@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.util.Translation;
 
-import org.springframework.stereotype.Component;
-
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
@@ -27,11 +25,11 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.STAT
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_RESULT_FIELDS;
 
-@Component
 public class DefinitionSheetsToTranslate {
 
-    public Map<SheetName, List<ColumnName>> generateSheetAndValues() {
+    public static Map<SheetName, List<ColumnName>> generateSheetAndValues() {
         Map<SheetName, List<ColumnName>> definitionSheetMap = new HashMap();
+
         // create list for CaseEvent
         List<ColumnName> caseEventColumns = new ArrayList();
         caseEventColumns.add(ColumnName.NAME);

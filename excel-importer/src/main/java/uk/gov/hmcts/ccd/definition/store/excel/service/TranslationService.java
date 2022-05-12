@@ -6,5 +6,5 @@ import java.util.Map;
 
 public interface TranslationService {
 
-    Map<String, String> processDefinitionSheets(Map<String, DefinitionSheet> definitionSheets);
+    void processDefinitionSheets(Map<String, DefinitionSheet> definitionSheets);
 }

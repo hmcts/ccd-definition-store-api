@@ -70,6 +70,12 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
 @Component
 public class ImportServiceImpl implements ImportService {
 
@@ -304,8 +310,7 @@ public class ImportServiceImpl implements ImportService {
 
         parseSearchParty(definitionSheets, parseContext);
 
-        Map<String, String> textToTranslateMap = translationService.processDefinitionSheets(definitionSheets);
-        // send the map to translation service
+        translationService.processDefinitionSheets(definitionSheets);
 
         return metadata;
     }

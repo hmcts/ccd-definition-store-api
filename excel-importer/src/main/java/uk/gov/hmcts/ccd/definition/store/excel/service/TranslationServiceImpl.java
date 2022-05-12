@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -15,29 +15,28 @@ import java.util.Map;
 @Component
 public class TranslationServiceImpl implements TranslationService {
 
-    @Autowired
-    private final DefinitionSheetsToTranslate definitionSheetsToTranslate;
-
-    public TranslationServiceImpl(DefinitionSheetsToTranslate definitionSheetsToTranslate) {
-        this.definitionSheetsToTranslate = definitionSheetsToTranslate;
-
-    }
+    private DefinitionSheetsToTranslate definitionSheetsToTranslate;
 
     @Override
-    public Map<String, String> processDefinitionSheets(Map<String, DefinitionSheet> definitionSheets) {
-        Map<String, String> textToTranslate = new HashMap<>();
-        //Retrieve definition sheets & Columns to translate
+    @Async
+    public void processDefinitionSheets(Map<String, DefinitionSheet> definitionSheets) {
+        Map<String, String> textToTranslate = retrieveTextToTranslate(definitionSheets);
+        //call Translation service to PUT Dictionary
+    }
+
+    private Map<String, String> retrieveTextToTranslate(Map<String, DefinitionSheet> definitionSheets) {
         Map<SheetName, List<ColumnName>> sheetsToProcess = definitionSheetsToTranslate.generateSheetAndValues();
+        Map<String, String> textToTranslate = new HashMap<>();
         for (var sheets : sheetsToProcess.entrySet()) {
             String sheetName = sheets.getKey().getName();
             if (definitionSheets.get(sheetName) != null) {
                 List<DefinitionDataItem> definitionDataItems = definitionSheets.get(sheetName).getDataItems();
-                if (definitionDataItems.size() == 1) {
-                    DefinitionDataItem definitionDataItem = definitionSheets.get(sheetName).getDataItems().get(0);
+                for (DefinitionDataItem dataItem : definitionDataItems) {
+                    DefinitionDataItem definitionDataItem = dataItem;
                     List<ColumnName> columns = sheets.getValue();
                     for (ColumnName column : columns) {
                         if (definitionDataItem.getString(column) != null) {
-                            textToTranslate.put(definitionDataItem.getString(column), ":");
+                            textToTranslate.put(definitionDataItem.getString(column), "");
                         }
                     }
                 }
