@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.excel.domain.definition.translation;
+package uk.gov.hmcts.ccd.definition.store.excel.client.translation;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
