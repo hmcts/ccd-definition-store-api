@@ -12,6 +12,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static uk.gov.hmcts.ccd.definition.store.excel.util.Translation.DefinitionSheetsToTranslate.DEFINITION_SHEETS_TO_TRANSLATE;
+
 @Component
 public class TranslationServiceImpl implements TranslationService {
 
@@ -25,7 +27,7 @@ public class TranslationServiceImpl implements TranslationService {
     }
 
     private Map<String, String> retrieveTextToTranslate(Map<String, DefinitionSheet> definitionSheets) {
-        Map<SheetName, List<ColumnName>> sheetsToProcess = definitionSheetsToTranslate.generateSheetAndValues();
+        Map<SheetName, List<ColumnName>> sheetsToProcess = DEFINITION_SHEETS_TO_TRANSLATE;
         Map<String, String> textToTranslate = new HashMap<>();
         for (var sheets : sheetsToProcess.entrySet()) {
             String sheetName = sheets.getKey().getName();

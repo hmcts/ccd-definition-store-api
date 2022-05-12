@@ -4,6 +4,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +28,13 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK
 
 public class DefinitionSheetsToTranslate {
 
-    public static Map<SheetName, List<ColumnName>> generateSheetAndValues() {
+    public static final Map<SheetName, List<ColumnName>>  DEFINITION_SHEETS_TO_TRANSLATE;
+
+    static {
+        DEFINITION_SHEETS_TO_TRANSLATE = Collections.unmodifiableMap(generateSheetAndValues());
+    }
+
+    private static Map<SheetName, List<ColumnName>> generateSheetAndValues() {
         Map<SheetName, List<ColumnName>> definitionSheetMap = new HashMap();
 
         // create list for CaseEvent
