@@ -47,9 +47,6 @@ public class TranslationServiceImpl implements TranslationService {
     private void callTranslationService(Translations textToTranslate) {
         try {
             log.info("calling Translation service.. start");
-            // TODO pass s2s token
-            /*HttpHeaders headers = securityUtils.authorizationHeaders();
-            final HttpEntity<Object> requestEntity = new HttpEntity<>(headers);*/
             translationServiceApiClient.uploadToDictionary(textToTranslate);
             log.info("calling Translation service.. end");
         } catch (Exception e) {
