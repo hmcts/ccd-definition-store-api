@@ -16,6 +16,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_C
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_PAYMENT_HISTORY_VIEWER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COLLECTION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPONENT_LAUNCHER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE_TIME;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DOCUMENT;
@@ -242,6 +243,7 @@ public class ImportServiceImplTest {
     private FieldTypeEntity flagLauncherBaseType;
     private FieldTypeEntity searchPartyBaseType;
     private FieldTypeEntity searchCriteriaBaseType;
+    private FieldTypeEntity componentLauncherBaseType;
 
     @Before
     public void setup() {
@@ -308,8 +310,8 @@ public class ImportServiceImplTest {
         flagLauncherBaseType = buildBaseType(BASE_FLAG_LAUNCHER);
         searchPartyBaseType = buildBaseType(PREDEFINED_COMPLEX_SEARCH_PARTY);
         searchCriteriaBaseType = buildBaseType(PREDEFINED_COMPLEX_SEARCH_CRITERIA);
+        componentLauncherBaseType = buildBaseType(BASE_COMPONENT_LAUNCHER);
         ttlBaseType = buildBaseType(PREDEFINED_COMPLEX_TTL);
-
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
 
@@ -489,6 +491,7 @@ public class ImportServiceImplTest {
             flagLauncherBaseType,
             searchPartyBaseType,
             searchCriteriaBaseType,
+            componentLauncherBaseType,
             ttlBaseType);
     }
 
