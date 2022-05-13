@@ -6,8 +6,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 public class TranslationServiceApiClientConfig {
 
     @Bean
-    public SystemUserAuthHeadersInterceptor systemUserAuthHeadersInterceptor(SecurityUtils securityUtils) {
-        return new SystemUserAuthHeadersInterceptor(securityUtils);
+    public ServiceAuthHeadersInterceptor systemUserAuthHeadersInterceptor(SecurityUtils securityUtils) {
+        return new ServiceAuthHeadersInterceptor(securityUtils);
     }
 
 }

@@ -4,13 +4,13 @@ import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 
-public class SystemUserAuthHeadersInterceptor implements RequestInterceptor {
+public class ServiceAuthHeadersInterceptor implements RequestInterceptor {
 
     private static final String EXPERIMENTAL = "experimental";
 
     private final SecurityUtils securityUtils;
 
-    public SystemUserAuthHeadersInterceptor(SecurityUtils securityUtils) {
+    public ServiceAuthHeadersInterceptor(SecurityUtils securityUtils) {
         this.securityUtils = securityUtils;
     }
 
