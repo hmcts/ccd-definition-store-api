@@ -38,7 +38,7 @@ public class BaseTypeControllerTests extends BaseTest {
 
         FieldType[] baseTypes = BaseTest.mapper.readValue(result.getResponse().getContentAsString(), FieldType[].class);
 
-        assertEquals("Unexpected number of Base Types", 26, baseTypes.length);
+        assertEquals("Unexpected number of Base Types", 27, baseTypes.length);
 
         assertThat(baseTypes)
             .withFailMessage("Unexpected Base Type and Id")
@@ -69,7 +69,8 @@ public class BaseTypeControllerTests extends BaseTest {
                 tuple("DynamicRadioList", "DynamicRadioList", null),
                 tuple("DynamicMultiSelectList", "DynamicMultiSelectList", null),
                 tuple("WaysToPay", "WaysToPay", null),
-                tuple("FlagLauncher", "FlagLauncher", null)
+                tuple("FlagLauncher", "FlagLauncher", null),
+                tuple("ComponentLauncher", "ComponentLauncher", null)
             );
     }
 }
