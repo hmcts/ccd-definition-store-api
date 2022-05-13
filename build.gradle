@@ -46,7 +46,7 @@ dependencyCheck {
 
 //spring boot dependency override
 //overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.4.2 of Elastic
-ext['elasticsearch.version'] = '7.16.2'
+ext['elasticsearch.version'] = '7.17.1'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['spring-security.version'] = '5.4.7'
@@ -55,7 +55,7 @@ ext['snakeyaml.version'] = '1.26'
 ext['postgresql.version'] = '42.2.16'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.17.1'
-ext['spring-framework.version'] = '5.3.18'
+ext['spring-framework.version'] = '5.3.19'
 
 // end
 
@@ -104,7 +104,7 @@ allprojects {
     apply plugin: 'java'
 
     ext {
-        elasticSearchVersion = '7.16.2'
+        elasticSearchVersion = '7.17.1'
     }
 
     dependencies {
@@ -275,7 +275,7 @@ subprojects { subproject ->
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.17.1_RDM-13140'
+        testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.18.1-prerelease'
         testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.2-Categories'
 
         testCompile group: 'commons-lang', name: 'commons-lang', version: '2.6'
