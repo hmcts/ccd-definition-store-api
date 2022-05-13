@@ -22,7 +22,8 @@ public class EventEntityEnablingConditionValidator extends AbstractShowCondition
                                      final EventEntityValidationContext eventEntityValidationContext) {
 
         final ValidationResult validationResult = new ValidationResult();
-        validateShowConditionFields(eventEntity, validationResult, eventEntity.getEventEnablingCondition());
+        validateShowConditionFieldsSupportInjectedData(eventEntity, validationResult,
+                eventEntity.getEventEnablingCondition());
         return validationResult;
     }
 
