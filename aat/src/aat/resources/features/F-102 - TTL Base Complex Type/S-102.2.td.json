@@ -377,7 +377,7 @@
         "show_condition" : null,
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
-        "category_id" : null
+        "category_id" : "#divorceState"
       }, {
         "metadata" : false,
         "id" : "DecreeNisiDocumentField",
@@ -395,7 +395,7 @@
         "show_condition" : null,
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
-        "category_id" : null
+        "category_id" : "decreeNisi"
       }, {
         "metadata" : false,
         "id" : "DocumentField",
@@ -413,7 +413,7 @@
         "show_condition" : null,
         "display_context_parameter" : null,
         "retain_hidden_value" : null,
-        "category_id" : null
+        "category_id" : "divorceDocs"
       }, {
         "metadata" : false,
         "id" : "MoneyField",
