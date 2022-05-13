@@ -122,7 +122,10 @@
 				"can_save_draft" : null,
 				"end_button_label" : null
 			} ],
-			"states" : [ {
+			"states" : [
+				{
+					"__ordering__": "UNORDERED"
+				}, {
 				"id" : "CaseCreated",
 				"name" : "Create case",
 				"description" : null,
@@ -159,6 +162,7 @@
 			"searchAliasFields" : [ ],
 			"roleToAccessProfiles" : [ ],
 			"searchParties" : [ ],
+			"categories" : [ ],
       "searchCriterias" : [ ],
 			"case_fields" : [
 				{
