@@ -11,6 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.Translation.DefinitionSheetsToTranslate;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -26,22 +27,33 @@ public class TranslationServiceImpl implements TranslationService {
 
     private final TranslationServiceApiClient translationServiceApiClient;
 
+    private final SecurityUtils securityUtils;
+
     private final String TRANSLATION_SERVICE_FAILED_TO_RESPOND = "Translation Service failed to respond";
 
-    public TranslationServiceImpl(TranslationServiceApiClient translationServiceApiClient) {
+    public TranslationServiceImpl(TranslationServiceApiClient translationServiceApiClient,
+                                  final SecurityUtils securityUtils) {
         this.translationServiceApiClient = translationServiceApiClient;
+        this.securityUtils = securityUtils;
     }
 
     @Override
     @Async
     public void processDefinitionSheets(Map<String, DefinitionSheet> definitionSheets) {
         Translations textToTranslate = retrieveTextToTranslate(definitionSheets);
+        callTranslationService(textToTranslate);
+    }
+
+    private void callTranslationService(Translations textToTranslate) {
         try {
             log.info("calling Translation service.. start");
+            // TODO pass s2s token
+            /*HttpHeaders headers = securityUtils.authorizationHeaders();
+            final HttpEntity<Object> requestEntity = new HttpEntity<>(headers);*/
             translationServiceApiClient.uploadToDictionary(textToTranslate);
             log.info("calling Translation service.. end");
         } catch (Exception e) {
-            log.info("Error calling Translation service");
+            log.error("Error while calling Translation service", e);
             throw new TranslationServiceException(TRANSLATION_SERVICE_FAILED_TO_RESPOND);
         }
     }
