@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
@@ -28,6 +29,7 @@ public class TranslationServiceImpl implements TranslationService {
 
     private final String TRANSLATION_SERVICE_FAILED_TO_RESPOND = "Translation Service failed to respond";
 
+    @Autowired
     public TranslationServiceImpl(TranslationServiceApiClient translationServiceApiClient) {
         this.translationServiceApiClient = translationServiceApiClient;
     }
