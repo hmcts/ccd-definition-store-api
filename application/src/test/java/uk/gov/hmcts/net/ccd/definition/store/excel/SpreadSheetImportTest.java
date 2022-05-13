@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
@@ -25,6 +26,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -45,6 +47,7 @@ import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubForPutDictionaryReturns200;
 
 /**
  * Component-level tests for the Core Case Definition Importer API.
@@ -90,6 +93,9 @@ public class SpreadSheetImportTest extends BaseTest {
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
+
+            stubForPutDictionaryReturns200(getDictionaryRequest());
+
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser")) //
@@ -783,5 +789,15 @@ public class SpreadSheetImportTest extends BaseTest {
     private int getIdForTestJurisdiction() {
         return jdbcTemplate.queryForObject("SELECT id FROM jurisdiction WHERE reference = 'TEST' AND version = 1",
             Integer.class);
+    }
+
+    private DictionaryRequest getDictionaryRequest()  {
+        DictionaryRequest dictionaryRequest = new DictionaryRequest();
+        Map<String, String> translations = new HashMap<>();
+        translations.put("CaseTypeName",":");
+        translations.put("CaseFieldDescription",":");
+        translations.put("FixedLists-ListElement",":");
+        dictionaryRequest.setTranslations(translations);
+        return dictionaryRequest;
     }
 }

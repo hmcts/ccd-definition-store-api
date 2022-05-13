@@ -16,9 +16,9 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 public interface TranslationServiceApiClient {
 
-    String UPDATE_DICTIONARY_URL = "/dictionary";
+    String DICTIONARY_URL = "/dictionary";
 
-    @PutMapping(value = UPDATE_DICTIONARY_URL, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    ResponseEntity uploadToDictionary(@RequestBody Translations translations);
+    @PutMapping(value = DICTIONARY_URL, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    ResponseEntity uploadToDictionary(@RequestBody DictionaryRequest dictionaryRequest);
 
 }

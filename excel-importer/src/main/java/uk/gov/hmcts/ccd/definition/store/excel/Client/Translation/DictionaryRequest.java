@@ -9,7 +9,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class Translations {
+public class DictionaryRequest {
 
     private Map<String, String> translations;
 

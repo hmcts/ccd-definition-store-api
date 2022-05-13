@@ -4,14 +4,13 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.TranslationServiceException;
+import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.TranslationServiceApiClient;
-import uk.gov.hmcts.ccd.definition.store.excel.client.translation.Translations;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.Translation.DefinitionSheetsToTranslate;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -27,27 +26,23 @@ public class TranslationServiceImpl implements TranslationService {
 
     private final TranslationServiceApiClient translationServiceApiClient;
 
-    private final SecurityUtils securityUtils;
-
     private final String TRANSLATION_SERVICE_FAILED_TO_RESPOND = "Translation Service failed to respond";
 
-    public TranslationServiceImpl(TranslationServiceApiClient translationServiceApiClient,
-                                  final SecurityUtils securityUtils) {
+    public TranslationServiceImpl(TranslationServiceApiClient translationServiceApiClient) {
         this.translationServiceApiClient = translationServiceApiClient;
-        this.securityUtils = securityUtils;
     }
 
     @Override
     @Async
     public void processDefinitionSheets(Map<String, DefinitionSheet> definitionSheets) {
-        Translations textToTranslate = retrieveTextToTranslate(definitionSheets);
-        callTranslationService(textToTranslate);
+        DictionaryRequest dictionaryRequest = retrieveTextToTranslate(definitionSheets);
+        callTranslationService(dictionaryRequest);
     }
 
-    private void callTranslationService(Translations textToTranslate) {
+    private void callTranslationService(DictionaryRequest dictionaryRequest) {
         try {
             log.info("calling Translation service.. start");
-            translationServiceApiClient.uploadToDictionary(textToTranslate);
+            translationServiceApiClient.uploadToDictionary(dictionaryRequest);
             log.info("calling Translation service.. end");
         } catch (Exception e) {
             log.error("Error while calling Translation service", e);
@@ -55,8 +50,8 @@ public class TranslationServiceImpl implements TranslationService {
         }
     }
 
-    private Translations retrieveTextToTranslate(Map<String, DefinitionSheet> definitionSheets) {
-        Translations translations = new Translations();
+    private DictionaryRequest retrieveTextToTranslate(Map<String, DefinitionSheet> definitionSheets) {
+        DictionaryRequest dictionaryRequest = new DictionaryRequest();
         Map<SheetName, List<ColumnName>> sheetsToProcess = DEFINITION_SHEETS_TO_TRANSLATE;
         Map<String, String> textToTranslate = new HashMap<>();
         for (var sheets : sheetsToProcess.entrySet()) {
@@ -74,8 +69,8 @@ public class TranslationServiceImpl implements TranslationService {
                 }
             }
         }
-        translations.setTranslations(textToTranslate);
-        return translations;
+        dictionaryRequest.setTranslations(textToTranslate);
+        return dictionaryRequest;
     }
 
 }
