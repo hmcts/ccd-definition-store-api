@@ -32,6 +32,7 @@
       "searchAliasFields": [],
       "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
       "searchParties": [],
+      "categories" : "[[ANYTHING_PRESENT]]",
       "searchCriterias": [],
       "case_fields": [ {
         "__ordering__": "UNORDERED",

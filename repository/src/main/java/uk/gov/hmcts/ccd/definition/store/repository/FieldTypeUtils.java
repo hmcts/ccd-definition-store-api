@@ -43,6 +43,7 @@ public class FieldTypeUtils {
     public static final String BASE_DYNAMIC_MULTI_SELECT_LIST = "DynamicMultiSelectList";
     public static final String BASE_WAYS_TO_PAY = "WaysToPay";
     public static final String BASE_FLAG_LAUNCHER = "FlagLauncher";
+    public static final String BASE_COMPONENT_LAUNCHER = "ComponentLauncher";
 
     public static Boolean isList(String baseTypeReference) {
         return BASE_FIXED_LIST.equals(baseTypeReference)
