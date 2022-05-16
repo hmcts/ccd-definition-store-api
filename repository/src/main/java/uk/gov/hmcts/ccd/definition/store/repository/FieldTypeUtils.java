@@ -36,6 +36,7 @@ public class FieldTypeUtils {
     public static final String PREDEFINED_COMPLEX_FLAGS = "Flags";
     public static final String PREDEFINED_COMPLEX_SEARCH_PARTY = "SearchParty";
     public static final String PREDEFINED_COMPLEX_SEARCH_CRITERIA = "SearchCriteria";
+    public static final String PREDEFINED_COMPLEX_LINK_REASON = "LinkReason";
     public static final String BASE_REGION = "Region";
     public static final String BASE_BASE_LOCATION = "BaseLocation";
     public static final String BASE_DYNAMIC_RADIO_LIST = "DynamicRadioList";
