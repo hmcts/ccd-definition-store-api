@@ -792,7 +792,7 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private DictionaryRequest getDictionaryRequest()  {
-        DictionaryRequest dictionaryRequest = new DictionaryRequest();
+        final DictionaryRequest dictionaryRequest = new DictionaryRequest();
         Map<String, String> translations = new HashMap<>();
         translations.put("CaseTypeName",":");
         translations.put("CaseFieldDescription",":");
