@@ -172,6 +172,7 @@
       "searchAliasFields": [],
       "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
       "searchParties": [],
+      "categories": "[[ANYTHING_PRESENT]]",
       "searchCriterias": [],
       "case_fields" :  "[[ANYTHING_PRESENT]]",
       "printable_document_url" : "[[ANY_NULLABLE]]",
