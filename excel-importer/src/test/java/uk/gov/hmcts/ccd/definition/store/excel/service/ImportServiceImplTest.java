@@ -436,7 +436,8 @@ public class ImportServiceImplTest {
             buildBaseType(BASE_WAYS_TO_PAY),
             buildBaseType(BASE_REGION),
             buildBaseType(BASE_BASE_LOCATION),
-            buildBaseType(BASE_FLAG_LAUNCHER));
+            buildBaseType(BASE_FLAG_LAUNCHER),
+            buildBaseType(BASE_COMPONENT_LAUNCHER));
     }
 
     private List<FieldTypeEntity> getPredefinedComplexBaseTypesList() {
