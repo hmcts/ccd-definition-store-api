@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequ
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.TranslationServiceApiClient;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
-import uk.gov.hmcts.ccd.definition.store.excel.util.Translation.DefinitionSheetsToTranslate;
+import uk.gov.hmcts.ccd.definition.store.excel.util.translation.DefinitionSheetsToTranslate;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static uk.gov.hmcts.ccd.definition.store.excel.util.Translation.DefinitionSheetsToTranslate.DEFINITION_SHEETS_TO_TRANSLATE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.translation.DefinitionSheetsToTranslate.DEFINITION_SHEETS_TO_TRANSLATE;
 
 @Component
 @Slf4j
@@ -27,7 +27,7 @@ public class TranslationServiceImpl implements TranslationService {
 
     private final TranslationServiceApiClient translationServiceApiClient;
 
-    private final String TRANSLATION_SERVICE_FAILED_TO_RESPOND = "Translation Service failed to respond";
+    private static final String TRANSLATION_SERVICE_FAILED_TO_RESPOND = "Translation Service failed to respond";
 
     @Autowired
     public TranslationServiceImpl(TranslationServiceApiClient translationServiceApiClient) {

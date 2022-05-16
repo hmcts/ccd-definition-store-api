@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.excel.util.Translation;
+package uk.gov.hmcts.ccd.definition.store.excel.util.translation;
 
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;

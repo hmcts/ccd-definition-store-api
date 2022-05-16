@@ -58,7 +58,7 @@ public class WiremockFixtures {
     public static void stubForPutDictionaryReturns200(DictionaryRequest dictionaryRequest) {
         stubFor(WireMock.put(urlEqualTo(dictionaryUrl))
             .withRequestBody(equalToJson(getJsonString(dictionaryRequest)))
-            .withHeader("SERVICE_AUTHORIZATION", equalTo(S2S_TOKEN))
+            .withHeader(SERVICE_AUTHORIZATION, equalTo(S2S_TOKEN))
             .willReturn(aResponse()
                 .withStatus(HTTP_OK)
                 .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)));
