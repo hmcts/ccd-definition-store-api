@@ -11,7 +11,6 @@ import com.google.common.annotations.VisibleForTesting;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -69,12 +68,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 @Component
 public class ImportServiceImpl implements ImportService {

@@ -28,6 +28,9 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK
 
 public class DefinitionSheetsToTranslate {
 
+    private DefinitionSheetsToTranslate() {
+    }
+
     public static final Map<SheetName, List<ColumnName>>  DEFINITION_SHEETS_TO_TRANSLATE;
 
     static {

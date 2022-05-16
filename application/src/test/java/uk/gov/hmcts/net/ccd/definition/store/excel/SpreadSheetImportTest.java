@@ -125,10 +125,10 @@ public class SpreadSheetImportTest extends BaseTest {
     @Test
     @Transactional
     public void importValidDefinitionFileUsingLegacyAccessProfileColumnAlias() throws Exception {
-
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_WITH_ACCESS_PROFILE_ALIAS, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
+            stubForPutDictionaryReturns200(getDictionaryRequest());
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser")) //
@@ -162,6 +162,8 @@ public class SpreadSheetImportTest extends BaseTest {
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
 
             final MockMultipartFile file = new MockMultipartFile("file", inputStream);
+
+            stubForPutDictionaryReturns200(getDictionaryRequest());
 
             // Given wiremock returns http status 403
             WireMock.stubFor(WireMock.put(urlEqualTo("/user-profile/users"))
