@@ -15,6 +15,7 @@
       "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
       "searchParties": "[[ANYTHING_PRESENT]]",
       "searchCriterias": "[[ANYTHING_PRESENT]]",
+      "categories" : "[[ANYTHING_PRESENT]]",
       "case_fields": [],
       "printable_document_url": "[[ANY_STRING_NULLABLE]]",
       "callback_get_case_url" : "[[ANY_STRING_NULLABLE]]",
