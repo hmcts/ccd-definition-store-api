@@ -283,6 +283,7 @@ subprojects { subproject ->
         // https://mvnrepository.com/artifact/junit/junit
         compile group: 'junit', name: 'junit', version: '4.13.1'
         testCompile 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
+
     }
 
     // from https://github.com/junit-team/junit5/issues/1024'
