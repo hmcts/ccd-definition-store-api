@@ -55,7 +55,7 @@ ext['snakeyaml.version'] = '1.26'
 ext['postgresql.version'] = '42.2.16'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.17.1'
-ext['spring-framework.version'] = '5.3.18'
+ext['spring-framework.version'] = '5.3.19'
 
 // end
 
@@ -275,7 +275,7 @@ subprojects { subproject ->
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.18.0'
+        testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.0'
         testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.2-Categories'
 
         testCompile group: 'commons-lang', name: 'commons-lang', version: '2.6'
