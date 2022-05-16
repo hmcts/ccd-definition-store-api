@@ -36,6 +36,15 @@
       "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
       "searchParties": [],
       "searchCriterias": [],
+      "categories" : [ {
+        "category_id" : "evidenceDocs",
+        "category_label" : "Evidence Documents",
+        "parent_category_id" : null,
+        "live_from" : "[[ANYTHING_PRESENT]]",
+        "live_to" : "[[ANYTHING_PRESENT]]",
+        "display_order" : 131,
+        "case_type_id" : "FT_CaseFileView"
+      } ],
       "case_fields" : [
         {
           "__ordering__": "UNORDERED",
