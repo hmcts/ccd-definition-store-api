@@ -150,6 +150,10 @@ allprojects {
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.8.5'
                 }
+
+                if (details.requested.group == 'com.google.code.gson' && details.requested.name == 'gson') {
+                    details.useVersion '2.9.0'
+                }
             }
         }
     }
@@ -193,7 +197,6 @@ subprojects { subproject ->
     }
 
     dependencies {
-        compile 'com.google.code.gson:gson:2.8.9'
         implementation group: 'org.apache.poi', name: 'poi', version: '5.2.2'
         implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.2'
         implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: '5.2.2'
