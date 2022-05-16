@@ -92,6 +92,7 @@
       "roleToAccessProfiles" : [ ],
 			"searchParties" : [ ],
       "searchCriterias" : [ ],
+      "categories" : [ ],
 			"case_fields" : [
 				{
 					"__ordering__": "UNORDERED",
