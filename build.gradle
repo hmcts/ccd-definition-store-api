@@ -150,6 +150,10 @@ allprojects {
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.8.5'
                 }
+
+                if (details.requested.group == 'com.google.code.gson' && details.requested.name == 'gson') {
+                    details.useVersion '2.9.0'
+                }
             }
         }
     }
@@ -193,12 +197,11 @@ subprojects { subproject ->
     }
 
     dependencies {
-        compile 'com.google.code.gson:gson:2.8.9'
         implementation group: 'org.apache.poi', name: 'poi', version: '5.2.2'
         implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.2'
         implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: '5.2.2'
         implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
-
+        compile group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
         compile  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
         compile group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
         compile group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
