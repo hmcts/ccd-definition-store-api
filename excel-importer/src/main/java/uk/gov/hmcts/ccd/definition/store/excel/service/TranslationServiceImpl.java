@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
-import uk.gov.hmcts.ccd.definition.store.domain.exception.TranslationServiceException;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.TranslationServiceApiClient;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -44,11 +43,11 @@ public class TranslationServiceImpl implements TranslationService {
     private void callTranslationService(DictionaryRequest dictionaryRequest) {
         try {
             log.info("calling Translation service.. start");
+            log.warn("Errors calling Translation service will not fail the definition import");
             translationServiceApiClient.uploadToDictionary(dictionaryRequest);
             log.info("calling Translation service.. end");
         } catch (Exception e) {
             log.error("Error while calling Translation service", e);
-            throw new TranslationServiceException(TRANSLATION_SERVICE_FAILED_TO_RESPOND);
         }
     }
 
