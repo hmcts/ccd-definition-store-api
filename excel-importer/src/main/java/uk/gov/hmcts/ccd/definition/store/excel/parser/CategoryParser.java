@@ -71,6 +71,8 @@ public class CategoryParser {
         categoriesEntity.setParentCategoryId(definitionDataItem.getString(ColumnName.PARENT_CATEGORY_ID));
         categoriesEntity.setCategoryLabel(definitionDataItem.getString(ColumnName.CATEGORY_LABEL));
         categoriesEntity.setCategoryId(definitionDataItem.getString(ColumnName.CATEGORY_ID));
+        //register Case Type and category
+        parseContext.registerCaseTypeForCategory(caseType, categoriesEntity);
         return categoriesEntity;
     }
 }
