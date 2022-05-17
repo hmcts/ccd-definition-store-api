@@ -26,8 +26,6 @@ public class TranslationServiceImpl implements TranslationService {
 
     private final TranslationServiceApiClient translationServiceApiClient;
 
-    private static final String TRANSLATION_SERVICE_FAILED_TO_RESPOND = "Translation service failed to respond";
-
     @Autowired
     public TranslationServiceImpl(TranslationServiceApiClient translationServiceApiClient) {
         this.translationServiceApiClient = translationServiceApiClient;
