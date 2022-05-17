@@ -20,7 +20,7 @@ public class TranslationHelper {
     private static final String CASE_TYPE_ID = "N>G>I>T>B.";
     private static final String CASE_FIELD_ID = "BaYaN";
 
-    public TranslationHelper() {
+    private TranslationHelper() {
     }
 
     public static DictionaryRequest getDictionaryRequest() {
