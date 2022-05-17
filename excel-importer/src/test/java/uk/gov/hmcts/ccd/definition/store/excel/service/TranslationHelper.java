@@ -20,12 +20,15 @@ public class TranslationHelper {
     private static final String CASE_TYPE_ID = "N>G>I>T>B.";
     private static final String CASE_FIELD_ID = "BaYaN";
 
-    public static DictionaryRequest getDictionaryRequest()  {
+    public TranslationHelper() {
+    }
+
+    public static DictionaryRequest getDictionaryRequest() {
         final DictionaryRequest dictionaryRequest = new DictionaryRequest();
         Map<String, String> translations = new HashMap<>();
-        translations.put("CaseTypeName",":");
-        translations.put("CaseFieldDescription",":");
-        translations.put("FixedLists-ListElement",":");
+        translations.put("CaseTypeName", ":");
+        translations.put("CaseFieldDescription", ":");
+        translations.put("FixedLists-ListElement", ":");
         dictionaryRequest.setTranslations(translations);
         return dictionaryRequest;
     }
