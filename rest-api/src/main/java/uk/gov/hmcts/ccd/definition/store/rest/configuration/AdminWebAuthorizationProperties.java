@@ -19,6 +19,10 @@ public class AdminWebAuthorizationProperties {
 
     private List<String> importDefinition;
 
+    private List<String> manageWelshTranslation;
+
+    private List<String> retrieveWelshTranslation;
+
     public boolean isEnabled() {
         return enabled;
     }
@@ -57,5 +61,21 @@ public class AdminWebAuthorizationProperties {
 
     public void setImportDefinition(final List<String> importDefinition) {
         this.importDefinition = importDefinition;
+    }
+
+    public List<String> getManageWelshTranslation() {
+        return manageWelshTranslation;
+    }
+
+    public void setManageWelshTranslation(final List<String> manageWelshTranslation) {
+        this.manageWelshTranslation = manageWelshTranslation;
+    }
+
+    public List<String> getRetrieveWelshTranslation() {
+        return retrieveWelshTranslation;
+    }
+
+    public void setRetrieveWelshTranslation(final List<String> retrieveWelshTranslation) {
+        this.retrieveWelshTranslation = retrieveWelshTranslation;
     }
 }

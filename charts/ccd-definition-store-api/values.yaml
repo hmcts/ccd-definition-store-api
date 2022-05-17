@@ -47,6 +47,8 @@ java:
     ADMIN_WEB_AUTHORIZATION_MANAGE_USER_ROLE_0: ccd-import
     ADMIN_WEB_AUTHORIZATION_MANAGE_DEFINITION_0: ccd-import
     ADMIN_WEB_AUTHORIZATION_IMPORT_DEFINITION_0: ccd-import
+    ADMIN_WEB_AUTHORIZATION_MANAGE_WELSH_TRANSLATION_0: manage-translations
+    ADMIN_WEB_AUTHORIZATION_RETRIEVE_WELSH_TRANSLATION_0: load-translations
 
     IDAM_USER_URL: https://idam-web-public.{{ .Values.global.environment }}.platform.hmcts.net
     IDAM_S2S_URL: http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
