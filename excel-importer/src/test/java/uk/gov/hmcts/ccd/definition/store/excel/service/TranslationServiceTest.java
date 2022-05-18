@@ -54,8 +54,6 @@ class TranslationServiceTest {
         filterLoggerCapture.start();
         filterLogger.addAppender(filterLoggerCapture);
 
-        //translationService = new TranslationServiceImpl(translationServiceApiClient);
-
         definitionSheets = new HashMap<>();
         definitionSheet = new DefinitionSheet();
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), buildSheetForGenerics(WORK_BASKET_RESULT_FIELDS));
@@ -64,7 +62,7 @@ class TranslationServiceTest {
     }
 
     @Test
-    public void processDefinitionSheets_TranslationReturn200() {
+    void processDefinitionSheets_TranslationReturn200() {
         translationService.processDefinitionSheets(definitionSheets);
         verify(translationServiceApiClient, times(1)).uploadToDictionary(any());
         List<ILoggingEvent> loggingEvents = filterLoggerCapture.list;
@@ -81,7 +79,7 @@ class TranslationServiceTest {
     }
 
     @Test
-    public void processDefinitionSheets_TranslationReturn4XX() {
+    void processDefinitionSheets_TranslationReturn4XX() {
         BadRequestException exception = new BadRequestException("Invalid request");
         when(translationServiceApiClient.uploadToDictionary(any(DictionaryRequest.class))).thenThrow(exception);
         translationService.processDefinitionSheets(definitionSheets);

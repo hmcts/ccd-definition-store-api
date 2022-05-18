@@ -38,93 +38,92 @@ public class DefinitionSheetsToTranslate {
     }
 
     private static Map<SheetName, List<ColumnName>> generateSheetAndValues() {
-        Map<SheetName, List<ColumnName>> definitionSheetMap = new HashMap();
+        Map<SheetName, List<ColumnName>> definitionSheetMap = new HashMap<>();
 
         // create list for CaseEvent
-        List<ColumnName> caseEventColumns = new ArrayList();
+        List<ColumnName> caseEventColumns = new ArrayList<>();
         caseEventColumns.add(ColumnName.NAME);
         caseEventColumns.add(ColumnName.DESCRIPTION);
         definitionSheetMap.put(CASE_EVENT, caseEventColumns);
 
         // create list for CaseEventToFields
-        List<ColumnName> caseEventToFieldsColumns = new ArrayList();
+        List<ColumnName> caseEventToFieldsColumns = new ArrayList<>();
         caseEventToFieldsColumns.add(ColumnName.PAGE_LABEL);
         definitionSheetMap.put(CASE_EVENT_TO_FIELDS, caseEventToFieldsColumns);
 
         // create list for CaseField
-        List<ColumnName> caseFieldColumns = new ArrayList();
+        List<ColumnName> caseFieldColumns = new ArrayList<>();
         caseFieldColumns.add(ColumnName.LABEL);
         caseFieldColumns.add(ColumnName.HINT_TEXT);
         definitionSheetMap.put(CASE_FIELD, caseFieldColumns);
 
         // create list for CaseType
-        List<ColumnName> caseTypeColumns = new ArrayList();
+        List<ColumnName> caseTypeColumns = new ArrayList<>();
         caseTypeColumns.add(ColumnName.NAME);
         caseTypeColumns.add(ColumnName.DESCRIPTION);
         definitionSheetMap.put(CASE_TYPE, caseTypeColumns);
 
         // create list for CaseTypeTab
-        List<ColumnName> caseTypeTabColumns = new ArrayList();
+        List<ColumnName> caseTypeTabColumns = new ArrayList<>();
         caseTypeTabColumns.add(ColumnName.TAB_LABEL);
         definitionSheetMap.put(CASE_TYPE_TAB, caseTypeTabColumns);
 
-        //TODO verify tab name
         // create list for ChallengeQuestionTab
-        List<ColumnName> challengeQuestionTabColumns = new ArrayList();
+        List<ColumnName> challengeQuestionTabColumns = new ArrayList<>();
         challengeQuestionTabColumns.add(ColumnName.CHALLENGE_QUESTION_TEXT);
         definitionSheetMap.put(CHALLENGE_QUESTION_TAB, challengeQuestionTabColumns);
 
         // create list for ComplexTypes
-        List<ColumnName> complexTypesColumns = new ArrayList();
+        List<ColumnName> complexTypesColumns = new ArrayList<>();
         complexTypesColumns.add(ColumnName.ELEMENT_LABEL);
         complexTypesColumns.add(ColumnName.HINT_TEXT);
         definitionSheetMap.put(COMPLEX_TYPES, complexTypesColumns);
 
         // create list for eventToComplexTypes
-        List<ColumnName> eventToComplexTypesColumns = new ArrayList();
+        List<ColumnName> eventToComplexTypesColumns = new ArrayList<>();
         eventToComplexTypesColumns.add(ColumnName.EVENT_ELEMENT_LABEL);
         eventToComplexTypesColumns.add(ColumnName.EVENT_HINT_TEXT);
         definitionSheetMap.put(CASE_EVENT_TO_COMPLEX_TYPES, eventToComplexTypesColumns);
 
         // create list for FixedLists
-        List<ColumnName> fixedListsColumns = new ArrayList();
+        List<ColumnName> fixedListsColumns = new ArrayList<>();
         fixedListsColumns.add(ColumnName.LIST_ELEMENT);
         definitionSheetMap.put(FIXED_LISTS, fixedListsColumns);
 
         // create list for Jurisdiction
-        List<ColumnName> jurisdictionColumns = new ArrayList();
+        List<ColumnName> jurisdictionColumns = new ArrayList<>();
         jurisdictionColumns.add(ColumnName.NAME);
         jurisdictionColumns.add(ColumnName.DESCRIPTION);
         definitionSheetMap.put(JURISDICTION, jurisdictionColumns);
 
         // create list for SearchCasesResultFields
-        List<ColumnName> searchCasesResultFieldsColumns = new ArrayList();
+        List<ColumnName> searchCasesResultFieldsColumns = new ArrayList<>();
         searchCasesResultFieldsColumns.add(ColumnName.LABEL);
         definitionSheetMap.put(SEARCH_CASES_RESULT_FIELDS, searchCasesResultFieldsColumns);
 
         // create list for SearchInputFields
-        List<ColumnName> searchInputFieldsColumns = new ArrayList();
+        List<ColumnName> searchInputFieldsColumns = new ArrayList<>();
         searchInputFieldsColumns.add(ColumnName.LABEL);
         definitionSheetMap.put(SEARCH_INPUT_FIELD, searchInputFieldsColumns);
 
         // create list for SearchResultFields
-        List<ColumnName> searchResultFieldsColumns = new ArrayList();
+        List<ColumnName> searchResultFieldsColumns = new ArrayList<>();
         searchResultFieldsColumns.add(ColumnName.LABEL);
         definitionSheetMap.put(SEARCH_RESULT_FIELD, searchResultFieldsColumns);
 
         // create list for State
-        List<ColumnName> stateColumns = new ArrayList();
+        List<ColumnName> stateColumns = new ArrayList<>();
         stateColumns.add(ColumnName.NAME);
         stateColumns.add(ColumnName.DESCRIPTION);
         definitionSheetMap.put(STATE, stateColumns);
 
         // create list for WorkBasketInputFields
-        List<ColumnName> workBasketInputFieldsColumns = new ArrayList();
+        List<ColumnName> workBasketInputFieldsColumns = new ArrayList<>();
         workBasketInputFieldsColumns.add(ColumnName.LABEL);
         definitionSheetMap.put(WORK_BASKET_INPUT_FIELD, workBasketInputFieldsColumns);
 
         // create list for WorkBasketResultFields
-        List<ColumnName> workBasketResultFieldsColumns = new ArrayList();
+        List<ColumnName> workBasketResultFieldsColumns = new ArrayList<>();
         workBasketResultFieldsColumns.add(ColumnName.LABEL);
         definitionSheetMap.put(WORK_BASKET_RESULT_FIELDS, searchResultFieldsColumns);
 
