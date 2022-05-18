@@ -22,4 +22,3 @@ public class ServiceAuthHeadersInterceptor implements RequestInterceptor {
         template.header(EXPERIMENTAL, "true");
     }
 }
-
