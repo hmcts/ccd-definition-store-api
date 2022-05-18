@@ -98,7 +98,7 @@ class SecurityUtilsTest {
         final String headers = securityUtils.getS2SToken();
 
         assertAll(
-            () -> assertEquals( headers, SERVICE_JWT)
+            () -> assertEquals(headers, SERVICE_JWT)
         );
     }
 
