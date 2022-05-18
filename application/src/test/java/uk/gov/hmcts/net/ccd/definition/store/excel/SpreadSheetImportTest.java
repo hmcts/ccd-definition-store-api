@@ -48,6 +48,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubForPutDictionaryReturns200;
+import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubForPutDictionaryReturns4XX;
 
 /**
  * Component-level tests for the Core Case Definition Importer API.
@@ -95,6 +96,37 @@ public class SpreadSheetImportTest extends BaseTest {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
 
             stubForPutDictionaryReturns200(getDictionaryRequest());
+
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+                .file(file)
+                .header(AUTHORIZATION, "Bearer testUser")) //
+                .andReturn();
+
+            assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
+        }
+
+        WireMock.verify(1,
+            putRequestedFor(urlEqualTo("/user-profile/users")).withRequestBody(equalTo(EXPECTED_USER_PROFILES)));
+
+        // Check the HTTP GET request for the imported Case Type returns the correct response.
+        MvcResult getCaseTypesMvcResult = mockMvc.perform(MockMvcRequestBuilders.get(CASE_TYPE_DEF_URL)
+            .header(AUTHORIZATION, "Bearer testUser"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+        assertBody(getCaseTypesMvcResult.getResponse().getContentAsString());
+
+        assertDatabaseIsCorrect();
+    }
+
+    @Test
+    @Transactional
+    public void importValidDefinitionFile_TranslationService_return4XX() throws Exception {
+
+        try (final InputStream inputStream =
+                 new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
+            MockMultipartFile file = new MockMultipartFile("file", inputStream);
+
+            stubForPutDictionaryReturns4XX(getDictionaryRequest());
 
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
                 .file(file)

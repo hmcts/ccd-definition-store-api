@@ -21,6 +21,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.equalToJson;
 import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static java.net.HttpURLConnection.HTTP_FORBIDDEN;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 public class WiremockFixtures {
@@ -61,6 +62,15 @@ public class WiremockFixtures {
             .withHeader(SERVICE_AUTHORIZATION, equalTo(S2S_TOKEN))
             .willReturn(aResponse()
                 .withStatus(HTTP_OK)
+                .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)));
+    }
+
+    public static void stubForPutDictionaryReturns4XX(DictionaryRequest dictionaryRequest) {
+        stubFor(WireMock.put(urlEqualTo(dictionaryUrl))
+            .withRequestBody(equalToJson(getJsonString(dictionaryRequest)))
+            .withHeader(SERVICE_AUTHORIZATION, equalTo(S2S_TOKEN))
+            .willReturn(aResponse()
+                .withStatus(HTTP_FORBIDDEN)
                 .withHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)));
     }
 
