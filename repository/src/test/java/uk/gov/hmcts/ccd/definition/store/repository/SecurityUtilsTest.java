@@ -57,7 +57,7 @@ class SecurityUtilsTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        final GrantedAuthority[] authorities = new GrantedAuthority[] {newAuthority("role1"), newAuthority("role2")};
+        final GrantedAuthority[] authorities = new GrantedAuthority[]{newAuthority("role1"), newAuthority("role2")};
 
         when(serviceTokenGenerator.generate()).thenReturn(SERVICE_JWT);
 
@@ -98,7 +98,7 @@ class SecurityUtilsTest {
         final String headers = securityUtils.getS2SToken();
 
         assertAll(
-            () -> assertEquals(headers, SERVICE_JWT)
+            () -> assertEquals(SERVICE_JWT, headers)
         );
     }
 
