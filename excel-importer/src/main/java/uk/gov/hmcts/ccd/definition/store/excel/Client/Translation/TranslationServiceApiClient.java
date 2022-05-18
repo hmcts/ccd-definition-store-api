@@ -19,6 +19,6 @@ public interface TranslationServiceApiClient {
     String DICTIONARY_URL = "/dictionary";
 
     @PutMapping(value = DICTIONARY_URL, consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    ResponseEntity uploadToDictionary(@RequestBody DictionaryRequest dictionaryRequest);
+    void uploadToDictionary(@RequestBody DictionaryRequest dictionaryRequest);
 
 }
