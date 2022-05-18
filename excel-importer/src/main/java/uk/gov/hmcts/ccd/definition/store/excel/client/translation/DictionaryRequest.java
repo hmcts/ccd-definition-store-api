@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.excel.client.translation;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.Map;
 
-@NoArgsConstructor
 @Data
+@Setter
 public class DictionaryRequest {
 
     private Map<String, String> translations;

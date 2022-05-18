@@ -5,7 +5,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,7 +38,7 @@ public class DefinitionSheetsToTranslate {
     }
 
     private static Map<SheetName, List<ColumnName>> generateSheetAndValues() {
-        Map<SheetName, List<ColumnName>> definitionSheetMap = new HashMap<>();
+        Map<SheetName, List<ColumnName>> definitionSheetMap = new EnumMap<>(SheetName.class);
 
         // create list for CaseEvent
         List<ColumnName> caseEventColumns = new ArrayList<>();
