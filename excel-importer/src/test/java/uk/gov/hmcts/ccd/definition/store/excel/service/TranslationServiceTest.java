@@ -81,7 +81,7 @@ class TranslationServiceTest {
     }
 
     @Test
-    public void processDefinitionSheets_TranslationReturn400() {
+    public void processDefinitionSheets_TranslationReturn4XX() {
         BadRequestException exception = new BadRequestException("Invalid request");
         when(translationServiceApiClient.uploadToDictionary(any(DictionaryRequest.class))).thenThrow(exception);
         translationService.processDefinitionSheets(definitionSheets);
