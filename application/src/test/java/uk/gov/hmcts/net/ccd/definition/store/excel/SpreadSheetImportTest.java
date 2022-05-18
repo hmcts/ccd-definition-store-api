@@ -130,7 +130,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
                 .file(file)
-                .header(AUTHORIZATION, "Bearer testUser")) //
+                .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
 
             assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
