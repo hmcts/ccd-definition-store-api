@@ -27,6 +27,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -88,6 +89,16 @@ class SecurityUtilsTest {
 
         assertAll(
             () -> assertHeader(headers, "ServiceAuthorization", SERVICE_JWT)
+        );
+    }
+
+    @Test
+    @DisplayName("authorizationHeaders")
+    void getS2SToken() {
+        final String headers = securityUtils.getS2SToken();
+
+        assertAll(
+            () -> assertEquals( headers, SERVICE_JWT)
         );
     }
 
