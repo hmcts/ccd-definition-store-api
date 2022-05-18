@@ -19,7 +19,6 @@ public class ServiceAuthHeadersInterceptor implements RequestInterceptor {
         if (!template.headers().containsKey("ServiceAuthorization")) {
             template.header("ServiceAuthorization", securityUtils.getS2SToken());
         }
-        // TODO: will be removed once ccd cleaned in their end
         template.header(EXPERIMENTAL, "true");
     }
 }

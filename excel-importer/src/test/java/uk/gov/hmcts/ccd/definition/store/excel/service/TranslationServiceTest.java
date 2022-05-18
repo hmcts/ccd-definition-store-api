@@ -22,9 +22,9 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.buildSheetForCaseEvent;
 import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.buildSheetForCaseType;
 import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.buildSheetForGenerics;
@@ -81,7 +81,7 @@ class TranslationServiceTest {
     @Test
     void processDefinitionSheets_TranslationReturn4XX() {
         BadRequestException exception = new BadRequestException("Invalid request");
-        when(translationServiceApiClient.uploadToDictionary(any(DictionaryRequest.class))).thenThrow(exception);
+        doThrow(exception).when(translationServiceApiClient).uploadToDictionary(any(DictionaryRequest.class));
         translationService.processDefinitionSheets(definitionSheets);
         verify(translationServiceApiClient, times(1)).uploadToDictionary(any());
         List<ILoggingEvent> loggingEvents = filterLoggerCapture.list;
