@@ -8,7 +8,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequ
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.TranslationServiceApiClient;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
-import uk.gov.hmcts.ccd.definition.store.excel.util.translation.DefinitionSheetsToTranslate;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
@@ -21,8 +20,6 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.translation.Definitio
 @Component
 @Slf4j
 public class TranslationServiceImpl implements TranslationService {
-
-    private DefinitionSheetsToTranslate definitionSheetsToTranslate;
 
     private final TranslationServiceApiClient translationServiceApiClient;
 
