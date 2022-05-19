@@ -21,7 +21,7 @@ public class AdminWebAuthorization {
 
     private boolean canManageWelshTranslation;
 
-    private boolean canRetrieveWelshTranslation;
+    private boolean canLoadWelshTranslation;
 
     public boolean getCanManageUserProfile() {
         return canManageUserProfile;
@@ -63,12 +63,12 @@ public class AdminWebAuthorization {
         this.canManageWelshTranslation = canManageWelshTranslation;
     }
 
-    public boolean getCanRetrieveWelshTranslation() {
-        return canRetrieveWelshTranslation;
+    public boolean getCanLoadWelshTranslation() {
+        return canLoadWelshTranslation;
     }
 
-    public void setCanRetrieveWelshTranslation(final boolean canRetrieveWelshTranslation) {
-        this.canRetrieveWelshTranslation = canRetrieveWelshTranslation;
+    public void setCanLoadWelshTranslation(final boolean canLoadWelshTranslation) {
+        this.canLoadWelshTranslation = canLoadWelshTranslation;
     }
 
     public static class AdminWebAuthorizationBuilder {
@@ -100,15 +100,15 @@ public class AdminWebAuthorization {
                     adminWebAuthorizationProperties.getManageUserRole(), idamRoles));
                 adminWebAuthorization.setCanManageWelshTranslation(evaluateRole(
                     adminWebAuthorizationProperties.getManageWelshTranslation(), idamRoles));
-                adminWebAuthorization.setCanRetrieveWelshTranslation(evaluateRole(
-                    adminWebAuthorizationProperties.getRetrieveWelshTranslation(), idamRoles));
+                adminWebAuthorization.setCanLoadWelshTranslation(evaluateRole(
+                    adminWebAuthorizationProperties.getLoadWelshTranslation(), idamRoles));
                 return adminWebAuthorization;
             } else {
                 adminWebAuthorization.setCanImportDefinition(true);
                 adminWebAuthorization.setCanManageUserProfile(true);
                 adminWebAuthorization.setCanManageUserRole(true);
                 adminWebAuthorization.setCanManageDefinition(true);
-                adminWebAuthorization.setCanRetrieveWelshTranslation(true);
+                adminWebAuthorization.setCanLoadWelshTranslation(true);
                 adminWebAuthorization.setCanManageWelshTranslation(true);
             }
 

@@ -21,7 +21,7 @@ public class AdminWebAuthorizationProperties {
 
     private List<String> manageWelshTranslation;
 
-    private List<String> retrieveWelshTranslation;
+    private List<String> loadWelshTranslation;
 
     public boolean isEnabled() {
         return enabled;
@@ -71,11 +71,11 @@ public class AdminWebAuthorizationProperties {
         this.manageWelshTranslation = manageWelshTranslation;
     }
 
-    public List<String> getRetrieveWelshTranslation() {
-        return retrieveWelshTranslation;
+    public List<String> getLoadWelshTranslation() {
+        return loadWelshTranslation;
     }
 
-    public void setRetrieveWelshTranslation(final List<String> retrieveWelshTranslation) {
-        this.retrieveWelshTranslation = retrieveWelshTranslation;
+    public void setLoadWelshTranslation(final List<String> loadWelshTranslation) {
+        this.loadWelshTranslation = loadWelshTranslation;
     }
 }
