@@ -35,7 +35,7 @@ public class ApplicationParams {
     @Value("${case.event.default.publish:false}")
     private boolean defaultPublish;
 
-    @Value("${welsh-translation.enabled}")
+    @Value("${welsh-translation.enabled:true}")
     private boolean welshTranslationEnabled;
 
     public boolean isDefaultPublish() {
