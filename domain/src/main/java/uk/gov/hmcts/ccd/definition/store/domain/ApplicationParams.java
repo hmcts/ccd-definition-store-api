@@ -35,8 +35,15 @@ public class ApplicationParams {
     @Value("${case.event.default.publish:false}")
     private boolean defaultPublish;
 
+    @Value("${welsh-translation.enabled}")
+    private boolean welshTranslationEnabled;
+
     public boolean isDefaultPublish() {
         return defaultPublish;
+    }
+
+    public boolean isWelshTranslationEnabled() {
+        return welshTranslationEnabled;
     }
 
     public String userProfilePutURL() {
