@@ -41,6 +41,8 @@ java:
     ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT: '%s_cases'
     ELASTIC_SEARCH_CASE_INDEX_MAPPING_FIELDS_LIMIT: 8000
 
+    WELSH_TRANSLATION_ENABLED: false
+
     # Role-based authorization for CCD Admin Web
     ADMIN_WEB_AUTHORIZATION_ENABLED: false # Needs enabling once the appropriate roles are created in IdAM
     ADMIN_WEB_AUTHORIZATION_MANAGE_USER_PROFILE_0: ccd-import
