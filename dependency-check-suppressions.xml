@@ -68,4 +68,12 @@
    ]]></notes>
 		<cve>CVE-2016-1000027</cve>
 	</suppress>
+	
+	
+	<suppress until="2022-06-25">
+		<notes><![CDATA[
+   file name: tomcat-embed-core-9.0.58.jar
+   ]]></notes>
+		<cve>CVE-2022-29885</cve>
+	</suppress>
 </suppressions>
