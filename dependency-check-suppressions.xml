@@ -53,15 +53,6 @@
     		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-core@.*$</packageUrl>
     		<vulnerabilityName>CWE-862: Missing Authorization</vulnerabilityName>
   	</suppress>
-
-	<suppress until="2022-06-25">
-		<notes><![CDATA[
-   file name: postgresql-42.2.16.jar
-   ]]></notes>
-		<packageUrl regex="true">^pkg:maven/org\.postgresql/postgresql@.*$</packageUrl>
-		<cve>CVE-2022-21724</cve>
-	</suppress>
-
 	<suppress until="2022-06-25">
 		<notes><![CDATA[
    file name: tomcat-embed-core-9.0.58.jar
@@ -76,6 +67,21 @@
    ]]></notes>
 		<packageUrl regex="true">^pkg:maven/org\.apache\.tomcat\.embed/tomcat\-embed\-websocket@.*$</packageUrl>
 		<cve>CVE-2022-29885</cve>
+	</suppress>
+	<suppress until="2022-06-25">
+		<notes><![CDATA[
+   file name: spring-core-5.3.19.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework/spring\-core@.*$</packageUrl>
+		<cve>CVE-2022-22970</cve>
+	</suppress>
+
+	<suppress until="2022-06-25">
+		<notes><![CDATA[
+   file name: spring-core-5.3.19.jar
+   ]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework/spring\-core@.*$</packageUrl>
+		<cve>CVE-2022-22971</cve>
 	</suppress>
 
 	<suppress until="2022-06-25">
