@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.workbasket;
 
-import org.hibernate.service.spi.ServiceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -65,9 +64,7 @@ public class WorkBasketUserDefaultService {
 
         } catch (Exception e) {
             LOG.error("Problem updating user profile: {} because of ", workBasketUserDefaults, e);
-            throw new ServiceException(String.format("Problem updating user profile: '%s' because of '%s'",
-                workBasketUserDefaults,
-                e.getMessage()), e);
+            throw e;
         }
     }
 }
