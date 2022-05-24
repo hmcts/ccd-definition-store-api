@@ -23,7 +23,7 @@ dependencies {
     testCompile ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
     }
-    testCompile  group: 'org.postgresql', name: 'postgresql', version: '42.2.16'
+    testCompile  group: 'org.postgresql', name: 'postgresql', version: '42.3.5'
 }
 
 // To help obscure gradle problem

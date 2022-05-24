@@ -52,7 +52,7 @@ ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['spring-security.version'] = '5.4.7'
 ext['jackson.version'] = '2.13.2'
 ext['snakeyaml.version'] = '1.26'
-ext['postgresql.version'] = '42.2.16'
+ext['postgresql.version'] = '42.3.5'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.17.1'
 ext['spring-framework.version'] = '5.3.19'
@@ -247,8 +247,8 @@ subprojects { subproject ->
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
-        testCompile "org.postgresql:postgresql:42.2.16"
-        testCompile "org.testcontainers:postgresql:1.15.1"
+        testCompile "org.postgresql:postgresql:42.3.5"
+        testCompile "org.testcontainers:postgresql:1.17.2"
         testCompile "org.hamcrest:hamcrest-core:${hamcrestVersion}"
         testCompile "org.hamcrest:hamcrest-library:${hamcrestVersion}"
         testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
