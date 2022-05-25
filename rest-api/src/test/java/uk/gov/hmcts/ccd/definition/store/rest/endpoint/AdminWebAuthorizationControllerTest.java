@@ -57,7 +57,9 @@ class AdminWebAuthorizationControllerTest {
             () -> assertTrue(result.getCanManageUserProfile()),
             () -> assertTrue(result.getCanImportDefinition()),
             () -> assertTrue(result.getCanManageDefinition()),
-            () -> assertTrue(result.getCanManageUserRole())
+            () -> assertTrue(result.getCanManageUserRole()),
+            () -> assertTrue(result.getCanManageWelshTranslation()),
+            () -> assertTrue(result.getCanLoadWelshTranslation())
         );
     }
 
@@ -70,7 +72,9 @@ class AdminWebAuthorizationControllerTest {
             () -> assertFalse(response.getCanManageUserProfile()),
             () -> assertFalse(response.getCanImportDefinition()),
             () -> assertFalse(response.getCanManageDefinition()),
-            () -> assertFalse(response.getCanManageUserRole())
+            () -> assertFalse(response.getCanManageUserRole()),
+            () -> assertFalse(response.getCanManageWelshTranslation()),
+            () -> assertFalse(response.getCanLoadWelshTranslation())
         );
     }
 
@@ -86,7 +90,9 @@ class AdminWebAuthorizationControllerTest {
             () -> assertTrue(response.getCanManageUserProfile()),
             () -> assertFalse(response.getCanImportDefinition()),
             () -> assertFalse(response.getCanManageDefinition()),
-            () -> assertFalse(response.getCanManageUserRole())
+            () -> assertFalse(response.getCanManageUserRole()),
+            () -> assertFalse(response.getCanManageWelshTranslation()),
+            () -> assertFalse(response.getCanLoadWelshTranslation())
         );
     }
 
