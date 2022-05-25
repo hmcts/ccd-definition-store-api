@@ -52,7 +52,7 @@
    		]]></notes>
     		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-core@.*$</packageUrl>
     		<vulnerabilityName>CWE-862: Missing Authorization</vulnerabilityName>
-  </suppress>
+  	</suppress>
 
 	<suppress until="2022-06-25">
 		<notes>False-positive. See CCD-3251</notes>
