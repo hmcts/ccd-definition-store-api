@@ -49,7 +49,7 @@ dependencyCheck {
 ext['elasticsearch.version'] = '7.17.1'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
-ext['spring-security.version'] = '5.6.3'
+ext['spring-security.version'] = '5.7.1'
 ext['jackson.version'] = '2.13.2'
 ext['snakeyaml.version'] = '1.26'
 ext['postgresql.version'] = '42.3.5'
@@ -133,7 +133,7 @@ allprojects {
         // CVE-2021-42550
         compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
         compile group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
-        compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.6.3'
+        compile group: 'org.springframework.security', name: 'spring-security-core', version: '5.7.1'
         testCompile "io.rest-assured:xml-path:${restAssuredVersion}"
         testCompile "io.rest-assured:json-path:${restAssuredVersion}"
         testCompile "org.codehaus.groovy:groovy:${groovyVersion}"
@@ -216,8 +216,8 @@ subprojects { subproject ->
             exclude group: 'com.google.guava', module: 'guava'
         }
 
-        compile "org.springframework.security:spring-security-web:5.6.3"
-        compile "org.springframework.security:spring-security-config:5.6.3"
+        compile "org.springframework.security:spring-security-web:5.7.1"
+        compile "org.springframework.security:spring-security-config:5.7.1"
         compile "org.springframework.boot:spring-boot-starter-oauth2-client"
         compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
 
