@@ -26,6 +26,7 @@ public class CaseField implements HasAcls, Orderable {
     private boolean metadata;
     private String displayContextParameter;
     private Boolean retainHiddenValue;
+    private String category;
 
     /**
      * The id of the case field.
@@ -212,5 +213,18 @@ public class CaseField implements HasAcls, Orderable {
 
     public void setRetainHiddenValue(Boolean retainHiddenValue) {
         this.retainHiddenValue = retainHiddenValue;
+    }
+
+    /**
+     * The category id of the case field.
+     **/
+    @ApiModelProperty(value = "")
+    @JsonProperty("category_id")
+    public String getCategoryId() {
+        return category;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.category = categoryId;
     }
 }
