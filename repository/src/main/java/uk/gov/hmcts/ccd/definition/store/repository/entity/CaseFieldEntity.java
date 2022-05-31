@@ -99,6 +99,9 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     @Type(type = "pgsql_datafieldtype_enum")
     private DataFieldType dataFieldType;
 
+    @Column(name = "category_id")
+    private String categoryId;
+
     @Transient
     private String oid = IdGenerator.createId();
 
@@ -217,6 +220,14 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         this.dataFieldType = dataFieldType;
     }
 
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
+    }
+
     public CaseFieldEntity addCaseFieldACL(final CaseFieldACLEntity caseFieldACLEntity) {
         caseFieldACLEntity.setCaseField(this);
         caseFieldACLEntities.add(caseFieldACLEntity);
@@ -261,7 +272,7 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
         if (e.getAccessProfile().getReference() == null) {
             return false;
         }
-        return  e.getAccessProfile().getReference().equalsIgnoreCase(accessProfile);
+        return e.getAccessProfile().getReference().equalsIgnoreCase(accessProfile);
     }
 
     @Override
