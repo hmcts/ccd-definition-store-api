@@ -1,0 +1,26 @@
+{
+  "_guid_": "F-107_Get_CaseType",
+  "_extends_": "Get_CaseType",
+
+  "expectedResponse": {
+    "body": {
+      "description": "[[ANY_STRING_NULLABLE]]",
+      "version":  "[[ANYTHING_PRESENT]]",
+      "name": "[[ANY_STRING_NOT_NULLABLE]]",
+      "jurisdiction": "[[ANYTHING_PRESENT]]",
+      "events": "[[ANYTHING_PRESENT]]",
+      "states": "[[ANYTHING_PRESENT]]",
+      "acls": "[[ANYTHING_PRESENT]]",
+      "searchAliasFields": "[[ANYTHING_PRESENT]]",
+      "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
+      "searchParties": "[[ANYTHING_PRESENT]]",
+      "searchCriterias": "[[ANYTHING_PRESENT]]",
+      "categories" : "[[ANYTHING_PRESENT]]",
+      "case_fields": [],
+      "printable_document_url": "[[ANY_STRING_NULLABLE]]",
+      "callback_get_case_url" : "[[ANY_STRING_NULLABLE]]",
+      "retries_get_case_url" : "[[ANYTHING_PRESENT]]",
+      "security_classification": "PUBLIC"
+    }
+  }
+}
