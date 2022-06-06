@@ -76,6 +76,9 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
     @Column(name = "retain_hidden_value")
     private Boolean retainHiddenValue;
 
+    @Column(name = "category_id")
+    private String categoryId;
+
     public Integer getId() {
         return id;
     }
@@ -198,6 +201,14 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     public void setRetainHiddenValue(Boolean retainHiddenValue) {
         this.retainHiddenValue = retainHiddenValue;
+    }
+
+    public String getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.categoryId = categoryId;
     }
 
     @Override

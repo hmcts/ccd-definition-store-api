@@ -29,6 +29,12 @@ elasticsearch:
                        "document_url":{
                           "type":"text",
                           "index":false
+                       },
+                       "category_id":{
+                          "type":"text"
+                       },
+                       "upload_timestamp":{
+                          "type":"date"
                        }
                     }
                  }'
@@ -58,6 +64,7 @@ elasticsearch:
     - CaseHistoryViewer
     - WaysToPay
     - FlagLauncher
+    - ComponentLauncher
   # typeMappings configured as 'defaultText' need to be declared in the data-store elasticsearch.type-mappings.defaultText property
   typeMappings:
     Text: ${elasticsearch.elasticMappings.defaultText}
