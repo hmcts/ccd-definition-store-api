@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -104,21 +103,6 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
         response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
-    @ExceptionHandler(FeignException.FeignClientException.class)
-    @ResponseBody
-    public ResponseEntity<Object> handleFeignClientException(FeignException.FeignClientException exception,
-                                                             WebRequest request) {
-        log.error(exception.getMessage(), exception);
-
-        int status = exception.status();
-        if (status != HttpStatus.UNAUTHORIZED.value()) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR.value();
-        }
-
-        return handleExceptionInternal(exception, flattenExceptionMessages(exception), new HttpHeaders(),
-            HttpStatus.valueOf(status), request);
-    }
-
     @ExceptionHandler(FeignException.FeignServerException.class)
     @ResponseBody
     public void handleFeignServerException(FeignException.FeignServerException exception, HttpServletResponse response)
@@ -145,21 +129,6 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
         }
 
         response.sendError(status);
-    }
-
-    @ExceptionHandler(HttpClientErrorException.class)
-    @ResponseBody
-    public ResponseEntity<Object> handleHttpClientErrorException(HttpClientErrorException exception,
-                                                                 WebRequest request) {
-        log.error(exception.getMessage(), exception);
-
-        int status = exception.getRawStatusCode();
-        if (status != HttpStatus.UNAUTHORIZED.value()) {
-            status = HttpStatus.INTERNAL_SERVER_ERROR.value();
-        }
-
-        return handleExceptionInternal(exception, flattenExceptionMessages(exception), new HttpHeaders(),
-            HttpStatus.valueOf(status), request);
     }
 
     private String flattenExceptionMessages(RuntimeException ex) {

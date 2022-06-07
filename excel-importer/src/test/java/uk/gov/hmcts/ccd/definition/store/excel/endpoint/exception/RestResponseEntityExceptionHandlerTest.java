@@ -7,7 +7,6 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.WebRequest;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
@@ -117,28 +116,6 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleHttpClientErrorException_shouldReturn401() {
-        HttpClientErrorException ex = new HttpClientErrorException(
-            HttpStatus.UNAUTHORIZED, "Unauthorized");
-
-        final ResponseEntity<Object> response = exceptionHandler
-            .handleHttpClientErrorException(ex, mock(WebRequest.class));
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-    }
-
-    @Test
-    public void handleHttpClientErrorException_shouldReturn500IfReceived400() {
-        HttpClientErrorException ex = new HttpClientErrorException(
-            HttpStatus.BAD_REQUEST, "Bad Request");
-
-        final ResponseEntity<Object> response = exceptionHandler
-            .handleHttpClientErrorException(ex, mock(WebRequest.class));
-
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-    }
-
-    @Test
     public void handleFeignServerException_shouldSwitch500_502() throws IOException {
         FeignException.FeignServerException ex = new FeignException.FeignServerException(
             HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error",
@@ -163,31 +140,4 @@ public class RestResponseEntityExceptionHandlerTest {
 
         assertEquals(HttpStatus.GATEWAY_TIMEOUT.value(), response.getStatus());
     }
-
-    @Test
-    public void handleFeignClientException_shouldReturn401() {
-        FeignException.FeignClientException ex = new FeignException.FeignClientException(
-            HttpStatus.UNAUTHORIZED.value(), "UNAUTHORIZED",
-            Request.create(Request.HttpMethod.GET, "UNAUTHORIZED", Map.of(), new byte[0],
-                Charset.defaultCharset(), null), new byte[0], Map.of());
-
-        final ResponseEntity<Object> response = exceptionHandler
-            .handleFeignClientException(ex, mock(WebRequest.class));
-
-        assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
-    }
-
-    @Test
-    public void handleFeignClientException_shouldReturn500IfReceived400() {
-        FeignException.FeignClientException ex = new FeignException.FeignClientException(
-            HttpStatus.BAD_REQUEST.value(), "Bad Request",
-            Request.create(Request.HttpMethod.GET, "Bad Request", Map.of(), new byte[0],
-                Charset.defaultCharset(), null), new byte[0], Map.of());
-
-        final ResponseEntity<Object> response = exceptionHandler
-            .handleFeignClientException(ex, mock(WebRequest.class));
-
-        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
-    }
-
 }
