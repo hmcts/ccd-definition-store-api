@@ -32,6 +32,7 @@
       "searchAliasFields": [],
       "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
       "searchParties": [],
+      "categories" : "[[ANYTHING_PRESENT]]",
       "searchCriterias": [],
       "case_fields": [ {
         "__ordering__": "UNORDERED",
@@ -52,7 +53,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "TTL",
@@ -94,7 +96,8 @@
             "order" : null,
             "show_condition" : null,
             "display_context_parameter" : null,
-            "retain_hidden_value" : null
+            "retain_hidden_value" : null,
+            "category_id" : null
           }, {
             "metadata" : false,
             "id" : "OverrideTTL",
@@ -120,7 +123,8 @@
             "order" : null,
             "show_condition" : null,
             "display_context_parameter" : null,
-            "retain_hidden_value" : null
+            "retain_hidden_value" : null,
+            "category_id" : null
           }, {
             "metadata" : false,
             "id" : "Suspended",
@@ -146,7 +150,8 @@
             "order" : null,
             "show_condition" : null,
             "display_context_parameter" : null,
-            "retain_hidden_value" : null
+            "retain_hidden_value" : null,
+            "category_id" : null
           } ],
           "collection_field_type" : null
         },
@@ -174,7 +179,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "caseLinks",
@@ -191,7 +197,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "CaseLinkCollection",
@@ -208,7 +215,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "CaseLinkField",
@@ -225,7 +233,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "OrganisationPolicyField2",
@@ -242,7 +251,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "OrganisationPolicyField1",
@@ -259,7 +269,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "DynamicList",
@@ -276,7 +287,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "LabelField",
@@ -293,7 +305,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "CaseHistory",
@@ -310,7 +323,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "MultiSelectField",
@@ -327,7 +341,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "EmailField",
@@ -344,7 +359,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "DocumentField1",
@@ -361,7 +377,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : "#divorceState"
       }, {
         "metadata" : false,
         "id" : "DecreeNisiDocumentField",
@@ -378,7 +395,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : "decreeNisi"
       }, {
         "metadata" : false,
         "id" : "DocumentField",
@@ -395,7 +413,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : "divorceDocs"
       }, {
         "metadata" : false,
         "id" : "MoneyField",
@@ -412,7 +431,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "MarritalStatus",
@@ -429,7 +449,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "AddressUKField",
@@ -446,7 +467,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "CollectionField",
@@ -463,7 +485,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "CollectionFieldMan",
@@ -480,7 +503,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "YesNoField",
@@ -497,7 +521,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "NumberField",
@@ -514,7 +539,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "PhoneField",
@@ -531,7 +557,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "AddressField",
@@ -548,7 +575,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "DateField",
@@ -565,7 +593,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "TextAreaField",
@@ -582,7 +611,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "TextField",
@@ -599,7 +629,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "SearchCriteria",
@@ -616,7 +647,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : false,
         "id" : "caseManagementLocation",
@@ -633,25 +665,27 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
-        "metadata" : false,
-        "id" : "caseNameHmctsInternal",
-        "case_type_id" : "FT_MasterCaseType",
-        "label" : "Case Name HMCTS Internal",
-        "hint_text" : null,
-        "field_type" : "[[ANYTHING_PRESENT]]",
-        "hidden" : false,
-        "security_classification" : "PUBLIC",
-        "live_from" : "[[ANYTHING_PRESENT]]",
-        "live_until" : null,
-        "acls" : "[[ANYTHING_PRESENT]]",
-        "complexACLs" : [ ],
-        "order" : null,
-        "show_condition" : null,
-        "display_context_parameter" : null,
-        "retain_hidden_value" : null
-      }, {
+          "metadata":false,
+          "id": "caseNameHmctsInternal",
+          "case_type_id": "FT_MasterCaseType",
+          "label": "Case Name HMCTS Internal",
+          "hint_text": null,
+          "field_type": "[[ANYTHING_PRESENT]]",
+          "hidden": false,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANYTHING_PRESENT]]",
+          "live_until": null,
+          "acls": "[[ANYTHING_PRESENT]]",
+          "complexACLs": [ ],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null,
+          "category_id": null
+        },{
         "metadata" : true,
         "id" : "[CASE_REFERENCE]",
         "case_type_id" : null,
@@ -667,7 +701,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : true,
         "id" : "[LAST_STATE_MODIFIED_DATE]",
@@ -684,7 +719,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : true,
         "id" : "[LAST_MODIFIED_DATE]",
@@ -701,7 +737,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : true,
         "id" : "[CREATED_DATE]",
@@ -718,7 +755,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : true,
         "id" : "[SECURITY_CLASSIFICATION]",
@@ -735,7 +773,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : true,
         "id" : "[CASE_TYPE]",
@@ -752,7 +791,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       }, {
         "metadata" : true,
         "id" : "[JURISDICTION]",
@@ -769,7 +809,8 @@
         "order" : null,
         "show_condition" : null,
         "display_context_parameter" : null,
-        "retain_hidden_value" : null
+        "retain_hidden_value" : null,
+        "category_id" : null
       } ],
       "printable_document_url" : "[[ANY_STRING_NOT_NULLABLE]]",
       "callback_get_case_url" : null,

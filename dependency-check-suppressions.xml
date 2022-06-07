@@ -47,6 +47,14 @@
 	</suppress>
 
 	<suppress until="2022-06-25">
+    		<notes><![CDATA[
+   			file name: spring-security-core-5.4.7.jar
+   		]]></notes>
+		<packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring\-security\-core@.*$</packageUrl>
+		<vulnerabilityName>CWE-862: Missing Authorization</vulnerabilityName>
+	</suppress>
+
+	<suppress until="2022-06-25">
 		<notes>False-positive. See CCD-3251</notes>
 		<cve>CVE-2016-1000027</cve>
 	</suppress>

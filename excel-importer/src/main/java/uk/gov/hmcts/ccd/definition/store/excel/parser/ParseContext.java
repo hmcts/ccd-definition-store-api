@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CategoryEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -21,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toMap;
 
@@ -63,6 +65,11 @@ public class ParseContext {
      * Accumulate CaseRoles by case type and case role ID for subsequent linking to event states.
      */
     private final Map<String, Map<String, CaseRoleEntity>> caseRolesByCaseTypes = Maps.newHashMap();
+
+    /**
+     * Accumulate Categories by case type and category IDs for subsequent linking to case fields.
+     */
+    private final Map<String, Map<String, CategoryEntity>> categoryByCaseTypes = Maps.newHashMap();
 
     /**
      * Store metadata fields for linking to layouts.
@@ -151,6 +158,36 @@ public class ParseContext {
         caseTypeStates.put(state.getReference(), state);
 
         return this;
+    }
+
+    public CategoryEntity getCategory(String caseTypeId, String categoryId) {
+        final Map<String, CategoryEntity> categories = categoryByCaseTypes.get(caseTypeId);
+
+        if (null == categories) {
+            return null;
+        }
+
+        return categories.get(categoryId);
+    }
+
+    public boolean checkCategoryExists(String categoryId) {
+        return categoryByCaseTypes.values().stream()
+            .flatMap(categoryEntityMap -> categoryEntityMap.values().stream())
+            .map(CategoryEntity::getCategoryId)
+            .anyMatch(catId -> catId.equals(categoryId));
+    }
+
+    public void registerCaseTypeForCategory(String caseTypeId, CategoryEntity categoryEntity) {
+        categoryByCaseTypes.computeIfAbsent(caseTypeId, k -> Maps.newHashMap());
+
+        final Map<String, CategoryEntity> categoryStates = categoryByCaseTypes.get(caseTypeId);
+
+        if (categoryStates.containsKey(categoryEntity.getCategoryId())) {
+            throw new SpreadsheetParsingException("Category already registered for ID: "
+                + categoryEntity.getCategoryId());
+        }
+
+        categoryStates.put(categoryEntity.getCategoryId(), categoryEntity);
     }
 
     public StateEntity getStateForCaseType(String caseTypeId, String stateId) {
@@ -300,5 +337,11 @@ public class ParseContext {
 
     public void addMissingAccessProfile(String missingAccessProfile) {
         this.missingAccessProfiles.add(missingAccessProfile);
+    }
+
+    public List<FieldTypeEntity> getComplexTypes() {
+        return allTypes.values().stream()
+            .filter(fieldType -> fieldType.getBaseFieldType() != null && fieldType.isComplexFieldType())
+            .collect(Collectors.toList());
     }
 }
