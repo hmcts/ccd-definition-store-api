@@ -25,7 +25,7 @@
 		<cve>CVE-2016-1000027</cve>
 	</suppress>
 	<!--End of false positives section -->
-	
+
 	<!--Please add all the temporary suppression under the below section-->
 	  <suppress>
 	    <notes>Temporary Suppression
@@ -34,5 +34,5 @@
 	    <cve>CVE-2022-34305</cve>
 	  </suppress>
 	<!--End of temporary suppression section -->
-	
+
 </suppressions>
