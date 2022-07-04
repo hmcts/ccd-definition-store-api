@@ -4,6 +4,10 @@ ARG APP_INSIGHTS_AGENT_VERSION=2.6.1
 ARG PLATFORM=""
 
 FROM hmctspublic.azurecr.io/base/java${PLATFORM}:11-distroless
+
+# Change to non-root privilege
+USER hmcts
+
 LABEL maintainer="https://github.com/hmcts/ccd-definition-store-api"
 
 COPY build/libs/case-definition-store-api.jar /opt/app/

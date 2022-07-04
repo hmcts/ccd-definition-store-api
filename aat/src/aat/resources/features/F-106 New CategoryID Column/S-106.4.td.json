@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-106.4",
+  "_extends_": "Import_Base_data",
+  "title": "Import Definition file without the CategoryID column in the CaseField tab",
+  "specs": [
+    "an active profile in CCD",
+    "contains a missing CategoryID in the Categories tab being referenced as a Document value in the CaseField tab"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/categories/BEFTA_Master_Definition_Missing_CategoryID_That_Exists_In_CaseField.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "CaseFieldTab Invalid value 'evidenceDocs' is not a valid CategoryID value. Category cannot be found."
+    }
+  }
+}
