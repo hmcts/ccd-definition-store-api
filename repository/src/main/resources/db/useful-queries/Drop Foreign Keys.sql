@@ -1,4 +1,4 @@
---These are the commong 'drop constraint' statements executed prior to a data cleanup exercise on defintion store
+--These are the common 'drop constraint' statements executed prior to a data cleanup exercise on defintion store
 ALTER TABLE public."banner" DROP CONSTRAINT "fk_banner_jurisdiction_id";
 ALTER TABLE public."case_field" DROP CONSTRAINT "fk_case_field_case_type_id";
 ALTER TABLE public."case_field" DROP CONSTRAINT "fk_case_field_field_type_id";

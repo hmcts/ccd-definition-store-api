@@ -1,4 +1,4 @@
---These are the commong 'add constraint' statements executed post a data cleanup exercise on defintion store
+--These are the common 'add constraint' statements executed post a data cleanup exercise on defintion store
 ALTER TABLE public."workbasket_input_case_field" ADD CONSTRAINT "fk_workbasket_input_case_field_case_type_id" FOREIGN KEY (case_type_id) REFERENCES case_type(id);
 ALTER TABLE public."workbasket_input_case_field" ADD CONSTRAINT "fk_workbasket_input_case_field_case_field_id" FOREIGN KEY (case_field_id) REFERENCES case_field(id);
 ALTER TABLE public."workbasket_input_case_field" ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
