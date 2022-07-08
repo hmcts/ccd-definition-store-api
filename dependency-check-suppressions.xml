@@ -13,6 +13,7 @@
 			CVE-2007-1651 https://tools.hmcts.net/jira/browse/CCD-350
 			CVE-2007-1652 https://tools.hmcts.net/jira/browse/CCD-175
 			CVE-2016-1000027 https://tools.hmcts.net/jira/browse/CCD-3251
+			CVE-2022-33915 https://tools.hmcts.net/jira/browse/CCD-3440
 		</notes>
 		<cve>CVE-2020-23171</cve>
 		<cve>CVE-2018-1258</cve>
@@ -23,9 +24,10 @@
 		<cve>CVE-2007-1651</cve>
 		<cve>CVE-2007-1652</cve>
 		<cve>CVE-2016-1000027</cve>
+		<cve>CVE-2022-33915</cve>
 	</suppress>
 	<!--End of false positives section -->
-	
+
 	<!--Please add all the temporary suppression under the below section-->
 	  <suppress>
 	    <notes>Temporary Suppression
@@ -34,5 +36,5 @@
 	    <cve>CVE-2022-34305</cve>
 	  </suppress>
 	<!--End of temporary suppression section -->
-	
+
 </suppressions>
