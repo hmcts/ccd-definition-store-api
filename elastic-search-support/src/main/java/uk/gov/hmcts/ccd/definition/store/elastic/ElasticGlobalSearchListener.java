@@ -34,14 +34,13 @@ public class ElasticGlobalSearchListener {
     @Transactional
     public void initialiseElasticSearchForGlobalSearch() {
         HighLevelCCDElasticClient elasticClient = null;
-        try {
+        try (InputStream inputStream = getClass().getResourceAsStream("/globalSearchCasesMapping.json")) {
             elasticClient = clientFactory.getObject();
             if (!elasticClient.aliasExists(GLOBAL_SEARCH)) {
                 String actualIndexName = GLOBAL_SEARCH + FIRST_INDEX_SUFFIX;
                 elasticClient.createIndex(actualIndexName, GLOBAL_SEARCH);
             }
 
-            InputStream inputStream = getClass().getResourceAsStream("/globalSearchCasesMapping.json");
             String mapping = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
             log.debug("case mapping: {}", mapping);
             elasticClient.upsertMapping(GLOBAL_SEARCH, mapping);

@@ -74,6 +74,7 @@
 				} ],
 				"show_summary" : true,
 				"publish" : false,
+				"ttl_increment" : null,
 				"show_event_notes" : null,
 				"can_save_draft" : null,
 				"end_button_label" : null
@@ -122,6 +123,7 @@
 				} ],
 				"show_summary" : true,
 				"publish" : true,
+				"ttl_increment" : null,
 				"show_event_notes" : null,
 				"can_save_draft" : null,
 				"end_button_label" : null
@@ -176,6 +178,15 @@
 					"search_party_collection_field_name": null
 				}
 			],
+			"categories" : [ {
+				"category_id" : "translatedDivorceDocs",
+				"category_label" : "te te te te",
+				"parent_category_id" : null,
+				"live_from": "2017-01-01",
+				"live_to" : "2017-01-01",
+				"display_order" : 130,
+				"case_type_id" : "FT_MultiplePages"
+			} ],
       "searchCriterias" : [
         {
           "case_type_id": "FT_MultiplePages",
@@ -237,7 +248,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id":  null
 				},
 				{
 					"metadata": false,
@@ -272,7 +284,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": false,
@@ -307,7 +320,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": false,
@@ -342,7 +356,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": false,
@@ -377,7 +392,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": false,
@@ -412,7 +428,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": false,
@@ -447,7 +464,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -474,7 +492,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -501,7 +520,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -528,7 +548,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -555,7 +576,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -582,7 +604,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -609,7 +632,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				},
 				{
 					"metadata": true,
@@ -636,7 +660,8 @@
 					"order": null,
 					"show_condition": null,
 					"display_context_parameter": null,
-					"retain_hidden_value": null
+					"retain_hidden_value": null,
+					"category_id": null
 				}
 			],
 			"printable_document_url": null,

@@ -46,16 +46,16 @@ dependencyCheck {
 
 //spring boot dependency override
 //overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.4.2 of Elastic
-ext['elasticsearch.version'] = '7.16.2'
+ext['elasticsearch.version'] = '7.17.1'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
-ext['spring-security.version'] = '5.4.7'
-ext['jackson.version'] = '2.10.3'
+ext['spring-security.version'] = '5.6.1'
+ext['jackson.version'] = '2.13.2'
 ext['snakeyaml.version'] = '1.26'
-ext['postgresql.version'] = '42.2.16'
+ext['postgresql.version'] = '42.3.5'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.17.1'
-ext['spring-framework.version'] = '5.3.15'
+ext['spring-framework.version'] = '5.3.20'
 
 // end
 
@@ -69,7 +69,7 @@ ext {
     reformLogging= '5.1.9'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.2!!'
-    tomcatVersion = '9.0.58!!'
+    tomcatVersion = '9.0.63!!'
     hibernateVersion = '5.4.24.Final!!'
     feignJackson = '11.6'
     limits = [
@@ -104,14 +104,14 @@ allprojects {
     apply plugin: 'java'
 
     ext {
-        elasticSearchVersion = '7.16.2'
+        elasticSearchVersion = '7.17.1'
     }
 
     dependencies {
         testCompile ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}"){
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
-        compile  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
+        compile  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
         compile 'net.minidev:json-smart:2.4.7'
     }
 
@@ -120,12 +120,15 @@ allprojects {
         compile "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
         compile "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
         compile "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
-        compile "com.fasterxml.jackson.core:jackson-databind:2.11.1"
+        compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2"
+        compile "com.fasterxml.jackson.core:jackson-databind:2.13.2.2"
+        compile "com.fasterxml.jackson.core:jackson-core:2.13.2"
+        compile "com.fasterxml.jackson.core:jackson-annotations:2.13.2"
         compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
         compile "org.hibernate:hibernate-core:${hibernateVersion}"
         // Overriding transitive dependency commons-compress due to CVE failures
         compile "org.apache.commons:commons-compress:1.21"
-            // CVE-2021-28170
+        // CVE-2021-28170
         compile "org.glassfish:jakarta.el:4.0.1"
         // CVE-2021-42550
         compile group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
@@ -146,6 +149,14 @@ allprojects {
             eachDependency { details ->
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.8.5'
+                }
+
+                if (details.requested.group == 'com.google.code.gson' && details.requested.name == 'gson') {
+                    details.useVersion '2.9.0'
+                }
+
+                if (details.requested.group == 'com.nimbusds' && details.requested.name == 'nimbus-jose-jwt') {
+                    details.useVersion '9.21'
                 }
             }
         }
@@ -190,7 +201,14 @@ subprojects { subproject ->
     }
 
     dependencies {
-        compile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
+        implementation group: 'org.apache.poi', name: 'poi', version: '5.2.2'
+        implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.2'
+        implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: '5.2.2'
+        implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+        implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.21'
+        
+        compile group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
+        compile  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
         compile group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
         compile group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
         compile 'com.github.hmcts:properties-volume-spring-boot-starter:0.0.4'
@@ -235,8 +253,8 @@ subprojects { subproject ->
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
-        testCompile "org.postgresql:postgresql:42.2.16"
-        testCompile "org.testcontainers:postgresql:1.15.1"
+        testCompile "org.postgresql:postgresql:42.3.5"
+        testCompile "org.testcontainers:postgresql:1.17.2"
         testCompile "org.hamcrest:hamcrest-core:${hamcrestVersion}"
         testCompile "org.hamcrest:hamcrest-library:${hamcrestVersion}"
         testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
@@ -261,15 +279,15 @@ subprojects { subproject ->
         testCompile group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
         testCompile "io.github.openfeign:feign-jackson:${feignJackson}"
         testCompile 'io.github.openfeign.form:feign-form:3.8.0'
-        testCompile group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.10.3'
+        testCompile  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
         testCompile "org.exparity:hamcrest-date:2.0.4"
         testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
         testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.14.1'
-
+        testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.0'
         testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.2-Categories'
+
         testCompile group: 'commons-lang', name: 'commons-lang', version: '2.6'
         // https://mvnrepository.com/artifact/junit/junit
         compile group: 'junit', name: 'junit', version: '4.13.1'

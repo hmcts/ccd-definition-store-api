@@ -54,10 +54,10 @@ public class CaseFieldParserTest extends ParserTestBase {
 
     @Test
     public void shouldParse() {
-        final FieldTypeEntity field = mock(FieldTypeEntity.class);
+        final FieldTypeEntity field = new FieldTypeEntity();
         given(parseContext.getCaseFieldType(CASE_TYPE_UNDER_TEST, "Case_Field")).willReturn(field);
 
-        DefinitionDataItem dataItem = buildDefinitionDataItem(CASE_TYPE_UNDER_TEST);
+        DefinitionDataItem dataItem = buildDefinitionDataItemCaseField(CASE_TYPE_UNDER_TEST);
         definitionSheet.addDataItem(dataItem);
 
         final Collection<CaseFieldEntity> caseFieldEntities = caseFieldParser.parseAll(definitionSheets, caseType);
@@ -67,16 +67,18 @@ public class CaseFieldParserTest extends ParserTestBase {
         assertThat(entity.getLabel(), is("Case Field"));
         assertThat(entity.getFieldType(), is(field));
         assertThat(entity.isSearchable(), is(true));
+        assertThat(entity.getCategoryId(), is("Category Id"));
         MatcherAssert.assertThat(
             entityToDefinitionDataItemRegistry.getForEntity(entity), Matchers.is(Optional.of(dataItem)));
     }
 
-    private DefinitionDataItem buildDefinitionDataItem(final String caseTypeId) {
+    private DefinitionDataItem buildDefinitionDataItemCaseField(final String caseTypeId) {
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_FIELD.toString());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), caseTypeId);
         item.addAttribute(ColumnName.ID.toString(), "Case_Field");
         item.addAttribute(ColumnName.LABEL.toString(), "Case Field");
         item.addAttribute(ColumnName.FIELD_TYPE.toString(), "Text");
+        item.addAttribute(ColumnName.CATEGORY_ID.toString(), "Category Id");
         return item;
     }
 }

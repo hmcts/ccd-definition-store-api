@@ -32,15 +32,18 @@ public class FieldTypeUtils {
     public static final String PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST = "ChangeOrganisationRequest";
     public static final String PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION = "PreviousOrganisation";
     public static final String PREDEFINED_COMPLEX_CASE_LOCATION = "CaseLocation";
+    public static final String PREDEFINED_COMPLEX_TTL = "TTL";
     public static final String PREDEFINED_COMPLEX_FLAGS = "Flags";
     public static final String PREDEFINED_COMPLEX_SEARCH_PARTY = "SearchParty";
     public static final String PREDEFINED_COMPLEX_SEARCH_CRITERIA = "SearchCriteria";
+    public static final String PREDEFINED_COMPLEX_LINK_REASON = "LinkReason";
     public static final String BASE_REGION = "Region";
     public static final String BASE_BASE_LOCATION = "BaseLocation";
     public static final String BASE_DYNAMIC_RADIO_LIST = "DynamicRadioList";
     public static final String BASE_DYNAMIC_MULTI_SELECT_LIST = "DynamicMultiSelectList";
     public static final String BASE_WAYS_TO_PAY = "WaysToPay";
     public static final String BASE_FLAG_LAUNCHER = "FlagLauncher";
+    public static final String BASE_COMPONENT_LAUNCHER = "ComponentLauncher";
 
     public static Boolean isList(String baseTypeReference) {
         return BASE_FIXED_LIST.equals(baseTypeReference)

@@ -207,7 +207,7 @@ public class ImportServiceImpl implements ImportService {
             .findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA));
 
         /*
-            4 - Case Type
+            4- Case Type
          */
         logger.debug("Importing spreadsheet: Case types...");
 
@@ -292,7 +292,9 @@ public class ImportServiceImpl implements ImportService {
             challengeQuestionTabService.saveAll(newChallengeQuestionEntities);
             logger.debug("Importing spreadsheet: NewChallengeQuestion...: OK");
         }
+
         parseCategoryTab(definitionSheets, parseContext);
+        parserFactory.createCategoryIdValidator().validate(parseContext);
 
         parseRoleToAccessProfiles(definitionSheets, parseContext);
 
