@@ -1,12 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.security.idam;
 
+import feign.FeignException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.reform.authorisation.exceptions.InvalidTokenException;
+import uk.gov.hmcts.reform.authorisation.exceptions.ServiceException;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
 
 @Component
+@Slf4j
 public class IdamRepository {
 
     private final IdamClient idamClient;
@@ -18,6 +23,20 @@ public class IdamRepository {
 
     @Cacheable(value = "userInfoCache")
     public UserInfo getUserInfo(String jwtToken) {
-        return idamClient.getUserInfo("Bearer " + jwtToken);
+        try {
+            return idamClient.getUserInfo("Bearer " + jwtToken);
+        } catch (FeignException e) {
+            log.error("FeignException: retrieve user info:", e);
+
+            if (isClientError(e)) {
+                throw new InvalidTokenException(e.getMessage(), e);
+            } else {
+                throw new ServiceException(e.getMessage(), e);
+            }
+        }
+    }
+
+    private boolean isClientError(FeignException feignException) {
+        return feignException.status() >= 400 && feignException.status() <= 499;
     }
 }
