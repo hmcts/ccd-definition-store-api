@@ -92,8 +92,10 @@ class IdamRepositoryTest {
     @Test
     @DisplayName("Error message is logged when exception is caught")
     void errorMessageLogged() {
+        String exceptionMessage = "errorMessageLogged";
+
         FeignException.FeignClientException feignClientException
-            = new FeignException.FeignClientException(403, "errorMessageLogged", createRequestForFeignException(),
+            = new FeignException.FeignClientException(403, exceptionMessage, createRequestForFeignException(),
             new byte[0], null);
 
         when(idamClient.getUserInfo(anyString())).thenThrow(feignClientException);
@@ -111,7 +113,9 @@ class IdamRepositoryTest {
         List<ILoggingEvent> loggerList = listAppender.list;
         ILoggingEvent lastLogEntry = loggerList.get(loggerList.size() - 1);
         assertEquals(Level.ERROR, lastLogEntry.getLevel());
-        assertEquals("FeignException: retrieve user info:", lastLogEntry.getMessage());
+        // Need to use getFormattedMessage() as exception message is logged using a parameterised string
+        assertEquals("FeignException: retrieve user info: " + exceptionMessage,
+            lastLogEntry.getFormattedMessage());
 
         logger.detachAndStopAllAppenders();
     }

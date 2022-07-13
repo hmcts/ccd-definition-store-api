@@ -26,7 +26,7 @@ public class IdamRepository {
         try {
             return idamClient.getUserInfo("Bearer " + jwtToken);
         } catch (FeignException e) {
-            log.error("FeignException: retrieve user info:", e);
+            log.error("FeignException: retrieve user info: {}", e.getMessage());
 
             if (isClientError(e)) {
                 throw new InvalidTokenException(e.getMessage(), e);
