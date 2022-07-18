@@ -255,7 +255,9 @@ subprojects { subproject ->
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
         testCompile "org.postgresql:postgresql:42.3.5"
-        testCompile "org.testcontainers:postgresql:1.17.2"
+        testCompile ("org.testcontainers:postgresql:1.17.3") {
+            exclude group: 'org.testcontainers', module: 'elasticsearch'
+        }
         testCompile "org.hamcrest:hamcrest-core:${hamcrestVersion}"
         testCompile "org.hamcrest:hamcrest-library:${hamcrestVersion}"
         testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
