@@ -31,23 +31,9 @@
 	<!--Please add all the temporary suppression under the below section-->
 	  <suppress>
 	    <notes>Temporary Suppression
-	      CVE-2022-34305  refer https://tools.hmcts.net/jira/browse/CCD-3429
+	      	CVE-2022-34305  refer https://tools.hmcts.net/jira/browse/CCD-3429
 			CVE-2022-31569  refer https://tools.hmcts.net/jira/browse/CCD-3536
 			CVE-2020-15522 refer https://tools.hmcts.net/jira/browse/CCD-3511
-			CVE-2015-3337 refer https://tools.hmcts.net/jira/browse/CCD-3540
-			CVE-2019-7611 refer https://tools.hmcts.net/jira/browse/CCD-3541
-			CVE-2020-7021 refer https://tools.hmcts.net/jira/browse/CCD-3542
-			CVE-2020-7020 refer https://tools.hmcts.net/jira/browse/CCD-3543
-			CVE-2014-6439 refer https://tools.hmcts.net/jira/browse/CCD-3544
-			CVE-2019-7614 refer https://tools.hmcts.net/jira/browse/CCD-3545
-			CVE-2021-22144 refer https://tools.hmcts.net/jira/browse/CCD-3546
-			CVE-2015-5377 refer https://tools.hmcts.net/jira/browse/CCD-3547
-			CVE-2021-22135 refer https://tools.hmcts.net/jira/browse/CCD-3548
-			CVE-2015-5531 refer https://tools.hmcts.net/jira/browse/CCD-3549
-			CVE-2021-22137 refer https://tools.hmcts.net/jira/browse/CCD-3550
-			CVE-2020-7019 refer https://tools.hmcts.net/jira/browse/CCD-3551
-			CVE-2015-1427 refer https://tools.hmcts.net/jira/browse/CCD-3552
-			CVE-2022-31569 refer https://tools.hmcts.net/jira/browse/CCD-3536
 			CVE-2022-22969 refer https://tools.hmcts.net/jira/browse/CCD-3512
 			CVE-2022-22978 refer https://tools.hmcts.net/jira/browse/CCD-3513
 			CVE-2021-22112 refer https://tools.hmcts.net/jira/browse/CCD-3514
@@ -55,22 +41,8 @@
 			CVE-2021-22044 refer https://tools.hmcts.net/jira/browse/CCD-3509
  	    </notes>
 	    <cve>CVE-2022-34305</cve>
-		  <cve>CVE-2022-31569</cve>
-	    <cve>CVE-2020-15522</cve>
-	    <cve>CVE-2015-3337</cve>
-	    <cve>CVE-2019-7611</cve>
-	    <cve>CVE-2020-7021</cve>
-	    <cve>CVE-2020-7020</cve>
-	    <cve>CVE-2014-6439</cve>
-	    <cve>CVE-2019-7614</cve>
-	    <cve>CVE-2021-22144</cve>
-	    <cve>CVE-2015-5377</cve>
-	    <cve>CVE-2021-22135</cve>
-	    <cve>CVE-2015-5531</cve>
-	    <cve>CVE-2021-22137</cve>
-	    <cve>CVE-2020-7019</cve>
-	    <cve>CVE-2015-1427</cve>
 	    <cve>CVE-2022-31569</cve>
+	    <cve>CVE-2020-15522</cve>
 	    <cve>CVE-2022-22969</cve>
 	    <cve>CVE-2022-22978</cve>
 	    <cve>CVE-2021-22112</cve>
