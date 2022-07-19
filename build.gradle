@@ -4,7 +4,7 @@ buildscript {
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
     }
 }
 
@@ -222,8 +222,16 @@ subprojects { subproject ->
 
         compile "org.springframework.security:spring-security-web"
         compile "org.springframework.security:spring-security-config"
-        compile "org.springframework.boot:spring-boot-starter-oauth2-client"
-        compile "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+        compile ("org.springframework.boot:spring-boot-starter-oauth2-client") {
+            version {
+                strictly '2.5.14'
+            }
+        }
+        compile ("org.springframework.boot:spring-boot-starter-oauth2-resource-server") {
+            version {
+                strictly '2.5.14'
+            }
+        }
 
         implementation "io.github.openfeign:feign-httpclient:${feignJackson}"
 
