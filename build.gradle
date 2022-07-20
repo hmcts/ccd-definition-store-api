@@ -91,7 +91,6 @@ dependencyManagement {
 // tag::repositories[]
 allprojects {
     group 'uk.gov.hmcts.ccd.definition'
-    version '1.2.0-SNAPSHOT'
 
     repositories {
         mavenLocal()
