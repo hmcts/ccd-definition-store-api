@@ -15,15 +15,15 @@ dependencyCheck {
 }
 
 dependencies {
-    compile project(':application')
-    compile project(':excel-importer')
-    compile project(':rest-api')
-    testCompile "org.springframework.boot:spring-boot-starter-web"
-    testCompile "org.springframework.boot:spring-boot-starter-actuator"
-    testCompile ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
+    implementation project(':application')
+    implementation project(':excel-importer')
+    implementation project(':rest-api')
+    testImplementation "org.springframework.boot:spring-boot-starter-web"
+    testImplementation "org.springframework.boot:spring-boot-starter-actuator"
+    testImplementation ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
     }
-    testCompile  group: 'org.postgresql', name: 'postgresql', version: '42.3.5'
+    testImplementation  group: 'org.postgresql', name: 'postgresql', version: '42.3.5'
 }
 
 // To help obscure gradle problem
