@@ -27,7 +27,7 @@ public class LegacyCaseTypeValidator {
     /**
      * Run all validation rules for the Case Type and collate all errors in the result.
      *
-     * @param caseTypeItem - Case Type to be validated
+     * @param caseTypeEntity - Case Type to be validated
      */
     public void validateCaseType(CaseTypeEntity caseTypeEntity) {
         // If the Case Type Item has no Case Type then do not continue with validation
