@@ -92,6 +92,7 @@
       "roleToAccessProfiles" : [ ],
 			"searchParties" : [ ],
       "searchCriterias" : [ ],
+      "categories" : [ ],
 			"case_fields" : [
 				{
 					"__ordering__": "UNORDERED",
@@ -126,7 +127,8 @@
 				"order" : null,
 				"show_condition" : null,
 				"display_context_parameter" : null,
-				"retain_hidden_value" : null
+				"retain_hidden_value" : null,
+				"category_id": null
 			}, {
 				"metadata" : false,
 				"id" : "CaseHistory",
@@ -158,7 +160,8 @@
 				"order" : null,
 				"show_condition" : null,
 				"display_context_parameter" : null,
-				"retain_hidden_value" : null
+				"retain_hidden_value" : null,
+				"category_id": null
 			}, {
 				"metadata" : false,
 				"id" : "TextField",
@@ -190,7 +193,8 @@
 				"order" : null,
 				"show_condition" : null,
 				"display_context_parameter" : null,
-				"retain_hidden_value" : null
+				"retain_hidden_value" : null,
+				"category_id": null
 			}, {
 				"metadata" : true,
 				"id" : "[JURISDICTION]",
@@ -216,7 +220,8 @@
 				"order" : null,
 				"show_condition" : null,
 				"display_context_parameter" : null,
-				"retain_hidden_value" : null
+				"retain_hidden_value" : null,
+				"category_id": null
 			}, {
 				"metadata" : true,
 				"id" : "[CASE_TYPE]",
@@ -242,7 +247,8 @@
 				"order" : null,
 				"show_condition" : null,
 				"display_context_parameter" : null,
-				"retain_hidden_value" : null
+				"retain_hidden_value" : null,
+				"category_id": null
 			}, {
 				"metadata" : true,
 				"id" : "[SECURITY_CLASSIFICATION]",
@@ -268,7 +274,8 @@
 				"order" : null,
 				"show_condition" : null,
 				"display_context_parameter" : null,
-				"retain_hidden_value" : null
+				"retain_hidden_value" : null,
+				"category_id": null
 			}, {
 				"metadata" : true,
 				"id" : "[CASE_REFERENCE]",
@@ -294,7 +301,8 @@
 				"order" : null,
 				"show_condition" : null,
 				"display_context_parameter" : null,
-				"retain_hidden_value" : null
+				"retain_hidden_value" : null,
+				"category_id": null
 			}, {
 				"metadata" : true,
 				"id" : "[CREATED_DATE]",
@@ -320,7 +328,8 @@
 				"order" : null,
 				"show_condition" : null,
 				"display_context_parameter" : null,
-				"retain_hidden_value" : null
+				"retain_hidden_value" : null,
+				"category_id": null
 			}, {
 				"metadata" : true,
 				"id" : "[LAST_MODIFIED_DATE]",
@@ -346,7 +355,8 @@
 				"order" : null,
 				"show_condition" : null,
 				"display_context_parameter" : null,
-				"retain_hidden_value" : null
+				"retain_hidden_value" : null,
+				"category_id": null
 			}, {
 				"metadata" : true,
 				"id" : "[LAST_STATE_MODIFIED_DATE]",
@@ -372,7 +382,8 @@
 				"order" : null,
 				"show_condition" : null,
 				"display_context_parameter" : null,
-				"retain_hidden_value" : null
+				"retain_hidden_value" : null,
+				"category_id": null
 			} ],
 			"printable_document_url" : null,
       "callback_get_case_url" : null,

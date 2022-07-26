@@ -1,0 +1,7 @@
+{
+  "_guid_": "BaseComponentLauncherFieldType",
+  "_extends_": "CommonFieldType",
+
+  "id": "ComponentLauncher",
+  "type": "ComponentLauncher"
+}
