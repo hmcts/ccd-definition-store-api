@@ -36,4 +36,8 @@ public class SecurityUtils {
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return jwt.getTokenValue();
     }
+
+    public String getS2SToken() {
+        return authTokenGenerator.generate();
+    }
 }
