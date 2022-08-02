@@ -27,6 +27,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -56,7 +57,7 @@ class SecurityUtilsTest {
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        final GrantedAuthority[] authorities = new GrantedAuthority[] {newAuthority("role1"), newAuthority("role2")};
+        final GrantedAuthority[] authorities = new GrantedAuthority[]{newAuthority("role1"), newAuthority("role2")};
 
         when(serviceTokenGenerator.generate()).thenReturn(SERVICE_JWT);
 
@@ -88,6 +89,16 @@ class SecurityUtilsTest {
 
         assertAll(
             () -> assertHeader(headers, "ServiceAuthorization", SERVICE_JWT)
+        );
+    }
+
+    @Test
+    @DisplayName("authorizationHeaders")
+    void getS2SToken() {
+        final String headers = securityUtils.getS2SToken();
+
+        assertAll(
+            () -> assertEquals(SERVICE_JWT, headers)
         );
     }
 
