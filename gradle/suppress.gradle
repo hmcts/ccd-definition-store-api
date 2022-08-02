@@ -1,0 +1,29 @@
+import groovy.xml.XmlUtil
+
+def suppressCves(String reportPath, String suppressionsPath) {
+    def report = new XmlSlurper().parse(new FileReader(reportPath))
+    def vulns = report.'**'.findAll { node -> node.name() == 'vulnerability' }.collect { it.name.text() } as Set<String>
+
+    if (vulns) {
+        def file = file(suppressionsPath)
+        def suppressions = new XmlSlurper(false, false).parse(file)
+
+        vulns.each {
+            def cveName = it
+            suppressions.appendNode {
+                suppress {
+                    notes(' Ticket TBC')
+                    cve(cveName)
+                }
+            }
+        }
+
+        file.write(XmlUtil.serialize(suppressions))
+    }
+}
+
+task suppressCves() {
+    doLast {
+        suppressCves('./application/build/reports/dependency-check-report.xml', './dependency-check-suppressions.xml')
+    }
+}
