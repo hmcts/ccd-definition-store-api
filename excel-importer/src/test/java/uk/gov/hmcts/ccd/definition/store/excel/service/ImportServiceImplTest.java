@@ -11,6 +11,8 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_BASE_LOCATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_HISTORY_VIEWER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_PAYMENT_HISTORY_VIEWER;
@@ -214,6 +216,9 @@ public class ImportServiceImplTest {
     @Mock
     private ApplicationParams applicationParams;
 
+    @Mock
+    private TranslationService translationService;
+
     @Before
     public void setup() {
         Map<MetadataField, MetadataCaseFieldEntityFactory> registry = new HashMap<>();
@@ -243,7 +248,9 @@ public class ImportServiceImplTest {
             challengeQuestionTabService,
             roleToAccessProfileService,
             searchCriteriaService,
-            searchPartyService, categoryTabService);
+            searchPartyService, categoryTabService,
+            translationService,
+            applicationParams);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
 
@@ -252,6 +259,8 @@ public class ImportServiceImplTest {
         idamProperties.setEmail("user@hmcts.net");
 
         doReturn(idamProperties).when(idamProfileClient).getLoggedInUserDetails();
+
+        when(applicationParams.isWelshTranslationEnabled()).thenReturn(true);
     }
 
     @Test(expected = InvalidImportException.class)
@@ -325,9 +334,45 @@ public class ImportServiceImplTest {
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
+        verify(translationService).processDefinitionSheets(any());
         verify(categoryIdValidator).validate(any(ParseContext.class));
         assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
     }
+
+    @Test
+    public void shouldVerifyAccessWhenWelshTranslationDisabled() throws Exception {
+        when(applicationParams.isWelshTranslationEnabled()).thenReturn(false);
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
+
+        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream);
+        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
+        assertEquals(2, metadata.getCaseTypes().size());
+        assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
+        assertEquals(TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(1));
+        assertEquals("user@hmcts.net", metadata.getUserId());
+        assertEquals(
+            TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE,
+            metadata.getCaseTypesAsString());
+
+        verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
+        verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
+        verifyNoInteractions(translationService);
+        assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
+    }
+
 
     @Test
     public void shouldReturnImportWarnings() {
@@ -359,7 +404,9 @@ public class ImportServiceImplTest {
             challengeQuestionTabService,
             roleToAccessProfileService,
             searchCriteriaService,
-            searchPartyService, categoryTabService);
+            searchPartyService, categoryTabService,
+            translationService,applicationParams);
+
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 
