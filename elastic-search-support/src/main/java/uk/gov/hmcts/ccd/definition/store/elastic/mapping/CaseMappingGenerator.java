@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerat
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
+//import uk.gov.hmcts.ccd.definition.store.
 
 import java.io.IOException;
 import java.util.List;

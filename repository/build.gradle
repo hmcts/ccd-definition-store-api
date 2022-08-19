@@ -48,6 +48,15 @@ dependencies {
     testCompile group: 'com.vladmihalcea', name: 'db-util', version: '1.0.5'
 }
 
+//sourceSets {
+//    main {
+//        java {
+//            srcDir "${rootDir}/commons/src/main/java"
+////            srcDir 'build/swagger-code-dummy/src/main/java'
+//        }
+//    }
+//}
+
 pitest {
     targetClasses = ['uk.gov.hmcts.ccd.definition.store.repository.*']
     targetTests = ['uk.gov.hmcts.ccd.definition.store.repository.*',
