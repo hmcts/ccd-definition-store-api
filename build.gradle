@@ -294,7 +294,7 @@ subprojects { subproject ->
         implementation 'javax.validation:validation-api:2.0.1.Final'
         implementation 'io.swagger:swagger-annotations:1.6.6'
         implementation 'com.vladmihalcea:hibernate-types-52:2.16.3'
-        implementation group: 'org.apache.directory.studio', name: 'org.apache.commons.collections', version: '3.2.1'
+        implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
 
     }
 
