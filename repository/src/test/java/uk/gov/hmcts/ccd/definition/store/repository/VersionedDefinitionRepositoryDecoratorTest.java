@@ -152,6 +152,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
             }
         });
     }
+
     @Test
     public void getByIdTest() {
         versionedJurisdictionRepository.getById(Integer.MAX_VALUE);
