@@ -24,28 +24,28 @@ ext {
 }
 
 dependencies {
-    compile project(':commons')
-    compile("org.springframework.boot:spring-boot-starter-data-jpa") {
+    implementation project(':commons')
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa") {
         exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
     }
-    compile (group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3') {
+    implementation (group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3') {
         exclude group: 'com.google.guava', module: 'guava'
     }
-    compile "commons-beanutils:commons-beanutils:1.9.4"
-    compile "org.apache.commons:commons-lang3:3.11"
-    compile ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
+    implementation "commons-beanutils:commons-beanutils:1.9.4"
+    implementation "org.apache.commons:commons-lang3:3.11"
+    implementation ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
     }
-    compile "com.google.guava:guava:30.0-jre"
-    compile "javax.validation:validation-api:2.0.1.Final"
-    compile "org.hibernate.validator:hibernate-validator:6.0.20.Final"
-    compile "org.glassfish:javax.el:3.0.0"
-    compile "org.flywaydb:flyway-core:6.5.7"
-    testCompile "org.assertj:assertj-core"
-    testCompile project(":commons").sourceSets.main.output
-    compile group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.9.13'
+    implementation "com.google.guava:guava:30.0-jre"
+    implementation "javax.validation:validation-api:2.0.1.Final"
+    implementation "org.hibernate.validator:hibernate-validator:6.0.20.Final"
+    implementation "org.glassfish:javax.el:3.0.0"
+    implementation "org.flywaydb:flyway-core:6.5.7"
+    testImplementation "org.assertj:assertj-core"
+    testImplementation project(":commons").sourceSets.main.output
+    implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.9.13'
 
-    testCompile group: 'com.vladmihalcea', name: 'db-util', version: '1.0.5'
+    testImplementation group: 'com.vladmihalcea', name: 'db-util', version: '1.0.5'
 }
 
 //sourceSets {

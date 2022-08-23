@@ -64,7 +64,8 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
     }
 
     @Override
-    public <S extends T, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>, R> queryFunction) {
+    public <S extends T, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>,
+        R> queryFunction) {
         return null;
     }
 }
