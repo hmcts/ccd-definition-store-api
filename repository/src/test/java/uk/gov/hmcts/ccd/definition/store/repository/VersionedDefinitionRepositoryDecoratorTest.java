@@ -1,18 +1,24 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import org.jetbrains.annotations.NotNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
@@ -102,4 +108,79 @@ public class VersionedDefinitionRepositoryDecoratorTest {
         assertThat(retrievedCaseType2.get().getVersion(), is(1));
 
     }
+
+    @Test
+    public void saveAllAndFlushTest() {
+        versionedJurisdictionRepository.saveAllAndFlush(new Iterable<JurisdictionEntity>() {
+            @NotNull
+            @Override
+            public Iterator<JurisdictionEntity> iterator() {
+                return null;
+            }
+        });
+    }
+
+    @Test
+    public void deleteAllInBatchTest() {
+        versionedJurisdictionRepository.deleteAllInBatch(new Iterable<JurisdictionEntity>() {
+            @NotNull
+            @Override
+            public Iterator<JurisdictionEntity> iterator() {
+                return null;
+            }
+        });
+    }
+
+    @Test
+    public void deleteAllByIdTest() {
+        versionedJurisdictionRepository.deleteAllById(new Iterable<Integer>() {
+            @NotNull
+            @Override
+            public Iterator<Integer> iterator() {
+                return null;
+            }
+        });
+    }
+
+    @Test
+    public void deleteAllByIdInBatchTest() {
+        versionedJurisdictionRepository.deleteAllByIdInBatch(new Iterable<Integer>() {
+            @NotNull
+            @Override
+            public Iterator<Integer> iterator() {
+                return null;
+            }
+        });
+    }
+    @Test
+    public void getByIdTest() {
+        versionedJurisdictionRepository.getById(Integer.MAX_VALUE);
+    }
+
+    @Test
+    public void getReferenceByIdTest() {
+        versionedJurisdictionRepository.getReferenceById(Integer.MAX_VALUE);
+    }
+
+    @Test
+    public void getReferenceByITest() {
+        versionedJurisdictionRepository.findBy(new Example<JurisdictionEntity>() {
+            @Override
+            public JurisdictionEntity getProbe() {
+                return null;
+            }
+
+            @Override
+            public ExampleMatcher getMatcher() {
+                return null;
+            }
+        }, new Function<FluentQuery.FetchableFluentQuery<JurisdictionEntity>, Object>() {
+            @Override
+            public Object apply(FluentQuery.FetchableFluentQuery<JurisdictionEntity>
+                                    jurisdictionEntityFetchableFluentQuery) {
+                return null;
+            }
+        });
+    }
+
 }
