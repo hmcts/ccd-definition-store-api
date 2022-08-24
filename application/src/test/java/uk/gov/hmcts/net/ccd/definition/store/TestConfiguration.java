@@ -84,7 +84,6 @@ public class TestConfiguration extends ContextCleanupListener {
             shouldRegisterLinksMapping, null);
     }
 
-
     private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties, Environment environment,
                                                String basePath) {
         return webEndpointProperties.getDiscovery().isEnabled() && (StringUtils.hasText(basePath)
