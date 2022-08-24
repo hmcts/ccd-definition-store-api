@@ -1,29 +1,83 @@
+import groovy.util.slurpersupport.GPathResult
+import groovy.xml.DOMBuilder
 import groovy.xml.XmlUtil
+import org.w3c.dom.Document
+import org.w3c.dom.Element
+import org.w3c.dom.Node
+import org.w3c.dom.NodeList
 
-def suppressCves(String reportPath, String suppressionsPath) {
-    def report = new XmlSlurper().parse(new FileReader(reportPath))
-    def vulns = report.'**'.findAll { node -> node.name() == 'vulnerability' }.collect { it.name.text() } as Set<String>
+import javax.xml.xpath.XPathConstants
+import javax.xml.xpath.XPathExpression
+import javax.xml.xpath.XPathFactory
 
-    if (vulns) {
-        def file = file(suppressionsPath)
-        def suppressions = new XmlSlurper(false, false).parse(file)
-
-        vulns.each {
-            def cveName = it
-            suppressions.appendNode {
-                suppress {
-                    notes(' Ticket TBC')
-                    cve(cveName)
-                }
-            }
-        }
-
-        file.write(XmlUtil.serialize(suppressions))
+void suppressCves(String reportName = 'dependency-check-report.xml') {
+    // Default output directory is 'build/reports'
+    def reportFile = new File(project.file('./application/build/reports'), reportName)
+    if (!reportFile.isFile()) {
+        throw new FileNotFoundException("Report file not found.\n" +
+                "\nPossible Solution: run :dependencyCheckAnalyze")
     }
+
+    // Grabs the unique set of non-suppressed vulnerabilities
+    GPathResult report = new XmlSlurper().parse(new FileReader(reportFile))
+    Set<String> unSuppressedCves = report.'**'
+            .findAll { node -> node.name() == 'vulnerability' }
+            .collect { it.name.text() } as Set<String>
+
+    if (!unSuppressedCves.isEmpty()) {
+        // Suppression file must be specified as 'suppressionFile=...' in build.gradle.
+        File suppressionFile = project.file(dependencyCheck.getSuppressionFile())
+        String suppressionXml = new String(suppressionFile.readBytes(), "UTF-8")
+        Element suppressionDoc = DOMBuilder.parse(new StringReader(suppressionXml)).getDocumentElement()
+        addNewSuppression(unSuppressedCves, suppressionDoc)
+        suppressionFile.write(XmlUtil.serialize(cleanXml(suppressionDoc)))
+    }
+}
+
+static void addNewSuppression(unSuppressedCves, suppressionDoc) {
+    // Find a specified phrase in notes element and amend text content with new cve
+    XPathExpression xpathExp = XPathFactory.newInstance().newXPath().compile(
+            "//*[local-name()='notes']")
+    NodeList noteNodes = xpathExp.evaluate(suppressionDoc, XPathConstants.NODESET) as NodeList
+    String whiteSpaceForIndent = "\n" + "\u0020".repeat(8) // white space for indentation
+    String textToFind = "Temporary Suppression"
+
+    noteNodes.find {
+        if (it.getTextContent().contains(textToFind)) {
+            def noteNode = it
+            Document document = suppressionDoc.getOwnerDocument()
+            Node parentNode = noteNode.getParentNode()
+            unSuppressedCves.each {
+                def cve = it
+                noteNode.appendChild(
+                        document.createTextNode(whiteSpaceForIndent + cve + " refer [Ticket]"))
+                parentNode.appendChild(
+                        document.createElement("cve")).appendChild(document.createTextNode(cve))
+            }
+            return true
+        }
+    } ?: { throw new GradleException(String.format("No notes element with text '%s'", textToFind)) }()
+}
+
+static def cleanXml(Element suppression) {
+    // Strip out all empty nodes
+    XPathExpression xpathExp = XPathFactory.newInstance().newXPath().compile(
+            "//text()[normalize-space(.) = '']")
+
+    NodeList emptyTextNodes = xpathExp.evaluate(suppression, XPathConstants.NODESET) as NodeList
+    if (emptyTextNodes.getLength()) {
+        for (int i = 0; i < emptyTextNodes.getLength(); i++) {
+            Node emptyTextNode = emptyTextNodes.item(i)
+            emptyTextNode.getParentNode().removeChild(emptyTextNode)
+        }
+    }
+    return suppression
 }
 
 task suppressCves() {
     doLast {
-        suppressCves('./application/build/reports/dependency-check-report.xml', './dependency-check-suppressions.xml')
+        // Optional argument can be added to specify the name of the report file.
+        // If no argument is specified, the default report file is 'dependency-check-report.xml'
+        suppressCves()
     }
 }

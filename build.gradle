@@ -21,7 +21,7 @@ plugins {
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
     id "info.solidsoft.pitest" version '1.5.1' apply(false)
     id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
-    id 'uk.gov.hmcts.java' version '0.12.27'
+    id 'uk.gov.hmcts.java' version '0.12.28'
 }
 
 apply plugin: 'java'
@@ -41,11 +41,6 @@ mainClassName = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
 
 dependencyCheck {
     suppressionFile = 'dependency-check-suppressions.xml'
-    analyzers {
-        ossIndex {
-            enabled = false
-        }
-    }
 }
 
 //spring boot dependency override

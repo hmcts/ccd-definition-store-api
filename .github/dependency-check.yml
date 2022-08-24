@@ -26,7 +26,7 @@ jobs:
         with:
           java-version: 11
       - name: Run dependency-check
-        run: ./gradlew dependencyCheckAnalyze
+        run: ./gradlew dependencyCheckAggregate
         continue-on-error: true
       - name: Suppressions
         run: ./gradlew suppressCves
