@@ -12,7 +12,7 @@ import javax.xml.xpath.XPathFactory
 
 void suppressCves(String reportName = 'dependency-check-report.xml') {
     // Default output directory is 'build/reports'
-    def reportFile = new File(project.file('./application/build/reports'), reportName)
+    def reportFile = new File(project.file(dependencyCheck.getOutputDirectory()), reportName)
     if (!reportFile.isFile()) {
         throw new FileNotFoundException("Report file not found.\n" +
                 "\nPossible Solution: run :dependencyCheckAnalyze")
