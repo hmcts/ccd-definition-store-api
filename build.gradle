@@ -120,7 +120,6 @@ allprojects {
         implementation "com.fasterxml.jackson.core:jackson-core:2.13.2"
         implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.2"
         implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
-//        implementation "org.hibernate:hibernate-core:${hibernateVersion}"
         // Overriding transitive dependency commons-compress due to CVE failures
         implementation "org.apache.commons:commons-compress:1.21"
         // CVE-2021-28170
@@ -283,7 +282,6 @@ subprojects { subproject ->
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.0'
-//        testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.2-Categories'
         implementation group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.2-Categories'
 
         testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'

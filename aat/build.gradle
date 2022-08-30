@@ -22,9 +22,6 @@ sourceSets {
             runtimeClasspath += main.output
             runtimeClasspath += main.runtimeClasspath
             runtimeClasspath += test.runtimeClasspath
-//            dependencies {
-//                implementation group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.2-Categories'
-//            }
         }
         resources {
             srcDir('src/aat/resources')
@@ -190,20 +187,4 @@ jar {
     failWhenNoMutations = false
     detectInlinedCode = true
 }*/
-
-task printSourceSetInformation(){
-
-    doLast{
-        sourceSets.each { srcSet ->
-            println "["+srcSet.name+"]"
-            print "-->Source directories: "+srcSet.allJava.srcDirs+"\n"
-            print "-->Output directories: "+srcSet.output.classesDirs.files+"\n"
-            print "-->Compile classpath:\n"
-            srcSet.compileClasspath.files.each {
-                print "  "+it.path+"\n"
-            }
-            println ""
-        }
-    }
-}
 
