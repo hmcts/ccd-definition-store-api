@@ -29,7 +29,7 @@ dependencies {
         exclude group: 'com.google.guava', module: 'guava'
     }
     compile "org.flywaydb:flyway-core:6.5.7"
-    runtime group: 'org.postgresql', name: 'postgresql', version: '42.3.5'
+    runtime group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
 
     testCompile project(":app-insights").sourceSets.main.output
     testCompile project(":commons").sourceSets.main.output
