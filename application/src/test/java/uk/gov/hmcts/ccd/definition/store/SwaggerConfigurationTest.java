@@ -18,6 +18,9 @@ import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
 class SwaggerConfigurationTest extends BaseTest {
 
+    private static final int EXPECTED_TOTAL_ENDPOINTS = 16;
+    private static final String EXPECTED_APPLICATION_CONTEXT_NAME = "application-1";
+
     @Autowired
     private WebEndpointsSupplier webEndpointsSupplier;
 
@@ -57,8 +60,8 @@ class SwaggerConfigurationTest extends BaseTest {
             swaggerConfiguration.webEndpointServletHandlerMapping(webEndpointsSupplier, servletEndpointsSupplier,
             controllerEndpointsSupplier, endpointMediaTypes,corsProperties, webEndpointProperties, environment);
 
-        assertEquals(16, webMvcEndpointHandlerMapping.getEndpoints().size());
-        assertEquals("application-1", webMvcEndpointHandlerMapping.getApplicationContext().getId());
+        assertEquals(EXPECTED_TOTAL_ENDPOINTS, webMvcEndpointHandlerMapping.getEndpoints().size());
+        assertEquals(EXPECTED_APPLICATION_CONTEXT_NAME, webMvcEndpointHandlerMapping.getApplicationContext().getId());
     }
 
 }

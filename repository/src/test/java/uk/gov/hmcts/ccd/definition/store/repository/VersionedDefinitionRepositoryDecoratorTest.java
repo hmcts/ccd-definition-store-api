@@ -184,7 +184,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void getReferenceByITest() {
+    public void findByTest() {
         versionedJurisdictionRepository.findBy(new Example<JurisdictionEntity>() {
             @Override
             public JurisdictionEntity getProbe() {
