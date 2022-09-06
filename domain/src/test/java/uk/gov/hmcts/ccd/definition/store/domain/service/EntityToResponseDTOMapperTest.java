@@ -1695,6 +1695,7 @@ class  EntityToResponseDTOMapperTest {
             challengeQuestionEntity.setOrder(2);
             challengeQuestionEntity.setQuestionId("QuestionId");
             challengeQuestionEntity.setQuestionText("QuestionText");
+            challengeQuestionEntity.setIgnoreNullFields(false);
 
             ChallengeQuestion challengeQuestion = classUnderTest.map(challengeQuestionEntity);
 
@@ -1708,6 +1709,7 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(challengeQuestion.getOrder(), challengeQuestionEntity.getOrder());
             assertEquals(challengeQuestion.getQuestionId(), challengeQuestionEntity.getQuestionId());
             assertEquals(challengeQuestion.getQuestionText(), challengeQuestionEntity.getQuestionText());
+            assertEquals(challengeQuestion.isIgnoreNullFields(), challengeQuestionEntity.isIgnoreNullFields());
         }
 
         @Test
