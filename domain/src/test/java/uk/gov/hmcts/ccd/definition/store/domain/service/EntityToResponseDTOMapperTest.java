@@ -101,6 +101,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
@@ -1725,6 +1726,7 @@ class  EntityToResponseDTOMapperTest {
             assertNull(challengeQuestion.getDisplayContextParameter());
             assertNull(challengeQuestion.getOrder());
             assertNull(challengeQuestion.getQuestionId());
+            assertFalse(challengeQuestion.isIgnoreNullFields());
             assertNull(challengeQuestion.getQuestionText());
         }
 

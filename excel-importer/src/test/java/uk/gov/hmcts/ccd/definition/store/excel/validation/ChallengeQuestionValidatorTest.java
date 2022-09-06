@@ -10,9 +10,12 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.challengequestion.BaseChallengeQuestionTest;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -105,6 +108,30 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
                 + "Please check the expression format and the roles."));
             throw exception;
 
+        }
+    }
+
+    @Test()
+    public void testEmptyAnswerWithValidIgnoreNullFields() {
+        DefinitionDataItem definitionDataItem = buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+            QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, null, "questionId");
+        definitionDataItem.addAttribute(ColumnName.CHALLENGE_QUESTION_IGNORE_NULL_FIELDS, true);
+
+        challengeQuestionValidator.validate(parseContext,
+            Lists.newArrayList(definitionDataItem));
+    }
+
+    @Test()
+    public void failForEmptyAnswerWithInValidIgnoreNullFields() {
+        try {
+            DefinitionDataItem definitionDataItem = buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, null, "questionId");
+            definitionDataItem.addAttribute(ColumnName.CHALLENGE_QUESTION_IGNORE_NULL_FIELDS, false);
+
+            challengeQuestionValidator.validate(parseContext,
+                Lists.newArrayList(definitionDataItem));
+        } catch (Exception exception) {
+            assertEquals("ChallengeQuestionTab Invalid value: answer cannot be null.", exception.getMessage());
         }
     }
 
