@@ -81,14 +81,25 @@ public class ChallengeQuestionParser {
         if (fieldTypeEntity.isPresent()) {
             challengeQuestionTabEntity.setAnswerFieldType(fieldTypeEntity.get());
         }
-
+        setAnswerField(definitionDataItem, challengeQuestionTabEntity);
         challengeQuestionTabEntity.setChallengeQuestionId(definitionDataItem.getString(ColumnName.ID));
         challengeQuestionTabEntity.setQuestionText(definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_TEXT));
         challengeQuestionTabEntity.setOrder(Integer.parseInt(definitionDataItem.getString(ColumnName.DISPLAY_ORDER)));
-        challengeQuestionTabEntity.setAnswerField(definitionDataItem
-            .getString(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD));
         challengeQuestionTabEntity.setDisplayContextParameter(definitionDataItem
             .getString(ColumnName.DISPLAY_CONTEXT_PARAMETER));
         return challengeQuestionTabEntity;
+    }
+
+    private void setAnswerField(DefinitionDataItem definitionDataItem,
+                                ChallengeQuestionTabEntity challengeQuestionTabEntity) {
+        if (definitionDataItem.getBoolean(ColumnName.CHALLENGE_QUESTION_IGNORE_NULL_FIELDS) == null
+            || !definitionDataItem.getBoolean(ColumnName.CHALLENGE_QUESTION_IGNORE_NULL_FIELDS)) {
+            challengeQuestionTabEntity.setIgnoreNullFields(false);
+            challengeQuestionTabEntity.setAnswerField(definitionDataItem
+                                    .getString(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD));
+        } else if (Boolean.TRUE.equals(definitionDataItem
+                                    .getBoolean(ColumnName.CHALLENGE_QUESTION_IGNORE_NULL_FIELDS))) {
+            challengeQuestionTabEntity.setIgnoreNullFields(true);
+        }
     }
 }

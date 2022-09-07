@@ -50,7 +50,7 @@ public class ChallengeQuestionTabEntity implements Serializable {
     private String  questionId;
 
     @Column(name = "ignore_null_fields", columnDefinition = "boolean default false")
-    private Boolean ignoreNullFields;
+    private Boolean ignoreNullFields = false;
 
     public Integer getId() {
         return id;
