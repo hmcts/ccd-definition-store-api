@@ -18,6 +18,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.ChallengeQuestionValid
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -43,6 +44,34 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
                 challengeQuestionParser.parse(createDefinitionSheets(false), parseContext);
         assertThat(challengeQuestionTabEntities.size(), is(1));
         assertThat(challengeQuestionTabEntities.get(0).getQuestionId(), is("questionID1"));
+    }
+
+    @Test
+    public void testEmptyAnswerFieldWithValidIgnoreNullFields() {
+        Map<String, DefinitionSheet> map =  createDefinitionSheets(false);
+        DefinitionSheet definitionSheet1 =  map.get(SheetName.CHALLENGE_QUESTION_TAB.getName());
+        DefinitionDataItem definitionDataItem = definitionSheet1.getDataItems().get(0);
+        definitionDataItem.addAttribute(ColumnName.CHALLENGE_QUESTION_IGNORE_NULL_FIELDS.toString(), true);
+        final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
+            challengeQuestionParser.parse(map, parseContext);
+        assertThat(challengeQuestionTabEntities.size(), is(1));
+        assertNull(challengeQuestionTabEntities.get(0).getAnswerField());
+        assertThat(challengeQuestionTabEntities.get(0).isIgnoreNullFields(), is(true));
+    }
+
+    @Test
+    public void testAnswerFieldWithInValidIgnoreNullFields() {
+        Map<String, DefinitionSheet> map =  createDefinitionSheets(false);
+        DefinitionSheet definitionSheet1 =  map.get(SheetName.CHALLENGE_QUESTION_TAB.getName());
+        DefinitionDataItem definitionDataItem = definitionSheet1.getDataItems().get(0);
+        definitionDataItem.addAttribute(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD.toString(),
+                                        "${OrganisationField}:[CLAIMANT]");
+        definitionDataItem.addAttribute(ColumnName.CHALLENGE_QUESTION_IGNORE_NULL_FIELDS.toString(), false);
+        final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
+            challengeQuestionParser.parse(map, parseContext);
+        assertThat(challengeQuestionTabEntities.size(), is(1));
+        assertThat(challengeQuestionTabEntities.get(0).getAnswerField(), is("${OrganisationField}:[CLAIMANT]"));
+        assertThat(challengeQuestionTabEntities.get(0).isIgnoreNullFields(), is(false));
     }
 
     @Test(expected = ValidationException.class)

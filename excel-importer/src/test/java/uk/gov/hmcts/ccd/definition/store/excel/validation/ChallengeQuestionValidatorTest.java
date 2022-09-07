@@ -122,7 +122,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test()
-    public void failForEmptyAnswerWithInValidIgnoreNullFields() {
+    public void failEmptyAnswerWithInValidIgnoreNullFields() {
         try {
             DefinitionDataItem definitionDataItem = buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
                 QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, null, "questionId");
