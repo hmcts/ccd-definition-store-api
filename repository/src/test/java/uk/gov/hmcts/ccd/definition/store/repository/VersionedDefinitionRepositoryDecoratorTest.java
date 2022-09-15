@@ -117,12 +117,12 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     public void saveAllAndFlushTest() {
         List<JurisdictionEntity> result = versionedJurisdictionRepository.saveAllAndFlush(
             new Iterable<JurisdictionEntity>() {
-            @NotNull
-            @Override
-            public Iterator<JurisdictionEntity> iterator() {
-                return null;
-            }
-        });
+                @NotNull
+                @Override
+                public Iterator<JurisdictionEntity> iterator() {
+                    return null;
+                }
+            });
 
         //method being tested is stubbed as it isn't used
         //simplest assertion added to satisfy SonarScan
