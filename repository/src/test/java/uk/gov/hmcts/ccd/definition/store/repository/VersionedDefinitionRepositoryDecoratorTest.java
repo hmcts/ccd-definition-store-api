@@ -115,7 +115,8 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     //test for required coverage of new lines in sonar
     @Test
     public void saveAllAndFlushTest() {
-        List<JurisdictionEntity> result = versionedJurisdictionRepository.saveAllAndFlush(new Iterable<JurisdictionEntity>() {
+        List<JurisdictionEntity> result = versionedJurisdictionRepository.saveAllAndFlush(
+            new Iterable<JurisdictionEntity>() {
             @NotNull
             @Override
             public Iterator<JurisdictionEntity> iterator() {
