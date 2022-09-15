@@ -117,9 +117,9 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     public void saveAllAndFlushTest() {
         List<JurisdictionEntity> result = versionedJurisdictionRepository.saveAllAndFlush(
             new Iterable<JurisdictionEntity>() {
-                @NotNull
-                @Override
-                public Iterator<JurisdictionEntity> iterator() {
+            @NotNull
+            @Override
+            public Iterator<JurisdictionEntity> iterator() {
                 return null;
             }
         });
