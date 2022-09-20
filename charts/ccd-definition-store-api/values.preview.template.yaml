@@ -23,9 +23,11 @@ java:
     # enable whenever required and provide host url to match with corresponding data-store-api
     ELASTIC_SEARCH_ENABLED: true
 
-    ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-1260-es-master
+    # TODO: remove TEMPORARY OVERRIDE to test ElasticSearch, reinstate: ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-1260-es-master
+    ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-2105-es-master
 
-    USER_PROFILE_HOST: http://ccd-user-profile-api-pr-399-java
+    # TODO: remove TEMPORARY OVERRIDE to test ElasticSearch, reinstate: USER_PROFILE_HOST: http://ccd-user-profile-api-pr-399-java
+    USER_PROFILE_HOST: http://ccd-user-profile-api-pr-501-java
 
     # ccd-test app-insights key - remove once testing is done
     APPINSIGHTS_INSTRUMENTATIONKEY: 2dcb834e-768e-4429-9050-ab15af959995
