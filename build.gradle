@@ -269,24 +269,22 @@ subprojects { subproject ->
         testImplementation ("org.mockito:mockito-core:3.6.0") {
             exclude group: 'org.hamcrest'
         }
-        
-        testCompile "org.mockito:mockito-all:1.10.19"
-        testCompile 'org.mockito:mockito-junit-jupiter:3.6.0'
-        testCompile 'com.github.npathai:hamcrest-optional:2.0.0'
-        testCompile group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
-        testCompile "io.github.openfeign:feign-jackson:${feignJackson}"
-        testCompile 'io.github.openfeign.form:feign-form:3.8.0'
-        testCompile  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
-        testCompile "org.exparity:hamcrest-date:2.0.4"
-        testCompile "io.rest-assured:rest-assured:${restAssuredVersion}"
-        testCompile group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
-        testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
+         testImplementation "org.mockito:mockito-all:1.10.19"
+         testImplementation 'org.mockito:mockito-junit-jupiter:3.6.0'
+         testImplementation 'com.github.npathai:hamcrest-optional:2.0.0'
+         testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
+         testImplementation "io.github.openfeign:feign-jackson:${feignJackson}"
+         testImplementation 'io.github.openfeign.form:feign-form:3.8.0'
+         testImplementation  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
+         testImplementation "org.exparity:hamcrest-date:2.0.4"
+         testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
+         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
+         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.5'
-        testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.6'
+         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.5'
+         implementation group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.6'
 
-        testCompile group: 'commons-lang', name: 'commons-lang', version: '2.6'
-
+         testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
         // https://mvnrepository.com/artifact/junit/junit
         implementation group: 'junit', name: 'junit', version: '4.13.1'
         testImplementation group: 'junit', name: 'junit', version: '4.13.1'
