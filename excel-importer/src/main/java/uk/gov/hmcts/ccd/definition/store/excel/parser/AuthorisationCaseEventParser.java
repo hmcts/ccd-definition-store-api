@@ -43,7 +43,9 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
         validateCaseTypes(definitionSheets, dataItemMap);
         validateCaseEvents(definitionSheets, definitionSheet, caseTypeReference);
 
-        final List<DefinitionDataItem> dataItems = dataItemMap.get(caseTypeReference);
+        final List<DefinitionDataItem> dataItems = dataItemMap.getOrDefault(caseTypeReference, List.of());
+        final Map<String, List<DefinitionDataItem>> collect =
+                dataItems.stream().collect(groupingBy(d -> d.getString(ColumnName.CASE_EVENT_ID)));
 
         for (EventEntity event : events) {
             final List<EventACLEntity> parseResults = Lists.newArrayList();
@@ -52,14 +54,11 @@ class AuthorisationCaseEventParser implements AuthorisationParser {
             LOG.debug("Parsing AuthorisationCaseEvent for case type {}, event {}...",
                 caseTypeReference, eventReference);
 
-            if (null == dataItems || dataItems.isEmpty()) {
+            if (dataItems.isEmpty()) {
                 LOG.warn("No data is found for case type '{}' in AuthorisationCaseEvents tab", caseTypeReference);
             } else {
                 LOG.debug("Parsing access profiles for case type {}: {} AuthorisationCaseEvents detected",
                     caseTypeReference, dataItems.size());
-
-                final Map<String, List<DefinitionDataItem>> collect =
-                    dataItems.stream().collect(groupingBy(d -> d.getString(ColumnName.CASE_EVENT_ID)));
 
                 List<DefinitionDataItem> definitionDataItems = collect.get(eventReference);
 
