@@ -232,29 +232,31 @@ subprojects { subproject ->
         implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
         implementation('org.springframework.boot:spring-boot-starter-cache')
 
-        compile 'org.flywaydb:flyway-core:6.5.7'
+        implementation 'org.flywaydb:flyway-core:6.5.7'
 
-        compile group: 'javax.inject', name: 'javax.inject', version: '1'
+        implementation group: 'javax.inject', name: 'javax.inject', version: '1'
 
-        compile (group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0') {
+        implementation (group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0') {
             exclude group: 'com.google.guava', module: 'guava'
         }
-        compile group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
+        implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
 
         // CVE-2021-29425
-        compile group: 'commons-io', name: 'commons-io', version: '2.8.0'
-        implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.0.1'
+        implementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
+        implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.3'
+        implementation "org.springframework.cloud:spring-cloud-starter-bootstrap"
+        implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.3'
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
-        testCompileOnly 'org.apiguardian:apiguardian-api:1.0.0'
-        testCompile "org.postgresql:postgresql:42.4.1"
-        testCompile "org.testcontainers:postgresql:1.17.2"
-        testCompile "org.hamcrest:hamcrest-core:${hamcrestVersion}"
-        testCompile "org.hamcrest:hamcrest-library:${hamcrestVersion}"
-        testCompile "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
-        testRuntime "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
-        testRuntime "org.junit.vintage:junit-vintage-engine:${junitVintageVersion}"
-        testCompile "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
+        testImplementation 'org.apiguardian:apiguardian-api:1.0.0'
+        testImplementation "org.postgresql:postgresql:42.4.1"
+        testImplementation "org.testcontainers:postgresql:1.17.2"
+        testImplementation "org.hamcrest:hamcrest-core:${hamcrestVersion}"
+        testImplementation "org.hamcrest:hamcrest-library:${hamcrestVersion}"
+        testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
+        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
+        testRuntimeOnly "org.junit.vintage:junit-vintage-engine:${junitVintageVersion}"
+        testImplementation "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
         testImplementation('org.springframework.boot:spring-boot-starter-test')
         testImplementation('org.springframework.cloud:spring-cloud-starter-contract-stub-runner:2.1.0.RELEASE') {
             exclude group: 'com.github.tomakehurst', module: 'wiremock-standalone'
@@ -279,8 +281,8 @@ subprojects { subproject ->
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testCompile group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.5-CCD-3694.1'
-        testCompile group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.7-CCD-3694'
+        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.5-CCD-3694.1'
+        implementation group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.7-CCD-3694'
 
         testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
         // https://mvnrepository.com/artifact/junit/junit
@@ -430,7 +432,7 @@ bootJar {
 
 // Although there are no sources to compile, Jenkins pipeline needs the jar file to be here
 dependencies {
-    compile project(':application')
+    implementation project(':application')
 }
 
 task smoke(type: Test, dependsOn: ":aat:smoke")
