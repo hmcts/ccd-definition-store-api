@@ -19,14 +19,7 @@
 	<!--End of false positives section -->
 
 	<!--Please add all the temporary suppression under the below section-->
-	  <suppress>
-	    <notes>Temporary Suppression
-			CVE-2022-22969 refer https://tools.hmcts.net/jira/browse/CCD-3568
-			CVE-2021-22044 refer https://tools.hmcts.net/jira/browse/CCD-3509
- 	    </notes>
-		  <cve>CVE-2022-22969</cve>
-		  <cve>CVE-2021-22044</cve>
-	  </suppress>
+
 	<!--End of temporary suppression section -->
 
 </suppressions>

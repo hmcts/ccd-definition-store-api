@@ -8,13 +8,18 @@ import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.EnumSet;
@@ -35,10 +40,13 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*"})
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({CloudBlobContainer.class, CloudBlockBlob.class, BlobProperties.class})
+@PrepareForTest({CloudBlobContainer.class, CloudBlockBlob.class, BlobProperties.class, SSLContext.class})
 public class AzureImportAuditsClientTest {
 
     public static final int IMPORT_AUDITS_GET_LIMIT = 5;
+
+    public static final String SSL_CONTEXT_PROTOCOL_1_DOT_2 = "TLSv1.2";
+    public static final String SSL_CONTEXT_PROTOCOL_TLS = "TLS";
 
     private AzureImportAuditsClient subject;
 
@@ -64,8 +72,12 @@ public class AzureImportAuditsClientTest {
 
     final CloudBlobContainer cloudBlobContainer = mock(CloudBlobContainer.class);
 
+    private SSLContext context;
+
+    private SSLSocketFactory socketFactory;
+
     @Before
-    public void setUp() throws StorageException {
+    public void setUp() throws StorageException, NoSuchAlgorithmException {
         final ApplicationParams applicationParams = mock(ApplicationParams.class);
 
         b11 = mock(CloudBlockBlob.class);
@@ -85,6 +97,18 @@ public class AzureImportAuditsClientTest {
         blobsPage3 = mock(ResultSegment.class);
 
         MockitoAnnotations.initMocks(this);
+
+        // create the mock to return by getInstance()
+        SSLContext context = PowerMockito.mock(SSLContext.class);
+
+        // mock the static method getInstance() to return above created mock context
+        PowerMockito.mockStatic(SSLContext.class);
+        Mockito.when(SSLContext.getInstance(SSL_CONTEXT_PROTOCOL_1_DOT_2)).thenReturn(context);
+        Mockito.when(SSLContext.getInstance(SSL_CONTEXT_PROTOCOL_TLS)).thenReturn(context);
+
+        //socketFactor mock required otherwise test hangs
+        socketFactory = mock(SSLSocketFactory.class);
+        Mockito.when(context.getSocketFactory()).thenReturn(socketFactory);
 
         when(applicationParams.getAzureImportAuditsGetLimit()).thenReturn(IMPORT_AUDITS_GET_LIMIT);
         subject = new AzureImportAuditsClient(cloudBlobContainer, applicationParams);
