@@ -49,7 +49,7 @@ ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['spring-security.version'] = '5.7.2'
 ext['jackson.version'] = '2.13.2'
-ext['snakeyaml.version'] = '1.26'
+ext['snakeyaml.version'] = '1.32'
 ext['postgresql.version'] = '42.4.1'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.17.1'
