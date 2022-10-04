@@ -38,18 +38,18 @@ ext {
 }
 
 dependencies {
-    compile project(':app-insights')
-    compile (project(':repository')) {
+    implementation project(':app-insights')
+    implementation (project(':repository')) {
         exclude group: 'org.mapstruct', module: 'mapstruct'
     }
-    compile "org.apache.commons:commons-lang3:3.11"
-    compile (group: 'commons-validator', name: 'commons-validator', version: '1.6') {
+    implementation "org.apache.commons:commons-lang3:3.11"
+    implementation (group: 'commons-validator', name: 'commons-validator', version: '1.6') {
         exclude group: 'commons-beanutils', module: 'commons-beanutils'
     }
-    compile "org.mapstruct:mapstruct-jdk8:${orgMapstructVersion}"
-    compileOnly "org.mapstruct:mapstruct-processor:${orgMapstructVersion}"
-    testCompile project(":app-insights").sourceSets.main.output
-    testCompile project(":repository").sourceSets.test.output
+    implementation "org.mapstruct:mapstruct-jdk8:${orgMapstructVersion}"
+    implementation "org.mapstruct:mapstruct-processor:${orgMapstructVersion}"
+    testImplementation project(":app-insights").sourceSets.main.output
+    testImplementation project(":repository").sourceSets.test.output
 
     annotationProcessor "org.mapstruct:mapstruct-processor:${orgMapstructVersion}"
 }
