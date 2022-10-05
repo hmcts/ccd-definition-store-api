@@ -47,6 +47,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_FLAGS;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_JUDICIAL_USER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_LINK_REASON;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
@@ -500,6 +501,7 @@ public class ImportServiceImplTest {
             buildBaseType(PREDEFINED_COMPLEX_SEARCH_PARTY),
             buildBaseType(PREDEFINED_COMPLEX_SEARCH_CRITERIA),
             buildBaseType(PREDEFINED_COMPLEX_FLAGS),
+            buildBaseType(PREDEFINED_COMPLEX_JUDICIAL_USER),
             buildBaseType(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST),
             buildBaseType(PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION),
             buildBaseType(PREDEFINED_COMPLEX_ORGANISATION),
