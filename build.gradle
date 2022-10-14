@@ -49,7 +49,7 @@ ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['spring-security.version'] = '5.7.2'
 ext['jackson.version'] = '2.13.2'
-ext['snakeyaml.version'] = '1.26'
+ext['snakeyaml.version'] = '1.32'
 ext['postgresql.version'] = '42.4.1'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.17.1'
@@ -269,6 +269,7 @@ subprojects { subproject ->
         testImplementation ("org.mockito:mockito-core:3.6.0") {
             exclude group: 'org.hamcrest'
         }
+
         testImplementation "org.mockito:mockito-all:1.10.19"
         testImplementation 'org.mockito:mockito-junit-jupiter:3.6.0'
         testImplementation 'com.github.npathai:hamcrest-optional:2.0.0'
@@ -281,10 +282,11 @@ subprojects { subproject ->
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.0'
-        implementation group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.2-Categories'
+        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.4'
+        implementation group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.6'
 
         testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
+
         // https://mvnrepository.com/artifact/junit/junit
         implementation group: 'junit', name: 'junit', version: '4.13.1'
         testImplementation group: 'junit', name: 'junit', version: '4.13.1'
