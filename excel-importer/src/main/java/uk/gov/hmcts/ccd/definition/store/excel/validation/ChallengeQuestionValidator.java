@@ -8,8 +8,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ChallengeQuestionDisplayContextParameterValidator;
@@ -29,7 +27,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import static java.util.stream.Collectors.groupingBy;
 
 @Component
-@Slf4j
 public class ChallengeQuestionValidator {
 
     private ParseContext parseContext;
@@ -124,30 +121,16 @@ public class ChallengeQuestionValidator {
 
     private void validateAnswer(DefinitionDataItem definitionDataItem, CaseTypeEntity caseTypeEntity) {
         final String answers = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD);
-        final Boolean ignoreNullFields = definitionDataItem
-                                        .getBoolean(ColumnName.CHALLENGE_QUESTION_IGNORE_NULL_FIELDS);
-        if (!validateEmptyAnswer(ignoreNullFields,answers)) {
-            final String[] answersRules = answers.split(ANSWER_MAIN_SEPARATOR);
+        validateNullValue(answers, ERROR_MESSAGE + " value: answer cannot be null.");
+        final String[] answersRules = answers.split(ANSWER_MAIN_SEPARATOR);
 
-            if (answersRules.length > 0 && answersRules.length != 1) {
-                Arrays.asList(answersRules).forEach(currentAnswerExpression ->
-                    validateAnswerExpression(definitionDataItem, caseTypeEntity, currentAnswerExpression)
-                );
-            } else {
-                validateAnswerExpression(definitionDataItem, caseTypeEntity, answers);
-            }
+        if (answersRules.length > 0 && answersRules.length != 1) {
+            Arrays.asList(answersRules).forEach(currentAnswerExpression ->
+                validateAnswerExpression(definitionDataItem, caseTypeEntity, currentAnswerExpression)
+            );
+        } else {
+            validateAnswerExpression(definitionDataItem, caseTypeEntity, answers);
         }
-    }
-
-    private boolean validateEmptyAnswer(Boolean ignoreNullFields, String answers) {
-        if (answers == null && !ignoreNullFields) {
-            throw new InvalidImportException(ERROR_MESSAGE + " value: answer cannot be null.");
-        }
-        if ((answers == null || answers.isEmpty()) && Boolean.TRUE.equals(ignoreNullFields)) {
-            log.debug("No answer is provided and ignoreNullFields is set to true");
-            return true;
-        }
-        return false;
     }
 
     private void validateAnswerExpression(DefinitionDataItem definitionDataItem,
