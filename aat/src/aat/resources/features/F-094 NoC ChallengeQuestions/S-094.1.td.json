@@ -57,7 +57,7 @@
 					"challenge_question_id": "NoCChallenge",
 					"answer_field": "${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationName}|${[scenarioContext][customValues][no_dynamic_injection_${OrganisationField.OrganisationID}:[Defendant]",
 					"question_id": "NoCChallengeQ2",
-          "ignore_null_fields": true
+          "ignore_null_fields": false
 				},
 				{
 					"case_type_id": "FT_ComplexOrganisation",
