@@ -111,30 +111,6 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
         }
     }
 
-    @Test()
-    public void testEmptyAnswerWithValidIgnoreNullFields() {
-        DefinitionDataItem definitionDataItem = buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
-            QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, null, "questionId");
-        definitionDataItem.addAttribute(ColumnName.CHALLENGE_QUESTION_IGNORE_NULL_FIELDS, true);
-
-        challengeQuestionValidator.validate(parseContext,
-            Lists.newArrayList(definitionDataItem));
-    }
-
-    @Test()
-    public void failEmptyAnswerWithInValidIgnoreNullFields() {
-        try {
-            DefinitionDataItem definitionDataItem = buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
-                QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, null, "questionId");
-            definitionDataItem.addAttribute(ColumnName.CHALLENGE_QUESTION_IGNORE_NULL_FIELDS, false);
-
-            challengeQuestionValidator.validate(parseContext,
-                Lists.newArrayList(definitionDataItem));
-        } catch (Exception exception) {
-            assertEquals("ChallengeQuestionTab Invalid value: answer cannot be null.", exception.getMessage());
-        }
-    }
-
     @Test(expected = InvalidImportException.class)
     public void failForCaseTypeValidation() {
         try {
