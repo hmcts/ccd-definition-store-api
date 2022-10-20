@@ -23,6 +23,10 @@ plugins {
     id 'uk.gov.hmcts.java' version '0.12.27'
 }
 
+def versions = [
+        jackson         : '2.14.0-rc1'
+]
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -48,7 +52,7 @@ ext['elasticsearch.version'] = '7.17.1'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['spring-security.version'] = '5.7.2'
-ext['jackson.version'] = '2.13.2'
+ext['jackson.version'] = '2.14.0-rc1'
 ext['snakeyaml.version'] = '1.32'
 ext['postgresql.version'] = '42.4.1'
 //overriding log4j2 default version 2.7 because of vulnerability issues
@@ -106,7 +110,7 @@ allprojects {
         testImplementation ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}"){
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
-        implementation  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
+        implementation  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: versions.jackson
         implementation 'net.minidev:json-smart:2.4.7'
     }
 
@@ -115,10 +119,10 @@ allprojects {
         implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
-        implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.13.2"
-        implementation "com.fasterxml.jackson.core:jackson-databind:2.13.2.2"
-        implementation "com.fasterxml.jackson.core:jackson-core:2.13.2"
-        implementation "com.fasterxml.jackson.core:jackson-annotations:2.13.2"
+        implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
         implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
         // Overriding transitive dependency commons-compress due to CVE failures
         implementation "org.apache.commons:commons-compress:1.21"
@@ -202,7 +206,7 @@ subprojects { subproject ->
         implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.21'
 
         implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
-        implementation  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
+        implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: versions.jackson
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
         implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
         implementation 'com.github.hmcts:properties-volume-spring-boot-starter:0.0.4'
@@ -276,7 +280,7 @@ subprojects { subproject ->
         testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
         testImplementation "io.github.openfeign:feign-jackson:${feignJackson}"
         testImplementation 'io.github.openfeign.form:feign-form:3.8.0'
-        testImplementation  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.13.2'
+        testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: versions.jackson
         testImplementation "org.exparity:hamcrest-date:2.0.4"
         testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
