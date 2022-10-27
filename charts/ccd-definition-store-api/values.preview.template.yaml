@@ -24,7 +24,7 @@ java:
     ELASTIC_SEARCH_ENABLED: true
 
     # TODO: remove TEMPORARY OVERRIDE to test ElasticSearch, reinstate: ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-1260-es-master
-    ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-2105-es-master
+    ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-2129-es-master
 
     # TODO: remove TEMPORARY OVERRIDE to test ElasticSearch, reinstate: USER_PROFILE_HOST: http://ccd-user-profile-api-pr-399-java
     USER_PROFILE_HOST: http://ccd-user-profile-api-pr-501-java
