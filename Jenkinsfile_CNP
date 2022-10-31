@@ -107,3 +107,4 @@ withPipeline(type, product, app) {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
     }
 }
+
