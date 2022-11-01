@@ -2,7 +2,7 @@
 
 import uk.gov.hmcts.contino.GithubAPI
 
-@Library("Infrastructure")
+@Library("Infrastructure@movehighleveldataseupinpreview")
 
 def type = "java"
 
