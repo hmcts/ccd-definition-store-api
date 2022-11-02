@@ -1,5 +1,7 @@
 #!groovy
 
+import uk.gov.hmcts.contino.GithubAPI
+
 @Library("Infrastructure")
 
 def type = "java"
@@ -65,6 +67,11 @@ withPipeline(type, product, app) {
     }
     onPR {
         enableSlackNotifications('#ccd-pr-builds')
+
+        def githubApi = new GithubAPI(this)
+        if (!githubApi.getLabelsbyPattern(env.BRANCH_NAME, "keep-helm")) {
+            enableCleanupOfHelmReleaseOnSuccess()
+        }
     }
 
     if (env.BRANCH_NAME.startsWith("PR-")) {
