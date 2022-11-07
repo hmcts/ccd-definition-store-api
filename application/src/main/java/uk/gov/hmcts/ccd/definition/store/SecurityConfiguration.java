@@ -20,6 +20,7 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthen
 import uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ElasticsearchIndexController;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
 import uk.gov.hmcts.ccd.definition.store.security.JwtGrantedAuthoritiesConverter;
+import uk.gov.hmcts.ccd.definition.store.security.filters.ExceptionHandlingFilter;
 import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
 
 import javax.inject.Inject;
@@ -39,11 +40,13 @@ public class SecurityConfiguration
 
     private final ServiceAuthFilter serviceAuthFilter;
     private final JwtAuthenticationConverter jwtAuthenticationConverter;
+    private final ExceptionHandlingFilter exceptionHandlingFilter;
 
     @Inject
     public SecurityConfiguration(final ServiceAuthFilter serviceAuthFilter,
                                  final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter) {
         this.serviceAuthFilter = serviceAuthFilter;
+        this.exceptionHandlingFilter = new ExceptionHandlingFilter();
         jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
     }
@@ -64,6 +67,7 @@ public class SecurityConfiguration
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+            .addFilterBefore(exceptionHandlingFilter, BearerTokenAuthenticationFilter.class)
             .addFilterBefore(serviceAuthFilter, BearerTokenAuthenticationFilter.class)
             .sessionManagement().sessionCreationPolicy(STATELESS).and()
             .csrf().disable()
