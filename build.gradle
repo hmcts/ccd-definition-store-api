@@ -70,7 +70,7 @@ ext {
     reformLogging= '5.1.9'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.11!!'
-    tomcatVersion = '9.0.65!!'
+    tomcatVersion = '9.0.68!!'
     feignJackson = '11.6'
     limits = [
             'instruction': 99,
@@ -286,7 +286,8 @@ subprojects { subproject ->
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.6'
+        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.7'
+
         implementation group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.6'
 
         testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
