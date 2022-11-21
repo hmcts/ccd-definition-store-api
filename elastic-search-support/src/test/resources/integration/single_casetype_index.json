@@ -411,7 +411,7 @@
                 },
                 "mapping": {
                     "total_fields": {
-                        "limit": "8000"
+                        "limit": "10000"
                     }
                 },
                 "number_of_shards": "8",
