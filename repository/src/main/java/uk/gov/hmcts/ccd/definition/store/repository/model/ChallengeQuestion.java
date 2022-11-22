@@ -16,4 +16,5 @@ public class ChallengeQuestion {
     private String challengeQuestionId;
     private String answerField;
     private String questionId;
+    private boolean ignoreNullFields;
 }
