@@ -5,6 +5,7 @@ on:
     branches:
       - master
       - RDM-10747
+      - CCD-3916_Github_Actions
 
 jobs:
   build:
