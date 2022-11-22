@@ -68,6 +68,8 @@ public class ChallengeQuestionTabRepositoryTest {
             () -> assertThat(result, hasSize(2)),
             () -> assertThat(result.get(0).getCaseType(), is(latestCaseType)),
             () -> assertThat(result.get(1).getCaseType(), is(latestCaseType)),
+            () -> assertThat(result.get(0).isIgnoreNullFields(), is(false)),
+            () -> assertThat(result.get(1).isIgnoreNullFields(), is(false)),
             () -> assertThat(result, hasItem(hasProperty("challengeQuestionId", is(CHALLENGE_QUESTION_ID)))),
             () -> assertThat(result, hasItem(hasProperty("challengeQuestionId", is(CHALLENGE_QUESTION_ID)))),
             () -> assertThat(result, hasItem(hasProperty("questionId", is("QuestionId2")))),
@@ -114,6 +116,7 @@ public class ChallengeQuestionTabRepositoryTest {
         challengeQuestion.setAnswerField("AnswerField" + suffix);
         challengeQuestion.setCaseType(caseType);
         challengeQuestion.setOrder(1);
+        challengeQuestion.setIgnoreNullFields(false);
         return challengeQuestionTabRepository.save(challengeQuestion);
     }
 }
