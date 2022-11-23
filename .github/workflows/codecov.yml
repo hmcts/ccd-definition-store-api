@@ -21,6 +21,6 @@ jobs:
       - name: Generate Code Coverage Report
         run: ./gradlew codeCoverageReport
       - name: Upload Code Coverage Report
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
           fail_ci_if_error: true
