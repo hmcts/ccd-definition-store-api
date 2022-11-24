@@ -20,7 +20,7 @@ plugins {
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
     id "info.solidsoft.pitest" version '1.5.1' apply(false)
     id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
-    id 'uk.gov.hmcts.java' version '0.12.27'
+    id 'uk.gov.hmcts.java' version '0.12.28'
 }
 
 def versions = [
@@ -39,11 +39,9 @@ apply plugin: 'se.patrikerdes.use-latest-versions'
 
 mainClassName = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
 
+apply from: './gradle/suppress.gradle'
 dependencyCheck {
     suppressionFile = 'dependency-check-suppressions.xml'
-
-    // Ignore these non-runtime configurations
-    skipConfigurations = ['codacy']
 }
 
 //spring boot dependency override
@@ -51,7 +49,7 @@ dependencyCheck {
 ext['elasticsearch.version'] = '7.17.1'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
-ext['spring-security.version'] = '5.7.2'
+ext['spring-security.version'] = '5.7.5'
 ext['jackson.version'] = '2.14.0-rc1'
 ext['snakeyaml.version'] = '1.32'
 ext['postgresql.version'] = '42.4.1'
@@ -70,7 +68,7 @@ ext {
     reformLogging= '5.1.9'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.11!!'
-    tomcatVersion = '9.0.65!!'
+    tomcatVersion = '9.0.68!!'
     feignJackson = '11.6'
     limits = [
             'instruction': 99,
