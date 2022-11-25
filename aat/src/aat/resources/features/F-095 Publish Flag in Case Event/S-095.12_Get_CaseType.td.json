@@ -1468,6 +1468,34 @@
                 "display_context_parameter": null,
                 "retain_hidden_value": null,
                 "category_id": null
+              },
+              {
+                "metadata" : false,
+                "id" : "CreatedBy",
+                "case_type_id" : null,
+                "label" : "Created By",
+                "hint_text" : null,
+                "field_type" : {
+                  "id" : "Email",
+                  "type" : "Email",
+                  "min" : null,
+                  "max" : null,
+                  "regular_expression" : null,
+                  "fixed_list_items" : [ ],
+                  "complex_fields" : [ ],
+                  "collection_field_type" : null
+                },
+                "hidden" : null,
+                "security_classification" : "PUBLIC",
+                "live_from" : null,
+                "live_until" : null,
+                "acls" : null,
+                "complexACLs" : [ ],
+                "order" : null,
+                "show_condition" : null,
+                "display_context_parameter" : null,
+                "retain_hidden_value" : null,
+                "category_id" : null
               }
             ],
             "collection_field_type": null
@@ -2298,6 +2326,34 @@
                 "display_context_parameter": null,
                 "retain_hidden_value": null,
                 "category_id": null
+              },
+              {
+                "metadata" : false,
+                "id" : "LastNoCRequestedBy",
+                "case_type_id" : null,
+                "label" : "Last NoC Requested By",
+                "hint_text" : null,
+                "field_type" : {
+                  "id" : "Email",
+                  "type" : "Email",
+                  "min" : null,
+                  "max" : null,
+                  "regular_expression" : null,
+                  "fixed_list_items" : [ ],
+                  "complex_fields" : [ ],
+                  "collection_field_type" : null
+                },
+                "hidden" : null,
+                "security_classification" : "PUBLIC",
+                "live_from" : null,
+                "live_until" : null,
+                "acls" : null,
+                "complexACLs" : [ ],
+                "order" : null,
+                "show_condition" : null,
+                "display_context_parameter" : null,
+                "retain_hidden_value" : null,
+                "category_id" : null
               }
             ],
             "collection_field_type": null
