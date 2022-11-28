@@ -37,6 +37,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageS
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.net.ccd.definition.store.domain.model.DisplayItemsData;
 import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
+import uk.gov.hmcts.net.ccd.definition.store.wiremock.config.WireMockTestConfiguration;
 
 import javax.inject.Inject;
 import javax.sql.DataSource;
@@ -58,7 +59,8 @@ import static org.mockito.Mockito.when;
 @SpringBootTest(classes = {
     CaseDataAPIApplication.class,
     TestConfiguration.class,
-    TestIdamConfiguration.class
+    TestIdamConfiguration.class,
+    WireMockTestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @AutoConfigureWireMock(port = 0)

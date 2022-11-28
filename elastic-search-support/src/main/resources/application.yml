@@ -29,6 +29,12 @@ elasticsearch:
                        "document_url":{
                           "type":"text",
                           "index":false
+                       },
+                       "category_id":{
+                          "type":"text"
+                       },
+                       "upload_timestamp":{
+                          "type":"date"
                        }
                     }
                  }'
@@ -58,6 +64,7 @@ elasticsearch:
     - CaseHistoryViewer
     - WaysToPay
     - FlagLauncher
+    - ComponentLauncher
   # typeMappings configured as 'defaultText' need to be declared in the data-store elasticsearch.type-mappings.defaultText property
   typeMappings:
     Text: ${elasticsearch.elasticMappings.defaultText}
@@ -82,7 +89,7 @@ elasticsearch:
     DynamicRadioList: ${elasticsearch.elasticMappings.ccdDynamicList}
     DynamicMultiSelectList: ${elasticsearch.elasticMappings.ccdDynamicList}
   casesIndexNameFormat: ${ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT:%s_cases}
-  casesIndexMappingFieldsLimit: ${ELASTIC_SEARCH_CASE_INDEX_MAPPING_FIELDS_LIMIT:8000}
+  casesIndexMappingFieldsLimit: ${ELASTIC_SEARCH_CASE_INDEX_MAPPING_FIELDS_LIMIT:10000}
   casesIndexType: _doc
   # casePredefinedMappings configured as 'defaultText' need to be declared in the data-store elasticsearch.case-predefined-mappings.defaultText property
   casePredefinedMappings:

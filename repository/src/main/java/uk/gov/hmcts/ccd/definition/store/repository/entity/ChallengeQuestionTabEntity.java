@@ -49,6 +49,9 @@ public class ChallengeQuestionTabEntity implements Serializable {
     @Column(name = "question_id")
     private String  questionId;
 
+    @Column(name = "ignore_null_fields", columnDefinition = "boolean default false")
+    private Boolean ignoreNullFields = false;
+
     public Integer getId() {
         return id;
     }
@@ -119,5 +122,13 @@ public class ChallengeQuestionTabEntity implements Serializable {
 
     public void setQuestionId(String questionId) {
         this.questionId = questionId;
+    }
+
+    public Boolean isIgnoreNullFields() {
+        return ignoreNullFields;
+    }
+
+    public void setIgnoreNullFields(boolean ignoreNullFields) {
+        this.ignoreNullFields = ignoreNullFields;
     }
 }

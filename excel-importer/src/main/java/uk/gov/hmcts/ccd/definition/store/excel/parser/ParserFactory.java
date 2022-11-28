@@ -7,11 +7,13 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.RoleToAccessProfilesValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.CategoryIdValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.RoleToAccessProfilesValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
+
 import java.util.concurrent.Executor;
 
 @Component
@@ -26,6 +28,7 @@ public class ParserFactory {
     private final CategoryParser categoryParser;
     private final SearchPartyValidator searchPartyValidator;
     private final SearchCriteriaValidator searchCriteriaValidator;
+    private final CategoryIdValidator categoryIdValidator;
     private final ApplicationParams applicationParams;
     private final Executor executor;
 
@@ -38,6 +41,7 @@ public class ParserFactory {
                          ChallengeQuestionParser challengeQuestionParser,
                          CategoryParser categoryParser, SearchPartyValidator searchPartyValidator,
                          SearchCriteriaValidator searchCriteriaValidator,
+                         CategoryIdValidator categoryIdValidator,
                          ApplicationParams applicationParams, @Qualifier("validateExecutor") Executor executor) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
@@ -48,6 +52,7 @@ public class ParserFactory {
         this.categoryParser = categoryParser;
         this.searchPartyValidator = searchPartyValidator;
         this.searchCriteriaValidator = searchCriteriaValidator;
+        this.categoryIdValidator = categoryIdValidator;
         this.applicationParams = applicationParams;
         this.executor = executor;
     }
@@ -151,5 +156,9 @@ public class ParserFactory {
 
     public CategoryParser createCategoriesParser() {
         return categoryParser;
+    }
+
+    public CategoryIdValidator createCategoryIdValidator() {
+        return categoryIdValidator;
     }
 }

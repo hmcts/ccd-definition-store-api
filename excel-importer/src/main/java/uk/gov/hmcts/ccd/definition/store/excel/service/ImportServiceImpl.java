@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
@@ -93,6 +94,8 @@ public class ImportServiceImpl implements ImportService {
     private final SearchCriteriaService searchCriteriaService;
     private final SearchPartyService searchPartyService;
     private final CategoryTabService categoryTabService;
+    private final TranslationService translationService;
+    private final ApplicationParams applicationParams;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -112,7 +115,9 @@ public class ImportServiceImpl implements ImportService {
                              ChallengeQuestionTabService challengeQuestionTabService,
                              RoleToAccessProfileService roleToAccessProfileService,
                              SearchCriteriaService searchCriteriaService,
-                             SearchPartyService searchPartyService, CategoryTabService categoryTabService) {
+                             SearchPartyService searchPartyService, CategoryTabService categoryTabService,
+                             TranslationService translationService,
+                             ApplicationParams applicationParams) {
 
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
@@ -133,6 +138,8 @@ public class ImportServiceImpl implements ImportService {
         this.searchCriteriaService = searchCriteriaService;
         this.searchPartyService = searchPartyService;
         this.categoryTabService = categoryTabService;
+        this.translationService = translationService;
+        this.applicationParams = applicationParams;
     }
 
     /**
@@ -207,7 +214,7 @@ public class ImportServiceImpl implements ImportService {
             .findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA));
 
         /*
-            4 - Case Type
+            4- Case Type
          */
         logger.debug("Importing spreadsheet: Case types...");
 
@@ -292,13 +299,19 @@ public class ImportServiceImpl implements ImportService {
             challengeQuestionTabService.saveAll(newChallengeQuestionEntities);
             logger.debug("Importing spreadsheet: NewChallengeQuestion...: OK");
         }
+
         parseCategoryTab(definitionSheets, parseContext);
+        parserFactory.createCategoryIdValidator().validate(parseContext);
 
         parseRoleToAccessProfiles(definitionSheets, parseContext);
 
         parseSearchCriteria(definitionSheets, parseContext);
 
         parseSearchParty(definitionSheets, parseContext);
+
+        if (applicationParams.isWelshTranslationEnabled()) {
+            translationService.processDefinitionSheets(definitionSheets);
+        }
 
         return metadata;
     }

@@ -81,7 +81,6 @@ public class ChallengeQuestionParser {
         if (fieldTypeEntity.isPresent()) {
             challengeQuestionTabEntity.setAnswerFieldType(fieldTypeEntity.get());
         }
-
         challengeQuestionTabEntity.setChallengeQuestionId(definitionDataItem.getString(ColumnName.ID));
         challengeQuestionTabEntity.setQuestionText(definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_TEXT));
         challengeQuestionTabEntity.setOrder(Integer.parseInt(definitionDataItem.getString(ColumnName.DISPLAY_ORDER)));
@@ -89,6 +88,9 @@ public class ChallengeQuestionParser {
             .getString(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD));
         challengeQuestionTabEntity.setDisplayContextParameter(definitionDataItem
             .getString(ColumnName.DISPLAY_CONTEXT_PARAMETER));
+        challengeQuestionTabEntity.setIgnoreNullFields(definitionDataItem.getBooleanOrDefault(
+            ColumnName.CHALLENGE_QUESTION_IGNORE_NULL_FIELDS, false));
         return challengeQuestionTabEntity;
     }
+
 }
