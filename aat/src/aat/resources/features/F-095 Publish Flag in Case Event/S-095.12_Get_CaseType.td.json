@@ -710,8 +710,7 @@
                         "fixed_list_items": [],
                         "complex_fields": [
                           {
-                            "__ordering__": "UNORDERED",
-                            "__elementId__": "listElementCode"
+                            "__ordering__": "UNORDERED"
                           },
                           {
                             "metadata": false,
@@ -1052,8 +1051,7 @@
                         "fixed_list_items": [],
                         "complex_fields": [
                           {
-                            "__ordering__": "UNORDERED",
-                            "__elementId__": "listElementCode"
+                            "__ordering__": "UNORDERED"
                           },
                           {
                             "metadata": false,
@@ -1623,8 +1621,7 @@
                         "fixed_list_items": [],
                         "complex_fields": [
                           {
-                            "__ordering__": "UNORDERED",
-                            "__elementId__": "listElementCode"
+                            "__ordering__": "UNORDERED"
                           },
                           {
                             "metadata": false,
@@ -2057,8 +2054,7 @@
                           "fixed_list_items": [],
                           "complex_fields": [
                             {
-                              "__ordering__": "UNORDERED",
-                              "__elementId__": "listElementCode"
+                              "__ordering__": "UNORDERED"
                             },
                             {
                               "metadata": false,
@@ -2500,8 +2496,7 @@
                   "fixed_list_items": [],
                   "complex_fields": [
                     {
-                      "__ordering__": "UNORDERED",
-                      "__elementId__": "listElementCode"
+                      "__ordering__": "UNORDERED"
                     },
                     {
                       "metadata": false,
