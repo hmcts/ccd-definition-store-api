@@ -710,6 +710,10 @@
                         "fixed_list_items": [],
                         "complex_fields": [
                           {
+                            "__ordering__": "UNORDERED",
+                            "__elementId__": "listElementCode"
+                          },
+                          {
                             "metadata": false,
                             "id": "AddressLine1",
                             "case_type_id": null,
@@ -1047,6 +1051,10 @@
                         "regular_expression": null,
                         "fixed_list_items": [],
                         "complex_fields": [
+                          {
+                            "__ordering__": "UNORDERED",
+                            "__elementId__": "listElementCode"
+                          },
                           {
                             "metadata": false,
                             "id": "AddressLine1",
@@ -1587,6 +1595,10 @@
                         "fixed_list_items": [],
                         "complex_fields": [
                           {
+                            "__ordering__": "UNORDERED",
+                            "__elementId__": "listElementCode"
+                          },
+                          {
                             "metadata": false,
                             "id": "AddressLine1",
                             "case_type_id": null,
@@ -2017,6 +2029,10 @@
                           "fixed_list_items": [],
                           "complex_fields": [
                             {
+                              "__ordering__": "UNORDERED",
+                              "__elementId__": "listElementCode"
+                            },
+                            {
                               "metadata": false,
                               "id": "AddressLine1",
                               "case_type_id": null,
@@ -2427,6 +2443,10 @@
                   "regular_expression": null,
                   "fixed_list_items": [],
                   "complex_fields": [
+                    {
+                      "__ordering__": "UNORDERED",
+                      "__elementId__": "listElementCode"
+                    },
                     {
                       "metadata": false,
                       "id": "AddressLine1",
