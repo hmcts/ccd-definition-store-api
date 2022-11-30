@@ -20,7 +20,7 @@ plugins {
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
     id "info.solidsoft.pitest" version '1.5.1' apply(false)
     id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
-    id 'uk.gov.hmcts.java' version '0.12.27'
+    id 'uk.gov.hmcts.java' version '0.12.28'
 }
 
 def versions = [
@@ -39,11 +39,9 @@ apply plugin: 'se.patrikerdes.use-latest-versions'
 
 mainClassName = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
 
+apply from: './gradle/suppress.gradle'
 dependencyCheck {
     suppressionFile = 'dependency-check-suppressions.xml'
-
-    // Ignore these non-runtime configurations
-    skipConfigurations = ['codacy']
 }
 
 //spring boot dependency override
@@ -286,7 +284,7 @@ subprojects { subproject ->
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.7'
+        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.9'
 
         implementation group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.6'
 
