@@ -20,7 +20,7 @@ plugins {
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
     id "info.solidsoft.pitest" version '1.5.1' apply(false)
     id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
-    id 'uk.gov.hmcts.java' version '0.12.27'
+    id 'uk.gov.hmcts.java' version '0.12.28'
 }
 
 def versions = [
@@ -39,11 +39,9 @@ apply plugin: 'se.patrikerdes.use-latest-versions'
 
 mainClassName = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
 
+apply from: './gradle/suppress.gradle'
 dependencyCheck {
     suppressionFile = 'dependency-check-suppressions.xml'
-
-    // Ignore these non-runtime configurations
-    skipConfigurations = ['codacy']
 }
 
 //spring boot dependency override
@@ -286,8 +284,9 @@ subprojects { subproject ->
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.10-CCD-3694_CCD-3836'
-        implementation group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.7-CCD-3694_CCD-3836'
+        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.9'
+
+        implementation group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.6'
 
         testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
 
@@ -496,4 +495,48 @@ task fortifyScan(type: JavaExec)  {
 cucumberReports {
     outputDir = file("${rootDir}/target/cucumber")
     reports = files("${rootDir}/target/cucumber.json")
+}
+
+task reloadEnvSecrets {
+    doFirst {
+        def env = project.findProperty('env') ?: 'demo'
+        if (project.file("./.${env}-remote-env").exists()) {
+            project.file("./.${env}-remote-env").delete()
+        }
+    }
+}
+
+task runRemoteDemo(type: JavaExec) {
+    main = mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    doFirst() {
+        configRemoteRunTask(it, 'demo')
+    }
+}
+
+void configRemoteRunTask(Task execTask, String env) {
+    loadEnvSecrets(env)
+    project.file("./.${env}-remote-env").readLines().each() {
+        def index = it.indexOf("=")
+        def key = it.substring(0, index)
+        def value = it.substring(index + 1)
+        execTask.environment(key, value)
+    }
+}
+
+void loadEnvSecrets(String env) {
+    def azCmd = ['az', 'keyvault', 'secret', 'show', '--vault-name', "ccd-${env}", '-o', 'tsv', '--query', 'value', '--name', 'definition-store-remote-env']
+    if (!project.file("./.${env}-remote-env").exists()) {
+        new ByteArrayOutputStream().withStream { os ->
+            exec {
+                if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+                    commandLine ['cmd', '/c'] + azCmd
+                } else {
+                    commandLine azCmd
+                }
+                standardOutput = os
+            }
+            project.file("./.${env}-remote-env").write(new String(os.toString().replace('\n', '').decodeBase64(), java.nio.charset.StandardCharsets.UTF_8))
+        }
+    }
 }
