@@ -23,10 +23,6 @@ plugins {
     id 'uk.gov.hmcts.java' version '0.12.28'
 }
 
-def versions = [
-        jackson         : '2.14.0-rc1'
-]
-
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -50,9 +46,9 @@ ext['elasticsearch.version'] = '7.17.1'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['spring-security.version'] = '5.7.5'
-ext['jackson.version'] = '2.14.0-rc1'
+ext['jackson.version'] = '2.14.1'
 ext['snakeyaml.version'] = '1.32'
-ext['postgresql.version'] = '42.4.1'
+ext['postgresql.version'] = '42.5.1'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.17.1'
 
@@ -108,7 +104,6 @@ allprojects {
         testImplementation ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}"){
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
-        implementation  group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: versions.jackson
         implementation 'net.minidev:json-smart:2.4.7'
     }
 
@@ -117,10 +112,6 @@ allprojects {
         implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
-        implementation group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: versions.jackson
-        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
-        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: versions.jackson
-        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: versions.jackson
         implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
         // Overriding transitive dependency commons-compress due to CVE failures
         implementation "org.apache.commons:commons-compress:1.21"
@@ -204,7 +195,6 @@ subprojects { subproject ->
         implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.21'
 
         implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
-        implementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: versions.jackson
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
         implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
         implementation 'com.github.hmcts:properties-volume-spring-boot-starter:0.0.4'
@@ -251,7 +241,7 @@ subprojects { subproject ->
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testImplementation 'org.apiguardian:apiguardian-api:1.0.0'
-        testImplementation "org.postgresql:postgresql:42.4.1"
+        testImplementation "org.postgresql:postgresql:42.5.1"
         testImplementation "org.testcontainers:postgresql:1.17.2"
         testImplementation "org.hamcrest:hamcrest-core:${hamcrestVersion}"
         testImplementation "org.hamcrest:hamcrest-library:${hamcrestVersion}"
@@ -278,7 +268,6 @@ subprojects { subproject ->
         testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
         testImplementation "io.github.openfeign:feign-jackson:${feignJackson}"
         testImplementation 'io.github.openfeign.form:feign-form:3.8.0'
-        testImplementation group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: versions.jackson
         testImplementation "org.exparity:hamcrest-date:2.0.4"
         testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
@@ -495,4 +484,48 @@ task fortifyScan(type: JavaExec)  {
 cucumberReports {
     outputDir = file("${rootDir}/target/cucumber")
     reports = files("${rootDir}/target/cucumber.json")
+}
+
+task reloadEnvSecrets {
+    doFirst {
+        def env = project.findProperty('env') ?: 'demo'
+        if (project.file("./.${env}-remote-env").exists()) {
+            project.file("./.${env}-remote-env").delete()
+        }
+    }
+}
+
+task runRemoteDemo(type: JavaExec) {
+    main = mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+    doFirst() {
+        configRemoteRunTask(it, 'demo')
+    }
+}
+
+void configRemoteRunTask(Task execTask, String env) {
+    loadEnvSecrets(env)
+    project.file("./.${env}-remote-env").readLines().each() {
+        def index = it.indexOf("=")
+        def key = it.substring(0, index)
+        def value = it.substring(index + 1)
+        execTask.environment(key, value)
+    }
+}
+
+void loadEnvSecrets(String env) {
+    def azCmd = ['az', 'keyvault', 'secret', 'show', '--vault-name', "ccd-${env}", '-o', 'tsv', '--query', 'value', '--name', 'definition-store-remote-env']
+    if (!project.file("./.${env}-remote-env").exists()) {
+        new ByteArrayOutputStream().withStream { os ->
+            exec {
+                if (System.getProperty('os.name').toLowerCase(Locale.ROOT).contains('windows')) {
+                    commandLine ['cmd', '/c'] + azCmd
+                } else {
+                    commandLine azCmd
+                }
+                standardOutput = os
+            }
+            project.file("./.${env}-remote-env").write(new String(os.toString().replace('\n', '').decodeBase64(), java.nio.charset.StandardCharsets.UTF_8))
+        }
+    }
 }
