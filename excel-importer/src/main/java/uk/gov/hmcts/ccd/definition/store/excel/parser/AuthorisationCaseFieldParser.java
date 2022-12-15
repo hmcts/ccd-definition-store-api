@@ -38,7 +38,9 @@ class AuthorisationCaseFieldParser implements AuthorisationParser {
         final String caseTypeReference = caseType.getReference();
         validateCaseFields(definitionSheets, definitionSheet, caseTypeReference);
 
-        final List<DefinitionDataItem> dataItems = dataItemMap.get(caseTypeReference);
+        final List<DefinitionDataItem> dataItems = dataItemMap.getOrDefault(caseTypeReference, List.of());
+        final Map<String, List<DefinitionDataItem>> collect =
+            dataItems.stream().collect(groupingBy(d -> d.getString(ColumnName.CASE_FIELD_ID)));
 
         for (CaseFieldEntity caseField : caseFields) {
             final List<CaseFieldACLEntity> parseResults = Lists.newArrayList();
@@ -47,14 +49,12 @@ class AuthorisationCaseFieldParser implements AuthorisationParser {
             LOG.debug("Parsing AuthorisationCaseField for case type {}, caseField {}...",
                 caseTypeReference, caseFieldReference);
 
-            if (null == dataItems || dataItems.isEmpty()) {
+            if (dataItems.isEmpty()) {
                 LOG.warn("No data is found for case type '{}' in AuthorisationCaseFields tab", caseTypeReference);
             } else {
                 LOG.debug("Parsing access profiles for case type '{}': '{}' AuthorisationCaseFields detected",
                     caseTypeReference, dataItems.size());
 
-                final Map<String, List<DefinitionDataItem>> collect =
-                    dataItems.stream().collect(groupingBy(d -> d.getString(ColumnName.CASE_FIELD_ID)));
 
                 List<DefinitionDataItem> definitionDataItems = collect.get(caseFieldReference);
 

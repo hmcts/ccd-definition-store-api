@@ -91,9 +91,6 @@ BEGIN
   DELETE FROM display_group WHERE case_type_id IN
     (SELECT id FROM tmp_case_type_ids);
 
-  DELETE FROM noc_config WHERE case_type_id IN
-      (SELECT id FROM tmp_case_type_ids);
-
   DELETE FROM event_webhook WHERE event_id IN
     (SELECT id FROM event WHERE case_type_id IN
         (SELECT id FROM tmp_case_type_ids)
@@ -138,13 +135,13 @@ BEGIN
   DELETE FROM role_to_access_profiles WHERE case_type_id IN
     (SELECT id FROM tmp_case_type_ids);
 
-  DELETE FROM noc_config WHERE case_type_id IN
-        (SELECT id FROM tmp_case_type_ids);
-
   DELETE FROM search_criteria WHERE case_type_id IN
     (SELECT id FROM tmp_case_type_ids);
 
   DELETE FROM search_party WHERE case_type_id IN
+    (SELECT id FROM tmp_case_type_ids);
+
+  DELETE FROM category WHERE case_type_id IN
     (SELECT id FROM tmp_case_type_ids);
 
   --Takes very long to complete

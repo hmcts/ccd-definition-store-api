@@ -16,6 +16,7 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
@@ -25,6 +26,7 @@ import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -45,6 +47,8 @@ import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubForPutDictionaryReturns200;
+import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubForPutDictionaryReturns4XX;
 
 /**
  * Component-level tests for the Core Case Definition Importer API.
@@ -90,9 +94,43 @@ public class SpreadSheetImportTest extends BaseTest {
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
+
+            stubForPutDictionaryReturns200(getDictionaryRequest());
+
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser")) //
+                .andReturn();
+
+            assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
+        }
+
+        WireMock.verify(1,
+            putRequestedFor(urlEqualTo("/user-profile/users")).withRequestBody(equalTo(EXPECTED_USER_PROFILES)));
+
+        // Check the HTTP GET request for the imported Case Type returns the correct response.
+        MvcResult getCaseTypesMvcResult = mockMvc.perform(MockMvcRequestBuilders.get(CASE_TYPE_DEF_URL)
+            .header(AUTHORIZATION, "Bearer testUser"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+        assertBody(getCaseTypesMvcResult.getResponse().getContentAsString());
+
+        assertDatabaseIsCorrect();
+    }
+
+    @Test
+    @Transactional
+    public void importValidDefinitionFile_TranslationService_return4XX() throws Exception {
+
+        try (final InputStream inputStream =
+                 new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
+            MockMultipartFile file = new MockMultipartFile("file", inputStream);
+
+            stubForPutDictionaryReturns4XX(getDictionaryRequest());
+
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+                .file(file)
+                .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
 
             assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
@@ -119,10 +157,10 @@ public class SpreadSheetImportTest extends BaseTest {
     @Test
     @Transactional
     public void importValidDefinitionFileUsingLegacyAccessProfileColumnAlias() throws Exception {
-
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_WITH_ACCESS_PROFILE_ALIAS, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
+            stubForPutDictionaryReturns200(getDictionaryRequest());
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser")) //
@@ -156,6 +194,8 @@ public class SpreadSheetImportTest extends BaseTest {
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
 
             final MockMultipartFile file = new MockMultipartFile("file", inputStream);
+
+            stubForPutDictionaryReturns200(getDictionaryRequest());
 
             // Given wiremock returns http status 403
             WireMock.stubFor(WireMock.put(urlEqualTo("/user-profile/users"))
@@ -782,5 +822,15 @@ public class SpreadSheetImportTest extends BaseTest {
     private int getIdForTestJurisdiction() {
         return jdbcTemplate.queryForObject("SELECT id FROM jurisdiction WHERE reference = 'TEST' AND version = 1",
             Integer.class);
+    }
+
+    private DictionaryRequest getDictionaryRequest()  {
+        final DictionaryRequest dictionaryRequest = new DictionaryRequest();
+        Map<String, String> translations = new HashMap<>();
+        translations.put("CaseTypeName",":");
+        translations.put("CaseFieldDescription",":");
+        translations.put("FixedLists-ListElement",":");
+        dictionaryRequest.setTranslations(translations);
+        return dictionaryRequest;
     }
 }

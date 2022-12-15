@@ -51,9 +51,9 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
         final Map<String, List<DefinitionDataItem>> dataItemMap = definitionSheet.groupDataItemsByCaseType();
         validateCaseTypes(definitionSheets, dataItemMap);
         validateStates(definitionSheets, definitionSheet, caseTypeReference);
-        final List<DefinitionDataItem> dataItems = dataItemMap.get(caseTypeReference);
+        final List<DefinitionDataItem> dataItems = dataItemMap.getOrDefault(caseTypeReference, List.of());
 
-        if (null == dataItems) {
+        if (dataItems.isEmpty()) {
             LOG.warn("No row were defined for case state '{}' in AuthorisationCaseState tab", stateReference);
         } else {
             LOG.debug("Parsing access profiles for case state {}: {} AuthorisationCaseSate detected",

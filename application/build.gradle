@@ -19,20 +19,30 @@ bootJar {
 }
 
 dependencies {
-    compile project(':app-insights')
-    compile project(':rest-api')
-    compile project(':excel-importer')
-    compile project(':elastic-search-support')
-    compile "org.springframework.boot:spring-boot-starter-web"
-    compile "org.springframework.boot:spring-boot-starter-actuator"
-    compile ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
+    implementation project(':app-insights')
+    implementation project(':rest-api')
+    implementation project(':excel-importer')
+    implementation project(':elastic-search-support')
+    implementation project(':repository')
+    implementation project(':domain')
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springframework.boot:spring-boot-starter-actuator"
+    implementation ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
     }
-    compile "org.flywaydb:flyway-core:6.5.7"
-    runtime group: 'org.postgresql', name: 'postgresql', version: '42.3.5'
+    implementation "org.flywaydb:flyway-core:6.5.7"
+    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
 
-    testCompile project(":app-insights").sourceSets.main.output
-    testCompile project(":commons").sourceSets.main.output
+    testImplementation project(":app-insights").sourceSets.main.output
+    testImplementation project(":commons").sourceSets.main.output
+}
+
+rootProject.tasks.named("distTar") {
+    duplicatesStrategy = 'include'
+}
+
+rootProject.tasks.named("distZip") {
+    duplicatesStrategy = 'include'
 }
 
 pitest {

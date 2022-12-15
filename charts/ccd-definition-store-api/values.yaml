@@ -39,7 +39,9 @@ java:
     ELASTIC_SEARCH_FAIL_ON_IMPORT: true
     ELASTIC_SEARCH_DYNAMIC: true
     ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT: '%s_cases'
-    ELASTIC_SEARCH_CASE_INDEX_MAPPING_FIELDS_LIMIT: 8000
+    ELASTIC_SEARCH_CASE_INDEX_MAPPING_FIELDS_LIMIT: 10000
+
+    WELSH_TRANSLATION_ENABLED: false
 
     # Role-based authorization for CCD Admin Web
     ADMIN_WEB_AUTHORIZATION_ENABLED: false # Needs enabling once the appropriate roles are created in IdAM
@@ -54,3 +56,4 @@ java:
     IDAM_S2S_URL: http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
     USER_PROFILE_HOST: http://ccd-user-profile-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
     OIDC_ISSUER: https://forgerock-am.service.core-compute-idam-{{ .Values.global.environment }}.internal:8443/openam/oauth2/hmcts
+    TS_TRANSLATION_SERVICE_HOST: http://ts-translation-service-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
