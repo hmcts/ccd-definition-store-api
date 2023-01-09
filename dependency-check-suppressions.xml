@@ -19,4 +19,11 @@
     <cve>CVE-2021-37533</cve>
     <cve>CVE-2021-4277</cve>
   </suppress>
+  <suppress>
+    <notes>Temporary Suppression
+        CVE-2022-3064 refer [Ticket]
+        CVE-2021-4235 refer [Ticket]</notes>
+    <cve>CVE-2022-3064</cve>
+    <cve>CVE-2021-4235</cve>
+  </suppress>
 </suppressions>
