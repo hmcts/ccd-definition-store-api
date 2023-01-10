@@ -11,9 +11,9 @@ java:
         - ccd-definition-s2s-secret
   environment:
     DEFINITION_STORE_DB_HOST: "{{ .Release.Name }}-postgresql"
-    DEFINITION_STORE_DB_NAME: "{{ .Values.postgresql.postgresqlDatabase}}"
-    DEFINITION_STORE_DB_USERNAME: "{{ .Values.postgresql.postgresqlUsername}}"
-    DEFINITION_STORE_DB_PASSWORD: "{{ .Values.postgresql.postgresqlPassword}}"
+    DEFINITION_STORE_DB_NAME: "{{ .Values.postgresql.auth.database}}"
+    DEFINITION_STORE_DB_USERNAME: "{{ .Values.postgresql.auth.username}}"
+    DEFINITION_STORE_DB_PASSWORD: "{{ .Values.postgresql.auth.password}}"
     DEFINITION_STORE_DB_OPTIONS: ""
     DEFINITION_STORE_DB_MAX_POOL_SIZE: 5
     LOG_LEVEL_ROOT: DEBUG
@@ -25,10 +25,12 @@ java:
 
     ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-1260-es-master
 
-    USER_PROFILE_HOST: http://ccd-user-profile-api-pr-399.service.core-compute-preview.internal
+    USER_PROFILE_HOST: http://ccd-user-profile-api-pr-399-java
 
     # ccd-test app-insights key - remove once testing is done
     APPINSIGHTS_INSTRUMENTATIONKEY: 2dcb834e-768e-4429-9050-ab15af959995
+
+    TS_TRANSLATION_SERVICE_HOST:
 
   postgresql:
     enabled: true

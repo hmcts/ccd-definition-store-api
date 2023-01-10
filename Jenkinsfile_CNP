@@ -1,5 +1,7 @@
 #!groovy
 
+import uk.gov.hmcts.contino.GithubAPI
+
 @Library("Infrastructure")
 
 def type = "java"
@@ -65,6 +67,11 @@ withPipeline(type, product, app) {
     }
     onPR {
         enableSlackNotifications('#ccd-pr-builds')
+
+        def githubApi = new GithubAPI(this)
+        if (!githubApi.getLabelsbyPattern(env.BRANCH_NAME, "keep-helm")) {
+            enableCleanupOfHelmReleaseOnSuccess()
+        }
     }
 
     if (env.BRANCH_NAME.startsWith("PR-")) {
@@ -80,7 +87,7 @@ withPipeline(type, product, app) {
     disableLegacyDeployment()
     enableHighLevelDataSetup()
 
-    after('smoketest:preview') {
+    afterAlways('smoketest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
     }
 
@@ -88,15 +95,15 @@ withPipeline(type, product, app) {
         env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-staging.service.core-compute-aat.internal"
     }
 
-    after('smoketest:aat') {
+    afterAlways('smoketest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
     }
 
-    after('functionalTest:preview') {
+    afterAlways('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
     }
 
-    after('functionalTest:aat') {
+    afterAlways('functionalTest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
     }
 }

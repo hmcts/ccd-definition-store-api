@@ -49,9 +49,9 @@ class AuthorisationComplexTypeParser implements AuthorisationParser {
             validateCaseTypes(definitionSheets, dataItemMap);
             validateCaseFields(definitionSheets, definitionSheet, caseTypeReference);
 
-            final List<DefinitionDataItem> dataItems = dataItemMap.get(caseTypeReference);
+            final List<DefinitionDataItem> dataItems = dataItemMap.getOrDefault(caseTypeReference, List.of());
 
-            if (null == dataItems) {
+            if (dataItems.isEmpty()) {
                 LOG.warn("No data is found for case type '{} in AuthorisationComplexTypes tab", caseTypeReference);
             } else {
                 LOG.debug("Parsing access profiles for case type '{}': '{}' AuthorisationComplexTypes detected",
