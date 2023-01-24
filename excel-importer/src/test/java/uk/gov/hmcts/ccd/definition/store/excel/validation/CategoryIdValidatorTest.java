@@ -29,6 +29,7 @@ class CategoryIdValidatorTest {
     private static final String DOCUMENT = "Document";
     private static final String DIVORCE_DOCUMENT = "divorceDocument";
     private static final String TEXT_STRING = "TEXT";
+    private static final String UUID_STRING = "e7e67248-9c0e-11ed-a8fc-0242ac120002";
 
     private ParseContext parseContext;
     private CategoryIdValidator categoryValidator;
@@ -47,23 +48,35 @@ class CategoryIdValidatorTest {
         private ParseContext buildParseContextCaseTypeEntity(String reference,
                                                              String collectionType,
                                                              String category) {
+            return buildParseContextCaseTypeEntityWithBaseFieldType(reference, collectionType, category, null);
+        }
+
+        private ParseContext buildParseContextCaseTypeEntityWithBaseFieldType(String reference,
+                                                                              String collectionType,
+                                                                              String category,
+                                                                              String baseFieldTypeReference) {
             val parseContext = new ParseContext();
             val caseTypeEntity = new CaseTypeEntity();
 
             caseTypeEntity.setReference(CASE_TYPE);
-            caseTypeEntity.addCaseField(buildCaseTypeDocumentReference(reference, collectionType, category));
+            caseTypeEntity.addCaseField(buildCaseTypeDocumentReferenceWithBaseFieldType(reference, collectionType,
+                category, baseFieldTypeReference));
 
             parseContext.registerCaseType(caseTypeEntity);
             return spy(parseContext);
         }
 
-        private CaseFieldEntity buildCaseTypeDocumentReference(String reference,
-                                                               String collectionType,
-                                                               String category) {
+        private CaseFieldEntity buildCaseTypeDocumentReferenceWithBaseFieldType(String reference,
+                                                                                String collectionType,
+                                                                                String category,
+                                                                                String baseFieldTypeReference) {
             CaseFieldEntity caseField = new CaseFieldEntity();
             FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
             if (!reference.equals(COLLECTION)) {
                 fieldTypeEntity.setReference(reference);
+                FieldTypeEntity baseFieldTypeEntity = new FieldTypeEntity();
+                baseFieldTypeEntity.setReference(baseFieldTypeReference);
+                fieldTypeEntity.setBaseFieldType(baseFieldTypeEntity);
             } else {
                 FieldTypeEntity baseFieldTypeEntity = new FieldTypeEntity();
                 FieldTypeEntity collectionFieldTypeEntity = new FieldTypeEntity();
@@ -94,6 +107,45 @@ class CategoryIdValidatorTest {
             parseContext.registerCaseTypeForCategory(CASE_TYPE, divorceDocsCategoryEntity);
             categoryValidator.validate(parseContext);
             verify(parseContext).getCategory(CASE_TYPE, DIVORCE_DOCS);
+        }
+
+        @Test
+        void testValidateCaseFieldFieldTypeDocumentWithBaseFieldTypeNullNoNullPointer() {
+            parseContext = buildParseContextCaseTypeEntityWithBaseFieldType(DOCUMENT + "-" + UUID_STRING, null, DIVORCE_DOCS, null);
+
+            parseContext.registerCaseTypeForCategory(CASE_TYPE, divorceDocsCategoryEntity);
+
+            final InvalidImportException invalidImportException =
+                assertThrows(InvalidImportException.class, () -> categoryValidator.validate(parseContext));
+
+            assertEquals(
+                "CaseFieldTab Invalid value 'divorceDocs' is not a valid CategoryID value."
+                    + " Category not permitted for this field type.",
+                invalidImportException.getMessage());
+        }
+
+        @Test
+        void testValidateCaseFieldFieldTypeDocumentWithBaseFieldTypeEqualsDocument() {
+            parseContext = buildParseContextCaseTypeEntityWithBaseFieldType(DOCUMENT + "-" + UUID_STRING, null, DIVORCE_DOCS, DOCUMENT);
+
+            parseContext.registerCaseTypeForCategory(CASE_TYPE, divorceDocsCategoryEntity);
+            categoryValidator.validate(parseContext);
+            verify(parseContext).getCategory(CASE_TYPE, DIVORCE_DOCS);
+        }
+
+        @Test
+        void testValidateCaseFieldFieldTypeDocumentWithBaseFieldTypeEqualsCollectionThrowException() {
+            parseContext = buildParseContextCaseTypeEntityWithBaseFieldType(DOCUMENT + "-" + UUID_STRING, null, DIVORCE_DOCS, COLLECTION);
+
+            parseContext.registerCaseTypeForCategory(CASE_TYPE, divorceDocsCategoryEntity);
+
+            final InvalidImportException invalidImportException =
+                assertThrows(InvalidImportException.class, () -> categoryValidator.validate(parseContext));
+
+            assertEquals(
+                "CaseFieldTab Invalid value 'divorceDocs' is not a valid CategoryID value."
+                    + " Category not permitted for this field type.",
+                invalidImportException.getMessage());
         }
 
         @Test
