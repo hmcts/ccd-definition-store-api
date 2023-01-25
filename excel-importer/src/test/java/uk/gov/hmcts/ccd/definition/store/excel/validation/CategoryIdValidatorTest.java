@@ -111,7 +111,8 @@ class CategoryIdValidatorTest {
 
         @Test
         void testValidateCaseFieldFieldTypeDocumentWithBaseFieldTypeNullNoNullPointer() {
-            parseContext = buildParseContextCaseTypeEntityWithBaseFieldType(DOCUMENT + "-" + UUID_STRING, null, DIVORCE_DOCS, null);
+            parseContext = buildParseContextCaseTypeEntityWithBaseFieldType(DOCUMENT + "-" + UUID_STRING,
+                null, DIVORCE_DOCS, null);
 
             parseContext.registerCaseTypeForCategory(CASE_TYPE, divorceDocsCategoryEntity);
 
@@ -126,7 +127,8 @@ class CategoryIdValidatorTest {
 
         @Test
         void testValidateCaseFieldFieldTypeDocumentWithBaseFieldTypeEqualsDocument() {
-            parseContext = buildParseContextCaseTypeEntityWithBaseFieldType(DOCUMENT + "-" + UUID_STRING, null, DIVORCE_DOCS, DOCUMENT);
+            parseContext = buildParseContextCaseTypeEntityWithBaseFieldType(DOCUMENT + "-" + UUID_STRING,
+                null, DIVORCE_DOCS, DOCUMENT);
 
             parseContext.registerCaseTypeForCategory(CASE_TYPE, divorceDocsCategoryEntity);
             categoryValidator.validate(parseContext);
@@ -135,7 +137,8 @@ class CategoryIdValidatorTest {
 
         @Test
         void testValidateCaseFieldFieldTypeDocumentWithBaseFieldTypeEqualsCollectionThrowException() {
-            parseContext = buildParseContextCaseTypeEntityWithBaseFieldType(DOCUMENT + "-" + UUID_STRING, null, DIVORCE_DOCS, COLLECTION);
+            parseContext = buildParseContextCaseTypeEntityWithBaseFieldType(DOCUMENT + "-" + UUID_STRING,
+                null, DIVORCE_DOCS, COLLECTION);
 
             parseContext.registerCaseTypeForCategory(CASE_TYPE, divorceDocsCategoryEntity);
 
