@@ -8,20 +8,8 @@ java:
   keyVaults:
     ccd:
       secrets:
-        - name: definition-store-api-POSTGRES-USER
-          alias: DEFINITION_STORE_DB_USERNAME
-        - name: definition-store-api-POSTGRES-PASS
-          alias: DEFINITION_STORE_DB_PASSWORD
         - name: ccd-definition-s2s-secret
           alias: DEFINITION_STORE_IDAM_KEY
-        - name: ccd-ELASTIC-SEARCH-URL
-          alias: ELASTIC_SEARCH_HOST
-        - name: ccd-ELASTIC-SEARCH-PASSWORD
-          alias: ELASTIC_SEARCH_PASSWORD
-        - name: storage-account-primary-connection-string
-          alias: AZURE_STORAGE_CONNECTION_STRING
-        - name: AppInsightsInstrumentationKey
-          alias: azure.application-insights.instrumentation-key
   environment:
     DEFINITION_STORE_DB_HOST: "{{ .Release.Name }}-postgresql"
     DEFINITION_STORE_DB_NAME: "{{ .Values.postgresql.auth.database}}"
