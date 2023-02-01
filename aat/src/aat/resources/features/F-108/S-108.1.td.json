@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-108.1",
+  "_extends_": "Test_Base_data",
+  "title": "must fail to import definition file",
+  "specs": [
+    "contains complex field type OrderSummary defined",
+    "provides a clear validation message describing why the definition import has failed, for example, 'OrderSummary' complex type defined in worksheet [ComplexTypes] tries to override a base complex 'OrderSummary' type"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/BEFTA_Master_Definition_Invalid_Complex_Base_Complex_Type_Override.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet.- Cannot override predefined complex type: OrderSummary"
+    }
+  }
+}
