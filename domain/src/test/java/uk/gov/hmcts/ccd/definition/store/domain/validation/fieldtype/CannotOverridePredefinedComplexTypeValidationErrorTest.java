@@ -4,24 +4,24 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class CannotOverrideBaseTypeValidationErrorTest {
+class CannotOverridePredefinedComplexTypeValidationErrorTest {
 
-    private CannotOverrideBaseTypeValidationError classUnderTest;
+    private CannotOverridePredefinedComplexTypeValidationError classUnderTest;
 
     @BeforeEach
     public void setUp() {
-        classUnderTest = new CannotOverrideBaseTypeValidationError(
-            fieldTypeEntityWithReference("TeXt"),
-            fieldTypeEntityWithReference("Text")
+        classUnderTest = new CannotOverridePredefinedComplexTypeValidationError(
+            fieldTypeEntityWithReference("OrderSuMMary"),
+            fieldTypeEntityWithReference("OrderSummary")
         );
     }
 
     @Test
-    public void testDefaultMessage() {
+    void testDefaultMessage() {
         assertEquals(
-            "Cannot override base type: Text",
+            "Cannot override predefined complex type: OrderSummary",
             classUnderTest.getDefaultMessage()
         );
     }
@@ -31,5 +31,4 @@ public class CannotOverrideBaseTypeValidationErrorTest {
         fieldTypeEntity.setReference(reference);
         return fieldTypeEntity;
     }
-
 }
