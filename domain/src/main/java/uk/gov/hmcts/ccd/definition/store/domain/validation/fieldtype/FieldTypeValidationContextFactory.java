@@ -17,6 +17,7 @@ public class FieldTypeValidationContextFactory {
     }
 
     public FieldTypeValidationContext create() {
-        return new FieldTypeValidationContext(typeRepository.findCurrentBaseTypes());
+        return new FieldTypeValidationContext(typeRepository.findCurrentBaseTypes(),
+                                              typeRepository.findPredefinedComplexTypes());
     }
 }
