@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +28,7 @@ import java.util.Base64;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.HttpStatus.RESET_CONTENT;
 import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.CREATE;
 
@@ -76,6 +78,19 @@ public class UserRoleController {
         final ServiceResponse<UserRole> serviceResponse = accessProfileService.createRole(userRole);
         final ResponseEntity.BodyBuilder responseEntityBuilder = ResponseEntity.status(CREATED);
         return responseEntityBuilder.body(serviceResponse.getResponseBody());
+    }
+
+    // Delete User Role is based on DraftDefinitionController.draftDefinitionDelete()
+    @DeleteMapping(URI_USER_ROLE)
+    @ResponseStatus(NO_CONTENT)
+    @ApiOperation(
+        value = "Delete a user role",
+        notes = "a user role is deleted if it exists"
+    )
+    @ApiResponse(code = 204, message = "User role is deleted")
+    public void userRoleDelete(
+        @ApiParam(value = "user role", required = true) @RequestBody @NotNull UserRole userRole) {
+        accessProfileService.deleteRole(userRole);
     }
 
     @GetMapping(value = URI_USER_ROLE, produces = {"application/json"})

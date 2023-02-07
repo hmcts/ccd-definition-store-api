@@ -38,7 +38,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.isA;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -307,6 +309,38 @@ class UserRoleControllerTest {
                     .content(MAPPER.writeValueAsBytes(argument)))
                 .andExpect(status().isCreated())
             ;
+        }
+    }
+
+    @Nested
+    @DisplayName("Delete Role Tests")
+    class DeleteRoleTests {
+
+        @Test
+        @DisplayName("Should delete role")
+        void shouldDeleteRole() throws Exception {
+            final UserRole argument = buildUserRole(ROLE_DEFINED);
+
+            mockMvc.perform(
+                    delete(URL_API_USER_ROLE)
+                        .contentType(CONTENT_TYPE)
+                        .content(MAPPER.writeValueAsBytes(argument)))
+                .andExpect(status().isNoContent());
+        }
+
+        @Test
+        @DisplayName("Should throw exception when role not found")
+        void shouldThrowException_whenRoleNotFound() throws Exception {
+            final UserRole argument = buildUserRole(ROLE_DEFINED);
+
+            doThrow(new NotFoundException("Role is not found"))
+                .when(accessProfileService).deleteRole(isA(UserRole.class));
+
+            mockMvc.perform(
+                    delete(URL_API_USER_ROLE)
+                        .contentType(CONTENT_TYPE)
+                        .content(MAPPER.writeValueAsBytes(argument)))
+                .andExpect(status().isNotFound());
         }
     }
 
