@@ -88,4 +88,16 @@ public class AccessProfileServiceImpl implements AccessProfileService {
             .map(UserRoleModelMapper::toModel)
             .collect(toList());
     }
+
+    @Transactional
+    @Override
+    public void deleteRole(final UserRole userRole) {
+        final Optional<AccessProfileEntity> searchResult = repository.findTopByReference(userRole.getRole());
+        if (searchResult.isPresent()) {
+            final AccessProfileEntity entity = searchResult.get();
+            repository.delete(entity);
+        } else {
+            throw new NotFoundException("Role '" + userRole.getRole() + "' is not found");
+        }
+    }
 }

@@ -196,6 +196,37 @@ class AccessProfileServiceImplTest {
     }
 
     @Nested
+    @DisplayName("Delete Role Tests")
+    class DeleteTests {
+        @Test
+        @DisplayName("should delete role")
+        void shouldDeleteRole() {
+            final String role = "delete";
+            givenUserRole(role, PUBLIC);
+            givenEntityWithRole(role);
+
+            doReturn(Optional.of(mockAccessProfileEntity)).when(repository).findTopByReference(role);
+
+            service.deleteRole(mockUserRole);
+
+            verify(repository).delete(any(AccessProfileEntity.class));
+        }
+
+        @Test
+        @DisplayName("should throw exception when role not found")
+        void shouldThrowException_whenRoleNotFound() {
+            final String role = "delete";
+            givenUserRole(role, PUBLIC);
+            givenEntityWithRole(role);
+
+            doReturn(Optional.empty()).when(repository).findTopByReference(role);
+
+            Throwable thrown = assertThrows(NotFoundException.class, () -> service.deleteRole(mockUserRole));
+            assertEquals("Role 'delete' is not found", thrown.getMessage());
+        }
+    }
+
+    @Nested
     @DisplayName("GetRoles Tests")
     class GetRolesTests {
         @Test
