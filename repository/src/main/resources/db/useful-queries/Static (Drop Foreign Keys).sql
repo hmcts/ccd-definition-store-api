@@ -14,6 +14,10 @@ ALTER TABLE public."challenge_question" DROP CONSTRAINT "fk_challenge_question_c
 ALTER TABLE public."challenge_question" DROP CONSTRAINT "fk_challenge_question_field_type_id";
 ALTER TABLE public."complex_field_acl" DROP CONSTRAINT "fk_complex_field_acl_case_field_id_case_field_id";
 ALTER TABLE public."complex_field_acl" DROP CONSTRAINT "fk_complex_field_acl_role_id_role_id";
+
+ALTER TABLE public."complex_field" DROP CONSTRAINT "fk_complex_field_complex_field_type_id";
+ALTER TABLE public."complex_field" DROP CONSTRAINT "fk_complex_field_field_type_id";
+
 ALTER TABLE public."definition_designer" DROP CONSTRAINT "fk_definition_designer_jurisdiction_id";
 ALTER TABLE public."display_group" DROP CONSTRAINT "fk_display_group_case_type_id";
 ALTER TABLE public."display_group" DROP CONSTRAINT "fk_display_group_event_id";

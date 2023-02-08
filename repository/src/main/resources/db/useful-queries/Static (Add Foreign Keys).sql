@@ -48,6 +48,10 @@ ALTER TABLE public."display_group" ADD CONSTRAINT "fk_display_group_case_type_id
 ALTER TABLE public."definition_designer" ADD CONSTRAINT "fk_definition_designer_jurisdiction_id" FOREIGN KEY (jurisdiction_id) REFERENCES jurisdiction(id);
 ALTER TABLE public."complex_field_acl" ADD CONSTRAINT "fk_complex_field_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
 ALTER TABLE public."complex_field_acl" ADD CONSTRAINT "fk_complex_field_acl_case_field_id_case_field_id" FOREIGN KEY (case_field_id) REFERENCES case_field(id);
+
+ALTER TABLE public."complex_field" ADD CONSTRAINT fk_complex_field_complex_field_type_id FOREIGN KEY (complex_field_type_id) REFERENCES field_type(id);
+ALTER TABLE public."complex_field" ADD CONSTRAINT fk_complex_field_field_type_id FOREIGN KEY (field_type_id) REFERENCES field_type(id);
+
 ALTER TABLE public."challenge_question" ADD CONSTRAINT "fk_challenge_question_field_type_id" FOREIGN KEY (answer_field_type) REFERENCES field_type(id);
 ALTER TABLE public."challenge_question" ADD CONSTRAINT "fk_challenge_question_case_type_id" FOREIGN KEY (case_type_id) REFERENCES case_type(id);
 ALTER TABLE public."category" ADD CONSTRAINT "fk_category_case_type_id" FOREIGN KEY (case_type_id) REFERENCES case_type(id);
