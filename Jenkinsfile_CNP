@@ -70,7 +70,7 @@ withPipeline(type, product, app) {
 
         def githubApi = new GithubAPI(this)
         if (!githubApi.getLabelsbyPattern(env.BRANCH_NAME, "keep-helm")) {
-            enableCleanupOfHelmReleaseOnSuccess()
+            enableCleanupOfHelmReleaseAlways()
         }
     }
 
