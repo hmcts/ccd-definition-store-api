@@ -45,6 +45,79 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
         assertThat(challengeQuestionTabEntities.get(0).getQuestionId(), is("questionID1"));
     }
 
+    @Test
+    public void testIgnoreNullFields_True() {
+        final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
+            getChallengeQuestionTabEntities("true");
+        assertThat(challengeQuestionTabEntities.size(), is(1));
+        assertThat(challengeQuestionTabEntities.get(0).getAnswerField(), is("${OrganisationField}:[CLAIMANT]"));
+        assertThat(challengeQuestionTabEntities.get(0).isIgnoreNullFields(), is(true));
+    }
+
+    @Test
+    public void testIgnoreNullFields_Yes() {
+        final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
+            getChallengeQuestionTabEntities("Yes");
+        assertThat(challengeQuestionTabEntities.size(), is(1));
+        assertThat(challengeQuestionTabEntities.get(0).getAnswerField(), is("${OrganisationField}:[CLAIMANT]"));
+        assertThat(challengeQuestionTabEntities.get(0).isIgnoreNullFields(), is(true));
+    }
+
+    @Test
+    public void testIgnoreNullFields_Y() {
+        final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
+            getChallengeQuestionTabEntities("Y");
+        assertThat(challengeQuestionTabEntities.size(), is(1));
+        assertThat(challengeQuestionTabEntities.get(0).getAnswerField(), is("${OrganisationField}:[CLAIMANT]"));
+        assertThat(challengeQuestionTabEntities.get(0).isIgnoreNullFields(), is(true));
+    }
+
+    @Test
+    public void testIgnoreNullFields_False() {
+        final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
+            getChallengeQuestionTabEntities("false");
+        assertThat(challengeQuestionTabEntities.size(), is(1));
+        assertThat(challengeQuestionTabEntities.get(0).getAnswerField(), is("${OrganisationField}:[CLAIMANT]"));
+        assertThat(challengeQuestionTabEntities.get(0).isIgnoreNullFields(), is(false));
+    }
+
+    @Test
+    public void testIgnoreNullFields_No() {
+        final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
+            getChallengeQuestionTabEntities("No");
+        assertThat(challengeQuestionTabEntities.size(), is(1));
+        assertThat(challengeQuestionTabEntities.get(0).getAnswerField(), is("${OrganisationField}:[CLAIMANT]"));
+        assertThat(challengeQuestionTabEntities.get(0).isIgnoreNullFields(), is(false));
+    }
+
+    @Test
+    public void testIgnoreNullFields_N() {
+        final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
+            getChallengeQuestionTabEntities("N");
+        assertThat(challengeQuestionTabEntities.size(), is(1));
+        assertThat(challengeQuestionTabEntities.get(0).getAnswerField(), is("${OrganisationField}:[CLAIMANT]"));
+        assertThat(challengeQuestionTabEntities.get(0).isIgnoreNullFields(), is(false));
+    }
+
+    @Test
+    public void testIgnoreNullFields_Default() {
+        final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
+            getChallengeQuestionTabEntities(null);
+        assertThat(challengeQuestionTabEntities.size(), is(1));
+        assertThat(challengeQuestionTabEntities.get(0).getAnswerField(), is("${OrganisationField}:[CLAIMANT]"));
+        assertThat(challengeQuestionTabEntities.get(0).isIgnoreNullFields(), is(false));
+    }
+
+    private List<ChallengeQuestionTabEntity> getChallengeQuestionTabEntities(String ignoreField) {
+        Map<String, DefinitionSheet> map = createDefinitionSheets(false);
+        DefinitionSheet definitionSheet1 = map.get(SheetName.CHALLENGE_QUESTION_TAB.getName());
+        DefinitionDataItem definitionDataItem = definitionSheet1.getDataItems().get(0);
+        definitionDataItem.addAttribute(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD.toString(),
+            "${OrganisationField}:[CLAIMANT]");
+        definitionDataItem.addAttribute(ColumnName.CHALLENGE_QUESTION_IGNORE_NULL_FIELDS.toString(), ignoreField);
+        return challengeQuestionParser.parse(map, parseContext);
+    }
+
     @Test(expected = ValidationException.class)
     public void failDueToDuplicatedIDs() {
         doThrow(new ValidationException(new ValidationResult()))
