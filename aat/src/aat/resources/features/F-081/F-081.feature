@@ -48,7 +48,7 @@ Scenario: must return 403 when request provides authentic credentials without au
       And the response has all the details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-350 @Ignore #RDM-7615
+@S-350 #RDM-7615
 Scenario: must return 404 when user provide non-existing JID {jurisdiction references} within the request
 
     Given a user with [an active profile in CCD]
