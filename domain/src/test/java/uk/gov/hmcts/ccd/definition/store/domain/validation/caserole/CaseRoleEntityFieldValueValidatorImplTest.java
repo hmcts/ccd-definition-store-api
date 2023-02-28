@@ -140,6 +140,28 @@ class CaseRoleEntityFieldValueValidatorImplTest {
         );
     }
 
+    @DisplayName("should pass - Valid CaseRole Reference including number")
+    @Test
+    void validCaseRoleIdWithNumber() {
+        caseRoleEntity.setReference("[ABCDEFGHIJ01]");
+        final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
+        assertAll(
+            () -> assertThat(result.getValidationErrors().size(), is(0)),
+            () -> assertThat(result.isValid(), is(true))
+        );
+    }
+
+    @DisplayName("should Fail - Invalid CaseRole Reference including any other character'")
+    @Test
+    void invalidCaseRoleIdWithStar() {
+        caseRoleEntity.setReference("[ABCDEFGHIJ*]");
+        final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
+        assertAll(
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.isValid(), is(false))
+        );
+    }
+
     @DisplayName("should fail - CaseRole name is null")
     @Test
     void nullCaseRoleName() {

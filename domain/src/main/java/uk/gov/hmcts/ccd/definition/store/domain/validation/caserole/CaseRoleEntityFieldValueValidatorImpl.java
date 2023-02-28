@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 @Component
 public class CaseRoleEntityFieldValueValidatorImpl implements CaseRoleEntityValidator {
 
-    private static final String CASE_ROLE_ID_REGEX = "^(\\[[A-Za-z]+\\])$";
+    private static final String CASE_ROLE_ID_REGEX = "^(\\[[A-Za-z0-9]+\\])$";
     private static final int ID_MAX_LENGTH = 255;
     private static final int NAME_MAX_LENGTH = 255;
 
