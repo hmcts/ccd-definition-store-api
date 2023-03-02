@@ -22,30 +22,29 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
 @ExtendWith(MockitoExtension.class)
-public class BaseReferenceFieldTypeValidatorTest {
-
+class PredefinedComplexReferenceFieldTypeValidatorTest {
     private static final JurisdictionEntity JURISDICTION = new JurisdictionEntity();
 
     @Mock
     private FieldTypeValidationContext context;
 
-    private final FieldTypeEntity globalType = new FieldTypeEntity();
-    public static final String GLOBAL_TYPE_REFERENCE = "Text";
+    private final FieldTypeEntity globalComplexType = new FieldTypeEntity();
+    public static final String PREDEFINED_COMPLEX_TYPE_REFERENCE = "OrderSummary";
 
-    private BaseReferenceFieldTypeValidator validator;
+    private PredefinedComplexReferenceFieldTypeValidator validator;
 
     @BeforeEach
     public void setUp() {
-        validator = new BaseReferenceFieldTypeValidator();
-        globalType.setReference(GLOBAL_TYPE_REFERENCE);
+        validator = new PredefinedComplexReferenceFieldTypeValidator();
+        globalComplexType.setReference(PREDEFINED_COMPLEX_TYPE_REFERENCE);
     }
 
-    @DisplayName("Should accept global type overriding base type reference")
+    @DisplayName("Should accept global type overriding base complex type reference")
     @Test
-    public void shouldAcceptGlobalTypeOverridingBaseTypeReference() {
+    public void shouldAcceptGlobalTypeOverridingBaseComplexTypeReference() {
         final FieldTypeEntity fieldType = new FieldTypeEntity();
-        fieldType.setReference(GLOBAL_TYPE_REFERENCE);
-        fieldType.setJurisdiction(null); // No jurisdiction --> Global field type
+        fieldType.setReference(PREDEFINED_COMPLEX_TYPE_REFERENCE);
+        fieldType.setJurisdiction(null); // No jurisdiction --> Global complex field type
 
         final ValidationResult result = validator.validate(context, fieldType);
 
@@ -61,27 +60,28 @@ public class BaseReferenceFieldTypeValidatorTest {
     @Test
     public void shouldRejectJurisdictionTypeOverridingBaseTypeReference() {
         final FieldTypeEntity fieldType = new FieldTypeEntity();
-        fieldType.setReference(GLOBAL_TYPE_REFERENCE);
+        fieldType.setReference(PREDEFINED_COMPLEX_TYPE_REFERENCE);
         fieldType.setJurisdiction(JURISDICTION);
 
-        doReturn(Collections.singleton(globalType)).when(context).getBaseTypes();
+        doReturn(Collections.singleton(globalComplexType)).when(context).getBaseComplexTypes();
 
         final ValidationResult result = validator.validate(context, fieldType);
 
         assertAll(
             () -> assertFalse(result.isValid()),
             () -> assertEquals(1, result.getValidationErrors().size()),
-            () -> assertTrue(result.getValidationErrors().get(0) instanceof CannotOverrideBaseTypeValidationError),
-            () -> assertEquals(fieldType, ((CannotOverrideBaseTypeValidationError) result.getValidationErrors().get(0))
-                .getFieldTypeEntity()),
-            () -> assertEquals(globalType, ((CannotOverrideBaseTypeValidationError) result.getValidationErrors().get(0))
-                .getConflictingFieldTypeEntity()),
-            () -> assertEquals("Cannot override base type: " + GLOBAL_TYPE_REFERENCE,
+            () -> assertTrue(result.getValidationErrors().get(0)
+                                 instanceof CannotOverridePredefinedComplexTypeValidationError),
+            () -> assertEquals(fieldType, ((CannotOverridePredefinedComplexTypeValidationError)
+                result.getValidationErrors().get(0)).getFieldTypeEntity()),
+            () -> assertEquals(globalComplexType, ((CannotOverridePredefinedComplexTypeValidationError)
+                result.getValidationErrors().get(0)).getConflictingFieldTypeEntity()),
+            () -> assertEquals("Cannot override predefined complex type: " + PREDEFINED_COMPLEX_TYPE_REFERENCE,
                                (result.getValidationErrors().get(0)).getDefaultMessage())
         );
 
-        verify(context, times(1)).getBaseTypes();
-        verify(context, times(0)).getBaseComplexTypes();
+        verify(context, times(1)).getBaseComplexTypes();
+        verify(context, times(0)).getBaseTypes();
     }
 
 }
