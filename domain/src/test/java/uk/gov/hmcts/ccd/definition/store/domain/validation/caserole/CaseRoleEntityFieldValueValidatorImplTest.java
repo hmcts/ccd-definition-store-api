@@ -140,10 +140,10 @@ class CaseRoleEntityFieldValueValidatorImplTest {
         );
     }
 
-    @DisplayName("should pass - Valid CaseRole Reference including number")
+    @DisplayName("should pass - Valid CaseRole Reference including number underscore or hyphen")
     @Test
-    void validCaseRoleIdWithNumber() {
-        caseRoleEntity.setReference("[ABCDEFGHIJ01]");
+    void validCaseRoleIdWithNumberOrUnderscoreOrHyphen() {
+        caseRoleEntity.setReference("[ABCDEFGHIJ01-_]");
         final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(0)),
@@ -151,10 +151,21 @@ class CaseRoleEntityFieldValueValidatorImplTest {
         );
     }
 
-    @DisplayName("should Fail - Invalid CaseRole Reference including any other character'")
+    @DisplayName("should Fail - Invalid CaseRole Reference including any other character")
     @Test
-    void invalidCaseRoleIdWithStar() {
+    void invalidCaseRoleIdWithSpecialCharacters() {
         caseRoleEntity.setReference("[ABCDEFGHIJ*]");
+        final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
+        assertAll(
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.isValid(), is(false))
+        );
+    }
+
+    @DisplayName("should Fail - Invalid CaseRole Reference including any not starting with Alphabets")
+    @Test
+    void invalidCaseRoleIdNotStartingWithAlphabets() {
+        caseRoleEntity.setReference("[0ABCDEFGHIJ*]");
         final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(1)),

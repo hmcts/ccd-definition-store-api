@@ -79,6 +79,40 @@ class ImportDefinitionTest extends BaseTest {
             .contains("Case Type with name 'Demo case' must have a Security Classification defined"));
     }
 
+    @Test
+    @DisplayName("Invalid CaseRole in CaseRoles tab")
+    void shouldNotImportInvalidCaseRoleInfo() {
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        Response response = asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_Invalid_CaseRole.xlsx"))
+            .expect()
+            .statusCode(400)
+            .when()
+            .post(IMPORT_URL);
+
+        assert (response.getBody().prettyPrint()
+            .contains("Case Type with name 'Demo case' must have a Security Classification defined"));
+    }
+
+    @Test
+    @DisplayName("Invalid CaseRole in CaseRoles tab")
+    void shouldNotImportValidCaseRoleInfo() {
+
+        Supplier<RequestSpecification> asUser = asAutoTestImporter();
+        Response response = asUser.get()
+            .given()
+            .multiPart(new File("src/resource/CCD_CNP_27_Valid_CaseRole.xlsx"))
+            .expect()
+            .statusCode(201)
+            .when()
+            .post(IMPORT_URL);
+
+        assert (response.getBody().prettyPrint()
+            .equals(SUCCESS_RESPONSE_BODY));
+    }
+
     @Disabled("The response code should be 400 instead of 500. Code needs to be fixed.")
     @Test
     @DisplayName("Missing SecurityType ACL column in CaseType tab")
