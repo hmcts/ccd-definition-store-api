@@ -81,6 +81,9 @@ public class CategoryIdValidator {
     boolean validFieldType(FieldTypeEntity fieldType) {
         return fieldType.getReference().equals(FieldTypeUtils.BASE_DOCUMENT)
             || (fieldType.getBaseFieldType() != null
+            && fieldType.getBaseFieldType().getReference() != null
+            && fieldType.getBaseFieldType().getReference().equals(FieldTypeUtils.BASE_DOCUMENT))
+            || (fieldType.getBaseFieldType() != null
             && fieldType.getCollectionFieldType() != null
             && fieldType.getBaseFieldType().getReference().equals(FieldTypeUtils.BASE_COLLECTION)
             && fieldType.getCollectionFieldType().getReference().equals(FieldTypeUtils.BASE_DOCUMENT));
