@@ -23,7 +23,8 @@ public class CaseRoleEntityFieldValueValidatorImpl implements CaseRoleEntityVali
                     caseRoleEntityValidationContext.getCaseName()), caseRoleEntity));
         } else if (!caseRoleEntity.getReference().matches(CASE_ROLE_ID_REGEX)) {
             validationResult.addError(new CaseRoleEntityFieldValueValidatorImpl.ValidationError(
-                String.format("CaseRole ID must be only characters with no space and between '[]' for case type '%s'",
+                String.format("CaseRole ID must be only characters followed by characters or numbers or hyphen or "
+                        + "underscore with no space and between '[]' for case type '%s'",
                     caseRoleEntityValidationContext.getCaseName()), caseRoleEntity));
         } else if (caseRoleEntity.getReference().length() > ID_MAX_LENGTH) {
             validationResult.addError(new CaseRoleEntityFieldValueValidatorImpl.ValidationError(

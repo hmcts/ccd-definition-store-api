@@ -88,17 +88,18 @@ class ImportDefinitionTest extends BaseTest {
             .given()
             .multiPart(new File("src/resource/CCD_CNP_27_Invalid_CaseRole.xlsx"))
             .expect()
-            .statusCode(400)
+            .statusCode(422)
             .when()
             .post(IMPORT_URL);
 
         assert (response.getBody().prettyPrint()
-            .contains("Case Type with name 'Demo case' must have a Security Classification defined"));
+            .contains("CaseRole ID must be only characters followed by characters or numbers or hyphen or underscore "
+                + "with no space and between '[]' for case type 'AATPUBLIC'"));
     }
 
     @Test
-    @DisplayName("Invalid CaseRole in CaseRoles tab")
-    void shouldNotImportValidCaseRoleInfo() {
+    @DisplayName("Valid CaseRole in CaseRoles tab")
+    void shouldImportValidCaseRoleInfo() {
 
         Supplier<RequestSpecification> asUser = asAutoTestImporter();
         Response response = asUser.get()
