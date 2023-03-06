@@ -93,8 +93,8 @@ class ImportDefinitionTest extends BaseTest {
             .post(IMPORT_URL);
 
         assert (response.getBody().prettyPrint()
-            .contains("CaseRole ID must be only characters followed by characters or numbers or hyphen or underscore "
-                + "with no space and between '[]' for case type 'AATPUBLIC'"));
+            .contains("CaseRole ID must begin with an alphabet and can contain underscore, hyphen and "
+              +  "alphanumeric characters with no space and between '[]' for case type 'AATPUBLIC'"));
     }
 
     @Test

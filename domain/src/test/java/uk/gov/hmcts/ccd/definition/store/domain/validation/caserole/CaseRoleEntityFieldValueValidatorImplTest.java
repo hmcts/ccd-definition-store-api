@@ -124,8 +124,8 @@ class CaseRoleEntityFieldValueValidatorImplTest {
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(1)),
             () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-                containsString("CaseRole ID must be only characters followed by characters or numbers or "
-                   + "hyphen or underscore with no space and between '[]'")),
+                containsString("CaseRole ID must begin with an alphabet and can contain underscore, hyphen "
+                    + "and alphanumeric characters with no space and between '[]'")),
             () -> assertThat(result.isValid(), is(false))
         );
     }
