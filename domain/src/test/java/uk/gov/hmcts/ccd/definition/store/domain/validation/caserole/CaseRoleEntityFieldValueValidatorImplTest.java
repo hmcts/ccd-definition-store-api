@@ -123,8 +123,9 @@ class CaseRoleEntityFieldValueValidatorImplTest {
         final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(1)),
-            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(), containsString("CaseRole ID"
-                + " must be only characters with no space and between '[]'")),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                containsString("CaseRole ID must begin with an alphabet and can contain underscore, hyphen "
+                    + "and alphanumeric characters with no space and between '[]'")),
             () -> assertThat(result.isValid(), is(false))
         );
     }
@@ -137,6 +138,39 @@ class CaseRoleEntityFieldValueValidatorImplTest {
         assertAll(
             () -> assertThat(result.getValidationErrors().size(), is(0)),
             () -> assertThat(result.isValid(), is(true))
+        );
+    }
+
+    @DisplayName("should pass - Valid CaseRole Reference including number underscore or hyphen")
+    @Test
+    void validCaseRoleIdWithNumberOrUnderscoreOrHyphen() {
+        caseRoleEntity.setReference("[ABCDEFGHIJ01-_]");
+        final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
+        assertAll(
+            () -> assertThat(result.getValidationErrors().size(), is(0)),
+            () -> assertThat(result.isValid(), is(true))
+        );
+    }
+
+    @DisplayName("should Fail - Invalid CaseRole Reference including any other character")
+    @Test
+    void invalidCaseRoleIdWithSpecialCharacters() {
+        caseRoleEntity.setReference("[ABCDEFGHIJ*]");
+        final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
+        assertAll(
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.isValid(), is(false))
+        );
+    }
+
+    @DisplayName("should Fail - Invalid CaseRole Reference including any not starting with Alphabets")
+    @Test
+    void invalidCaseRoleIdNotStartingWithAlphabets() {
+        caseRoleEntity.setReference("[0ABCDEFGHIJ*]");
+        final ValidationResult result = classUnderTest.validate(caseRoleEntity, caseRoleEntityValidationContext);
+        assertAll(
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.isValid(), is(false))
         );
     }
 
