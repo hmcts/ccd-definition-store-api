@@ -20,7 +20,7 @@ Scenario: must return the case type for an appropriate request
       And the response has all other details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-509  @Ignore # Response code mismatch, expected: 401, actual: 403 RDM-6628
+@S-509 # Response code mismatch, expected: 401, actual: 403 RDM-6628
 Scenario: must return 401 when request does not provide valid authentication credentials
 
     Given a user with [an active profile in CCD]
@@ -34,7 +34,7 @@ Scenario: must return 401 when request does not provide valid authentication cre
       And the response has all the details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-510 @Ignore # Response code mismatch, expected: 403, actual: 200 RDM-7562
+@S-510 # Response code mismatch, expected: 403, actual: 200 RDM-7562
 Scenario: must return 403 when request provides authentic credentials without authorised access to the operation 
 
     Given a user with [an active profile in CCD, and insufficient privilege to the case type]
