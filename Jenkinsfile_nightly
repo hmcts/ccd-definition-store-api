@@ -45,11 +45,11 @@ def vaultOverrides = [
 ]
 
 // Vars needed for AKS functional and smoke tests
-env.TEST_URL = "http://ccd-definition-store-api-aat.service.core-compute-aat.internal"
+env.TEST_URL = "http://ccd-definition-store-api-aat.preview.platform.hmcts.net"
 env.BEFTA_S2S_CLIENT_ID = "ccd_gw"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
 env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN"
-env.CCD_STUB_SERVICE_URI_BASE="ccd-test-stubs-service-aat.service.core-compute-aat.internal"
+env.CCD_STUB_SERVICE_URI_BASE="ccd-test-stubs-service-aat.preview.platform.hmcts.net"
 
 
 
@@ -58,7 +58,7 @@ withNightlyPipeline(type, product, component) {
     env.OAUTH2_CLIENT_ID = "ccd_gateway"
     env.OAUTH2_REDIRECT_URI = "https://www-ccd.nonprod.platform.hmcts.net/oauth2redirect"
     env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
-    env.S2S_URL = "http://rpe-service-auth-provider-aat.service.core-compute-aat.internal"
+    env.S2S_URL = "http://rpe-service-auth-provider-aat.preview.platform.hmcts.net"
     env.CCD_GW_SERVICE_NAME = "ccd_gw"
 
     loadVaultSecrets(secrets)
