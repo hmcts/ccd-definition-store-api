@@ -1,6 +1,6 @@
 # Keep hub.Dockerfile aligned to this file as far as possible
 # ARG JAVA_OPTS="-Djava.security.egd=file:/dev/./urandom"
-ARG JAVA_OPTS="-XX:+UseConcMarkSweepGC -Xlog:gc*,gc+heap -XX:+HeapDumpOnOutOfMemoryError -XX:+ExitOnOutOfMemoryError -Djava.security.egd=file:/dev/./urandom"
+ARG JAVA_OPTS="-XX:+UseConcMarkSweepGC -Djava.security.egd=file:/dev/./urandom"
 ARG APP_INSIGHTS_AGENT_VERSION=2.6.1
 ARG PLATFORM=""
 
