@@ -80,7 +80,6 @@ public class UserRoleController {
         return responseEntityBuilder.body(serviceResponse.getResponseBody());
     }
 
-    // Delete User Role is based on DraftDefinitionController.draftDefinitionDelete()
     @DeleteMapping(URI_USER_ROLE)
     @ResponseStatus(NO_CONTENT)
     @ApiOperation(
@@ -89,8 +88,9 @@ public class UserRoleController {
     )
     @ApiResponse(code = 204, message = "User role is deleted")
     public void userRoleDelete(
-        @ApiParam(value = "user role", required = true) @RequestBody @NotNull UserRole userRole) {
-        accessProfileService.deleteRole(userRole);
+        @ApiParam(value = "user role", required = true) @RequestParam("role") @NotNull byte[] roleBase64EncodedBytes) {
+        final String role = new String(Base64.getDecoder().decode(roleBase64EncodedBytes));
+        accessProfileService.deleteRole(role);
     }
 
     @GetMapping(value = URI_USER_ROLE, produces = {"application/json"})

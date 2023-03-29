@@ -207,7 +207,7 @@ class AccessProfileServiceImplTest {
 
             doReturn(Optional.of(mockAccessProfileEntity)).when(repository).findTopByReference(role);
 
-            service.deleteRole(mockUserRole);
+            service.deleteRole(role);
 
             verify(repository).delete(any(AccessProfileEntity.class));
         }
@@ -221,7 +221,7 @@ class AccessProfileServiceImplTest {
 
             doReturn(Optional.empty()).when(repository).findTopByReference(role);
 
-            Throwable thrown = assertThrows(NotFoundException.class, () -> service.deleteRole(mockUserRole));
+            Throwable thrown = assertThrows(NotFoundException.class, () -> service.deleteRole(role));
             assertEquals("Role 'delete' is not found", thrown.getMessage());
         }
     }

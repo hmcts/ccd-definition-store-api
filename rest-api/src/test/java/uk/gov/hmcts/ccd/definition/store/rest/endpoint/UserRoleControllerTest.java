@@ -319,27 +319,23 @@ class UserRoleControllerTest {
         @Test
         @DisplayName("Should delete role")
         void shouldDeleteRole() throws Exception {
-            final UserRole argument = buildUserRole(ROLE_DEFINED);
+            uriVariables.put("role", Base64.getEncoder().encode(ROLE_DEFINED.getBytes()));
 
             mockMvc.perform(
-                    delete(URL_API_USER_ROLE)
-                        .contentType(CONTENT_TYPE)
-                        .content(MAPPER.writeValueAsBytes(argument)))
+                    delete(URL_TEMPLATE.expand(uriVariables)))
                 .andExpect(status().isNoContent());
         }
 
         @Test
         @DisplayName("Should throw exception when role not found")
         void shouldThrowException_whenRoleNotFound() throws Exception {
-            final UserRole argument = buildUserRole(ROLE_DEFINED);
+            uriVariables.put("role", Base64.getEncoder().encode(ROLE_DEFINED.getBytes()));
 
             doThrow(new NotFoundException("Role is not found"))
-                .when(accessProfileService).deleteRole(isA(UserRole.class));
+                .when(accessProfileService).deleteRole(ROLE_DEFINED);
 
             mockMvc.perform(
-                    delete(URL_API_USER_ROLE)
-                        .contentType(CONTENT_TYPE)
-                        .content(MAPPER.writeValueAsBytes(argument)))
+                    delete(URL_TEMPLATE.expand(uriVariables)))
                 .andExpect(status().isNotFound());
         }
     }
