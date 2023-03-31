@@ -21,7 +21,7 @@ Scenario: must return 200 with List of jurisdictions
       And the response has all other details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-348 @Ignore # Response code mismatch, expected: 401, actual: 403 RDM-6628
+@S-348 # Response code mismatch, expected: 401, actual: 403 RDM-6628
 Scenario: must return 401 when request does not provide valid authentication credentials
 
     Given a user with [an active profile in CCD]
@@ -35,7 +35,7 @@ Scenario: must return 401 when request does not provide valid authentication cre
       And the response has all the details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-349 @Ignore # Response code mismatch, expected: 403, actual: 200 Is this valid?
+@S-349 # Response code mismatch, expected: 403, actual: 200 Is this valid?
 Scenario: must return 403 when request provides authentic credentials without authorised access to the operation
 
     Given a user with [an active profile in CCD, and insufficient privilege to the case type]
@@ -48,7 +48,7 @@ Scenario: must return 403 when request provides authentic credentials without au
       And the response has all the details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-350 @Ignore #RDM-7615
+@S-350 #RDM-7615
 Scenario: must return 404 when user provide non-existing JID {jurisdiction references} within the request
 
     Given a user with [an active profile in CCD]

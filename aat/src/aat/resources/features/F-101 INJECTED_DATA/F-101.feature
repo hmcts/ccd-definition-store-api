@@ -33,7 +33,7 @@ Feature: F-101: Injected Data
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-101.6 @Ignore
+  @S-101.6
   Scenario: Import Definition file with [INJECTED_DATA.<value>] in PageShowCondition column of the CaseEventToFields tab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
