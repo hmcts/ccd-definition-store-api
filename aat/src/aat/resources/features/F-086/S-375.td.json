@@ -24,30 +24,35 @@
      "wizard_pages" : [ {
        "id" : "createCaseSingleFormPage",
        "label" : "Data Field Types Page",
-       "order" : 1,
-       "wizard_page_fields" : [ {
+       "order" : "[[ANYTHING_PRESENT]]",
+       "wizard_page_fields" : [
+         {
+           "__ordering__": "UNORDERED",
+           "__elementId__": "case_field_id"
+         },
+         {
          "case_field_id" : "CollectionField",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "AddressField",
-         "order" : 2,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "caseNameHmctsInternal",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "TextField",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "OrganisationPolicyField2",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ {
            "complex_field_element_id" : "OrganisationPolicyField2.Organisation.OrganisationID",
@@ -180,82 +185,82 @@
          } ]
        }, {
          "case_field_id" : "MoneyField",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "NumberField",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "caseLinks",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "TextAreaField",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "MarritalStatus",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "DocumentField",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "MultiSelectField",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "CaseLinkCollection",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "DateField",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "AddressUKField",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "EmailField",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "CollectionFieldMan",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "CaseLinkField",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "YesNoField",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "DynamicList",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
          "case_field_id" : "OrganisationPolicyField1",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ {
            "complex_field_element_id" : "OrganisationPolicyField1.Organisation.OrganisationID",
@@ -388,7 +393,7 @@
          } ]
        }, {
          "case_field_id" : "PhoneField",
-         "order" : 1,
+         "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        } ],
