@@ -45,7 +45,7 @@ def vaultOverrides = [
 ]
 
 // Vars needed for AKS functional and smoke tests
-env.TEST_URL = "http://ccd-definition-store-api-aat.service.core-compute-aat.internal"
+env.TEST_URL = "http://ccd-definition-store-api-aat.aat.platform.hmcts.net"
 env.BEFTA_S2S_CLIENT_ID = "ccd_gw"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
 env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN"
