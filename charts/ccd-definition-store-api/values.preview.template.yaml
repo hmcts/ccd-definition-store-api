@@ -8,8 +8,7 @@ java:
   keyVaults:
     ccd:
       secrets:
-        - name: ccd-definition-s2s-secret
-          alias: DEFINITION_STORE_IDAM_KEY
+        - ccd-definition-s2s-secret
   environment:
     DEFINITION_STORE_DB_HOST: "{{ .Release.Name }}-postgresql"
     DEFINITION_STORE_DB_NAME: "{{ .Values.postgresql.auth.database}}"
