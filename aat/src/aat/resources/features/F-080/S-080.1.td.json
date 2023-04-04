@@ -708,7 +708,7 @@
           },
           "hidden": false,
           "security_classification": "PUBLIC",
-          "live_from": "2022-12-19",
+          "live_from": "[[ANYTHING_PRESENT]]",
           "live_until": null,
           "acls": [],
           "complexACLs": [],
