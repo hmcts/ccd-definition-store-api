@@ -49,7 +49,7 @@ env.TEST_URL = "http://ccd-definition-store-api-aat.aat.platform.hmcts.net"
 env.BEFTA_S2S_CLIENT_ID = "ccd_gw"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
 env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN"
-env.CCD_STUB_SERVICE_URI_BASE="ccd-test-stubs-service-aat.aat.platform.hmcts.net"
+env.CCD_STUB_SERVICE_URI_BASE="ccd-test-stubs-service-aat.service.core-compute-aat.internal"
 
 
 
