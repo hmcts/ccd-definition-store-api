@@ -117,6 +117,10 @@
           "order": 1,
           "case_fields": [
             {
+              "__ordering__": "UNORDERED",
+              "__elementId__": "case_field_id"
+            },
+            {
               "case_field_id": "CaseAccessCategory",
               "display_context": "OPTIONAL",
               "display_context_parameter": null,
