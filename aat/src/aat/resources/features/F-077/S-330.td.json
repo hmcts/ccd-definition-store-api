@@ -7,11 +7,6 @@
 		"an active profile in CCD, and insufficient privilege to the operation",
 		"contains 403 forbidden code"
 	],
-  "users": {
-    "invokingUser": {
-      "_extends_": "BeftaCitizen2"
-    }
-  },
 
 	"expectedResponse": {
 		"_extends_": "Common_403_Response",

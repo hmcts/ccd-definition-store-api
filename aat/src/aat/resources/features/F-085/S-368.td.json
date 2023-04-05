@@ -1,6 +1,6 @@
 {
-	"_guid_": "S-363",
-	"_extends_": "F-084_Test_Base_Data",
+	"_guid_": "S-368",
+	"_extends_": "F-085_Test_Base_Data",
 	"title": "must return 404 when request provides a non-existing case type id",
 
 	"specs": [
