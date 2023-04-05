@@ -7,6 +7,10 @@
 	 "an active profile in CCD, and insufficient privilege to the case type",
 	 "contains 403 forbidden code"
 	],
+  "users": {
+    "invokingUser": {
+      "_extends_": "BeftaCitizen2"
+    },
 
 	"request": {
 	 "pathVariables": {
