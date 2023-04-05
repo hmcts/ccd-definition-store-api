@@ -33,21 +33,21 @@
         "live_until" : null,
         "case_types" : [ ]
       },
-      "events" : [ {
+      "events" : [
+        {
+          "__ordering__": "UNORDERED",
+          "__elementId__": "case_field_id"
+        },
+        {
+          "__ordering__": "UNORDERED",
+          "__elementId__": "case_fields_complex"
+        },
+        {
         "id" : "createOrganisation",
         "name" : "Create organisation",
         "description" : "Create organisation information",
         "order" : "[[ANYTHING_PRESENT]]",
-        "case_fields" : [
-          {
-            "__ordering__": "UNORDERED",
-            "__elementId__": "case_field_id"
-          },
-          {
-            "__ordering__": "UNORDERED",
-            "__elementId__": "case_fields_complex"
-          },
-          {
+        "case_fields" : [ {
           "case_field_id" : "OrganisationField",
           "display_context" : "COMPLEX",
           "display_context_parameter" : null,
