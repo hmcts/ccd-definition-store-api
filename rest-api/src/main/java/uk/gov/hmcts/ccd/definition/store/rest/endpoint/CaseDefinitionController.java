@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,15 @@ import java.util.Optional;
 @RequestMapping(value = "/api")
 public class CaseDefinitionController {
 
+    @Value("${spring.datasource.url}")
+    private String springDatasourceUrl;
+
+    @Value("${spring.datasource.username}")
+    private String springDatasourceUsername;
+
+    @Value("${spring.datasource.password}")
+    private String springDatasourcePassword;
+
     private CaseTypeService caseTypeService;
     private JurisdictionService jurisdictionService;
     private final CaseRoleService caseRoleService;
@@ -45,6 +55,12 @@ public class CaseDefinitionController {
         this.jurisdictionService = jurisdictionService;
         this.caseRoleService = caseRoleService;
         this.roleToAccessProfilesService = roleToAccessProfilesService;
+        LOG.info("JCDEBUG: CaseDefinitionController: springDatasourceUrl = "
+            + (springDatasourceUrl == null ? "NULL" : springDatasourceUrl));
+        LOG.info("JCDEBUG: CaseDefinitionController: springDatasourceUsername = "
+            + (springDatasourceUsername == null ? "NULL" : springDatasourceUsername));
+        LOG.info("JCDEBUG: CaseDefinitionController: springDatasourcePassword = "
+            + (springDatasourcePassword == null ? "NULL" : springDatasourcePassword));
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(CaseDefinitionController.class);
@@ -128,6 +144,13 @@ public class CaseDefinitionController {
         @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> idsOptional) {
 
         LOG.debug("received find jurisdictions request with ids: {}", idsOptional);
+
+        LOG.info("JCDEBUG: CaseDefinitionController.findJurisdictions: springDatasourceUrl = "
+            + (springDatasourceUrl == null ? "NULL" : springDatasourceUrl));
+        LOG.info("JCDEBUG: CaseDefinitionController.findJurisdictions: springDatasourceUsername = "
+            + (springDatasourceUsername == null ? "NULL" : springDatasourceUsername));
+        LOG.info("JCDEBUG: CaseDefinitionController.findJurisdictions: springDatasourcePassword = "
+            + (springDatasourcePassword == null ? "NULL" : springDatasourcePassword));
 
         return idsOptional.map(ids -> jurisdictionService.getAll(ids)).orElseGet(jurisdictionService::getAll);
     }
