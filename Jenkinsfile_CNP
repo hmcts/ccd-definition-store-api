@@ -53,7 +53,7 @@ def vaultOverrides = [
 env.BEFTA_S2S_CLIENT_ID = "ccd_gw"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
 env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN"
-env.CCD_STUB_SERVICE_URI_BASE="ccd-test-stubs-service-aat.service.core-compute-aat.internal"
+env.CCD_STUB_SERVICE_URI_BASE="ccd-test-stubs-service-aat.aat.platform.hmcts.net"
 
 withPipeline(type, product, app) {
     onMaster {
@@ -76,7 +76,7 @@ withPipeline(type, product, app) {
 
     if (env.BRANCH_NAME.startsWith("PR-")) {
         environmentOfDependencies = env.BRANCH_NAME.toLowerCase()
-        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-${environmentOfDependencies}.service.core-compute-preview.internal"
+        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-${environmentOfDependencies}.preview.platform.hmcts.net"
     }
 
     syncBranchesWithMaster(branchesToSync)
@@ -92,7 +92,7 @@ withPipeline(type, product, app) {
     }
 
     before('smoketest:aat') {
-        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-staging.service.core-compute-aat.internal"
+        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-staging.aat.platform.hmcts.net"
     }
 
     afterAlways('smoketest:aat') {
