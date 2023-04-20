@@ -12,7 +12,7 @@ import static uk.gov.hmcts.befta.dse.ccd.DataLoaderToDefinitionStore.VALID_CCD_T
 
 public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationAdapter {
 
-    private final static Logger LOG = LoggerFactory.getLogger(DefinitionStoreTestAutomationAdapter.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DefinitionStoreTestAutomationAdapter.class);
 
     public static final String TEMPORARY_DEFINITION_FOLDER = "build/tmp/definition_files_copy";
 
