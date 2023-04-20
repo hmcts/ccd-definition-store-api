@@ -12,7 +12,7 @@ import static uk.gov.hmcts.befta.dse.ccd.DataLoaderToDefinitionStore.VALID_CCD_T
 
 public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationAdapter {
 
-    private final Logger log = LoggerFactory.getLogger(DefinitionStoreTestAutomationAdapter.class);
+    private final static Logger LOG = LoggerFactory.getLogger(DefinitionStoreTestAutomationAdapter.class);
 
     public static final String TEMPORARY_DEFINITION_FOLDER = "build/tmp/definition_files_copy";
 
@@ -48,9 +48,9 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
                 "Copy valid def files generated from a JSON template to a temporary location for use in FTAs: '%s'",
                 TEMPORARY_DEFINITION_FOLDER
             ));
-            log.info("JCDEBUG: DefinitionStoreTestAutomationAdapter #1");
+            LOG.info("JCDEBUG: DefinitionStoreTestAutomationAdapter #1");
             testDataLoader.getAllDefinitionFilesToLoadAt(VALID_CCD_TEST_DEFINITIONS_PATH, TEMPORARY_DEFINITION_FOLDER);
-            log.info("JCDEBUG: DefinitionStoreTestAutomationAdapter #2");
+            LOG.info("JCDEBUG: DefinitionStoreTestAutomationAdapter #2");
             BeftaUtils.defaultLog("Copy complete.\n");
         }
     }
