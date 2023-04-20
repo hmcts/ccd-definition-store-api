@@ -14,8 +14,7 @@ public class DefinitionStoreBeftaMain extends BeftaMain {
             taAdapter.initialiseTestDataLoader();
 
             BeftaMain.main(args, taAdapter);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.info("JCDEBUG: Exception in DefinitionStoreBeftaMain.main: {} , {}", e.getMessage(), e.toString());
         }
     }

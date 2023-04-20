@@ -18,8 +18,7 @@ public class CaseDataAPIApplication {
     public static void main(String[] args) {
         try {
             SpringApplication.run(CaseDataAPIApplication.class, args);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.info("JCDEBUG: Exception in CaseDataAPIApplication.main: {} , {}", e.getMessage(), e.toString());
         }
     }

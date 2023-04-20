@@ -21,8 +21,7 @@ public class HighLevelDataSetupApp extends DataLoaderToDefinitionStore {
             if (!args[0].toLowerCase(Locale.ENGLISH).equals("prod")) {
                 main(HighLevelDataSetupApp.class, args);
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             LOG.info("JCDEBUG: Exception in HighLevelDataSetupApp.main: {} , {}", e.getMessage(), e.toString());
         }
     }
