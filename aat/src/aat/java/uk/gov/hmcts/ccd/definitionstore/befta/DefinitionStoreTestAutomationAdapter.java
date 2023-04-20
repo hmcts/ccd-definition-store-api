@@ -48,9 +48,9 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
                 "Copy valid def files generated from a JSON template to a temporary location for use in FTAs: '%s'",
                 TEMPORARY_DEFINITION_FOLDER
             ));
-            LOG.info("JCDEBUG: DefinitionStoreTestAutomationAdapter #1");
+            LOG.info("JCDEBUG: ************ DefinitionStoreTestAutomationAdapter #1");
             testDataLoader.getAllDefinitionFilesToLoadAt(VALID_CCD_TEST_DEFINITIONS_PATH, TEMPORARY_DEFINITION_FOLDER);
-            LOG.info("JCDEBUG: DefinitionStoreTestAutomationAdapter #2");
+            LOG.info("JCDEBUG: ************ DefinitionStoreTestAutomationAdapter #2");
             BeftaUtils.defaultLog("Copy complete.\n");
         }
     }
