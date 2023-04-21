@@ -8,7 +8,6 @@ import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,23 +32,10 @@ import java.util.Optional;
 @RequestMapping(value = "/api")
 public class CaseDefinitionController {
 
-    @Value("${spring.datasource.url}")
-    private String springDatasourceUrl;
-
-    @Value("${spring.datasource.username}")
-    private String springDatasourceUsername;
-
-    @Value("${spring.datasource.password}")
-    private String springDatasourcePassword;
-
     private CaseTypeService caseTypeService;
     private JurisdictionService jurisdictionService;
     private final CaseRoleService caseRoleService;
     private final RoleToAccessProfileService roleToAccessProfilesService;
-
-    private void jcdebug(String message1, String message2) {
-        LOG.info(message1, (message2 == null ? "NULL" : message2));
-    }
 
     @Autowired
     public CaseDefinitionController(CaseTypeService caseTypeService, JurisdictionService jurisdictionService,
@@ -59,9 +45,6 @@ public class CaseDefinitionController {
         this.jurisdictionService = jurisdictionService;
         this.caseRoleService = caseRoleService;
         this.roleToAccessProfilesService = roleToAccessProfilesService;
-        jcdebug("JCDEBUG: CaseDefinitionController: springDatasourceUrl = {}", springDatasourceUrl);
-        jcdebug("JCDEBUG: CaseDefinitionController: springDatasourceUsername = {}", springDatasourceUsername);
-        jcdebug("JCDEBUG: CaseDefinitionController: springDatasourcePassword = {}", springDatasourcePassword);
     }
 
     private static final Logger LOG = LoggerFactory.getLogger(CaseDefinitionController.class);
@@ -145,10 +128,6 @@ public class CaseDefinitionController {
         @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> idsOptional) {
 
         LOG.debug("received find jurisdictions request with ids: {}", idsOptional);
-
-        jcdebug("JCDEBUG: findJurisdictions: springDatasourceUrl = {}", springDatasourceUrl);
-        jcdebug("JCDEBUG: findJurisdictions: springDatasourceUsername = {}", springDatasourceUsername);
-        jcdebug("JCDEBUG: findJurisdictions: springDatasourcePassword = {}", springDatasourcePassword);
 
         return idsOptional.map(ids -> jurisdictionService.getAll(ids)).orElseGet(jurisdictionService::getAll);
     }

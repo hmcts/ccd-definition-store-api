@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definitionstore.befta;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.befta.dse.ccd.CcdEnvironment;
 import uk.gov.hmcts.befta.dse.ccd.DataLoaderToDefinitionStore;
 import uk.gov.hmcts.befta.util.BeftaUtils;
@@ -10,17 +8,13 @@ import java.util.Locale;
 
 public class HighLevelDataSetupApp extends DataLoaderToDefinitionStore {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HighLevelDataSetupApp.class);
-
     public HighLevelDataSetupApp(CcdEnvironment dataSetupEnvironment) {
         super(dataSetupEnvironment);
     }
 
     public static void main(String[] args) throws Throwable {
         if (!args[0].toLowerCase(Locale.ENGLISH).equals("prod")) {
-            LOG.info("JCDEBUG: HighLevelDataSetupApp #1");
             main(HighLevelDataSetupApp.class, args);
-            LOG.info("JCDEBUG: HighLevelDataSetupApp #2");
         }
     }
 
