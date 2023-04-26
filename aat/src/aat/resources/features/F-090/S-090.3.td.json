@@ -44,10 +44,6 @@
             "__elementId__": "case_field_id"
           },
           {
-            "__ordering__": "UNORDERED",
-            "__elementId__": "case_fields_complex"
-          },
-          {
           "case_field_id" : "OrganisationField",
           "display_context" : "COMPLEX",
           "display_context_parameter" : null,
