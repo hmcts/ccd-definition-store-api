@@ -22,7 +22,7 @@
       "id": "FT_ComplexOrganisation",
       "description": "CaseType for testing Organisation base complex type",
       "version": {
-        "number": 2,
+        "number": "[[ANYTHING_PRESENT]]",
         "live_from": "[[ANYTHING_PRESENT]]",
         "live_until": null
       },
