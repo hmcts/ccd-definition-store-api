@@ -278,7 +278,12 @@
         "name" : "Update organisation",
         "description" : "Update organisation information",
         "order" : "[[ANYTHING_PRESENT]]",
-        "case_fields" : [ {
+        "case_fields" : [
+          {
+            "__ordering__": "UNORDERED",
+            "__elementId__": "case_field_id"
+          },
+          {
           "case_field_id" : "OrganisationField",
           "display_context" : "COMPLEX",
           "display_context_parameter" : null,
