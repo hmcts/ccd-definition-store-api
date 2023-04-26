@@ -31,10 +31,6 @@
            "__elementId__": "case_field_id"
          },
          {
-           "__ordering__": "UNORDERED",
-           "__elementId__": "complex_field_overrides"
-         },
-         {
          "case_field_id" : "CollectionField",
          "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
@@ -58,7 +54,12 @@
          "case_field_id" : "OrganisationPolicyField2",
          "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
-         "complex_field_overrides" : [{
+         "complex_field_overrides" : [
+           {
+             "__ordering__": "UNORDERED",
+             "__elementId__": "complex_field_element_id"
+           },
+           {
            "complex_field_element_id" : "OrganisationPolicyField2.Organisation.OrganisationID",
            "display_context" : "OPTIONAL",
            "label" : null,
@@ -266,7 +267,12 @@
          "case_field_id" : "OrganisationPolicyField1",
          "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
-         "complex_field_overrides" : [ {
+         "complex_field_overrides" : [
+           {
+             "__ordering__": "UNORDERED",
+             "__elementId__": "complex_field_element_id"
+           },
+           {
            "complex_field_element_id" : "OrganisationPolicyField1.Organisation.OrganisationID",
            "display_context" : "OPTIONAL",
            "label" : null,

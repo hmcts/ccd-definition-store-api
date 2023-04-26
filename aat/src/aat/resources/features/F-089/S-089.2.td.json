@@ -1291,6 +1291,10 @@
           ],
           "complexACLs": [
             {
+              "__ordering__": "UNORDERED",
+              "__elementId__": "listElementCode"
+            },
+            {
               "role": "caseworker-befta_master",
               "create": true,
               "read": true,
