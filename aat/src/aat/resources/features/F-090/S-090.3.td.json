@@ -95,7 +95,12 @@
           "publish" : false,
           "publish_as" : null,
           "default_value" : null,
-          "case_fields_complex" : [ {
+          "case_fields_complex" : [
+            {
+              "__ordering__": "UNORDERED",
+              "__elementId__": "reference"
+            },
+            {
             "reference" : "OrgPolicyReference",
             "hint" : null,
             "label" : null,
@@ -149,7 +154,12 @@
           "publish" : false,
           "publish_as" : null,
           "default_value" : null,
-          "case_fields_complex" : [ {
+          "case_fields_complex" : [
+            {
+              "__ordering__": "UNORDERED",
+              "__elementId__": "reference"
+            },
+            {
             "reference" : "NotesReason",
             "hint" : null,
             "label" : null,
@@ -301,7 +311,12 @@
           "publish" : false,
           "publish_as" : null,
           "default_value" : null,
-          "case_fields_complex" : [ {
+          "case_fields_complex" : [
+            {
+              "__ordering__": "UNORDERED",
+              "__elementId__": "reference"
+            },
+            {
             "reference" : "OrganisationName",
             "hint" : null,
             "label" : null,
@@ -335,7 +350,12 @@
           "publish" : false,
           "publish_as" : null,
           "default_value" : null,
-          "case_fields_complex" : [ {
+          "case_fields_complex" : [
+            {
+              "__ordering__": "UNORDERED",
+              "__elementId__": "reference"
+            },
+            {
             "reference" : "OrgPolicyReference",
             "hint" : null,
             "label" : null,
@@ -389,7 +409,12 @@
           "publish" : false,
           "publish_as" : null,
           "default_value" : null,
-          "case_fields_complex" : [ {
+          "case_fields_complex" : [
+            {
+              "__ordering__": "UNORDERED",
+              "__elementId__": "reference"
+            },
+            {
             "reference" : "NotesReason",
             "hint" : null,
             "label" : null,
