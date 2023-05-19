@@ -77,3 +77,8 @@ UPDATE complex_field SET display_order=16
 where complex_field_type_id in (
 (select id from field_type where reference = 'FlagDetails' and version = 1 and jurisdiction_id is null))
 and complex_field.id = (select id from complex_field where reference = 'status');
+
+insert into complex_field (reference, label, security_classification, retain_hidden_value, display_order, field_type_id, complex_field_type_id)
+values ('availableExternally', 'Availability to Non Staff', 'PUBLIC', true, 17,
+(select id from field_type where reference = 'YesOrNo' and version = 1 and jurisdiction_id is null),
+(select id from field_type where reference = 'FlagDetails' and version = 1 and jurisdiction_id is null));
