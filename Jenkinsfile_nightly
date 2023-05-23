@@ -3,7 +3,7 @@
 properties([
     // H allow predefined but random minute see https://en.wikipedia.org/wiki/Cron#Non-standard_characters
     //CCD-3539 (Stop running Nightly builds on weekends). Original schedule was 'H 05 * * *'
-    pipelineTriggers([cron('H 07 * * 07-07')])
+    pipelineTriggers([cron('H 07 * * 1-5')])
 ])
 
 @Library("Infrastructure")
