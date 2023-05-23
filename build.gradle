@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.7.1'
+        springBootVersion = '2.7.10'
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
@@ -63,8 +63,8 @@ ext {
     powermockVersion = '2.0.0-beta.5'
     reformLogging= '5.1.9'
     restAssuredVersion = '4.3.0!!'
-    groovyVersion = '3.0.11!!'
-    tomcatVersion = '9.0.69!!'
+    groovyVersion = '3.0.16!!'
+    tomcatVersion = '9.0.73!!'
     feignJackson = '11.6'
     limits = [
             'instruction': 99,
@@ -113,6 +113,7 @@ allprojects {
         implementation "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
         implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+        implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
         // Overriding transitive dependency commons-compress due to CVE failures
         implementation "org.apache.commons:commons-compress:1.21"
         // CVE-2021-28170
@@ -197,7 +198,6 @@ subprojects { subproject ->
         implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
         implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
-        implementation 'com.github.hmcts:properties-volume-spring-boot-starter:0.0.4'
 
         implementation group: 'io.jsonwebtoken', name: 'jjwt', version:'0.9.1'
         implementation (group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3') {
