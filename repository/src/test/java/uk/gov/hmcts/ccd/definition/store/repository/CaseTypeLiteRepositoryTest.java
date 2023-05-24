@@ -55,9 +55,9 @@ public class CaseTypeLiteRepositoryTest {
         caseType.setJurisdiction(testJurisdiction);
         caseType.setSecurityClassification(SecurityClassification.PUBLIC);
         saveCaseTypeClearAndFlushSession(caseType);
-        caseType.setVersion(2);
+        caseType.setVersion(6);
         saveCaseTypeClearAndFlushSession(caseType);
-        caseType.setVersion(3);
+        caseType.setVersion(7);
         saveCaseTypeClearAndFlushSession(caseType);
 
         final CaseTypeEntity caseType2 = new CaseTypeEntity();
@@ -84,12 +84,12 @@ public class CaseTypeLiteRepositoryTest {
             = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
         assertTrue(caseTypeEntityOptional.size() == 2);
 
-        CaseTypeLiteEntity caseTypeJurisdictionIdVersionReferenceIdx1 = caseTypeEntityOptional.get(1);
-        assertEquals(3, caseTypeJurisdictionIdVersionReferenceIdx1.getVersion().intValue());
+        CaseTypeLiteEntity caseTypeJurisdictionIdVersionReferenceIdx1 = caseTypeEntityOptional.get(0);
+        assertEquals(7, caseTypeJurisdictionIdVersionReferenceIdx1.getVersion().intValue());
         assertEquals("Test case", caseTypeJurisdictionIdVersionReferenceIdx1.getName());
         assertEquals("Some case type", caseTypeJurisdictionIdVersionReferenceIdx1.getDescription());
 
-        CaseTypeLiteEntity caseTypeJurisdictionIdVersionReferenceIdx2 = caseTypeEntityOptional.get(0);
+        CaseTypeLiteEntity caseTypeJurisdictionIdVersionReferenceIdx2 = caseTypeEntityOptional.get(1);
         assertEquals(2, caseTypeJurisdictionIdVersionReferenceIdx2.getVersion().intValue());
         assertEquals("Test case 2", caseTypeJurisdictionIdVersionReferenceIdx2.getName());
         assertEquals("Another case type", caseTypeJurisdictionIdVersionReferenceIdx2.getDescription());
@@ -117,7 +117,7 @@ public class CaseTypeLiteRepositoryTest {
         // caseType entity only no child associations (lazy)
         SQLStatementCountValidator.assertSelectCount(1);
 
-        CaseTypeLiteEntity caseTypeLiteEntity = caseTypeEntityOptional.get(0);
+        CaseTypeLiteEntity caseTypeLiteEntity = caseTypeEntityOptional.get(1);
 
         assertEquals(1, caseTypeLiteEntity.getStates().size());
 
