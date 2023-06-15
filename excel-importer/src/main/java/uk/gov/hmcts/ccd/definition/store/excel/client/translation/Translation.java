@@ -1,14 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.excel.client.translation;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 
 
-@Data
-@Setter
+@Getter
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Translation {

@@ -75,9 +75,6 @@ public class TranslationServiceImpl implements TranslationService {
     }
 
     private boolean containsYesOrNoTypeLabel(DefinitionDataItem definitionDataItem) {
-        if (definitionDataItem == null) {
-            return false;
-        }
         String fieldType = definitionDataItem.getString(ColumnName.FIELD_TYPE);
         if (fieldType == null) {
             return false;

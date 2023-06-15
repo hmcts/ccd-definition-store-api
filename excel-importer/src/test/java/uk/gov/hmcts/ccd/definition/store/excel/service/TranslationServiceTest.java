@@ -93,6 +93,7 @@ class TranslationServiceTest {
         );
 
         Translation yesOrNo = translationMap.get(YES_OR_NO);
+        assertEquals("", yesOrNo.getTranslation());
         assertTrue(yesOrNo.isYesOrNo());
 
         Translation caseField = translationMap.get(CASE_FIELD_UNDER_TEST);
