@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -12,23 +13,33 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
+import uk.gov.hmcts.ccd.definition.store.excel.client.translation.Translation;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.TranslationServiceApiClient;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.CASE_EVENT_UNDER_TEST;
+import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.CASE_FIELD_UNDER_TEST;
+import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.CASE_TYPE_UNDER_TEST;
+import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.YES_OR_NO;
 import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.buildSheetForCaseEvent;
+import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.buildSheetForCaseField;
 import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.buildSheetForCaseType;
 import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.buildSheetForGenerics;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_EVENT;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_RESULT_FIELDS;
 
@@ -59,12 +70,39 @@ class TranslationServiceTest {
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), buildSheetForGenerics(WORK_BASKET_RESULT_FIELDS));
         definitionSheets.put(CASE_TYPE.getName(), buildSheetForCaseType());
         definitionSheets.put(CASE_EVENT.getName(), buildSheetForCaseEvent());
+        definitionSheets.put(CASE_FIELD.getName(), buildSheetForCaseField());
+    }
+
+    @Test
+    void processDefinitionSheets_CheckDictionaryRequest() {
+        ArgumentCaptor<DictionaryRequest> captor = ArgumentCaptor.forClass(DictionaryRequest.class);
+
+        translationService.processDefinitionSheets(definitionSheets);
+        verify(translationServiceApiClient, times(1)).uploadToDictionary(captor.capture());
+        DictionaryRequest request = captor.getValue();
+
+        Map<String, Translation> translationMap = request.getTranslations();
+        assertEquals(
+            Set.of(
+                CASE_TYPE_UNDER_TEST,
+                CASE_EVENT_UNDER_TEST,
+                YES_OR_NO,
+                CASE_FIELD_UNDER_TEST
+            ),
+            translationMap.keySet()
+        );
+
+        Translation yesOrNo = translationMap.get(YES_OR_NO);
+        assertTrue(yesOrNo.isYesOrNo());
+
+        Translation caseField = translationMap.get(CASE_FIELD_UNDER_TEST);
+        assertFalse(caseField.isYesOrNo());
     }
 
     @Test
     void processDefinitionSheets_TranslationReturn200() {
         translationService.processDefinitionSheets(definitionSheets);
-        verify(translationServiceApiClient, times(1)).uploadToDictionary(any());
+        verify(translationServiceApiClient, times(1)).uploadToDictionary(any(DictionaryRequest.class));
         List<ILoggingEvent> loggingEvents = filterLoggerCapture.list;
         assertAll(
             () -> assertEquals(3, loggingEvents.size()),

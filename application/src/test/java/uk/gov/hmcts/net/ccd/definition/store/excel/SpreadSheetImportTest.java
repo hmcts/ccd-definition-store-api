@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
+import uk.gov.hmcts.ccd.definition.store.excel.client.translation.Translation;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
@@ -826,10 +827,10 @@ public class SpreadSheetImportTest extends BaseTest {
 
     private DictionaryRequest getDictionaryRequest()  {
         final DictionaryRequest dictionaryRequest = new DictionaryRequest();
-        Map<String, String> translations = new HashMap<>();
-        translations.put("CaseTypeName",":");
-        translations.put("CaseFieldDescription",":");
-        translations.put("FixedLists-ListElement",":");
+        Map<String, Translation> translations = new HashMap<>();
+        translations.put("CaseTypeName",new Translation(":", true));
+        translations.put("CaseFieldDescription",new Translation(":", false));
+        translations.put("FixedLists-ListElement",new Translation(":"));
         dictionaryRequest.setTranslations(translations);
         return dictionaryRequest;
     }

@@ -5,6 +5,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import lombok.extern.slf4j.Slf4j;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
+import uk.gov.hmcts.ccd.definition.store.excel.client.translation.Translation;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.TranslationServiceApiClient;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -49,17 +50,21 @@ public class TranslationServiceImpl implements TranslationService {
     private DictionaryRequest retrieveTextToTranslate(Map<String, DefinitionSheet> definitionSheets) {
         DictionaryRequest dictionaryRequest = new DictionaryRequest();
         Map<SheetName, List<ColumnName>> sheetsToProcess = DEFINITION_SHEETS_TO_TRANSLATE;
-        Map<String, String> textToTranslate = new HashMap<>();
+        Map<String, Translation> textToTranslate = new HashMap<>();
         for (var sheets : sheetsToProcess.entrySet()) {
             String sheetName = sheets.getKey().getName();
             if (definitionSheets.get(sheetName) != null) {
                 List<DefinitionDataItem> definitionDataItems = definitionSheets.get(sheetName).getDataItems();
-                for (DefinitionDataItem dataItem : definitionDataItems) {
-                    DefinitionDataItem definitionDataItem = dataItem;
+                for (DefinitionDataItem definitionDataItem : definitionDataItems) {
+                    boolean yesOrNo = containsYesOrNoTypeLabel(definitionDataItem);
                     List<ColumnName> columns = sheets.getValue();
                     for (ColumnName column : columns) {
                         if (definitionDataItem.getString(column) != null) {
-                            textToTranslate.put(definitionDataItem.getString(column), "");
+                            boolean requestYesOrNo = column.equals(ColumnName.LABEL) && yesOrNo;
+                            textToTranslate.put(
+                                definitionDataItem.getString(column),
+                                new Translation("", requestYesOrNo)
+                            );
                         }
                     }
                 }
@@ -67,6 +72,17 @@ public class TranslationServiceImpl implements TranslationService {
         }
         dictionaryRequest.setTranslations(textToTranslate);
         return dictionaryRequest;
+    }
+
+    private boolean containsYesOrNoTypeLabel(DefinitionDataItem definitionDataItem) {
+        if (definitionDataItem == null) {
+            return false;
+        }
+        String fieldType = definitionDataItem.getString(ColumnName.FIELD_TYPE);
+        if (fieldType == null) {
+            return false;
+        }
+        return fieldType.equalsIgnoreCase("yesOrNo");
     }
 
 }
