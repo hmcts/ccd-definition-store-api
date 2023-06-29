@@ -64,7 +64,7 @@ ext {
     reformLogging= '5.1.9'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.16!!'
-    tomcatVersion = '9.0.73!!'
+    tomcatVersion = '9.0.75!!'
     feignJackson = '11.6'
     limits = [
             'instruction': 99,
