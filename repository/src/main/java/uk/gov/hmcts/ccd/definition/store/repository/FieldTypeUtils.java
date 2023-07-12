@@ -33,6 +33,7 @@ public class FieldTypeUtils {
     public static final String PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION = "PreviousOrganisation";
     public static final String PREDEFINED_COMPLEX_CASE_LOCATION = "CaseLocation";
     public static final String PREDEFINED_COMPLEX_TTL = "TTL";
+    public static final String PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION = "CaseQueries";
     public static final String PREDEFINED_COMPLEX_FLAGS = "Flags";
     public static final String PREDEFINED_COMPLEX_JUDICIAL_USER = "JudicialUser";
     public static final String PREDEFINED_COMPLEX_SEARCH_PARTY = "SearchParty";
