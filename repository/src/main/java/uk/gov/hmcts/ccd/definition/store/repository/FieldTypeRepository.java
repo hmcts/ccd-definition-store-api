@@ -43,6 +43,7 @@ public interface FieldTypeRepository extends VersionedDefinitionRepository<Field
         + "', '" + PREDEFINED_COMPLEX_LINK_REASON
         + "', '" + PREDEFINED_COMPLEX_TTL
         + "', '" + PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION
+        + "', '" + PREDEFINED_COMPLEX_CASE_MESSAGE
         + "', '" + BASE_CASE_QUERIES_COLLECTION
         + "')")
     List<FieldTypeEntity> findPredefinedComplexTypes();

@@ -470,6 +470,7 @@ public class ImportServiceImplTest {
             buildBaseType(PREDEFINED_COMPLEX_ORDER_SUMMARY),
             buildBaseType(PREDEFINED_COMPLEX_CASE_LOCATION),
             buildBaseType(PREDEFINED_COMPLEX_TTL),
-            buildBaseType(PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION));
+            buildBaseType(PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION),
+            buildBaseType(PREDEFINED_COMPLEX_CASE_MESSAGE));
     }
 }
