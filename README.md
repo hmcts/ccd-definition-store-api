@@ -19,7 +19,7 @@ Spring Boot and Spring Data are used to persist the data in a PostgreSQL databas
 
 Moreover, if the feature is enabled, the ElasticSearch cluster is initialised when a definition file is imported. For each case type, an index, an alias, 
 and a mapping is created on ElasticSearch. If `failOnImport` is true, any ES initialisation error will prevent the import to succeed. If false, ES errors are
-simply ignored
+simply ignored.
 
 ## Getting started
 
