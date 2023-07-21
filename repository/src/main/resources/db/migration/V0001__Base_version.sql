@@ -2720,28 +2720,6 @@ VALUES (now(), 'OrganisationPolicy', '1', (select id
                                                               and base_field_type_id is null)));
 
 INSERT INTO public.field_type (created_at, reference, version, base_field_type_id)
-VALUES (now(), 'CaseQueriesCollection', '1', (select id
-                                           from field_type
-                                           where reference = 'Complex'
-                                             and jurisdiction_id is null
-                                             and version = (select max(version)
-                                                            from field_type
-                                                            where reference = 'Complex'
-                                                              and jurisdiction_id is null
-                                                              and base_field_type_id is null)));
-
-INSERT INTO public.field_type (created_at, reference, version, base_field_type_id)
-VALUES (now(), 'CaseMessage', '1', (select id
-                                     from field_type
-                                     where reference = 'Complex'
-                                       and jurisdiction_id is null
-                                       and version = (select max(version)
-                                                      from field_type
-                                                      where reference = 'Complex'
-                                                        and jurisdiction_id is null
-                                                        and base_field_type_id is null)));
-
-INSERT INTO public.field_type (created_at, reference, version, base_field_type_id)
 VALUES (now(), 'ChangeOrganisationRequest', '1', (select id
                                                   from field_type
                                                   where reference = 'Complex'
