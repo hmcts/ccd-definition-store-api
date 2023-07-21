@@ -14,19 +14,19 @@ values ('idamId', 'IdamId', 'PUBLIC',
 (select id from field_type where reference = 'JudicialUser' and version = 1 and jurisdiction_id is null));
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
-values ('subject', 'Subject', 'PUBLIC',
+values ('subject', 'subject', 'PUBLIC',
 (select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
 (select id from field_type where reference = 'JudicialUser' and version = 1 and jurisdiction_id is null));
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
-values ('body', 'Body', 'PUBLIC',
+values ('body', 'subject', 'PUBLIC',
 (select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
 (select id from field_type where reference = 'JudicialUser' and version = 1 and jurisdiction_id is null));
 
-insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
-values ('attachments', 'PersonalCode', 'PUBLIC',
-(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
-(select id from field_type where reference = 'JudicialUser' and version = 1 and jurisdiction_id is null));
+INSERT INTO public.field_type (created_at, reference, version, base_field_type_id)
+values (now(), 'attachments', '1',
+(select id from field_type where reference = 'Complex' and jurisdiction_id is null and version = (select max(version)
+from field_type where reference = 'Complex' and jurisdiction_id is null and base_field_type_id is null)));
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
 values ('isHearingRelated', 'isHearingRelated', 'PUBLIC',
