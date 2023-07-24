@@ -25,7 +25,6 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_PARTY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_MESSAGE;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_CASE_QUERIES_COLLECTION;
 
 public interface FieldTypeRepository extends VersionedDefinitionRepository<FieldTypeEntity, Integer> {
 
@@ -62,7 +61,6 @@ public interface FieldTypeRepository extends VersionedDefinitionRepository<Field
         + "', '" + PREDEFINED_COMPLEX_TTL
         + "', '" + PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION
         + "', '" + PREDEFINED_COMPLEX_CASE_MESSAGE
-        + "', '" + BASE_CASE_QUERIES_COLLECTION
         + "')")
     List<FieldTypeEntity> findPredefinedComplexTypes();
 }

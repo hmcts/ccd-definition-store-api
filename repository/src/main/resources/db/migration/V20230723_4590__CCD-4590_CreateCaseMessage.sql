@@ -19,14 +19,14 @@ values ('subject', 'subject', 'PUBLIC',
 (select id from field_type where reference = 'JudicialUser' and version = 1 and jurisdiction_id is null));
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
-values ('body', 'subject', 'PUBLIC',
+values ('body', 'body', 'PUBLIC',
 (select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
 (select id from field_type where reference = 'JudicialUser' and version = 1 and jurisdiction_id is null));
 
-INSERT INTO public.field_type (created_at, reference, version, base_field_type_id)
-values (now(), 'attachments', '1',
-(select id from field_type where reference = 'Complex' and jurisdiction_id is null and version = (select max(version)
-from field_type where reference = 'Complex' and jurisdiction_id is null and base_field_type_id is null)));
+insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
+values ('attachments', 'attachements', 'PUBLIC',
+(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
+(select id from field_type where reference = 'JudicialUser' and version = 1 and jurisdiction_id is null));
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
 values ('isHearingRelated', 'isHearingRelated', 'PUBLIC',
@@ -45,7 +45,7 @@ values ('createdOn', 'createdOn', 'PUBLIC',
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
 values ('createdBy', 'createdBy', 'PUBLIC',
-(select id from field_type where reference = "DateTime" and version = 1 and jurisdiction_id is null),
+(select id from field_type where reference = 'DateTime' and version = 1 and jurisdiction_id is null),
 (select id from field_type where reference = 'JudicialUser' and version = 1 and jurisdiction_id is null));
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)

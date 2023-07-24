@@ -18,5 +18,3 @@ values ('CaseMessage', 'Case Message', 'PUBLIC',
 (select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
 (select id from field_type where reference = 'JudicialUser' and version = 1 and jurisdiction_id is null));
 
-
-// does case queries collect need an ID?

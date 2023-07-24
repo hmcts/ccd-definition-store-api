@@ -43,7 +43,6 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_TTL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_CRITERIA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_PARTY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION;
@@ -253,7 +252,6 @@ public class FieldTypeRepositoryTest {
             fieldTypeWithReference(PREDEFINED_COMPLEX_SEARCH_PARTY),
             fieldTypeWithReference(PREDEFINED_COMPLEX_SEARCH_CRITERIA),
             fieldTypeWithReference(PREDEFINED_COMPLEX_LINK_REASON),
-            fieldTypeWithReference(PREDEFINED_COMPLEX_TTL),
             fieldTypeWithReference(PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION),
             fieldTypeWithReference(PREDEFINED_COMPLEX_CASE_MESSAGE)
             )
