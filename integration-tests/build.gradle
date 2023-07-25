@@ -1,12 +1,12 @@
 jacocoTestReport {
     reports {
-        xml.enabled false
-        html.enabled false
+        xml.required = false
+        html.required = false
     }
 
     doLast {
         // test coverage does not apply to this module; use 'application' module to substitute as a place holder
-        def report = file("../application/${jacoco.reportsDir}/test/jacocoTestReport.xml")
+        def report = file("../application/${jacoco.reportsDirectory}/test/jacocoTestReport.xml")
     }
 }
 

@@ -6,8 +6,8 @@ dependencyCheck {
 }
 
 task testJar(type: Jar, dependsOn: testClasses) {
-    baseName = 'test-' + project.archivesBaseName
-    classifier = 'tests'
+    archiveFileName = 'test-' + project.archivesBaseName
+    archiveClassifier = 'tests'
     from sourceSets.test.output
 }
 
@@ -25,7 +25,7 @@ jar {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': project.version
     }
-    archiveName = 'definition-store-domain.jar'
+    archiveFileName = 'definition-store-domain.jar'
 }
 
 bootJar {
