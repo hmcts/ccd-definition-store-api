@@ -15,9 +15,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.Translation;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.TranslationServiceApiClient;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
-import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
 import java.util.HashMap;
 import java.util.List;
@@ -104,13 +102,13 @@ class TranslationServiceTest {
 
     @Test
     void processDefinitionSheets_CheckDictionaryRequest_handleDuplicates() {
-        ArgumentCaptor<DictionaryRequest> captor = ArgumentCaptor.forClass(DictionaryRequest.class);
 
         DefinitionSheet sheet = definitionSheets.get(CASE_FIELD.getName());
         sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),CASE_FIELD_ID,CASE_FIELD_UNDER_TEST,CASE_FIELD_UNDER_TEST));
         sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),YES_OR_NO,YES_OR_NO,YES_OR_NO));
         definitionSheets.put(CASE_FIELD.getName(), sheet);
 
+        ArgumentCaptor<DictionaryRequest> captor = ArgumentCaptor.forClass(DictionaryRequest.class);
 
         translationService.processDefinitionSheets(definitionSheets);
         verify(translationServiceApiClient, times(1)).uploadToDictionary(captor.capture());
@@ -137,12 +135,17 @@ class TranslationServiceTest {
 
     @Test
     void processDefinitionSheets_CheckDictionaryRequest_multipleItems() {
-        ArgumentCaptor<DictionaryRequest> captor = ArgumentCaptor.forClass(DictionaryRequest.class);
 
         DefinitionSheet sheet = definitionSheets.get(CASE_FIELD.getName());
-        sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),CASE_FIELD_ID,"non-duplicate-case",CASE_FIELD_UNDER_TEST));
-        sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),YES_OR_NO,"non-duplicate-yes-no",YES_OR_NO));
+        sheet.addDataItem(
+            buildDefinitionDataItem(CASE_FIELD.getName(),CASE_FIELD_ID,"non-duplicate-case",CASE_FIELD_UNDER_TEST)
+        );
+        sheet.addDataItem(
+            buildDefinitionDataItem(CASE_FIELD.getName(),YES_OR_NO,"non-duplicate-yes-no",YES_OR_NO)
+        );
         definitionSheets.put(CASE_FIELD.getName(), sheet);
+
+        ArgumentCaptor<DictionaryRequest> captor = ArgumentCaptor.forClass(DictionaryRequest.class);
 
         translationService.processDefinitionSheets(definitionSheets);
         verify(translationServiceApiClient, times(1)).uploadToDictionary(captor.capture());

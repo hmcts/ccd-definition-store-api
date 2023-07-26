@@ -60,13 +60,17 @@ public class TranslationHelper {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(CASE_FIELD.getName());
 
-        sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),CASE_FIELD_ID,CASE_FIELD_UNDER_TEST,CASE_FIELD_UNDER_TEST));
-        sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),YES_OR_NO,YES_OR_NO,YES_OR_NO));
+        sheet.addDataItem(
+            buildDefinitionDataItem(CASE_FIELD.getName(),CASE_FIELD_ID,CASE_FIELD_UNDER_TEST,CASE_FIELD_UNDER_TEST)
+        );
+        sheet.addDataItem(
+            buildDefinitionDataItem(CASE_FIELD.getName(),YES_OR_NO,YES_OR_NO,YES_OR_NO)
+        );
 
         return sheet;
     }
 
-    static DefinitionDataItem buildDefinitionDataItem(String sheetName ,String id, String label, String type) {
+    static DefinitionDataItem buildDefinitionDataItem(String sheetName, String id, String label, String type) {
         final DefinitionDataItem item = new DefinitionDataItem(sheetName);
         item.addAttribute(ID, id);
         item.addAttribute(FIELD_TYPE, type);
