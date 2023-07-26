@@ -104,8 +104,12 @@ class TranslationServiceTest {
     void processDefinitionSheets_CheckDictionaryRequest_handleDuplicates() {
 
         DefinitionSheet sheet = definitionSheets.get(CASE_FIELD.getName());
-        sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),CASE_FIELD_ID,CASE_FIELD_UNDER_TEST,CASE_FIELD_UNDER_TEST));
-        sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),YES_OR_NO,YES_OR_NO,YES_OR_NO));
+        sheet.addDataItem(
+            buildDefinitionDataItem(CASE_FIELD.getName(),CASE_FIELD_ID,CASE_FIELD_UNDER_TEST,CASE_FIELD_UNDER_TEST)
+        );
+        sheet.addDataItem(
+            buildDefinitionDataItem(CASE_FIELD.getName(),YES_OR_NO,YES_OR_NO,YES_OR_NO)
+        );
         definitionSheets.put(CASE_FIELD.getName(), sheet);
 
         ArgumentCaptor<DictionaryRequest> captor = ArgumentCaptor.forClass(DictionaryRequest.class);
