@@ -60,18 +60,17 @@ public class TranslationHelper {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(CASE_FIELD.getName());
 
-        final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_FIELD.getName());
-        item.addAttribute(ID, CASE_FIELD_ID);
-        item.addAttribute(LABEL, CASE_FIELD_UNDER_TEST);
-        item.addAttribute(FIELD_TYPE, CASE_FIELD_UNDER_TEST);
-        sheet.addDataItem(item);
-
-        final DefinitionDataItem yesNoItem = new DefinitionDataItem(CASE_FIELD.getName());
-        yesNoItem.addAttribute(ID, YES_OR_NO);
-        yesNoItem.addAttribute(FIELD_TYPE, YES_OR_NO);
-        yesNoItem.addAttribute(LABEL, YES_OR_NO);
-        sheet.addDataItem(yesNoItem);
+        sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),CASE_FIELD_ID,CASE_FIELD_UNDER_TEST,CASE_FIELD_UNDER_TEST));
+        sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),YES_OR_NO,YES_OR_NO,YES_OR_NO));
 
         return sheet;
+    }
+
+    static DefinitionDataItem buildDefinitionDataItem(String sheetName ,String id, String label, String type) {
+        final DefinitionDataItem item = new DefinitionDataItem(sheetName);
+        item.addAttribute(ID, id);
+        item.addAttribute(FIELD_TYPE, type);
+        item.addAttribute(LABEL, label);
+        return item;
     }
 }

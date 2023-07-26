@@ -15,7 +15,9 @@ import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.Translation;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.TranslationServiceApiClient;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,10 +36,12 @@ import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.
 import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.CASE_FIELD_UNDER_TEST;
 import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.CASE_TYPE_UNDER_TEST;
 import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.YES_OR_NO;
+import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.CASE_FIELD_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.buildSheetForCaseEvent;
 import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.buildSheetForCaseField;
 import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.buildSheetForCaseType;
 import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.buildSheetForGenerics;
+import static uk.gov.hmcts.ccd.definition.store.excel.service.TranslationHelper.buildDefinitionDataItem;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_EVENT;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
@@ -52,7 +56,6 @@ class TranslationServiceTest {
     private TranslationServiceApiClient translationServiceApiClient;
 
     private Map<String, DefinitionSheet> definitionSheets;
-    private DefinitionSheet definitionSheet;
     private ListAppender<ILoggingEvent> filterLoggerCapture;
 
     @BeforeEach
@@ -66,7 +69,6 @@ class TranslationServiceTest {
         filterLogger.addAppender(filterLoggerCapture);
 
         definitionSheets = new HashMap<>();
-        definitionSheet = new DefinitionSheet();
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), buildSheetForGenerics(WORK_BASKET_RESULT_FIELDS));
         definitionSheets.put(CASE_TYPE.getName(), buildSheetForCaseType());
         definitionSheets.put(CASE_EVENT.getName(), buildSheetForCaseEvent());
@@ -88,6 +90,73 @@ class TranslationServiceTest {
                 CASE_EVENT_UNDER_TEST,
                 YES_OR_NO,
                 CASE_FIELD_UNDER_TEST
+            ),
+            translationMap.keySet()
+        );
+
+        Translation yesOrNo = translationMap.get(YES_OR_NO);
+        assertEquals("", yesOrNo.getTranslation());
+        assertTrue(yesOrNo.isYesOrNo());
+
+        Translation caseField = translationMap.get(CASE_FIELD_UNDER_TEST);
+        assertFalse(caseField.isYesOrNo());
+    }
+
+    @Test
+    void processDefinitionSheets_CheckDictionaryRequest_handleDuplicates() {
+        ArgumentCaptor<DictionaryRequest> captor = ArgumentCaptor.forClass(DictionaryRequest.class);
+
+        DefinitionSheet sheet = definitionSheets.get(CASE_FIELD.getName());
+        sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),CASE_FIELD_ID,CASE_FIELD_UNDER_TEST,CASE_FIELD_UNDER_TEST));
+        sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),YES_OR_NO,YES_OR_NO,YES_OR_NO));
+        definitionSheets.put(CASE_FIELD.getName(), sheet);
+
+
+        translationService.processDefinitionSheets(definitionSheets);
+        verify(translationServiceApiClient, times(1)).uploadToDictionary(captor.capture());
+        DictionaryRequest request = captor.getValue();
+
+        Map<String, Translation> translationMap = request.getTranslations();
+        assertEquals(
+            Set.of(
+                CASE_TYPE_UNDER_TEST,
+                CASE_EVENT_UNDER_TEST,
+                YES_OR_NO,
+                CASE_FIELD_UNDER_TEST
+            ),
+            translationMap.keySet()
+        );
+
+        Translation yesOrNo = translationMap.get(YES_OR_NO);
+        assertEquals("", yesOrNo.getTranslation());
+        assertTrue(yesOrNo.isYesOrNo());
+
+        Translation caseField = translationMap.get(CASE_FIELD_UNDER_TEST);
+        assertFalse(caseField.isYesOrNo());
+    }
+
+    @Test
+    void processDefinitionSheets_CheckDictionaryRequest_multipleItems() {
+        ArgumentCaptor<DictionaryRequest> captor = ArgumentCaptor.forClass(DictionaryRequest.class);
+
+        DefinitionSheet sheet = definitionSheets.get(CASE_FIELD.getName());
+        sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),CASE_FIELD_ID,"non-duplicate-case",CASE_FIELD_UNDER_TEST));
+        sheet.addDataItem(buildDefinitionDataItem(CASE_FIELD.getName(),YES_OR_NO,"non-duplicate-yes-no",YES_OR_NO));
+        definitionSheets.put(CASE_FIELD.getName(), sheet);
+
+        translationService.processDefinitionSheets(definitionSheets);
+        verify(translationServiceApiClient, times(1)).uploadToDictionary(captor.capture());
+        DictionaryRequest request = captor.getValue();
+
+        Map<String, Translation> translationMap = request.getTranslations();
+        assertEquals(
+            Set.of(
+                CASE_TYPE_UNDER_TEST,
+                CASE_EVENT_UNDER_TEST,
+                YES_OR_NO,
+                CASE_FIELD_UNDER_TEST,
+                "non-duplicate-case",
+                "non-duplicate-yes-no"
             ),
             translationMap.keySet()
         );
