@@ -29,7 +29,7 @@ values ('body', 'body', 'PUBLIC',
 (select id from field_type where reference = 'CaseMessage' and version = 1 and jurisdiction_id is null));
 
 insert into field_type (created_at, reference, version, base_field_type_id, collection_field_type_id)
-values (now(), 'documentCollection', 1,
+values (now(), 'DocumentCollection', 1,
     (select id from field_type where reference = 'Collection'
         and jurisdiction_id is null
         and version = (select max(version)
@@ -43,7 +43,7 @@ values (now(), 'documentCollection', 1,
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
 values ('attachments', 'attachments', 'PUBLIC',
-    (select id from field_type where reference = 'documentCollection' and version = 1 and jurisdiction_id is null),
+    (select id from field_type where reference = 'DocumentCollection' and version = 1 and jurisdiction_id is null),
     (select id from field_type where reference = 'CaseMessage' and version = 1 and jurisdiction_id is null));
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
