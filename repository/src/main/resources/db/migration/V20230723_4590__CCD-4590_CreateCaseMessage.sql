@@ -9,12 +9,17 @@ and base_field_type_id is null))
 );
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
-values ('caseMessageId', 'caseMessageId', 'PUBLIC',
+values ('id', 'caseMessageId', 'PUBLIC',
 (select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
 (select id from field_type where reference = 'CaseMessage' and version = 1 and jurisdiction_id is null));
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
 values ('subject', 'subject', 'PUBLIC',
+(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
+(select id from field_type where reference = 'CaseMessage' and version = 1 and jurisdiction_id is null));
+
+insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
+values ('name', 'name', 'PUBLIC',
 (select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
 (select id from field_type where reference = 'CaseMessage' and version = 1 and jurisdiction_id is null));
 
@@ -63,10 +68,5 @@ values ('createdBy', 'createdBy', 'PUBLIC',
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
 values ('parentId', 'parentId', 'PUBLIC',
-(select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
-(select id from field_type where reference = 'CaseMessage' and version = 1 and jurisdiction_id is null));
-
-insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
-values ('name', 'name', 'PUBLIC',
 (select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
 (select id from field_type where reference = 'CaseMessage' and version = 1 and jurisdiction_id is null));
