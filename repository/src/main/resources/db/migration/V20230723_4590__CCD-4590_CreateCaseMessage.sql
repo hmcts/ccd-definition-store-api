@@ -36,7 +36,7 @@ values (now(), 'documentCollection', 1,
         from field_type where reference = 'Collection'
         and jurisdiction_id is null
         and base_field_type_id is null)),
-    (select id from field_type where reference = 'document'
+    (select id from field_type where reference = 'Document'
         and jurisdiction_id is null
         and version = 1)
 );
