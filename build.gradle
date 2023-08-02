@@ -61,7 +61,7 @@ ext {
     springfoxSwaggerVersion = '3.0.0'
     hamcrestVersion = '1.3'
     powermockVersion = '2.0.0-beta.5'
-    reformLogging= '5.1.9'
+    reformLogging= '6.0.1'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.17!!'
     tomcatVersion = '9.0.73!!'
