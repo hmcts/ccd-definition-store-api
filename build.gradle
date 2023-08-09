@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.7.10'
+        springBootVersion = '2.7.11'
     }
     dependencies {
         classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
@@ -45,7 +45,7 @@ dependencyCheck {
 ext['elasticsearch.version'] = '7.17.1'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
-ext['spring-security.version'] = '5.7.5'
+ext['spring-security.version'] = '5.7.8'
 ext['jackson.version'] = '2.14.1'
 ext['snakeyaml.version'] = '1.32'
 ext['postgresql.version'] = '42.5.1'
@@ -63,7 +63,7 @@ ext {
     powermockVersion = '2.0.0-beta.5'
     reformLogging= '5.1.9'
     restAssuredVersion = '4.3.0!!'
-    groovyVersion = '3.0.16!!'
+    groovyVersion = '3.0.17!!'
     tomcatVersion = '9.0.75!!'
     feignJackson = '11.6'
     limits = [
