@@ -13,7 +13,7 @@ jar {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': project.version
     }
-    archiveName = 'app-insights.jar'
+    archiveFileName = 'app-insights.jar'
 }
 
 bootJar {

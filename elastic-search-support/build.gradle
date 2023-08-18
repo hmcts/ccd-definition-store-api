@@ -6,7 +6,7 @@ dependencyCheck {
 
 jar {
     enabled = true
-    baseName = 'definition-store-es-support'
+    archiveFileName = 'definition-store-es-support'
 }
 
 bootJar {

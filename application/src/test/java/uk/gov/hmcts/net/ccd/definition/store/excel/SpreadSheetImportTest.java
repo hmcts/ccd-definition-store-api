@@ -75,8 +75,8 @@ public class SpreadSheetImportTest extends BaseTest {
     private static final String EXPECTED_USER_PROFILES = "[{\"id\":\"user1@hmcts.net\","
         + "\"work_basket_default_jurisdiction\":\"TEST\","
         + "\"work_basket_default_case_type\":\"TestAddressBookCase\","
-        + "\"work_basket_default_state\":\"CaseCreated\"}," + //
-        "{\"id\":\"UseR2@hmcts.net\"," + "\"work_basket_default_jurisdiction\":\"TEST\","
+        + "\"work_basket_default_state\":\"CaseCreated\"},"
+        + "{\"id\":\"UseR2@hmcts.net\"," + "\"work_basket_default_jurisdiction\":\"TEST\","
         + "\"work_basket_default_case_type\":\"TestAddressBookCase\","
         + "\"work_basket_default_state\":\"CaseEnteredIntoLegacy\"}]";
 
