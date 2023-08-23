@@ -4,7 +4,7 @@ dependencyCheck {
 
 jar {
     enabled = true
-    baseName = 'definition-store-rest-api'
+    archiveFileName = 'definition-store-rest-api'
 }
 apply plugin: 'info.solidsoft.pitest'
 

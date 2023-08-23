@@ -39,13 +39,13 @@ import static javax.persistence.GenerationType.SEQUENCE;
         typeClass = PostgreSQLEnumType.class,
         parameters = @Parameter(name = "type",
             value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
-    ),
+            ),
     @TypeDef(
         name = "pgsql_datafieldtype_enum",
         typeClass = PostgreSQLEnumType.class,
         parameters = @Parameter(name = "type",
             value = "uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType")
-    )})
+            )})
 public class CaseFieldEntity implements FieldEntity, Serializable {
 
     @Id

@@ -495,8 +495,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
         final CaseFieldEntityInvalidAccessProfileValidationError error
                 = new CaseFieldEntityInvalidAccessProfileValidationError(entity,
-                    new AuthorisationCaseFieldValidationContext(caseFieldEntity,
-                    new CaseFieldEntityValidationContext(caseTypeEntity)));
+                        new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                        new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(entity))
             .thenReturn(
@@ -613,8 +613,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final CaseFieldEntityInvalidComplexCrudValidationError error
             = new CaseFieldEntityInvalidComplexCrudValidationError(
             entity,
-            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
-                new CaseFieldEntityValidationContext(caseTypeEntity)));
+                new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                    new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(entity))
             .thenReturn(
@@ -641,10 +641,10 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
         final CaseFieldEntityInvalidComplexCrudValidationError error
             = new CaseFieldEntityInvalidComplexCrudValidationError(entity,
-            new AuthorisationCaseFieldValidationContext(
-                caseFieldEntity,
-                new CaseFieldEntityValidationContext(
-                    caseTypeEntity)));
+                new AuthorisationCaseFieldValidationContext(
+                    caseFieldEntity,
+                    new CaseFieldEntityValidationContext(
+                        caseTypeEntity)));
 
         assertEquals("Invalid CRUD value 'Xcrud' for case type 'case type', case field 'case field', "
                 + "list element code 'code1'",
@@ -708,7 +708,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
             = new CaseFieldEntityInvalidMetadataFieldValidationError(
                 "Invalid metadata field 'case field' declaration for case type 'case type'",
             caseFieldEntity,
-            new CaseFieldEntityValidationContext(caseTypeEntity));
+                new CaseFieldEntityValidationContext(caseTypeEntity));
 
         assertEquals("Invalid metadata field 'case field' declaration for case type 'case type'",
             classUnderTest.createErrorMessage(error));
@@ -1596,8 +1596,8 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         final CaseFieldEntityInvalidIdValidationError error
             = new CaseFieldEntityInvalidIdValidationError(
             caseFieldEntity,
-            new AuthorisationCaseFieldValidationContext(caseFieldEntity,
-                new CaseFieldEntityValidationContext(caseTypeEntity)));
+                new AuthorisationCaseFieldValidationContext(caseFieldEntity,
+                    new CaseFieldEntityValidationContext(caseTypeEntity)));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(caseFieldEntity))
             .thenReturn(
