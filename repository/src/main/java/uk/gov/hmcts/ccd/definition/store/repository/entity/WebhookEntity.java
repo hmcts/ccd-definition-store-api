@@ -22,7 +22,7 @@ import java.util.List;
     @TypeDef(
         name = "int-array",
         typeClass = IntArrayType.class
-    )
+            )
 })
 public class WebhookEntity implements Serializable {
 
