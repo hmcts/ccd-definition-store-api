@@ -1,5 +1,5 @@
 # ccd-case-definition-store-api
-[![API Docs](https://img.shields.io/badge/API%20Docs-site-e140ad.svg)](https://hmcts.github.io/reform-api-docs/swagger.html?url=https://hmcts.github.io/reform-api-docs/specs/ccd-definition-store-api.json)
+[![API Docs](https://img.shields.io/badge/API%20Docs-site-e140ad.svg)](https://hmcts.github.io/cnp-api-docs/swagger.html?url=https://hmcts.github.io/cnp-api-docs/specs/ccd-definition-store-api.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://api.travis-ci.org/hmcts/ccd-definition-store-api.svg?branch=master)](https://travis-ci.org/hmcts/ccd-definition-store-api)
 [![Docker Build Status](https://img.shields.io/docker/build/hmcts/ccd-definition-store-api.svg)](https://hub.docker.com/r/hmcts/ccd-definition-store-api)
@@ -25,7 +25,7 @@ simply ignored
 
 ### Prerequisites
 
-- [Open JDK 8](https://openjdk.java.net/)
+- [Open JDK 17](https://openjdk.java.net/)
 - [Docker](https://www.docker.com)
 
 #### Environment variables
