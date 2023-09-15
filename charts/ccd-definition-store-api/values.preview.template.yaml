@@ -31,7 +31,7 @@ java:
     # ccd-test app-insights key - remove once testing is done
     APPINSIGHTS_INSTRUMENTATIONKEY: 2dcb834e-768e-4429-9050-ab15af959995
 
-    TS_TRANSLATION_SERVICE_HOST:
+    TS_TRANSLATION_SERVICE_HOST: https://ts-translation-service-pr-226.preview.platform.hmcts.net
 
   postgresql:
     enabled: true
