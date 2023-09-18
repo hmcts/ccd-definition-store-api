@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -337,7 +338,7 @@ public class ImportServiceImplTest {
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
-        verify(translationService).processDefinitionSheets(any());
+        verify(translationService).processDefinitionSheets(anyMap());
         verify(categoryIdValidator).validate(any(ParseContext.class));
         assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
     }
