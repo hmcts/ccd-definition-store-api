@@ -1,7 +1,7 @@
 {
   "connectionString": "${file:/mnt/secrets/ccd/app-insights-connection-string}",
   "role": {
-    "name": "hmc-cft-hearing-service"
+    "name": "ccd-definition-store-api"
   },
   "preview": {
     "sampling": {
