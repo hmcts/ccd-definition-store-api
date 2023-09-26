@@ -91,6 +91,16 @@ public class CaseTypeServiceImpl implements CaseTypeService {
 
     @Transactional
     @Override
+    public List<CaseType> findAllByCaseTypeIds(List<String> caseTypeIds) {
+        return repository.findAllLatestVersions(caseTypeIds)
+            .stream()
+            .map(dtoMapper::map)
+            .map(this::addMetadataFields)
+            .collect(toList());
+    }
+
+    @Transactional
+    @Override
     public Optional<CaseTypeVersionInformation> findVersionInfoByCaseTypeId(final String id) {
         return repository.findLastVersion(id)
             .map(CaseTypeVersionInformation::new);
