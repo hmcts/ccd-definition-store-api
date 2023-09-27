@@ -76,7 +76,7 @@ withPipeline(type, product, app) {
 
     if (env.BRANCH_NAME.startsWith("PR-")) {
         environmentOfDependencies = env.BRANCH_NAME.toLowerCase()
-        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-${environmentOfDependencies}.service.core-compute-preview.internal"
+        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-${environmentOfDependencies}.preview.platform.hmcts.net"
     }
 
     syncBranchesWithMaster(branchesToSync)
@@ -92,7 +92,7 @@ withPipeline(type, product, app) {
     }
 
     before('smoketest:aat') {
-        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-staging.service.core-compute-aat.internal"
+        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-staging.aat.platform.hmcts.net"
     }
 
     afterAlways('smoketest:aat') {

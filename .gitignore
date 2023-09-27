@@ -26,6 +26,8 @@ hs_err_pid*
 .DS_Store
 
 application/src/test/resources/test-local-override.properties
+applicationinsights-agent-*.jar
+*.log
 
 .gradle/
 build/

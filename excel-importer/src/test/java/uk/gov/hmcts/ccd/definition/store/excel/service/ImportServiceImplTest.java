@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -56,6 +57,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_PARTY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_CRITERIA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_TTL;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_MESSAGE;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -335,7 +338,7 @@ public class ImportServiceImplTest {
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
-        verify(translationService).processDefinitionSheets(any());
+        verify(translationService).processDefinitionSheets(anyMap());
         verify(categoryIdValidator).validate(any(ParseContext.class));
         assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
     }
@@ -511,6 +514,8 @@ public class ImportServiceImplTest {
             buildBaseType(PREDEFINED_COMPLEX_ADDRESS_UK),
             buildBaseType(PREDEFINED_COMPLEX_ORDER_SUMMARY),
             buildBaseType(PREDEFINED_COMPLEX_CASE_LOCATION),
-            buildBaseType(PREDEFINED_COMPLEX_TTL));
+            buildBaseType(PREDEFINED_COMPLEX_TTL),
+            buildBaseType(PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION),
+            buildBaseType(PREDEFINED_COMPLEX_CASE_MESSAGE));
     }
 }
