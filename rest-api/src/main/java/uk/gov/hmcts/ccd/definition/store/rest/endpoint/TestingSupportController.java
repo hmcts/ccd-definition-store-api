@@ -21,6 +21,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 @RestController
@@ -55,25 +56,42 @@ public class TestingSupportController {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        var ids = session.createNativeQuery("SELECT id FROM case_type WHERE reference IN ( :caseTypesWithChangeIds );")
-            .setParameterList("caseTypesWithChangeIds", caseTypesWithChangeIds)
-            .list();
-        session.getTransaction().commit();
+        var ids = getCaseTypeIdsByReferences(session, caseTypesWithChangeIds);
         if (ids.size() != caseIdList.size()) {
             throw new NotFoundException("Unable to find case type");
         }
 
-        ArrayList<String> sql = new ArrayList<String>(
+        var sql = getDeleteSql();
+
+        sql.forEach(sqlStatement -> executeSql(session, sqlStatement, ids));
+
+        session.close();
+    }
+
+    private List<Integer> getCaseTypeIdsByReferences(Session session, List<String> caseTypesWithChangeIds) {
+        var ids = session.createNativeQuery("SELECT id FROM case_type WHERE reference IN ( :caseTypesWithChangeIds );")
+            .setParameterList("caseTypesWithChangeIds", caseTypesWithChangeIds)
+            .list();
+        session.getTransaction().commit();
+        List<Integer> intIds = new ArrayList<Integer>();
+        for (Object s : ids) {
+            intIds.add(Integer.valueOf(s.toString()));
+        }
+        return intIds;
+    }
+
+    private ArrayList<String> getDeleteSql() {
+        return new ArrayList<>(
             Arrays.asList(
-                 """
-                 DELETE FROM event_case_field_complex_type
-                 WHERE  event_case_field_id IN (SELECT id
-                                                FROM   event_case_field
-                                                WHERE  event_id IN (SELECT id
-                                                                    FROM   event
-                                                                    WHERE
-                                                       case_type_id IN ( :caseTypeIds ) )
-                                                      )
+                """
+                DELETE FROM event_case_field_complex_type
+                WHERE  event_case_field_id IN (SELECT id
+                                               FROM   event_case_field
+                                               WHERE  event_id IN (SELECT id
+                                                                   FROM   event
+                                                                   WHERE
+                                                      case_type_id IN ( :caseTypeIds ) )
+                                                     )
                 """,
                 """
                 DELETE FROM event_case_field
@@ -203,15 +221,13 @@ public class TestingSupportController {
                 """
             )
         );
+    }
 
-        for (String sqlStatement : sql) {
-            session.beginTransaction();
-            session.createNativeQuery(sqlStatement)
-                .setParameterList("caseTypeIds", ids, org.hibernate.type.IntegerType.INSTANCE)
-                .executeUpdate();
-            session.getTransaction().commit();
-        }
-
-        session.close();
+    private void executeSql(Session session, String sql, List<Integer> ids) {
+        session.beginTransaction();
+        session.createNativeQuery(sql)
+            .setParameterList("caseTypeIds", ids, org.hibernate.type.IntegerType.INSTANCE)
+            .executeUpdate();
+        session.getTransaction().commit();
     }
 }
