@@ -69,10 +69,6 @@ withPipeline(type, product, app) {
         enableSlackNotifications('#ccd-pr-builds')
 
         def githubApi = new GithubAPI(this)
-        if (!githubApi.getLabelsbyPattern(env.BRANCH_NAME, "keep-helm")) {
-            //commenting as enableCleanupOfHelmReleaseOnSuccess is now the default
-            //enableCleanupOfHelmReleaseAlways()
-        }
     }
 
     if (env.BRANCH_NAME.startsWith("PR-")) {
