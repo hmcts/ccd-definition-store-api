@@ -50,16 +50,6 @@
             "validationQuery" : "isValid()"
           }
         },
-        "discoveryComposite" : {
-          "description" : "Discovery Client not initialized",
-          "status" : "UNKNOWN",
-          "components" : {
-            "discoveryClient" : {
-              "description" : "Discovery Client not initialized",
-              "status" : "UNKNOWN"
-            }
-          }
-        },
         "diskSpace" : {
           "status" : "UP",
           "details" : {

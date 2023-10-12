@@ -146,11 +146,12 @@ public class ImportServiceImpl implements ImportService {
      * Imports the Case Definition data and inserts it into the database.
      *
      * @param inputStream the Case Definition data as an <code>InputStream</code>
+
+     * @return A {@link DefinitionFileUploadMetadata} instance containing the Jurisdiction and Case Types from the
+     *         Definition data, and the user ID of the account used for importing the Definition
      * @throws IOException            in the event that there is a problem reading in the data
      * @throws InvalidImportException if any of the Case Definition sheets fails checks for a definition name and a row
      *                                of attribute headers
-     * @return A {@link DefinitionFileUploadMetadata} instance containing the Jurisdiction and Case Types from the
-     *         Definition data, and the user ID of the account used for importing the Definition
      */
     @Override
     public DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream) throws IOException {
