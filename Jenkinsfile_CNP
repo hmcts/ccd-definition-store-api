@@ -1,7 +1,5 @@
 #!groovy
 
-import uk.gov.hmcts.contino.GithubAPI
-
 @Library("Infrastructure")
 
 def type = "java"
