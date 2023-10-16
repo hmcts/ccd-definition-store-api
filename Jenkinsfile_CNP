@@ -65,8 +65,6 @@ withPipeline(type, product, app) {
     }
     onPR {
         enableSlackNotifications('#ccd-pr-builds')
-
-        def githubApi = new GithubAPI(this)
     }
 
     if (env.BRANCH_NAME.startsWith("PR-")) {
