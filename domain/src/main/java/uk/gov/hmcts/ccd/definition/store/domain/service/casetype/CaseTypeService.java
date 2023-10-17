@@ -21,8 +21,6 @@ public interface CaseTypeService {
 
     Optional<CaseType> findByCaseTypeId(String id);
 
-    List<CaseType> findAllByCaseTypeIds(List<String> caseTypeIds);
-
     Optional<CaseTypeVersionInformation> findVersionInfoByCaseTypeId(String id);
 
     String findDefinitiveCaseTypeId(String id);
