@@ -206,7 +206,7 @@ subprojects { subproject ->
         implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
 
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
-        implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
+        //implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
 
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
