@@ -110,9 +110,11 @@ allprojects {
         implementation "org.apache.commons:commons-compress:1.21"
         // CVE-2021-28170
         implementation "org.glassfish:jakarta.el:4.0.1"
+
         // CVE-2021-42550
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
         implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
+
         testImplementation "io.rest-assured:xml-path:${restAssuredVersion}"
         testImplementation "io.rest-assured:json-path:${restAssuredVersion}"
         testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
