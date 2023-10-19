@@ -14,7 +14,6 @@ public class AppInsights {
 
     @Autowired
     public AppInsights(TelemetryClient telemetry) {
-
         this.telemetry = telemetry;
     }
 
