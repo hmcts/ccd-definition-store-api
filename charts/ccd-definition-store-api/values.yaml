@@ -21,8 +21,8 @@ java:
           alias: ELASTIC_SEARCH_PASSWORD
         - name: storage-account-primary-connection-string
           alias: AZURE_STORAGE_CONNECTION_STRING
-        - name: AppInsightsInstrumentationKey
-          alias: azure.application-insights.instrumentation-key
+        - name: app-insights-connection-string
+          alias: app-insights-connection-string
   environment:
     DEFINITION_STORE_DB_PORT: 5432
     DEFINITION_STORE_DB_NAME: ccd_definition_store
