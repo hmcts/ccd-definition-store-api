@@ -26,6 +26,7 @@ sonarqube {
         property "sonar.coverage.exclusions", "**/AppInsightsConfiguration.java"
         property "sonar.projectName", "ccd-definition-store-api"
         property "sonar.projectKey", "ccd-definition-store-api"
+        property "sonar.jacoco.excludes", "**/AppInsightsConfiguration.java"
     }
 }
 
