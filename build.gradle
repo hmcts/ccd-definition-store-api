@@ -1,37 +1,28 @@
 buildscript {
     ext {
-        springBootVersion = '2.7.10'
+        springBootVersion = '2.7.11'
     }
     dependencies {
-        classpath "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.7.0.1622"
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
 
 plugins {
     id 'application'
+    id "org.springframework.boot" version '2.1.0.RELEASE'
     id 'io.spring.dependency-management' version '1.0.10.RELEASE'
     id 'se.patrikerdes.use-latest-versions' version '0.2.7'
     id 'com.github.ben-manes.versions' version '0.20.0'
-    id 'org.sonarqube' version '2.7'
+    id 'org.sonarqube' version '4.2.0.3129'
     id 'jacoco'
-    id "com.github.kt3k.coveralls" version "2.8.2"
-    id 'io.franzbecker.gradle-lombok' version '2.0'
+    id 'idea'
+    id 'eclipse'
+    id 'com.github.kt3k.coveralls' version "2.8.2"
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
-    id "info.solidsoft.pitest" version '1.5.1' apply(false)
-    id "org.jetbrains.gradle.plugin.idea-ext" version "0.7"
-    id 'uk.gov.hmcts.java' version '0.12.40'
+    id 'info.solidsoft.pitest' version '1.5.1' apply(false)
+    id 'org.jetbrains.gradle.plugin.idea-ext' version "0.7"
+    id 'uk.gov.hmcts.java' version '0.12.43'
 }
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'application'
-apply plugin: "org.sonarqube"
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
-apply plugin: 'com.github.ben-manes.versions'
-apply plugin: 'se.patrikerdes.use-latest-versions'
 
 mainClassName = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
 
@@ -45,7 +36,7 @@ dependencyCheck {
 ext['elasticsearch.version'] = '7.17.1'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
-ext['spring-security.version'] = '5.7.5'
+ext['spring-security.version'] = '5.7.8'
 ext['jackson.version'] = '2.14.1'
 ext['snakeyaml.version'] = '2.0'
 ext['postgresql.version'] = '42.5.1'
@@ -60,11 +51,12 @@ ext {
     springCloudVersion = '2021.0.3'
     springfoxSwaggerVersion = '3.0.0'
     hamcrestVersion = '1.3'
-    powermockVersion = '2.0.0-beta.5'
-    reformLogging= '5.1.9'
+    powermockVersion = '2.0.9'
+    reformLogging= '6.0.1'
+    appInsightsVersion = '2.4.1'
     restAssuredVersion = '4.3.0!!'
-    groovyVersion = '3.0.11!!'
-    tomcatVersion = '9.0.73!!'
+    groovyVersion = '3.0.17!!'
+    tomcatVersion = '9.0.75!!'
     feignJackson = '11.6'
     limits = [
             'instruction': 99,
@@ -118,9 +110,11 @@ allprojects {
         implementation "org.apache.commons:commons-compress:1.21"
         // CVE-2021-28170
         implementation "org.glassfish:jakarta.el:4.0.1"
+
         // CVE-2021-42550
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
         implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
+
         testImplementation "io.rest-assured:xml-path:${restAssuredVersion}"
         testImplementation "io.rest-assured:json-path:${restAssuredVersion}"
         testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
@@ -151,8 +145,15 @@ allprojects {
     }
 }
 
-sourceCompatibility = 11
-targetCompatibility = 11
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.8"
+}
 
 
 // end::repositories[]
@@ -164,7 +165,6 @@ subprojects { subproject ->
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'jacoco'
     apply plugin: "com.github.kt3k.coveralls"
-    apply plugin: 'io.franzbecker.gradle-lombok'
     apply plugin: 'uk.gov.hmcts.java'
 
     configurations {
@@ -173,6 +173,16 @@ subprojects { subproject ->
         aatCompile.extendsFrom(testImplementation)
         aatRuntime.extendsFrom(testRuntimeOnly)
         cucumberRuntime.extendsFrom(functionalRuntime)
+    }
+
+    tasks.withType(Test).configureEach{
+        // Added to handle Powermockito issues
+        jvmArgs = jvmArgs + [
+                '--add-opens=java.base/java.lang=ALL-UNNAMED',
+                '--add-opens=java.base/java.util=ALL-UNNAMED',
+                '--add-opens=java.base/java.lang.invoke=ALL-UNNAMED',
+                '--add-opens=java.base/sun.security.action=ALL-UNNAMED'
+        ]
     }
 
     dependencyUpdates.resolutionStrategy = {
@@ -197,7 +207,8 @@ subprojects { subproject ->
 
         implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
-        implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
+        implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
+        implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
 
         implementation group: 'io.jsonwebtoken', name: 'jjwt', version:'0.9.1'
         implementation (group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3') {
@@ -206,6 +217,12 @@ subprojects { subproject ->
         implementation (group: 'com.github.hmcts', name: 'idam-java-client', version: '2.0.1') {
             exclude group: 'com.google.guava', module: 'guava'
         }
+
+        compileOnly 'org.projectlombok:lombok:1.18.28'
+        annotationProcessor 'org.projectlombok:lombok:1.18.28'
+
+        testCompileOnly 'org.projectlombok:lombok:1.18.28'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
 
         implementation "org.springframework.security:spring-security-web"
         implementation "org.springframework.security:spring-security-config"
@@ -297,16 +314,20 @@ subprojects { subproject ->
             reports {
                 // XML required by coveralls and for the below coverage checks
                 // and html are generated by default
-                xml.enabled true
-                html.enabled true
+                html.required = true
+                html.outputLocation = file("${buildDir}/reports/jacoco/html")
+
+                xml.required = true
+                xml.outputLocation = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
+
             }
 
             classDirectories.setFrom((classDirectories.files.collect {
-                fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**'])
+                fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**','**/AppInsightsConfiguration**'])
             }))
 
             doLast {
-                def report = file("${jacoco.reportsDir}/test/jacocoTestReport.xml")
+                def report = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
                 logger.lifecycle("Checking coverage results: ${report}")
 
                 def parser = new XmlParser()
@@ -359,7 +380,7 @@ subprojects { subproject ->
         }
 
         reports {
-            html.enabled = true
+            html.required = true
         }
     }
 
@@ -369,10 +390,12 @@ subprojects { subproject ->
 
 sonarqube {
     properties {
+        property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**"
+        property "sonar.exclusions", "**/AppInsightsConfiguration**"
         property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
         property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/junitPlatformTest.exec"
         property "sonar.cpd.exclusions", "**/entity/*.java,**/model/*.java"
-        property "sonar.jacoco.excludes", "**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java"
+        property "sonar.jacoco.excludes", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java"
         property "sonar.projectName", "ccd-definition-store-api"
         property "sonar.projectKey", "ccd-definition-store-api"
     }
@@ -421,7 +444,7 @@ bootJar {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': project.version
     }
-    archiveName = 'case-definition-store-api.jar'
+    archiveFileName = 'case-definition-store-api.jar'
 }
 
 // Although there are no sources to compile, Jenkins pipeline needs the jar file to be here
@@ -445,11 +468,15 @@ task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
     }
 
     reports {
-        csv.enabled = false
-        html.enabled = true
-        html.destination = file("${buildDir}/reports/jacoco/html")
-        xml.enabled = true
-        xml.destination = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
+        csv.required = false
+        html {
+            required = true
+            outputLocation = file("${buildDir}/reports/jacoco/html")
+        }
+        xml {
+            required = true
+            outputLocation = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
+        }
     }
 }
 
@@ -462,7 +489,7 @@ dependencies {
     codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
 }
 task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
-    main = "com.codacy.CodacyCoverageReporter"
+    mainClass = "com.codacy.CodacyCoverageReporter"
     classpath = configurations.codacy
     args = [
             "report",
@@ -474,7 +501,7 @@ task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
 }
 
 task fortifyScan(type: JavaExec)  {
-    main = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
+    mainClass = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
     classpath += sourceSets.test.runtimeClasspath
     jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
     // The line below prevents the build from failing if the Fortify scan detects issues
@@ -496,7 +523,7 @@ task reloadEnvSecrets {
 }
 
 task runRemoteDemo(type: JavaExec) {
-    main = mainClassName
+    mainClass = mainClassName
     classpath = sourceSets.main.runtimeClasspath
     doFirst() {
         configRemoteRunTask(it, 'demo')

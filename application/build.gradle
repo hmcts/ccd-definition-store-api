@@ -7,7 +7,7 @@ dependencyCheck {
 
 jar {
     enabled = true
-    baseName = "${applicationName}"
+    archiveFileName = "${applicationName}"
     manifest {
         attributes 'Implementation-Title': "${applicationName}",
                 'Implementation-Version': project.version

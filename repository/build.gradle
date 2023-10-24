@@ -10,7 +10,7 @@ jar {
         attributes 'Implementation-Title': project.name,
                 'Implementation-Version': project.version
     }
-    archiveName = 'definition-store-repository.jar'
+    archiveFileName = 'definition-store-repository.jar'
 }
 
 bootJar {
