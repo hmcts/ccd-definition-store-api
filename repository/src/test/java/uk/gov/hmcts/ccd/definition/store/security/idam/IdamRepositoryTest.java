@@ -96,7 +96,7 @@ class IdamRepositoryTest {
 
         FeignException.FeignClientException feignClientException
             = new FeignException.FeignClientException(403, exceptionMessage, createRequestForFeignException(),
-            new byte[0], null);
+                new byte[0], null);
 
         when(idamClient.getUserInfo(anyString())).thenThrow(feignClientException);
 
