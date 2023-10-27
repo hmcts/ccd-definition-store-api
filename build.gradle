@@ -102,7 +102,6 @@ allprojects {
 
     // Global constraints
     dependencies {
-        implementation group: 'org.owasp', name: 'dependency-check-gradle', version: '8.4.1'
         implementation group: 'org.json', name: 'json', version: '20231013'
 
         implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
