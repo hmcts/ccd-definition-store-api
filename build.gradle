@@ -52,10 +52,11 @@ ext {
     springfoxSwaggerVersion = '3.0.0'
     hamcrestVersion = '1.3'
     powermockVersion = '2.0.9'
-    reformLogging= '5.1.9'
+    reformLogging= '6.0.1'
+    appInsightsVersion = '2.4.1'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.17!!'
-    tomcatVersion = '9.0.73!!'
+    tomcatVersion = '9.0.75!!'
     feignJackson = '11.6'
     limits = [
             'instruction': 99,
@@ -109,9 +110,11 @@ allprojects {
         implementation "org.apache.commons:commons-compress:1.21"
         // CVE-2021-28170
         implementation "org.glassfish:jakarta.el:4.0.1"
+
         // CVE-2021-42550
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
         implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
+
         testImplementation "io.rest-assured:xml-path:${restAssuredVersion}"
         testImplementation "io.rest-assured:json-path:${restAssuredVersion}"
         testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
@@ -204,7 +207,8 @@ subprojects { subproject ->
 
         implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
-        implementation group: 'com.github.hmcts.java-logging', name: 'logging-appinsights', version: reformLogging
+        implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
+        implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
 
         implementation group: 'io.jsonwebtoken', name: 'jjwt', version:'0.9.1'
         implementation (group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3') {
@@ -319,7 +323,7 @@ subprojects { subproject ->
             }
 
             classDirectories.setFrom((classDirectories.files.collect {
-                fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**'])
+                fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**','**/AppInsightsConfiguration**'])
             }))
 
             doLast {
@@ -386,10 +390,12 @@ subprojects { subproject ->
 
 sonarqube {
     properties {
+        property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**"
+        property "sonar.exclusions", "**/AppInsightsConfiguration**"
         property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
         property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/junitPlatformTest.exec"
         property "sonar.cpd.exclusions", "**/entity/*.java,**/model/*.java"
-        property "sonar.jacoco.excludes", "**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java"
+        property "sonar.jacoco.excludes", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java"
         property "sonar.projectName", "ccd-definition-store-api"
         property "sonar.projectKey", "ccd-definition-store-api"
     }
