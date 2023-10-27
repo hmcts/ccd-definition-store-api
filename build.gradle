@@ -22,6 +22,7 @@ plugins {
     id 'info.solidsoft.pitest' version '1.5.1' apply(false)
     id 'org.jetbrains.gradle.plugin.idea-ext' version "0.7"
     id 'uk.gov.hmcts.java' version '0.12.43'
+    id 'org.owasp.dependencycheck' version '8.4.2' apply true
 }
 
 mainClassName = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
@@ -96,11 +97,14 @@ allprojects {
         testImplementation ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}"){
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
-        implementation 'net.minidev:json-smart:2.4.7'
+        implementation 'net.minidev:json-smart:2.5.0'
     }
 
     // Global constraints
     dependencies {
+        implementation group: 'org.owasp', name: 'dependency-check-gradle', version: '8.4.1'
+        implementation group: 'org.json', name: 'json', version: '20231013'
+
         implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
