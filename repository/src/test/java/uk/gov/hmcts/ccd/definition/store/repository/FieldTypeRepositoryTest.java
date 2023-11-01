@@ -237,7 +237,7 @@ public class FieldTypeRepositoryTest {
 
         List<FieldTypeEntity> predefinedComplexTypes = fieldTypeRepository.findPredefinedComplexTypes();
 
-        assertEquals(19, predefinedComplexTypes.size());
+        assertEquals(20, predefinedComplexTypes.size());
 
         assertThat(predefinedComplexTypes, hasItems(
             fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL),
