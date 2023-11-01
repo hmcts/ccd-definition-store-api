@@ -49,6 +49,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_MESSAGE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUP;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -252,6 +253,7 @@ public class FieldTypeRepositoryTest {
             fieldTypeWithReference(PREDEFINED_COMPLEX_FLAGS),
             fieldTypeWithReference(PREDEFINED_COMPLEX_JUDICIAL_USER),
             fieldTypeWithReference(PREDEFINED_COMPLEX_CASE_ACCESS_GROUP),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS),
             fieldTypeWithReference(PREDEFINED_COMPLEX_SEARCH_PARTY),
             fieldTypeWithReference(PREDEFINED_COMPLEX_SEARCH_CRITERIA),
             fieldTypeWithReference(PREDEFINED_COMPLEX_LINK_REASON),

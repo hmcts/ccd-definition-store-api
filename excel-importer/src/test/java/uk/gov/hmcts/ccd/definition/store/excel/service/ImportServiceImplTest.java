@@ -507,6 +507,7 @@ public class ImportServiceImplTest {
             buildBaseType(PREDEFINED_COMPLEX_FLAGS),
             buildBaseType(PREDEFINED_COMPLEX_JUDICIAL_USER),
             buildBaseType(PREDEFINED_COMPLEX_CASE_ACCESS_GROUP),
+            buildBaseType(PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS),
             buildBaseType(PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST),
             buildBaseType(PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION),
             buildBaseType(PREDEFINED_COMPLEX_ORGANISATION),

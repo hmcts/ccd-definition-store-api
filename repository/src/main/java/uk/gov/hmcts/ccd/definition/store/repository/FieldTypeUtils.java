@@ -38,6 +38,7 @@ public class FieldTypeUtils {
     public static final String PREDEFINED_COMPLEX_FLAGS = "Flags";
     public static final String PREDEFINED_COMPLEX_JUDICIAL_USER = "JudicialUser";
     public static final String PREDEFINED_COMPLEX_CASE_ACCESS_GROUP = "CaseAccessGroup";
+    public static final String PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS = "CaseAccessGroups";
     public static final String PREDEFINED_COMPLEX_SEARCH_PARTY = "SearchParty";
     public static final String PREDEFINED_COMPLEX_SEARCH_CRITERIA = "SearchCriteria";
     public static final String PREDEFINED_COMPLEX_LINK_REASON = "LinkReason";

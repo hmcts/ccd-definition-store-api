@@ -26,6 +26,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_MESSAGE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUP;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS;
 
 public interface FieldTypeRepository extends VersionedDefinitionRepository<FieldTypeEntity, Integer> {
 
@@ -57,6 +58,7 @@ public interface FieldTypeRepository extends VersionedDefinitionRepository<Field
         + "', '" + PREDEFINED_COMPLEX_FLAGS
         + "', '" + PREDEFINED_COMPLEX_JUDICIAL_USER
         + "', '" + PREDEFINED_COMPLEX_CASE_ACCESS_GROUP
+        + "', '" + PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS
         + "', '" + PREDEFINED_COMPLEX_SEARCH_PARTY
         + "', '" + PREDEFINED_COMPLEX_SEARCH_CRITERIA
         + "', '" + PREDEFINED_COMPLEX_LINK_REASON
