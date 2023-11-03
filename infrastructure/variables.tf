@@ -39,6 +39,12 @@ variable "pgsql_storage_mb" {
   default     = 65536
 }
 
+variable "pgsql_storage_mb" {
+  description = "Max storage allowed for the PGSql Flexibile instance"
+  type        = number
+  default     = 65536
+}
+
 ////////////////////////////////
 // Database
 ////////////////////////////////
