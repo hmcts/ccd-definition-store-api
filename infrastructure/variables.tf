@@ -39,10 +39,10 @@ variable "pgsql_storage_mb" {
   default     = 65536
 }
 
-variable "pgsql_storage_mb" {
-  description = "Max storage allowed for the PGSql Flexibile instance"
-  type        = number
-  default     = 65536
+variable "subnet_suffix" {
+  default     = null
+  type        = string
+  description = "Suffix to append to the subnet name, the originally created one used by this module is full in a number of environments."
 }
 
 ////////////////////////////////
