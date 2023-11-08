@@ -78,6 +78,11 @@ resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
 
+
+////////////////////////////////
+// DB version 11              //
+////////////////////////////////
+
 module "definition-store-db-v11" {
   source          = "git@github.com:hmcts/cnp-module-postgres?ref=master"
   product         = var.product
@@ -95,10 +100,6 @@ module "definition-store-db-v11" {
   storage_mb      = "102400"
   common_tags     = "${var.common_tags}"
 }
-
-////////////////////////////////
-// DB version 15              //
-////////////////////////////////
 
 module "postgresql_v15" {
   source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=master"
