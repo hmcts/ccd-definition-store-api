@@ -11,6 +11,36 @@
 
 Validation and persistence of definitions for field types, jurisdictions, case types and associated display elements.
 
+## setup for Group Access
+### create a ccd_definition-store docker image for local use
+```bash
+../ga-ccd-docker/ccd login
+
+./gradlew assemble
+
+docker build -t localdebug_ccd_definition-store-api .
+
+docker tag localdebug_ccd_definition-store-api:latest localdebug_ccd_definition-store-api:staging
+```
+stop ccd_definition-store-api container on ga-ccd-docker
+
+update ga-ccd-docker **backend.yml** so that
+
+**ccd_definition-store-api** points to image: **localdebug_ccd_definition-store-api:latest**
+
+restart ccd_definition-store-api container by
+
+```bash
+./ccd compose up -d
+```
+
+```bash
+./bin/ccd-import-definition.sh /home/sanjay/Downloads/CCD_BEFTA_JURISDICTION1_GA-3.xlsx
+```
+
+**xxxxxxxxxx---END OF GROUP ACCESS SETUP---xxxxxxxxxx**
+
+
 ## Overview
 
 Definitions are imported as an Excel spreadsheet which are parsed, persisted and then exposed as JSON through a REST API.

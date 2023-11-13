@@ -21,6 +21,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles.AccessTypeRolesService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
@@ -31,6 +32,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUse
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypeRolesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.BannerParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
@@ -54,6 +56,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
@@ -91,6 +94,7 @@ public class ImportServiceImpl implements ImportService {
     private final JurisdictionUiConfigService jurisdictionUiConfigService;
     private final ChallengeQuestionTabService challengeQuestionTabService;
     private final RoleToAccessProfileService roleToAccessProfileService;
+    private final AccessTypeRolesService accessTypeRolesService;
     private final SearchCriteriaService searchCriteriaService;
     private final SearchPartyService searchPartyService;
     private final CategoryTabService categoryTabService;
@@ -114,6 +118,7 @@ public class ImportServiceImpl implements ImportService {
                              JurisdictionUiConfigService jurisdictionUiConfigService,
                              ChallengeQuestionTabService challengeQuestionTabService,
                              RoleToAccessProfileService roleToAccessProfileService,
+                             AccessTypeRolesService accessTypeRolesService,
                              SearchCriteriaService searchCriteriaService,
                              SearchPartyService searchPartyService, CategoryTabService categoryTabService,
                              TranslationService translationService,
@@ -135,6 +140,7 @@ public class ImportServiceImpl implements ImportService {
         this.jurisdictionUiConfigService = jurisdictionUiConfigService;
         this.challengeQuestionTabService = challengeQuestionTabService;
         this.roleToAccessProfileService = roleToAccessProfileService;
+        this.accessTypeRolesService = accessTypeRolesService;
         this.searchCriteriaService = searchCriteriaService;
         this.searchPartyService = searchPartyService;
         this.categoryTabService = categoryTabService;
@@ -301,6 +307,8 @@ public class ImportServiceImpl implements ImportService {
             logger.debug("Importing spreadsheet: NewChallengeQuestion...: OK");
         }
 
+        parseAccessTypeRoles(definitionSheets, parseContext);
+
         parseCategoryTab(definitionSheets, parseContext);
         parserFactory.createCategoryIdValidator().validate(parseContext);
 
@@ -315,6 +323,20 @@ public class ImportServiceImpl implements ImportService {
         }
 
         return metadata;
+    }
+
+    private void parseAccessTypeRoles(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext) {
+        if (definitionSheets.get(SheetName.ACCESS_TYPE_ROLES.getName()) != null) {
+            logger.debug("Importing spreadsheet: AccessTypeRoles...");
+            final AccessTypeRolesParser accessTypeRolesParser =
+                parserFactory.createNewAccessTypeRolesParser();
+
+            List<AccessTypeRolesEntity> newAccessTypeRolesEntities = accessTypeRolesParser
+                .parse(definitionSheets,parseContext);
+            accessTypeRolesService.saveAll(newAccessTypeRolesEntities);
+            logger.debug("Importing spreadsheet: AccessTypeRoles...: OK");
+        }
+
     }
 
     public void parseCategoryTab(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext) {
