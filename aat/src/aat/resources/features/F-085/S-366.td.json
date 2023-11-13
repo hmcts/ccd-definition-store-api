@@ -1,6 +1,6 @@
 {
-	"_guid_": "S-082.2",
-	"_extends_": "F-082_Test_Base_Data",
+	"_guid_": "S-366",
+	"_extends_": "F-085_Test_Base_Data",
 	"title": "must return 401 when request does not provide valid authentication credentials",
 
 	"specs": [

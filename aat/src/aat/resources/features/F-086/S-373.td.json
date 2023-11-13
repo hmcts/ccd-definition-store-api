@@ -1,6 +1,6 @@
 {
-	"_guid_": "S-358",
-	"_extends_": "F-083_Test_Base_Data",
+	"_guid_": "S-373",
+	"_extends_": "F-086_Test_Base_Data",
 	"title": "must return 404 when request provides a non-existing case type id",
 
 	"specs": [
@@ -11,7 +11,7 @@
 
 	"request": {
 	 "pathVariables": {
-		"id": "NON_EXISTING_BEFTA_CASETYPE"
+		"ctid": "NON_EXISTING_BEFTA_CASETYPE"
 	 }
 	},
 
