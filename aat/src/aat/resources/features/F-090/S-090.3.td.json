@@ -585,7 +585,7 @@
       "categories" : [ ],
       "case_fields" : [ {
         "__ordering__": "UNORDERED",
-        "__elementId__": "case_field_id"
+        "__elementId__": "id"
       }, {
         "metadata" : false,
         "id" : "OrganisationField",
