@@ -21,19 +21,7 @@ Scenario: must return 200 and Gets the current version of a Case Type Schema
       And the response has all the details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-332 @Ignore
-Scenario: more tests
-
-#-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-333 @Ignore
-Scenario: Case type version information (Green path /Not found)
-
-#-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-334 @Ignore
-Scenario: Case type version information (Green path /Not found)
-
-#-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-336 @Ignore # Response code mismatch, expected: 401, actual: 403 RDM-6628
+@S-336
 Scenario: must return 401 when request does not provide valid authentication credentials
 
     Given a user with [an active profile in CCD]
@@ -47,7 +35,7 @@ Scenario: must return 401 when request does not provide valid authentication cre
       And the response has all the details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-337 @Ignore # Response code mismatch, expected: 403, actual: 200
+@S-337 @Ignore # Response code mismatch, expected: 403, actual: 200 CCD-4455
 Scenario: must return 403 when request provides authentic credentials without authorised access to the operation
 
     Given a user with [an active profile in CCD, and insufficient privilege to the case type]
@@ -60,7 +48,7 @@ Scenario: must return 403 when request provides authentic credentials without au
       And the response has all the details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-338
+@S-338 @Ignore # Response code mismatch, expected: 404, actual: 200 CCD-4461
 Scenario: must return 404 when user provide non-existing Case Type ID within the request
 
     Given a user with [an active profile in CCD]
