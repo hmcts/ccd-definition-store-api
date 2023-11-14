@@ -623,6 +623,10 @@
       "categories": [],
       "case_fields": [
         {
+          "__ordering__": "UNORDERED",
+          "__elementId__": "id"
+        },
+        {
           "metadata": false,
           "id": "OrganisationField",
           "case_type_id": "FT_ComplexOrganisation",

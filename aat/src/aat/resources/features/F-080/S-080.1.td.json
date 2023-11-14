@@ -268,6 +268,10 @@
       "categories": [],
       "case_fields": [
         {
+          "__ordering__": "UNORDERED",
+          "__elementId__": "id"
+        },
+        {
           "metadata": false,
           "id": "TextField",
           "case_type_id": "FT_CaseAccessCategories",
