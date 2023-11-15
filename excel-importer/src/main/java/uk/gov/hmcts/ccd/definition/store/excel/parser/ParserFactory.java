@@ -25,6 +25,7 @@ public class ParserFactory {
     private final SpreadsheetValidator spreadsheetValidator;
     private final HiddenFieldsValidator hiddenFieldsValidator;
     private final ChallengeQuestionParser challengeQuestionParser;
+    private final AccessTypeRolesParser accessTypeRolesParser;
     private final CategoryParser categoryParser;
     private final SearchPartyValidator searchPartyValidator;
     private final SearchCriteriaValidator searchCriteriaValidator;
@@ -39,6 +40,7 @@ public class ParserFactory {
                          SpreadsheetValidator spreadsheetValidator,
                          HiddenFieldsValidator hiddenFieldsValidator,
                          ChallengeQuestionParser challengeQuestionParser,
+                         AccessTypeRolesParser accessTypeRolesParser,
                          CategoryParser categoryParser, SearchPartyValidator searchPartyValidator,
                          SearchCriteriaValidator searchCriteriaValidator,
                          CategoryIdValidator categoryIdValidator,
@@ -49,6 +51,7 @@ public class ParserFactory {
         this.spreadsheetValidator = spreadsheetValidator;
         this.hiddenFieldsValidator = hiddenFieldsValidator;
         this.challengeQuestionParser = challengeQuestionParser;
+        this.accessTypeRolesParser = accessTypeRolesParser;
         this.categoryParser = categoryParser;
         this.searchPartyValidator = searchPartyValidator;
         this.searchCriteriaValidator = searchCriteriaValidator;
@@ -128,6 +131,10 @@ public class ParserFactory {
 
     public ChallengeQuestionParser createNewChallengeQuestionParser() {
         return challengeQuestionParser;
+    }
+
+    public AccessTypeRolesParser createNewAccessTypeRolesParser() {
+        return accessTypeRolesParser;
     }
 
     public RoleToAccessProfilesParser createRoleToAccessProfilesParser() {

@@ -83,6 +83,7 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles.AccessTypeRolesService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
@@ -90,6 +91,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfiles
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypeRolesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.CategoryParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
@@ -194,10 +196,14 @@ public class ImportServiceImplTest {
     private CategoryParser categoryParser;
 
     @Mock
+    private AccessTypeRolesParser accessTypeRolesParser;
+
+    @Mock
     private ChallengeQuestionTabService challengeQuestionTabService;
 
     @Mock
     private RoleToAccessProfileService roleToAccessProfileService;
+    private AccessTypeRolesService accessTypeRolesService;
 
     @Mock
     private SearchCriteriaService searchCriteriaService;
@@ -230,7 +236,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser, categoryParser, searchPartyValidator, searchCriteriaValidator,
+            challengeQuestionParser, accessTypeRolesParser, categoryParser, searchPartyValidator, searchCriteriaValidator,
             categoryIdValidator, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
@@ -251,6 +257,7 @@ public class ImportServiceImplTest {
             jurisdictionUiConfigService,
             challengeQuestionTabService,
             roleToAccessProfileService,
+            accessTypeRolesService,
             searchCriteriaService,
             searchPartyService, categoryTabService,
             translationService,
@@ -385,7 +392,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
-            hiddenFieldsValidator,challengeQuestionParser,
+            hiddenFieldsValidator,challengeQuestionParser, accessTypeRolesParser,
             categoryParser, searchPartyValidator, searchCriteriaValidator, categoryIdValidator,
             applicationParams, executor);
 
@@ -407,6 +414,7 @@ public class ImportServiceImplTest {
             jurisdictionUiConfigService,
             challengeQuestionTabService,
             roleToAccessProfileService,
+            accessTypeRolesService,
             searchCriteriaService,
             searchPartyService, categoryTabService,
             translationService,applicationParams);
