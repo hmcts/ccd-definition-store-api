@@ -1,17 +1,17 @@
 {
-	"_guid_": "S-358",
-	"_extends_": "F-083_Test_Base_Data",
+	"_guid_": "S-374",
+	"_extends_": "F-086_Test_Base_Data",
 	"title": "must return 404 when request provides a non-existing case type id",
 
 	"specs": [
 	 "an active profile in CCD",
-	 "contains a non-existing case type id",
+	 "contains a non-existing event type id",
 	 "contains 404 not found code"
 	],
 
 	"request": {
 	 "pathVariables": {
-		"id": "NON_EXISTING_BEFTA_CASETYPE"
+		"etid": "NON_EXISTING_BEFTA_EVENTTYPE"
 	 }
 	},
 
@@ -20,7 +20,7 @@
 	 "responseCode": 404,
 	 "responseMessage": "Not Found",
 	 "body": {
-		"message": "Object Not Found for:NON_EXISTING_BEFTA_CASETYPE"
+		"message": "Object Not Found for:NON_EXISTING_BEFTA_EVENTTYPE"
 	 }
 	}
 }
