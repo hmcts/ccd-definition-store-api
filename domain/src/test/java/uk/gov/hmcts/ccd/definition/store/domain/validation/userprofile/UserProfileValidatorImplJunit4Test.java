@@ -65,9 +65,9 @@ public class UserProfileValidatorImplJunit4Test {
         assertFalse(result.isValid());
         assertThat(result.getValidationErrors(), hasSize(equalTo(1)));
         assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
-            is("Invalid jurisdiction in workbasket user default; user: " + //
-                "'Nayab.The.Royal.Highness.ssssh@hmcts.net', " + //
-                "jurisdiction: 'QA', case type: 'HOLIDAY', state: 'GoingToHeaven'"));
+            is("Invalid jurisdiction in workbasket user default; user: "
+                + "'Nayab.The.Royal.Highness.ssssh@hmcts.net', "
+                + "jurisdiction: 'QA', case type: 'HOLIDAY', state: 'GoingToHeaven'"));
 
     }
 

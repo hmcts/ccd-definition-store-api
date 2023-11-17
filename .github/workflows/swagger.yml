@@ -17,10 +17,10 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle-
-      - name: Set up JDK 11
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          java-version: 11
+          java-version: 17
           distribution: 'temurin'
       - name: Run Swagger Publisher
         run: ./gradlew application:test --tests uk.gov.hmcts.net.ccd.definition.store.SwaggerGeneratorTest
@@ -31,7 +31,7 @@ jobs:
           git init
           git config user.email "github-actions@users.noreply.github.com"
           git config user.name "GitHub action"
-          git remote add upstream "https://jenkins-reform-hmcts:${{ secrets.GH_TOKEN }}@github.com/hmcts/reform-api-docs.git"
+          git remote add upstream "https://jenkins-reform-hmcts:${{ secrets.GH_TOKEN }}@github.com/hmcts/cnp-api-docs.git"
           git pull upstream master
           repo=`echo "$GITHUB_REPOSITORY" | cut -f2- -d/`
           echo "$(cat /tmp/ccd-definition-store-api.json)" > "docs/specs/ccd-definition-store-api.json"

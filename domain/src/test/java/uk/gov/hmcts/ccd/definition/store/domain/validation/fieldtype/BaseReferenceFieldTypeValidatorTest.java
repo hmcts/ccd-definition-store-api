@@ -1,24 +1,27 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import java.util.Collections;
 
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class BaseReferenceFieldTypeValidatorTest {
 
     private static final JurisdictionEntity JURISDICTION = new JurisdictionEntity();
@@ -26,21 +29,18 @@ public class BaseReferenceFieldTypeValidatorTest {
     @Mock
     private FieldTypeValidationContext context;
 
-    final FieldTypeEntity globalType = new FieldTypeEntity();
+    private final FieldTypeEntity globalType = new FieldTypeEntity();
+    public static final String GLOBAL_TYPE_REFERENCE = "Text";
 
     private BaseReferenceFieldTypeValidator validator;
 
-    public static final String GLOBAL_TYPE_REFERENCE = "Text";
-
-    @Before
+    @BeforeEach
     public void setUp() {
         validator = new BaseReferenceFieldTypeValidator();
-
         globalType.setReference(GLOBAL_TYPE_REFERENCE);
-
-        doReturn(Collections.singleton(globalType)).when(context).getBaseTypes();
     }
 
+    @DisplayName("Should accept global type overriding base type reference")
     @Test
     public void shouldAcceptGlobalTypeOverridingBaseTypeReference() {
         final FieldTypeEntity fieldType = new FieldTypeEntity();
@@ -49,32 +49,39 @@ public class BaseReferenceFieldTypeValidatorTest {
 
         final ValidationResult result = validator.validate(context, fieldType);
 
-        assertThat(result.isValid(), is(true));
-        assertThat(result.getValidationErrors(), hasSize(0));
+        assertAll(
+            () -> assertTrue(result.isValid()),
+            () -> assertEquals(0, result.getValidationErrors().size())
+        );
+
+        verifyNoInteractions(context);
     }
 
+    @DisplayName("Should reject jurisdiction type overriding base type reference")
     @Test
     public void shouldRejectJurisdictionTypeOverridingBaseTypeReference() {
         final FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setReference(GLOBAL_TYPE_REFERENCE);
         fieldType.setJurisdiction(JURISDICTION);
 
+        doReturn(Collections.singleton(globalType)).when(context).getBaseTypes();
+
         final ValidationResult result = validator.validate(context, fieldType);
 
-        assertThat(result.isValid(), is(false));
-        assertThat(result.getValidationErrors(), hasSize(1));
-        assertTrue(result.getValidationErrors().get(0)
-            instanceof CannotOverrideBaseTypeValidationError);
-        assertEquals(
-            fieldType,
-            ((CannotOverrideBaseTypeValidationError) result.getValidationErrors().get(0)).getFieldTypeEntity()
-        );
-        assertEquals(
-            globalType,
-            ((CannotOverrideBaseTypeValidationError) result.getValidationErrors().get(0))
-                .getConflictingFieldTypeEntity()
+        assertAll(
+            () -> assertFalse(result.isValid()),
+            () -> assertEquals(1, result.getValidationErrors().size()),
+            () -> assertTrue(result.getValidationErrors().get(0) instanceof CannotOverrideBaseTypeValidationError),
+            () -> assertEquals(fieldType, ((CannotOverrideBaseTypeValidationError) result.getValidationErrors().get(0))
+                .getFieldTypeEntity()),
+            () -> assertEquals(globalType, ((CannotOverrideBaseTypeValidationError) result.getValidationErrors().get(0))
+                .getConflictingFieldTypeEntity()),
+            () -> assertEquals("Cannot override base type: " + GLOBAL_TYPE_REFERENCE,
+                               (result.getValidationErrors().get(0)).getDefaultMessage())
         );
 
+        verify(context, times(1)).getBaseTypes();
+        verify(context, times(0)).getBaseComplexTypes();
     }
 
 }

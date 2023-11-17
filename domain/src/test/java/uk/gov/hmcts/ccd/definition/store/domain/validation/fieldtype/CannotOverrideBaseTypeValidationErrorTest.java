@@ -1,8 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.MockitoAnnotations;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import static org.junit.Assert.assertEquals;
@@ -11,9 +10,8 @@ public class CannotOverrideBaseTypeValidationErrorTest {
 
     private CannotOverrideBaseTypeValidationError classUnderTest;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
         classUnderTest = new CannotOverrideBaseTypeValidationError(
             fieldTypeEntityWithReference("TeXt"),
             fieldTypeEntityWithReference("Text")
