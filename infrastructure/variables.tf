@@ -59,3 +59,9 @@ variable "pgsql_storage_mb" {
   type        = number
   default     = 102400
 }
+
+variable "subnet_suffix" {
+  default     = null
+  type        = string
+  description = "Suffix to append to the subnet name, the originally created one used by this module is full in a number of environments."
+}
