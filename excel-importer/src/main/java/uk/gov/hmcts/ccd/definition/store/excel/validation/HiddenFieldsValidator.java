@@ -119,14 +119,6 @@ public class HiddenFieldsValidator {
                     caseFieldId, SheetName.CASE_EVENT_TO_FIELDS.getName()));
             }
         }
-
-
-        if (definitionDataItem.getRetainHiddenValue() != null && !valid) {
-            throw new MapperException(String.format("'retainHiddenValue' can only be configured "
-                    + "for a field that uses a "
-                    + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
-                caseFieldId, SheetName.CASE_EVENT_TO_FIELDS.getName()));
-        }
     }
 
     public Boolean parseCaseEventComplexTypesHiddenFields(DefinitionDataItem definitionDataItem,
@@ -142,7 +134,7 @@ public class HiddenFieldsValidator {
 
 
     private void verifyEventFieldHasRetainHiddenValue(DefinitionDataItem definitionDataItem,
-                                                 DefinitionSheet caseEventToFieldsSheet) {
+                                                      DefinitionSheet caseEventToFieldsSheet) {
         List<DefinitionDataItem> caseEventToFields = caseEventToFieldsSheet.getDataItems().stream()
             .filter(caseEventToField -> caseEventToField.getCaseFieldId()
                 .equals(definitionDataItem.getCaseFieldId()) && caseEventToField.getCaseEventId()

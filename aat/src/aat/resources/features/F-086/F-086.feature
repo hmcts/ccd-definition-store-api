@@ -7,7 +7,7 @@ Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-375 @Ignore
+@S-375
 Scenario: must return the Case Wizard Page Collection for a given case type
 
     Given a user with [an active profile in CCD]
@@ -21,7 +21,7 @@ Scenario: must return the Case Wizard Page Collection for a given case type
       And the response has all other details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-371 @Ignore @RDM-7618
+@S-371
 Scenario: must return 401 when request does not provide valid authentication credentials
 
     Given a user with [an active profile in CCD]
@@ -35,7 +35,7 @@ Scenario: must return 401 when request does not provide valid authentication cre
       And the response has all other details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-372 @Ignore @RDM-7618
+@S-372 @Ignore # Response code mismatch, expected: 403, actual: 200 CCD-4455
 Scenario: must return 403 when request provides authentic credentials without authorised access to the operation 
 
     Given a user with [an active profile in CCD, and insufficient privilege to the case type]
@@ -48,7 +48,7 @@ Scenario: must return 403 when request provides authentic credentials without au
       And the response has all other details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-373 @Ignore @RDM-7618
+@S-373 @Ignore # Response code mismatch, expected: 404, actual: 200 CCD-4461
 Scenario: must return 404 when request provides a non-existing case type id
 
     Given a user with [an active profile in CCD]
@@ -62,13 +62,13 @@ Scenario: must return 404 when request provides a non-existing case type id
       And the response has all other details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-374 @Ignore @RDM-7618
+@S-374 @Ignore # Response code mismatch, expected: 404, actual: 200 CCD-4461
 Scenario: must return 404 when request provides a non-existing event type id
 
     Given a user with [an active profile in CCD]
 
      When a request is prepared with appropriate values
-      And the request [contains a non-existing case type id]
+      And the request [contains a non-existing event type id]
       And it is submitted to call the [Case Wizard page collection By CaseType] operation of [CCD Definition Store]
 
      Then a negative response is received

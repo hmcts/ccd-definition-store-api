@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store;
 import com.microsoft.applicationinsights.TelemetryClient;
 import com.microsoft.applicationinsights.telemetry.Duration;
 import com.microsoft.applicationinsights.telemetry.RequestTelemetry;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -11,6 +12,7 @@ public class AppInsights {
     private static final String MODULE = "CASE_DEFINITION";
     private final TelemetryClient telemetry;
 
+    @Autowired
     public AppInsights(TelemetryClient telemetry) {
         this.telemetry = telemetry;
     }

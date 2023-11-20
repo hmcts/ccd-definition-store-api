@@ -37,8 +37,8 @@ ext['elasticsearch.version'] = '7.17.1'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['spring-security.version'] = '5.7.8'
-ext['jackson.version'] = '2.14.1'
-ext['snakeyaml.version'] = '1.32'
+ext['jackson.version'] = '2.15.3'
+ext['snakeyaml.version'] = '2.0'
 ext['postgresql.version'] = '42.5.1'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.17.1'
@@ -56,7 +56,7 @@ ext {
     appInsightsVersion = '2.4.1'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.17!!'
-    tomcatVersion = '9.0.73!!'
+    tomcatVersion = '9.0.75!!'
     feignJackson = '11.6'
     limits = [
             'instruction': 99,
@@ -81,6 +81,7 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        google()
         maven {
             url  "https://jitpack.io"
         }
@@ -110,9 +111,11 @@ allprojects {
         implementation "org.apache.commons:commons-compress:1.21"
         // CVE-2021-28170
         implementation "org.glassfish:jakarta.el:4.0.1"
+
         // CVE-2021-42550
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
         implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
+
         testImplementation "io.rest-assured:xml-path:${restAssuredVersion}"
         testImplementation "io.rest-assured:json-path:${restAssuredVersion}"
         testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
@@ -137,6 +140,9 @@ allprojects {
 
                 if (details.requested.group == 'com.nimbusds' && details.requested.name == 'nimbus-jose-jwt') {
                     details.useVersion '9.21'
+                }
+                if (details.requested.group == 'com.google.guava' && details.requested.name == 'guava') {
+                    details.useVersion '32.1.3-jre'
                 }
             }
         }
@@ -298,7 +304,7 @@ subprojects { subproject ->
         implementation group: 'junit', name: 'junit', version: '4.13.1'
         testImplementation group: 'junit', name: 'junit', version: '4.13.1'
         testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
-        implementation 'com.google.guava:guava:31.1-jre'
+        implementation group: 'com.google.guava', name: 'guava', version: '32.1.3-jre'
         implementation 'javax.validation:validation-api:2.0.1.Final'
         implementation 'io.swagger:swagger-annotations:1.6.6'
         implementation 'com.vladmihalcea:hibernate-types-52:2.16.3'
@@ -321,7 +327,7 @@ subprojects { subproject ->
             }
 
             classDirectories.setFrom((classDirectories.files.collect {
-                fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**'])
+                fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**','**/AppInsightsConfiguration**'])
             }))
 
             doLast {
@@ -388,10 +394,13 @@ subprojects { subproject ->
 
 sonarqube {
     properties {
+        property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**"
+        property "sonar.exclusions", "**/AppInsightsConfiguration**"
         property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
         property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/junitPlatformTest.exec"
         property "sonar.cpd.exclusions", "**/entity/*.java,**/model/*.java"
-        property "sonar.jacoco.excludes", "**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java"
+        property "sonar.jacoco.excludes", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java,**/TestingSupportController.java"
+        property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java,**/TestingSupportController.java"
         property "sonar.projectName", "ccd-definition-store-api"
         property "sonar.projectKey", "ccd-definition-store-api"
     }
