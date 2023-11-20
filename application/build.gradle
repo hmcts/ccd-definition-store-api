@@ -46,6 +46,7 @@ rootProject.tasks.named("distZip") {
 }
 
 pitest {
+    pitestVersion.set('1.7.4')
     targetClasses = ['uk.gov.hmcts.ccd.definition.store.*',
                      'uk.gov.hmcts.ccd.definition.store.hikari.*']
     targetTests = ['uk.gov.hmcts.ccd.definition.store.*']
@@ -57,7 +58,7 @@ pitest {
     mainSourceSets = [sourceSets.main]
     fileExtensionsToFilter.addAll('xml', 'json')
     outputFormats = ['XML', 'HTML', 'CSV']
-    mutationThreshold = 0
+    mutationThreshold = 50
     coverageThreshold = 0
     //maxMutationsPerClass = 15
     jvmArgs = ['-Xms1G', '-Xmx3G']
