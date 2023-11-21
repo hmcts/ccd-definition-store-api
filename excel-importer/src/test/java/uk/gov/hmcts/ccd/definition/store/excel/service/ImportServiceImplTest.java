@@ -83,6 +83,7 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles.AccessTypeRolesService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
@@ -90,13 +91,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfiles
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.CategoryParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -110,12 +104,21 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuesti
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypeRolesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.CategoryParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.CategoryIdValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -164,6 +167,9 @@ public class ImportServiceImplTest {
     private AccessProfileRepository accessProfileRepository;
 
     @Mock
+    private AccessTypeRolesRepository accessTypeRolesRepository;
+
+    @Mock
     private WorkBasketUserDefaultService workBasketUserDefaultService;
 
     @Mock
@@ -192,6 +198,9 @@ public class ImportServiceImplTest {
 
     @Mock
     private CategoryParser categoryParser;
+
+    @Mock
+    private AccessTypeRolesParser accessTypeRolesParser;
 
     @Mock
     private ChallengeQuestionTabService challengeQuestionTabService;
@@ -223,6 +232,9 @@ public class ImportServiceImplTest {
     @Mock
     private TranslationService translationService;
 
+    @Mock
+    private AccessTypeRolesService accessTypeRolesService;
+
     @Before
     public void setup() {
         Map<MetadataField, MetadataCaseFieldEntityFactory> registry = new HashMap<>();
@@ -230,8 +242,8 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser, categoryParser, searchPartyValidator, searchCriteriaValidator,
-            categoryIdValidator, applicationParams, executor);
+            challengeQuestionParser, categoryParser, accessTypeRolesParser, searchPartyValidator,
+            searchCriteriaValidator, categoryIdValidator, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -243,6 +255,7 @@ public class ImportServiceImplTest {
             caseTypeService,
             layoutService,
             accessProfileRepository,
+            accessTypeRolesRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
             applicationEventPublisher,
@@ -254,6 +267,7 @@ public class ImportServiceImplTest {
             searchCriteriaService,
             searchPartyService, categoryTabService,
             translationService,
+            accessTypeRolesService,
             applicationParams);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
@@ -265,6 +279,7 @@ public class ImportServiceImplTest {
         doReturn(idamProperties).when(idamProfileClient).getLoggedInUserDetails();
 
         when(applicationParams.isWelshTranslationEnabled()).thenReturn(true);
+        when(applicationParams.isCaseGroupAccessFilteringEnabled()).thenReturn(true);
     }
 
     @Test(expected = InvalidImportException.class)
@@ -386,7 +401,7 @@ public class ImportServiceImplTest {
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
             hiddenFieldsValidator,challengeQuestionParser,
-            categoryParser, searchPartyValidator, searchCriteriaValidator, categoryIdValidator,
+            categoryParser, accessTypeRolesParser, searchPartyValidator, searchCriteriaValidator, categoryIdValidator,
             applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
@@ -399,6 +414,7 @@ public class ImportServiceImplTest {
             caseTypeService,
             layoutService,
             accessProfileRepository,
+            accessTypeRolesRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
             applicationEventPublisher,
@@ -409,7 +425,8 @@ public class ImportServiceImplTest {
             roleToAccessProfileService,
             searchCriteriaService,
             searchPartyService, categoryTabService,
-            translationService,applicationParams);
+            translationService, accessTypeRolesService,
+            applicationParams);
 
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
