@@ -408,6 +408,7 @@
       "searchParties" : [ ],
       "categories" : [ ],
       "searchCriterias" : [ ],
+      "accessTypeRoles": [],
       "case_fields": [
         {
           "__operator__": "equivalent",

@@ -304,8 +304,6 @@ public interface EntityToResponseDTOMapper {
 
     Banner map(BannerEntity bannerEntity);
 
-    AccessTypeRolesField map(AccessTypeRolesEntity accessTypeRolesEntity);
-
     @Mapping(source = "jurisdictionUiConfigEntity.jurisdiction.reference", target = "id")
     @Mapping(source = "jurisdictionUiConfigEntity.jurisdiction.name", target = "name")
     JurisdictionUiConfig map(JurisdictionUiConfigEntity jurisdictionUiConfigEntity);
@@ -325,6 +323,10 @@ public interface EntityToResponseDTOMapper {
 
     @Mapping(source = "caseType.reference", target = "caseTypeId")
     Category map(CategoryEntity categoryEntity);
+
+    @Mapping(target = "caseTypeId.reference")
+    @Mapping(target = "caseTypeId")
+    AccessTypeRolesField map(AccessTypeRolesEntity accessTypeRolesEntity);
 
     @Mapping(source = "caseType.reference", target = "id")
     @Mapping(source = "roleToAccessProfilesEntity.roleName", target = "name")
