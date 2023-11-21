@@ -78,7 +78,8 @@
           "search_party_name" : "IndividualOtherName",
           "search_party_collection_field_name" : "ListOfPeople"
         }
-      ]
+      ],
+      "accessTypeRoles": "[[ANYTHING_PRESENT]]"
     }
 	}
 }
