@@ -113,7 +113,17 @@ public enum ColumnName {
     CATEGORY_ID("CategoryID"),
     CATEGORY_LABEL("CategoryLabel"),
     PARENT_CATEGORY_ID("ParentCategoryID"),
-    CASE_ACCESS_CATEGORIES("CaseAccessCategories");
+    CASE_ACCESS_CATEGORIES("CaseAccessCategories"),
+    ACCESS_TYPE_ID("AccessTypeID"),
+    ORGANISATION_PROFILE_ID("OrganisationProfileID"),
+    ACCESS_MANDATORY("AccessMandatory"),
+    ACCESS_DEFAULT("AccessDefault"),
+    DISPLAY("Display"),
+    ORGANISATION_ROLE_NAME("OrganisationalRoleName"),
+    GROUP_ROLE_NAME("GroupRoleName"),
+    ORGANISATION_POLICY_FIELD("OrganisationPolicyField"),
+    GROUP_ACCESS_ENABLED("GroupAccessEnabled"),
+    CASE_GROUP_ID_TEMPLATE("CaseAccessGroupIDTemplate");
 
     private final String name;
     private final String[] aliases;
