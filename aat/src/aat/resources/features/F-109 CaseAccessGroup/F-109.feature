@@ -4,7 +4,7 @@ Feature: F-109: 'CaseAccessGroup' Base Complex Type
   Background:
     Given an appropriate test context as detailed in the test data source
 
- @Ignore @S-109.1 #AC01
+ @S-109.1 #AC01
   Scenario: Must successfully import a definition file that contains CaseAccessGroup fields
     Given a user with [an active profile in CCD],
     When a request is prepared with appropriate values,
@@ -13,7 +13,7 @@ Feature: F-109: 'CaseAccessGroup' Base Complex Type
     Then a positive response is received,
     And the response has all other details as expected
 
-  @Ignore @S-109.2 #AC02
+  @S-109.2 #AC02
   Scenario: A new case is created with CaseAccessGroup base type
   Given a user with [an active profile in CCD],
     When a request is prepared with appropriate values
@@ -24,7 +24,7 @@ Feature: F-109: 'CaseAccessGroup' Base Complex Type
     #And a call [fetch a Case Type Schema] will get the expected response as in [S-109.2_Get_CaseType].
 
 
-  @S-109.3 #AC03
+  @Ignore @S-109.3 #AC03
   Scenario: must return case type details for the request
   Given a user with [an active profile in CCD]
   When a request is prepared with appropriate values
