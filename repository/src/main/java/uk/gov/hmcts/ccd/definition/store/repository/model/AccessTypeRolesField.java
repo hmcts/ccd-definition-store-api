@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.time.LocalDate;
 
@@ -14,7 +13,9 @@ public class AccessTypeRolesField {
     private Integer id;
     private LocalDate liveFrom;
     private LocalDate liveTo;
-    private CaseTypeEntity caseTypeId;
+    private String caseTypeId;
+    private String jurisdictionId;
+    private String jurisdictionName;
     private String accessTypeId;
     private String organisationProfileId;
     private Boolean accessMandatory;

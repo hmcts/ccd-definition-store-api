@@ -9,7 +9,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 
 import java.util.List;
@@ -65,12 +64,12 @@ public class AccessTypeRolesValidator {
     private void validateAccessTypeId(ValidationResult validationResult,
                                       List<AccessTypeRolesEntity> accessTypeRolesEntities) {
 
-        Map<Triple<CaseTypeEntity, Integer, String>, List<AccessTypeRolesEntity>> accessTypeRolesAccessTypeId =
+        Map<Triple<String, Integer, String>, List<AccessTypeRolesEntity>> accessTypeRolesAccessTypeId =
             accessTypeRolesEntities
                 .stream()
                 .collect(groupingBy(p ->
-                    Triple.of(p.getCaseTypeId(),
-                        p.getCaseTypeId().getJurisdiction().getId(),
+                    Triple.of(p.getCaseType().getReference(),
+                        p.getCaseType().getJurisdiction().getId(),
                         p.getAccessTypeId())));
 
         accessTypeRolesAccessTypeId.keySet()
@@ -132,12 +131,12 @@ public class AccessTypeRolesValidator {
 
     private void validateDisplayOrder(ValidationResult validationResult,
                                       List<AccessTypeRolesEntity> accessTypeRolesEntities) {
-        Map<Triple<CaseTypeEntity, Integer, Integer>, List<AccessTypeRolesEntity>> accessTypeRolesDisplayOrder =
+        Map<Triple<String, Integer, Integer>, List<AccessTypeRolesEntity>> accessTypeRolesDisplayOrder =
             accessTypeRolesEntities
                 .stream()
                 .collect(groupingBy(p ->
-                    Triple.of(p.getCaseTypeId(),
-                        p.getCaseTypeId().getJurisdiction().getId(),
+                    Triple.of(p.getCaseType().getReference(),
+                        p.getCaseType().getJurisdiction().getId(),
                         p.getDisplayOrder())));
 
         accessTypeRolesDisplayOrder.keySet()

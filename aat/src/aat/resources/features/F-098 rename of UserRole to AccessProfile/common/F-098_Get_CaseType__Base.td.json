@@ -109,6 +109,7 @@
       "roleToAccessProfiles": [],
 			"searchParties": [],
 			"categories": [],
+      "accessTypeRoles": [],
       "searchCriterias": [],
 			"printable_document_url": null,
       "callback_get_case_url" : null,
