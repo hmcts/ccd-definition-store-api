@@ -164,6 +164,7 @@
 			"searchParties" : [ ],
 			"categories" : [ ],
       "searchCriterias" : [ ],
+      "accessTypeRoles": [],
 			"case_fields" : [
 				{
 					"__ordering__": "UNORDERED",

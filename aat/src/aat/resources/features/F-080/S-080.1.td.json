@@ -270,6 +270,7 @@
       "searchCriterias": [],
       "searchParties": [],
       "categories": [],
+      "accessTypeRoles": [],
       "case_fields": [
         {
           "__ordering__": "UNORDERED",
