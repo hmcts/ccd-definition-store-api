@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -43,7 +45,9 @@ import static javax.persistence.GenerationType.SEQUENCE;
 )
 public class CaseTypeEntity implements Serializable, Versionable {
 
-    private static final long serialVersionUID = 542723327314434924L;
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = SEQUENCE, generator = "case_type_id_seq")
@@ -129,6 +133,11 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<CategoryEntity> categories = new ArrayList<>();
+
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "case_type_id")
+    private final List<AccessTypeRolesEntity> accessTypeRoles = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -329,5 +338,9 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     public List<CategoryEntity> getCategories() {
         return categories;
+    }
+
+    public List<AccessTypeRolesEntity> getAccessTypeRoles() {
+        return accessTypeRoles;
     }
 }

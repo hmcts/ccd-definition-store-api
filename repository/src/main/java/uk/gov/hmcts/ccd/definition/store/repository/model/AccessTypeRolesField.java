@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
@@ -29,4 +30,6 @@ public class AccessTypeRolesField {
     private Boolean groupAccessEnabled;
     private String caseAccessGroupIdTemplate;
 
+    @JsonIgnore
+    public Integer idOfCaseType;
 }

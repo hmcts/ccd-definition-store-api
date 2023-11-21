@@ -5,8 +5,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +25,13 @@ public class AccessTypeRolesServiceImplTest {
     @Mock
     private AccessTypeRolesRepository repository;
 
+    @Mock
+    private EntityToResponseDTOMapper dtoMapper;
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        classUnderTest = new AccessTypeRolesServiceImpl(repository);
+        classUnderTest = new AccessTypeRolesServiceImpl(repository, dtoMapper);
     }
 
     @Test
@@ -39,4 +44,5 @@ public class AccessTypeRolesServiceImplTest {
         classUnderTest.saveAll(entitiesToSave);
         verify(repository, times(1)).saveAll(eq(entitiesToSave));
     }
+
 }
