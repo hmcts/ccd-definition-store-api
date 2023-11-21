@@ -405,6 +405,8 @@ sonarqube {
         property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java,**/TestingSupportController.java"
         property "sonar.projectName", "ccd-definition-store-api"
         property "sonar.projectKey", "ccd-definition-store-api"
+        property "sonar.pitest.mode", "reuseReport"
+        property "sonar.pitest.reportsDirectory", "build/reports/pitest"
     }
 }
 
