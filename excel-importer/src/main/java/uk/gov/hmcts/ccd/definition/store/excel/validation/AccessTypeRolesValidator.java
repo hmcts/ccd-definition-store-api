@@ -8,7 +8,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 
 import java.util.List;
@@ -21,8 +22,20 @@ public class AccessTypeRolesValidator {
 
     List<String> roles;
 
-    public ValidationResult validate(final ParseContext parseContext,
-                                     final List<AccessTypeRolesEntity> accessTypeRolesEntities,
+    public ValidationResult validateAccessTypes(final List<AccessTypeEntity> accessTypeEntities) {
+
+        ValidationResult validationResult = new ValidationResult();
+
+        accessTypeEntities
+            .forEach(entity -> {
+                validateDisplay(validationResult, entity, accessTypeEntities);
+            });
+
+        return validationResult;
+    }
+
+    public ValidationResult validateAccessTypeRoles(final ParseContext parseContext,
+                                     final List<AccessTypeRoleEntity> accessTypeRolesEntities,
                                      final List<RoleToAccessProfilesEntity> accessProfileEntities) {
 
         ValidationResult validationResult = new ValidationResult();
@@ -33,7 +46,6 @@ public class AccessTypeRolesValidator {
         accessTypeRolesEntities
             .forEach(entity -> {
                 validateRequiredFields(validationResult, entity, accessTypeRolesEntities);
-                validateDisplay(validationResult, entity, accessTypeRolesEntities);
                 validateRoleName(validationResult, entity);
                 validateCaseAccessGroupIDTemplate(parseContext, validationResult, entity);
             });
@@ -41,8 +53,8 @@ public class AccessTypeRolesValidator {
         return validationResult;
     }
 
-    private void validateRequiredFields(ValidationResult validationResult, AccessTypeRolesEntity entity,
-                                        List<AccessTypeRolesEntity> accessTypeRolesEntities) {
+    private void validateRequiredFields(ValidationResult validationResult, AccessTypeRoleEntity entity,
+                                        List<AccessTypeRoleEntity> accessTypeRolesEntities) {
 
         if (!StringUtils.hasLength(entity.getAccessTypeId())) {
             validationResult.addError(new ValidationError(
@@ -62,9 +74,9 @@ public class AccessTypeRolesValidator {
     }
 
     private void validateAccessTypeId(ValidationResult validationResult,
-                                      List<AccessTypeRolesEntity> accessTypeRolesEntities) {
+                                      List<AccessTypeRoleEntity> accessTypeRolesEntities) {
 
-        Map<Triple<String, Integer, String>, List<AccessTypeRolesEntity>> accessTypeRolesAccessTypeId =
+        Map<Triple<String, Integer, String>, List<AccessTypeRoleEntity>> accessTypeRolesAccessTypeId =
             accessTypeRolesEntities
                 .stream()
                 .collect(groupingBy(p ->
@@ -85,8 +97,8 @@ public class AccessTypeRolesValidator {
             });
     }
 
-    private void validateDisplay(ValidationResult validationResult, AccessTypeRolesEntity entity,
-                                 List<AccessTypeRolesEntity> accessTypeRolesEntities) {
+    private void validateDisplay(ValidationResult validationResult, AccessTypeEntity entity,
+                                 List<AccessTypeEntity> accessTypeEntities) {
 
         if (entity.getDisplay()) {
             if (!entity.getAccessMandatory() || !entity.getAccessDefault()) {
@@ -124,15 +136,15 @@ public class AccessTypeRolesValidator {
                         ColumnName.DISPLAY_ORDER, ColumnName.DISPLAY_ORDER, SheetName.ACCESS_TYPE_ROLES)) {
                 });
             } else {
-                validateDisplayOrder(validationResult, accessTypeRolesEntities);
+                validateDisplayOrder(validationResult, accessTypeEntities);
             }
         }
     }
 
     private void validateDisplayOrder(ValidationResult validationResult,
-                                      List<AccessTypeRolesEntity> accessTypeRolesEntities) {
-        Map<Triple<String, Integer, Integer>, List<AccessTypeRolesEntity>> accessTypeRolesDisplayOrder =
-            accessTypeRolesEntities
+                                      List<AccessTypeEntity> accessTypeEntities) {
+        Map<Triple<String, Integer, Integer>, List<AccessTypeEntity>> accessTypeRolesDisplayOrder =
+            accessTypeEntities
                 .stream()
                 .collect(groupingBy(p ->
                     Triple.of(p.getCaseType().getReference(),
@@ -153,7 +165,7 @@ public class AccessTypeRolesValidator {
             });
     }
 
-    private void validateRoleName(ValidationResult validationResult, AccessTypeRolesEntity entity) {
+    private void validateRoleName(ValidationResult validationResult, AccessTypeRoleEntity entity) {
 
         if (!StringUtils.hasLength(entity.getOrganisationalRoleName())
             && !StringUtils.hasLength(entity.getGroupRoleName())) {
@@ -184,7 +196,7 @@ public class AccessTypeRolesValidator {
     }
 
     private void validateCaseAccessGroupIDTemplate(ParseContext parseContext, ValidationResult validationResult,
-                                                   AccessTypeRolesEntity entity) {
+                                                   AccessTypeRoleEntity entity) {
 
         if (!StringUtils.hasLength(entity.getCaseAccessGroupIdTemplate())
             && StringUtils.hasLength(entity.getGroupRoleName())) {
@@ -220,7 +232,7 @@ public class AccessTypeRolesValidator {
     }
 
     private void validateCaseAssignedRoleField(ValidationResult validationResult,
-                                               AccessTypeRolesEntity entity) {
+                                               AccessTypeRoleEntity entity) {
 
         if (!StringUtils.hasLength(entity.getCaseAssignedRoleField())) {
             validationResult.addError(new ValidationError(

@@ -167,6 +167,6 @@ public class ParserFactory {
     }
 
     public AccessTypeRolesParser createAccessTypeRolesParser() {
-        return  accessTypeRolesParser;
+        return accessTypeRolesParser;
     }
 }

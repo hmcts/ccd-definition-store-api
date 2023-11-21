@@ -11,26 +11,26 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import uk.gov.hmcts.ccd.definition.store.repository.model.OrganisationProfileIds;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesJurisdictionResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeJurisdictionResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesJurisdictionResults;
 import uk.gov.hmcts.ccd.definition.store.rest.service.AccessTypeRolesService;
 
 import javax.validation.Valid;
 
 @RestController
-public class AccessTypeRolesController {
+public class AccessTypesController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccessTypeRolesController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AccessTypesController.class);
 
     private final AccessTypeRolesService accessTypeRolesService;
 
     @Autowired
-    public AccessTypeRolesController(AccessTypeRolesService accessTypeRolesService) {
+    public AccessTypesController(AccessTypeRolesService accessTypeRolesService) {
         this.accessTypeRolesService = accessTypeRolesService;
     }
 
     @PostMapping(value = "/retrieve-access-types",consumes = {"application/json"}, produces = {"application/json"})
-    @ApiOperation(value = "Get all accessTypes for all caseTypes", response = AccessTypeRolesJurisdictionResult.class,
+    @ApiOperation(value = "Get all accessTypes for all caseTypes", response = AccessTypeJurisdictionResult.class,
         responseContainer = "List")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "List of valid access types request"),

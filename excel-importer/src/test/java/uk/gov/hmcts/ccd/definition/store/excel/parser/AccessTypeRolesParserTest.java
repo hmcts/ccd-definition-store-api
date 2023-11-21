@@ -15,7 +15,8 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.AccessTypeRolesValidator;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
@@ -103,29 +104,42 @@ class AccessTypeRolesParserTest extends ParserTestBase {
         definitionSheet.addDataItem(item);
         definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
 
-        List<AccessTypeRolesEntity> accessTypeRolesEntities =
-            accessTypeRolesParser.parse(definitionSheets, parseContext, roleToAccessProfilesEntities);
+        List<AccessTypeEntity> accessTypesEntities =
+            accessTypeRolesParser.parseAccessTypes(definitionSheets, parseContext);
+
+        List<AccessTypeRoleEntity> accessTypeRolesEntities =
+            accessTypeRolesParser.parseAccessTypeRoles(definitionSheets, parseContext, roleToAccessProfilesEntities);
 
         assertThat(!accessTypeRolesEntities.isEmpty(), is(true));
 
-        for (AccessTypeRolesEntity accessTypeRolesEntity: accessTypeRolesEntities) {
+        for (AccessTypeEntity accessTypeEntity : accessTypesEntities) {
             assertAll(
-                () -> assertThat(accessTypeRolesEntity.getLiveFrom(), is(LocalDate.of(2023, Month.FEBRUARY, 12))),
-                () -> assertThat(accessTypeRolesEntity.getLiveTo(), is(LocalDate.of(2080, Month.FEBRUARY, 12))),
-                () -> assertThat(accessTypeRolesEntity.getCaseType().getReference(), is(CASE_TYPE_ID_1)),
-                () -> assertThat(accessTypeRolesEntity.getAccessTypeId(), is("access id")),
-                () -> assertThat(accessTypeRolesEntity.getOrganisationProfileId(), is("OrgProfileID")),
-                () -> assertThat(accessTypeRolesEntity.getAccessMandatory(), is(false)),
-                () -> assertThat(accessTypeRolesEntity.getAccessDefault(), is(false)),
-                () -> assertThat(accessTypeRolesEntity.getDisplay(), is(false)),
-                () -> assertThat(accessTypeRolesEntity.getDescription(), is("Test Desc1")),
-                () -> assertThat(accessTypeRolesEntity.getHint(), is("Hint")),
-                () -> assertThat(accessTypeRolesEntity.getDisplayOrder(), is(1)),
-                () -> assertThat(accessTypeRolesEntity.getGroupRoleName(), is(ROLE_TO_ACCESS_PROFILES_ROLE_NAME)),
-                () -> assertThat(accessTypeRolesEntity.getCaseAssignedRoleField(),
+                () -> assertThat(accessTypeEntity.getLiveFrom(), is(LocalDate.of(2023, Month.FEBRUARY, 12))),
+                () -> assertThat(accessTypeEntity.getLiveTo(), is(LocalDate.of(2080, Month.FEBRUARY, 12))),
+                () -> assertThat(accessTypeEntity.getCaseType().getReference(), is(CASE_TYPE_ID_1)),
+                () -> assertThat(accessTypeEntity.getAccessTypeId(), is("access id")),
+                () -> assertThat(accessTypeEntity.getOrganisationProfileId(), is("OrgProfileID")),
+                () -> assertThat(accessTypeEntity.getAccessMandatory(), is(false)),
+                () -> assertThat(accessTypeEntity.getAccessDefault(), is(false)),
+                () -> assertThat(accessTypeEntity.getDisplay(), is(false)),
+                () -> assertThat(accessTypeEntity.getDescription(), is("Test Desc1")),
+                () -> assertThat(accessTypeEntity.getHint(), is("Hint")),
+                () -> assertThat(accessTypeEntity.getDisplayOrder(), is(1))
+            );
+        }
+
+        for (AccessTypeRoleEntity accessTypeRoleEntity : accessTypeRolesEntities) {
+            assertAll(
+                () -> assertThat(accessTypeRoleEntity.getLiveFrom(), is(LocalDate.of(2023, Month.FEBRUARY, 12))),
+                () -> assertThat(accessTypeRoleEntity.getLiveTo(), is(LocalDate.of(2080, Month.FEBRUARY, 12))),
+                () -> assertThat(accessTypeRoleEntity.getCaseType().getReference(), is(CASE_TYPE_ID_1)),
+                () -> assertThat(accessTypeRoleEntity.getAccessTypeId(), is("access id")),
+                () -> assertThat(accessTypeRoleEntity.getOrganisationProfileId(), is("OrgProfileID")),
+                () -> assertThat(accessTypeRoleEntity.getGroupRoleName(), is(ROLE_TO_ACCESS_PROFILES_ROLE_NAME)),
+                () -> assertThat(accessTypeRoleEntity.getCaseAssignedRoleField(),
                     is(ROLE_TO_ACCESS_PROFILES_ROLE_NAME)),
-                () -> assertThat(accessTypeRolesEntity.getGroupAccessEnabled(), is(true)),
-                () -> assertThat(accessTypeRolesEntity.getCaseAccessGroupIdTemplate(), is(CASE_GROUP_ID_TEMPLATE))
+                () -> assertThat(accessTypeRoleEntity.getGroupAccessEnabled(), is(true)),
+                () -> assertThat(accessTypeRoleEntity.getCaseAccessGroupIdTemplate(), is(CASE_GROUP_ID_TEMPLATE))
             );
         }
     }
@@ -141,10 +155,18 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
 
+        //access types
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+                .parseAccessTypes(definitionSheets, parseContext));
         assertThat(exception.getValidationResult().getValidationErrors().get(0).toString(),
+            is("Case Type not found Some Case Type in column 'CaseTypeID' in the sheet 'AccessTypeRoles'"));
+
+        //access type roles
+        ValidationException exception2 =
+            assertThrows(ValidationException.class, () -> accessTypeRolesParser
+                .parseAccessTypeRoles(definitionSheets, parseContext, roleToAccessProfilesEntities));
+        assertThat(exception2.getValidationResult().getValidationErrors().get(0).toString(),
             is("Case Type not found Some Case Type in column 'CaseTypeID' in the sheet 'AccessTypeRoles'"));
     }
 
@@ -159,10 +181,18 @@ class AccessTypeRolesParserTest extends ParserTestBase {
         definitionSheet.addDataItem(item);
         definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
 
+        //access types
         MapperException exception =
             assertThrows(MapperException.class, () -> accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+                .parseAccessTypes(definitionSheets, parseContext));
         assertThat(exception.getMessage(),
+            is("Invalid value 'invalid date' is found in column 'LiveFrom' in the sheet 'AccessTypeRoles'"));
+
+        //access type roles
+        MapperException exception2 =
+            assertThrows(MapperException.class, () -> accessTypeRolesParser
+                .parseAccessTypeRoles(definitionSheets, parseContext, roleToAccessProfilesEntities));
+        assertThat(exception2.getMessage(),
             is("Invalid value 'invalid date' is found in column 'LiveFrom' in the sheet 'AccessTypeRoles'"));
     }
 
@@ -185,7 +215,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+                .parseAccessTypes(definitionSheets, parseContext));
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors()
@@ -229,7 +259,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+                .parseAccessTypes(definitionSheets, parseContext));
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
@@ -262,7 +292,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+                .parseAccessTypes(definitionSheets, parseContext));
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
@@ -296,7 +326,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+                .parseAccessTypes(definitionSheets, parseContext));
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
@@ -348,7 +378,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+                .parseAccessTypes(definitionSheets, parseContext));
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
@@ -359,12 +389,17 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldReturnEmptyOptionalWhenAccessTypeRolesSheetHasNoItems() {
-        List<AccessTypeRolesEntity> accessTypeRolesEntities =
+    public void shouldReturnEmptyWhenAccessTypeRolesSheetHasNoItems() {
+        List<AccessTypeEntity> accessTypeEntities =
             accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities);
+                .parseAccessTypes(definitionSheets, parseContext);
+
+        List<AccessTypeRoleEntity> accessTypeRolesEntities =
+            accessTypeRolesParser
+                .parseAccessTypeRoles(definitionSheets, parseContext, roleToAccessProfilesEntities);
 
         assertAll(
+            () -> assertThat(!accessTypeEntities.isEmpty(), is(false)),
             () -> assertThat(!accessTypeRolesEntities.isEmpty(), is(false))
         );
     }
@@ -383,7 +418,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+                .parseAccessTypeRoles(definitionSheets, parseContext, roleToAccessProfilesEntities));
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 2, is(true)),
@@ -424,7 +459,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+                .parseAccessTypeRoles(definitionSheets, parseContext, roleToAccessProfilesEntities));
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
@@ -450,7 +485,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+                .parseAccessTypeRoles(definitionSheets, parseContext, roleToAccessProfilesEntities));
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 2, is(true)),
@@ -479,7 +514,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+                .parseAccessTypeRoles(definitionSheets, parseContext, roleToAccessProfilesEntities));
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 3, is(true)),
@@ -511,7 +546,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+                .parseAccessTypeRoles(definitionSheets, parseContext, roleToAccessProfilesEntities));
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
@@ -539,7 +574,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypeRolesParser
-                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+                .parseAccessTypeRoles(definitionSheets, parseContext, roleToAccessProfilesEntities));
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 3, is(true)),

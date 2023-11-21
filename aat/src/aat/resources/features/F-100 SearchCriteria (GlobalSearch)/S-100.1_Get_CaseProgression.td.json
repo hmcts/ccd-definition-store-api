@@ -23,7 +23,8 @@
           "other_case_reference": "TextField0"
         }
       ],
-      "accessTypeRoles": []
+      "accessTypeRoles": [],
+      "accessTypes": []
     }
   }
 }
