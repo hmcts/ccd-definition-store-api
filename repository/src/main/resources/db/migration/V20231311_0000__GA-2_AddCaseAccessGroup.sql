@@ -14,7 +14,7 @@ VALUES (now(), 'CaseAccessGroups',
 (select id from field_type where reference = 'CaseAccessGroup' and version = 1 and jurisdiction_id is null), '1');
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
-values ('caseGroupType', 'CaseGroupType', 'PUBLIC',
+values ('caseAccessGroupType', 'CaseAccessGroupType', 'PUBLIC',
 (select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
 (select id from field_type where reference = 'CaseAccessGroup' and version = 1 and jurisdiction_id is null));
 
