@@ -4,7 +4,7 @@
 
 CREATE TABLE public.access_type_roles (
                                         id integer NOT NULL,
-                                        live_from date NOT NULL,
+                                        live_from date,
                                         live_to date,
                                         case_type_id integer NOT NULL,
                                         access_type_id character varying(200) NOT NULL,

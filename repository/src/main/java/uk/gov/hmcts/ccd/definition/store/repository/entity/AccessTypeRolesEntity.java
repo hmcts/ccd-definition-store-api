@@ -23,7 +23,7 @@ public class AccessTypeRolesEntity implements Serializable {
     @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
-    @Column(name = "live_from", nullable = false)
+    @Column(name = "live_from")
     private LocalDateTime liveFrom;
 
     @Column(name = "live_to")
