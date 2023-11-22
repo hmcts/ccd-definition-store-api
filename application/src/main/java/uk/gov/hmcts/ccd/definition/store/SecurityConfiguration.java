@@ -61,7 +61,8 @@ public class SecurityConfiguration
             "/health/liveness",
             "/health/readiness",
             "/",
-            "/loggers/**");
+            "/loggers/**",
+            "/api/testing-support/**");
     }
 
     @Override
