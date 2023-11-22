@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
