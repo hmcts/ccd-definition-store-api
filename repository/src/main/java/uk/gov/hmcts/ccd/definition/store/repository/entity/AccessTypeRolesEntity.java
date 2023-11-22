@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import javax.annotation.Nullable;
 import javax.persistence.Table;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -15,7 +16,6 @@ import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "access_type_roles")
-@Entity
 public class AccessTypeRolesEntity implements Serializable {
 
     @Id
@@ -23,7 +23,7 @@ public class AccessTypeRolesEntity implements Serializable {
     @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
-    @Column(name = "live_from")
+    @Column(name = "live_from", nullable = false)
     private LocalDateTime liveFrom;
 
     @Column(name = "live_to")
@@ -33,10 +33,10 @@ public class AccessTypeRolesEntity implements Serializable {
     @JoinColumn(name = "case_type_id", nullable = false)
     private CaseTypeEntity caseTypeId;
 
-    @Column(name = "access_type_id")
+    @Column(name = "access_type_id", nullable = false)
     private String accessTypeId;
 
-    @Column(name = "organisation_profile_id")
+    @Column(name = "organisation_profile_id", nullable = false)
     private String organisationProfileId;
 
     @Column(name = "access_mandatory")
