@@ -1,11 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -14,6 +9,7 @@ import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
 @Table(name = "access_type_roles")
+@Entity
 public class AccessTypeRolesEntity implements Serializable {
 
     @Id
