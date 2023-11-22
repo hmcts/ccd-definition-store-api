@@ -44,7 +44,7 @@ ALTER SEQUENCE public.access_type_roles_id_seq OWNED BY public.access_type_roles
 --
 
 ALTER TABLE ONLY public.access_type_roles
-    ADD CONSTRAINT fk_access_type_roles_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
+    ADD CONSTRAINT fk_access_type_roles_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id);
 
 --
 -- Name: access_type_roles pk_access_type_roles; Type: CONSTRAINT; Schema: public; Owner: -
