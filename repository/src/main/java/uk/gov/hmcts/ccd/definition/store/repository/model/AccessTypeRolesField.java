@@ -26,7 +26,7 @@ public class AccessTypeRolesField {
     private Integer displayOrder;
     private String organisationalRoleName;
     private String groupRoleName;
-    private String organisationPolicy_field;
+    private String organisationPolicyField;
     private Boolean groupAccessEnabled;
     private String caseAccessGroupIdTemplate;
 
