@@ -1,0 +1,37 @@
+{
+  "_guid_": "S-109.3",
+  "_extends_": "F-109_Test_Base_Data",
+
+  "title": "must successfully import a definition file using CaseAccessGroup columns",
+
+  "specs": [
+    "an active profile in CCD",
+    "contains case type details",
+    "contains definition file using CaseAccessGroup columns",
+    "contains id of a case type with CaseAccessGroup fields with caseAccessGroupType and caseAccessGroupId"
+  ],
+
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "localFilePath": "build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"
+        }
+      ]
+    }
+  },
+
+  "expectedResponse": {
+    "_extends_": "Common_201_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "Case Definition data successfully imported"
+    }
+  }
+}
+
