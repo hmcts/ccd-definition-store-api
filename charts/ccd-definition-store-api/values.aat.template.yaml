@@ -5,6 +5,23 @@ java:
   devcpuRequests: 2000m
   devmemoryLimits: 4096Mi
   devcpuLimits: 4000m
+  keyVaults:
+        ccd:
+          secrets:
+            - name: definition-store-api-POSTGRES-USER-V15
+              alias: DEFINITION_STORE_DB_USERNAME
+            - name: definition-store-api-POSTGRES-PASS-V15
+              alias: DEFINITION_STORE_DB_PASSWORD
+            - name: ccd-definition-s2s-secret
+              alias: DEFINITION_STORE_IDAM_KEY
+            - name: ccd-ELASTIC-SEARCH-URL
+              alias: ELASTIC_SEARCH_HOST
+            - name: ccd-ELASTIC-SEARCH-PASSWORD
+              alias: ELASTIC_SEARCH_PASSWORD
+            - name: storage-account-primary-connection-string
+              alias: AZURE_STORAGE_CONNECTION_STRING
+            - name: app-insights-connection-string
+              alias: app-insights-connection-string
   environment:
     DEFINITION_STORE_DB_NAME: ccd_definition_store
-    DEFINITION_STORE_DB_HOST: ccd-definition-store-api-postgres-db-v11-aat.postgres.database.azure.com
+    DEFINITION_STORE_DB_HOST: ccd-definition-store-api-postgres-db-v15-aat.postgres.database.azure.com
