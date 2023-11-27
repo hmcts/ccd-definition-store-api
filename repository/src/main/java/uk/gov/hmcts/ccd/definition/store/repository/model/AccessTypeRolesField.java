@@ -1,19 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Data
 public class AccessTypeRolesField {
 
     private Integer id;
-    private LocalDateTime liveFrom;
-    private LocalDateTime liveTo;
+    private LocalDate liveFrom;
+    private LocalDate liveTo;
     private CaseTypeEntity caseTypeId;
     private String accessTypeId;
     private String organisationProfileId;
