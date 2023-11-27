@@ -8,7 +8,7 @@
 	 "pathVariables": {
 		"uid": "[[DEFAULT_AUTO_VALUE]]",
 		"jid": "BEFTA_MASTER",
-		"ctid": "FT_CaseAccessGroup"
+		"ctid": "FT_MasterCaseType"
 	 }
 	}
 }
