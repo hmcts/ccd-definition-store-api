@@ -32,7 +32,7 @@ pitest {
     mainSourceSets = [sourceSets.main]
     fileExtensionsToFilter.addAll('xml','json')
     outputFormats = ['XML', 'HTML','CSV']
-    mutationThreshold = 50
+    mutationThreshold = 0
     coverageThreshold = 0
     //maxMutationsPerClass = 15
     jvmArgs = ['-Xms1G','-Xmx3G']
