@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.stereotype.*;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -14,6 +15,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 
+@Component
 public class AccessTypeRolesParser {
 
     public List<AccessTypeRolesEntity> parse(final Map<String, DefinitionSheet> definitionSheets,
