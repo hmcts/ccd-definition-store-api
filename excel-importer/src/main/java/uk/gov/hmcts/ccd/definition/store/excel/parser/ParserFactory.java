@@ -162,9 +162,11 @@ public class ParserFactory {
         return categoryParser;
     }
 
-    public AccessTypeRolesParser createAccessTypeRolesParser() {return  accessTypeRolesParser; }
-
     public CategoryIdValidator createCategoryIdValidator() {
         return categoryIdValidator;
+    }
+
+    public AccessTypeRolesParser createAccessTypeRolesParser() {
+        return  accessTypeRolesParser;
     }
 }

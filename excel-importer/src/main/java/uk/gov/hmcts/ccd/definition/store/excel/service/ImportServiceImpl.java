@@ -21,6 +21,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles.*;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
@@ -31,21 +32,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUse
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.BannerParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.FieldsTypeParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.JurisdictionUiConfigParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.LayoutParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseResult;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.RoleToAccessProfilesParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SearchCriteriaParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SearchPartyParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.UserProfilesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.*;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.RoleToAccessProfilesValidator;
@@ -54,18 +41,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCriteriaEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
@@ -95,6 +71,7 @@ public class ImportServiceImpl implements ImportService {
     private final SearchPartyService searchPartyService;
     private final CategoryTabService categoryTabService;
     private final TranslationService translationService;
+    private final AccessTypeRolesService accessTypeRolesService;
     private final ApplicationParams applicationParams;
 
     @Autowired
@@ -117,6 +94,7 @@ public class ImportServiceImpl implements ImportService {
                              SearchCriteriaService searchCriteriaService,
                              SearchPartyService searchPartyService, CategoryTabService categoryTabService,
                              TranslationService translationService,
+                             AccessTypeRolesService accessTypeRolesService,
                              ApplicationParams applicationParams) {
 
         this.spreadsheetValidator = spreadsheetValidator;
@@ -139,6 +117,7 @@ public class ImportServiceImpl implements ImportService {
         this.searchPartyService = searchPartyService;
         this.categoryTabService = categoryTabService;
         this.translationService = translationService;
+        this.accessTypeRolesService = accessTypeRolesService;
         this.applicationParams = applicationParams;
     }
 
@@ -310,6 +289,8 @@ public class ImportServiceImpl implements ImportService {
 
         parseSearchParty(definitionSheets, parseContext);
 
+        parseAccessTypeRoles(definitionSheets, parseContext);
+
         if (applicationParams.isWelshTranslationEnabled()) {
             translationService.processDefinitionSheets(definitionSheets);
         }
@@ -375,6 +356,20 @@ public class ImportServiceImpl implements ImportService {
             searchPartyService.saveAll(searchPartyEntities);
             logger.debug("Importing spreadsheet: SearchParty...: OK");
         }
+    }
+
+    private void parseAccessTypeRoles(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext) {
+        if (definitionSheets.get(SheetName.ACCESS_TYPE_ROLES.getName()) != null) {
+            logger.debug("Importing spreadsheet: AccessTypeRoles...");
+            final AccessTypeRolesParser accessTypeRolesParser =
+                parserFactory.createAccessTypeRolesParser();
+
+            List<AccessTypeRolesEntity> newAccessTypeRolesEntities = accessTypeRolesParser
+                .parse(definitionSheets,parseContext);
+            accessTypeRolesService.saveAll(newAccessTypeRolesEntities);
+            logger.debug("Importing spreadsheet: AccessTypeRoles...: OK");
+        }
+
     }
 
     @VisibleForTesting  // used by BaseTest

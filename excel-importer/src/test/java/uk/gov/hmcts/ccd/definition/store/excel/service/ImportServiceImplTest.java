@@ -83,6 +83,7 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles.*;
 import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
@@ -90,13 +91,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfiles
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.CategoryParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.*;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -194,6 +189,9 @@ public class ImportServiceImplTest {
     private CategoryParser categoryParser;
 
     @Mock
+    private AccessTypeRolesParser accessTypeRolesParser;
+
+    @Mock
     private ChallengeQuestionTabService challengeQuestionTabService;
 
     @Mock
@@ -223,6 +221,9 @@ public class ImportServiceImplTest {
     @Mock
     private TranslationService translationService;
 
+    @Mock
+    private AccessTypeRolesService accessTypeRolesService;
+
     @Before
     public void setup() {
         Map<MetadataField, MetadataCaseFieldEntityFactory> registry = new HashMap<>();
@@ -230,7 +231,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser, categoryParser, searchPartyValidator, searchCriteriaValidator,
+            challengeQuestionParser, categoryParser, accessTypeRolesParser, searchPartyValidator, searchCriteriaValidator,
             categoryIdValidator, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
@@ -254,6 +255,7 @@ public class ImportServiceImplTest {
             searchCriteriaService,
             searchPartyService, categoryTabService,
             translationService,
+            accessTypeRolesService,
             applicationParams);
 
         given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
@@ -386,7 +388,7 @@ public class ImportServiceImplTest {
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
             hiddenFieldsValidator,challengeQuestionParser,
-            categoryParser, searchPartyValidator, searchCriteriaValidator, categoryIdValidator,
+            categoryParser, accessTypeRolesParser, searchPartyValidator, searchCriteriaValidator, categoryIdValidator,
             applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
@@ -409,7 +411,8 @@ public class ImportServiceImplTest {
             roleToAccessProfileService,
             searchCriteriaService,
             searchPartyService, categoryTabService,
-            translationService,applicationParams);
+            translationService, accessTypeRolesService,
+            applicationParams);
 
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
