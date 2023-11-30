@@ -83,7 +83,7 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles.*;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles.AccessTypeRolesService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
@@ -91,7 +91,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfiles
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.*;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -105,12 +104,21 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuesti
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypeRolesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.CategoryParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.CategoryIdValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -157,6 +165,9 @@ public class ImportServiceImplTest {
 
     @Mock
     private AccessProfileRepository accessProfileRepository;
+
+    @Mock
+    private AccessTypeRolesRepository accessTypeRolesRepository;
 
     @Mock
     private WorkBasketUserDefaultService workBasketUserDefaultService;
@@ -244,6 +255,7 @@ public class ImportServiceImplTest {
             caseTypeService,
             layoutService,
             accessProfileRepository,
+            accessTypeRolesRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
             applicationEventPublisher,
@@ -401,6 +413,7 @@ public class ImportServiceImplTest {
             caseTypeService,
             layoutService,
             accessProfileRepository,
+            accessTypeRolesRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
             applicationEventPublisher,

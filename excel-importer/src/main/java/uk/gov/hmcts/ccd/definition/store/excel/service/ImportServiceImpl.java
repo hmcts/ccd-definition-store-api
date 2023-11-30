@@ -320,7 +320,9 @@ public class ImportServiceImpl implements ImportService {
 
         parseSearchParty(definitionSheets, parseContext);
 
-        parseAccessTypeRoles(definitionSheets, parseContext);
+        if (applicationParams.isCaseGroupAccessFilteringEnabled()) {
+            parseAccessTypeRoles(definitionSheets, parseContext);
+        }
 
         if (applicationParams.isWelshTranslationEnabled()) {
             translationService.processDefinitionSheets(definitionSheets);
