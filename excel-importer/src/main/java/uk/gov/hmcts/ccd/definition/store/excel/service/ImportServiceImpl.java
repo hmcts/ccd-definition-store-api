@@ -55,6 +55,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidato
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
@@ -86,6 +87,7 @@ public class ImportServiceImpl implements ImportService {
     private final CaseTypeService caseTypeService;
     private final LayoutService layoutService;
     private final AccessProfileRepository accessProfileRepository;
+    private final AccessTypeRolesRepository accessTypeRolesRepository;
     private final WorkBasketUserDefaultService workBasketUserDefaultService;
     private final CaseFieldRepository caseFieldRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
@@ -110,6 +112,7 @@ public class ImportServiceImpl implements ImportService {
                              CaseTypeService caseTypeService,
                              LayoutService layoutService,
                              AccessProfileRepository accessProfileRepository,
+                             AccessTypeRolesRepository accessTypeRolesRepository,
                              WorkBasketUserDefaultService workBasketUserDefaultService,
                              CaseFieldRepository caseFieldRepository,
                              ApplicationEventPublisher applicationEventPublisher,
@@ -132,6 +135,7 @@ public class ImportServiceImpl implements ImportService {
         this.caseTypeService = caseTypeService;
         this.layoutService = layoutService;
         this.accessProfileRepository = accessProfileRepository;
+        this.accessTypeRolesRepository = accessTypeRolesRepository;
         this.workBasketUserDefaultService = workBasketUserDefaultService;
         this.caseFieldRepository = caseFieldRepository;
         this.idamProfileClient = idamProfileClient;

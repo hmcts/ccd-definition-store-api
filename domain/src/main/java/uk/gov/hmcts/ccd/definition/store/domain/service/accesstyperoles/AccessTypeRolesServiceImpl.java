@@ -18,13 +18,9 @@ public class AccessTypeRolesServiceImpl implements AccessTypeRolesService {
 
     private final AccessTypeRolesRepository repository;
 
-    private final EntityToResponseDTOMapper dtoMapper;
-
     @Autowired
-    public AccessTypeRolesServiceImpl(AccessTypeRolesRepository repository,
-                                           EntityToResponseDTOMapper dtoMapper, CaseTypeRepository caseTypeRepository) {
+    public AccessTypeRolesServiceImpl(AccessTypeRolesRepository repository) {
         this.repository = repository;
-        this.dtoMapper = dtoMapper;
     }
 
     @Override
