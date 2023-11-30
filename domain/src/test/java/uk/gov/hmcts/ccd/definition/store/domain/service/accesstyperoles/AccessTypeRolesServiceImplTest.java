@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
