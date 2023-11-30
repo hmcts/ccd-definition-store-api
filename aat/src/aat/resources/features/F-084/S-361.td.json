@@ -23,6 +23,7 @@
 		"Content-Type": "application/json;charset=UTF-8",
 		"Keep-Alive": "timeout=60",
 		"Transfer-Encoding": "chunked"
-	 }
-	}
+	 },
+    "body" : null
+  }
 }
