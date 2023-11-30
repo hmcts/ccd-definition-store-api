@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.springframework.stereotype.*;
+import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -13,7 +13,8 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 @Component
 public class AccessTypeRolesParser {
@@ -59,18 +60,22 @@ public class AccessTypeRolesParser {
         accessTypeRolesEntity.setLiveTo(definitionDataItem.getLocalDate(ColumnName.LIVE_TO));
         accessTypeRolesEntity.setCaseTypeId(caseTypeEntity);
         accessTypeRolesEntity.setAccessTypeId(definitionDataItem.getString(ColumnName.ACCESS_TYPE_ID));
-        accessTypeRolesEntity.setOrganisationProfileId(definitionDataItem.getString(ColumnName.ORGANISATION_PROFILE_ID));
+        accessTypeRolesEntity.setOrganisationProfileId(definitionDataItem.getString(
+            ColumnName.ORGANISATION_PROFILE_ID));
         accessTypeRolesEntity.setAccessMandatory(definitionDataItem.getBoolean(ColumnName.ACCESS_MANDATORY));
         accessTypeRolesEntity.setAccessDefault(definitionDataItem.getBoolean(ColumnName.ACCESS_DEFAULT));
         accessTypeRolesEntity.setDisplay(definitionDataItem.getBoolean(ColumnName.DISPLAY));
         accessTypeRolesEntity.setDescription(definitionDataItem.getString(ColumnName.DESCRIPTION));
         accessTypeRolesEntity.setHint(definitionDataItem.getString(ColumnName.HINT_TEXT));
         accessTypeRolesEntity.setDisplayOrder(definitionDataItem.getInteger(ColumnName.DISPLAY_ORDER));
-        accessTypeRolesEntity.setOrganisationalRoleName(definitionDataItem.getString(ColumnName.ORGANISATION_ROLE_NAME));
+        accessTypeRolesEntity.setOrganisationalRoleName(
+            definitionDataItem.getString(ColumnName.ORGANISATION_ROLE_NAME));
         accessTypeRolesEntity.setGroupRoleName(definitionDataItem.getString(ColumnName.GROUP_ROLE_NAME));
-        accessTypeRolesEntity.setOrganisationPolicyField(definitionDataItem.getString(ColumnName.ORGANISATION_POLICY_FIELD));
+        accessTypeRolesEntity.setOrganisationPolicyField(
+            definitionDataItem.getString(ColumnName.ORGANISATION_POLICY_FIELD));
         accessTypeRolesEntity.setGroupAccessEnabled(definitionDataItem.getBoolean(ColumnName.GROUP_ROLE_NAME));
-        accessTypeRolesEntity.setCaseAccessGroupIdTemplate(definitionDataItem.getString(ColumnName.CASE_GROUP_ID_TEMPLATE));
+        accessTypeRolesEntity.setCaseAccessGroupIdTemplate(
+            definitionDataItem.getString(ColumnName.CASE_GROUP_ID_TEMPLATE));
 
         return accessTypeRolesEntity;
     }
