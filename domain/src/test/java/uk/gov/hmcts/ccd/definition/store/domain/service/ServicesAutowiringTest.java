@@ -46,27 +46,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeVa
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldNameValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldUnicityValidator;
-import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.BannerRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CategoryTabRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.ChallengeQuestionTabRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.DraftDefinitionRepositoryDecorator;
-import uk.gov.hmcts.ccd.definition.store.repository.EventRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.GenericLayoutRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionUiConfigRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.RoleToAccessProfilesRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.SearchCriteriaRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.SearchPartyRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
+import uk.gov.hmcts.ccd.definition.store.repository.*;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
 
@@ -307,6 +287,12 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public AccessProfileRepository accessProfileRepository() {
             return mock(AccessProfileRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public AccessTypeRolesRepository accessTypeRolesRepository() {
+            return mock(AccessTypeRolesRepository.class);
         }
 
         @Bean
