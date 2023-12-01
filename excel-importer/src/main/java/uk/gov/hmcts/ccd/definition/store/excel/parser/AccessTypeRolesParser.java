@@ -73,7 +73,7 @@ public class AccessTypeRolesParser {
         accessTypeRolesEntity.setGroupRoleName(definitionDataItem.getString(ColumnName.GROUP_ROLE_NAME));
         accessTypeRolesEntity.setOrganisationPolicyField(
             definitionDataItem.getString(ColumnName.ORGANISATION_POLICY_FIELD));
-        accessTypeRolesEntity.setGroupAccessEnabled(definitionDataItem.getBoolean(ColumnName.GROUP_ROLE_NAME));
+        accessTypeRolesEntity.setGroupAccessEnabled(definitionDataItem.getBoolean(ColumnName.GROUP_ACCESS_ENABLED));
         accessTypeRolesEntity.setCaseAccessGroupIdTemplate(
             definitionDataItem.getString(ColumnName.CASE_GROUP_ID_TEMPLATE));
 
