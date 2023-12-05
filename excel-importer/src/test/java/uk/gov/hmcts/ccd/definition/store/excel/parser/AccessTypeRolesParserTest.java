@@ -13,6 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.*;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
@@ -49,7 +50,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
         MockitoAnnotations.initMocks(this);
         parseContext = buildParseContext();
 
-        accessTypeRolesParser = new AccessTypeRolesParser();
+        accessTypeRolesParser = new AccessTypeRolesParser(new AccessTypeRolesValidator());
 
         definitionSheets = new HashMap<>();
         definitionSheet = new DefinitionSheet();
@@ -97,17 +98,13 @@ class AccessTypeRolesParserTest extends ParserTestBase {
                 () -> assertThat(accessTypeRolesEntity.getCaseAccessGroupIdTemplate(), is("Case Group ID Template")),
 
                 //OPTIONAL
-
                 () -> assertThat(accessTypeRolesEntity.getAccessMandatory(), is(nullValue())),
                 () -> assertThat(accessTypeRolesEntity.getAccessDefault(), is(nullValue())),
                 () -> assertThat(accessTypeRolesEntity.getDisplay(), is(nullValue())),
                 () -> assertThat(accessTypeRolesEntity.getAccessDefault(), is(nullValue())),
                 () -> assertThat(accessTypeRolesEntity.getGroupAccessEnabled(), is(nullValue())),
                 () -> assertThat(accessTypeRolesEntity.getGroupAccessEnabled(), is(nullValue()))
-
-
-
-                );
+            );
         }
     }
 
@@ -149,7 +146,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("AccessTypeRolesTabParser - should fail when mandatory AccessTypeID missing")
-    void shouldFail_whenMandatoryValuesNotGiven() {
+    void shouldFail_whenMandatoryAccessTypeIDNotGiven() {
 
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
 
@@ -164,11 +161,38 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         definitionSheet.addDataItem(item);
         definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
-        List<AccessTypeRolesEntity> accessTypeRolesEntities = accessTypeRolesParser.parse(definitionSheets, parseContext);
 
+        try {
+            accessTypeRolesParser.parse(definitionSheets, parseContext);
+        }catch(ValidationException e) {
+            assertThat(e.getValidationResult().getValidationErrors() .get(0).toString(), is("Access Type ID should not be null or empty in column 'AccessTypeID' in the sheet 'AccessTypeRoles'"));
+        }
 
-        ValidationException thrown = assertThrows(ValidationException.class, () -> accessTypeRolesParser.parse(definitionSheets, parseContext));
-        assertThat(thrown.getValidationResult().getValidationErrors().get(0), is("Couldn't find the column AccessTypeID in the sheet AccessTypeRoles"));
+    }
+
+    @Test
+    @DisplayName("AccessTypeRolesTabParser - should fail when mandatory OrganisationProfileID missing")
+    void shouldFail_whenMandatoryOrganisationProfileIDNotGiven() {
+
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
+
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
+        item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "AccessTypeID");
+        item.addAttribute(ColumnName.DESCRIPTION.toString(), "AccessTypeRoles Description");
+        item.addAttribute(ColumnName.HINT_TEXT.toString(), "hint");
+        item.addAttribute(ColumnName.ORGANISATION_ROLE_NAME.toString(), "Name");
+        item.addAttribute(ColumnName.DISPLAY_ORDER.toString(), 1.0);
+        item.addAttribute(ColumnName.ORGANISATION_POLICY_FIELD.toString(), "Policy Field Name");
+        item.addAttribute(ColumnName.CASE_GROUP_ID_TEMPLATE.toString(), "Case Group ID Template");
+
+        definitionSheet.addDataItem(item);
+        definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
+
+        try {
+            accessTypeRolesParser.parse(definitionSheets, parseContext);
+        }catch(ValidationException e) {
+            assertThat(e.getValidationResult().getValidationErrors() .get(0).toString(), is("Organisation Profile ID should not be null or empty in column 'OrganisationProfileID' in the sheet 'AccessTypeRoles'"));
+        }
 
     }
 

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.*;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
@@ -13,21 +14,33 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.*;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 
 @Component
 public class AccessTypeRolesParser {
 
+    private final AccessTypeRolesValidator accessTypeRolesValidator;
+
+    @Autowired
+    public AccessTypeRolesParser(AccessTypeRolesValidator accessTypeRolesValidator) {
+        this.accessTypeRolesValidator = accessTypeRolesValidator;
+    }
+
     public List<AccessTypeRolesEntity> parse(final Map<String, DefinitionSheet> definitionSheets,
                                              final ParseContext parseContext) {
         try {
-            final List<DefinitionDataItem> roleToAccessProfiles = definitionSheets
+            final List<DefinitionDataItem> accessTypeRolesItems = definitionSheets
                 .get(SheetName.ACCESS_TYPE_ROLES.getName())
                 .getDataItems();
-            return roleToAccessProfiles.stream()
-                .map(roleToAccessProfile -> createRoleToAccessProfileEntity(parseContext, roleToAccessProfile))
-                .collect(Collectors.toUnmodifiableList());
+            final List<AccessTypeRolesEntity> accessTypeRolesEntities = accessTypeRolesItems
+                .stream().map(accessTypeRolesEntity ->
+                        createRoleToAccessProfileEntity(parseContext, accessTypeRolesEntity)
+                ).collect(Collectors.toList());
+            accessTypeRolesValidator.validate(accessTypeRolesEntities);
+
+            return accessTypeRolesEntities;
         } catch (InvalidImportException invalidImportException) {
             ValidationResult validationResult = new ValidationResult();
             validationResult.addError(new ValidationError(invalidImportException.getMessage()) {
