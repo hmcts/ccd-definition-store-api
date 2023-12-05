@@ -22,14 +22,14 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPE_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.ACCESS_TYPE_ROLES;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.util.List;
+import java.time.*;
+import java.util.*;
 
 @RunWith(MockitoJUnitRunner.class)
 class AccessTypeRolesParserTest extends ParserTestBase {
@@ -78,6 +78,8 @@ class AccessTypeRolesParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.CASE_GROUP_ID_TEMPLATE.toString(), "Case Group ID Template");
         item.addAttribute(ColumnName.GROUP_ROLE_NAME.toString(), "Group role name");
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
+        item.addAttribute(ColumnName.LIVE_FROM.toString(), Date.from(LocalDate.of(2023,
+            Month.FEBRUARY, 12).atStartOfDay(ZoneId.systemDefault()).toInstant()));
 
         definitionSheet.addDataItem(item);
         definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
@@ -96,6 +98,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
                 () -> assertThat(accessTypeRolesEntity.getGroupRoleName(), is("Group role name")),
                 () -> assertThat(accessTypeRolesEntity.getOrganisationPolicyField(), is("Policy Field Name")),
                 () -> assertThat(accessTypeRolesEntity.getCaseAccessGroupIdTemplate(), is("Case Group ID Template")),
+                () -> assertThat(accessTypeRolesEntity.getLiveFrom(), is(LocalDate.of(2023, Month.FEBRUARY, 12))),
 
                 //OPTIONAL
                 () -> assertThat(accessTypeRolesEntity.getAccessMandatory(), is(nullValue())),
@@ -158,6 +161,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.DISPLAY_ORDER.toString(), 1.0);
         item.addAttribute(ColumnName.ORGANISATION_POLICY_FIELD.toString(), "Policy Field Name");
         item.addAttribute(ColumnName.CASE_GROUP_ID_TEMPLATE.toString(), "Case Group ID Template");
+        item.addAttribute(ColumnName.LIVE_FROM.toString(), new Date());
 
         definitionSheet.addDataItem(item);
         definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
@@ -184,6 +188,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.DISPLAY_ORDER.toString(), 1.0);
         item.addAttribute(ColumnName.ORGANISATION_POLICY_FIELD.toString(), "Policy Field Name");
         item.addAttribute(ColumnName.CASE_GROUP_ID_TEMPLATE.toString(), "Case Group ID Template");
+        item.addAttribute(ColumnName.LIVE_FROM.toString(), new Date());
 
         definitionSheet.addDataItem(item);
         definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
@@ -192,6 +197,31 @@ class AccessTypeRolesParserTest extends ParserTestBase {
             accessTypeRolesParser.parse(definitionSheets, parseContext);
         }catch(ValidationException e) {
             assertThat(e.getValidationResult().getValidationErrors() .get(0).toString(), is("Organisation Profile ID should not be null or empty in column 'OrganisationProfileID' in the sheet 'AccessTypeRoles'"));
+        }
+
+    }
+
+    @Test
+    @DisplayName("AccessTypeRolesTabParser - should fail when mandatory LiveFrom missing")
+    void shouldFail_whenMandatoryLiveFromNotGiven() {
+
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
+
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
+        item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "AccessTypeID");
+        item.addAttribute(ColumnName.DESCRIPTION.toString(), "AccessTypeRoles Description");
+        item.addAttribute(ColumnName.HINT_TEXT.toString(), "hint");
+        item.addAttribute(ColumnName.ORGANISATION_ROLE_NAME.toString(), "Name");
+        item.addAttribute(ColumnName.DISPLAY_ORDER.toString(), 1.0);
+        item.addAttribute(ColumnName.ORGANISATION_POLICY_FIELD.toString(), "Policy Field Name");
+
+        definitionSheet.addDataItem(item);
+        definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
+
+        try {
+            accessTypeRolesParser.parse(definitionSheets, parseContext);
+        }catch(ValidationException e) {
+            assertThat(e.getValidationResult().getValidationErrors() .get(0).toString(), is("Live From should not be null or empty in column 'LiveFrom' in the sheet 'AccessTypeRoles'"));
         }
 
     }

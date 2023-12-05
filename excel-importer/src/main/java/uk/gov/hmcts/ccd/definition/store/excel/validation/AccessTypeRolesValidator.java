@@ -33,6 +33,14 @@ public class AccessTypeRolesValidator {
 
     private void validateRequiredFields(ValidationResult validationResult,
                                                   AccessTypeRolesEntity entity) {
+
+        if (StringUtils.isEmpty(entity.getLiveFrom())) {
+            String formattedMessage = String.format("Live From should not be null or empty in column '%s' "
+                + "in the sheet '%s'", ColumnName.LIVE_FROM, SheetName.ACCESS_TYPE_ROLES);
+            createErrorMessage(validationResult, formattedMessage);
+            throw new ValidationException(validationResult);
+        }
+
         if (StringUtils.isEmpty(entity.getCaseTypeId())) {
             String formattedMessage = String.format("Case Type ID should not be null or empty in column '%s' "
                 + "in the sheet '%s'", ColumnName.CASE_TYPE_ID, SheetName.ACCESS_TYPE_ROLES);
