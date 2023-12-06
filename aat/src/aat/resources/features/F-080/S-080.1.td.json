@@ -621,6 +621,11 @@
             "regular_expression": null,
             "fixed_list_items": [
               {
+                "__operator__": "equivalent",
+                "__ordering__": "unordered",
+                "__elementId__": "id"
+              },
+              {
                 "code": "CaseUpdated",
                 "label": "Update case",
                 "order": null

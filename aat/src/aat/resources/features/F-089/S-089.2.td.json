@@ -1762,6 +1762,11 @@
             "regular_expression": null,
             "fixed_list_items": [
               {
+                "__operator__": "equivalent",
+                "__ordering__": "unordered",
+                "__elementId__": "id"
+              },
+              {
                 "code": "CaseCreated",
                 "label": "Create case",
                 "order": null
