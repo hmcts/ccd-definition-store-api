@@ -425,6 +425,11 @@
             "type": "FixedList",
             "fixed_list_items": [
               {
+                "__operator__": "equivalent",
+                "__ordering__": "unordered",
+                "__elementId__": "id"
+              },
+              {
                 "code": "DONE",
                 "label": "Done",
                 "order": null
