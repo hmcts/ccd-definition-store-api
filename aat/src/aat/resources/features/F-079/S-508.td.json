@@ -418,14 +418,33 @@
           "_extends_" : "CaseField",
           "metadata": true,
           "id": "[STATE]",
-          "case_type_id": "FT_DateTimeFormats",
-          "label": "State",
+          "metadata": "[[ANYTHING_PRESENT]]",
+          "case_type_id": "[[ANY_STRING_NULLABLE]]",
+          "label": "[[ANY_STRING_NOT_NULLABLE]]",
+          "hint_text": "[[ANY_STRING_NULLABLE]]",
           "field_type": {
-            "id": "FixedList-FT_DateTimeFormats[STATE]",
-            "type": "FixedList",
-            "fixed_list_items": "[[ANYTHING_PRESENT]]"
+            "id": "[[ANY_STRING_NOT_NULLABLE]]",
+            "type": "[[ANY_STRING_NOT_NULLABLE]]",
+            "min": null,
+            "max": null,
+            "regular_expression": "[[ANY_STRING_NULLABLE]]",
+            "fixed_list_items": "[[ANYTHING_PRESENT]]",
+            "complex_fields": "[[ANYTHING_PRESENT]]",
+            "collection_field_type": "[[ANY_NULLABLE]]"
           },
-          "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
+          "hidden": "[[ANYTHING_PRESENT]]",
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANY_DATE_NOT_NULLABLE]]",
+          "live_until": null,
+
+          "acls": [],
+          "complexACLs": [],
+
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null,
+          "category_id": null
         },
         {
           "_extends_" : "CaseField",
