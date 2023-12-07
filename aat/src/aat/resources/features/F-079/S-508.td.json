@@ -430,6 +430,11 @@
                 "__elementId__": "id"
               },
               {
+                "__operator__": "equivalent",
+                "__ordering__": "unordered",
+                "__elementId__": "id"
+              },
+              {
                 "code": "DONE",
                 "label": "Done",
                 "order": null
