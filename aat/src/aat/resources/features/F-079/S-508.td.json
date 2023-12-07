@@ -423,28 +423,7 @@
           "field_type": {
             "id": "FixedList-FT_DateTimeFormats[STATE]",
             "type": "FixedList",
-            "fixed_list_items": [
-              {
-                "__operator__": "equivalent",
-                "__ordering__": "unordered",
-                "__elementId__": "id"
-              },
-              {
-                "code": "DONE",
-                "label": "Done",
-                "order": null
-              },
-              {
-                "code": "IN_PROGRESS",
-                "label": "In progress",
-                "order": null
-              },
-              {
-                "code": "TODO",
-                "label": "To do",
-                "order": null
-              }
-            ]
+            "fixed_list_items": "[[ANYTHING_PRESENT]]"
           },
           "live_from": "[[ANY_DATE_NOT_NULLABLE]]"
         },
