@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -16,7 +15,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles.AccessTypeRolesService;
 
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -24,29 +26,32 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.*;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.Month;
-import java.util.*;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Arrays;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.same;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.TEXT_PLAIN;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+
 
 
 public class AccessTypeRolesControllerTest {
-
-    private static final String URL = "https://api/retrieve-access-types";
 
     private AccessTypeRolesController controller;
     @Mock
@@ -70,8 +75,6 @@ public class AccessTypeRolesControllerTest {
     */
     List<String> orgProfileIds = List.of(new String[]{"organisationProfileId_1", "organisationProfileId_2"});
 
-    private OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
-
     private AccessTypeRolesEntity accessTypeRolesEntity = new AccessTypeRolesEntity();
     private AccessTypeRolesField accessTypeRolesField = new AccessTypeRolesField();
 
@@ -81,6 +84,29 @@ public class AccessTypeRolesControllerTest {
     private AccessTypeRolesEntity accessTypeRolesEntity2 = new AccessTypeRolesEntity();
     private AccessTypeRolesField accessTypeRolesField2 = new AccessTypeRolesField();
 
+
+    private final JurisdictionEntity jurisdiction = new JurisdictionEntity();
+
+    private final CaseTypeEntity caseTypeEntity1 = new CaseTypeEntity();
+
+    private final CaseTypeEntity caseTypeEntity2 = new CaseTypeEntity();
+
+    private final CaseTypeEntity caseTypeEntity3 = new CaseTypeEntity();
+
+    private final Collection<CaseTypeEntity> caseTypeEntities = Arrays.asList(caseTypeEntity1, caseTypeEntity2,
+        caseTypeEntity3);
+    private static final String JURISDICTION_REFERENCE = "TEST";
+    private static final String CASE_TYPE_REFERENCE_1 = "TestAddressBookCase1";
+    private static final String CASE_TYPE_REFERENCE_2 = "TestAddressBookCase2";
+    private static final String CASE_TYPE_REFERENCE_3 = "TestAddressBookCase3";
+    private static final int DEFAULT_VERSION = 69;
+    @Mock
+    private CaseTypeEntityValidator caseTypeEntityValidator1;
+
+    @Mock
+    private CaseTypeEntityValidator caseTypeEntityValidator2;
+    @Mock
+    private CaseTypeRepository caseTypeRepository;
     @BeforeEach
     void setUp() throws IOException {
         initMocks(this);
@@ -113,6 +139,20 @@ public class AccessTypeRolesControllerTest {
         entityList.add(accessTypeRolesEntity2);
 
         accessTypeRolesService.saveAll(entityList);
+
+        when(caseTypeRepository.findLastVersion(any())).thenReturn(Optional.of(DEFAULT_VERSION));
+        when(caseTypeEntityValidator1.validate(any())).thenReturn(new ValidationResult());
+        when(caseTypeEntityValidator2.validate(any())).thenReturn(new ValidationResult());
+        when(caseTypeRepository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_1))
+            .thenReturn(Optional.of(caseTypeEntity1));
+        final CaseType caseType = new CaseType();
+        caseType.setId(CASE_TYPE_REFERENCE_1);
+        when(entityToResponseDTOMapper.map(same(caseTypeEntity1))).thenReturn(caseType);
+        when(caseTypeRepository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_2))
+            .thenReturn(Optional.empty());
+        when(caseTypeRepository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_3))
+            .thenReturn(Optional.empty());
+
 
         doReturn(orgProfileIds)
             .when(accessTypeRolesRepository)
@@ -151,7 +191,7 @@ public class AccessTypeRolesControllerTest {
 
         assertThat(mvcResult.getResponse().getContentAsString(), is("[]"));
 
-        List<AccessTypeRolesField> result = controller.getAccessTypeRoles(organisationProfileIds);
+        List<AccessTypeRolesField> result = controller.retrieveAccessTypeRoles(organisationProfileIds);
         assertEquals(expected, result);
     }
 
@@ -169,14 +209,14 @@ public class AccessTypeRolesControllerTest {
                 .content(objmapper.writeValueAsString(organisationProfileIds)))
             .andExpect(status().isOk()).andReturn();
 
-        assertThat(mvcResult.getResponse().getContentAsString(), is("[]"));
+        //assertThat(mvcResult.getResponse().getContentAsString(), is("[]"));
         assertAll(
             () -> assertThat(mvcResult.getResponse().getContentAsString(), is(3)),
             //() -> assertThat(mvcResult.get(0).getOrganisationProfileId(), is(orgProfileIds.get(0)))
             () -> assertThat(mvcResult.getResponse().getContentAsString(), containsString(orgProfileIds.get(0)))
         );
 
-        List<AccessTypeRolesField> result = controller.getAccessTypeRoles(organisationProfileIds);
+        List<AccessTypeRolesField> result = controller.retrieveAccessTypeRoles(organisationProfileIds);
         assertEquals(expected, result);
     }
 

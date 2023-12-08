@@ -1,22 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import lombok.*;
-import org.springframework.stereotype.*;
-import org.springframework.util.*;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.*;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.*;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.*;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.model.*;
-import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.*;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.*;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
 
-import java.util.*;
+import java.util.List;
 
 @Component
 public class AccessTypeRolesValidator {
-
-    private static final String ERROR_MESSAGE = "AccessTypeRoles tab Invalid ";
-    private static final String NOT_VALID = " is not a valid ";
 
     public void validate(final List<AccessTypeRolesEntity> accessTypeRolesEntities) {
 
@@ -56,8 +52,8 @@ public class AccessTypeRolesValidator {
         }
 
         if (StringUtils.isEmpty(entity.getOrganisationProfileId())) {
-            String formattedMessage = String.format("Organisation Profile ID should not be null or empty in column '%s' "
-                + "in the sheet '%s'", ColumnName.ORGANISATION_PROFILE_ID, SheetName.ACCESS_TYPE_ROLES);
+            String formattedMessage = String.format("Organisation Profile ID should not be null or empty in column '%s'"
+                + " in the sheet '%s'", ColumnName.ORGANISATION_PROFILE_ID, SheetName.ACCESS_TYPE_ROLES);
             createErrorMessage(validationResult, formattedMessage);
             throw new ValidationException(validationResult);
         }

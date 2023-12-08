@@ -242,8 +242,8 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser, categoryParser, accessTypeRolesParser, searchPartyValidator, searchCriteriaValidator,
-            categoryIdValidator, applicationParams, executor);
+            challengeQuestionParser, categoryParser, accessTypeRolesParser, searchPartyValidator,
+            searchCriteriaValidator, categoryIdValidator, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 

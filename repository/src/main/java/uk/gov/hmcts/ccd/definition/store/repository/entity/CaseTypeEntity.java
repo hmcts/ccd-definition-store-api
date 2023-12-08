@@ -130,6 +130,11 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "case_type_id")
     private final List<CategoryEntity> categories = new ArrayList<>();
 
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, targetEntity = AccessTypeRolesEntity.class)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "case_type_id")
+    private List<AccessTypeRolesEntity> accessTypeRoles = new ArrayList<>();
+
     public Integer getId() {
         return id;
     }
@@ -329,5 +334,9 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     public List<CategoryEntity> getCategories() {
         return categories;
+    }
+
+    public List<AccessTypeRolesEntity> getAccessTypeRoles() {
+        return accessTypeRoles;
     }
 }

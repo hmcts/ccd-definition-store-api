@@ -13,7 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.*;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.AccessTypeRolesValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
@@ -21,15 +21,18 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPE_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.ACCESS_TYPE_ROLES;
 
-import java.time.*;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.Month;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.List;
 
 @RunWith(MockitoJUnitRunner.class)
 class AccessTypeRolesParserTest extends ParserTestBase {
@@ -83,7 +86,8 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         definitionSheet.addDataItem(item);
         definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
-        List<AccessTypeRolesEntity> accessTypeRolesEntities = accessTypeRolesParser.parse(definitionSheets, parseContext);
+        List<AccessTypeRolesEntity> accessTypeRolesEntities = accessTypeRolesParser.parse(definitionSheets,
+            parseContext);
         assertThat(accessTypeRolesEntities.size() > 0, is(true));
         for (AccessTypeRolesEntity accessTypeRolesEntity: accessTypeRolesEntities) {
             assertAll(
@@ -97,8 +101,10 @@ class AccessTypeRolesParserTest extends ParserTestBase {
                 () -> assertThat(accessTypeRolesEntity.getOrganisationalRoleName(), is("Name")),
                 () -> assertThat(accessTypeRolesEntity.getGroupRoleName(), is("Group role name")),
                 () -> assertThat(accessTypeRolesEntity.getOrganisationPolicyField(), is("Policy Field Name")),
-                () -> assertThat(accessTypeRolesEntity.getCaseAccessGroupIdTemplate(), is("Case Group ID Template")),
-                () -> assertThat(accessTypeRolesEntity.getLiveFrom(), is(LocalDate.of(2023, Month.FEBRUARY, 12))),
+                () -> assertThat(accessTypeRolesEntity.getCaseAccessGroupIdTemplate(),
+                    is("Case Group ID Template")),
+                () -> assertThat(accessTypeRolesEntity.getLiveFrom(), is(LocalDate.of(2023, Month.FEBRUARY,
+                    12))),
 
                 //OPTIONAL
                 () -> assertThat(accessTypeRolesEntity.getAccessMandatory(), is(nullValue())),
@@ -115,16 +121,20 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     public void shouldReturnCaseTypeIDNotFound() {
         definitionSheet.addDataItem(buildDefinitionDataItem(ACCESSTYPEROLES_DESCRIPTION));
         try {
-            List<AccessTypeRolesEntity> accessTypeRolesEntities = accessTypeRolesParser.parse(definitionSheets, parseContext);
+            List<AccessTypeRolesEntity> accessTypeRolesEntities = accessTypeRolesParser.parse(definitionSheets,
+                parseContext);
             assertThat(accessTypeRolesEntities.size() > 0, is(true));
             for (AccessTypeRolesEntity accessTypeRolesEntity : accessTypeRolesEntities) {
                 assertAll(
-                    () -> assertThat(accessTypeRolesEntity.getDescription(), is(ACCESSTYPEROLES_DESCRIPTION)), () -> assertThat(accessTypeRolesEntity.getAccessDefault(), is(true)),
+                    () -> assertThat(accessTypeRolesEntity.getDescription(), is(ACCESSTYPEROLES_DESCRIPTION)),
+                    () -> assertThat(accessTypeRolesEntity.getAccessDefault(), is(true)),
                     () -> assertThat(accessTypeRolesEntity.getGroupAccessEnabled(), is(true))
                 );
             }
-        }catch(ValidationException e) {
-            assertThat(e.getValidationResult().getValidationErrors() .get(0).toString(), is("Case Type not found Some Case Type in column 'CaseTypeID' in the sheet 'RoleToAccessProfiles'"));
+        } catch (ValidationException e) {
+            assertThat(e.getValidationResult().getValidationErrors().get(0).toString(),
+                is("Case Type not found Some Case Type in column 'CaseTypeID' in the sheet "
+                    + "'RoleToAccessProfiles'"));
         }
     }
 
@@ -133,7 +143,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
         List<AccessTypeRolesEntity> accessTypeRolesEntities = accessTypeRolesParser.parse(definitionSheets, context);
 
         assertAll(
-            () -> assertThat(accessTypeRolesEntities.size()>0, is(false))
+            () -> assertThat(accessTypeRolesEntities.size() > 0, is(false))
         );
     }
 
@@ -168,8 +178,10 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         try {
             accessTypeRolesParser.parse(definitionSheets, parseContext);
-        }catch(ValidationException e) {
-            assertThat(e.getValidationResult().getValidationErrors() .get(0).toString(), is("Access Type ID should not be null or empty in column 'AccessTypeID' in the sheet 'AccessTypeRoles'"));
+        } catch (ValidationException e) {
+            assertThat(e.getValidationResult().getValidationErrors().get(0).toString(),
+                is("Access Type ID should not be null or empty in column 'AccessTypeID' "
+                    + "in the sheet 'AccessTypeRoles'"));
         }
 
     }
@@ -195,8 +207,10 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         try {
             accessTypeRolesParser.parse(definitionSheets, parseContext);
-        }catch(ValidationException e) {
-            assertThat(e.getValidationResult().getValidationErrors() .get(0).toString(), is("Organisation Profile ID should not be null or empty in column 'OrganisationProfileID' in the sheet 'AccessTypeRoles'"));
+        } catch (ValidationException e) {
+            assertThat(e.getValidationResult().getValidationErrors().get(0).toString(),
+                is("Organisation Profile ID should not be null or empty in column 'OrganisationProfileID' "
+                    + "in the sheet 'AccessTypeRoles'"));
         }
 
     }
@@ -220,8 +234,9 @@ class AccessTypeRolesParserTest extends ParserTestBase {
 
         try {
             accessTypeRolesParser.parse(definitionSheets, parseContext);
-        }catch(ValidationException e) {
-            assertThat(e.getValidationResult().getValidationErrors() .get(0).toString(), is("Live From should not be null or empty in column 'LiveFrom' in the sheet 'AccessTypeRoles'"));
+        } catch (ValidationException e) {
+            assertThat(e.getValidationResult().getValidationErrors().get(0).toString(),
+                is("Live From should not be null or empty in column 'LiveFrom' in the sheet 'AccessTypeRoles'"));
         }
 
     }
