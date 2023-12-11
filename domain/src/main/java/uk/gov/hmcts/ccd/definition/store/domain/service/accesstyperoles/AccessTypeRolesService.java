@@ -8,7 +8,4 @@ import java.util.List;
 public interface AccessTypeRolesService {
 
     void saveAll(List<AccessTypeRolesEntity> entityList);
-
-    List<AccessTypeRolesField> findByOrganisationProfileId(String organisationProfileId);
-
 }

@@ -51,31 +51,4 @@ public class AccessTypeRolesServiceImplTest {
         verify(repository, times(1)).saveAll(eq(entitiesToSave));
     }
 
-    @Test
-    @DisplayName("Should get AccessType Roles for the passed organisation profile ID")
-    void shouldGetRoleToAccessProfilesForValidRoleName() {
-        List<AccessTypeRolesEntity> accessTypeRolesEntityEntities = Lists.newArrayList();
-        accessTypeRolesEntityEntities.add(createAccessTypeRoles("TestRole1", "judge"));
-        accessTypeRolesEntityEntities.add(createAccessTypeRoles("TestRole2", "solicitor"));
-        doReturn(accessTypeRolesEntityEntities).when(repository).findByOrganisationProfileIds(anyList());
-        List<AccessTypeRolesField> valuesReturned = classUnderTest.findByOrganisationProfileId("solicitor");
-        Assert.assertEquals(0, valuesReturned.size());
-    }
-
-    private AccessTypeRolesEntity createAccessTypeRoles(String roleName, String organisationProfileId) {
-        AccessTypeRolesEntity  accessTypeRolesEntityEntity = new AccessTypeRolesEntity();
-        accessTypeRolesEntityEntity.setCaseTypeId(createCaseTypeEntity());
-        accessTypeRolesEntityEntity.setOrganisationalRoleName(roleName);
-        accessTypeRolesEntityEntity.setOrganisationProfileId(organisationProfileId);
-        accessTypeRolesEntityEntity.setCaseAccessGroupIdTemplate("groupTemplate");
-        accessTypeRolesEntityEntity.setGroupAccessEnabled(false);
-        accessTypeRolesEntityEntity.setAccessTypeId("accessTypeId");
-        return accessTypeRolesEntityEntity;
-    }
-
-    private CaseTypeEntity createCaseTypeEntity() {
-        CaseTypeEntity entity = new CaseTypeEntity();
-        entity.setReference("TestCaseTypeRef");
-        return entity;
-    }
 }

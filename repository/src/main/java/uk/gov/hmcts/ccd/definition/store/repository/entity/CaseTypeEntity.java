@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -45,6 +46,7 @@ import static javax.persistence.GenerationType.SEQUENCE;
 )
 public class CaseTypeEntity implements Serializable, Versionable {
 
+    @Serial
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -137,7 +139,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
-    private List<AccessTypeRolesEntity> accessTypeRoles = new ArrayList<>();
+    private final List<AccessTypeRolesEntity> accessTypeRoles = new ArrayList<>();
 
     public Integer getId() {
         return id;

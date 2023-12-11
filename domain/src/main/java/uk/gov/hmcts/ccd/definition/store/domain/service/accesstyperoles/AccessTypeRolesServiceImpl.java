@@ -30,19 +30,4 @@ public class AccessTypeRolesServiceImpl implements AccessTypeRolesService {
     public void saveAll(List<AccessTypeRolesEntity> entityList) {
         repository.saveAll(entityList);
     }
-
-    @Override
-    public List<AccessTypeRolesField> findByOrganisationProfileId(String organisationProfileId) {
-
-        if (organisationProfileId == null || organisationProfileId.isEmpty()) {
-            return null;
-        }
-        List<AccessTypeRolesEntity> accessTypeRolesEntities = repository
-            .findByOrganisationProfileId(organisationProfileId);
-
-        return accessTypeRolesEntities.stream()
-            .map(dtoMapper::map)
-            .collect(Collectors.toList());
-    }
-
 }
