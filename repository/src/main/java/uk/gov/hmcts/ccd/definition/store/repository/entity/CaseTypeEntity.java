@@ -19,6 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -43,7 +45,8 @@ import static javax.persistence.GenerationType.SEQUENCE;
 )
 public class CaseTypeEntity implements Serializable, Versionable {
 
-    private static final long serialVersionUID = 542723327314434924L;
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = SEQUENCE, generator = "case_type_id_seq")
@@ -83,6 +86,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "get_case_webhook_id", nullable = true)
     private WebhookEntity getCaseWebhook;
 
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "jurisdiction_id", nullable = false)
     private JurisdictionEntity jurisdiction;
@@ -130,7 +134,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "case_type_id")
     private final List<CategoryEntity> categories = new ArrayList<>();
 
-    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, targetEntity = AccessTypeRolesEntity.class)
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private List<AccessTypeRolesEntity> accessTypeRoles = new ArrayList<>();

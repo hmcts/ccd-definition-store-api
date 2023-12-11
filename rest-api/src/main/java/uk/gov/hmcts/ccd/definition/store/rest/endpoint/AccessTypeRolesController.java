@@ -44,7 +44,6 @@ public class AccessTypeRolesController {
         @Valid @RequestBody() @NotNull  OrganisationProfileIds organisationProfileIds){
         List<AccessTypeRolesEntity>  accessTypeRolesEntities = accessTypeRolesRepository.findByOrganisationProfileIds(organisationProfileIds.getOrganisationProfileIds());
         return accessTypeRolesEntities.stream().map(entityToResponseDTOMapper::map).collect(Collectors.toList());
-
     }
 
 }

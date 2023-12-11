@@ -22,6 +22,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 public class AccessTypeRolesEntity implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "id")
