@@ -58,6 +58,7 @@ ext {
     groovyVersion = '3.0.17!!'
     tomcatVersion = '9.0.75!!'
     feignJackson = '11.6'
+    beftaFwVersion = '8.8.0'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -296,7 +297,7 @@ subprojects { subproject ->
 
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.19.12'
 
-        implementation group: 'com.github.hmcts', name: 'befta-fw', version: '8.7.11'
+        implementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
 
         testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
 
