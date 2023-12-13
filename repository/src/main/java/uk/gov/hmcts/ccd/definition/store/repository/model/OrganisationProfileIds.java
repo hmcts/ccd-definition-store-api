@@ -14,7 +14,6 @@ public class OrganisationProfileIds {
 
     @ApiModelProperty(value = "")
     @JsonProperty("organisation_profile_ids")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     public List<String> getOrganisationProfileIds() {
         return organisationProfileIds;
     }

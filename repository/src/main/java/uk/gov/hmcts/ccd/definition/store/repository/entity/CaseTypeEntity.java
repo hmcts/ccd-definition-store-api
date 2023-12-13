@@ -21,7 +21,6 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
@@ -88,7 +87,6 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @JoinColumn(name = "get_case_webhook_id", nullable = true)
     private WebhookEntity getCaseWebhook;
 
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "jurisdiction_id", nullable = false)
     private JurisdictionEntity jurisdiction;
