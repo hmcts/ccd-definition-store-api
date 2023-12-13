@@ -38,10 +38,6 @@ public class AccessTypeRolesEntity implements Serializable {
     @Column(name = "live_to")
     private LocalDate liveTo;
 
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "case_type_id", nullable = false)
-    private CaseTypeEntity caseTypeId;
-
     @Column(name = "access_type_id", nullable = false)
     private String accessTypeId;
 
@@ -80,4 +76,8 @@ public class AccessTypeRolesEntity implements Serializable {
 
     @Column(name = "case_access_group_id_template")
     private String caseAccessGroupIdTemplate;
+
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "case_type_id", nullable = false)
+    private CaseTypeEntity caseTypeId;
 }
