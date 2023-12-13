@@ -18,14 +18,14 @@
 
 	"request": {
 	 "queryParams": {
-		"ids": "BEFTA_3_sdfhdj"
+		"ids": "NON_EXISTING_BEFTA_JURISDICTION"
 	 }
 	},
 
 	"expectedResponse": {
 	 "_extends_": "Common_404_Response",
 	 "body": {
-		"message": "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
+		"message": "Object Not Found for:NON_EXISTING_BEFTA_JURISDICTION"
 	 }
 	}
 }

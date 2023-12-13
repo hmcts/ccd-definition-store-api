@@ -1,7 +1,5 @@
 #!groovy
 
-import uk.gov.hmcts.contino.GithubAPI
-
 @Library("Infrastructure")
 
 def type = "java"
@@ -53,7 +51,12 @@ def vaultOverrides = [
 env.BEFTA_S2S_CLIENT_ID = "ccd_gw"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
 env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN"
-env.CCD_STUB_SERVICE_URI_BASE="ccd-test-stubs-service-aat.service.core-compute-aat.internal"
+env.CCD_STUB_SERVICE_URI_BASE="ccd-test-stubs-service-aat.aat.platform.hmcts.net"
+// BEFTA retry env variables
+env.BEFTA_RETRY_MAX_ATTEMPTS = "3"
+env.BEFTA_RETRY_STATUS_CODES = "500,502,503,504"
+env.BEFTA_RETRY_MAX_DELAY = "1000"
+env.BEFTA_RETRY_NON_RETRYABLE_HTTP_METHODS = "POST,PUT"
 
 withPipeline(type, product, app) {
     onMaster {
@@ -67,11 +70,6 @@ withPipeline(type, product, app) {
     }
     onPR {
         enableSlackNotifications('#ccd-pr-builds')
-
-        def githubApi = new GithubAPI(this)
-        if (!githubApi.getLabelsbyPattern(env.BRANCH_NAME, "keep-helm")) {
-            enableCleanupOfHelmReleaseAlways()
-        }
     }
 
     if (env.BRANCH_NAME.startsWith("PR-")) {
