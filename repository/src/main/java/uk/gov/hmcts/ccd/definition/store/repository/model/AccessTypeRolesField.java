@@ -14,7 +14,6 @@ public class AccessTypeRolesField {
     private Integer id;
     private LocalDate liveFrom;
     private LocalDate liveTo;
-    private CaseTypeEntity caseTypeId;
     private String accessTypeId;
     private String organisationProfileId;
     private Boolean accessMandatory;
@@ -28,5 +27,5 @@ public class AccessTypeRolesField {
     private String organisationPolicyField;
     private Boolean groupAccessEnabled;
     private String caseAccessGroupIdTemplate;
-
+    private CaseTypeEntity caseTypeId;
 }
