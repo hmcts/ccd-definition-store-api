@@ -58,6 +58,8 @@ env.BEFTA_RETRY_STATUS_CODES = "500,502,503,504"
 env.BEFTA_RETRY_MAX_DELAY = "1000"
 env.BEFTA_RETRY_NON_RETRYABLE_HTTP_METHODS = "POST,PUT"
 
+env.DEFAULT_COLLECTION_ASSERTION_MODE="UNORDERED"
+
 withPipeline(type, product, app) {
     onMaster {
         enableSlackNotifications('#ccd-master-builds')
