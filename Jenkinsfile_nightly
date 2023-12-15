@@ -56,6 +56,8 @@ env.BEFTA_RETRY_STATUS_CODES = "500,502,503,504"
 env.BEFTA_RETRY_MAX_DELAY = "1000"
 env.BEFTA_RETRY_NON_RETRYABLE_HTTP_METHODS = "POST,PUT"
 
+env.DEFAULT_COLLECTION_ASSERTION_MODE="UNORDERED"
+
 withNightlyPipeline(type, product, component) {
     // Vars needed for functional and smoke tests run against AKS
     env.OAUTH2_CLIENT_ID = "ccd_gateway"
