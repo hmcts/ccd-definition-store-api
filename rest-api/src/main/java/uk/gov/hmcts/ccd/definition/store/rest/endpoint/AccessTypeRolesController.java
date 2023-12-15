@@ -67,7 +67,7 @@ public class AccessTypeRolesController {
 
         ATRJurisdictionResults jurisdictionResults = new ATRJurisdictionResults();
         jurisdictionResults.setJurisdictions(jurisdictions);
-        return jurisdictionResults;
+        return  jurisdictionResults;
     }
 
 
@@ -76,6 +76,7 @@ public class AccessTypeRolesController {
 
         for (AccessTypeRolesField accessTypeRole : accessTypeRoles){
             ATRJurisdictionResult jurisdictionResult = new ATRJurisdictionResult();
+
             CaseTypeEntity caseTypeEntity = accessTypeRole.getCaseTypeId();
             JurisdictionEntity jurisdictionEntity = caseTypeEntity.getJurisdiction();
             jurisdictionResult.setId(jurisdictionEntity.getId().toString());
@@ -102,11 +103,13 @@ public class AccessTypeRolesController {
         result.setAccessMandatory(accessTypeRole.getAccessMandatory());
         result.setAccessDefault(accessTypeRole.getAccessDefault());
         result.setDisplay(accessTypeRole.getDisplay());
+        result.setDisplayOrder(accessTypeRole.getDisplayOrder());
         result.setDescription(accessTypeRole.getDescription());
+        result.setHint(accessTypeRole.getHint());
 
         role.setGroupRoleName(accessTypeRole.getGroupRoleName());
-        role.setCaseTypeId(accessTypeRole.getId().toString());
-        role.setGroupRoleName(accessTypeRole.getGroupRoleName());
+        role.setCaseTypeId(accessTypeRole.getIdOfCaseType().toString()); /***** Need to change when casetypId = null is fixed******/
+        role.setOrganisationalRoleName(accessTypeRole.getOrganisationalRoleName());
         role.setCaseGroupIdTemplate(accessTypeRole.getCaseAccessGroupIdTemplate());
 
         atrRoleResults.add(role);

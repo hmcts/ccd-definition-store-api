@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @ApiModel(description = "jurisdiction")
@@ -12,7 +13,8 @@ public class ATRJurisdictionResult {
 
     private String id = null;
     private String name = null;
-    private List<ATRResult> accessTypeResults;
+    private List<ATRResult> accessTypeResults = new ArrayList<ATRResult>();
+
     /**
      * id of a particular Jurisdiction.
      **/

@@ -35,8 +35,9 @@ public class ATRResult {
     public String getAccessTypeId() {
         return accessTypeId;
     }
+
     public void setAccessTypeId(String accessTypeId) {
-        this.accessTypeId= accessTypeId;
+        this.accessTypeId = accessTypeId;
     }
 
     @ApiModelProperty(required = true, value = "")
@@ -46,7 +47,7 @@ public class ATRResult {
     }
 
     public void setAccessMandatory(Boolean accessMandatory) {
-        this.accessMandatory= accessMandatory;
+        this.accessMandatory = accessMandatory;
     }
 
     @ApiModelProperty(required = true, value = "")
@@ -56,7 +57,7 @@ public class ATRResult {
     }
 
     public void setAccessDefault(Boolean accessDefault) {
-        this.accessDefault= accessDefault;
+        this.accessDefault = accessDefault;
     }
 
     @ApiModelProperty(required = true, value = "")
@@ -66,7 +67,7 @@ public class ATRResult {
     }
 
     public void setDisplay(Boolean display) {
-        this.display= display;
+        this.display = display;
     }
 
     @ApiModelProperty(required = true, value = "")
@@ -76,7 +77,7 @@ public class ATRResult {
     }
 
     public void setDescription(String description) {
-        this.description= description;
+        this.description = description;
     }
 
     @ApiModelProperty(required = true, value = "")
@@ -84,8 +85,19 @@ public class ATRResult {
     public Integer getDisplayOrder() {
         return displayOrder;
     }
-    public void setDisplayOrder(Integer hint) {
+
+    public void setDisplayOrder(Integer displayOrder) {
         this.displayOrder = displayOrder;
+    }
+
+    @ApiModelProperty(required = true, value = "")
+    @JsonProperty("hint")
+    public String getHint() {
+        return hint;
+    }
+
+    public void setHint(String hint) {
+        this.hint = hint;
     }
 
     @ApiModelProperty(required = true, value = "")
@@ -93,6 +105,7 @@ public class ATRResult {
     public List<ATRRoleResult> getRoles() {
         return roles;
     }
+
     public void setRoles(List<ATRRoleResult> roles) {
         this.roles = roles;
     }

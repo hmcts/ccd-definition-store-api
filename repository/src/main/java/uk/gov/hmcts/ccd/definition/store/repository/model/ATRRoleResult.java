@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 public class ATRRoleResult {
 
     private String caseTypeId;
-    private String organisationRoleName;
+    private String organisationalRoleName;
     private String groupRoleName;
     private String caseGroupIdTemplate;
 
@@ -23,12 +23,13 @@ public class ATRRoleResult {
     }
 
     @ApiModelProperty(required = true, value = "")
-    @JsonProperty("organisationRoleName")
-    public String getOrganisationRoleName() {
-        return organisationRoleName;
+    @JsonProperty("organisationalRoleName")
+    public String getOrganisationalRoleName() {
+        return organisationalRoleName;
     }
-    public void setOrganisationRoleName(String organisationRoleName) {
-        this.organisationRoleName= organisationRoleName;
+
+    public void setOrganisationalRoleName(String organisationalRoleName) {
+        this.organisationalRoleName= organisationalRoleName;
     }
 
     @ApiModelProperty(required = true, value = "")
@@ -38,7 +39,7 @@ public class ATRRoleResult {
     }
 
     public void setGroupRoleName(String groupRoleName) {
-        this.groupRoleName= groupRoleName;
+        this.groupRoleName = groupRoleName;
     }
 
     @ApiModelProperty(required = true, value = "")
@@ -48,7 +49,7 @@ public class ATRRoleResult {
     }
 
     public void setCaseGroupIdTemplate(String caseGroupIdTemplate) {
-        this.caseGroupIdTemplate= caseGroupIdTemplate;
+        this.caseGroupIdTemplate = caseGroupIdTemplate;
     }
 
 }

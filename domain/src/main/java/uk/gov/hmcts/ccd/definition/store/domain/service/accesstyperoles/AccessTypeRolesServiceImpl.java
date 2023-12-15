@@ -7,10 +7,8 @@ import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesField;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 public class AccessTypeRolesServiceImpl implements AccessTypeRolesService {

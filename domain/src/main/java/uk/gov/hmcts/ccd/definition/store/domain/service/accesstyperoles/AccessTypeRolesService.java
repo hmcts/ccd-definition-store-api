@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles;
 
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesField;
 
 import java.util.List;
 
