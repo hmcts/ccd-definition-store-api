@@ -29,7 +29,7 @@ public class ATRRoleResult {
     }
 
     public void setOrganisationalRoleName(String organisationalRoleName) {
-        this.organisationalRoleName= organisationalRoleName;
+        this.organisationalRoleName = organisationalRoleName;
     }
 
     @ApiModelProperty(required = true, value = "")
