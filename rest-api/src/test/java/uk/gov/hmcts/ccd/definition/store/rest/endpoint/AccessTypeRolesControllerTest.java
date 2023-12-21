@@ -60,7 +60,7 @@ public class AccessTypeRolesControllerTest {
 
     private MockMvc mockMvc;
 
-    private final List<String> orgProfileIds = List.of(new String[]{"organisationProfileId_1", "organisationProfileId_2"});
+    private final List<String> orgProfileIds = List.of(new String[]{"SOLICITOR_ORG", "SOLICITOR_ORG"});
 
     @Mock
     private JurisdictionEntity jurisdiction = new JurisdictionEntity();
@@ -74,11 +74,6 @@ public class AccessTypeRolesControllerTest {
     private static final String CASE_TYPE_REFERENCE = "get-test";
     private static final String CASE_TYPE_REFERENCE_1 = "get-test1";
     private static final String CASE_TYPE_REFERENCE_2 = "get-test2";
-    //private static final String CASE_TYPE_REFERENCE_3 = "get-test3";
-
-    @Mock
-    private AccessTypeRolesEntity accessTypeRolesEntityHELEN;
-
     @Mock
     private AccessTypeRolesEntity accessTypeRolesEntity;
 
@@ -86,10 +81,6 @@ public class AccessTypeRolesControllerTest {
     private AccessTypeRolesEntity accessTypeRolesEntity1;
     @Mock
     private AccessTypeRolesEntity accessTypeRolesEntity2;
-    @Mock
-    private CaseTypeEntity caseTypeEntityHELEN;
-
-    @Mock JurisdictionEntity jurisdictionHelen;
 
     @BeforeEach
     void setUp()  {
@@ -164,7 +155,7 @@ public class AccessTypeRolesControllerTest {
 
         ATRJurisdictionResults finalAtrJurisdictionResults = atrJurisdictionResults;
         assertAll(
-            () -> assertThat(finalAtrJurisdictionResults.getJurisdictions().size(), is(2)),
+            () -> assertThat(finalAtrJurisdictionResults.getJurisdictions().size(), is(4)),
             //() -> assertThat(mvcResult.get(0).getOrganisationProfileId(), is(orgProfileIds.get(0)))
             () -> greaterThan(finalAtrJurisdictionResults.getJurisdictions().get(0).getAccessTypeRoles().size()),
             () -> assertThat(finalAtrJurisdictionResults.getJurisdictions().get(0)
@@ -172,7 +163,7 @@ public class AccessTypeRolesControllerTest {
             );
 
         ATRJurisdictionResults jurisdictionResults = controller.retrieveAccessTypeRoles(organisationProfileIds);
-        assertEquals(2, jurisdictionResults.getJurisdictions().size() );
+        assertEquals(4, jurisdictionResults.getJurisdictions().size() );
     }
 
     private <T> Matcher<T> matchesCaseTypeEntityWithJurisdictionAndVersionAdded(CaseTypeEntity caseTypeEntity1,
@@ -250,11 +241,11 @@ public class AccessTypeRolesControllerTest {
         entityList.add(accessTypeRolesEntity);
 
         caseTypeId = CASE_TYPE_REFERENCE_1;//"get-test1";
-        setupAccessTypeRolesEntity(accessTypeRolesEntity1, caseTypeId, "organisationProfileId_1");
+        setupAccessTypeRolesEntity(accessTypeRolesEntity1, caseTypeId, "SOLICITOR_ORG");
         entityList.add(accessTypeRolesEntity1);
 
         caseTypeId = CASE_TYPE_REFERENCE_2;//"get-test2";
-        setupAccessTypeRolesEntity(accessTypeRolesEntity1, caseTypeId, "organisationProfileId_2");
+        setupAccessTypeRolesEntity(accessTypeRolesEntity1, caseTypeId, "SOLICITOR_ORG");
         entityList.add(accessTypeRolesEntity2);
 
         List<AccessTypeRolesEntity> result = new ArrayList<>();
@@ -264,27 +255,21 @@ public class AccessTypeRolesControllerTest {
         when(caseTypeEntity.getJurisdiction().getId()).thenReturn(1);
         when(accessTypeRolesEntity.getOrganisationProfileId()).thenReturn("SOLICITOR_ORG");
         when(accessTypeRolesEntity.getAccessTypeId()).thenReturn("default");
-        //result.add(accessTypeRolesEntity);
+        result.add(accessTypeRolesEntity);
 
         when(accessTypeRolesEntity1.getCaseTypeId()).thenReturn(caseTypeEntity1);
         when(caseTypeEntity1.getJurisdiction()).thenReturn(jurisdiction);
         when(caseTypeEntity1.getJurisdiction().getId()).thenReturn(1);
-        when(accessTypeRolesEntity1.getOrganisationProfileId()).thenReturn("organisationProfileId_1");
+        when(accessTypeRolesEntity1.getOrganisationProfileId()).thenReturn("SOLICITOR_ORG");
         when(accessTypeRolesEntity1.getAccessTypeId()).thenReturn("default");
         result.add(accessTypeRolesEntity1);
 
         when(accessTypeRolesEntity2.getCaseTypeId()).thenReturn(caseTypeEntity2);
         when(caseTypeEntity2.getJurisdiction()).thenReturn(jurisdiction);
         when(caseTypeEntity2.getJurisdiction().getId()).thenReturn(1);
-        when(accessTypeRolesEntity2.getOrganisationProfileId()).thenReturn("organisationProfileId_2");
+        when(accessTypeRolesEntity2.getOrganisationProfileId()).thenReturn("SOLICITOR_ORG");
         when(accessTypeRolesEntity2.getAccessTypeId()).thenReturn("default");
-        //result.add(accessTypeRolesEntity2);
-
-        when(accessTypeRolesEntityHELEN.getCaseTypeId()).thenReturn(caseTypeEntityHELEN);
-        when(caseTypeEntityHELEN.getJurisdiction()).thenReturn(jurisdictionHelen);
-        when(caseTypeEntityHELEN.getJurisdiction().getId()).thenReturn(1);
-        when(accessTypeRolesEntityHELEN.getOrganisationProfileId()).thenReturn("organisationProfileId_1");
-        when(accessTypeRolesEntityHELEN.getAccessTypeId()).thenReturn("access ty");
+        result.add(accessTypeRolesEntity2);
 
         result.add(accessTypeRolesEntity);
         when(accessTypeRolesRepository.findByOrganisationProfileIds(orgProfileIds)).thenReturn(result);
