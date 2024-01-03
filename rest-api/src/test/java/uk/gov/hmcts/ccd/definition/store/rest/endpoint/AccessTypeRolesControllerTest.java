@@ -1,9 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
+import org.hamcrest.MatcherAssert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -32,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertEquals;
-import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
@@ -127,10 +125,6 @@ public class AccessTypeRolesControllerTest {
     void shouldHandleACollection() throws Exception {
         OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
         organisationProfileIds.setOrganisationProfileIds(orgProfileIds);
-        List<AccessTypeRolesField> expected = new ArrayList<>();
-
-        //AccessTypeRolesEntity source = accessTypeRolesEntity;
-        //AccessTypeRolesField target =  entityToResponseDTOMapper.map(source);
 
         ObjectMapper objmapper = new ObjectMapper();
         String response = objmapper.writeValueAsString(new AccessTypeRolesField());
@@ -144,10 +138,9 @@ public class AccessTypeRolesControllerTest {
             .andDo(print())
             .andExpect(status().isOk()).andReturn();
 
-        ATRJurisdictionResults atrJurisdictionResults = null;
-        assertNotNull("Response from post null", mvcResult);
+        Assertions.assertNotNull(mvcResult, "Response from post null");
 
-        atrJurisdictionResults = objmapper.readValue(mvcResult.getResponse().getContentAsString(),
+        ATRJurisdictionResults atrJurisdictionResults = objmapper.readValue(mvcResult.getResponse().getContentAsString(),
             ATRJurisdictionResults.class);
 
         assertFalse("atrJurisdictionResults is null or empty", atrJurisdictionResults == null
@@ -155,35 +148,15 @@ public class AccessTypeRolesControllerTest {
 
         ATRJurisdictionResults finalAtrJurisdictionResults = atrJurisdictionResults;
         assertAll(
-            () -> assertThat(finalAtrJurisdictionResults.getJurisdictions().size(), is(4)),
+            () -> MatcherAssert.assertThat(finalAtrJurisdictionResults.getJurisdictions().size(), is(4)),
             //() -> assertThat(mvcResult.get(0).getOrganisationProfileId(), is(orgProfileIds.get(0)))
             () -> greaterThan(finalAtrJurisdictionResults.getJurisdictions().get(0).getAccessTypeRoles().size()),
-            () -> assertThat(finalAtrJurisdictionResults.getJurisdictions().get(0)
+            () -> MatcherAssert.assertThat(finalAtrJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypeRoles().get(0).getOrganisationProfileId(), is(orgProfileIds.get(0)))
             );
 
         ATRJurisdictionResults jurisdictionResults = controller.retrieveAccessTypeRoles(organisationProfileIds);
-        assertEquals(4, jurisdictionResults.getJurisdictions().size() );
-    }
-
-    private <T> Matcher<T> matchesCaseTypeEntityWithJurisdictionAndVersionAdded(CaseTypeEntity caseTypeEntity1,
-                                                                                JurisdictionEntity jurisdiction,
-                                                                                int version) {
-
-        return new BaseMatcher<T>() {
-            @Override
-            public boolean matches(Object o) {
-                return o == caseTypeEntity1
-                    && ((CaseTypeEntity) o).getJurisdiction().equals(jurisdiction)
-                    && ((CaseTypeEntity) o).getVersion().equals(version);
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("Expected to be the same CaseTypeEntity instance with the jurisdiction set");
-            }
-        };
-
+        Assertions.assertEquals(4, jurisdictionResults.getJurisdictions().size());
     }
 
     private CaseTypeEntity createCaseType(String caseTypeId, String jurisdictionPostfix) {
@@ -237,16 +210,12 @@ public class AccessTypeRolesControllerTest {
 
         String caseTypeId = CASE_TYPE_REFERENCE;//"get-test";
         setupAccessTypeRolesEntity(accessTypeRolesEntity, caseTypeId, "SOLICITOR_ORG");
-        List<AccessTypeRolesEntity> entityList = new ArrayList<>();
-        entityList.add(accessTypeRolesEntity);
 
         caseTypeId = CASE_TYPE_REFERENCE_1;//"get-test1";
         setupAccessTypeRolesEntity(accessTypeRolesEntity1, caseTypeId, "SOLICITOR_ORG");
-        entityList.add(accessTypeRolesEntity1);
 
         caseTypeId = CASE_TYPE_REFERENCE_2;//"get-test2";
         setupAccessTypeRolesEntity(accessTypeRolesEntity1, caseTypeId, "SOLICITOR_ORG");
-        entityList.add(accessTypeRolesEntity2);
 
         List<AccessTypeRolesEntity> result = new ArrayList<>();
 
