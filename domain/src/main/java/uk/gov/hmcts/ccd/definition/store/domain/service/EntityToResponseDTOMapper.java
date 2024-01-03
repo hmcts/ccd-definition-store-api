@@ -10,6 +10,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.mapper.FieldTypeListItemMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
@@ -41,6 +42,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessControlList;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventField;
@@ -301,6 +303,8 @@ public interface EntityToResponseDTOMapper {
     SearchAliasField map(SearchAliasFieldEntity searchAliasFieldEntity);
 
     Banner map(BannerEntity bannerEntity);
+
+    AccessTypeRolesField map(AccessTypeRolesEntity accessTypeRolesEntity);
 
     @Mapping(source = "jurisdictionUiConfigEntity.jurisdiction.reference", target = "id")
     @Mapping(source = "jurisdictionUiConfigEntity.jurisdiction.name", target = "name")
