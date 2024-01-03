@@ -71,10 +71,10 @@ public class AccessTypeRolesController {
     }
 
 
-    private List<ATRJurisdictionResult> buildJuristionJsonResult(List<AccessTypeRolesField> accessTypeRoles){
+    private List<ATRJurisdictionResult> buildJuristionJsonResult(List<AccessTypeRolesField> accessTypeRoles) {
         List<ATRJurisdictionResult>  jurisdictions = new ArrayList<ATRJurisdictionResult>();
 
-        for (AccessTypeRolesField accessTypeRole : accessTypeRoles){
+        for (AccessTypeRolesField accessTypeRole : accessTypeRoles) {
             ATRJurisdictionResult jurisdictionResult = new ATRJurisdictionResult();
 
             CaseTypeEntity caseTypeEntity = accessTypeRole.getCaseTypeId();
@@ -90,7 +90,7 @@ public class AccessTypeRolesController {
         return jurisdictions;
     }
 
-    private List<ATRResult>  getRoleJsonResults(AccessTypeRolesField accessTypeRole){
+    private List<ATRResult>  getRoleJsonResults(AccessTypeRolesField accessTypeRole) {
         List<ATRRoleResult> atrRoleResults = new ArrayList<ATRRoleResult>();
         List<ATRResult> atrResults = new ArrayList<ATRResult>();
 

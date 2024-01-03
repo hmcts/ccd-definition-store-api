@@ -196,7 +196,7 @@ public class AccessTypeRolesControllerTest {
             + "to be assigned to each case");
         accessTypeRolesEntity.setDisplayOrder(1);
         accessTypeRolesEntity.setGroupRoleName("[APPLICANTSOLICITORONE]");
-        accessTypeRolesEntity.setOrganisationPolicyField("applicant1OrganisationPolicy");
+        accessTypeRolesEntity.setCaseAssignedRoleField("applicant1OrganisationPolicy");
         accessTypeRolesEntity.setCaseAccessGroupIdTemplate("CIVIL:all:CIVIL:AS1:$ORGID$");
 
         accessTypeRolesField = entityToResponseDTOMapper.map(accessTypeRolesEntity);
