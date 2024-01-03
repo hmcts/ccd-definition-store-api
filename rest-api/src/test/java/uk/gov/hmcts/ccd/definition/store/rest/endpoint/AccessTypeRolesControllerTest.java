@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.MatcherAssert;
+import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -21,7 +22,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.ATRJurisdictionResults;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesJurisdictionResults;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.OrganisationProfileIds;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Version;
@@ -106,7 +107,7 @@ public class AccessTypeRolesControllerTest {
     @DisplayName("Should handle empty accessTypeRoles collection")
     void shouldHandleEmptyCollection() throws Exception {
         OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
-        ATRJurisdictionResults expected = new ATRJurisdictionResults();
+        AccessTypeRolesJurisdictionResults expected = new AccessTypeRolesJurisdictionResults();
 
         ObjectMapper objmapper = new ObjectMapper();
         final MvcResult mvcResult = mockMvc.perform(post("/api/retrieve-access-types")
@@ -116,7 +117,7 @@ public class AccessTypeRolesControllerTest {
 
         assertThat(mvcResult.getResponse().getContentAsString().toString(), is("{\"jurisdictions\":[]}"));
 
-        ATRJurisdictionResults jurisdictionResults = controller.retrieveAccessTypeRoles(organisationProfileIds);
+        AccessTypeRolesJurisdictionResults jurisdictionResults = controller.retrieveAccessTypeRoles(organisationProfileIds);
         assertEquals(expected.getJurisdictions(), jurisdictionResults.getJurisdictions());
     }
 
@@ -140,22 +141,22 @@ public class AccessTypeRolesControllerTest {
 
         Assertions.assertNotNull(mvcResult, "Response from post null");
 
-        ATRJurisdictionResults atrJurisdictionResults = objmapper.readValue(mvcResult.getResponse().getContentAsString(),
-            ATRJurisdictionResults.class);
+        AccessTypeRolesJurisdictionResults accessTypeRolesJurisdictionResults = objmapper.readValue(mvcResult.getResponse().getContentAsString(),
+            AccessTypeRolesJurisdictionResults.class);
 
-        assertFalse("atrJurisdictionResults is null or empty", atrJurisdictionResults == null
-            || atrJurisdictionResults.getJurisdictions().isEmpty());
+        assertFalse("accessTypeRolesJurisdictionResults is null or empty", accessTypeRolesJurisdictionResults == null
+            || accessTypeRolesJurisdictionResults.getJurisdictions().isEmpty());
 
-        ATRJurisdictionResults finalAtrJurisdictionResults = atrJurisdictionResults;
+        AccessTypeRolesJurisdictionResults finalAccessTypeRolesJurisdictionResults = accessTypeRolesJurisdictionResults;
         assertAll(
-            () -> MatcherAssert.assertThat(finalAtrJurisdictionResults.getJurisdictions().size(), is(4)),
+            () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().size(), is(4)),
             //() -> assertThat(mvcResult.get(0).getOrganisationProfileId(), is(orgProfileIds.get(0)))
-            () -> greaterThan(finalAtrJurisdictionResults.getJurisdictions().get(0).getAccessTypeRoles().size()),
-            () -> MatcherAssert.assertThat(finalAtrJurisdictionResults.getJurisdictions().get(0)
+            () -> greaterThan(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0).getAccessTypeRoles().size()),
+            () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypeRoles().get(0).getOrganisationProfileId(), is(orgProfileIds.get(0)))
             );
 
-        ATRJurisdictionResults jurisdictionResults = controller.retrieveAccessTypeRoles(organisationProfileIds);
+        AccessTypeRolesJurisdictionResults jurisdictionResults = controller.retrieveAccessTypeRoles(organisationProfileIds);
         Assertions.assertEquals(4, jurisdictionResults.getJurisdictions().size());
     }
 

@@ -8,12 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApiModel(description = "jurisdiction")
-public class ATRJurisdictionResult {
-
+public class AccessTypeRolesJurisdictionResult {
 
     private String id = null;
     private String name = null;
-    private List<ATRResult> accessTypeResults = new ArrayList<ATRResult>();
+    private List<AccessTypeRolesResult> accessTypeResults = new ArrayList<AccessTypeRolesResult>();
 
     /**
      * id of a particular Jurisdiction.
@@ -43,11 +42,11 @@ public class ATRJurisdictionResult {
 
     @ApiModelProperty(value = "")
     @JsonProperty("accessTypes")
-    public List<ATRResult> getAccessTypeRoles() {
+    public List<AccessTypeRolesResult> getAccessTypeRoles() {
         return accessTypeResults;
     }
 
-    public void setAccessTypeRoles(List<ATRResult> accessTypeResults) {
+    public void setAccessTypeRoles(List<AccessTypeRolesResult> accessTypeResults) {
         this.accessTypeResults = accessTypeResults;
     }
 }

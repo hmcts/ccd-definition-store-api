@@ -6,8 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
 @ApiModel(description = "accessType")
-public class ATRResult {
-
+public class AccessTypeRolesResult {
 
     private String organisationProfileId;
     private String accessTypeId;
@@ -18,7 +17,7 @@ public class ATRResult {
     private String hint;
     private Integer displayOrder;
 
-    private List<ATRRoleResult> roles;
+    private List<AccessTypeRolesRoleResult> roles;
 
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("organisationProfileId")
@@ -102,11 +101,11 @@ public class ATRResult {
 
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("roles")
-    public List<ATRRoleResult> getRoles() {
+    public List<AccessTypeRolesRoleResult> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<ATRRoleResult> roles) {
+    public void setRoles(List<AccessTypeRolesRoleResult> roles) {
         this.roles = roles;
     }
 }

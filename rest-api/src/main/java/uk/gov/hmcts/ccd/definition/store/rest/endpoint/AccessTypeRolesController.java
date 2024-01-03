@@ -17,10 +17,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.OrganisationProfileIds;
-import uk.gov.hmcts.ccd.definition.store.repository.model.ATRJurisdictionResult;
-import uk.gov.hmcts.ccd.definition.store.repository.model.ATRJurisdictionResults;
-import uk.gov.hmcts.ccd.definition.store.repository.model.ATRResult;
-import uk.gov.hmcts.ccd.definition.store.repository.model.ATRRoleResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesJurisdictionResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesJurisdictionResults;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesRoleResult;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -46,14 +46,14 @@ public class AccessTypeRolesController {
 
 
     @PostMapping(value = "/retrieve-access-types",consumes = {"application/json"}, produces = {"application/json"})
-    @ApiOperation(value = "Get all accessTypes for all caseTypes", response = ATRJurisdictionResult.class,
+    @ApiOperation(value = "Get all accessTypes for all caseTypes", response = AccessTypeRolesJurisdictionResult.class,
         responseContainer = "List")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "List of valid access types request"),
         @ApiResponse(code = 401, message = "Unauthorised request"),
         @ApiResponse(code = 403, message = "Bad request")
     })
-    public ATRJurisdictionResults retrieveAccessTypeRoles(
+    public AccessTypeRolesJurisdictionResults retrieveAccessTypeRoles(
         @Valid @RequestBody() @NotNull  OrganisationProfileIds organisationProfileIds) {
         List<AccessTypeRolesField> accessTypeRoles = null;
 
@@ -63,39 +63,39 @@ public class AccessTypeRolesController {
             .collect(Collectors.toList());
 
         // Build the json output from the data
-        List<ATRJurisdictionResult> jurisdictions = buildJuristionJsonResult(accessTypeRoles);
+        List<AccessTypeRolesJurisdictionResult> jurisdictions = buildJuristionJsonResult(accessTypeRoles);
 
-        ATRJurisdictionResults jurisdictionResults = new ATRJurisdictionResults();
+        AccessTypeRolesJurisdictionResults jurisdictionResults = new AccessTypeRolesJurisdictionResults();
         jurisdictionResults.setJurisdictions(jurisdictions);
         return  jurisdictionResults;
     }
 
 
-    private List<ATRJurisdictionResult> buildJuristionJsonResult(List<AccessTypeRolesField> accessTypeRoles) {
-        List<ATRJurisdictionResult>  jurisdictions = new ArrayList<ATRJurisdictionResult>();
+    private List<AccessTypeRolesJurisdictionResult> buildJuristionJsonResult(List<AccessTypeRolesField> accessTypeRoles) {
+        List<AccessTypeRolesJurisdictionResult>  jurisdictions = new ArrayList<AccessTypeRolesJurisdictionResult>();
 
         for (AccessTypeRolesField accessTypeRole : accessTypeRoles) {
-            ATRJurisdictionResult jurisdictionResult = new ATRJurisdictionResult();
+            AccessTypeRolesJurisdictionResult jurisdictionResult = new AccessTypeRolesJurisdictionResult();
 
             CaseTypeEntity caseTypeEntity = accessTypeRole.getCaseTypeId();
             JurisdictionEntity jurisdictionEntity = caseTypeEntity.getJurisdiction();
             jurisdictionResult.setId(jurisdictionEntity.getId().toString());
             jurisdictionResult.setName(jurisdictionEntity.getName());
 
-            List<ATRResult> atrResults = getRoleJsonResults(accessTypeRole);
-            jurisdictionResult.setAccessTypeRoles(atrResults);
+            List<AccessTypeRolesResult> accessTypeRolesResults = getRoleJsonResults(accessTypeRole);
+            jurisdictionResult.setAccessTypeRoles(accessTypeRolesResults);
 
             jurisdictions.add(jurisdictionResult);
         }
         return jurisdictions;
     }
 
-    private List<ATRResult>  getRoleJsonResults(AccessTypeRolesField accessTypeRole) {
-        List<ATRRoleResult> atrRoleResults = new ArrayList<ATRRoleResult>();
-        List<ATRResult> atrResults = new ArrayList<ATRResult>();
+    private List<AccessTypeRolesResult>  getRoleJsonResults(AccessTypeRolesField accessTypeRole) {
+        List<AccessTypeRolesRoleResult> accessTypeRolesRoleResults = new ArrayList<AccessTypeRolesRoleResult>();
+        List<AccessTypeRolesResult> accessTypeRolesResults = new ArrayList<AccessTypeRolesResult>();
 
-        ATRResult result = new ATRResult();
-        ATRRoleResult role = new ATRRoleResult();
+        AccessTypeRolesResult result = new AccessTypeRolesResult();
+        AccessTypeRolesRoleResult role = new AccessTypeRolesRoleResult();
 
         // for each jurisdiction build access type Roles
         result.setOrganisationProfileId(accessTypeRole.getOrganisationProfileId());
@@ -112,12 +112,12 @@ public class AccessTypeRolesController {
         role.setOrganisationalRoleName(accessTypeRole.getOrganisationalRoleName());
         role.setCaseGroupIdTemplate(accessTypeRole.getCaseAccessGroupIdTemplate());
 
-        atrRoleResults.add(role);
+        accessTypeRolesRoleResults.add(role);
 
-        result.setRoles(atrRoleResults);
+        result.setRoles(accessTypeRolesRoleResults);
 
-        atrResults.add(result);
+        accessTypeRolesResults.add(result);
 
-        return  atrResults;
+        return accessTypeRolesResults;
     }
 }

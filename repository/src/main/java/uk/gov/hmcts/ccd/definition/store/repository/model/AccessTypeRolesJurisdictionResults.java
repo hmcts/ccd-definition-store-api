@@ -8,17 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApiModel(description = "jurisdictions")
-public class ATRJurisdictionResults {
+public class AccessTypeRolesJurisdictionResults {
 
-    private List<ATRJurisdictionResult> jurisdictions = new ArrayList<ATRJurisdictionResult>();
+    private List<AccessTypeRolesJurisdictionResult> jurisdictions = new ArrayList<AccessTypeRolesJurisdictionResult>();
 
     @ApiModelProperty(value = "")
     @JsonProperty("jurisdictions")
-    public List<ATRJurisdictionResult> getJurisdictions() {
+    public List<AccessTypeRolesJurisdictionResult> getJurisdictions() {
         return jurisdictions;
     }
 
-    public void setJurisdictions(List<ATRJurisdictionResult> jurisdictions) {
+    public void setJurisdictions(List<AccessTypeRolesJurisdictionResult> jurisdictions) {
         this.jurisdictions = jurisdictions;
     }
 }
