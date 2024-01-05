@@ -72,7 +72,7 @@ public class AccessTypeRolesController {
 
     private List<AccessTypeRolesJurisdictionResult> buildJuristionJsonResult(
         List<AccessTypeRolesField> accessTypeRoles) {
-        List<AccessTypeRolesJurisdictionResult>  jurisdictions = new ArrayList<AccessTypeRolesJurisdictionResult>();
+        List<AccessTypeRolesJurisdictionResult>  jurisdictions = new ArrayList<>();
 
         for (AccessTypeRolesField accessTypeRole : accessTypeRoles) {
             AccessTypeRolesJurisdictionResult jurisdictionResult = new AccessTypeRolesJurisdictionResult();
@@ -114,7 +114,7 @@ public class AccessTypeRolesController {
         role.setOrganisationalRoleName(accessTypeRole.getOrganisationalRoleName());
         role.setCaseGroupIdTemplate(accessTypeRole.getCaseAccessGroupIdTemplate());
 
-        List<AccessTypeRolesRoleResult> accessTypeRolesRoleResults = new ArrayList<AccessTypeRolesRoleResult>();
+        List<AccessTypeRolesRoleResult> accessTypeRolesRoleResults = new ArrayList<>();
 
         accessTypeRolesRoleResults.add(role);
 
