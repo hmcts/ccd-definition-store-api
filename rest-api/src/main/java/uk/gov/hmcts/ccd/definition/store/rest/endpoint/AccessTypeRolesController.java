@@ -70,8 +70,8 @@ public class AccessTypeRolesController {
         return  jurisdictionResults;
     }
 
-
-    private List<AccessTypeRolesJurisdictionResult> buildJuristionJsonResult(List<AccessTypeRolesField> accessTypeRoles) {
+    private List<AccessTypeRolesJurisdictionResult> buildJuristionJsonResult(
+        List<AccessTypeRolesField> accessTypeRoles) {
         List<AccessTypeRolesJurisdictionResult>  jurisdictions = new ArrayList<AccessTypeRolesJurisdictionResult>();
 
         for (AccessTypeRolesField accessTypeRole : accessTypeRoles) {
@@ -91,11 +91,8 @@ public class AccessTypeRolesController {
     }
 
     private List<AccessTypeRolesResult>  getRoleJsonResults(AccessTypeRolesField accessTypeRole) {
-        List<AccessTypeRolesRoleResult> accessTypeRolesRoleResults = new ArrayList<AccessTypeRolesRoleResult>();
-        List<AccessTypeRolesResult> accessTypeRolesResults = new ArrayList<AccessTypeRolesResult>();
 
         AccessTypeRolesResult result = new AccessTypeRolesResult();
-        AccessTypeRolesRoleResult role = new AccessTypeRolesRoleResult();
 
         // for each jurisdiction build access type Roles
         result.setOrganisationProfileId(accessTypeRole.getOrganisationProfileId());
@@ -107,14 +104,23 @@ public class AccessTypeRolesController {
         result.setDescription(accessTypeRole.getDescription());
         result.setHint(accessTypeRole.getHint());
 
+        AccessTypeRolesRoleResult role = new AccessTypeRolesRoleResult();
+
         role.setGroupRoleName(accessTypeRole.getGroupRoleName());
-        role.setCaseTypeId(accessTypeRole.getIdOfCaseType().toString()); /***** Need to change when casetypId = null is fixed******/
+        /***** Set with getIdOfCaseType Saved previously from casetypeId before it is copied and is = null when
+         * case is copied the id is null as (Property "id") has no write accessor
+         * ******/
+        role.setCaseTypeId(accessTypeRole.getIdOfCaseType().toString());
         role.setOrganisationalRoleName(accessTypeRole.getOrganisationalRoleName());
         role.setCaseGroupIdTemplate(accessTypeRole.getCaseAccessGroupIdTemplate());
+
+        List<AccessTypeRolesRoleResult> accessTypeRolesRoleResults = new ArrayList<AccessTypeRolesRoleResult>();
 
         accessTypeRolesRoleResults.add(role);
 
         result.setRoles(accessTypeRolesRoleResults);
+
+        List<AccessTypeRolesResult> accessTypeRolesResults = new ArrayList<AccessTypeRolesResult>();
 
         accessTypeRolesResults.add(result);
 
