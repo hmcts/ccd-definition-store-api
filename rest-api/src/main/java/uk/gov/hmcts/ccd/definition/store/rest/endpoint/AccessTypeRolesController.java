@@ -54,7 +54,7 @@ public class AccessTypeRolesController {
         @ApiResponse(code = 403, message = "Bad request")
     })
     public AccessTypeRolesJurisdictionResults retrieveAccessTypeRoles(
-        @Valid @RequestBody() @NotNull  OrganisationProfileIds organisationProfileIds) {
+        @Valid @RequestBody @NotNull  OrganisationProfileIds organisationProfileIds) {
         List<AccessTypeRolesField> accessTypeRoles = null;
 
         List<AccessTypeRolesEntity>  accessTypeRolesEntities = accessTypeRolesRepository

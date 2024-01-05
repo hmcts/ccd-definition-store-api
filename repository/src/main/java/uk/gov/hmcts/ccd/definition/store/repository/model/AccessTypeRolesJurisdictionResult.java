@@ -12,13 +12,13 @@ public class AccessTypeRolesJurisdictionResult {
 
     private String id = null;
     private String name = null;
-    private List<AccessTypeRolesResult> accessTypeResults = new ArrayList<AccessTypeRolesResult>();
+    private List<AccessTypeRolesResult> accessTypeResults = new ArrayList<>();
 
     /**
      * id of a particular Jurisdiction.
      **/
     @ApiModelProperty(required = true, value = "")
-    @JsonProperty("jurisdictionid")
+    @JsonProperty("jurisdictionId")
     public String getId() {
         return id;
     }

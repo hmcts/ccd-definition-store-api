@@ -10,7 +10,7 @@ import java.util.List;
 @ApiModel(description = "jurisdictions")
 public class AccessTypeRolesJurisdictionResults {
 
-    private List<AccessTypeRolesJurisdictionResult> jurisdictions = new ArrayList<AccessTypeRolesJurisdictionResult>();
+    private List<AccessTypeRolesJurisdictionResult> jurisdictions = new ArrayList<>();
 
     @ApiModelProperty(value = "")
     @JsonProperty("jurisdictions")
