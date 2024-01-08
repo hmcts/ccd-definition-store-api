@@ -322,9 +322,7 @@ public class ImportServiceImpl implements ImportService {
 
         parseSearchParty(definitionSheets, parseContext);
 
-        if (applicationParams.isCaseGroupAccessFilteringEnabled()) {
-            parseAccessTypeRoles(definitionSheets, parseContext, accessProfileEntities);
-        }
+        parseAccessTypeRoles(definitionSheets, parseContext, accessProfileEntities);
 
         if (applicationParams.isWelshTranslationEnabled()) {
             translationService.processDefinitionSheets(definitionSheets);
@@ -395,15 +393,18 @@ public class ImportServiceImpl implements ImportService {
     }
 
     private void parseAccessTypeRoles(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext,
-                                      List<RoleToAccessProfilesEntity> accessProfileEntities) {
-        if (definitionSheets.get(SheetName.ACCESS_TYPE_ROLES.getName()) != null) {
+                                                             List<RoleToAccessProfilesEntity> accessProfileEntities) {
+
+        if ((applicationParams.isCaseGroupAccessFilteringEnabled())
+            && definitionSheets.get(SheetName.ACCESS_TYPE_ROLES.getName()) != null) {
+
             logger.debug("Importing spreadsheet: AccessTypeRoles...");
             final AccessTypeRolesParser accessTypeRolesParser =
                 parserFactory.createAccessTypeRolesParser();
 
-            List<AccessTypeRolesEntity> newAccessTypeRolesEntities = accessTypeRolesParser
+            List<AccessTypeRolesEntity> accessTypeRolesEntities = accessTypeRolesParser
                 .parse(definitionSheets,parseContext, accessProfileEntities);
-            accessTypeRolesService.saveAll(newAccessTypeRolesEntities);
+            accessTypeRolesService.saveAll(accessTypeRolesEntities);
             logger.debug("Importing spreadsheet: AccessTypeRoles...: OK");
         }
 

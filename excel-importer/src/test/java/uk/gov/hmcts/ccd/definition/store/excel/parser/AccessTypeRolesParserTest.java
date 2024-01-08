@@ -144,7 +144,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypeRolesParser
                 .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
-        assertThat(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
+        assertThat(exception.getValidationResult().getValidationErrors().get(0).toString(),
             is("Case Type not found Some Case Type in column 'CaseTypeID' in the sheet 'AccessTypeRoles'"));
     }
 

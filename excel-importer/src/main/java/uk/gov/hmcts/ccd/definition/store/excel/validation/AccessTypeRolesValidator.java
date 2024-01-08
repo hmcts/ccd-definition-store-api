@@ -147,8 +147,7 @@ public class AccessTypeRolesValidator {
                             + "a given Jurisdiction in the sheet '%s'",
                         ColumnName.DISPLAY_ORDER, SheetName.ACCESS_TYPE_ROLES);
 
-                    if (!alreadyReportedError(validationResult, errorMessage)
-                        && accessTypeRolesDisplayOrder.get(triple).size() > 1) {
+                    if (!alreadyReportedError(validationResult, errorMessage)) {
                         validationResult.addError(new ValidationError(errorMessage) {});
                     }
                 }

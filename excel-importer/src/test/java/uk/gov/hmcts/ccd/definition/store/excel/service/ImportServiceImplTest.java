@@ -120,6 +120,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
@@ -134,9 +135,12 @@ public class ImportServiceImplTest {
 
     public static final String BAD_FILE = "CCD_TestDefinition_V12.xlsx";
     private static final String GOOD_FILE = "CCD_TestDefinition.xlsx";
+    private static final String GOOD_FILE_MISSING_ACCESS_TYPES_ROLES_TAB
+        = "CCD_TestDefinitionMissingAccessTypesRolesTab.xlsx";
     private static final String JURISDICTION_NAME = "TEST";
     private static final String TEST_ADDRESS_BOOK_CASE_TYPE = "TestAddressBookCase";
     private static final String TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE = "TestComplexAddressBookCase";
+    private static final String ACCESS_PROFILE_1 = "AccessProfile1";
 
     private ImportServiceImpl service;
 
@@ -280,6 +284,10 @@ public class ImportServiceImplTest {
 
         when(applicationParams.isWelshTranslationEnabled()).thenReturn(true);
         when(applicationParams.isCaseGroupAccessFilteringEnabled()).thenReturn(true);
+
+        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
+        accessProfileEntity.setReference(ACCESS_PROFILE_1);
+        given(accessProfileRepository.findAll()).willReturn(Arrays.asList(accessProfileEntity));
     }
 
     @Test(expected = InvalidImportException.class)
@@ -322,7 +330,7 @@ public class ImportServiceImplTest {
     }
 
     @Test
-    public void shouldImportDefinition() throws Exception {
+    public void shouldImportDefinitionWhenMissingAccessTypesRolesTab() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
 
@@ -339,6 +347,46 @@ public class ImportServiceImplTest {
         state.setDataFieldType(DataFieldType.METADATA);
         given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
             .willReturn(state);
+
+        final InputStream inputStream = getClass().getClassLoader()
+            .getResourceAsStream(GOOD_FILE_MISSING_ACCESS_TYPES_ROLES_TAB);
+
+        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream);
+        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
+        assertEquals(2, metadata.getCaseTypes().size());
+        assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
+        assertEquals(TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(1));
+        assertEquals("user@hmcts.net", metadata.getUserId());
+        assertEquals(
+            TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE,
+            metadata.getCaseTypesAsString());
+
+        verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
+        verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
+        verify(translationService).processDefinitionSheets(anyMap());
+        verify(categoryIdValidator).validate(any(ParseContext.class));
+        assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
+    }
+
+    @Test
+    public void shouldImportDefinition2() throws Exception {
+
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
         final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream);
