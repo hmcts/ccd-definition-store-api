@@ -56,10 +56,10 @@ public class AccessTypeRolesParser {
             String errorMessage = invalidImportException.getMessage();
             if (StringUtils.hasLength(errorMessage)) {
                 validationResult.addError(new ValidationError(invalidImportException.getMessage()) {
-                /* @Override
+                    @Override
                     public String toString() {
                         return getDefaultMessage();
-                    }*/
+                    }
                 });
             }
             throw new ValidationException(validationResult);

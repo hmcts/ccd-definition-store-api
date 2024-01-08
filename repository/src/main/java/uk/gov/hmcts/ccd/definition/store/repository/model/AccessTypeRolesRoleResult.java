@@ -11,6 +11,7 @@ public class AccessTypeRolesRoleResult {
     private String organisationalRoleName;
     private String groupRoleName;
     private String caseGroupIdTemplate;
+    private boolean groupAccessEnabled;
 
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("caseTypeId")
@@ -50,6 +51,16 @@ public class AccessTypeRolesRoleResult {
 
     public void setCaseGroupIdTemplate(String caseGroupIdTemplate) {
         this.caseGroupIdTemplate = caseGroupIdTemplate;
+    }
+
+    @ApiModelProperty(required = true, value = "")
+    @JsonProperty("groupAccessEnabled")
+    public Boolean getGroupAccessEnabled() {
+        return groupAccessEnabled;
+    }
+
+    public void setGroupAccessEnabled(Boolean groupAccessEnabled) {
+        this.groupAccessEnabled = groupAccessEnabled;
     }
 
 }
