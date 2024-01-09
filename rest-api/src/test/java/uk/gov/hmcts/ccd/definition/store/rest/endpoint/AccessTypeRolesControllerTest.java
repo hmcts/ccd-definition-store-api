@@ -94,7 +94,7 @@ public class AccessTypeRolesControllerTest {
         openMocks(this);
 
         jurisdictionResults = Mockito.spy(new AccessTypeRolesJurisdictionResults());
-        accessTypeRolesJurisdictions = Mockito.spy(new  ArrayList<AccessTypeRolesJurisdictionResult>());
+        accessTypeRolesJurisdictions = Mockito.spy(new  ArrayList<>());
 
         setUpAccessTypeRoleData();
 
@@ -122,7 +122,7 @@ public class AccessTypeRolesControllerTest {
         accessTypeRolesResult.setDescription("DESCRIPTION");
         accessTypeRolesResult.setHint("Hint");
 
-        List<AccessTypeRolesResult> accessTypeRolesResults = new ArrayList<AccessTypeRolesResult>();
+        List<AccessTypeRolesResult> accessTypeRolesResults = new ArrayList<>();
 
         accessTypeRolesResults.add(accessTypeRolesResult);
 
@@ -132,14 +132,11 @@ public class AccessTypeRolesControllerTest {
         AccessTypeRolesRoleResult accessTypeRolesRoleResult = new AccessTypeRolesRoleResult();
 
         accessTypeRolesRoleResult.setGroupRoleName("NAME");
-        /***** Set with getIdOfCaseType Saved previously from casetypeId before it is copied and is = null when
-         * case is copied the id is null as (Property "id") has no write accessor
-         * ******/
-        accessTypeRolesRoleResult.setCaseTypeId("IdOfCaseType");
+        accessTypeRolesRoleResult.setCaseTypeId("CaseTypeidReference");
         accessTypeRolesRoleResult.setOrganisationalRoleName("ORGROLENAME");
         accessTypeRolesRoleResult.setCaseGroupIdTemplate("CIVIL:all:CIVIL:AS1:$ORGID$");
 
-        List<AccessTypeRolesRoleResult> accessTypeRolesRoleResults = new ArrayList<AccessTypeRolesRoleResult>();
+        List<AccessTypeRolesRoleResult> accessTypeRolesRoleResults = new ArrayList<>();
 
         accessTypeRolesRoleResults.add(accessTypeRolesRoleResult);
 
@@ -151,7 +148,7 @@ public class AccessTypeRolesControllerTest {
         jurisdictionResults.setJurisdictions(accessTypeRolesJurisdictions);
 
         doReturn(controller.retrieveAccessTypeRoles(organisationProfileIds)).when(accessTypeRolesJurisdictions).get(0);
-        jurisdictionResults.getJurisdictions();
+        List<AccessTypeRolesJurisdictionResult> results = jurisdictionResults.getJurisdictions();
         verify(jurisdictionResults).getJurisdictions();
     }
 
@@ -270,7 +267,6 @@ public class AccessTypeRolesControllerTest {
         AccessTypeRolesField accessTypeRolesField;
 
         accessTypeRolesField = entityToResponseDTOMapper.map(accessTypeRolesEntity);
-        accessTypeRolesField.setIdOfCaseType(caseTypeReturned.getId());
 
     }
 

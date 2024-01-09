@@ -55,7 +55,7 @@ public class AccessTypeRolesController {
     })
     public AccessTypeRolesJurisdictionResults retrieveAccessTypeRoles(
         @Valid @RequestBody @NotNull  OrganisationProfileIds organisationProfileIds) {
-        List<AccessTypeRolesField> accessTypeRoles = null;
+        List<AccessTypeRolesField> accessTypeRoles;
 
         List<AccessTypeRolesEntity>  accessTypeRolesEntities = accessTypeRolesRepository
             .findByOrganisationProfileIds(organisationProfileIds.getOrganisationProfileIds());
@@ -79,7 +79,7 @@ public class AccessTypeRolesController {
 
             CaseTypeEntity caseTypeEntity = accessTypeRole.getCaseTypeId();
             JurisdictionEntity jurisdictionEntity = caseTypeEntity.getJurisdiction();
-            jurisdictionResult.setId(jurisdictionEntity.getId().toString());
+            jurisdictionResult.setId(jurisdictionEntity.getReference());
             jurisdictionResult.setName(jurisdictionEntity.getName());
 
             List<AccessTypeRolesResult> accessTypeRolesResults = getRoleJsonResults(accessTypeRole);
@@ -107,10 +107,7 @@ public class AccessTypeRolesController {
         AccessTypeRolesRoleResult role = new AccessTypeRolesRoleResult();
 
         role.setGroupRoleName(accessTypeRole.getGroupRoleName());
-        /***** Set with getIdOfCaseType Saved previously from casetypeId before it is copied and is = null when
-         * case is copied the id is null as (Property "id") has no write accessor
-         * ******/
-        role.setCaseTypeId(accessTypeRole.getIdOfCaseType().toString());
+        role.setCaseTypeId(accessTypeRole.getCaseTypeId().getReference());
         role.setOrganisationalRoleName(accessTypeRole.getOrganisationalRoleName());
         role.setCaseGroupIdTemplate(accessTypeRole.getCaseAccessGroupIdTemplate());
 
@@ -120,7 +117,7 @@ public class AccessTypeRolesController {
 
         result.setRoles(accessTypeRolesRoleResults);
 
-        List<AccessTypeRolesResult> accessTypeRolesResults = new ArrayList<AccessTypeRolesResult>();
+        List<AccessTypeRolesResult> accessTypeRolesResults = new ArrayList<>();
 
         accessTypeRolesResults.add(result);
 
