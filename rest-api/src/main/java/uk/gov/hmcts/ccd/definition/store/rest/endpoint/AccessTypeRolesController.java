@@ -57,10 +57,21 @@ public class AccessTypeRolesController {
         @Valid @RequestBody @NotNull  OrganisationProfileIds organisationProfileIds) {
         List<AccessTypeRolesField> accessTypeRoles;
 
-        List<AccessTypeRolesEntity>  accessTypeRolesEntities = accessTypeRolesRepository
-            .findByOrganisationProfileIds(organisationProfileIds.getOrganisationProfileIds());
-        accessTypeRoles =  accessTypeRolesEntities.stream().map(entityToResponseDTOMapper::map)
-            .collect(Collectors.toList());
+        if (organisationProfileIds != null
+            && organisationProfileIds.getOrganisationProfileIds() != null
+            && !organisationProfileIds.getOrganisationProfileIds().isEmpty()) {
+            //Get only access_types with caseTypeId's by OrganisationProfileIds
+            List<AccessTypeRolesEntity> accessTypeRolesEntities = accessTypeRolesRepository
+                .findByOrganisationProfileIds(organisationProfileIds.getOrganisationProfileIds());
+            accessTypeRoles = accessTypeRolesEntities.stream().map(entityToResponseDTOMapper::map)
+                .collect(Collectors.toList());
+        } else {
+            // get all access Types  with caseTypeId's
+            List<AccessTypeRolesEntity> accessTypeRolesEntities = accessTypeRolesRepository
+                .findAllWithCaseTypeIds();
+            accessTypeRoles = accessTypeRolesEntities.stream().map(entityToResponseDTOMapper::map)
+                .collect(Collectors.toList());
+        }
 
         // Build the json output from the data
         List<AccessTypeRolesJurisdictionResult> jurisdictions = buildJuristionJsonResult(accessTypeRoles);
