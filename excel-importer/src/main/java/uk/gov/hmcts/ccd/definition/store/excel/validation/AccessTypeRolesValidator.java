@@ -197,7 +197,7 @@ public class AccessTypeRolesValidator {
 
             String jurisdiction = parseContext.getJurisdiction().getReference();
 
-            if (!entity.getCaseAccessGroupIdTemplate().startsWith(jurisdiction)) {
+            if (!entity.getCaseAccessGroupIdTemplate().startsWith(jurisdiction+":")) {
                 validationResult.addError(new ValidationError(
                     String.format("'%s' must start with '%s' (Service Name) in column '%s' in the sheet '%s'",
                         entity.getCaseAccessGroupIdTemplate(), jurisdiction, ColumnName.CASE_GROUP_ID_TEMPLATE,
