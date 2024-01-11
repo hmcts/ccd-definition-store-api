@@ -64,7 +64,7 @@ public class AccessTypeRolesController {
             accessTypeRoles = accessTypeRolesEntities.stream().map(entityToResponseDTOMapper::map)
                 .collect(Collectors.toList());
         } else {
-            // get all access Types  with caseTypeId's
+            // get all access Types
             List<AccessTypeRolesEntity> accessTypeRolesEntities = accessTypeRolesRepository
                 .findAllWithCaseTypeIds();
             accessTypeRoles = accessTypeRolesEntities.stream().map(entityToResponseDTOMapper::map)

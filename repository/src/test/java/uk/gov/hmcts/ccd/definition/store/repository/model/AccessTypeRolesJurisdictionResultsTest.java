@@ -47,10 +47,7 @@ public class AccessTypeRolesJurisdictionResultsTest {
         accessTypeRolesJurisdictionResult.setAccessTypeRoles(accessTypeRolesResults);
 
         accessTypeRolesRoleResult.setGroupRoleName("NAME");
-        /***** Set with getIdOfCaseType Saved previously from casetypeId before it is copied and is = null when
-         * case is copied the id is null as (Property "id") has no write accessor
-         * ******/
-        accessTypeRolesRoleResult.setCaseTypeId("IdOfCaseType");
+        accessTypeRolesRoleResult.setCaseTypeId("CaseTypeID");
         accessTypeRolesRoleResult.setOrganisationalRoleName("ORGROLENAME");
         accessTypeRolesRoleResult.setCaseGroupIdTemplate("CIVIL:all:CIVIL:AS1:$ORGID$");
 
@@ -63,8 +60,6 @@ public class AccessTypeRolesJurisdictionResultsTest {
         accessTypeRolesJurisdictions.add(accessTypeRolesJurisdictionResult);
         jurisdictionResults.setJurisdictions(accessTypeRolesJurisdictions);
 
-        //doReturn(controller.retrieveAccessTypeRoles(organisationProfileIds))
-        // .when(accessTypeRolesJurisdictions).get(0);
         jurisdictionResults.getJurisdictions();
         verify(jurisdictionResults).getJurisdictions();
 

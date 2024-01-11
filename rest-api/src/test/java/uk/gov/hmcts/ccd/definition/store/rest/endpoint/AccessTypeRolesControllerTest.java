@@ -170,7 +170,6 @@ public class AccessTypeRolesControllerTest {
         String request = objmapper.writeValueAsString(organisationProfileIds);
 
         final MvcResult mvcResult = mockMvc.perform(post("/api/retrieve-access-types")
-                //.contextPath("/api")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .content(request))
@@ -191,7 +190,6 @@ public class AccessTypeRolesControllerTest {
         assertAll(
             () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().size(),
                 is(4)),
-            //() -> assertThat(mvcResult.get(0).getOrganisationProfileId(), is(orgProfileIds.get(0)))
             () -> greaterThan(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypeRoles().size()),
             () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0)
@@ -207,14 +205,12 @@ public class AccessTypeRolesControllerTest {
     @Test
     void shouldHandleEmptyOrganisationProfileIds() throws Exception {
         OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
-        //organisationProfileIds.setOrganisationProfileIds(orgProfileIds);
 
         ObjectMapper objmapper = new ObjectMapper();
         String response = objmapper.writeValueAsString(new AccessTypeRolesField());
         String request = objmapper.writeValueAsString(organisationProfileIds);
 
         final MvcResult mvcResult = mockMvc.perform(post("/api/retrieve-access-types")
-                //.contextPath("/api")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .content(request))
@@ -235,7 +231,6 @@ public class AccessTypeRolesControllerTest {
         assertAll(
             () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().size(),
                 is(4)),
-            //() -> assertThat(mvcResult.get(0).getOrganisationProfileId(), is(orgProfileIds.get(0)))
             () -> greaterThan(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypeRoles().size()),
             () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0)
