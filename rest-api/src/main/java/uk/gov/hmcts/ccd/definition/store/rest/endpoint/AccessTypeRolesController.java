@@ -23,8 +23,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesRoleResult;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -54,7 +52,7 @@ public class AccessTypeRolesController {
         @ApiResponse(code = 403, message = "Bad request")
     })
     public AccessTypeRolesJurisdictionResults retrieveAccessTypeRoles(
-        @Valid @RequestBody @NotNull  OrganisationProfileIds organisationProfileIds) {
+        @Valid @RequestBody OrganisationProfileIds organisationProfileIds) {
         List<AccessTypeRolesField> accessTypeRoles;
 
         if (organisationProfileIds != null
