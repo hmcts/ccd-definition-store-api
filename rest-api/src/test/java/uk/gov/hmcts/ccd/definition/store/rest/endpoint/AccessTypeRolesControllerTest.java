@@ -288,7 +288,7 @@ public class AccessTypeRolesControllerTest {
 
     }
 
-    void setUpAccessTypeRoleData() {
+    private void setUpAccessTypeRoleData() {
 
         String caseTypeId = CASE_TYPE_REFERENCE;//"get-test";
         setupAccessTypeRolesEntity(accessTypeRolesEntity, caseTypeId, "SOLICITOR_ORG");
