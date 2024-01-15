@@ -259,10 +259,8 @@ public class AccessTypeRolesControllerTest {
     private void setupAccessTypeRolesEntity(AccessTypeRolesEntity accessTypeRolesEntity, String caseTypeId,
                                             String organisationProfileId) {
 
-        //String caseTypeId = "get-test";
         CaseTypeEntity caseTypeReturned = createCaseType(caseTypeId, caseTypeId);
 
-        //accessTypeRolesField = createAccessTypeRolesField(caseTypeId );
         accessTypeRolesEntity.setCaseTypeId(caseTypeReturned);
         accessTypeRolesEntity.setAccessTypeId("default");
         accessTypeRolesEntity.setAccessMandatory(true);
