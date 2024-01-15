@@ -28,4 +28,5 @@ public class AccessTypeRolesField {
     private String caseAssignedRoleField;
     private Boolean groupAccessEnabled;
     private String caseAccessGroupIdTemplate;
+
 }
