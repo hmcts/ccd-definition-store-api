@@ -52,7 +52,7 @@ public class AccessTypeRolesController {
         @ApiResponse(code = 403, message = "Bad request")
     })
     public AccessTypeRolesJurisdictionResults retrieveAccessTypeRoles(
-        @Valid @RequestBody OrganisationProfileIds organisationProfileIds) {
+        @RequestBody @Valid OrganisationProfileIds organisationProfileIds) {
         List<AccessTypeRolesField> accessTypeRoles;
 
         if (organisationProfileIds != null
