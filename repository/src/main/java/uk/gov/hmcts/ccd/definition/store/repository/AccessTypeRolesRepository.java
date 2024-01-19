@@ -9,12 +9,14 @@ import java.util.List;
 public interface AccessTypeRolesRepository extends JpaRepository<AccessTypeRolesEntity, Integer> {
 
     @Query("select atr from AccessTypeRolesEntity atr where"
-        + " atr.caseTypeId.version = (select max(ct.version) from CaseTypeEntity ct where ct.id=atr.caseTypeId)")
+        + " atr.caseTypeId.version = (select max(ct.version) from CaseTypeEntity ct)"
+        + " and atr.reference = ct1.reference")
     List<AccessTypeRolesEntity> findAllWithCaseTypeIds();
 
-    @Query("select atr from AccessTypeRolesEntity atr where atr.organisationProfileId"
+    @Query("select atr from AccessTypeRolesEntity atr, CaseTypeEntity ct1 where atr.organisationProfileId"
         + " in :organisationProfileIds"
-        + " and atr.caseTypeId.version = (select max(ct.version) from CaseTypeEntity ct where ct.id=atr.caseTypeId)")
+        + " and atr.caseTypeId.version = (select max(ct.version) from CaseTypeEntity ct)"
+        + " and atr.reference = ct1.reference")
     List<AccessTypeRolesEntity> findByOrganisationProfileIds(List<String>  organisationProfileIds);
 
 }
