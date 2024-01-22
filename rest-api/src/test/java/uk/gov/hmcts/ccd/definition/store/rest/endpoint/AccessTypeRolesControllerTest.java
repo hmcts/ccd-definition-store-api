@@ -25,8 +25,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.OrganisationProfileIds;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesRoleResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesJurisdictionResults;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesField;
-import uk.gov.hmcts.ccd.definition.store.repository.model.Version;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesJurisdictionResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesResult;
 
@@ -53,37 +51,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AccessTypeRolesControllerTest {
 
     private AccessTypeRolesController controller;
-
     @Spy
     private  EntityToResponseDTOMapper entityToResponseDTOMapper = new EntityToResponseDTOMapperImpl();
-
     @MockBean
     private AccessTypeRolesRepository accessTypeRolesRepository;
-
     private MockMvc mockMvc;
-
     private final List<String> orgProfileIds = List.of(new String[]{"SOLICITOR_ORG", "SOLICITOR_ORG"});
-
     @Mock
-    private JurisdictionEntity jurisdiction = new JurisdictionEntity();
+    private JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
+    @Mock
+    private JurisdictionEntity jurisdictionEntity2 = new JurisdictionEntity();
     @Mock
     private  CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
     @Mock
-    private  CaseTypeEntity caseTypeEntity1 = new CaseTypeEntity();
-    @Mock
-    private CaseTypeEntity caseTypeEntity2 = new CaseTypeEntity();
-
+    private  CaseTypeEntity caseTypeEntity2 = new CaseTypeEntity();
     private static final String CASE_TYPE_REFERENCE = "get-test";
-    private static final String CASE_TYPE_REFERENCE_1 = "get-test1";
-    private static final String CASE_TYPE_REFERENCE_2 = "get-test2";
+    private static final String JURISDICTION = "BEFTA_MASTER";
+    private static final String JURISDICTION2 = "BEFTA_MASTER2";
     @Mock
     private AccessTypeRolesEntity accessTypeRolesEntity;
-
     @Mock
     private AccessTypeRolesEntity accessTypeRolesEntity1;
     @Mock
     private AccessTypeRolesEntity accessTypeRolesEntity2;
-
     private AccessTypeRolesJurisdictionResults jurisdictionResults;
     private List<AccessTypeRolesJurisdictionResult> accessTypeRolesJurisdictions;
 
@@ -129,14 +119,12 @@ public class AccessTypeRolesControllerTest {
         accessTypeRolesJurisdictionResult.setAccessTypeRoles(accessTypeRolesResults);
 
         AccessTypeRolesRoleResult accessTypeRolesRoleResult = new AccessTypeRolesRoleResult();
-
         accessTypeRolesRoleResult.setGroupRoleName("NAME");
         accessTypeRolesRoleResult.setCaseTypeId("CaseTypeidReference");
         accessTypeRolesRoleResult.setOrganisationalRoleName("ORGROLENAME");
         accessTypeRolesRoleResult.setCaseGroupIdTemplate("CIVIL:all:CIVIL:AS1:$ORGID$");
 
         List<AccessTypeRolesRoleResult> accessTypeRolesRoleResults = new ArrayList<>();
-
         accessTypeRolesRoleResults.add(accessTypeRolesRoleResult);
 
         accessTypeRolesResult.setRoles(accessTypeRolesRoleResults);
@@ -154,7 +142,7 @@ public class AccessTypeRolesControllerTest {
     @DisplayName("Should post retrieve-access-types fail")
     @Test
     public void shouldFailPostretrieve_access_types_Request() throws Exception {
-        final MvcResult mvcResult = mockMvc.perform(post("/api/retrieve-access-types")
+        mockMvc.perform(post("/api/retrieve-access-types")
                 .contentType(TEXT_PLAIN)
                 .content(""))
             .andExpect(status().is4xxClientError()).andReturn();
@@ -165,10 +153,9 @@ public class AccessTypeRolesControllerTest {
     public void shouldFailRetrieve_access_types_Invalid_Request() throws Exception {
 
         ObjectMapper objmapper = new ObjectMapper();
-        String response = objmapper.writeValueAsString(new AccessTypeRolesField());
         String request = objmapper.writeValueAsString("{\"organisation_profile_ids\": [\"sdsads\",]}");
 
-        final MvcResult mvcResult = mockMvc.perform(post("/api/retrieve-access-types")
+        mockMvc.perform(post("/api/retrieve-access-types")
                 .contentType(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .content(request))
@@ -183,7 +170,6 @@ public class AccessTypeRolesControllerTest {
         organisationProfileIds.setOrganisationProfileIds(orgProfileIds);
 
         ObjectMapper objmapper = new ObjectMapper();
-        String response = objmapper.writeValueAsString(new AccessTypeRolesField());
         String request = objmapper.writeValueAsString(organisationProfileIds);
 
         final MvcResult mvcResult = mockMvc.perform(post("/api/retrieve-access-types")
@@ -206,7 +192,7 @@ public class AccessTypeRolesControllerTest {
         AccessTypeRolesJurisdictionResults finalAccessTypeRolesJurisdictionResults = accessTypeRolesJurisdictionResults;
         assertAll(
             () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().size(),
-                is(4)),
+                is(2)),
             () -> greaterThan(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypeRoles().size()),
             () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0)
@@ -215,7 +201,7 @@ public class AccessTypeRolesControllerTest {
 
         AccessTypeRolesJurisdictionResults jurisdictionResults =
             controller.retrieveAccessTypeRoles(organisationProfileIds);
-        Assertions.assertEquals(4, jurisdictionResults.getJurisdictions().size());
+        Assertions.assertEquals(2, jurisdictionResults.getJurisdictions().size());
     }
 
     @DisplayName("should return AccessTypeRolesField List when OrganisationProfileIds not specified")
@@ -224,7 +210,6 @@ public class AccessTypeRolesControllerTest {
         OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
 
         ObjectMapper objmapper = new ObjectMapper();
-        String response = objmapper.writeValueAsString(new AccessTypeRolesField());
         String request = objmapper.writeValueAsString(organisationProfileIds);
 
         final MvcResult mvcResult = mockMvc.perform(post("/api/retrieve-access-types")
@@ -247,7 +232,7 @@ public class AccessTypeRolesControllerTest {
         AccessTypeRolesJurisdictionResults finalAccessTypeRolesJurisdictionResults = accessTypeRolesJurisdictionResults;
         assertAll(
             () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().size(),
-                is(4)),
+                is(2)),
             () -> greaterThan(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypeRoles().size()),
             () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0)
@@ -256,14 +241,13 @@ public class AccessTypeRolesControllerTest {
 
         AccessTypeRolesJurisdictionResults jurisdictionResults =
             controller.retrieveAccessTypeRoles(organisationProfileIds);
-        Assertions.assertEquals(4, jurisdictionResults.getJurisdictions().size());
+        Assertions.assertEquals(2, jurisdictionResults.getJurisdictions().size());
     }
 
     @Test
     void shouldHandleNull() throws Exception {
 
         ObjectMapper objmapper = new ObjectMapper();
-        String response = objmapper.writeValueAsString(new AccessTypeRolesField());
         String request = objmapper.writeValueAsString(null);
 
         final MvcResult mvcResult = mockMvc.perform(post("/api/retrieve-access-types")
@@ -286,7 +270,7 @@ public class AccessTypeRolesControllerTest {
         AccessTypeRolesJurisdictionResults finalAccessTypeRolesJurisdictionResults = accessTypeRolesJurisdictionResults;
         assertAll(
             () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().size(),
-                is(4)),
+                is(2)),
             () -> greaterThan(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypeRoles().size()),
             () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0)
@@ -295,35 +279,48 @@ public class AccessTypeRolesControllerTest {
 
         AccessTypeRolesJurisdictionResults jurisdictionResults =
             controller.retrieveAccessTypeRoles(null);
-        Assertions.assertEquals(4, jurisdictionResults.getJurisdictions().size());
+        Assertions.assertEquals(2, jurisdictionResults.getJurisdictions().size());
     }
 
-    private CaseTypeEntity createCaseType(String caseTypeId, String jurisdictionPostfix) {
+    private void setUpAccessTypeRoleData() {
 
-        CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
-        JurisdictionEntity jurisdiction = new JurisdictionEntity();
-        jurisdiction.setName("test-" + jurisdictionPostfix);
+        //setup case type 1
+        when(caseTypeEntity.getReference()).thenReturn(CASE_TYPE_REFERENCE);
+        when(jurisdictionEntity.getReference()).thenReturn(JURISDICTION);
+        when(jurisdictionEntity.getId()).thenReturn(1);
+        when(caseTypeEntity.getJurisdiction()).thenReturn(jurisdictionEntity);
 
-        Version version = new Version();
+        //setup case type 2 with same case tyoe as 1 but with a different jurisdiction
+        when(caseTypeEntity2.getReference()).thenReturn(CASE_TYPE_REFERENCE);
+        when(jurisdictionEntity2.getReference()).thenReturn(JURISDICTION2);
+        when(jurisdictionEntity2.getId()).thenReturn(2);
+        when(caseTypeEntity2.getJurisdiction()).thenReturn(jurisdictionEntity2);
 
-        caseTypeEntity.setVersion(version.getNumber());
-        caseTypeEntity.setJurisdiction(jurisdiction);
-        caseTypeEntity.setName(caseTypeId);
-        return caseTypeEntity;
+        List<AccessTypeRolesEntity> result = new ArrayList<>();
+
+        setupAccessTypeRolesEntity(accessTypeRolesEntity, caseTypeEntity);
+        setupAccessTypeRolesEntity(accessTypeRolesEntity1, caseTypeEntity);
+        setupAccessTypeRolesEntity(accessTypeRolesEntity2, caseTypeEntity2);
+
+        result.add(accessTypeRolesEntity);
+        result.add(accessTypeRolesEntity1);
+        result.add(accessTypeRolesEntity2);
+
+        when(accessTypeRolesRepository.findByOrganisationProfileIds(orgProfileIds)).thenReturn(result);
+        when(accessTypeRolesRepository.findAllWithCaseTypeIds()).thenReturn(result);
     }
 
-    private void setupAccessTypeRolesEntity(AccessTypeRolesEntity accessTypeRolesEntity, String caseTypeId,
-                                            String organisationProfileId) {
+    private void setupAccessTypeRolesEntity(AccessTypeRolesEntity accessTypeRolesEntity, CaseTypeEntity caseTypeId) {
 
-        CaseTypeEntity caseTypeReturned = createCaseType(caseTypeId, caseTypeId);
-
-        accessTypeRolesEntity.setCaseTypeId(caseTypeReturned);
+        accessTypeRolesEntity.setCaseTypeId(caseTypeId);
+        when(accessTypeRolesEntity.getCaseTypeId()).thenReturn(caseTypeId);
         accessTypeRolesEntity.setAccessTypeId("default");
         accessTypeRolesEntity.setAccessMandatory(true);
         accessTypeRolesEntity.setAccessDefault(true);
         accessTypeRolesEntity.setGroupAccessEnabled(true);
         accessTypeRolesEntity.setDisplay(true);
-        accessTypeRolesEntity.setOrganisationProfileId(organisationProfileId);
+        accessTypeRolesEntity.setOrganisationProfileId("SOLICITOR_ORG");
+        when(accessTypeRolesEntity.getOrganisationProfileId()).thenReturn("SOLICITOR_ORG");
         accessTypeRolesEntity.setDescription("ACCESS CASES");
         accessTypeRolesEntity.setOrganisationalRoleName("civil-solicitor");
         accessTypeRolesEntity.setLiveFrom(LocalDate.now());
@@ -336,50 +333,7 @@ public class AccessTypeRolesControllerTest {
         accessTypeRolesEntity.setCaseAssignedRoleField("applicant1OrganisationPolicy");
         accessTypeRolesEntity.setCaseAccessGroupIdTemplate("CIVIL:all:CIVIL:AS1:$ORGID$");
 
-        AccessTypeRolesField accessTypeRolesField;
+        entityToResponseDTOMapper.map(accessTypeRolesEntity);
 
-        accessTypeRolesField = entityToResponseDTOMapper.map(accessTypeRolesEntity);
-
-    }
-
-    private void setUpAccessTypeRoleData() {
-
-        String caseTypeId = CASE_TYPE_REFERENCE;//"get-test";
-        setupAccessTypeRolesEntity(accessTypeRolesEntity, caseTypeId, "SOLICITOR_ORG");
-
-        caseTypeId = CASE_TYPE_REFERENCE_1;//"get-test1";
-        setupAccessTypeRolesEntity(accessTypeRolesEntity1, caseTypeId, "SOLICITOR_ORG");
-
-        caseTypeId = CASE_TYPE_REFERENCE_2;//"get-test2";
-        setupAccessTypeRolesEntity(accessTypeRolesEntity1, caseTypeId, "SOLICITOR_ORG");
-
-        when(accessTypeRolesEntity.getCaseTypeId()).thenReturn(caseTypeEntity);
-        when(caseTypeEntity.getJurisdiction()).thenReturn(jurisdiction);
-        when(caseTypeEntity.getJurisdiction().getId()).thenReturn(1);
-        when(accessTypeRolesEntity.getOrganisationProfileId()).thenReturn("SOLICITOR_ORG");
-        when(accessTypeRolesEntity.getAccessTypeId()).thenReturn("default");
-
-        List<AccessTypeRolesEntity> result = new ArrayList<>();
-
-        result.add(accessTypeRolesEntity);
-
-        when(accessTypeRolesEntity1.getCaseTypeId()).thenReturn(caseTypeEntity1);
-        when(caseTypeEntity1.getJurisdiction()).thenReturn(jurisdiction);
-        when(caseTypeEntity1.getJurisdiction().getId()).thenReturn(1);
-        when(accessTypeRolesEntity1.getOrganisationProfileId()).thenReturn("SOLICITOR_ORG");
-        when(accessTypeRolesEntity1.getAccessTypeId()).thenReturn("default");
-        result.add(accessTypeRolesEntity1);
-
-        when(accessTypeRolesEntity2.getCaseTypeId()).thenReturn(caseTypeEntity2);
-        when(caseTypeEntity2.getJurisdiction()).thenReturn(jurisdiction);
-        when(caseTypeEntity2.getJurisdiction().getId()).thenReturn(1);
-        when(accessTypeRolesEntity2.getOrganisationProfileId()).thenReturn("SOLICITOR_ORG");
-        when(accessTypeRolesEntity2.getAccessTypeId()).thenReturn("default");
-        result.add(accessTypeRolesEntity2);
-
-        result.add(accessTypeRolesEntity);
-        when(accessTypeRolesRepository.findByOrganisationProfileIds(orgProfileIds)).thenReturn(result);
-
-        when(accessTypeRolesRepository.findAllWithCaseTypeIds()).thenReturn(result);
     }
 }

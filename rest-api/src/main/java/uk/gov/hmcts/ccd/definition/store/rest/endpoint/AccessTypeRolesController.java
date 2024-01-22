@@ -25,6 +25,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesRoleRes
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -72,29 +73,40 @@ public class AccessTypeRolesController {
         }
 
         // Build the json output from the data
-        List<AccessTypeRolesJurisdictionResult> jurisdictions = buildJuristionJsonResult(accessTypeRoles);
+        List<AccessTypeRolesJurisdictionResult> jurisdictions = buildJurisdictionJsonResult(accessTypeRoles);
 
         AccessTypeRolesJurisdictionResults jurisdictionResults = new AccessTypeRolesJurisdictionResults();
         jurisdictionResults.setJurisdictions(jurisdictions);
         return  jurisdictionResults;
     }
 
-    private List<AccessTypeRolesJurisdictionResult> buildJuristionJsonResult(
+    private List<AccessTypeRolesJurisdictionResult> buildJurisdictionJsonResult(
         List<AccessTypeRolesField> accessTypeRoles) {
         List<AccessTypeRolesJurisdictionResult>  jurisdictions = new ArrayList<>();
 
         for (AccessTypeRolesField accessTypeRole : accessTypeRoles) {
-            AccessTypeRolesJurisdictionResult jurisdictionResult = new AccessTypeRolesJurisdictionResult();
 
-            CaseTypeEntity caseTypeEntity = accessTypeRole.getCaseTypeId();
-            JurisdictionEntity jurisdictionEntity = caseTypeEntity.getJurisdiction();
-            jurisdictionResult.setId(jurisdictionEntity.getReference());
-            jurisdictionResult.setName(jurisdictionEntity.getName());
+            Optional<AccessTypeRolesJurisdictionResult> existingJurisdiction = jurisdictions.stream()
+                .filter(jurisdiction -> accessTypeRole.getCaseTypeId().getJurisdiction().getReference()
+                    .equals(jurisdiction.getId()))
+                .findAny();
 
-            List<AccessTypeRolesResult> accessTypeRolesResults = getRoleJsonResults(accessTypeRole);
-            jurisdictionResult.setAccessTypeRoles(accessTypeRolesResults);
+            if (existingJurisdiction.isPresent()) {
+                existingJurisdiction.get().getAccessTypeRoles().addAll(getRoleJsonResults(accessTypeRole));
 
-            jurisdictions.add(jurisdictionResult);
+            } else {
+                AccessTypeRolesJurisdictionResult jurisdictionResult = new AccessTypeRolesJurisdictionResult();
+
+                CaseTypeEntity caseTypeEntity = accessTypeRole.getCaseTypeId();
+                JurisdictionEntity jurisdictionEntity = caseTypeEntity.getJurisdiction();
+                jurisdictionResult.setId(jurisdictionEntity.getReference());
+                jurisdictionResult.setName(jurisdictionEntity.getName());
+
+                List<AccessTypeRolesResult> accessTypeRolesResults = getRoleJsonResults(accessTypeRole);
+                jurisdictionResult.setAccessTypeRoles(accessTypeRolesResults);
+
+                jurisdictions.add(jurisdictionResult);
+            }
         }
         return jurisdictions;
     }

@@ -19,9 +19,9 @@ public class AccessTypeRolesJurisdictionResultsTest {
     private List<AccessTypeRolesJurisdictionResult> accessTypeRolesJurisdictions;
     private  AccessTypeRolesJurisdictionResult accessTypeRolesJurisdictionResult =
         new AccessTypeRolesJurisdictionResult();
-    private List<AccessTypeRolesResult> accessTypeRolesResults = new ArrayList<AccessTypeRolesResult>();
+    private List<AccessTypeRolesResult> accessTypeRolesResults = new ArrayList<>();
     private AccessTypeRolesResult  accessTypeRolesResult = new AccessTypeRolesResult();
-    private List<AccessTypeRolesRoleResult> accessTypeRolesRoleResults = new ArrayList<AccessTypeRolesRoleResult>();
+    private List<AccessTypeRolesRoleResult> accessTypeRolesRoleResults = new ArrayList<>();
     private AccessTypeRolesRoleResult accessTypeRolesRoleResult = new AccessTypeRolesRoleResult();
 
     @Test
@@ -30,7 +30,7 @@ public class AccessTypeRolesJurisdictionResultsTest {
         OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
 
         jurisdictionResults = Mockito.spy(new AccessTypeRolesJurisdictionResults());
-        accessTypeRolesJurisdictions = Mockito.spy(new ArrayList<AccessTypeRolesJurisdictionResult>());
+        accessTypeRolesJurisdictions = Mockito.spy(new ArrayList<>());
         organisationProfileIds.setOrganisationProfileIds(orgProfileIds);
 
         // for each jurisdiction build access type Roles
