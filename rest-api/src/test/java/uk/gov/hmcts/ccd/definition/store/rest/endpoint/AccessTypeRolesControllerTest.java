@@ -296,11 +296,11 @@ public class AccessTypeRolesControllerTest {
         when(jurisdictionEntity2.getId()).thenReturn(2);
         when(caseTypeEntity2.getJurisdiction()).thenReturn(jurisdictionEntity2);
 
-        List<AccessTypeRolesEntity> result = new ArrayList<>();
-
         setupAccessTypeRolesEntity(accessTypeRolesEntity, caseTypeEntity);
         setupAccessTypeRolesEntity(accessTypeRolesEntity1, caseTypeEntity);
         setupAccessTypeRolesEntity(accessTypeRolesEntity2, caseTypeEntity2);
+
+        List<AccessTypeRolesEntity> result = new ArrayList<>();
 
         result.add(accessTypeRolesEntity);
         result.add(accessTypeRolesEntity1);
