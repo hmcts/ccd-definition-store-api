@@ -409,6 +409,7 @@
       "categories" : [ ],
       "searchCriterias" : [ ],
       "accessTypeRoles": [],
+      "accessTypes": [],
       "case_fields": [
         {
           "__operator__": "equivalent",

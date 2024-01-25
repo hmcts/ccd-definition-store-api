@@ -18,14 +18,14 @@ import uk.gov.hmcts.ccd.definition.store.rest.service.AccessTypeRolesService;
 import javax.validation.Valid;
 
 @RestController
-public class AccessTypeRolesController {
+public class AccessTypesController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccessTypeRolesController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AccessTypesController.class);
 
     private final AccessTypeRolesService accessTypeRolesService;
 
     @Autowired
-    public AccessTypeRolesController(AccessTypeRolesService accessTypeRolesService) {
+    public AccessTypesController(AccessTypeRolesService accessTypeRolesService) {
         this.accessTypeRolesService = accessTypeRolesService;
     }
 

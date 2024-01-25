@@ -18,11 +18,11 @@ import java.time.LocalDate;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Table(name = "access_type_roles")
+@Table(name = "access_type_role")
 @Entity
 @Getter
 @Setter
-public class AccessTypeRolesEntity implements Serializable {
+public class AccessTypeRoleEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -47,24 +47,6 @@ public class AccessTypeRolesEntity implements Serializable {
 
     @Column(name = "organisation_profile_id", nullable = false)
     private String organisationProfileId;
-
-    @Column(name = "access_mandatory")
-    private Boolean accessMandatory;
-
-    @Column(name = "access_default")
-    private Boolean accessDefault;
-
-    @Column(name = "display")
-    private Boolean display;
-
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "hint")
-    private String hint;
-
-    @Column(name = "display_order")
-    private Integer displayOrder;
 
     @Column(name = "organisational_role_name")
     private String organisationalRoleName;
