@@ -3,10 +3,9 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.util.List;
 
 @ApiModel(description = "accessType")
-public class AccessTypeRolesResult {
+public class AccessTypeResult {
 
     private String organisationProfileId;
     private String accessTypeId;
@@ -16,8 +15,6 @@ public class AccessTypeRolesResult {
     private String description;
     private String hint;
     private Integer displayOrder;
-
-    private List<AccessTypeRolesRoleResult> roles;
 
     @ApiModelProperty(required = true, value = "")
     @JsonProperty("organisationProfileId")
@@ -99,13 +96,4 @@ public class AccessTypeRolesResult {
         this.hint = hint;
     }
 
-    @ApiModelProperty(required = true, value = "")
-    @JsonProperty("roles")
-    public List<AccessTypeRolesRoleResult> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<AccessTypeRolesRoleResult> roles) {
-        this.roles = roles;
-    }
 }

@@ -19,8 +19,8 @@ public class AccessTypeRolesJurisdictionResultsTest {
     private List<AccessTypeRolesJurisdictionResult> accessTypeRolesJurisdictions;
     private  AccessTypeRolesJurisdictionResult accessTypeRolesJurisdictionResult =
         new AccessTypeRolesJurisdictionResult();
-    private List<AccessTypeRolesResult> accessTypeRolesResults = new ArrayList<>();
-    private AccessTypeRolesResult  accessTypeRolesResult = new AccessTypeRolesResult();
+    private List<AccessTypeRoleResult> accessTypeRoleResults = new ArrayList<>();
+    private AccessTypeRoleResult accessTypeRoleResult = new AccessTypeRoleResult();
     private List<AccessTypeRolesRoleResult> accessTypeRolesRoleResults = new ArrayList<>();
     private AccessTypeRolesRoleResult accessTypeRolesRoleResult = new AccessTypeRolesRoleResult();
 
@@ -34,17 +34,11 @@ public class AccessTypeRolesJurisdictionResultsTest {
         organisationProfileIds.setOrganisationProfileIds(orgProfileIds);
 
         // for each jurisdiction build access type Roles
-        accessTypeRolesResult.setOrganisationProfileId("SOLICITOR_ORG");
-        accessTypeRolesResult.setAccessTypeId("AccessTypeId");
-        accessTypeRolesResult.setAccessMandatory(Boolean.TRUE);
-        accessTypeRolesResult.setAccessDefault(Boolean.TRUE);
-        accessTypeRolesResult.setDisplay(Boolean.TRUE);
-        accessTypeRolesResult.setDisplayOrder(10);
-        accessTypeRolesResult.setDescription("DESCRIPTION");
-        accessTypeRolesResult.setHint("Hint");
+        accessTypeRoleResult.setOrganisationProfileId("SOLICITOR_ORG");
+        accessTypeRoleResult.setAccessTypeId("AccessTypeId");
 
-        accessTypeRolesResults.add(accessTypeRolesResult);
-        accessTypeRolesJurisdictionResult.setAccessTypeRoles(accessTypeRolesResults);
+        accessTypeRoleResults.add(accessTypeRoleResult);
+        accessTypeRolesJurisdictionResult.setAccessTypeRoles(accessTypeRoleResults);
 
         accessTypeRolesRoleResult.setGroupRoleName("NAME");
         accessTypeRolesRoleResult.setCaseTypeId("CaseTypeID");
@@ -53,10 +47,10 @@ public class AccessTypeRolesJurisdictionResultsTest {
 
         accessTypeRolesRoleResults.add(accessTypeRolesRoleResult);
 
-        accessTypeRolesResult.setRoles(accessTypeRolesRoleResults);
+        accessTypeRoleResult.setRoles(accessTypeRolesRoleResults);
 
-        accessTypeRolesResults.add(accessTypeRolesResult);
-        accessTypeRolesJurisdictionResult.setAccessTypeRoles(accessTypeRolesResults);
+        accessTypeRoleResults.add(accessTypeRoleResult);
+        accessTypeRolesJurisdictionResult.setAccessTypeRoles(accessTypeRoleResults);
         accessTypeRolesJurisdictions.add(accessTypeRolesJurisdictionResult);
         jurisdictionResults.setJurisdictions(accessTypeRolesJurisdictions);
 

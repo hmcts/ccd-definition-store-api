@@ -12,7 +12,7 @@ public class AccessTypeRolesJurisdictionResult {
 
     private String id = null;
     private String name = null;
-    private List<AccessTypeRolesResult> accessTypeResults = new ArrayList<>();
+    private List<AccessTypeRoleResult> accessTypeResults = new ArrayList<>();
 
     /**
      * id of a particular Jurisdiction.
@@ -42,11 +42,11 @@ public class AccessTypeRolesJurisdictionResult {
 
     @ApiModelProperty(value = "")
     @JsonProperty("accessTypes")
-    public List<AccessTypeRolesResult> getAccessTypeRoles() {
+    public List<AccessTypeRoleResult> getAccessTypeRoles() {
         return accessTypeResults;
     }
 
-    public void setAccessTypeRoles(List<AccessTypeRolesResult> accessTypeResults) {
+    public void setAccessTypeRoles(List<AccessTypeRoleResult> accessTypeResults) {
         this.accessTypeResults = accessTypeResults;
     }
 }

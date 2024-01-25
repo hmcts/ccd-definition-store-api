@@ -22,14 +22,15 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapperImpl;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.OrganisationProfileIds;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesRoleResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesJurisdictionResults;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesJurisdictionResult;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRoleResult;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -51,15 +52,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest(classes = {EntityToResponseDTOMapperImpl.class})
 @ExtendWith(SpringExtension.class)
-public class AccessTypeRolesControllerTest {
+public class AccessTypesControllerTest {
 
-    private AccessTypeRolesController controller;
+    private AccessTypesController controller;
     @Spy
     private  EntityToResponseDTOMapper entityToResponseDTOMapper = new EntityToResponseDTOMapperImpl();
     @MockBean
     private AccessTypeRolesRepository accessTypeRolesRepository;
     private MockMvc mockMvc;
-    private final List<String> orgProfileIds = List.of(new String[]{"SOLICITOR_ORG", "OGD_DWP_PROFILE"});
+    private final List<String> orgProfileIds = List.of(new String[]{"SOLICITOR_ORG", "SOLICITOR_ORG"});
     @Mock
     private JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
     @Mock
@@ -72,18 +73,26 @@ public class AccessTypeRolesControllerTest {
     private static final String JURISDICTION = "BEFTA_MASTER";
     private static final String JURISDICTION2 = "BEFTA_MASTER2";
     @Mock
-    private AccessTypeRolesEntity accessTypeRolesEntity;
+    private AccessTypeRoleEntity accessTypeRoleEntity;
     @Mock
-    private AccessTypeRolesEntity accessTypeRolesEntity1;
+    private AccessTypeRoleEntity accessTypeRoleEntity1;
     @Mock
-    private AccessTypeRolesEntity accessTypeRolesEntity2;
+    private AccessTypeRoleEntity accessTypeRoleEntity2;
+    @Mock
+    private AccessTypeEntity accessTypeEntity;
+    @Mock
+    private AccessTypeEntity accessTypeEntity1;
+    @Mock
+    private AccessTypeEntity accessTypeEntity2;
     private AccessTypeRolesJurisdictionResults jurisdictionResults;
+    private List<AccessTypeRolesJurisdictionResult> accessTypeRolesJurisdictions;
 
     @BeforeEach
     void setUp()  {
         openMocks(this);
 
         jurisdictionResults = Mockito.spy(new AccessTypeRolesJurisdictionResults());
+        accessTypeRolesJurisdictions = Mockito.spy(new  ArrayList<>());
 
         setUpAccessTypeRoleData();
 
@@ -101,24 +110,18 @@ public class AccessTypeRolesControllerTest {
         OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
         organisationProfileIds.setOrganisationProfileIds(orgProfileIds);
 
-        AccessTypeRolesResult  accessTypeRolesResult = new AccessTypeRolesResult();
+        AccessTypeRoleResult accessTypeRoleResult = new AccessTypeRoleResult();
 
         // for each jurisdiction build access type Roles
-        accessTypeRolesResult.setOrganisationProfileId("SOLICITOR_ORG");
-        accessTypeRolesResult.setAccessTypeId("AccessTypeId");
-        accessTypeRolesResult.setAccessMandatory(Boolean.TRUE);
-        accessTypeRolesResult.setAccessDefault(Boolean.TRUE);
-        accessTypeRolesResult.setDisplay(Boolean.TRUE);
-        accessTypeRolesResult.setDisplayOrder(10);
-        accessTypeRolesResult.setDescription("DESCRIPTION");
-        accessTypeRolesResult.setHint("Hint");
+        accessTypeRoleResult.setOrganisationProfileId("SOLICITOR_ORG");
+        accessTypeRoleResult.setAccessTypeId("AccessTypeId");
 
-        List<AccessTypeRolesResult> accessTypeRolesResults = new ArrayList<>();
+        List<AccessTypeRoleResult> accessTypeRoleResults = new ArrayList<>();
 
-        accessTypeRolesResults.add(accessTypeRolesResult);
+        accessTypeRoleResults.add(accessTypeRoleResult);
 
         AccessTypeRolesJurisdictionResult accessTypeRolesJurisdictionResult = new AccessTypeRolesJurisdictionResult();
-        accessTypeRolesJurisdictionResult.setAccessTypeRoles(accessTypeRolesResults);
+        accessTypeRolesJurisdictionResult.setAccessTypeRoles(accessTypeRoleResults);
 
         AccessTypeRolesRoleResult accessTypeRolesRoleResult = new AccessTypeRolesRoleResult();
         accessTypeRolesRoleResult.setGroupRoleName("NAME");
@@ -129,12 +132,14 @@ public class AccessTypeRolesControllerTest {
         List<AccessTypeRolesRoleResult> accessTypeRolesRoleResults = new ArrayList<>();
         accessTypeRolesRoleResults.add(accessTypeRolesRoleResult);
 
-        accessTypeRolesResult.setRoles(accessTypeRolesRoleResults);
+        accessTypeRoleResult.setRoles(accessTypeRolesRoleResults);
 
-        accessTypeRolesResults.add(accessTypeRolesResult);
-        accessTypeRolesJurisdictionResult.setAccessTypeRoles(accessTypeRolesResults);
+        accessTypeRoleResults.add(accessTypeRoleResult);
+        accessTypeRolesJurisdictionResult.setAccessTypeRoles(accessTypeRoleResults);
 
         List<AccessTypeRolesJurisdictionResult> accessTypeRolesJurisdictions = Mockito.spy(new  ArrayList<>());
+        accessTypeRoleResults.add(accessTypeRoleResult);
+        accessTypeRolesJurisdictionResult.setAccessTypeRoles(accessTypeRoleResults);
         accessTypeRolesJurisdictions.add(accessTypeRolesJurisdictionResult);
         jurisdictionResults.setJurisdictions(accessTypeRolesJurisdictions);
 
@@ -304,9 +309,8 @@ public class AccessTypeRolesControllerTest {
         checkJsonResultIsCorrect(finalAccessTypeRolesJurisdictionResults, jurisdictionResults);
     }
 
-    @DisplayName("should return AccessTypeRolesField List when request body is not specified")
     @Test
-    void shouldHandleNullRequestBody() throws Exception {
+    void shouldHandleNull() throws Exception {
 
         ObjectMapper objmapper = new ObjectMapper();
         String request = objmapper.writeValueAsString(null);
@@ -362,15 +366,19 @@ public class AccessTypeRolesControllerTest {
         when(jurisdictionEntity2.getId()).thenReturn(2);
         when(caseTypeEntity2.getJurisdiction()).thenReturn(jurisdictionEntity2);
 
-        setupAccessTypeRolesEntity(accessTypeRolesEntity, caseTypeEntity);
-        setupAccessTypeRolesEntity(accessTypeRolesEntity1, caseTypeEntity);
-        setupAccessTypeRolesEntity(accessTypeRolesEntity2, caseTypeEntity2);
+        setupAccessTypeEntity(accessTypeEntity, caseTypeEntity);
+        setupAccessTypeEntity(accessTypeEntity1, caseTypeEntity);
+        setupAccessTypeEntity(accessTypeEntity2, caseTypeEntity2);
 
-        List<AccessTypeRolesEntity> result = new ArrayList<>();
+        setupAccessTypeRoleEntity(accessTypeRoleEntity, caseTypeEntity);
+        setupAccessTypeRoleEntity(accessTypeRoleEntity1, caseTypeEntity);
+        setupAccessTypeRoleEntity(accessTypeRoleEntity2, caseTypeEntity2);
 
-        result.add(accessTypeRolesEntity);
-        result.add(accessTypeRolesEntity1);
-        result.add(accessTypeRolesEntity2);
+        List<AccessTypeRoleEntity> result = new ArrayList<>();
+
+        result.add(accessTypeRoleEntity);
+        result.add(accessTypeRoleEntity1);
+        result.add(accessTypeRoleEntity2);
 
         when(accessTypeRolesRepository.findByOrganisationProfileIds(orgProfileIds)).thenReturn(result);
         when(accessTypeRolesRepository.findAllWithCaseTypeIds()).thenReturn(result);
@@ -379,28 +387,41 @@ public class AccessTypeRolesControllerTest {
 
     private void setupAccessTypeRolesEntity(AccessTypeRolesEntity accessTypeRolesEntity, CaseTypeEntity caseTypeId) {
 
-        accessTypeRolesEntity.setCaseTypeId(caseTypeId);
-        when(accessTypeRolesEntity.getCaseTypeId()).thenReturn(caseTypeId);
-        accessTypeRolesEntity.setAccessTypeId("default");
-        accessTypeRolesEntity.setAccessMandatory(true);
-        accessTypeRolesEntity.setAccessDefault(true);
-        accessTypeRolesEntity.setGroupAccessEnabled(true);
-        accessTypeRolesEntity.setDisplay(true);
-        accessTypeRolesEntity.setOrganisationProfileId("SOLICITOR_ORG");
-        when(accessTypeRolesEntity.getOrganisationProfileId()).thenReturn("SOLICITOR_ORG");
-        accessTypeRolesEntity.setDescription("ACCESS CASES");
-        accessTypeRolesEntity.setOrganisationalRoleName("civil-solicitor");
-        accessTypeRolesEntity.setLiveFrom(LocalDate.now());
-        accessTypeRolesEntity.setHint("Hint:User can work with all civil cases without needing to be "
+        accessTypeEntity.setCaseTypeId(caseTypeId);
+        when(accessTypeEntity.getCaseTypeId()).thenReturn(caseTypeId);
+        accessTypeEntity.setAccessTypeId("default");
+        accessTypeEntity.setAccessMandatory(true);
+        accessTypeEntity.setAccessDefault(true);
+        accessTypeEntity.setDisplay(true);
+        accessTypeEntity.setOrganisationProfileId("SOLICITOR_ORG");
+        when(accessTypeEntity.getOrganisationProfileId()).thenReturn("SOLICITOR_ORG");
+        accessTypeEntity.setDescription("ACCESS CASES");
+        accessTypeEntity.setLiveFrom(LocalDate.now());
+        accessTypeEntity.setHint("Hint:User can work with all civil cases without needing to be "
             + "assigned to each case");
-        accessTypeRolesEntity.setDescription("Description:User can work with all civil cases without needing "
+        accessTypeEntity.setDescription("Description:User can work with all civil cases without needing "
             + "to be assigned to each case");
-        accessTypeRolesEntity.setDisplayOrder(1);
-        accessTypeRolesEntity.setGroupRoleName("[APPLICANTSOLICITORROLE]");
-        accessTypeRolesEntity.setCaseAssignedRoleField("applicant1OrganisationPolicy");
-        accessTypeRolesEntity.setCaseAccessGroupIdTemplate("BEFTA_MASTER:CIVIL:all:CIVIL:AS1:$ORGID$");
+        accessTypeEntity.setDisplayOrder(1);
 
-        entityToResponseDTOMapper.map(accessTypeRolesEntity);
+        entityToResponseDTOMapper.map(accessTypeEntity);
+
+    }
+
+    private void setupAccessTypeRoleEntity(AccessTypeRoleEntity accessTypeRoleEntity, CaseTypeEntity caseTypeId) {
+
+        accessTypeRoleEntity.setCaseTypeId(caseTypeId);
+        when(accessTypeRoleEntity.getCaseTypeId()).thenReturn(caseTypeId);
+        accessTypeRoleEntity.setAccessTypeId("default");
+        accessTypeRoleEntity.setGroupAccessEnabled(true);
+        accessTypeRoleEntity.setOrganisationProfileId("SOLICITOR_ORG");
+        when(accessTypeRoleEntity.getOrganisationProfileId()).thenReturn("SOLICITOR_ORG");
+        accessTypeRoleEntity.setOrganisationalRoleName("civil-solicitor");
+        accessTypeRoleEntity.setLiveFrom(LocalDate.now());
+        accessTypeRoleEntity.setGroupRoleName("[APPLICANTSOLICITORONE]");
+        accessTypeRoleEntity.setCaseAssignedRoleField("applicant1OrganisationPolicy");
+        accessTypeRoleEntity.setCaseAccessGroupIdTemplate("CIVIL:all:CIVIL:AS1:$ORGID$");
+
+        entityToResponseDTOMapper.map(accessTypeRoleEntity);
 
     }
 
