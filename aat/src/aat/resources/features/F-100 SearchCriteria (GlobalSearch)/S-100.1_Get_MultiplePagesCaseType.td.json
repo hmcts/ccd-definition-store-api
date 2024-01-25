@@ -35,7 +35,8 @@
           "other_case_reference": "TextFieldLName"
         }
       ],
-      "accessTypeRoles": []
+      "accessTypeRoles": [],
+      "accessTypes": []
     }
   }
 }

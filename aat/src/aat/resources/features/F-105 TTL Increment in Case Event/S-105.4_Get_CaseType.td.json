@@ -173,6 +173,7 @@
       "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
       "searchParties": [],
       "accessTypeRoles": [],
+      "accessTypes": [],
       "categories": "[[ANYTHING_PRESENT]]",
       "searchCriterias": [],
       "case_fields" :  "[[ANYTHING_PRESENT]]",

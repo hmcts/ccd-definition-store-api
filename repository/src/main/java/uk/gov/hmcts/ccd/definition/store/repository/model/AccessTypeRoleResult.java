@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
 @ApiModel(description = "accessType")
-public class AccessTypeRolesResult {
+public class AccessTypeRoleResult {
 
     private String organisationProfileId;
     private String accessTypeId;

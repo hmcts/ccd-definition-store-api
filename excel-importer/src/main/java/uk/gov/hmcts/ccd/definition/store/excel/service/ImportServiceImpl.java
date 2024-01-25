@@ -23,6 +23,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigServ
 import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles.AccessTypeRolesService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accesstypes.AccessTypesService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
@@ -34,6 +35,7 @@ import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypeRolesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.BannerParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
@@ -57,8 +59,11 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
@@ -88,6 +93,7 @@ public class ImportServiceImpl implements ImportService {
     private final CaseTypeService caseTypeService;
     private final LayoutService layoutService;
     private final AccessProfileRepository accessProfileRepository;
+    private final AccessTypesRepository accessTypesRepository;
     private final AccessTypeRolesRepository accessTypeRolesRepository;
     private final WorkBasketUserDefaultService workBasketUserDefaultService;
     private final CaseFieldRepository caseFieldRepository;
@@ -101,6 +107,7 @@ public class ImportServiceImpl implements ImportService {
     private final SearchPartyService searchPartyService;
     private final CategoryTabService categoryTabService;
     private final TranslationService translationService;
+    private final AccessTypesService accessTypesService;
     private final AccessTypeRolesService accessTypeRolesService;
     private final ApplicationParams applicationParams;
 
@@ -113,6 +120,7 @@ public class ImportServiceImpl implements ImportService {
                              CaseTypeService caseTypeService,
                              LayoutService layoutService,
                              AccessProfileRepository accessProfileRepository,
+                             AccessTypesRepository accessTypesRepository,
                              AccessTypeRolesRepository accessTypeRolesRepository,
                              WorkBasketUserDefaultService workBasketUserDefaultService,
                              CaseFieldRepository caseFieldRepository,
@@ -125,6 +133,7 @@ public class ImportServiceImpl implements ImportService {
                              SearchCriteriaService searchCriteriaService,
                              SearchPartyService searchPartyService, CategoryTabService categoryTabService,
                              TranslationService translationService,
+                             AccessTypesService accessTypesService,
                              AccessTypeRolesService accessTypeRolesService,
                              ApplicationParams applicationParams) {
 
@@ -136,6 +145,7 @@ public class ImportServiceImpl implements ImportService {
         this.caseTypeService = caseTypeService;
         this.layoutService = layoutService;
         this.accessProfileRepository = accessProfileRepository;
+        this.accessTypesRepository = accessTypesRepository;
         this.accessTypeRolesRepository = accessTypeRolesRepository;
         this.workBasketUserDefaultService = workBasketUserDefaultService;
         this.caseFieldRepository = caseFieldRepository;
@@ -149,6 +159,7 @@ public class ImportServiceImpl implements ImportService {
         this.searchPartyService = searchPartyService;
         this.categoryTabService = categoryTabService;
         this.translationService = translationService;
+        this.accessTypesService = accessTypesService;
         this.accessTypeRolesService = accessTypeRolesService;
         this.applicationParams = applicationParams;
     }
@@ -340,7 +351,7 @@ public class ImportServiceImpl implements ImportService {
     }
 
     private List<RoleToAccessProfilesEntity> parseRoleToAccessProfiles(Map<String, DefinitionSheet> definitionSheets,
-                                           ParseContext parseContext) {
+                                                                       ParseContext parseContext) {
         List<RoleToAccessProfilesEntity> accessProfileEntities = new ArrayList<>();
         // Role to Access Profiles
         if (definitionSheets.get(SheetName.ROLE_TO_ACCESS_PROFILES.getName()) != null) {
@@ -358,7 +369,7 @@ public class ImportServiceImpl implements ImportService {
     }
 
     private void parseSearchCriteria(Map<String, DefinitionSheet> definitionSheets,
-                                           ParseContext parseContext) {
+                                     ParseContext parseContext) {
 
         if (definitionSheets.get(SheetName.SEARCH_CRITERIA.getName()) != null) {
             logger.debug("Importing spreadsheet: SearchCriteria...");
@@ -374,7 +385,7 @@ public class ImportServiceImpl implements ImportService {
     }
 
     private void parseSearchParty(Map<String, DefinitionSheet> definitionSheets,
-                                           ParseContext parseContext) {
+                                  ParseContext parseContext) {
 
         // Role to Access Profiles
         if (definitionSheets.get(SheetName.SEARCH_PARTY.getName()) != null) {
@@ -393,19 +404,28 @@ public class ImportServiceImpl implements ImportService {
     }
 
     private void parseAccessTypeRoles(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext,
-                                                             List<RoleToAccessProfilesEntity> accessProfileEntities) {
+                                      List<RoleToAccessProfilesEntity> accessProfileEntities) {
 
         if ((applicationParams.isCaseGroupAccessFilteringEnabled())
-            && definitionSheets.get(SheetName.ACCESS_TYPE_ROLES.getName()) != null) {
+            && definitionSheets.get(SheetName.ACCESS_TYPE_ROLE.getName()) != null) {
 
-            logger.debug("Importing spreadsheet: AccessTypeRoles...");
+            logger.debug("Importing spreadsheet: AccessType...");
+            final AccessTypesParser accessTypesParser =
+                parserFactory.createAccessTypesParser();
+
+            List<AccessTypeEntity> accessTypeEntities = accessTypesParser
+                .parse(definitionSheets,parseContext);
+            accessTypesService.saveAll(accessTypeEntities);
+            logger.debug("Importing spreadsheet: AccessType...: OK");
+
+            logger.debug("Importing spreadsheet: AccessTypeRole...");
             final AccessTypeRolesParser accessTypeRolesParser =
                 parserFactory.createAccessTypeRolesParser();
 
-            List<AccessTypeRolesEntity> accessTypeRolesEntities = accessTypeRolesParser
-                .parse(definitionSheets,parseContext, accessProfileEntities);
+            List<AccessTypeRoleEntity> accessTypeRolesEntities = accessTypeRolesParser
+                .parse(definitionSheets,parseContext, accessTypeEntities, accessProfileEntities);
             accessTypeRolesService.saveAll(accessTypeRolesEntities);
-            logger.debug("Importing spreadsheet: AccessTypeRoles...: OK");
+            logger.debug("Importing spreadsheet: AccessTypeRole...: OK");
         }
 
     }

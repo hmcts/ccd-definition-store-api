@@ -584,6 +584,7 @@
       "searchParties" : [ ],
       "categories" : [ ],
       "accessTypeRoles": [],
+      "accessTypes": [],
       "case_fields" : [ {
         "__ordering__": "UNORDERED",
         "__elementId__": "id"
