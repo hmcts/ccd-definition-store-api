@@ -56,7 +56,7 @@ public class AccessTypeRolesControllerTest {
     @MockBean
     private AccessTypeRolesRepository accessTypeRolesRepository;
     private MockMvc mockMvc;
-    private final List<String> orgProfileIds = List.of(new String[]{"SOLICITOR_ORG", "SOLICITOR_ORG"});
+    private final List<String> orgProfileIds = List.of(new String[]{"SOLICITOR_ORG", "OGD_DWP_PROFILE"});
     @Mock
     private JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
     @Mock
@@ -202,6 +202,10 @@ public class AccessTypeRolesControllerTest {
         AccessTypeRolesJurisdictionResults jurisdictionResults =
             controller.retrieveAccessTypeRoles(organisationProfileIds);
         Assertions.assertEquals(2, jurisdictionResults.getJurisdictions().size());
+        Assertions.assertEquals(2, jurisdictionResults.getJurisdictions().get(0).getAccessTypeRoles().size());
+        Assertions.assertEquals("BEFTA_MASTER", jurisdictionResults.getJurisdictions().get(0).getId());
+        Assertions.assertEquals("BEFTA_MASTER2", jurisdictionResults.getJurisdictions().get(1).getId());
+
     }
 
     @DisplayName("should return AccessTypeRolesField List when OrganisationProfileIds not specified")
@@ -242,10 +246,14 @@ public class AccessTypeRolesControllerTest {
         AccessTypeRolesJurisdictionResults jurisdictionResults =
             controller.retrieveAccessTypeRoles(organisationProfileIds);
         Assertions.assertEquals(2, jurisdictionResults.getJurisdictions().size());
+        Assertions.assertEquals(2, jurisdictionResults.getJurisdictions().get(0).getAccessTypeRoles().size());
+        Assertions.assertEquals("BEFTA_MASTER", jurisdictionResults.getJurisdictions().get(0).getId());
+        Assertions.assertEquals("BEFTA_MASTER2", jurisdictionResults.getJurisdictions().get(1).getId());
     }
 
+    @DisplayName("should return AccessTypeRolesField List when request body is not specified")
     @Test
-    void shouldHandleNull() throws Exception {
+    void shouldHandleNullRequestBody() throws Exception {
 
         ObjectMapper objmapper = new ObjectMapper();
         String request = objmapper.writeValueAsString(null);
@@ -280,6 +288,10 @@ public class AccessTypeRolesControllerTest {
         AccessTypeRolesJurisdictionResults jurisdictionResults =
             controller.retrieveAccessTypeRoles(null);
         Assertions.assertEquals(2, jurisdictionResults.getJurisdictions().size());
+        Assertions.assertEquals(2, jurisdictionResults.getJurisdictions().get(0).getAccessTypeRoles().size());
+        Assertions.assertEquals("BEFTA_MASTER", jurisdictionResults.getJurisdictions().get(0).getId());
+        Assertions.assertEquals("BEFTA_MASTER2", jurisdictionResults.getJurisdictions().get(1).getId());
+
     }
 
     private void setUpAccessTypeRoleData() {
