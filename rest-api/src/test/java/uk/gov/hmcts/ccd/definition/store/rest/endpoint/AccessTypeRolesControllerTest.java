@@ -215,8 +215,54 @@ public class AccessTypeRolesControllerTest {
 
     @DisplayName("should return AccessTypeRolesField List when OrganisationProfileIds not specified")
     @Test
+    void shouldHandleOrganisationProfileIdsNotSpecified() throws Exception {
+        OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
+
+        ObjectMapper objmapper = new ObjectMapper();
+        String request = objmapper.writeValueAsString(organisationProfileIds);
+
+        final MvcResult mvcResult = mockMvc.perform(post("/api/retrieve-access-types")
+                .contentType(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .content(request))
+            .andDo(print())
+            .andExpect(status().isOk()).andReturn();
+
+        Assertions.assertNotNull(mvcResult, "Response from post null");
+
+        AccessTypeRolesJurisdictionResults accessTypeRolesJurisdictionResults =
+            objmapper.readValue(mvcResult.getResponse().getContentAsString(),
+                AccessTypeRolesJurisdictionResults.class);
+
+        assertFalse("accessTypeRolesJurisdictionResults is null or empty",
+            accessTypeRolesJurisdictionResults == null
+                || accessTypeRolesJurisdictionResults.getJurisdictions().isEmpty());
+
+        AccessTypeRolesJurisdictionResults finalAccessTypeRolesJurisdictionResults = accessTypeRolesJurisdictionResults;
+        assertAll(
+            () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().size(),
+                is(2)),
+            () -> greaterThan(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0)
+                .getAccessTypeRoles().size()),
+            () -> MatcherAssert.assertThat(finalAccessTypeRolesJurisdictionResults.getJurisdictions().get(0)
+                .getAccessTypeRoles().get(0).getOrganisationProfileId(), is(orgProfileIds.get(0)))
+        );
+
+        AccessTypeRolesJurisdictionResults jurisdictionResults =
+            controller.retrieveAccessTypeRoles(organisationProfileIds);
+        Assertions.assertEquals(2, jurisdictionResults.getJurisdictions().size());
+        Assertions.assertEquals(2, jurisdictionResults.getJurisdictions().get(0).getAccessTypeRoles().size());
+        Assertions.assertEquals("BEFTA_MASTER", jurisdictionResults.getJurisdictions().get(0).getId());
+        Assertions.assertEquals("BEFTA_MASTER2", jurisdictionResults.getJurisdictions().get(1).getId());
+
+        checkJsonResultIsCorrect(finalAccessTypeRolesJurisdictionResults, jurisdictionResults);
+    }
+
+    @DisplayName("should return AccessTypeRolesField List when OrganisationProfileIds is specified but is empty")
+    @Test
     void shouldHandleEmptyOrganisationProfileIds() throws Exception {
         OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
+        organisationProfileIds.setOrganisationProfileIds(List.of(new String[]{}));
 
         ObjectMapper objmapper = new ObjectMapper();
         String request = objmapper.writeValueAsString(organisationProfileIds);
