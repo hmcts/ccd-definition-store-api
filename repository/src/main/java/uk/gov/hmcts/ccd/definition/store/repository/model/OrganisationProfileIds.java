@@ -12,7 +12,7 @@ public class OrganisationProfileIds {
     private List<String> organisationProfileIds = null;
 
     @ApiModelProperty(value = "")
-    @JsonProperty("organisation_profile_ids")
+    @JsonProperty("organisationProfileIds")
     public List<String> getOrganisationProfileIds() {
         return organisationProfileIds;
     }
