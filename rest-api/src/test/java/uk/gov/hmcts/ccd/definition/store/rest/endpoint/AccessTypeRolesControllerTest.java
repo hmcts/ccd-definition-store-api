@@ -341,9 +341,9 @@ public class AccessTypeRolesControllerTest {
         accessTypeRolesEntity.setDescription("Description:User can work with all civil cases without needing "
             + "to be assigned to each case");
         accessTypeRolesEntity.setDisplayOrder(1);
-        accessTypeRolesEntity.setGroupRoleName("[APPLICANTSOLICITORONE]");
+        accessTypeRolesEntity.setGroupRoleName("[APPLICANTSOLICITORROLE]");
         accessTypeRolesEntity.setCaseAssignedRoleField("applicant1OrganisationPolicy");
-        accessTypeRolesEntity.setCaseAccessGroupIdTemplate("CIVIL:all:CIVIL:AS1:$ORGID$");
+        accessTypeRolesEntity.setCaseAccessGroupIdTemplate("BEFTA_MASTER:CIVIL:all:CIVIL:AS1:$ORGID$");
 
         entityToResponseDTOMapper.map(accessTypeRolesEntity);
 
