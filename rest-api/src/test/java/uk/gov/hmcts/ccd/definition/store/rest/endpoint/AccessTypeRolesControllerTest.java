@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.microsoft.applicationinsights.core.dependencies.google.gson.JsonObject;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.Spy;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -75,14 +79,12 @@ public class AccessTypeRolesControllerTest {
     @Mock
     private AccessTypeRolesEntity accessTypeRolesEntity2;
     private AccessTypeRolesJurisdictionResults jurisdictionResults;
-    private List<AccessTypeRolesJurisdictionResult> accessTypeRolesJurisdictions;
 
     @BeforeEach
     void setUp()  {
         openMocks(this);
 
         jurisdictionResults = Mockito.spy(new AccessTypeRolesJurisdictionResults());
-        accessTypeRolesJurisdictions = Mockito.spy(new  ArrayList<>());
 
         setUpAccessTypeRoleData();
 
@@ -96,6 +98,7 @@ public class AccessTypeRolesControllerTest {
     @DisplayName("Should set up the results that can be retreived")
     @Test
     public void getAccessTypeRolesJurisdictionResults() {
+        List<AccessTypeRolesJurisdictionResult> accessTypeRolesJurisdictions = Mockito.spy(new  ArrayList<>());
         OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
         organisationProfileIds.setOrganisationProfileIds(orgProfileIds);
 
@@ -206,6 +209,7 @@ public class AccessTypeRolesControllerTest {
         Assertions.assertEquals("BEFTA_MASTER", jurisdictionResults.getJurisdictions().get(0).getId());
         Assertions.assertEquals("BEFTA_MASTER2", jurisdictionResults.getJurisdictions().get(1).getId());
 
+        checkJsonResultIsCorrect(finalAccessTypeRolesJurisdictionResults, jurisdictionResults);
     }
 
     @DisplayName("should return AccessTypeRolesField List when OrganisationProfileIds not specified")
@@ -249,6 +253,8 @@ public class AccessTypeRolesControllerTest {
         Assertions.assertEquals(2, jurisdictionResults.getJurisdictions().get(0).getAccessTypeRoles().size());
         Assertions.assertEquals("BEFTA_MASTER", jurisdictionResults.getJurisdictions().get(0).getId());
         Assertions.assertEquals("BEFTA_MASTER2", jurisdictionResults.getJurisdictions().get(1).getId());
+
+        checkJsonResultIsCorrect(finalAccessTypeRolesJurisdictionResults, jurisdictionResults);
     }
 
     @DisplayName("should return AccessTypeRolesField List when request body is not specified")
@@ -292,6 +298,7 @@ public class AccessTypeRolesControllerTest {
         Assertions.assertEquals("BEFTA_MASTER", jurisdictionResults.getJurisdictions().get(0).getId());
         Assertions.assertEquals("BEFTA_MASTER2", jurisdictionResults.getJurisdictions().get(1).getId());
 
+        checkJsonResultIsCorrect(finalAccessTypeRolesJurisdictionResults, jurisdictionResults);
     }
 
     private void setUpAccessTypeRoleData() {
@@ -320,6 +327,7 @@ public class AccessTypeRolesControllerTest {
 
         when(accessTypeRolesRepository.findByOrganisationProfileIds(orgProfileIds)).thenReturn(result);
         when(accessTypeRolesRepository.findAllWithCaseTypeIds()).thenReturn(result);
+
     }
 
     private void setupAccessTypeRolesEntity(AccessTypeRolesEntity accessTypeRolesEntity, CaseTypeEntity caseTypeId) {
@@ -347,5 +355,17 @@ public class AccessTypeRolesControllerTest {
 
         entityToResponseDTOMapper.map(accessTypeRolesEntity);
 
+    }
+
+
+    private void checkJsonResultIsCorrect(AccessTypeRolesJurisdictionResults expectedAccessTypeRolesJurisdictions,
+                                          AccessTypeRolesJurisdictionResults actualAccessTypeRolesJurisdictions) throws JsonProcessingException {
+        ObjectMapper objectMapper  = new ObjectMapper();
+        String actualJsonString = objectMapper.writeValueAsString(actualAccessTypeRolesJurisdictions);
+        String expectedJsonString = objectMapper.writeValueAsString(expectedAccessTypeRolesJurisdictions);
+
+        assertAll(
+            () -> JSONAssert.assertEquals(expectedJsonString, actualJsonString, JSONCompareMode.LENIENT)
+        );
     }
 }
