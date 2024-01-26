@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.microsoft.applicationinsights.core.dependencies.google.gson.JsonObject;
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -98,7 +97,7 @@ public class AccessTypeRolesControllerTest {
     @DisplayName("Should set up the results that can be retreived")
     @Test
     public void getAccessTypeRolesJurisdictionResults() {
-        List<AccessTypeRolesJurisdictionResult> accessTypeRolesJurisdictions = Mockito.spy(new  ArrayList<>());
+
         OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
         organisationProfileIds.setOrganisationProfileIds(orgProfileIds);
 
@@ -134,6 +133,8 @@ public class AccessTypeRolesControllerTest {
 
         accessTypeRolesResults.add(accessTypeRolesResult);
         accessTypeRolesJurisdictionResult.setAccessTypeRoles(accessTypeRolesResults);
+
+        List<AccessTypeRolesJurisdictionResult> accessTypeRolesJurisdictions = Mockito.spy(new  ArrayList<>());
         accessTypeRolesJurisdictions.add(accessTypeRolesJurisdictionResult);
         jurisdictionResults.setJurisdictions(accessTypeRolesJurisdictions);
 
@@ -359,7 +360,8 @@ public class AccessTypeRolesControllerTest {
 
 
     private void checkJsonResultIsCorrect(AccessTypeRolesJurisdictionResults expectedAccessTypeRolesJurisdictions,
-                                          AccessTypeRolesJurisdictionResults actualAccessTypeRolesJurisdictions) throws JsonProcessingException {
+                                          AccessTypeRolesJurisdictionResults actualAccessTypeRolesJurisdictions)
+        throws JsonProcessingException {
         ObjectMapper objectMapper  = new ObjectMapper();
         String actualJsonString = objectMapper.writeValueAsString(actualAccessTypeRolesJurisdictions);
         String expectedJsonString = objectMapper.writeValueAsString(expectedAccessTypeRolesJurisdictions);
