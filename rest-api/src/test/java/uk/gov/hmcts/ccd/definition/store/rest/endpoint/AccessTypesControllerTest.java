@@ -96,7 +96,7 @@ public class AccessTypesControllerTest {
 
         setUpAccessTypeRoleData();
 
-        controller = new AccessTypeRolesController(entityToResponseDTOMapper, accessTypeRolesRepository);
+        controller = new AccessTypesController(entityToResponseDTOMapper, accessTypeRolesRepository);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
             .setControllerAdvice(new ControllerExceptionHandler())
@@ -366,9 +366,9 @@ public class AccessTypesControllerTest {
         when(jurisdictionEntity2.getId()).thenReturn(2);
         when(caseTypeEntity2.getJurisdiction()).thenReturn(jurisdictionEntity2);
 
-        setupAccessTypeEntity(accessTypeEntity, caseTypeEntity);
-        setupAccessTypeEntity(accessTypeEntity1, caseTypeEntity);
-        setupAccessTypeEntity(accessTypeEntity2, caseTypeEntity2);
+        setupAccessTypeRolesEntity(accessTypeEntity, caseTypeEntity);
+        setupAccessTypeRolesEntity(accessTypeEntity1, caseTypeEntity);
+        setupAccessTypeRolesEntity(accessTypeEntity2, caseTypeEntity2);
 
         setupAccessTypeRoleEntity(accessTypeRoleEntity, caseTypeEntity);
         setupAccessTypeRoleEntity(accessTypeRoleEntity1, caseTypeEntity);
@@ -385,7 +385,7 @@ public class AccessTypesControllerTest {
 
     }
 
-    private void setupAccessTypeRolesEntity(AccessTypeRolesEntity accessTypeRolesEntity, CaseTypeEntity caseTypeId) {
+    private void setupAccessTypeRolesEntity(AccessTypeEntity accessTypeEntity, CaseTypeEntity caseTypeId) {
 
         accessTypeEntity.setCaseTypeId(caseTypeId);
         when(accessTypeEntity.getCaseTypeId()).thenReturn(caseTypeId);
