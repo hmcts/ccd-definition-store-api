@@ -8,7 +8,6 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
@@ -23,19 +22,7 @@ public class AccessTypeRolesValidator {
 
     List<String> roles;
 
-    public ValidationResult validateAccessTypes(final List<AccessTypeEntity> accessTypeEntities) {
-
-        ValidationResult validationResult = new ValidationResult();
-
-        accessTypeEntities
-            .forEach(entity -> {
-                validateDisplay(validationResult, entity, accessTypeEntities);
-            });
-
-        return validationResult;
-    }
-
-    public ValidationResult validateAccessTypeRoles(final ParseContext parseContext,
+    public ValidationResult validate(final ParseContext parseContext,
                                      final List<AccessTypeRoleEntity> accessTypeRolesEntities,
                                      final List<RoleToAccessProfilesEntity> accessProfileEntities) {
 
@@ -90,75 +77,6 @@ public class AccessTypeRolesValidator {
                 if (accessTypeRolesAccessTypeId.get(triple).size() > 1) {
                     String errorMessage = String.format("'%s' must be unique within the Jurisdiction in the sheet '%s'",
                         ColumnName.ACCESS_TYPE_ID, SheetName.ACCESS_TYPE_ROLES);
-
-                    if (!alreadyReportedError(validationResult, errorMessage)) {
-                        validationResult.addError(new ValidationError(errorMessage) {});
-                    }
-                }
-            });
-    }
-
-    private void validateDisplay(ValidationResult validationResult, AccessTypeEntity entity,
-                                 List<AccessTypeEntity> accessTypeEntities) {
-
-        if (entity.getDisplay()) {
-            if (!entity.getAccessMandatory() || !entity.getAccessDefault()) {
-                validationResult.addError(new ValidationError(
-                    String.format("'%s' and '%s' must be set to true for '%s' to be used in the sheet '%s'",
-                        ColumnName.ACCESS_MANDATORY, ColumnName.ACCESS_DEFAULT,
-                        ColumnName.DISPLAY, SheetName.ACCESS_TYPE_ROLES)) {
-                });
-            }
-
-            if (!StringUtils.hasLength(entity.getDescription())) {
-                validationResult.addError(new ValidationError(
-                    String.format("'%s' must be set for '%s' to be used in the sheet '%s'",
-                        ColumnName.DESCRIPTION, ColumnName.DISPLAY, SheetName.ACCESS_TYPE_ROLES)) {
-                });
-            }
-
-            if (!StringUtils.hasLength(entity.getHint())) {
-                validationResult.addError(new ValidationError(
-                    String.format("'%s' must be set for '%s' to be used in the sheet '%s'",
-                        ColumnName.HINT_TEXT, ColumnName.DISPLAY, SheetName.ACCESS_TYPE_ROLES)) {
-                });
-            }
-
-            if (entity.getDisplayOrder() == null) {
-                validationResult.addError(new ValidationError(
-                    String.format("'%s' should not be null or empty for '%s' to be used in column '%s' "
-                            + "in the sheet '%s'", ColumnName.DISPLAY_ORDER, ColumnName.DISPLAY,
-                        ColumnName.DISPLAY_ORDER, SheetName.ACCESS_TYPE_ROLES)) {
-                });
-
-            } else if (entity.getDisplayOrder() < 1) {
-                validationResult.addError(new ValidationError(
-                    String.format("'%s' must be greater than 0 in column '%s' in the sheet '%s'",
-                        ColumnName.DISPLAY_ORDER, ColumnName.DISPLAY_ORDER, SheetName.ACCESS_TYPE_ROLES)) {
-                });
-            } else {
-                validateDisplayOrder(validationResult, accessTypeEntities);
-            }
-        }
-    }
-
-    private void validateDisplayOrder(ValidationResult validationResult,
-                                      List<AccessTypeEntity> accessTypeEntities) {
-
-        Map<Triple<CaseTypeEntity, Integer, Integer>, List<AccessTypeEntity>> accessTypeRolesDisplayOrder =
-            accessTypeEntities
-                .stream()
-                .collect(groupingBy(p ->
-                    Triple.of(p.getCaseTypeId(),
-                        p.getCaseTypeId().getJurisdiction().getId(),
-                        p.getDisplayOrder())));
-
-        accessTypeRolesDisplayOrder.keySet()
-            .forEach(triple -> {
-                if (accessTypeRolesDisplayOrder.get(triple).size() > 1) {
-                    String errorMessage = String.format("'%s' must be unique across all Case Types for "
-                            + "a given Jurisdiction in the sheet '%s'",
-                        ColumnName.DISPLAY_ORDER, SheetName.ACCESS_TYPE_ROLES);
 
                     if (!alreadyReportedError(validationResult, errorMessage)) {
                         validationResult.addError(new ValidationError(errorMessage) {});

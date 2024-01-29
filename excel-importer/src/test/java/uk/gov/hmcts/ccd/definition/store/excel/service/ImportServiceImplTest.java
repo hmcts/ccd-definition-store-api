@@ -108,6 +108,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUse
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypeRolesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.CategoryParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
@@ -211,6 +212,9 @@ public class ImportServiceImplTest {
     private CategoryParser categoryParser;
 
     @Mock
+    private AccessTypesParser accessTypesParser;
+
+    @Mock
     private AccessTypeRolesParser accessTypeRolesParser;
 
     @Mock
@@ -256,7 +260,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser, categoryParser, accessTypeRolesParser, searchPartyValidator,
+            challengeQuestionParser, categoryParser, accessTypesParser, accessTypeRolesParser, searchPartyValidator,
             searchCriteriaValidator, categoryIdValidator, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
@@ -461,8 +465,8 @@ public class ImportServiceImplTest {
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
             hiddenFieldsValidator,challengeQuestionParser,
-            categoryParser, accessTypeRolesParser, searchPartyValidator, searchCriteriaValidator, categoryIdValidator,
-            applicationParams, executor);
+            categoryParser, accessTypesParser, accessTypeRolesParser, searchPartyValidator, searchCriteriaValidator,
+            categoryIdValidator, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
