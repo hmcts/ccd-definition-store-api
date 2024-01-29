@@ -47,7 +47,7 @@ public class AccessTypeRolesValidator {
         if (!StringUtils.hasLength(entity.getAccessTypeId())) {
             validationResult.addError(new ValidationError(
                 String.format("Access Type ID should not be null or empty in column '%s' in the sheet '%s'",
-                    ColumnName.ACCESS_TYPE_ID, SheetName.ACCESS_TYPE_ROLES)) {
+                    ColumnName.ACCESS_TYPE_ID, SheetName.ACCESS_TYPE_ROLE)) {
             });
         } else {
             validateAccessTypeId(validationResult, accessTypeRolesEntities);
@@ -56,7 +56,7 @@ public class AccessTypeRolesValidator {
         if (!StringUtils.hasLength(entity.getOrganisationProfileId())) {
             validationResult.addError(new ValidationError(
                 String.format("Organisation Profile ID should not be null or empty in column '%s' "
-                    + "in the sheet '%s'", ColumnName.ORGANISATION_PROFILE_ID, SheetName.ACCESS_TYPE_ROLES)) {
+                    + "in the sheet '%s'", ColumnName.ORGANISATION_PROFILE_ID, SheetName.ACCESS_TYPE_ROLE)) {
             });
         }
     }
@@ -76,7 +76,7 @@ public class AccessTypeRolesValidator {
             .forEach(triple -> {
                 if (accessTypeRolesAccessTypeId.get(triple).size() > 1) {
                     String errorMessage = String.format("'%s' must be unique within the Jurisdiction in the sheet '%s'",
-                        ColumnName.ACCESS_TYPE_ID, SheetName.ACCESS_TYPE_ROLES);
+                        ColumnName.ACCESS_TYPE_ID, SheetName.ACCESS_TYPE_ROLE);
 
                     if (!alreadyReportedError(validationResult, errorMessage)) {
                         validationResult.addError(new ValidationError(errorMessage) {});
@@ -91,7 +91,7 @@ public class AccessTypeRolesValidator {
             && !StringUtils.hasLength(entity.getGroupRoleName())) {
             validationResult.addError(new ValidationError(
                 String.format("Either '%s' or '%s' must be set in the sheet '%s'",
-                    ColumnName.ORGANISATION_ROLE_NAME, ColumnName.GROUP_ROLE_NAME, SheetName.ACCESS_TYPE_ROLES)) {
+                    ColumnName.ORGANISATION_ROLE_NAME, ColumnName.GROUP_ROLE_NAME, SheetName.ACCESS_TYPE_ROLE)) {
             });
         }
 
@@ -102,7 +102,7 @@ public class AccessTypeRolesValidator {
             if (!entity.getGroupAccessEnabled()) {
                 validationResult.addError(new ValidationError(
                     String.format("'%s' must be enabled if '%s' is set in the sheet '%s'",
-                        ColumnName.GROUP_ACCESS_ENABLED, ColumnName.GROUP_ROLE_NAME, SheetName.ACCESS_TYPE_ROLES)) {
+                        ColumnName.GROUP_ACCESS_ENABLED, ColumnName.GROUP_ROLE_NAME, SheetName.ACCESS_TYPE_ROLE)) {
                 });
             }
 
@@ -122,7 +122,7 @@ public class AccessTypeRolesValidator {
             && StringUtils.hasLength(entity.getGroupRoleName())) {
             validationResult.addError(new ValidationError(
                 String.format("'%s' must be set if '%s' is not null in the sheet '%s'",
-                    ColumnName.CASE_GROUP_ID_TEMPLATE, ColumnName.GROUP_ROLE_NAME, SheetName.ACCESS_TYPE_ROLES)) {
+                    ColumnName.CASE_GROUP_ID_TEMPLATE, ColumnName.GROUP_ROLE_NAME, SheetName.ACCESS_TYPE_ROLE)) {
             });
         } else if (StringUtils.hasLength(entity.getCaseAccessGroupIdTemplate())) {
 
@@ -132,7 +132,7 @@ public class AccessTypeRolesValidator {
                 validationResult.addError(new ValidationError(
                     String.format("'%s' must start with '%s' (Service Name) in column '%s' in the sheet '%s'",
                         entity.getCaseAccessGroupIdTemplate(), jurisdiction, ColumnName.CASE_GROUP_ID_TEMPLATE,
-                        SheetName.ACCESS_TYPE_ROLES)) {
+                        SheetName.ACCESS_TYPE_ROLE)) {
                 });
             }
 
@@ -140,7 +140,7 @@ public class AccessTypeRolesValidator {
                 validationResult.addError(new ValidationError(
                     String.format("'%s' must end with $ORGID$ column '%s' in the sheet '%s'",
                         entity.getCaseAccessGroupIdTemplate(), ColumnName.CASE_GROUP_ID_TEMPLATE,
-                        SheetName.ACCESS_TYPE_ROLES)) {
+                        SheetName.ACCESS_TYPE_ROLE)) {
                 });
             }
         }
@@ -157,7 +157,7 @@ public class AccessTypeRolesValidator {
         if (!StringUtils.hasLength(entity.getCaseAssignedRoleField())) {
             validationResult.addError(new ValidationError(
                 String.format("'%s' must be set if '%s' is not null in the sheet '%s'",
-                    ColumnName.CASE_ASSIGNED_ROLE_FIELD, ColumnName.GROUP_ROLE_NAME, SheetName.ACCESS_TYPE_ROLES)) {
+                    ColumnName.CASE_ASSIGNED_ROLE_FIELD, ColumnName.GROUP_ROLE_NAME, SheetName.ACCESS_TYPE_ROLE)) {
             });
         } else {
             validateAgainstRoleName(validationResult, entity.getCaseAssignedRoleField(),
@@ -170,7 +170,7 @@ public class AccessTypeRolesValidator {
             validationResult.addError(new ValidationError(
                 String.format("'%s' in column '%s' in the sheet '%s' is not a listed '%s' in the sheet '%s'",
                     columnValue, columnName,
-                    SheetName.ACCESS_TYPE_ROLES, ColumnName.ROLE_NAME, SheetName.ROLE_TO_ACCESS_PROFILES)) {
+                    SheetName.ACCESS_TYPE_ROLE, ColumnName.ROLE_NAME, SheetName.ROLE_TO_ACCESS_PROFILES)) {
             });
         }
     }

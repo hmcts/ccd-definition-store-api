@@ -35,7 +35,7 @@ public class AccessTypesParser {
         try {
 
             final List<DefinitionDataItem> accessTypeRolesItems = definitionSheets
-                .get(SheetName.ACCESS_TYPE_ROLES.getName())
+                .get(SheetName.ACCESS_TYPE.getName())
                 .getDataItems();
 
             final List<AccessTypeEntity> accessTypeEntities = accessTypeRolesItems
@@ -77,7 +77,7 @@ public class AccessTypesParser {
             .findAny()
             .orElseThrow(() -> {
                 String message = String.format("Case Type not found %s in column '%s' in the sheet '%s'",
-                    caseType, ColumnName.CASE_TYPE_ID, SheetName.ACCESS_TYPE_ROLES);
+                    caseType, ColumnName.CASE_TYPE_ID, SheetName.ACCESS_TYPE);
                 throw new InvalidImportException(message);
 
             });

@@ -406,7 +406,7 @@ public class ImportServiceImpl implements ImportService {
                                                              List<RoleToAccessProfilesEntity> accessProfileEntities) {
 
         if ((applicationParams.isCaseGroupAccessFilteringEnabled())
-            && definitionSheets.get(SheetName.ACCESS_TYPE_ROLES.getName()) != null) {
+            && definitionSheets.get(SheetName.ACCESS_TYPE_ROLE.getName()) != null) {
 
             logger.debug("Importing spreadsheet: AccessType...");
             final AccessTypesParser accessTypesParser =

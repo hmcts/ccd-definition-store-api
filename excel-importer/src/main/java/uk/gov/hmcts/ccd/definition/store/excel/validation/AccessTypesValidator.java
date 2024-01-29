@@ -37,7 +37,7 @@ public class AccessTypesValidator {
         if (!StringUtils.hasLength(entity.getAccessTypeId())) {
             validationResult.addError(new ValidationError(
                 String.format("Access Type ID should not be null or empty in column '%s' in the sheet '%s'",
-                    ColumnName.ACCESS_TYPE_ID, SheetName.ACCESS_TYPE_ROLES)) {
+                    ColumnName.ACCESS_TYPE_ID, SheetName.ACCESS_TYPE)) {
             });
         } else {
             validateAccessTypeId(validationResult, accessTypeEntities);
@@ -46,7 +46,7 @@ public class AccessTypesValidator {
         if (!StringUtils.hasLength(entity.getOrganisationProfileId())) {
             validationResult.addError(new ValidationError(
                 String.format("Organisation Profile ID should not be null or empty in column '%s' "
-                    + "in the sheet '%s'", ColumnName.ORGANISATION_PROFILE_ID, SheetName.ACCESS_TYPE_ROLES)) {
+                    + "in the sheet '%s'", ColumnName.ORGANISATION_PROFILE_ID, SheetName.ACCESS_TYPE)) {
             });
         }
     }
@@ -66,7 +66,7 @@ public class AccessTypesValidator {
             .forEach(triple -> {
                 if (accessTypeRolesAccessTypeId.get(triple).size() > 1) {
                     String errorMessage = String.format("'%s' must be unique within the Jurisdiction in the sheet '%s'",
-                        ColumnName.ACCESS_TYPE_ID, SheetName.ACCESS_TYPE_ROLES);
+                        ColumnName.ACCESS_TYPE_ID, SheetName.ACCESS_TYPE);
 
                     if (!alreadyReportedError(validationResult, errorMessage)) {
                         validationResult.addError(new ValidationError(errorMessage) {});
@@ -83,21 +83,21 @@ public class AccessTypesValidator {
                 validationResult.addError(new ValidationError(
                     String.format("'%s' and '%s' must be set to true for '%s' to be used in the sheet '%s'",
                         ColumnName.ACCESS_MANDATORY, ColumnName.ACCESS_DEFAULT,
-                        ColumnName.DISPLAY, SheetName.ACCESS_TYPE_ROLES)) {
+                        ColumnName.DISPLAY, SheetName.ACCESS_TYPE)) {
                 });
             }
 
             if (!StringUtils.hasLength(entity.getDescription())) {
                 validationResult.addError(new ValidationError(
                     String.format("'%s' must be set for '%s' to be used in the sheet '%s'",
-                        ColumnName.DESCRIPTION, ColumnName.DISPLAY, SheetName.ACCESS_TYPE_ROLES)) {
+                        ColumnName.DESCRIPTION, ColumnName.DISPLAY, SheetName.ACCESS_TYPE)) {
                 });
             }
 
             if (!StringUtils.hasLength(entity.getHint())) {
                 validationResult.addError(new ValidationError(
                     String.format("'%s' must be set for '%s' to be used in the sheet '%s'",
-                        ColumnName.HINT_TEXT, ColumnName.DISPLAY, SheetName.ACCESS_TYPE_ROLES)) {
+                        ColumnName.HINT_TEXT, ColumnName.DISPLAY, SheetName.ACCESS_TYPE)) {
                 });
             }
 
@@ -105,13 +105,13 @@ public class AccessTypesValidator {
                 validationResult.addError(new ValidationError(
                     String.format("'%s' should not be null or empty for '%s' to be used in column '%s' "
                             + "in the sheet '%s'", ColumnName.DISPLAY_ORDER, ColumnName.DISPLAY,
-                        ColumnName.DISPLAY_ORDER, SheetName.ACCESS_TYPE_ROLES)) {
+                        ColumnName.DISPLAY_ORDER, SheetName.ACCESS_TYPE)) {
                 });
 
             } else if (entity.getDisplayOrder() < 1) {
                 validationResult.addError(new ValidationError(
                     String.format("'%s' must be greater than 0 in column '%s' in the sheet '%s'",
-                        ColumnName.DISPLAY_ORDER, ColumnName.DISPLAY_ORDER, SheetName.ACCESS_TYPE_ROLES)) {
+                        ColumnName.DISPLAY_ORDER, ColumnName.DISPLAY_ORDER, SheetName.ACCESS_TYPE)) {
                 });
             } else {
                 validateDisplayOrder(validationResult, accessTypeEntities);
@@ -135,7 +135,7 @@ public class AccessTypesValidator {
                 if (accessTypeRolesDisplayOrder.get(triple).size() > 1) {
                     String errorMessage = String.format("'%s' must be unique across all Case Types for "
                             + "a given Jurisdiction in the sheet '%s'",
-                        ColumnName.DISPLAY_ORDER, SheetName.ACCESS_TYPE_ROLES);
+                        ColumnName.DISPLAY_ORDER, SheetName.ACCESS_TYPE);
 
                     if (!alreadyReportedError(validationResult, errorMessage)) {
                         validationResult.addError(new ValidationError(errorMessage) {});

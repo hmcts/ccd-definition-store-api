@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPE_ID;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.ACCESS_TYPE_ROLES;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.ACCESS_TYPE;
 
 public class AccessTypesParserTest extends ParserTestBase {
 
@@ -78,12 +78,12 @@ public class AccessTypesParserTest extends ParserTestBase {
 
         definitionSheets = new HashMap<>();
         definitionSheet = new DefinitionSheet();
-        definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
+        definitionSheets.put(ACCESS_TYPE.getName(), definitionSheet);
     }
 
     @Test
     public void shouldParse() {
-        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
 
         item.addAttribute(ColumnName.LIVE_FROM.toString(), Date.from(LocalDate.of(2023,
             Month.FEBRUARY, 12).atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -100,7 +100,7 @@ public class AccessTypesParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.CASE_GROUP_ID_TEMPLATE.toString(), CASE_GROUP_ID_TEMPLATE);
         item.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
         definitionSheet.addDataItem(item);
-        definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
+        definitionSheets.put(ACCESS_TYPE.getName(), definitionSheet);
 
         List<AccessTypeEntity> accessTypesEntities =
             accessTypesParser.parse(definitionSheets, parseContext);
@@ -125,45 +125,45 @@ public class AccessTypesParserTest extends ParserTestBase {
 
     @Test
     public void shouldFailWhenCaseTypeIDIsInvalid() {
-        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLES.toString());
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.toString());
         item.addAttribute(ColumnName.DESCRIPTION.toString(), "Test Desc1");
 
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "Access ID");
         item.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         definitionSheet.addDataItem(item);
 
-        definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
+        definitionSheets.put(ACCESS_TYPE.getName(), definitionSheet);
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypesParser
                 .parse(definitionSheets, parseContext));
         assertThat(exception.getValidationResult().getValidationErrors().get(0).toString(),
-            is("Case Type not found Some Case Type in column 'CaseTypeID' in the sheet 'AccessTypeRoles'"));
+            is("Case Type not found Some Case Type in column 'CaseTypeID' in the sheet 'AccessType'"));
 
     }
 
     @Test
     public void shouldFailWhenDateIsInvalid() {
-        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
         item.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
         item.addAttribute(ColumnName.LIVE_FROM.toString(), "invalid date");
 
         definitionSheet.addDataItem(item);
-        definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
+        definitionSheets.put(ACCESS_TYPE.getName(), definitionSheet);
 
         MapperException exception =
             assertThrows(MapperException.class, () -> accessTypesParser
                 .parse(definitionSheets, parseContext));
         assertThat(exception.getMessage(),
-            is("Invalid value 'invalid date' is found in column 'LiveFrom' in the sheet 'AccessTypeRoles'"));
+            is("Invalid value 'invalid date' is found in column 'LiveFrom' in the sheet 'AccessType'"));
 
     }
 
     @Test
     public void shouldFailIfDisplayIsSetToTrueAndRequiredFieldsAreNotSet() {
-        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
         item.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
@@ -176,7 +176,7 @@ public class AccessTypesParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
 
         definitionSheet.addDataItem(item);
-        definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
+        definitionSheets.put(ACCESS_TYPE.getName(), definitionSheet);
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypesParser
@@ -188,14 +188,14 @@ public class AccessTypesParserTest extends ParserTestBase {
             () -> assertThat(exception.getValidationResult().getValidationErrors(), allOf(
                     hasItem(matchesValidationErrorWithDefaultMessage(
                         "'AccessMandatory' and 'AccessDefault' must be set to true for 'Display' to be used "
-                            + "in the sheet 'AccessTypeRoles'")),
+                            + "in the sheet 'AccessType'")),
                     hasItem(matchesValidationErrorWithDefaultMessage(
-                        "'Description' must be set for 'Display' to be used in the sheet 'AccessTypeRoles'")),
+                        "'Description' must be set for 'Display' to be used in the sheet 'AccessType'")),
                     hasItem(matchesValidationErrorWithDefaultMessage(
-                        "'HintText' must be set for 'Display' to be used in the sheet 'AccessTypeRoles'")),
+                        "'HintText' must be set for 'Display' to be used in the sheet 'AccessType'")),
                     hasItem(matchesValidationErrorWithDefaultMessage(
                         "'DisplayOrder' should not be null or empty for 'Display' to be used in column 'DisplayOrder' "
-                            + "in the sheet 'AccessTypeRoles'"))
+                            + "in the sheet 'AccessType'"))
                 )
             )
         );
@@ -203,7 +203,7 @@ public class AccessTypesParserTest extends ParserTestBase {
 
     @Test
     public void shouldFailIfAccessMandatoryIsNotSet() {
-        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
         item.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
@@ -220,7 +220,7 @@ public class AccessTypesParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
 
         definitionSheet.addDataItem(item);
-        definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
+        definitionSheets.put(ACCESS_TYPE.getName(), definitionSheet);
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypesParser
@@ -230,13 +230,13 @@ public class AccessTypesParserTest extends ParserTestBase {
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
             () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
                 "'AccessMandatory' and 'AccessDefault' must be set to true for 'Display' to be used "
-                    + "in the sheet 'AccessTypeRoles'")
+                    + "in the sheet 'AccessType'")
         );
     }
 
     @Test
     public void shouldFailIfAccessDefaultIsNotSet() {
-        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
         item.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
@@ -253,7 +253,7 @@ public class AccessTypesParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
 
         definitionSheet.addDataItem(item);
-        definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
+        definitionSheets.put(ACCESS_TYPE.getName(), definitionSheet);
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypesParser
@@ -263,13 +263,13 @@ public class AccessTypesParserTest extends ParserTestBase {
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
             () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
                 "'AccessMandatory' and 'AccessDefault' must be set to true for 'Display' to be used "
-                    + "in the sheet 'AccessTypeRoles'")
+                    + "in the sheet 'AccessType'")
         );
     }
 
     @Test
     public void shouldFailIfDisplayOrderIsInvalid() {
-        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
         item.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
@@ -287,7 +287,7 @@ public class AccessTypesParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
 
         definitionSheet.addDataItem(item);
-        definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
+        definitionSheets.put(ACCESS_TYPE.getName(), definitionSheet);
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypesParser
@@ -297,13 +297,13 @@ public class AccessTypesParserTest extends ParserTestBase {
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
             () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
                 "'DisplayOrder' must be greater than 0 in column 'DisplayOrder' "
-                    + "in the sheet 'AccessTypeRoles'")
+                    + "in the sheet 'AccessType'")
         );
     }
 
     @Test
     public void shouldFailIfDisplayOrderIsNotUnique() {
-        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
         item.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
@@ -321,7 +321,7 @@ public class AccessTypesParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
         definitionSheet.addDataItem(item);
 
-        final DefinitionDataItem item2 = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
+        final DefinitionDataItem item2 = new DefinitionDataItem(ACCESS_TYPE.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item2.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id2");
         item2.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID2");
@@ -339,7 +339,7 @@ public class AccessTypesParserTest extends ParserTestBase {
         item2.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
         definitionSheet.addDataItem(item2);
 
-        definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
+        definitionSheets.put(ACCESS_TYPE.getName(), definitionSheet);
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypesParser
@@ -349,7 +349,7 @@ public class AccessTypesParserTest extends ParserTestBase {
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
             () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
                 "'DisplayOrder' must be unique across all Case Types for a given Jurisdiction "
-                    + "in the sheet 'AccessTypeRoles'")
+                    + "in the sheet 'AccessType'")
         );
     }
 
@@ -365,14 +365,14 @@ public class AccessTypesParserTest extends ParserTestBase {
     @Test
     void shouldFailWhenRequiredFieldsAreNotProvided() {
 
-        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.GROUP_ROLE_NAME.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
         item.addAttribute(ColumnName.CASE_GROUP_ID_TEMPLATE.toString(), CASE_GROUP_ID_TEMPLATE);
         item.addAttribute(ColumnName.CASE_ASSIGNED_ROLE_FIELD.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
         item.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
         definitionSheet.addDataItem(item);
-        definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
+        definitionSheets.put(ACCESS_TYPE.getName(), definitionSheet);
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypesParser
@@ -383,10 +383,10 @@ public class AccessTypesParserTest extends ParserTestBase {
             () -> assertThat(exception.getValidationResult().getValidationErrors(), allOf(
                     hasItem(matchesValidationErrorWithDefaultMessage(
                         "Access Type ID should not be null or empty in column 'AccessTypeID' "
-                            + "in the sheet 'AccessTypeRoles'")),
+                            + "in the sheet 'AccessType'")),
                     hasItem(matchesValidationErrorWithDefaultMessage(
                         "Organisation Profile ID should not be null or empty in column 'OrganisationProfileID' "
-                            + "in the sheet 'AccessTypeRoles'"))
+                            + "in the sheet 'AccessType'"))
                 )
             )
         );
@@ -394,7 +394,7 @@ public class AccessTypesParserTest extends ParserTestBase {
 
     @Test
     public void shouldFailWhenAccessTypeIdIsNotUnique() {
-        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
         item.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
@@ -404,7 +404,7 @@ public class AccessTypesParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
         definitionSheet.addDataItem(item);
 
-        final DefinitionDataItem item2 = new DefinitionDataItem(ACCESS_TYPE_ROLES.getName());
+        final DefinitionDataItem item2 = new DefinitionDataItem(ACCESS_TYPE.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item2.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
         item2.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
@@ -413,7 +413,7 @@ public class AccessTypesParserTest extends ParserTestBase {
         item2.addAttribute(ColumnName.CASE_ASSIGNED_ROLE_FIELD.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
         definitionSheet.addDataItem(item);
 
-        definitionSheets.put(ACCESS_TYPE_ROLES.getName(), definitionSheet);
+        definitionSheets.put(ACCESS_TYPE.getName(), definitionSheet);
 
         ValidationException exception =
             assertThrows(ValidationException.class, () -> accessTypesParser
@@ -422,7 +422,7 @@ public class AccessTypesParserTest extends ParserTestBase {
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
             () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
-                "'AccessTypeID' must be unique within the Jurisdiction in the sheet 'AccessTypeRoles'")
+                "'AccessTypeID' must be unique within the Jurisdiction in the sheet 'AccessType'")
         );
 
     }
