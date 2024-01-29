@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapperImpl;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRespository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -57,6 +58,8 @@ public class AccessTypesControllerTest {
     private AccessTypesController controller;
     @Spy
     private  EntityToResponseDTOMapper entityToResponseDTOMapper = new EntityToResponseDTOMapperImpl();
+    @MockBean
+    private AccessTypesRespository accessTypesRepository;
     @MockBean
     private AccessTypeRolesRepository accessTypeRolesRepository;
     private MockMvc mockMvc;
@@ -96,7 +99,8 @@ public class AccessTypesControllerTest {
 
         setUpAccessTypeRoleData();
 
-        controller = new AccessTypesController(entityToResponseDTOMapper, accessTypeRolesRepository);
+        controller = new AccessTypesController(entityToResponseDTOMapper,
+            accessTypesRepository, accessTypeRolesRepository);
 
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
             .setControllerAdvice(new ControllerExceptionHandler())
