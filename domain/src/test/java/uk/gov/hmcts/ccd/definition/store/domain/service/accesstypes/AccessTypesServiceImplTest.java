@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import uk.gov.hmcts.ccd.definition.store.domain.service.accesstypes.AccessTypesServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRespository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
 
