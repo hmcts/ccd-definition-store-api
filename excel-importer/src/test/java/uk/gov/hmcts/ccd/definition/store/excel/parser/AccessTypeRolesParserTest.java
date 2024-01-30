@@ -171,7 +171,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     }
 
     @Test
-    void shouldFailWhenRequiredFieldsAreNotProvided() {
+    void shouldFailWhenAccessTypeIDAndOrgProfileIDAreNotProvided() {
 
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
@@ -215,11 +215,12 @@ class AccessTypeRolesParserTest extends ParserTestBase {
         final DefinitionDataItem item2 = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item2.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
-        item2.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
+        item2.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID 2");
         item2.addAttribute(ColumnName.GROUP_ROLE_NAME.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
         item2.addAttribute(ColumnName.CASE_GROUP_ID_TEMPLATE.toString(), CASE_GROUP_ID_TEMPLATE);
         item2.addAttribute(ColumnName.CASE_ASSIGNED_ROLE_FIELD.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
-        definitionSheet.addDataItem(item);
+        item2.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
+        definitionSheet.addDataItem(item2);
 
         definitionSheets.put(ACCESS_TYPE_ROLE.getName(), definitionSheet);
 
@@ -230,7 +231,45 @@ class AccessTypeRolesParserTest extends ParserTestBase {
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
             () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
-                        "'AccessTypeID' must be unique within the Jurisdiction in the sheet 'AccessTypeRole'")
+                        "'AccessTypeID' in combination with the 'CaseTypeID' and 'OrganisationProfileID' must be "
+                            + "unique within the Jurisdiction in the sheet 'AccessTypeRole'")
+        );
+
+    }
+
+    @Test
+    public void shouldFailWhenAOrgProfileIDIsNotUnique() {
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
+        item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
+        item.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
+        item.addAttribute(ColumnName.GROUP_ROLE_NAME.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
+        item.addAttribute(ColumnName.CASE_GROUP_ID_TEMPLATE.toString(), CASE_GROUP_ID_TEMPLATE);
+        item.addAttribute(ColumnName.CASE_ASSIGNED_ROLE_FIELD.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
+        item.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
+        definitionSheet.addDataItem(item);
+
+        final DefinitionDataItem item2 = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
+        item2.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id2");
+        item2.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
+        item2.addAttribute(ColumnName.GROUP_ROLE_NAME.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
+        item2.addAttribute(ColumnName.CASE_GROUP_ID_TEMPLATE.toString(), CASE_GROUP_ID_TEMPLATE);
+        item2.addAttribute(ColumnName.CASE_ASSIGNED_ROLE_FIELD.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
+        item2.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
+        definitionSheet.addDataItem(item2);
+
+        definitionSheets.put(ACCESS_TYPE_ROLE.getName(), definitionSheet);
+
+        ValidationException exception =
+            assertThrows(ValidationException.class, () -> accessTypeRolesParser
+                .parse(definitionSheets, parseContext, roleToAccessProfilesEntities));
+
+        assertAll(
+            () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
+            () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
+                "'OrganisationProfileID' in combination with the 'CaseTypeID' and 'AccessTypeID' must be "
+                    + "unique within the Jurisdiction in the sheet 'AccessTypeRole'")
         );
 
     }
