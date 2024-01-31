@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import com.microsoft.applicationinsights.boot.dependencies.apachecommons.lang3.tuple.Triple;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
@@ -8,8 +7,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 
 import java.util.List;
@@ -23,6 +22,7 @@ public class AccessTypeRolesValidator {
     List<String> roles;
 
     public ValidationResult validate(final ParseContext parseContext,
+                                     final List<AccessTypeEntity> accessTypeEntities,
                                      final List<AccessTypeRoleEntity> accessTypeRolesEntities,
                                      final List<RoleToAccessProfilesEntity> accessProfileEntities) {
 
@@ -33,7 +33,7 @@ public class AccessTypeRolesValidator {
 
         accessTypeRolesEntities
             .forEach(entity -> {
-                validateRequiredFields(validationResult, entity, accessTypeRolesEntities);
+                validateRequiredFields(validationResult, entity, accessTypeEntities, accessTypeRolesEntities);
                 validateRoleName(validationResult, entity);
                 validateCaseAccessGroupIDTemplate(parseContext, validationResult, entity);
             });
@@ -42,6 +42,7 @@ public class AccessTypeRolesValidator {
     }
 
     private void validateRequiredFields(ValidationResult validationResult, AccessTypeRoleEntity entity,
+                                        List<AccessTypeEntity> accessTypeEntities,
                                         List<AccessTypeRoleEntity> accessTypeRolesEntities) {
 
         if (!StringUtils.hasLength(entity.getAccessTypeId())) {
@@ -49,8 +50,6 @@ public class AccessTypeRolesValidator {
                 String.format("Access Type ID should not be null or empty in column '%s' in the sheet '%s'",
                     ColumnName.ACCESS_TYPE_ID, SheetName.ACCESS_TYPE_ROLE)) {
             });
-        } else {
-            validateAccessTypeId(validationResult, accessTypeRolesEntities);
         }
 
         if (!StringUtils.hasLength(entity.getOrganisationProfileId())) {
@@ -58,63 +57,36 @@ public class AccessTypeRolesValidator {
                 String.format("Organisation Profile ID should not be null or empty in column '%s' "
                     + "in the sheet '%s'", ColumnName.ORGANISATION_PROFILE_ID, SheetName.ACCESS_TYPE_ROLE)) {
             });
-        } else {
-            validateOrgProfileId(validationResult, accessTypeRolesEntities);
+        }
+
+        if (StringUtils.hasLength(entity.getAccessTypeId()) && StringUtils.hasLength(entity.getOrganisationProfileId())) {
+            validateAccessType(validationResult, accessTypeEntities, accessTypeRolesEntities);
         }
     }
 
-    private void validateAccessTypeId(ValidationResult validationResult,
-                                      List<AccessTypeRoleEntity> accessTypeRolesEntities) {
+    private void validateAccessType(ValidationResult validationResult, List<AccessTypeEntity> accessTypeEntities,
+                                    List<AccessTypeRoleEntity> accessTypeRolesEntities) {
 
-        Map<Triple<CaseTypeEntity, Integer, String>, List<AccessTypeRoleEntity>> accessTypeRolesAccessTypeId =
-            accessTypeRolesEntities
-                .stream()
-                .collect(groupingBy(p ->
-                    Triple.of(p.getCaseTypeId(),
-                        p.getCaseTypeId().getJurisdiction().getId(),
-                        p.getAccessTypeId())));
 
-        accessTypeRolesAccessTypeId.keySet()
-            .forEach(triple -> {
-                if (accessTypeRolesAccessTypeId.get(triple).size() > 1) {
-                    String errorMessage = String.format(
-                        "'%s' in combination with the '%s' and '%s' must be unique within the Jurisdiction "
-                            + "in the sheet '%s'",
-                        ColumnName.ACCESS_TYPE_ID, ColumnName.CASE_TYPE_ID, ColumnName.ORGANISATION_PROFILE_ID,
-                        SheetName.ACCESS_TYPE_ROLE);
+        Map<Object, List<AccessTypeEntity>> uniqueRecords = accessTypeEntities.stream()
+            .collect(groupingBy(accessTypeEntity -> new AccessTypeEntity.uniqueIdentifier(
+                accessTypeEntity.getCaseTypeId().getReference(),
+                accessTypeEntity.getCaseTypeId().getJurisdiction().getReference(),
+                accessTypeEntity.getAccessTypeId(),
+                accessTypeEntity.getOrganisationProfileId()
+            )));
 
-                    if (!alreadyReportedError(validationResult, errorMessage)) {
-                        validationResult.addError(new ValidationError(errorMessage) {});
-                    }
-                }
+
+
+        /*find out if it existsss
+        if (!roles.contains(columnValue)) {
+            validationResult.addError(new ValidationError(
+                String.format("'%s' in column '%s' in the sheet '%s' is not a listed '%s' in the sheet '%s'",
+                    columnValue, columnName,
+                    SheetName.ACCESS_TYPE_ROLE, ColumnName.ROLE_NAME, SheetName.ROLE_TO_ACCESS_PROFILES)) {
             });
-    }
+        }*/
 
-    private void validateOrgProfileId(ValidationResult validationResult,
-                                      List<AccessTypeRoleEntity> accessTypeRolesEntities) {
-
-        Map<Triple<CaseTypeEntity, Integer, String>, List<AccessTypeRoleEntity>> accessTypeRolesAccessTypeId =
-            accessTypeRolesEntities
-                .stream()
-                .collect(groupingBy(p ->
-                    Triple.of(p.getCaseTypeId(),
-                        p.getCaseTypeId().getJurisdiction().getId(),
-                        p.getOrganisationProfileId())));
-
-        accessTypeRolesAccessTypeId.keySet()
-            .forEach(triple -> {
-                if (accessTypeRolesAccessTypeId.get(triple).size() > 1) {
-                    String errorMessage = String.format(
-                        "'%s' in combination with the '%s' and '%s' must be unique within the Jurisdiction "
-                            + "in the sheet '%s'",
-                        ColumnName.ORGANISATION_PROFILE_ID, ColumnName.CASE_TYPE_ID, ColumnName.ACCESS_TYPE_ID,
-                        SheetName.ACCESS_TYPE_ROLE);
-
-                    if (!alreadyReportedError(validationResult, errorMessage)) {
-                        validationResult.addError(new ValidationError(errorMessage) {});
-                    }
-                }
-            });
     }
 
     private void validateRoleName(ValidationResult validationResult, AccessTypeRoleEntity entity) {

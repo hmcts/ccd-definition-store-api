@@ -16,6 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.AccessTypeRolesValidator;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
@@ -32,6 +33,7 @@ public class AccessTypeRolesParser {
 
     public List<AccessTypeRoleEntity> parse(final Map<String, DefinitionSheet> definitionSheets,
                                         final ParseContext parseContext,
+                                        final List<AccessTypeEntity> accessTypeEntities,
                                         final List<RoleToAccessProfilesEntity> accessProfileEntities) {
         ValidationResult validationResult = new ValidationResult();
         try {
@@ -46,7 +48,7 @@ public class AccessTypeRolesParser {
                 ).collect(Collectors.toList());
 
             validationResult.merge(accessTypeRolesValidator
-                .validate(parseContext, accessTypeRolesEntities, accessProfileEntities));
+                .validate(parseContext, accessTypeEntities, accessTypeRolesEntities, accessProfileEntities));
 
             if (!validationResult.isValid()) {
                 throw new InvalidImportException();

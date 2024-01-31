@@ -42,6 +42,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.ACCE
 public class AccessTypesParserTest extends ParserTestBase {
 
     private static final String CASE_TYPE_ID_1 = "TestCaseTypeID_1";
+    private static final String CASE_TYPE_ID_2 = "TestCaseTypeID_2";
     private static final String JURISDICTION = "BEFTA_MASTER";
     private static String ROLE_TO_ACCESS_PROFILES_ROLE_NAME = "Role1";
     private static String CASE_GROUP_ID_TEMPLATE = JURISDICTION + ":$ORGID$";
@@ -51,6 +52,8 @@ public class AccessTypesParserTest extends ParserTestBase {
     private ParseContext parseContext;
     @Mock
     private CaseTypeEntity caseTypeEntity;
+    @Mock
+    private CaseTypeEntity caseTypeEntity2;
     @Mock
     private JurisdictionEntity jurisdictionEntity;
     private List<RoleToAccessProfilesEntity> roleToAccessProfilesEntities;
@@ -62,13 +65,16 @@ public class AccessTypesParserTest extends ParserTestBase {
         parseContext = new ParseContext();
         MockitoAnnotations.initMocks(this);
 
-        //setup case type
+        //setup case types
         when(caseTypeEntity.getReference()).thenReturn(CASE_TYPE_ID_1);
         parseContext.registerCaseType(caseTypeEntity);
+        when(caseTypeEntity2.getReference()).thenReturn(CASE_TYPE_ID_2);
+        parseContext.registerCaseType(caseTypeEntity2);
 
         //setup jurisdiction
         when(jurisdictionEntity.getReference()).thenReturn(JURISDICTION);
         when(caseTypeEntity.getJurisdiction()).thenReturn(jurisdictionEntity);
+        when(caseTypeEntity2.getJurisdiction()).thenReturn(jurisdictionEntity);
         parseContext.setJurisdiction(jurisdictionEntity);
 
         //setup role to access profile
@@ -394,7 +400,7 @@ public class AccessTypesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailWhenAccessTypeIdIsNotUnique() {
+    public void shouldFailWhenJurisdictionIsNotUnique() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
@@ -408,7 +414,7 @@ public class AccessTypesParserTest extends ParserTestBase {
         final DefinitionDataItem item2 = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item2.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
-        item2.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID 2");
+        item2.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
         item2.addAttribute(ColumnName.GROUP_ROLE_NAME.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
         item2.addAttribute(ColumnName.CASE_GROUP_ID_TEMPLATE.toString(), CASE_GROUP_ID_TEMPLATE);
         item2.addAttribute(ColumnName.CASE_ASSIGNED_ROLE_FIELD.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
@@ -424,10 +430,38 @@ public class AccessTypesParserTest extends ParserTestBase {
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
             () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
-                "'AccessTypeID' in combination with the 'CaseTypeID' and 'OrganisationProfileID' must be "
-                    + "unique within the Jurisdiction in the sheet 'AccessType'")
+                "'AccessTypeID' in combination with the 'CaseTypeID' and 'OrganisationProfileID', must be unique within the Jurisdiction.  "
+                    + "Therefore, if a service requires the same Access Type and Organisation Profile to apply for several "
+                    + "Case Types in the same Jursidiction, the configuration needs to be repeated for each reqired case type. "
+                    + "in the sheet 'AccessTypeRole'")
         );
+    }
 
+    @Test
+    public void shouldPassWhenCaseTypeIsUnique() {
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
+        item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
+        item.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
+        item.addAttribute(ColumnName.GROUP_ROLE_NAME.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
+        item.addAttribute(ColumnName.CASE_GROUP_ID_TEMPLATE.toString(), CASE_GROUP_ID_TEMPLATE);
+        item.addAttribute(ColumnName.CASE_ASSIGNED_ROLE_FIELD.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
+        item.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
+        definitionSheet.addDataItem(item);
+
+        final DefinitionDataItem item2 = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_2);
+        item2.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
+        item2.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
+        item2.addAttribute(ColumnName.GROUP_ROLE_NAME.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
+        item2.addAttribute(ColumnName.CASE_GROUP_ID_TEMPLATE.toString(), CASE_GROUP_ID_TEMPLATE);
+        item2.addAttribute(ColumnName.CASE_ASSIGNED_ROLE_FIELD.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
+        item2.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
+        definitionSheet.addDataItem(item2);
+
+        definitionSheets.put(ACCESS_TYPE.getName(), definitionSheet);
+
+        accessTypesParser.parse(definitionSheets, parseContext);
     }
 
     private <T> Matcher<T> matchesValidationErrorWithDefaultMessage(String defaultMessage) {

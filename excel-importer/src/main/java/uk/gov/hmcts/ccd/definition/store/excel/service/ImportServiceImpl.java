@@ -422,7 +422,7 @@ public class ImportServiceImpl implements ImportService {
                 parserFactory.createAccessTypeRolesParser();
 
             List<AccessTypeRoleEntity> accessTypeRolesEntities = accessTypeRolesParser
-                .parse(definitionSheets,parseContext, accessProfileEntities);
+                .parse(definitionSheets,parseContext, accessTypeEntities, accessProfileEntities);
             accessTypeRolesService.saveAll(accessTypeRolesEntities);
             logger.debug("Importing spreadsheet: AccessTypeRole...: OK");
         }
