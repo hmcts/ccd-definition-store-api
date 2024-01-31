@@ -363,7 +363,7 @@ public class AccessTypesParserTest extends ParserTestBase {
     }
 
     @Test
-    void shouldFailWhenRequiredFieldsAreNotProvided() {
+    void shouldFailWhenAccessTypeIDAndOrgProfileIDAreNotProvided() {
 
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
@@ -422,7 +422,8 @@ public class AccessTypesParserTest extends ParserTestBase {
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
             () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
-                "'AccessTypeID' must be unique within the Jurisdiction in the sheet 'AccessType'")
+                "'AccessTypeID' in combination with the 'CaseTypeID' and 'OrganisationProfileID' must be "
+                    + "unique within the Jurisdiction in the sheet 'AccessTypeRole'")
         );
 
     }

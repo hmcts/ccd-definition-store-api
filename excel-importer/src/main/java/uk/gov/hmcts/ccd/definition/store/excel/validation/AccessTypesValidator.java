@@ -8,6 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.util.List;
@@ -48,6 +49,8 @@ public class AccessTypesValidator {
                 String.format("Organisation Profile ID should not be null or empty in column '%s' "
                     + "in the sheet '%s'", ColumnName.ORGANISATION_PROFILE_ID, SheetName.ACCESS_TYPE)) {
             });
+        } else {
+            validateOrgProfileId(validationResult, accessTypeEntities);
         }
     }
 
@@ -67,6 +70,33 @@ public class AccessTypesValidator {
                 if (accessTypeRolesAccessTypeId.get(triple).size() > 1) {
                     String errorMessage = String.format("'%s' must be unique within the Jurisdiction in the sheet '%s'",
                         ColumnName.ACCESS_TYPE_ID, SheetName.ACCESS_TYPE);
+
+                    if (!alreadyReportedError(validationResult, errorMessage)) {
+                        validationResult.addError(new ValidationError(errorMessage) {});
+                    }
+                }
+            });
+    }
+
+    private void validateOrgProfileId(ValidationResult validationResult,
+                                      List<AccessTypeEntity> accessTypeEntities) {
+
+        Map<Triple<CaseTypeEntity, Integer, String>, List<AccessTypeEntity>> accessTypeRolesAccessTypeId =
+            accessTypeEntities
+                .stream()
+                .collect(groupingBy(p ->
+                    Triple.of(p.getCaseTypeId(),
+                        p.getCaseTypeId().getJurisdiction().getId(),
+                        p.getOrganisationProfileId())));
+
+        accessTypeRolesAccessTypeId.keySet()
+            .forEach(triple -> {
+                if (accessTypeRolesAccessTypeId.get(triple).size() > 1) {
+                    String errorMessage = String.format(
+                        "'%s' in combination with the '%s' and '%s' must be unique within the Jurisdiction "
+                            + "in the sheet '%s'",
+                        ColumnName.ORGANISATION_PROFILE_ID, ColumnName.CASE_TYPE_ID, ColumnName.ACCESS_TYPE_ID,
+                        SheetName.ACCESS_TYPE);
 
                     if (!alreadyReportedError(validationResult, errorMessage)) {
                         validationResult.addError(new ValidationError(errorMessage) {});
