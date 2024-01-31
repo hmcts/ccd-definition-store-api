@@ -37,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPE_ID;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.ACCESS_TYPE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.ACCESS_TYPE_ROLE;
 
 public class AccessTypesParserTest extends ParserTestBase {
 
@@ -394,7 +395,7 @@ public class AccessTypesParserTest extends ParserTestBase {
 
     @Test
     public void shouldFailWhenAccessTypeIdIsNotUnique() {
-        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
+        final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
         item.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
@@ -404,14 +405,15 @@ public class AccessTypesParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
         definitionSheet.addDataItem(item);
 
-        final DefinitionDataItem item2 = new DefinitionDataItem(ACCESS_TYPE.getName());
+        final DefinitionDataItem item2 = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item2.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
-        item2.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID");
+        item2.addAttribute(ColumnName.ORGANISATION_PROFILE_ID.toString(), "ProfileID 2");
         item2.addAttribute(ColumnName.GROUP_ROLE_NAME.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
         item2.addAttribute(ColumnName.CASE_GROUP_ID_TEMPLATE.toString(), CASE_GROUP_ID_TEMPLATE);
         item2.addAttribute(ColumnName.CASE_ASSIGNED_ROLE_FIELD.toString(), ROLE_TO_ACCESS_PROFILES_ROLE_NAME);
-        definitionSheet.addDataItem(item);
+        item2.addAttribute(ColumnName.GROUP_ACCESS_ENABLED.toString(), true);
+        definitionSheet.addDataItem(item2);
 
         definitionSheets.put(ACCESS_TYPE.getName(), definitionSheet);
 
@@ -423,7 +425,7 @@ public class AccessTypesParserTest extends ParserTestBase {
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
             () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
                 "'AccessTypeID' in combination with the 'CaseTypeID' and 'OrganisationProfileID' must be "
-                    + "unique within the Jurisdiction in the sheet 'AccessTypeRole'")
+                    + "unique within the Jurisdiction in the sheet 'AccessType'")
         );
 
     }

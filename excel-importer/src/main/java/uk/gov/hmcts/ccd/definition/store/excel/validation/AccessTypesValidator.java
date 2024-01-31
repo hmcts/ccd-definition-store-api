@@ -68,8 +68,11 @@ public class AccessTypesValidator {
         accessTypeRolesAccessTypeId.keySet()
             .forEach(triple -> {
                 if (accessTypeRolesAccessTypeId.get(triple).size() > 1) {
-                    String errorMessage = String.format("'%s' must be unique within the Jurisdiction in the sheet '%s'",
-                        ColumnName.ACCESS_TYPE_ID, SheetName.ACCESS_TYPE);
+                    String errorMessage = String.format(
+                        "'%s' in combination with the '%s' and '%s' must be unique within the Jurisdiction "
+                            + "in the sheet '%s'",
+                        ColumnName.ACCESS_TYPE_ID, ColumnName.CASE_TYPE_ID, ColumnName.ORGANISATION_PROFILE_ID,
+                        SheetName.ACCESS_TYPE);
 
                     if (!alreadyReportedError(validationResult, errorMessage)) {
                         validationResult.addError(new ValidationError(errorMessage) {});
