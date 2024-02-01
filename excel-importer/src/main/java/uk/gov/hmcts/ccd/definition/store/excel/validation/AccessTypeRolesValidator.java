@@ -107,8 +107,6 @@ public class AccessTypeRolesValidator {
 
         if (StringUtils.hasLength(entity.getGroupRoleName())) {
 
-            validateAgainstRoleName(validationResult, entity.getGroupRoleName(), ColumnName.GROUP_ROLE_NAME);
-
             if (!entity.getGroupAccessEnabled()) {
                 validationResult.addError(new ValidationError(
                     String.format("'%s' must be enabled if '%s' is set in the sheet '%s'",
@@ -119,10 +117,6 @@ public class AccessTypeRolesValidator {
             validateCaseAssignedRoleField(validationResult, entity);
         }
 
-        if (StringUtils.hasLength(entity.getOrganisationalRoleName())) {
-            validateAgainstRoleName(validationResult, entity.getOrganisationalRoleName(),
-                ColumnName.ORGANISATION_ROLE_NAME);
-        }
     }
 
     private void validateCaseAccessGroupIDTemplate(ParseContext parseContext, ValidationResult validationResult,
@@ -170,18 +164,15 @@ public class AccessTypeRolesValidator {
                     ColumnName.CASE_ASSIGNED_ROLE_FIELD, ColumnName.GROUP_ROLE_NAME, SheetName.ACCESS_TYPE_ROLE)) {
             });
         } else {
-            validateAgainstRoleName(validationResult, entity.getCaseAssignedRoleField(),
-                ColumnName.CASE_ASSIGNED_ROLE_FIELD);
-        }
-    }
 
-    private void validateAgainstRoleName(ValidationResult validationResult, String columnValue, ColumnName columnName) {
-        if (!roles.contains(columnValue)) {
-            validationResult.addError(new ValidationError(
-                String.format("'%s' in column '%s' in the sheet '%s' is not a listed '%s' in the sheet '%s'",
-                    columnValue, columnName,
-                    SheetName.ACCESS_TYPE_ROLE, ColumnName.ROLE_NAME, SheetName.ROLE_TO_ACCESS_PROFILES)) {
-            });
+            //validate against role name
+            if (!roles.contains(entity.getCaseAssignedRoleField())) {
+                validationResult.addError(new ValidationError(
+                    String.format("'%s' in column '%s' in the sheet '%s' is not a listed '%s' in the sheet '%s'",
+                        entity.getCaseAssignedRoleField(), ColumnName.CASE_ASSIGNED_ROLE_FIELD,
+                        SheetName.ACCESS_TYPE_ROLE, ColumnName.ROLE_NAME, SheetName.ROLE_TO_ACCESS_PROFILES)) {
+                });
+            }
         }
     }
 }

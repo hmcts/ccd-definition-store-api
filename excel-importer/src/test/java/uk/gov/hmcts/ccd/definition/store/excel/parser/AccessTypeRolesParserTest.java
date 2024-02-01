@@ -347,20 +347,10 @@ class AccessTypeRolesParserTest extends ParserTestBase {
                 .parse(definitionSheets, parseContext, accessTypeEntitys, roleToAccessProfilesEntities));
 
         assertAll(
-            () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 3, is(true)),
-            () -> assertThat(exception.getValidationResult().getValidationErrors(), allOf(
-                    hasItem(matchesValidationErrorWithDefaultMessage(
-                        "'Roleddgterhfghg' in column 'GroupRoleName' in the sheet 'AccessTypeRole' "
-                            + "is not a listed 'RoleName' in the sheet 'RoleToAccessProfiles'")),
-                    hasItem(matchesValidationErrorWithDefaultMessage(
-                        "'Role1342534' in column 'CaseAssignedRoleField' in the sheet 'AccessTypeRole' "
-                            + "is not a listed 'RoleName' in the sheet 'RoleToAccessProfiles'")),
-                    hasItem(matchesValidationErrorWithDefaultMessage(
-                        "'dkjfhgiduh' in column 'OrganisationalRoleName' in the sheet 'AccessTypeRole' "
-                            + "is not a listed 'RoleName' in the sheet 'RoleToAccessProfiles'"
-                    ))
-                )
-            )
+            () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
+            () -> assertEquals("'Role1342534' in column 'CaseAssignedRoleField' in the sheet 'AccessTypeRole' "
+                + "is not a listed 'RoleName' in the sheet 'RoleToAccessProfiles'",
+                exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage())
         );
     }
 
