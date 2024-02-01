@@ -235,9 +235,9 @@ public class AccessTypesParserTest extends ParserTestBase {
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
-            () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
-                "'AccessMandatory' and 'AccessDefault' must be set to true for 'Display' to be used "
-                    + "in the sheet 'AccessType'")
+            () -> assertEquals("'AccessMandatory' and 'AccessDefault' must be set to true for 'Display' to be used "
+                    + "in the sheet 'AccessType'",
+                exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage())
         );
     }
 
@@ -268,9 +268,9 @@ public class AccessTypesParserTest extends ParserTestBase {
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
-            () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
-                "'AccessMandatory' and 'AccessDefault' must be set to true for 'Display' to be used "
-                    + "in the sheet 'AccessType'")
+            () -> assertEquals("'AccessMandatory' and 'AccessDefault' must be set to true for 'Display' to be used "
+                    + "in the sheet 'AccessType'",
+                exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage())
         );
     }
 
@@ -302,9 +302,9 @@ public class AccessTypesParserTest extends ParserTestBase {
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
-            () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
-                "'DisplayOrder' must be greater than 0 in column 'DisplayOrder' "
-                    + "in the sheet 'AccessType'")
+            () -> assertEquals("'DisplayOrder' must be greater than 0 in column 'DisplayOrder' "
+                    + "in the sheet 'AccessType'",
+                exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage())
         );
     }
 
@@ -354,9 +354,9 @@ public class AccessTypesParserTest extends ParserTestBase {
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
-            () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
-                "'DisplayOrder' must be unique across all Case Types for a given Jurisdiction "
-                    + "in the sheet 'AccessType'")
+            () -> assertEquals("'DisplayOrder' must be unique across all Case Types for a given Jurisdiction "
+                    + "in the sheet 'AccessType'",
+                exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage())
         );
     }
 
@@ -429,11 +429,12 @@ public class AccessTypesParserTest extends ParserTestBase {
 
         assertAll(
             () -> assertThat(exception.getValidationResult().getValidationErrors().size() == 1, is(true)),
-            () -> assertEquals(exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage(),
-                "'AccessTypeID' in combination with the 'CaseTypeID' and 'OrganisationProfileID', must be unique within the Jurisdiction.  "
-                    + "Therefore, if a service requires the same Access Type and Organisation Profile to apply for several "
-                    + "Case Types in the same Jursidiction, the configuration needs to be repeated for each reqired case type. "
-                    + "in the sheet 'AccessTypeRole'")
+            () -> assertEquals("'AccessTypeID' in combination with the 'CaseTypeID' and "
+                    + "'OrganisationProfileID', must be unique within the Jurisdiction.  Therefore, if a service "
+                    + "requires the same Access Type and Organisation Profile to apply for several Case Types in "
+                    + "the same Jursidiction, the configuration needs to be repeated for each reqired case type. "
+                    + "in the sheet 'AccessTypeRole'",
+                exception.getValidationResult().getValidationErrors().get(0).getDefaultMessage())
         );
     }
 

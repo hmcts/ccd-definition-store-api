@@ -62,4 +62,5 @@ public class AccessTypeRoleEntity implements Serializable {
 
     @Column(name = "case_access_group_id_template")
     private String caseAccessGroupIdTemplate;
+
 }

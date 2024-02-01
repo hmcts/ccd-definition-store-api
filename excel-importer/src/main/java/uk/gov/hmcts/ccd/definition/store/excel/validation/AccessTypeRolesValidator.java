@@ -33,7 +33,7 @@ public class AccessTypeRolesValidator {
 
         accessTypeRolesEntities
             .forEach(entity -> {
-                validateRequiredFields(validationResult, entity, accessTypeEntities, accessTypeRolesEntities);
+                validateRequiredFields(validationResult, entity, accessTypeEntities);
                 validateRoleName(validationResult, entity);
                 validateCaseAccessGroupIDTemplate(parseContext, validationResult, entity);
             });
@@ -41,51 +41,57 @@ public class AccessTypeRolesValidator {
         return validationResult;
     }
 
-    private void validateRequiredFields(ValidationResult validationResult, AccessTypeRoleEntity entity,
-                                        List<AccessTypeEntity> accessTypeEntities,
-                                        List<AccessTypeRoleEntity> accessTypeRolesEntities) {
+    private void validateRequiredFields(ValidationResult validationResult, AccessTypeRoleEntity accessTypeRoleEntity,
+                                        List<AccessTypeEntity> accessTypeEntities) {
 
-        if (!StringUtils.hasLength(entity.getAccessTypeId())) {
+        if (!StringUtils.hasLength(accessTypeRoleEntity.getAccessTypeId())) {
             validationResult.addError(new ValidationError(
                 String.format("Access Type ID should not be null or empty in column '%s' in the sheet '%s'",
                     ColumnName.ACCESS_TYPE_ID, SheetName.ACCESS_TYPE_ROLE)) {
             });
         }
 
-        if (!StringUtils.hasLength(entity.getOrganisationProfileId())) {
+        if (!StringUtils.hasLength(accessTypeRoleEntity.getOrganisationProfileId())) {
             validationResult.addError(new ValidationError(
                 String.format("Organisation Profile ID should not be null or empty in column '%s' "
                     + "in the sheet '%s'", ColumnName.ORGANISATION_PROFILE_ID, SheetName.ACCESS_TYPE_ROLE)) {
             });
         }
 
-        if (StringUtils.hasLength(entity.getAccessTypeId()) && StringUtils.hasLength(entity.getOrganisationProfileId())) {
-            validateAccessType(validationResult, accessTypeEntities, accessTypeRolesEntities);
+        if (StringUtils.hasLength(accessTypeRoleEntity.getAccessTypeId())
+            && StringUtils.hasLength(accessTypeRoleEntity.getOrganisationProfileId())) {
+            validateAccessType(validationResult, accessTypeEntities, accessTypeRoleEntity);
         }
     }
 
     private void validateAccessType(ValidationResult validationResult, List<AccessTypeEntity> accessTypeEntities,
-                                    List<AccessTypeRoleEntity> accessTypeRolesEntities) {
+                                    AccessTypeRoleEntity accessTypeRoleEntity) {
 
 
-        Map<Object, List<AccessTypeEntity>> uniqueRecords = accessTypeEntities.stream()
-            .collect(groupingBy(accessTypeEntity -> new AccessTypeEntity.uniqueIdentifier(
+        Map<AccessTypeEntity.UniqueIdentifier, List<AccessTypeEntity>> validAccessTypes = accessTypeEntities.stream()
+            .collect(groupingBy(accessTypeEntity -> new AccessTypeEntity.UniqueIdentifier(
                 accessTypeEntity.getCaseTypeId().getReference(),
                 accessTypeEntity.getCaseTypeId().getJurisdiction().getReference(),
                 accessTypeEntity.getAccessTypeId(),
                 accessTypeEntity.getOrganisationProfileId()
             )));
 
+        AccessTypeEntity.UniqueIdentifier accessTypeRoleEntityUniqueId = new AccessTypeEntity.UniqueIdentifier(
+            accessTypeRoleEntity.getCaseTypeId().getReference(),
+            accessTypeRoleEntity.getCaseTypeId().getJurisdiction().getReference(),
+            accessTypeRoleEntity.getAccessTypeId(),
+            accessTypeRoleEntity.getOrganisationProfileId()
+        );
 
+        if (!validAccessTypes.keySet().contains(accessTypeRoleEntityUniqueId)) {
+            String errorMessage = String.format(
+                "AccessType in the sheet '%s' must match a record in the AccessType Tab",
+                SheetName.ACCESS_TYPE_ROLE);
 
-        /*find out if it existsss
-        if (!roles.contains(columnValue)) {
-            validationResult.addError(new ValidationError(
-                String.format("'%s' in column '%s' in the sheet '%s' is not a listed '%s' in the sheet '%s'",
-                    columnValue, columnName,
-                    SheetName.ACCESS_TYPE_ROLE, ColumnName.ROLE_NAME, SheetName.ROLE_TO_ACCESS_PROFILES)) {
-            });
-        }*/
+            if (!alreadyReportedError(validationResult, errorMessage)) {
+                validationResult.addError(new ValidationError(errorMessage) {});
+            }
+        }
 
     }
 

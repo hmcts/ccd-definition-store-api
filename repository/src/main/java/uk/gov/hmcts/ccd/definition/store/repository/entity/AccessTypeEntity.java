@@ -65,7 +65,7 @@ public class AccessTypeEntity {
     @Column(name = "display_order")
     private Integer displayOrder;
 
-    public record uniqueIdentifier(String caseTypeReference, String jurisdictionReference, String accessTypeId,
+    public record UniqueIdentifier(String caseTypeReference, String jurisdictionReference, String accessTypeId,
                                    String organisationProfileId) {
     }
 }

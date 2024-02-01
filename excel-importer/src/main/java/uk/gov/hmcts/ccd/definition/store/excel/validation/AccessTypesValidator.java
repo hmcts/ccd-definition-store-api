@@ -50,15 +50,15 @@ public class AccessTypesValidator {
 
         if (StringUtils.hasLength(entity.getAccessTypeId())
             && StringUtils.hasLength(entity.getOrganisationProfileId())) {
-            validateAccessTypeIdAndOrgProfileIdIsUniqueForCaseTypeAndJurisdiction(validationResult, accessTypeEntities);
+            validateAccessTypeIdentifier(validationResult, accessTypeEntities);
         }
     }
 
-    private void validateAccessTypeIdAndOrgProfileIdIsUniqueForCaseTypeAndJurisdiction(
+    private void validateAccessTypeIdentifier(
         ValidationResult validationResult, List<AccessTypeEntity> accessTypeEntities) {
 
         Map<Object, List<AccessTypeEntity>> uniqueRecords = accessTypeEntities.stream()
-            .collect(groupingBy(accessTypeEntity -> new AccessTypeEntity.uniqueIdentifier(
+            .collect(groupingBy(accessTypeEntity -> new AccessTypeEntity.UniqueIdentifier(
             accessTypeEntity.getCaseTypeId().getReference(),
             accessTypeEntity.getCaseTypeId().getJurisdiction().getReference(),
             accessTypeEntity.getAccessTypeId(),
