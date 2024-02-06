@@ -2091,7 +2091,8 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(accessTypeRolesEntity.getId(), accessTypeRolesField.getId());
             assertEquals(accessTypeRolesEntity.getLiveFrom(), accessTypeRolesField.getLiveFrom());
             assertEquals(accessTypeRolesEntity.getLiveTo(), accessTypeRolesField.getLiveTo());
-            assertEquals(accessTypeRolesEntity.getCaseTypeId(), accessTypeRolesField.getCaseTypeId());
+            assertEquals(accessTypeRolesEntity.getCaseTypeId().getReference(),
+                accessTypeRolesField.getCaseTypeId().getReference());
             assertEquals(accessTypeRolesEntity.getAccessTypeId(), accessTypeRolesField.getAccessTypeId());
             assertEquals(accessTypeRolesEntity.getOrganisationProfileId(),
                 accessTypeRolesField.getOrganisationProfileId());
