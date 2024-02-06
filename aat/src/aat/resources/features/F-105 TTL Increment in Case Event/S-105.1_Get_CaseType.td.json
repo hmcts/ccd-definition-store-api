@@ -406,6 +406,7 @@
       "categories": "[[ANYTHING_PRESENT]]",
       "searchCriterias": [],
       "accessTypeRoles": [],
+      "accessTypes": [],
       "case_fields" :  "[[ANYTHING_PRESENT]]",
       "printable_document_url" : "[[ANY_NULLABLE]]",
       "callback_get_case_url" : null,

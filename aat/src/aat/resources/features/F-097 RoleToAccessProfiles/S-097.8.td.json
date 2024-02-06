@@ -71,6 +71,7 @@
       "categories": [],
       "searchCriterias": [],
       "accessTypeRoles": [],
+      "accessTypes": [],
       "case_fields": "[[ANYTHING_PRESENT]]",
       "printable_document_url": null,
       "callback_get_case_url": null,

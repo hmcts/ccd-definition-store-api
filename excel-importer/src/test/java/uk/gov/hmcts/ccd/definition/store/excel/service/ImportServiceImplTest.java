@@ -86,6 +86,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles.AccessTypeRolesService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accesstypes.AccessTypesService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
@@ -121,6 +122,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -171,6 +173,9 @@ public class ImportServiceImplTest {
 
     @Mock
     private AccessProfileRepository accessProfileRepository;
+
+    @Mock
+    private AccessTypesRepository accessTypesRepository;
 
     @Mock
     private AccessTypeRolesRepository accessTypeRolesRepository;
@@ -239,6 +244,9 @@ public class ImportServiceImplTest {
     private TranslationService translationService;
 
     @Mock
+    private AccessTypesService accessTypesService;
+
+    @Mock
     private AccessTypeRolesService accessTypeRolesService;
 
     @Before
@@ -261,6 +269,7 @@ public class ImportServiceImplTest {
             caseTypeService,
             layoutService,
             accessProfileRepository,
+            accessTypesRepository,
             accessTypeRolesRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
@@ -273,6 +282,7 @@ public class ImportServiceImplTest {
             searchCriteriaService,
             searchPartyService, categoryTabService,
             translationService,
+            accessTypesService,
             accessTypeRolesService,
             applicationParams);
 
@@ -464,6 +474,7 @@ public class ImportServiceImplTest {
             caseTypeService,
             layoutService,
             accessProfileRepository,
+            accessTypesRepository,
             accessTypeRolesRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
@@ -475,8 +486,8 @@ public class ImportServiceImplTest {
             roleToAccessProfileService,
             searchCriteriaService,
             searchPartyService, categoryTabService,
-            translationService, accessTypeRolesService,
-            applicationParams);
+            translationService, accessTypesService,
+            accessTypeRolesService, applicationParams);
 
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
