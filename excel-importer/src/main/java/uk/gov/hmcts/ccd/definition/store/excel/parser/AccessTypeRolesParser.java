@@ -31,51 +31,15 @@ public class AccessTypeRolesParser {
         this.accessTypeRolesValidator = accessTypeRolesValidator;
     }
 
-    public List<AccessTypeEntity> parseAccessTypes(final Map<String, DefinitionSheet> definitionSheets,
-                                            final ParseContext parseContext) {
+    public List<AccessTypeRoleEntity> parse(final Map<String, DefinitionSheet> definitionSheets,
+                                            final ParseContext parseContext,
+                                            final List<AccessTypeEntity> accessTypeEntities,
+                                            final List<RoleToAccessProfilesEntity> accessProfileEntities) {
         ValidationResult validationResult = new ValidationResult();
         try {
 
             final List<DefinitionDataItem> accessTypeRolesItems = definitionSheets
-                .get(SheetName.ACCESS_TYPE_ROLES.getName())
-                .getDataItems();
-
-            final List<AccessTypeEntity> accessTypeEntities = accessTypeRolesItems
-                .stream().map(accessTypeEntity ->
-                    createAccessTypeEntity(parseContext, accessTypeEntity)
-                ).collect(Collectors.toList());
-
-            validationResult.merge(accessTypeRolesValidator
-                .validateAccessTypes(accessTypeEntities));
-
-            if (!validationResult.isValid()) {
-                throw new InvalidImportException();
-            }
-
-            return accessTypeEntities;
-
-        } catch (InvalidImportException invalidImportException) {
-            String errorMessage = invalidImportException.getMessage();
-            if (StringUtils.hasLength(errorMessage)) {
-                validationResult.addError(new ValidationError(invalidImportException.getMessage()) {
-                    @Override
-                    public String toString() {
-                        return getDefaultMessage();
-                    }
-                });
-            }
-            throw new ValidationException(validationResult);
-        }
-    }
-
-    public List<AccessTypeRoleEntity> parseAccessTypeRoles(final Map<String, DefinitionSheet> definitionSheets,
-                                        final ParseContext parseContext,
-                                        final List<RoleToAccessProfilesEntity> accessProfileEntities) {
-        ValidationResult validationResult = new ValidationResult();
-        try {
-
-            final List<DefinitionDataItem> accessTypeRolesItems = definitionSheets
-                .get(SheetName.ACCESS_TYPE_ROLES.getName())
+                .get(SheetName.ACCESS_TYPE_ROLE.getName())
                 .getDataItems();
 
             final List<AccessTypeRoleEntity> accessTypeRolesEntities = accessTypeRolesItems
@@ -84,7 +48,7 @@ public class AccessTypeRolesParser {
                 ).collect(Collectors.toList());
 
             validationResult.merge(accessTypeRolesValidator
-                .validateAccessTypeRoles(parseContext, accessTypeRolesEntities, accessProfileEntities));
+                .validate(parseContext, accessTypeEntities, accessTypeRolesEntities, accessProfileEntities));
 
             if (!validationResult.isValid()) {
                 throw new InvalidImportException();
@@ -106,43 +70,8 @@ public class AccessTypeRolesParser {
         }
     }
 
-    private AccessTypeEntity createAccessTypeEntity(final ParseContext parseContext,
-                                                    final DefinitionDataItem definitionDataItem) {
-        AccessTypeEntity accessTypeEntity = new AccessTypeEntity();
-
-        final String caseType = definitionDataItem.getString(ColumnName.CASE_TYPE_ID);
-        CaseTypeEntity caseTypeEntity = parseContext.getCaseTypes()
-            .stream()
-            .filter(entity -> entity.getReference().equals(caseType))
-            .findAny()
-            .orElseThrow(() -> {
-                String message = String.format("Case Type not found %s in column '%s' in the sheet '%s'",
-                    caseType, ColumnName.CASE_TYPE_ID, SheetName.ACCESS_TYPE_ROLES);
-                throw new InvalidImportException(message);
-
-            });
-        accessTypeEntity.setCaseTypeId(caseTypeEntity);
-
-        accessTypeEntity.setLiveFrom(definitionDataItem.getLocalDate(ColumnName.LIVE_FROM));
-        accessTypeEntity.setLiveTo(definitionDataItem.getLocalDate(ColumnName.LIVE_TO));
-        accessTypeEntity.setCaseTypeId(caseTypeEntity);
-        accessTypeEntity.setAccessTypeId(definitionDataItem.getString(ColumnName.ACCESS_TYPE_ID));
-        accessTypeEntity.setOrganisationProfileId(definitionDataItem.getString(
-            ColumnName.ORGANISATION_PROFILE_ID));
-        accessTypeEntity.setAccessMandatory(
-            definitionDataItem.getBooleanOrDefault(ColumnName.ACCESS_MANDATORY, false));
-        accessTypeEntity.setAccessDefault(
-            definitionDataItem.getBooleanOrDefault(ColumnName.ACCESS_DEFAULT, false));
-        accessTypeEntity.setDisplay(definitionDataItem.getBooleanOrDefault(ColumnName.DISPLAY, false));
-        accessTypeEntity.setDescription(definitionDataItem.getString(ColumnName.DESCRIPTION));
-        accessTypeEntity.setHint(definitionDataItem.getString(ColumnName.HINT_TEXT));
-        accessTypeEntity.setDisplayOrder(definitionDataItem.getInteger(ColumnName.DISPLAY_ORDER));
-
-        return accessTypeEntity;
-    }
-
     private AccessTypeRoleEntity createAccessTypeRoleEntity(final ParseContext parseContext,
-                                                                 final DefinitionDataItem definitionDataItem) {
+                                                            final DefinitionDataItem definitionDataItem) {
         AccessTypeRoleEntity accessTypeRoleEntity = new AccessTypeRoleEntity();
 
         final String caseType = definitionDataItem.getString(ColumnName.CASE_TYPE_ID);
@@ -152,7 +81,7 @@ public class AccessTypeRolesParser {
             .findAny()
             .orElseThrow(() -> {
                 String message = String.format("Case Type not found %s in column '%s' in the sheet '%s'",
-                    caseType, ColumnName.CASE_TYPE_ID, SheetName.ACCESS_TYPE_ROLES);
+                    caseType, ColumnName.CASE_TYPE_ID, SheetName.ACCESS_TYPE_ROLE);
                 throw new InvalidImportException(message);
 
             });
