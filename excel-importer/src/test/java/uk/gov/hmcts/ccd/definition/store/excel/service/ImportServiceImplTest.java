@@ -141,7 +141,7 @@ public class ImportServiceImplTest {
     public static final String BAD_FILE = "CCD_TestDefinition_V12.xlsx";
     private static final String GOOD_FILE = "CCD_TestDefinition.xlsx";
     private static final String GOOD_FILE_MISSING_ACCESS_TYPES_ROLES_TAB
-        = "CCD_TestDefinitionMissingAccessTypesRolesTab.xlsx";
+        = "CCD_TestDefinitionMissingAccessTypes&AccessTypeRolesTab.xlsx";
     private static final String JURISDICTION_NAME = "TEST";
     private static final String TEST_ADDRESS_BOOK_CASE_TYPE = "TestAddressBookCase";
     private static final String TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE = "TestComplexAddressBookCase";
