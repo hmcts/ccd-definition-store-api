@@ -68,8 +68,8 @@ public class AccessTypeRolesEntity implements Serializable {
     @Column(name = "group_role_name")
     private String groupRoleName;
 
-    @Column(name = "organisation_policy_field")
-    private String organisationPolicyField;
+    @Column(name = "case_assigned_role_field")
+    private String caseAssignedRoleField;
 
     @Column(name = "group_access_enabled")
     private Boolean groupAccessEnabled;
