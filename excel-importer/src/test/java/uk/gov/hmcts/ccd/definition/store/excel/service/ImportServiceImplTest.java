@@ -346,7 +346,7 @@ public class ImportServiceImplTest {
     }
 
     @Test
-    public void shouldImportDefinitionWhenMissingAccessTypesRolesTab() throws Exception {
+    public void shouldImportDefinitionWhenMissingAccessTypeAndAccessTypeRoleTab() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
 

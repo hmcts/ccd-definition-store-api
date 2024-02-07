@@ -406,28 +406,30 @@ public class ImportServiceImpl implements ImportService {
     private void parseAccessTypeRoles(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext,
                                       List<RoleToAccessProfilesEntity> accessProfileEntities) {
 
-        if ((applicationParams.isCaseGroupAccessFilteringEnabled())
-            && definitionSheets.get(SheetName.ACCESS_TYPE_ROLE.getName()) != null) {
+        if (applicationParams.isCaseGroupAccessFilteringEnabled()) {
 
-            logger.debug("Importing spreadsheet: AccessType...");
-            final AccessTypesParser accessTypesParser =
-                parserFactory.createAccessTypesParser();
+            if (definitionSheets.get(SheetName.ACCESS_TYPE.getName()) != null) {
+                logger.debug("Importing spreadsheet: AccessType...");
+                final AccessTypesParser accessTypesParser =
+                    parserFactory.createAccessTypesParser();
 
-            List<AccessTypeEntity> accessTypeEntities = accessTypesParser
-                .parse(definitionSheets,parseContext);
-            accessTypesService.saveAll(accessTypeEntities);
-            logger.debug("Importing spreadsheet: AccessType...: OK");
+                List<AccessTypeEntity> accessTypeEntities = accessTypesParser
+                    .parse(definitionSheets, parseContext);
+                accessTypesService.saveAll(accessTypeEntities);
+                logger.debug("Importing spreadsheet: AccessType...: OK");
 
-            logger.debug("Importing spreadsheet: AccessTypeRole...");
-            final AccessTypeRolesParser accessTypeRolesParser =
-                parserFactory.createAccessTypeRolesParser();
+                if (definitionSheets.get(SheetName.ACCESS_TYPE_ROLE.getName()) != null) {
+                    logger.debug("Importing spreadsheet: AccessTypeRole...");
+                    final AccessTypeRolesParser accessTypeRolesParser =
+                        parserFactory.createAccessTypeRolesParser();
 
-            List<AccessTypeRoleEntity> accessTypeRolesEntities = accessTypeRolesParser
-                .parse(definitionSheets,parseContext, accessTypeEntities, accessProfileEntities);
-            accessTypeRolesService.saveAll(accessTypeRolesEntities);
-            logger.debug("Importing spreadsheet: AccessTypeRole...: OK");
+                    List<AccessTypeRoleEntity> accessTypeRolesEntities = accessTypeRolesParser
+                        .parse(definitionSheets, parseContext, accessTypeEntities, accessProfileEntities);
+                    accessTypeRolesService.saveAll(accessTypeRolesEntities);
+                    logger.debug("Importing spreadsheet: AccessTypeRole...: OK");
+                }
+            }
         }
-
     }
 
     @VisibleForTesting  // used by BaseTest
