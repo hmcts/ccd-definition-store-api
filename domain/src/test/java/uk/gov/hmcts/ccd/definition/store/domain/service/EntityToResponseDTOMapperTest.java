@@ -2082,7 +2082,7 @@ class  EntityToResponseDTOMapperTest {
             accessTypeRolesEntity.setDisplayOrder(1);
             accessTypeRolesEntity.setOrganisationalRoleName("some org role name");
             accessTypeRolesEntity.setGroupRoleName("some group role name");
-            accessTypeRolesEntity.setOrganisationPolicyField("some org policy field");
+            accessTypeRolesEntity.setCaseAssignedRoleField("some case assigned role field");
             accessTypeRolesEntity.setGroupAccessEnabled(true);
             accessTypeRolesEntity.setCaseAccessGroupIdTemplate("some access group id template");
 
@@ -2104,8 +2104,8 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(accessTypeRolesEntity.getOrganisationalRoleName(),
                 accessTypeRolesField.getOrganisationalRoleName());
             assertEquals(accessTypeRolesEntity.getGroupRoleName(), accessTypeRolesField.getGroupRoleName());
-            assertEquals(accessTypeRolesEntity.getOrganisationPolicyField(),
-                accessTypeRolesField.getOrganisationPolicyField());
+            assertEquals(accessTypeRolesEntity.getCaseAssignedRoleField(),
+                accessTypeRolesField.getCaseAssignedRoleField());
             assertEquals(accessTypeRolesEntity.getGroupAccessEnabled(), accessTypeRolesField.getGroupAccessEnabled());
             assertEquals(accessTypeRolesEntity.getCaseAccessGroupIdTemplate(),
                 accessTypeRolesField.getCaseAccessGroupIdTemplate());
@@ -2132,7 +2132,7 @@ class  EntityToResponseDTOMapperTest {
             assertNull(accessTypeRolesField.getDisplayOrder());
             assertNull(accessTypeRolesField.getOrganisationalRoleName());
             assertNull(accessTypeRolesField.getGroupRoleName());
-            assertNull(accessTypeRolesField.getOrganisationPolicyField());
+            assertNull(accessTypeRolesField.getCaseAssignedRoleField());
             assertNull(accessTypeRolesField.getGroupAccessEnabled());
             assertNull(accessTypeRolesField.getCaseAccessGroupIdTemplate());
         }
