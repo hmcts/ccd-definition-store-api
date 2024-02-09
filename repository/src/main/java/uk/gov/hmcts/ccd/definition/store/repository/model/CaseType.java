@@ -3,11 +3,17 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
+import java.io.Serial;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class CaseType implements HasAcls {
+public class CaseType implements Serializable, HasAcls {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private String id = null;
     private String description = null;
     private Version version = null;

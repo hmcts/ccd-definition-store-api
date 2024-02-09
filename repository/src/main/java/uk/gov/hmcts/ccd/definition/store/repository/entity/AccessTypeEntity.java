@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,6 +13,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import java.io.Serial;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 import static javax.persistence.FetchType.LAZY;
@@ -21,7 +23,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Entity
 @Getter
 @Setter
-public class AccessTypeEntity {
+public class AccessTypeEntity implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -39,6 +41,7 @@ public class AccessTypeEntity {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "case_type_id", nullable = false)
+    @JsonIgnoreProperties(ignoreUnknown = true, value = {"hibernateLazyInitializer", "handler"})
     private CaseTypeEntity caseTypeId;
 
     @Column(name = "access_type_id", nullable = false)

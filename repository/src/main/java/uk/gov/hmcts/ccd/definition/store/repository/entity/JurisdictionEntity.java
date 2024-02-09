@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -16,6 +17,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Table(name = "jurisdiction")
 @Entity
 public class JurisdictionEntity implements Serializable, Versionable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "id")

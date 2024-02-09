@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -43,6 +44,9 @@ import static javax.persistence.GenerationType.SEQUENCE;
 )
 public class CaseTypeEntity implements Serializable, Versionable {
 
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = SEQUENCE, generator = "case_type_id_seq")
@@ -84,7 +88,8 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "jurisdiction_id", nullable = false)
-    private JurisdictionEntity jurisdiction;
+    //@JsonIgnoreProperties(ignoreUnknown = true, value = {"hibernateLazyInitializer", "handler"})
+    private  JurisdictionEntity jurisdiction;
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "caseType")
     private final List<EventEntity> events = new ArrayList<>();
@@ -132,6 +137,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
+    //@JsonIgnoreProperties(ignoreUnknown = true, value = {"hibernateLazyInitializer", "handler"})
     private final List<AccessTypeEntity> accessTypes = new ArrayList<>();
 
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
