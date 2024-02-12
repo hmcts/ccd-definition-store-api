@@ -95,7 +95,7 @@ public class AccessTypeRolesRepositoryTest {
         accessTypeRoles.setDisplayOrder(1);
         accessTypeRoles.setOrganisationalRoleName("some org role name");
         accessTypeRoles.setGroupRoleName("some group role name");
-        accessTypeRoles.setOrganisationPolicyField("some org policy field");
+        accessTypeRoles.setCaseAssignedRoleField("some case assigned role field");
         accessTypeRoles.setGroupAccessEnabled(true);
         accessTypeRoles.setCaseAccessGroupIdTemplate("some access group id template");
         return accessTypeRoles;
