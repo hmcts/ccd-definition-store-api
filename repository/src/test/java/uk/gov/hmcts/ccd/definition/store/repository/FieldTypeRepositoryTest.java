@@ -48,6 +48,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_PARTY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_MESSAGE;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUP;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -235,7 +237,7 @@ public class FieldTypeRepositoryTest {
 
         List<FieldTypeEntity> predefinedComplexTypes = fieldTypeRepository.findPredefinedComplexTypes();
 
-        assertEquals(18, predefinedComplexTypes.size());
+        assertEquals(20, predefinedComplexTypes.size());
 
         assertThat(predefinedComplexTypes, hasItems(
             fieldTypeWithReference(PREDEFINED_COMPLEX_ADDRESS_GLOBAL),
@@ -255,7 +257,9 @@ public class FieldTypeRepositoryTest {
             fieldTypeWithReference(PREDEFINED_COMPLEX_LINK_REASON),
             fieldTypeWithReference(PREDEFINED_COMPLEX_TTL),
             fieldTypeWithReference(PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION),
-            fieldTypeWithReference(PREDEFINED_COMPLEX_CASE_MESSAGE)
+            fieldTypeWithReference(PREDEFINED_COMPLEX_CASE_MESSAGE),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_CASE_ACCESS_GROUP),
+            fieldTypeWithReference(PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS)
             )
         );
     }
