@@ -225,6 +225,11 @@
 						"max": null,
 						"regular_expression": null,
 						"fixed_list_items": [
+              {
+                "__operator__": "equivalent",
+                "__ordering__": "unordered",
+                "__elementId__": "id"
+              },
 							{
 								"code": "extraDetailsAdded",
 								"label": "Extra Details Added",
