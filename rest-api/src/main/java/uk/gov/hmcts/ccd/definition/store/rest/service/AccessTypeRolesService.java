@@ -6,8 +6,6 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.OrganisationProfileIds;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesRoleResult;
@@ -76,7 +74,7 @@ public class AccessTypeRolesService {
         for (AccessTypeRolesField accessTypeRole : accessTypeRoles) {
 
             Optional<AccessTypeRolesJurisdictionResult> existingJurisdiction = jurisdictions.stream()
-                .filter(jurisdiction -> accessTypeRole.getCaseTypeId().getJurisdiction().getReference()
+                .filter(jurisdiction -> accessTypeRole.getJurisdictionId()
                     .equals(jurisdiction.getId()))
                 .findAny();
 
@@ -86,10 +84,8 @@ public class AccessTypeRolesService {
             } else {
                 AccessTypeRolesJurisdictionResult jurisdictionResult = new AccessTypeRolesJurisdictionResult();
 
-                CaseTypeEntity caseTypeEntity = accessTypeRole.getCaseTypeId();
-                JurisdictionEntity jurisdictionEntity = caseTypeEntity.getJurisdiction();
-                jurisdictionResult.setId(jurisdictionEntity.getReference());
-                jurisdictionResult.setName(jurisdictionEntity.getName());
+                jurisdictionResult.setId(accessTypeRole.getJurisdictionId());
+                jurisdictionResult.setName(accessTypeRole.getJurisdictionName());
 
                 List<AccessTypeRolesResult> accessTypeRolesResults = getRoleJsonResults(accessTypeRole);
                 jurisdictionResult.setAccessTypeRoles(accessTypeRolesResults);
@@ -117,7 +113,7 @@ public class AccessTypeRolesService {
         AccessTypeRolesRoleResult role = new AccessTypeRolesRoleResult();
 
         role.setGroupRoleName(accessTypeRole.getGroupRoleName());
-        role.setCaseTypeId(accessTypeRole.getCaseTypeId().getReference());
+        role.setCaseTypeId(accessTypeRole.getCaseTypeId());
         role.setOrganisationalRoleName(accessTypeRole.getOrganisationalRoleName());
         role.setCaseGroupIdTemplate(accessTypeRole.getCaseAccessGroupIdTemplate());
 

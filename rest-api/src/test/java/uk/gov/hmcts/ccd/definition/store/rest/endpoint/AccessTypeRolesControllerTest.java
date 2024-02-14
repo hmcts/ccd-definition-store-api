@@ -24,6 +24,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMappe
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.OrganisationProfileIds;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesRoleResult;
@@ -49,6 +50,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity.toCaseTypeLiteEntity;
 
 @SpringBootTest(classes = {EntityToResponseDTOMapperImpl.class})
 @ExtendWith(SpringExtension.class)
@@ -369,9 +371,9 @@ public class AccessTypeRolesControllerTest {
         when(jurisdictionEntity2.getId()).thenReturn(2);
         when(caseTypeEntity2.getJurisdiction()).thenReturn(jurisdictionEntity2);
 
-        setupAccessTypeRolesEntity(accessTypeRolesEntity, caseTypeEntity);
-        setupAccessTypeRolesEntity(accessTypeRolesEntity1, caseTypeEntity);
-        setupAccessTypeRolesEntity(accessTypeRolesEntity2, caseTypeEntity2);
+        setupAccessTypeRolesEntity(accessTypeRolesEntity, toCaseTypeLiteEntity(caseTypeEntity));
+        setupAccessTypeRolesEntity(accessTypeRolesEntity1, toCaseTypeLiteEntity(caseTypeEntity));
+        setupAccessTypeRolesEntity(accessTypeRolesEntity2, toCaseTypeLiteEntity(caseTypeEntity2));
 
         List<AccessTypeRolesEntity> result = new ArrayList<>();
 
@@ -384,10 +386,10 @@ public class AccessTypeRolesControllerTest {
 
     }
 
-    private void setupAccessTypeRolesEntity(AccessTypeRolesEntity accessTypeRolesEntity, CaseTypeEntity caseTypeId) {
+    private void setupAccessTypeRolesEntity(AccessTypeRolesEntity accessTypeRolesEntity, CaseTypeLiteEntity caseType) {
 
-        accessTypeRolesEntity.setCaseTypeId(caseTypeId);
-        when(accessTypeRolesEntity.getCaseTypeId()).thenReturn(caseTypeId);
+        accessTypeRolesEntity.setCaseType(caseType);
+        when(accessTypeRolesEntity.getCaseType()).thenReturn(caseType);
         accessTypeRolesEntity.setAccessTypeId("default");
         accessTypeRolesEntity.setAccessMandatory(true);
         accessTypeRolesEntity.setAccessDefault(true);

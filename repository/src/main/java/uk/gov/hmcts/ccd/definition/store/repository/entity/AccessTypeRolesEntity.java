@@ -40,7 +40,7 @@ public class AccessTypeRolesEntity implements Serializable {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "case_type_id", nullable = false)
-    private CaseTypeEntity caseTypeId;
+    private CaseTypeLiteEntity caseType;
 
     @Column(name = "access_type_id", nullable = false)
     private String accessTypeId;

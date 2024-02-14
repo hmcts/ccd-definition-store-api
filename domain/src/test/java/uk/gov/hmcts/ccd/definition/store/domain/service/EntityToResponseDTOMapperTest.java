@@ -108,6 +108,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity.toCaseTypeLiteEntity;
 
 class  EntityToResponseDTOMapperTest {
 
@@ -2059,6 +2060,7 @@ class  EntityToResponseDTOMapperTest {
         void testMapAccessTypeRolesEntity() {
 
             JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
+            jurisdictionEntity.setName("name");
 
             CaseTypeEntity caseType = new CaseTypeEntity();
             caseType.setReference("id");
@@ -2071,7 +2073,7 @@ class  EntityToResponseDTOMapperTest {
             AccessTypeRolesEntity accessTypeRolesEntity = new AccessTypeRolesEntity();
             accessTypeRolesEntity.setLiveFrom(LocalDate.of(2023, Month.FEBRUARY, 12));
             accessTypeRolesEntity.setLiveTo(LocalDate.of(2027, Month.OCTOBER, 17));
-            accessTypeRolesEntity.setCaseTypeId(caseType);
+            accessTypeRolesEntity.setCaseType(toCaseTypeLiteEntity(caseType));
             accessTypeRolesEntity.setAccessTypeId("some access type id");
             accessTypeRolesEntity.setOrganisationProfileId("some org profile id");
             accessTypeRolesEntity.setAccessMandatory(true);
@@ -2091,8 +2093,12 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(accessTypeRolesEntity.getId(), accessTypeRolesField.getId());
             assertEquals(accessTypeRolesEntity.getLiveFrom(), accessTypeRolesField.getLiveFrom());
             assertEquals(accessTypeRolesEntity.getLiveTo(), accessTypeRolesField.getLiveTo());
-            assertEquals(accessTypeRolesEntity.getCaseTypeId().getReference(),
-                accessTypeRolesField.getCaseTypeId().getReference());
+            assertEquals(accessTypeRolesEntity.getCaseType().getReference(),
+                accessTypeRolesField.getCaseTypeId());
+            assertEquals(accessTypeRolesEntity.getCaseType().getJurisdiction().getReference(),
+                accessTypeRolesField.getJurisdictionId());
+            assertEquals(accessTypeRolesEntity.getCaseType().getJurisdiction().getName(),
+                accessTypeRolesField.getJurisdictionName());
             assertEquals(accessTypeRolesEntity.getAccessTypeId(), accessTypeRolesField.getAccessTypeId());
             assertEquals(accessTypeRolesEntity.getOrganisationProfileId(),
                 accessTypeRolesField.getOrganisationProfileId());
