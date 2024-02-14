@@ -324,8 +324,8 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseType.reference", target = "caseTypeId")
     Category map(CategoryEntity categoryEntity);
 
-    @Mapping(target = "caseTypeId.reference")
-    @Mapping(target = "caseTypeId")
+    @Mapping(source = "caseTypeId.reference", target = "caseTypeId.reference")
+    @Mapping(source = "caseTypeId", target = "caseTypeId")
     AccessTypeRolesField map(AccessTypeRolesEntity accessTypeRolesEntity);
 
     @Mapping(source = "caseType.reference", target = "id")
