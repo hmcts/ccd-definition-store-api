@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-109.6",
+  "_extends_": "F-109_Definition_Import_Test_Base_data",
+  "title": "Fail to import a definition file with missing Hint in AccessTypeRoles when Display is set to True",
+  "specs": [
+    "an active profile in CCD",
+    "contains a definition file with new tab AccessTypeRoles with missing Hint when Display is set to True"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/accesstypes/BEFTA_Master_Definition_AccessType_MissingHint.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- 'HintText' must be set for 'Display' to be used in the sheet 'AccessTypeRoles'"
+    }
+  }
+}
