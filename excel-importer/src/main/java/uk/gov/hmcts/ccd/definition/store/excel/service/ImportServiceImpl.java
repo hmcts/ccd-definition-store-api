@@ -35,6 +35,7 @@ import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypeRolesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.BannerParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.CaseTypeParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
@@ -404,21 +405,29 @@ public class ImportServiceImpl implements ImportService {
     private void parseAccessTypeRoles(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext,
                                                              List<RoleToAccessProfilesEntity> accessProfileEntities) {
 
-        if ((applicationParams.isCaseGroupAccessFilteringEnabled())
-            && definitionSheets.get(SheetName.ACCESS_TYPE_ROLES.getName()) != null) {
+        if (applicationParams.isCaseGroupAccessFilteringEnabled()) {
 
-            logger.debug("Importing spreadsheet: AccessTypeRoles...");
-            final AccessTypeRolesParser accessTypeRolesParser =
-                parserFactory.createAccessTypeRolesParser();
+            if (definitionSheets.get(SheetName.ACCESS_TYPE.getName()) != null) {
+                logger.debug("Importing spreadsheet: AccessType...");
+                final AccessTypesParser accessTypesParser =
+                    parserFactory.createAccessTypesParser();
 
-            List<AccessTypeEntity> accessTypeEntities = accessTypeRolesParser
-                .parseAccessTypes(definitionSheets,parseContext);
-            accessTypesService.saveAll(accessTypeEntities);
+                List<AccessTypeEntity> accessTypeEntities = accessTypesParser
+                    .parse(definitionSheets, parseContext);
+                accessTypesService.saveAll(accessTypeEntities);
+                logger.debug("Importing spreadsheet: AccessType...: OK");
 
-            List<AccessTypeRoleEntity> accessTypeRolesEntities = accessTypeRolesParser
-                .parseAccessTypeRoles(definitionSheets,parseContext, accessProfileEntities);
-            accessTypeRolesService.saveAll(accessTypeRolesEntities);
-            logger.debug("Importing spreadsheet: AccessTypeRoles...: OK");
+                if (definitionSheets.get(SheetName.ACCESS_TYPE_ROLE.getName()) != null) {
+                    logger.debug("Importing spreadsheet: AccessTypeRole...");
+                    final AccessTypeRolesParser accessTypeRolesParser =
+                        parserFactory.createAccessTypeRolesParser();
+
+                    List<AccessTypeRoleEntity> accessTypeRolesEntities = accessTypeRolesParser
+                        .parse(definitionSheets, parseContext, accessTypeEntities, accessProfileEntities);
+                    accessTypeRolesService.saveAll(accessTypeRolesEntities);
+                    logger.debug("Importing spreadsheet: AccessTypeRole...: OK");
+                }
+            }
         }
 
     }

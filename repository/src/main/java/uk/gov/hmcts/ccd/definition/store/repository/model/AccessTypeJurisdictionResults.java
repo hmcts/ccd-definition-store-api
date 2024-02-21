@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ApiModel(description = "jurisdictions")
-public class AccessTypeRolesJurisdictionResults {
+public class AccessTypeJurisdictionResults {
 
     private List<AccessTypeJurisdictionResult> jurisdictions = new ArrayList<>();
 

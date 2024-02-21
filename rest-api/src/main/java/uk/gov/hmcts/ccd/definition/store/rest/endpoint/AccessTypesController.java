@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import uk.gov.hmcts.ccd.definition.store.repository.model.OrganisationProfileIds;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeJurisdictionResult;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesJurisdictionResults;
-import uk.gov.hmcts.ccd.definition.store.rest.service.AccessTypeRolesService;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeJurisdictionResults;
+import uk.gov.hmcts.ccd.definition.store.rest.service.AccessTypesService;
 
 import javax.validation.Valid;
 
@@ -22,11 +22,11 @@ public class AccessTypesController {
 
     private static final Logger LOG = LoggerFactory.getLogger(AccessTypesController.class);
 
-    private final AccessTypeRolesService accessTypeRolesService;
+    private final AccessTypesService accessTypesService;
 
     @Autowired
-    public AccessTypesController(AccessTypeRolesService accessTypeRolesService) {
-        this.accessTypeRolesService = accessTypeRolesService;
+    public AccessTypesController(AccessTypesService accessTypesService) {
+        this.accessTypesService = accessTypesService;
     }
 
     @PostMapping(value = "/retrieve-access-types",consumes = {"application/json"}, produces = {"application/json"})
@@ -37,10 +37,10 @@ public class AccessTypesController {
         @ApiResponse(code = 401, message = "Unauthorised request"),
         @ApiResponse(code = 403, message = "Bad request")
     })
-    public AccessTypeRolesJurisdictionResults retrieveAccessTypeRoles(
+    public AccessTypeJurisdictionResults retrieveAccessTypeRoles(
         @RequestBody(required = false) @Valid OrganisationProfileIds organisationProfileIds) {
 
-        return accessTypeRolesService.retrieveAccessTypeRoles(organisationProfileIds);
+        return accessTypesService.retrieveAccessTypeRoles(organisationProfileIds);
 
     }
 

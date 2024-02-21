@@ -14,7 +14,7 @@ import static org.mockito.Mockito.verify;
 public class AccessTypeJurisdictionResultsTest {
     private final List<String> orgProfileIds = List.of(new String[]{"SOLICITOR_ORG", "SOLICITOR_ORG"});
 
-    private AccessTypeRolesJurisdictionResults jurisdictionResults;
+    private AccessTypeJurisdictionResults jurisdictionResults;
 
     private List<AccessTypeJurisdictionResult> accessTypeRolesJurisdictions;
     private AccessTypeJurisdictionResult accessTypeRolesJurisdictionResult =
@@ -30,7 +30,7 @@ public class AccessTypeJurisdictionResultsTest {
 
         OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
 
-        jurisdictionResults = Mockito.spy(new AccessTypeRolesJurisdictionResults());
+        jurisdictionResults = Mockito.spy(new AccessTypeJurisdictionResults());
         accessTypeRolesJurisdictions = Mockito.spy(new ArrayList<>());
         organisationProfileIds.setOrganisationProfileIds(orgProfileIds);
 

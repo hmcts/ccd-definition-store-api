@@ -13,7 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRoleField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.OrganisationProfileIds;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRoleResult;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesJurisdictionResults;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeJurisdictionResults;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeJurisdictionResult;
 
 import java.util.ArrayList;
@@ -22,28 +22,28 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class AccessTypeRolesService {
+public class AccessTypesService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AccessTypeRolesService.class);
+    private static final Logger LOG = LoggerFactory.getLogger(AccessTypesService.class);
 
     private EntityToResponseDTOMapper entityToResponseDTOMapper;
     private AccessTypesRepository accessTypesRepository;
     private AccessTypeRolesRepository accessTypeRolesRepository;
 
-    public AccessTypeRolesService(EntityToResponseDTOMapper entityToResponseDTOMapper,
-                                  AccessTypesRepository accessTypeRepository,
-                                  AccessTypeRolesRepository accessTypeRolesRepository) {
+    public AccessTypesService(EntityToResponseDTOMapper entityToResponseDTOMapper,
+                              AccessTypesRepository accessTypeRepository,
+                              AccessTypeRolesRepository accessTypeRolesRepository) {
         this.entityToResponseDTOMapper = entityToResponseDTOMapper;
         this.accessTypesRepository = accessTypeRepository;
         this.accessTypeRolesRepository = accessTypeRolesRepository;
 
     }
 
-    public AccessTypeRolesJurisdictionResults retrieveAccessTypeRoles(OrganisationProfileIds organisationProfileIds) {
+    public AccessTypeJurisdictionResults retrieveAccessTypeRoles(OrganisationProfileIds organisationProfileIds) {
         return getAccessTypeRolesJurisdictionResults(organisationProfileIds);
     }
 
-    private AccessTypeRolesJurisdictionResults getAccessTypeRolesJurisdictionResults(
+    private AccessTypeJurisdictionResults getAccessTypeRolesJurisdictionResults(
         OrganisationProfileIds organisationProfileIds) {
         List<AccessTypeField> accessTypes;
         List<AccessTypeRoleField> accessTypeRoles;
@@ -80,7 +80,7 @@ public class AccessTypeRolesService {
         List<AccessTypeJurisdictionResult> jurisdictions = buildJurisdictionJsonResult(
             accessTypes, accessTypeRoles);
 
-        AccessTypeRolesJurisdictionResults jurisdictionResults = new AccessTypeRolesJurisdictionResults();
+        AccessTypeJurisdictionResults jurisdictionResults = new AccessTypeJurisdictionResults();
         jurisdictionResults.setJurisdictions(jurisdictions);
         return jurisdictionResults;
     }
@@ -97,11 +97,14 @@ public class AccessTypeRolesService {
                     .equals(jurisdiction.getId()))
                 .findAny();
 
-            //find matching access type role
-            Optional<AccessTypeRoleField> matchingAccessTypeRole = accessTypeRoles.stream()
+            //find matching access type roles
+            List<AccessTypeRoleField> matchingAccessTypeRole = accessTypeRoles.stream()
                 .filter(accessTypeRole -> accessTypeRole.getAccessTypeId()
                     .equals(accessType.getAccessTypeId()))
-                .findAny();
+                .filter(accessTypeRole -> accessTypeRole.getCaseTypeId()
+                    .equals(accessType.getCaseTypeId()))
+                .filter(accessTypeRole -> accessTypeRole.getOrganisationProfileId()
+                    .equals(accessType.getOrganisationProfileId())).toList();
 
             if (existingJurisdiction.isPresent()) {
 
@@ -125,7 +128,7 @@ public class AccessTypeRolesService {
     }
 
     private List<AccessTypeResult> getAccessTypeJsonResults(AccessTypeField accessType,
-                                                            Optional<AccessTypeRoleField> optionalAccessTypeRole) {
+                                                            List<AccessTypeRoleField> accessTypeRoles) {
 
         AccessTypeResult result = new AccessTypeResult();
 
@@ -137,9 +140,7 @@ public class AccessTypeRolesService {
         result.setDisplayOrder(accessType.getDisplayOrder());
         result.setDescription(accessType.getDescription());
         result.setHint(accessType.getHint());
-
-        optionalAccessTypeRole.ifPresent(accessTypeRoleField ->
-            result.setRoles(getAccessTypeRoleJsonResults(accessTypeRoleField)));
+        result.setRoles(getAccessTypeRoleJsonResults(accessTypeRoles));
 
         List<AccessTypeResult> accessTypeResults = new ArrayList<>();
         accessTypeResults.add(result);
@@ -147,16 +148,19 @@ public class AccessTypeRolesService {
         return accessTypeResults;
     }
 
-    private List<AccessTypeRoleResult> getAccessTypeRoleJsonResults(AccessTypeRoleField accessTypeRole) {
-
-        AccessTypeRoleResult role = new AccessTypeRoleResult();
-        role.setGroupRoleName(accessTypeRole.getGroupRoleName());
-        role.setCaseTypeId(accessTypeRole.getCaseTypeId());
-        role.setOrganisationalRoleName(accessTypeRole.getOrganisationalRoleName());
-        role.setCaseGroupIdTemplate(accessTypeRole.getCaseAccessGroupIdTemplate());
+    private List<AccessTypeRoleResult> getAccessTypeRoleJsonResults(List<AccessTypeRoleField> accessTypeRoles) {
 
         List<AccessTypeRoleResult> accessTypeRoleResults = new ArrayList<>();
-        accessTypeRoleResults.add(role);
+
+        accessTypeRoles.stream().forEach(accessTypeRole -> {
+            AccessTypeRoleResult role = new AccessTypeRoleResult();
+            role.setGroupRoleName(accessTypeRole.getGroupRoleName());
+            role.setCaseTypeId(accessTypeRole.getCaseTypeId());
+            role.setOrganisationalRoleName(accessTypeRole.getOrganisationalRoleName());
+            role.setCaseGroupIdTemplate(accessTypeRole.getCaseAccessGroupIdTemplate());
+            role.setGroupAccessEnabled(accessTypeRole.getGroupAccessEnabled());
+            accessTypeRoleResults.add(role);
+        });
 
         return accessTypeRoleResults;
     }
