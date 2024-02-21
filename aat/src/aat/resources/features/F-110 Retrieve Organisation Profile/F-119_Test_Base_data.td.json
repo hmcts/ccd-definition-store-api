@@ -1,0 +1,61 @@
+{
+  "_guid_": "F-119_Test_Base",
+  "description": "Comprehensive root test bed data for F-119 Retrieve Organisation Profile test operations.",
+  "oauth": {
+    "userToken": {
+      "valid": "[[DEFAULT_AUTO_VALUE]]",
+      "invalid": "an-invalid-user-token"
+    },
+    "s2sToken": {
+      "valid": "[[DEFAULT_AUTO_VALUE]]",
+      "invalid": "an-invalid-s2s-token"
+    }
+  },
+  "users": {
+    "caseWorker": {
+      "username": "[[$DEFINITION_IMPORTER_USERNAME]]",
+			"password": "[[$DEFINITION_IMPORTER_PASSWORD]]",
+      "roles": ["caseworker", "caseworker-import"]
+    }
+  },
+  "uris": {
+    "retrieveAccessTypes": "/retrieve-access-types"
+  },
+  "requests": {
+    "retrieveAll": {
+      "validOrgProfile": {
+        "httpMethod": "POST",
+        "headers": {
+          "validAuth": "${[scenarioContext][oauth][userToken][valid]}",
+          "s2sToken": "${[scenarioContext][oauth][s2sToken][valid]}"
+        },
+        "body": {
+          "organisationProfileIds": ["validOrganisationId1", "validOrganisationId2"]
+        }
+      },
+      "withInvalidS2SToken": {
+        "httpMethod": "POST",
+        "headers": {
+          "validAuth": "${[scenarioContext][oauth][userToken][valid]}",
+          "s2sToken": "${[scenarioContext][oauth][s2sToken][invalid]}"
+        },
+        "body": {
+          "organisationProfileIds": ["validOrganisationId1"]
+        }
+      }
+    }
+  },
+  "expectedResponses": {
+    "retrieveAllValid": {
+      "statusCode": 200,
+      "body": { 
+      }
+    },
+    "retrieveWithInvalidS2SToken": {
+      "statusCode": 401,
+      "body": {
+        "errorCode": "Unauthorized"
+      }
+    }
+  }
+}
