@@ -30,7 +30,7 @@
           "s2sToken": "${[scenarioContext][oauth][s2sToken][valid]}"
         },
         "body": {
-          "organisationProfileIds": ["validOrganisationId1", "validOrganisationId2"]
+          "organisationProfileIds": ["SOLICITOR_PROFILE", "SOLICITOR_PROFILE1"]
         }
       },
       "withInvalidS2SToken": {
@@ -40,7 +40,7 @@
           "s2sToken": "${[scenarioContext][oauth][s2sToken][invalid]}"
         },
         "body": {
-          "organisationProfileIds": ["validOrganisationId1"]
+          "organisationProfileIds": ["SOLICITOR_PROFILE"]
         }
       }
     }
