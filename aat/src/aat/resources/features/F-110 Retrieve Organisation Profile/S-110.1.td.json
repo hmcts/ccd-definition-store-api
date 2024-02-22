@@ -25,8 +25,8 @@
   "body": {
        "jurisdictions": [
     {
-      "jurisdictionId": "BEFTA_JURISDICTION_1",
-      "jurisdictionName": "BEFTA_JURISDICTION_1",
+      "jurisdictionId": "BEFTA_MASTER",
+      "jurisdictionName": "BEFTA Master",
       "accessTypes": [
         {
           "organisationProfileId": "SOLICITOR_PROFILE",
