@@ -6,6 +6,7 @@
     "an active profile in CCD",
     "contains correctly configured values",
     "contains an organisationProfileId that exists in CCD database",
+    "Retrieve Access Types operation of CCD Data Store",
     "contains all accessTypes for organisationProfileId in the response"
   ],
   "request": {
