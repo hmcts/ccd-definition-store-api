@@ -113,6 +113,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
                 () -> assertThat(accessTypeRolesEntity.getLiveFrom(), is(LocalDate.of(2023, Month.FEBRUARY, 12))),
                 () -> assertThat(accessTypeRolesEntity.getLiveTo(), is(LocalDate.of(2080, Month.FEBRUARY, 12))),
                 () -> assertThat(accessTypeRolesEntity.getCaseType().getReference(), is(CASE_TYPE_ID_1)),
+                () -> assertThat(accessTypeRolesEntity.getCaseTypeId().getReference(), is(CASE_TYPE_ID_1)),
                 () -> assertThat(accessTypeRolesEntity.getAccessTypeId(), is("access id")),
                 () -> assertThat(accessTypeRolesEntity.getOrganisationProfileId(), is("OrgProfileID")),
                 () -> assertThat(accessTypeRolesEntity.getAccessMandatory(), is(false)),

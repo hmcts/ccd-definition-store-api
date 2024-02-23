@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-109.9",
+  "_extends_": "F-109_Definition_Import_Test_Base_data",
+  "title": "Fail to import a definition file with DisplayOrder not being unique across CaseTypeId for a Jurisdiction in AccessTypeRoles",
+  "specs": [
+    "an active profile in CCD",
+    "contains a definition file with new tab AccessTypeRoles where DisplayOrder is not unique across CaseTypeId for a Jurisdiction"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/accesstypes/BEFTA_Master_Definition_AccessType_DisplayOrderNotUnique.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- 'DisplayOrder' must be unique across all Case Types for a given Jurisdiction in the sheet 'AccessTypeRoles'"
+    }
+  }
+}
