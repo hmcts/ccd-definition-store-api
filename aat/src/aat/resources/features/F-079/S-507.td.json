@@ -11,7 +11,7 @@
 
 	"request": {
 	 "pathVariables": {
-		"id": "BEFTA_CASETYPE_3_3_sdfhdj"
+		"id": "NON_EXISTING_BEFTA_CASETYPE"
 	 }
 	},
 
@@ -26,7 +26,7 @@
 		"X-Content-Type-Options": "nosniff"
 	 },
 	 "body": {
-		"message": "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
+		"message": "Object Not Found for:NON_EXISTING_BEFTA_CASETYPE"
 	 }
 	}
 }

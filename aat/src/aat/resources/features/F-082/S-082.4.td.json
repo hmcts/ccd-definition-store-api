@@ -11,7 +11,7 @@
 
 	"request": {
 	 "pathVariables": {
-		"jid": "BEFTA_3_sdfhdj",
+		"jid": "NON_EXISTING_BEFTA_JURISDICTION",
 		"uid": "[[DEFAULT_AUTO_VALUE]]"
 	 }
 	},
@@ -21,7 +21,7 @@
 	"expectedResponse": {
 	 "_extends_": "Common_404_Response",
 	 "body": {
-		"message": "Object Not Found for:BEFTA_CASETYPE_3_3_sdfhdj"
+		"message": "Object Not Found for:NON_EXISTING_BEFTA_JURISDICTION"
 	 }
 	}
 }

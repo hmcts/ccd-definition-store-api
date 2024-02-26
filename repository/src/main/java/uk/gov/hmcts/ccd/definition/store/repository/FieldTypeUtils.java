@@ -33,6 +33,8 @@ public class FieldTypeUtils {
     public static final String PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION = "PreviousOrganisation";
     public static final String PREDEFINED_COMPLEX_CASE_LOCATION = "CaseLocation";
     public static final String PREDEFINED_COMPLEX_TTL = "TTL";
+    public static final String PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION = "CaseQueriesCollection";
+    public static final String PREDEFINED_COMPLEX_CASE_MESSAGE = "CaseMessage";
     public static final String PREDEFINED_COMPLEX_FLAGS = "Flags";
     public static final String PREDEFINED_COMPLEX_JUDICIAL_USER = "JudicialUser";
     public static final String PREDEFINED_COMPLEX_SEARCH_PARTY = "SearchParty";
@@ -45,6 +47,9 @@ public class FieldTypeUtils {
     public static final String BASE_WAYS_TO_PAY = "WaysToPay";
     public static final String BASE_FLAG_LAUNCHER = "FlagLauncher";
     public static final String BASE_COMPONENT_LAUNCHER = "ComponentLauncher";
+
+    public static final String PREDEFINED_COMPLEX_CASE_ACCESS_GROUP = "CaseAccessGroup";
+    public static final String PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS = "CaseAccessGroups";
 
     public static Boolean isList(String baseTypeReference) {
         return BASE_FIXED_LIST.equals(baseTypeReference)
