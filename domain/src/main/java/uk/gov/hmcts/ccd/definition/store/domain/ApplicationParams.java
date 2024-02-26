@@ -38,12 +38,20 @@ public class ApplicationParams {
     @Value("${welsh-translation.enabled:true}")
     private boolean welshTranslationEnabled;
 
+    @Value("${enable-case-group-access-filtering:false}")
+    private boolean caseGroupAccessFilteringEnabled;
+
+
     public boolean isDefaultPublish() {
         return defaultPublish;
     }
 
     public boolean isWelshTranslationEnabled() {
         return welshTranslationEnabled;
+    }
+
+    public boolean isCaseGroupAccessFilteringEnabled() {
+        return caseGroupAccessFilteringEnabled;
     }
 
     public String userProfilePutURL() {

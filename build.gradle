@@ -36,7 +36,7 @@ dependencyCheck {
 ext['elasticsearch.version'] = '7.17.1'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
-ext['spring-security.version'] = '5.7.8'
+ext['spring-security.version'] = '5.7.10'
 ext['jackson.version'] = '2.15.3'
 ext['snakeyaml.version'] = '2.0'
 ext['postgresql.version'] = '42.5.1'
@@ -58,7 +58,7 @@ ext {
     groovyVersion = '3.0.17!!'
     tomcatVersion = '9.0.75!!'
     feignJackson = '11.6'
-    beftaFwVersion = '8.8.3'
+    beftaFwVersion = '8.8.4'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -295,7 +295,7 @@ subprojects { subproject ->
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.21.3'
+        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.21.7'
 
         implementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
 
