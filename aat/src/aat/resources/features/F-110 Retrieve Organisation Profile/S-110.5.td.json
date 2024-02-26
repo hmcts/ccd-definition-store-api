@@ -14,7 +14,7 @@
     "uri": "${[scenarioContext][uris][retrieveAccessTypes]}",
     "headers": {
       "Content-Type": "application/json",
-      "Authorization": "${[scenarioContext][oauth][userToken][valid]}", // Assuming the user token is still considered valid for the scenario's purpose
+      "Authorization": "${[scenarioContext][oauth][userToken][valid]}", 
       "ServiceAuthorization": "${[scenarioContext][oauth][s2sToken][invalid]}"
     },
     "body": {}
