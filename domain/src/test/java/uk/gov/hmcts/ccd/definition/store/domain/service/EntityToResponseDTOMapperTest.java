@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
@@ -54,6 +55,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEn
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessControlList;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRolesField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventFieldComplex;
@@ -85,6 +87,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputField;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -2045,6 +2048,93 @@ class  EntityToResponseDTOMapperTest {
             assertNull(banner.getBannerEnabled());
             assertNull(banner.getBannerUrl());
             assertNull(banner.getBannerUrlText());
+        }
+    }
+
+    @Nested
+    @DisplayName("Should return `a AccessTypeRoles which matches the AccessTypeRolesEntity")
+    class MapAccessTypeRolesEntityTests {
+
+        @Test
+        void testMapAccessTypeRolesEntity() {
+
+            JurisdictionEntity jurisdictionEntity = new JurisdictionEntity();
+
+            CaseTypeEntity caseType = new CaseTypeEntity();
+            caseType.setReference("id");
+            caseType.setName("Test case");
+            caseType.setVersion(1);
+            caseType.setDescription("Some case type");
+            caseType.setJurisdiction(jurisdictionEntity);
+            caseType.setSecurityClassification(SecurityClassification.PUBLIC);
+
+            AccessTypeRolesEntity accessTypeRolesEntity = new AccessTypeRolesEntity();
+            accessTypeRolesEntity.setLiveFrom(LocalDate.of(2023, Month.FEBRUARY, 12));
+            accessTypeRolesEntity.setLiveTo(LocalDate.of(2027, Month.OCTOBER, 17));
+            accessTypeRolesEntity.setCaseTypeId(caseType);
+            accessTypeRolesEntity.setAccessTypeId("some access type id");
+            accessTypeRolesEntity.setOrganisationProfileId("some org profile id");
+            accessTypeRolesEntity.setAccessMandatory(true);
+            accessTypeRolesEntity.setAccessDefault(true);
+            accessTypeRolesEntity.setDisplay(true);
+            accessTypeRolesEntity.setDescription("some description");
+            accessTypeRolesEntity.setHint("some hint");
+            accessTypeRolesEntity.setDisplayOrder(1);
+            accessTypeRolesEntity.setOrganisationalRoleName("some org role name");
+            accessTypeRolesEntity.setGroupRoleName("some group role name");
+            accessTypeRolesEntity.setCaseAssignedRoleField("some case assigned role field");
+            accessTypeRolesEntity.setGroupAccessEnabled(true);
+            accessTypeRolesEntity.setCaseAccessGroupIdTemplate("some access group id template");
+
+            AccessTypeRolesField accessTypeRolesField = classUnderTest.map(accessTypeRolesEntity);
+
+            assertEquals(accessTypeRolesEntity.getId(), accessTypeRolesField.getId());
+            assertEquals(accessTypeRolesEntity.getLiveFrom(), accessTypeRolesField.getLiveFrom());
+            assertEquals(accessTypeRolesEntity.getLiveTo(), accessTypeRolesField.getLiveTo());
+            assertEquals(accessTypeRolesEntity.getCaseTypeId(), accessTypeRolesField.getCaseTypeId());
+            assertEquals(accessTypeRolesEntity.getAccessTypeId(), accessTypeRolesField.getAccessTypeId());
+            assertEquals(accessTypeRolesEntity.getOrganisationProfileId(),
+                accessTypeRolesField.getOrganisationProfileId());
+            assertEquals(accessTypeRolesEntity.getAccessMandatory(), accessTypeRolesField.getAccessMandatory());
+            assertEquals(accessTypeRolesEntity.getAccessDefault(), accessTypeRolesField.getAccessDefault());
+            assertEquals(accessTypeRolesEntity.getDisplay(), accessTypeRolesField.getDisplay());
+            assertEquals(accessTypeRolesEntity.getDescription(), accessTypeRolesField.getDescription());
+            assertEquals(accessTypeRolesEntity.getHint(), accessTypeRolesField.getHint());
+            assertEquals(accessTypeRolesEntity.getDisplayOrder(), accessTypeRolesField.getDisplayOrder());
+            assertEquals(accessTypeRolesEntity.getOrganisationalRoleName(),
+                accessTypeRolesField.getOrganisationalRoleName());
+            assertEquals(accessTypeRolesEntity.getGroupRoleName(), accessTypeRolesField.getGroupRoleName());
+            assertEquals(accessTypeRolesEntity.getCaseAssignedRoleField(),
+                accessTypeRolesField.getCaseAssignedRoleField());
+            assertEquals(accessTypeRolesEntity.getGroupAccessEnabled(), accessTypeRolesField.getGroupAccessEnabled());
+            assertEquals(accessTypeRolesEntity.getCaseAccessGroupIdTemplate(),
+                accessTypeRolesField.getCaseAccessGroupIdTemplate());
+        }
+
+        @Test
+        void testMapEmptyAccessTypeRolesEntity() {
+
+            AccessTypeRolesEntity accessTypeRolesEntity = new AccessTypeRolesEntity();
+
+            AccessTypeRolesField accessTypeRolesField = classUnderTest.map(accessTypeRolesEntity);
+
+            assertNull(accessTypeRolesField.getId());
+            assertNull(accessTypeRolesField.getLiveFrom());
+            assertNull(accessTypeRolesField.getLiveTo());
+            assertNull(accessTypeRolesField.getCaseTypeId());
+            assertNull(accessTypeRolesField.getAccessTypeId());
+            assertNull(accessTypeRolesField.getOrganisationProfileId());
+            assertNull(accessTypeRolesField.getAccessMandatory());
+            assertNull(accessTypeRolesField.getAccessDefault());
+            assertNull(accessTypeRolesField.getDisplay());
+            assertNull(accessTypeRolesField.getDescription());
+            assertNull(accessTypeRolesField.getHint());
+            assertNull(accessTypeRolesField.getDisplayOrder());
+            assertNull(accessTypeRolesField.getOrganisationalRoleName());
+            assertNull(accessTypeRolesField.getGroupRoleName());
+            assertNull(accessTypeRolesField.getCaseAssignedRoleField());
+            assertNull(accessTypeRolesField.getGroupAccessEnabled());
+            assertNull(accessTypeRolesField.getCaseAccessGroupIdTemplate());
         }
     }
 
