@@ -1,6 +1,6 @@
 {
   "_guid_": "S-110.1",
-  "_extends_": "F-110_Test_Base",
+  "_extends_": "F-110_Test_Base_data",
   "title": "Successfully retrieve access types for provided organisationProfileIds",
   "specs": [
     "an active profile in CCD",
