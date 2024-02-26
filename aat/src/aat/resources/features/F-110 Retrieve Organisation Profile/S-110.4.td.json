@@ -1,0 +1,33 @@
+{
+  "_guid_": "S-110.4",
+  "_extends_": "F-110_Test_Base_data",
+  "title": "Negative response - Return 400 Bad Request for invalid organisationProfileId",
+  "specs": [
+    "an active profile in CCD",
+    "contains correctly configured values",
+    "contains an invalid organisationProfileId",
+    "Retrieve Access Types operation of CCD Data Store",
+    "has a status of 400 Bad Request"
+  ],
+  "request": {
+    "method": "POST",
+    "uri": "${[scenarioContext][uris][retrieveAccessTypes]}",
+    "headers": {
+      "Content-Type": "application/json",
+      "Authorization": "${[scenarioContext][oauth][userToken][valid]}",
+      "ServiceAuthorization": "${[scenarioContext][oauth][s2sToken][valid]}"
+    },
+    "body": {
+      "organisationProfileIds": ["invalid_OrgProfileId"]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "body": {
+      "error": "Invalid organisationProfileId provided",
+      "errorCode": "400",
+      "errorMessage": "The organisationProfileId 'invalid_OrgProfileId' is not recognized."
+    }
+  }
+}
