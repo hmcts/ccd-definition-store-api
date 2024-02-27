@@ -10,7 +10,7 @@ Feature: F-110: Retrieve Access Types
     When a request is prepared with appropriate values
     And the request [contains correctly configured values]
     And the request [contains an organisationProfileId that exists in CCD database]
-    And it is submitted to call the [Retrieve Access Types operation of CCD Data Store]
+    And the request [Retrieve Access Types operation of CCD Data Store]
     Then a positive response is received
     And the response has all other details as expected
     And the response [contains all accessTypes for organisationProfileId in the response]
@@ -21,7 +21,7 @@ Feature: F-110: Retrieve Access Types
     When a request is prepared with appropriate values
     And the request [contains correctly configured values]
     And the request [contains an organisationProfileId that does not exists in CCD database]
-    And it is submitted to call the [Retrieve Access Types operation of CCD Data Store]
+    And the request [Retrieve Access Types operation of CCD Data Store]
     Then a positive response is received
     And the response [has a status of 200 success]
     And the response [does not contain any accessTypes]
@@ -32,7 +32,7 @@ Feature: F-110: Retrieve Access Types
     When a request is prepared with appropriate values
     And the request [contains correctly configured values]
     And the request [does not contain organisationProfileId]
-    And it is submitted to call the [Retrieve Access Types operation of CCD Data Store]
+    And the request [Retrieve Access Types operation of CCD Data Store]
     Then a positive response is received
     And the response [has a status of 200 success]
     And the response [contains all accessTypes for all Organisations]
@@ -43,7 +43,7 @@ Feature: F-110: Retrieve Access Types
     When a request is prepared with appropriate values
     And the request [contains correctly configured values]
     And the request [contains an invalid organisationProfileId]
-    And it is submitted to call the [Retrieve Access Types operation of CCD Data Store]
+    And the request [Retrieve Access Types operation of CCD Data Store]
     Then a negative response is received
     And the response [has a status of 400 Bad Request]
 
@@ -53,7 +53,7 @@ Feature: F-110: Retrieve Access Types
     When a request is prepared with appropriate values
     And the request [contains correctly configured values]
     And the request [contains an invalid S2S token]
-    And it is submitted to call the [Retrieve Access Types operation of CCD Data Store]
+    And the request [Retrieve Access Types operation of CCD Data Store]
     Then a negative response is received
     And the response [has a status of 401 Unauthorised]
 
@@ -64,7 +64,7 @@ Feature: F-110: Retrieve Access Types
     When a request is prepared with appropriate values
     And the request [contains correctly configured values]
     And the request [contains an organisationProfileId that exists in CCD database]
-    And it is submitted to call the [Retrieve Access Types operation of CCD Data Store]
+    And the request [Retrieve Access Types operation of CCD Data Store]
     Then a positive response is received
     And the response [has a status of 200 success]
     And the response [contains the latest version of the accessTypes for organisationProfileId in the response]
@@ -76,7 +76,7 @@ Feature: F-110: Retrieve Access Types
     When a request is prepared with appropriate values
     And the request [contains correctly configured values]
     And the request [does not contain organisationProfileId]
-    And it is submitted to call the [Retrieve Access Types operation of CCD Data Store]
+    And the request [Retrieve Access Types operation of CCD Data Store]
     Then a positive response is received
     And the response [has a status of 200 success]
     And the response [contains the latest version of the accessTypes for all organisations across jurisdictions]
