@@ -18,7 +18,7 @@
       "ServiceAuthorization": "${[scenarioContext][oauth][s2sToken][valid]}"
     },
     "body": {
-      "organisationProfileIds": ["invalid_OrgProfileId"]
+      "organisationProfileIds": ["Invalid%%%s",]
     }
   },
   "expectedResponse": {
