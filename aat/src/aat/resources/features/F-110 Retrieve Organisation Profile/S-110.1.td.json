@@ -11,7 +11,7 @@
   ],
   "request": {
    "body": {
-      "organisationProfileIds": "SOLICITOR_PROFILE"
+      "organisationProfileIds": ["SOLICITOR_PROFILE"]
     }
   },
   "expectedResponse": {
