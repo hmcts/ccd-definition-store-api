@@ -12,7 +12,7 @@
     ],
     "request": {
         "pathVariables": {
-            "organisationProfileIds": "SOLS_PROFILE"
+            "organisationProfileIds": ["SOLS_PROFILE"]
         }
     },
     "expectedResponse": {
