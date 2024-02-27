@@ -1,31 +1,27 @@
 {
-  "_guid_": "S-110.5",
-  "_extends_": "F-110_Test_Base_data",
-  "title": "Negative response - Return 401 Unauthorised for invalid S2S token",
-  "specs": [
-    "a profile not active in CCD",
-    "contains correctly configured values",
-    "contains an invalid S2S token",
-    "Retrieve Access Types operation of CCD Data Store",
-    "has a status of 401 Unauthorised"
-  ],
-  "request": {
-    "method": "POST",
-    "uri": "${[scenarioContext][uris][retrieveAccessTypes]}",
-    "headers": {
-      "Content-Type": "application/json",
-      "Authorization": "${[scenarioContext][oauth][userToken][valid]}", 
-      "ServiceAuthorization": "${[scenarioContext][oauth][s2sToken][invalid]}"
+    "_guid_": "S-110.5",
+    "_extends_": "F-110_Test_Base_data",
+    "title": "Negative response - Return 401 Unauthorised for invalid S2S token",
+    "specs": [
+        "a profile not active in CCD",
+        "contains correctly configured values",
+        "contains an invalid S2S token",
+        "Retrieve Access Types operation of CCD Data Store",
+        "has a status of 401 Unauthorised"
+    ],
+    "request": {
+        "headers": {
+            "ServiceAuthorization": "${}"
+        },
+        "body": {
+            "organisationProfileIds": [
+                "SOLICITOR_PROFILE"
+            ]
+        }
     },
-    "body": {}
-  },
-  "expectedResponse": {
-    "responseCode": 401,
-    "responseMessage": "Unauthorized",
-    "body": {
-      "error": "Invalid S2S token",
-      "errorCode": "401",
-      "errorMessage": "The provided S2S token is invalid or expired."
+    "expectedResponse": {
+        "responseCode": 401,
+        "responseMessage": "Unauthorized",
+        "body": {}
     }
-  }
 }
