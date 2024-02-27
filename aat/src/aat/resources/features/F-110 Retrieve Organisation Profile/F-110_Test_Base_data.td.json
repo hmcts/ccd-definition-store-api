@@ -1,61 +1,23 @@
 {
   "_guid_": "F-110_Test_Base_data",
+  "productName": "CCD Definition Store",
   "description": "Comprehensive root test bed data for F-119 Retrieve Organisation Profile test operations.",
-  "oauth": {
-    "userToken": {
-      "valid": "[[DEFAULT_AUTO_VALUE]]",
-      "invalid": "an-invalid-user-token"
-    },
-    "s2sToken": {
-      "valid": "[[DEFAULT_AUTO_VALUE]]",
-      "invalid": "an-invalid-s2s-token"
-    }
-  },
+  "specs": [
+		"an active profile in CCD"
+	],
+  "method": "POST",
+	"uri": "/retrieve-access-types",
   "users": {
-    "caseWorker": {
-      "username": "[[$DEFINITION_IMPORTER_USERNAME]]",
-			"password": "[[$DEFINITION_IMPORTER_PASSWORD]]",
-      "roles": ["caseworker", "caseworker-import"]
-    }
-  },
-  "uris": {
-    "retrieveAccessTypes": "/retrieve-access-types"
-  },
-  "requests": {
-    "retrieveAll": {
-      "validOrgProfile": {
-        "httpMethod": "POST",
-        "headers": {
-          "validAuth": "${[scenarioContext][oauth][userToken][valid]}",
-          "s2sToken": "${[scenarioContext][oauth][s2sToken][valid]}"
-        },
-        "body": {
-          "organisationProfileIds": ["SOLICITOR_PROFILE", "SOLICITOR_PROFILE1"]
-        }
-      },
-      "withInvalidS2SToken": {
-        "httpMethod": "POST",
-        "headers": {
-          "validAuth": "${[scenarioContext][oauth][userToken][valid]}",
-          "s2sToken": "${[scenarioContext][oauth][s2sToken][invalid]}"
-        },
-        "body": {
-          "organisationProfileIds": ["SOLICITOR_PROFILE"]
-        }
-      }
-    }
-  },
-  "expectedResponses": {
-    "retrieveAllValid": {
-      "statusCode": 200,
-      "body": { 
-      }
-    },
-    "retrieveWithInvalidS2SToken": {
-      "statusCode": 401,
-      "body": {
-        "errorCode": "Unauthorized"
-      }
-    }
-  }
+		"invokingUser": {
+			"username": "befta.caseworker.3@gmail.com",
+      "password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
+		}
+	},
+	"request": {
+		"headers": {
+			"Authorization": "[[DEFAULT_AUTO_VALUE]]",
+			"ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+			"Content-Type": "application/json"
+		}
+	}
 }
