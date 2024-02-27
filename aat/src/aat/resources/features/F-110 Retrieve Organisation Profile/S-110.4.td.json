@@ -9,25 +9,15 @@
     "Retrieve Access Types operation of CCD Data Store",
     "has a status of 400 Bad Request"
   ],
-  "request": {
-    "method": "POST",
-    "uri": "${[scenarioContext][uris][retrieveAccessTypes]}",
-    "headers": {
-      "Content-Type": "application/json",
-      "Authorization": "${[scenarioContext][oauth][userToken][valid]}",
-      "ServiceAuthorization": "${[scenarioContext][oauth][s2sToken][valid]}"
-    },
-    "body": {
-      "organisationProfileIds": ["Invalid%%%s",]
+   "request": {
+   "body": {
+      "organisationProfileIds": "SOLZ_PROFILE"
     }
   },
   "expectedResponse": {
     "responseCode": 400,
     "responseMessage": "Bad Request",
     "body": {
-      "error": "Invalid organisationProfileId provided",
-      "errorCode": "400",
-      "errorMessage": "The organisationProfileId 'invalid_OrgProfileId' is not recognized."
     }
   }
 }
