@@ -25,6 +25,5 @@ java:
   environment:
     DEFINITION_STORE_DB_NAME: ccd_definition_store
     DEFINITION_STORE_DB_HOST: ccd-definition-store-api-postgres-db-v15-aat.postgres.database.azure.com
-    IDAM_S2S_URL: http://rpe-service-auth-provider-aat.aat.platform.hmcts.net
     USER_PROFILE_HOST: http://ccd-user-profile-api-aat.aat.platform.hmcts.net
     TS_TRANSLATION_SERVICE_HOST: http://ts-translation-service-aat.aat.platform.hmcts.net
