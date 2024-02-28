@@ -2,6 +2,7 @@
   "_guid_": "F-110_Test_Base_data",
   "productName": "CCD Definition Store",
   "description": "Comprehensive root test bed data for F-119 Retrieve Organisation Profile test operations.",
+  "operationName": "Retrieve Access Types",
   "specs": [
 		"an active profile in CCD"
 	],
