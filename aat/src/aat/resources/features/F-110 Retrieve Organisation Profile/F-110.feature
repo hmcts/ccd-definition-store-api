@@ -55,7 +55,7 @@ Feature: F-110: Retrieve Access Types
     Then a negative response is received
     And the response [has a status of 401 Unauthorised]
 
-  @S-110.6
+  @S-110.6 @Ignore # To be added with multiple Befta Jurisdictions
   Scenario: Successfully return 200 success with the latest version of accessTypes for organisationProfileId
     Given a user with [an active profile in CCD]
     And a pre-condition that multiple versions of AccessTypeRoles exist in the database
@@ -67,7 +67,7 @@ Feature: F-110: Retrieve Access Types
     And the response [has a status of 200 success]
     And the response [contains the latest version of the accessTypes for organisationProfileId in the response]
 
-  @S-110.7
+  @S-110.7 @Ignore # To be added with multiple Befta Jurisdictions
   Scenario: Successfully return 200 success with access type of all organisations across jurisdictions
     Given a user with [an active profile in CCD]
     And a pre-condition that multiple jurisdictions with their own access types exist due to imported definition files
