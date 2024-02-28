@@ -34,7 +34,8 @@
           "live_to": null,
           "other_case_reference": "TextFieldLName"
         }
-      ]
+      ],
+      "accessTypeRoles": []
     }
   }
 }

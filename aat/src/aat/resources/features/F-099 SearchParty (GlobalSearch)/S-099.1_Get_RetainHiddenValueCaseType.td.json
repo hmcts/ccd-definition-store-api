@@ -44,7 +44,8 @@
 					"search_party_name": "TextField,FamilyDetails.FatherFullName,TextField,FamilyDetails.MotherFullName",
           "search_party_collection_field_name": null
 				}
-			]
-		}
+			],
+      "accessTypeRoles": "[[ANYTHING_PRESENT]]"
+    }
 	}
 }

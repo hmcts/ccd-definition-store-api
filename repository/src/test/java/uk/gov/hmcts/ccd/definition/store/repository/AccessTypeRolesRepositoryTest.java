@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity.toCaseTypeLiteEntity;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -58,7 +59,7 @@ public class AccessTypeRolesRepositoryTest {
         assertThat(result.getId(), Is.is(1));
         assertThat(result.getLiveFrom(), Is.is(LocalDate.of(2023, Month.FEBRUARY, 12)));
         assertThat(result.getLiveTo(), Is.is(LocalDate.of(2027, Month.OCTOBER, 17)));
-        assertThat(result.getCaseTypeId().getId(), Is.is(caseType.getId()));
+        assertThat(result.getCaseType().getId(), Is.is(caseType.getId()));
         assertThat(result.getAccessTypeId(), Is.is("some access type id"));
         assertThat(result.getOrganisationProfileId(), Is.is("some org profile id"));
         assertThat(result.getAccessMandatory(), Is.is(true));
@@ -84,7 +85,7 @@ public class AccessTypeRolesRepositoryTest {
         final AccessTypeRolesEntity accessTypeRoles = new AccessTypeRolesEntity();
         accessTypeRoles.setLiveFrom(LocalDate.of(2023, Month.FEBRUARY, 12));
         accessTypeRoles.setLiveTo(LocalDate.of(2027, Month.OCTOBER, 17));
-        accessTypeRoles.setCaseTypeId(caseType);
+        accessTypeRoles.setCaseType(toCaseTypeLiteEntity(caseType));
         accessTypeRoles.setAccessTypeId("some access type id");
         accessTypeRoles.setOrganisationProfileId("some org profile id");
         accessTypeRoles.setAccessMandatory(true);
