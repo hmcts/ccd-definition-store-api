@@ -23,7 +23,6 @@ Feature: F-110: Retrieve Access Types
     And the request [contains an organisationProfileId that does not exists in CCD database]
     And it is submitted to call the [Retrieve Access Types] operation of [CCD Definition Store]
     Then a positive response is received
-    And the response [has a status of 200 success]
     And the response [does not contain any accessTypes]
 
   @S-110.3
@@ -34,7 +33,6 @@ Feature: F-110: Retrieve Access Types
     And the request [does not contain organisationProfileId]
     And it is submitted to call the [Retrieve Access Types] operation of [CCD Definition Store]
     Then a positive response is received
-    And the response [has a status of 200 success]
     And the response [contains all accessTypes for all Organisations]
 
   @S-110.4
