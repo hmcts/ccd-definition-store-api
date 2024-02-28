@@ -20,6 +20,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 
+import static uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity.toCaseTypeLiteEntity;
+
 @Component
 public class AccessTypeRolesParser {
 
@@ -81,11 +83,10 @@ public class AccessTypeRolesParser {
                 throw new InvalidImportException(message);
 
             });
-        accessTypeRolesEntity.setCaseTypeId(caseTypeEntity);
+        accessTypeRolesEntity.setCaseType(toCaseTypeLiteEntity(caseTypeEntity));
 
         accessTypeRolesEntity.setLiveFrom(definitionDataItem.getLocalDate(ColumnName.LIVE_FROM));
         accessTypeRolesEntity.setLiveTo(definitionDataItem.getLocalDate(ColumnName.LIVE_TO));
-        accessTypeRolesEntity.setCaseTypeId(caseTypeEntity);
         accessTypeRolesEntity.setAccessTypeId(definitionDataItem.getString(ColumnName.ACCESS_TYPE_ID));
         accessTypeRolesEntity.setOrganisationProfileId(definitionDataItem.getString(
             ColumnName.ORGANISATION_PROFILE_ID));
