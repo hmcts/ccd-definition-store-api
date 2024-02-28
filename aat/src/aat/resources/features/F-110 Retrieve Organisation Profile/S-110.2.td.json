@@ -11,10 +11,10 @@
         "does not contain any accessTypes"
     ],
     "request": {
-        "pathVariables": {
-            "organisationProfileIds": ["SOLS_PROFILE"]
-        }
-    },
+   "body": {
+      "organisationProfileIds": ["SOLS_PROFILE"]
+    }
+  },
     "expectedResponse": {
         "responseCode": 200,
         "responseMessage": "OK",
