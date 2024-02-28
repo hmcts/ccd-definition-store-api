@@ -1,0 +1,75 @@
+{
+    "_guid_": "S-110.2",
+    "_extends_": "F-110_Test_Base_data",
+    "title": "Successfully return 200 success without content for non-existent organisationProfileId",
+    "specs": [
+        "an active profile in CCD",
+        "contains correctly configured values",
+        "contains an organisationProfileId that does not exists in CCD database",
+        "Retrieve Access Types operation of CCD Data Store",
+        "has a status of 200 success",
+        "does not contain any accessTypes"
+    ],
+    "request": {
+   "body": {
+      "organisationProfileIds": ["SOLS_PROFILE"]
+    }
+  },
+    "expectedResponse": {
+        "responseCode": 200,
+        "responseMessage": "OK",
+        "headers": {
+            "Content-Encoding": "[[ANYTHING_PRESENT]]",
+            "Content-Type": "text/plain",
+            "Content-Length": "[[ANYTHING_PRESENT]]"
+        },
+        "body": {
+            "jurisdictions": [
+                {
+                    "jurisdictionId": "BEFTA_MASTER",
+                    "jurisdictionName": "BEFTA Master",
+                    "accessTypes": [
+                        {
+                            "organisationProfileId": "SOLICITOR_PROFILE",
+                            "accessTypeId": "default",
+                            "accessMandatory": true,
+                            "accessDefault": true,
+                            "display": true,
+                            "description": "Content for the BEFTA Master Jurisdiction Access Type.",
+                            "hint": "Content for the BEFTA Master Jurisdiction Access Type.",
+                            "displayOrder": 1,
+                            "roles": [
+                                {
+                                    "caseTypeId": "FT_MasterCaseType",
+                                    "organisationalRoleName": "Role1",
+                                    "groupRoleName": "Role1",
+                                    "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
+                                    "groupAccessEnabled": false
+                                }
+                            ]
+                        },
+                        {
+                            "organisationProfileId": "SOLICITOR_PROFILE",
+                            "accessTypeId": "respondents",
+                            "accessMandatory": true,
+                            "accessDefault": true,
+                            "display": true,
+                            "description": "Content for the BEFTA Master Jurisdiction Access Type.",
+                            "hint": "Content for the BEFTA Master Jurisdiction Access Type.",
+                            "displayOrder": 2,
+                            "roles": [
+                                {
+                                    "caseTypeId": "FT_MasterCaseType",
+                                    "organisationalRoleName": "Role1",
+                                    "groupRoleName": null,
+                                    "caseGroupIdTemplate": null,
+                                    "groupAccessEnabled": false
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
