@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -22,6 +23,9 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Getter
 @Setter
 public class AccessTypeRolesEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "id")
@@ -36,7 +40,7 @@ public class AccessTypeRolesEntity implements Serializable {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "case_type_id", nullable = false)
-    private CaseTypeEntity caseTypeId;
+    private CaseTypeLiteEntity caseType;
 
     @Column(name = "access_type_id", nullable = false)
     private String accessTypeId;
