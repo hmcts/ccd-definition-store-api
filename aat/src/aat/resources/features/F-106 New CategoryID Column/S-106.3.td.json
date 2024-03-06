@@ -35,6 +35,8 @@
       "searchAliasFields": [],
       "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
       "searchParties": [],
+      "accessTypeRoles": [],
+      "accessTypes": [],
       "searchCriterias": [],
       "categories" : [ {
         "category_id" : "evidenceDocs",

@@ -207,6 +207,8 @@
           "other_case_reference": "TextFieldLName"
         }
       ],
+      "accessTypeRoles": [],
+      "accessTypes": [],
 			"case_fields" : [
 				{
 					"__ordering__": "UNORDERED",

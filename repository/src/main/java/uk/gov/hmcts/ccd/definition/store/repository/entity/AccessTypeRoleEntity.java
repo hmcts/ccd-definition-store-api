@@ -11,17 +11,21 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.time.LocalDate;
 
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 
-@Table(name = "access_type_roles")
+@Table(name = "access_type_role")
 @Entity
 @Getter
 @Setter
-public class AccessTypeRolesEntity implements Serializable {
+public class AccessTypeRoleEntity implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
     @Column(name = "id")
@@ -36,31 +40,13 @@ public class AccessTypeRolesEntity implements Serializable {
 
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "case_type_id", nullable = false)
-    private CaseTypeEntity caseTypeId;
+    private CaseTypeLiteEntity caseType;
 
     @Column(name = "access_type_id", nullable = false)
     private String accessTypeId;
 
     @Column(name = "organisation_profile_id", nullable = false)
     private String organisationProfileId;
-
-    @Column(name = "access_mandatory")
-    private Boolean accessMandatory;
-
-    @Column(name = "access_default")
-    private Boolean accessDefault;
-
-    @Column(name = "display")
-    private Boolean display;
-
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "hint")
-    private String hint;
-
-    @Column(name = "display_order")
-    private Integer displayOrder;
 
     @Column(name = "organisational_role_name")
     private String organisationalRoleName;

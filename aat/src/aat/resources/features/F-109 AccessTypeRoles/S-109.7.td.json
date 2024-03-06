@@ -1,17 +1,17 @@
 {
   "_guid_": "S-109.7",
   "_extends_": "F-109_Definition_Import_Test_Base_data",
-  "title": "Fail to import a definition file with missing DisplayOrder in AccessTypeRoles when Display is set to True",
+  "title": "Fail to import a definition file containing new Tab AccessTypeRole with CaseAssignedRoleField has non matching value in RoleToAccessProfiles present",
   "specs": [
     "an active profile in CCD",
-    "contains a definition file with new tab AccessTypeRoles missing DisplayOrder when Display is set to True"
+    "contains a definition file with new tab AccessTypeRole with CaseAssignedRoleField has value that does not match a value in RoleToAccessProfiles"
   ],
   "request": {
     "body": {
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/accesstypes/BEFTA_Master_Definition_AccessType_MissingDisplayOrder.xlsx"
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/accesstyperoles/BEFTA_Master_Definition_AccessTypeRole_CaseAssignedRoleFieldNonMatching.xlsx"
         }
       ]
     }
@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- 'DisplayOrder' should not be null or empty for 'Display' to be used in column 'DisplayOrder' in the sheet 'AccessTypeRoles'"
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- 'InvalidValue' in column 'CaseAssignedRoleField' in the sheet 'AccessTypeRole' is not a listed 'RoleName' in the sheet 'RoleToAccessProfiles'"
     }
   }
 }

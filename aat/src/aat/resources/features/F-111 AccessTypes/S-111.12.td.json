@@ -1,10 +1,10 @@
 {
-  "_guid_": "S-109.15",
-  "_extends_": "F-109_Definition_Import_Test_Base_data",
-  "title": "Fail to import a definition file with Display set to an invalid value in AccessTypeRoles",
+  "_guid_": "S-111.12",
+  "_extends_": "F-111_Definition_Import_Test_Base_data",
+  "title": "Fail to import a definition file with Display set to an invalid value in AccessType",
   "specs": [
     "an active profile in CCD",
-    "contains a definition file with new tab AccessTypeRoles with Display set to an invalid value"
+    "contains a definition file with new tab AccessType with Display set to an invalid value"
   ],
   "request": {
     "body": {
@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "Invalid value 'u' is found in column 'Display' in the sheet 'AccessTypeRoles'"
+      "__plainTextValue__": "Invalid value 'u' is found in column 'Display' in the sheet 'AccessType'"
     }
   }
 }
