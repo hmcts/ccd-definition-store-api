@@ -86,6 +86,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles.AccessTypeRolesService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accesstypes.AccessTypesService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
@@ -107,6 +108,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUse
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypeRolesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.CategoryParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
@@ -121,6 +123,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -138,7 +141,7 @@ public class ImportServiceImplTest {
     public static final String BAD_FILE = "CCD_TestDefinition_V12.xlsx";
     private static final String GOOD_FILE = "CCD_TestDefinition.xlsx";
     private static final String GOOD_FILE_MISSING_ACCESS_TYPES_ROLES_TAB
-        = "CCD_TestDefinitionMissingAccessTypesRolesTab.xlsx";
+        = "CCD_TestDefinitionMissingAccessTypes&AccessTypeRolesTab.xlsx";
     private static final String JURISDICTION_NAME = "TEST";
     private static final String TEST_ADDRESS_BOOK_CASE_TYPE = "TestAddressBookCase";
     private static final String TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE = "TestComplexAddressBookCase";
@@ -171,6 +174,9 @@ public class ImportServiceImplTest {
 
     @Mock
     private AccessProfileRepository accessProfileRepository;
+
+    @Mock
+    private AccessTypesRepository accessTypesRepository;
 
     @Mock
     private AccessTypeRolesRepository accessTypeRolesRepository;
@@ -206,6 +212,9 @@ public class ImportServiceImplTest {
     private CategoryParser categoryParser;
 
     @Mock
+    private AccessTypesParser accessTypesParser;
+
+    @Mock
     private AccessTypeRolesParser accessTypeRolesParser;
 
     @Mock
@@ -239,6 +248,9 @@ public class ImportServiceImplTest {
     private TranslationService translationService;
 
     @Mock
+    private AccessTypesService accessTypesService;
+
+    @Mock
     private AccessTypeRolesService accessTypeRolesService;
 
     @Before
@@ -248,7 +260,7 @@ public class ImportServiceImplTest {
 
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
-            challengeQuestionParser, categoryParser, accessTypeRolesParser, searchPartyValidator,
+            challengeQuestionParser, categoryParser, accessTypesParser, accessTypeRolesParser, searchPartyValidator,
             searchCriteriaValidator, categoryIdValidator, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
@@ -261,6 +273,7 @@ public class ImportServiceImplTest {
             caseTypeService,
             layoutService,
             accessProfileRepository,
+            accessTypesRepository,
             accessTypeRolesRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
@@ -273,6 +286,7 @@ public class ImportServiceImplTest {
             searchCriteriaService,
             searchPartyService, categoryTabService,
             translationService,
+            accessTypesService,
             accessTypeRolesService,
             applicationParams);
 
@@ -332,7 +346,7 @@ public class ImportServiceImplTest {
     }
 
     @Test
-    public void shouldImportDefinitionWhenMissingAccessTypesRolesTab() throws Exception {
+    public void shouldImportDefinitionWhenMissingAccessTypeAndAccessTypeRoleTab() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
 
@@ -451,8 +465,8 @@ public class ImportServiceImplTest {
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
             hiddenFieldsValidator,challengeQuestionParser,
-            categoryParser, accessTypeRolesParser, searchPartyValidator, searchCriteriaValidator, categoryIdValidator,
-            applicationParams, executor);
+            categoryParser, accessTypesParser, accessTypeRolesParser, searchPartyValidator, searchCriteriaValidator,
+            categoryIdValidator, applicationParams, executor);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
@@ -464,6 +478,7 @@ public class ImportServiceImplTest {
             caseTypeService,
             layoutService,
             accessProfileRepository,
+            accessTypesRepository,
             accessTypeRolesRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
@@ -475,8 +490,8 @@ public class ImportServiceImplTest {
             roleToAccessProfileService,
             searchCriteriaService,
             searchPartyService, categoryTabService,
-            translationService, accessTypeRolesService,
-            applicationParams);
+            translationService, accessTypesService,
+            accessTypeRolesService, applicationParams);
 
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");

@@ -33,6 +33,7 @@
       "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
       "searchParties": [],
       "accessTypeRoles": "[[ANYTHING_PRESENT]]",
+      "accessTypes": "[[ANYTHING_PRESENT]]",
       "categories" : "[[ANYTHING_PRESENT]]",
       "searchCriterias": [],
       "case_fields": [ {

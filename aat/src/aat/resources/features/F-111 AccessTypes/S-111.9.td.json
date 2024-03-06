@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-111.9",
+  "_extends_": "F-111_Definition_Import_Test_Base_data",
+  "title": "Fail to import a definition file containing new Tab AccessType with a combination of CaseTypeId, AccessTypeId and OrganisationProfileId is not unique for a jurisdiction",
+  "specs": [
+    "an active profile in CCD",
+    "contains a definition file with new tab AccessType with a combination of CaseTypeId, AccessTypeId and OrganisationProfileId is not unique"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/accesstypes/BEFTA_Master_Definition_AccessType_NotUnique.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- 'AccessTypeID' in combination with the 'CaseTypeID' and 'OrganisationProfileID', must be unique within the Jurisdiction.  Therefore, if a service requires the same Access Type and Organisation Profile to apply for several Case Types in the same Jurisdiction, the configuration needs to be repeated for each required case type. in the sheet 'AccessType'"
+    }
+  }
+}
