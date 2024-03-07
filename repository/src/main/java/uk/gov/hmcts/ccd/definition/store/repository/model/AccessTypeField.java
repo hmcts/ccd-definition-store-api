@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @Data
-public class AccessTypeRolesField {
+public class AccessTypeField {
 
     private Integer id;
     private LocalDate liveFrom;
@@ -24,10 +24,4 @@ public class AccessTypeRolesField {
     private String description;
     private String hint;
     private Integer displayOrder;
-    private String organisationalRoleName;
-    private String groupRoleName;
-    private String caseAssignedRoleField;
-    private Boolean groupAccessEnabled;
-    private String caseAccessGroupIdTemplate;
-
 }

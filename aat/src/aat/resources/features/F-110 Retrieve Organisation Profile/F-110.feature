@@ -4,7 +4,7 @@ Feature: F-110: Retrieve Access Types
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-110.1 
+  @S-110.1
   Scenario: Successfully retrieve access types for provided organisationProfileIds
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -15,7 +15,7 @@ Feature: F-110: Retrieve Access Types
     And the response has all other details as expected
     And the response [contains all accessTypes for organisationProfileId in the response]
 
-  @S-110.2 
+  @S-110.2
   Scenario: Successfully return 200 success without content for non-existent organisationProfileId
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -23,6 +23,7 @@ Feature: F-110: Retrieve Access Types
     And the request [contains an organisationProfileId that does not exists in CCD database]
     And it is submitted to call the [Retrieve Access Types] operation of [CCD Definition Store]
     Then a positive response is received
+    And the response has all other details as expected
     And the response [does not contain any accessTypes]
 
   @S-110.3
@@ -33,6 +34,7 @@ Feature: F-110: Retrieve Access Types
     And the request [does not contain organisationProfileId]
     And it is submitted to call the [Retrieve Access Types] operation of [CCD Definition Store]
     Then a positive response is received
+    And the response has all other details as expected
     And the response [contains all accessTypes for all Organisations]
 
   @S-110.4

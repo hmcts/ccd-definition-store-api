@@ -1,23 +1,23 @@
 {
   "_guid_": "S-109.5",
   "_extends_": "F-109_Definition_Import_Test_Base_data",
-  "title": "Fail to import a definition file with missing Description in AccessTypeRoles when Display is set to True",
+  "title": "Fail to import a definition file with GroupAccessEnabled set to an invalid value in AccessTypeRole",
   "specs": [
     "an active profile in CCD",
-    "contains a definition file with new tab AccessTypeRoles with missing Description when Display is set to True"
+    "contains a definition file with new tab AccessTypeRole with GroupAccessEnabled set to an invalid value"
   ],
   "request": {
     "body": {
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/accesstypes/BEFTA_Master_Definition_AccessType_MissingDescription.xlsx"
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/accesstyperoles/BEFTA_Master_Definition_AccessTypeRole_GroupAccessEnabledIsInvalid.xlsx"
         }
       ]
     }
   },
   "expectedResponse": {
-    "responseCode": 422,
+    "responseCode": 400,
     "responseMessage": "Unprocessable Entity",
     "headers": {
       "Content-Encoding": "[[ANYTHING_PRESENT]]",
@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- 'Description' must be set for 'Display' to be used in the sheet 'AccessTypeRoles'"
+      "__plainTextValue__": "Invalid value 'ii' is found in column 'GroupAccessEnabled' in the sheet 'AccessTypeRole'"
     }
   }
 }
