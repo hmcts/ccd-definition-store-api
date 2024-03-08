@@ -1,10 +1,10 @@
 {
-  "_guid_": "S-109.9",
-  "_extends_": "F-109_Definition_Import_Test_Base_data",
-  "title": "Fail to import a definition file with DisplayOrder not being unique across CaseTypeId for a Jurisdiction in AccessTypeRoles",
+  "_guid_": "S-111.8",
+  "_extends_": "F-111_Definition_Import_Test_Base_data",
+  "title": "Fail to import a definition file with DisplayOrder not being unique across CaseTypeId for a Jurisdiction in AccessType",
   "specs": [
     "an active profile in CCD",
-    "contains a definition file with new tab AccessTypeRoles where DisplayOrder is not unique across CaseTypeId for a Jurisdiction"
+    "contains a definition file with new tab AccessType where DisplayOrder is not unique across CaseTypeId for a Jurisdiction"
   ],
   "request": {
     "body": {
@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- 'DisplayOrder' must be unique across all Case Types for a given Jurisdiction in the sheet 'AccessTypeRoles'"
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- 'DisplayOrder' must be unique across all Case Types for a given Jurisdiction in the sheet 'AccessType'"
     }
   }
 }

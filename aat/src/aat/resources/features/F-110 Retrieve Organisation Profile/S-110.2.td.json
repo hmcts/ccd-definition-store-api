@@ -11,65 +11,20 @@
         "does not contain any accessTypes"
     ],
     "request": {
-   "body": {
-      "organisationProfileIds": ["SOLS_PROFILE"]
-    }
-  },
+      "body": {
+        "organisationProfileIds": ["SOLS_PROFILE"]
+      }
+    },
     "expectedResponse": {
-        "responseCode": 200,
-        "responseMessage": "OK",
-        "headers": {
-            "Content-Encoding": "[[ANYTHING_PRESENT]]",
-            "Content-Type": "text/plain",
-            "Content-Length": "[[ANYTHING_PRESENT]]"
-        },
-        "body": {
-            "jurisdictions": [
-                {
-                    "jurisdictionId": "BEFTA_MASTER",
-                    "jurisdictionName": "BEFTA Master",
-                    "accessTypes": [
-                        {
-                            "organisationProfileId": "SOLICITOR_PROFILE",
-                            "accessTypeId": "default",
-                            "accessMandatory": true,
-                            "accessDefault": true,
-                            "display": true,
-                            "description": "Content for the BEFTA Master Jurisdiction Access Type.",
-                            "hint": "Content for the BEFTA Master Jurisdiction Access Type.",
-                            "displayOrder": 1,
-                            "roles": [
-                                {
-                                    "caseTypeId": "FT_MasterCaseType",
-                                    "organisationalRoleName": "Role1",
-                                    "groupRoleName": "Role1",
-                                    "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
-                                    "groupAccessEnabled": false
-                                }
-                            ]
-                        },
-                        {
-                            "organisationProfileId": "SOLICITOR_PROFILE",
-                            "accessTypeId": "respondents",
-                            "accessMandatory": true,
-                            "accessDefault": true,
-                            "display": true,
-                            "description": "Content for the BEFTA Master Jurisdiction Access Type.",
-                            "hint": "Content for the BEFTA Master Jurisdiction Access Type.",
-                            "displayOrder": 2,
-                            "roles": [
-                                {
-                                    "caseTypeId": "FT_MasterCaseType",
-                                    "organisationalRoleName": "Role1",
-                                    "groupRoleName": null,
-                                    "caseGroupIdTemplate": null,
-                                    "groupAccessEnabled": false
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ]
-        }
+      "_extends_": "Common_200_Response",
+      "headers": {
+        "Content-Encoding": "gzip",
+        "Content-Type": "[[ANYTHING_PRESENT]]",
+        "Transfer-Encoding": "[[ANYTHING_PRESENT]]",
+        "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+      },
+      "body": {
+        "jurisdictions" : [ ]
+      }
     }
 }
