@@ -329,7 +329,7 @@ class UserRoleControllerTest {
         @Test
         @DisplayName("Should throw exception when role not found")
         void shouldThrowException_whenRoleNotFound() throws Exception {
-            uriVariables.put("role", Base64.getEncoder().encode(ROLE_DEFINED.getBytes()));
+            uriVariables.put("role", ROLE_DEFINED);
 
             doThrow(new NotFoundException("Role is not found"))
                 .when(accessProfileService).deleteRole(ROLE_DEFINED);
