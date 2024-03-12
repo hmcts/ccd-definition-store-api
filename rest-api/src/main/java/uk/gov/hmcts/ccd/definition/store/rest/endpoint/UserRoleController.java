@@ -88,8 +88,7 @@ public class UserRoleController {
     )
     @ApiResponse(code = 204, message = "User role is deleted")
     public void userRoleDelete(
-        @ApiParam(value = "user role", required = true) @RequestParam("role") @NotNull byte[] roleBase64EncodedBytes) {
-        final String role = new String(Base64.getDecoder().decode(roleBase64EncodedBytes));
+        @ApiParam(value = "user role", required = true) @RequestParam("role") @NotNull String role) {
         accessProfileService.deleteRole(role);
     }
 
