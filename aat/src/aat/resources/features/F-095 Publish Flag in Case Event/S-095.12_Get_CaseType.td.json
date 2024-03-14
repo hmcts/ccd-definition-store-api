@@ -572,6 +572,7 @@
       "categories": [],
       "searchCriterias": [],
       "accessTypeRoles": [],
+      "accessTypes": [],
       "case_fields": [
         {
           "__ordering__": "UNORDERED",

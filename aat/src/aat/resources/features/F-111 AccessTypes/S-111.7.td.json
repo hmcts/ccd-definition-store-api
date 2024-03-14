@@ -1,10 +1,10 @@
 {
-  "_guid_": "S-109.8",
-  "_extends_": "F-109_Definition_Import_Test_Base_data",
-  "title": "Fail to import a definition file with DisplayOrder set to 0 in AccessTypeRoles when Display is set to True",
+  "_guid_": "S-111.7",
+  "_extends_": "F-111_Definition_Import_Test_Base_data",
+  "title": "Fail to import a definition file with DisplayOrder set to 0 in AccessType when Display is set to True",
   "specs": [
     "an active profile in CCD",
-    "contains a definition file with new tab AccessTypeRoles with DisplayOrder set to 0 when Display is set to True"
+    "contains a definition file with new tab AccessType with DisplayOrder set to 0 when Display is set to True"
   ],
   "request": {
     "body": {
@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- 'DisplayOrder' must be greater than 0 in column 'DisplayOrder' in the sheet 'AccessTypeRoles'"
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- 'DisplayOrder' must be greater than 0 in column 'DisplayOrder' in the sheet 'AccessType'"
     }
   }
 }

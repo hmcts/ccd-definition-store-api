@@ -1,10 +1,10 @@
 {
-  "_guid_": "S-109.13",
-  "_extends_": "F-109_Definition_Import_Test_Base_data",
-  "title": "Fail to import a definition file with AccessMandatory set to an invalid value in AccessTypeRoles",
+  "_guid_": "S-111.10",
+  "_extends_": "F-111_Definition_Import_Test_Base_data",
+  "title": "Fail to import a definition file with AccessMandatory set to an invalid value in AccessType",
   "specs": [
     "an active profile in CCD",
-    "contains a definition file with new tab AccessTypeRoles with AccessMandatory set to an invalid value"
+    "contains a definition file with new tab AccessType with AccessMandatory set to an invalid value"
   ],
   "request": {
     "body": {
@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "Invalid value 'Yess' is found in column 'AccessMandatory' in the sheet 'AccessTypeRoles'"
+      "__plainTextValue__": "Invalid value 'Yess' is found in column 'AccessMandatory' in the sheet 'AccessType'"
     }
   }
 }
