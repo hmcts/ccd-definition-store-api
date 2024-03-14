@@ -26,6 +26,7 @@ public class ParserFactory {
     private final HiddenFieldsValidator hiddenFieldsValidator;
     private final ChallengeQuestionParser challengeQuestionParser;
     private final CategoryParser categoryParser;
+    private final AccessTypesParser accessTypesParser;
     private final AccessTypeRolesParser accessTypeRolesParser;
     private final SearchPartyValidator searchPartyValidator;
     private final SearchCriteriaValidator searchCriteriaValidator;
@@ -41,6 +42,7 @@ public class ParserFactory {
                          HiddenFieldsValidator hiddenFieldsValidator,
                          ChallengeQuestionParser challengeQuestionParser,
                          CategoryParser categoryParser,
+                         AccessTypesParser accessTypesParser,
                          AccessTypeRolesParser accessTypeRolesParser,
                          SearchPartyValidator searchPartyValidator,
                          SearchCriteriaValidator searchCriteriaValidator,
@@ -53,6 +55,7 @@ public class ParserFactory {
         this.hiddenFieldsValidator = hiddenFieldsValidator;
         this.challengeQuestionParser = challengeQuestionParser;
         this.categoryParser = categoryParser;
+        this.accessTypesParser = accessTypesParser;
         this.accessTypeRolesParser = accessTypeRolesParser;
         this.searchPartyValidator = searchPartyValidator;
         this.searchCriteriaValidator = searchCriteriaValidator;
@@ -166,7 +169,11 @@ public class ParserFactory {
         return categoryIdValidator;
     }
 
+    public AccessTypesParser createAccessTypesParser() {
+        return accessTypesParser;
+    }
+
     public AccessTypeRolesParser createAccessTypeRolesParser() {
-        return  accessTypeRolesParser;
+        return accessTypeRolesParser;
     }
 }
