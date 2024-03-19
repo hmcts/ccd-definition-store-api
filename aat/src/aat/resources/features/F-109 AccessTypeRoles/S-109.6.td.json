@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-109.6",
+  "_extends_": "F-109_Definition_Import_Test_Base_data",
+  "title": "Fail to import a definition file containing new Tab AccessTypeRole with CaseAccessGroupIDTemplate has invalid format when value present",
+  "specs": [
+    "an active profile in CCD",
+    "contains a definition file with new tab AccessTypeRole with CaseAccessGroupIDTemplate has value of the format that does not match <service>[:<id1>[:<Id2...]]]"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/accesstyperoles/BEFTA_Master_Definition_AccessTypeRole_InvalidCaseAccessGroupIdTemplate.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- 'TypoBEFTA_MASTER:$ORGID$' must start with 'BEFTA_MASTER' (Service Name) in column 'CaseAccessGroupIDTemplate' in the sheet 'AccessTypeRole'"
+    }
+  }
+}

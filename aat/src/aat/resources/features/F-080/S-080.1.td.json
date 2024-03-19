@@ -230,6 +230,10 @@
       "searchAliasFields": [],
       "roleToAccessProfiles": [
         {
+          "__ordering__": "ORDERED",
+          "__elementId__": "case_type_id"
+        },
+        {
           "case_type_id": "FT_CaseAccessCategories",
           "disabled": false,
           "read_only": true,
@@ -266,6 +270,8 @@
       "searchCriterias": [],
       "searchParties": [],
       "categories": [],
+      "accessTypeRoles": [],
+      "accessTypes": [],
       "case_fields": [
         {
           "__ordering__": "UNORDERED",
