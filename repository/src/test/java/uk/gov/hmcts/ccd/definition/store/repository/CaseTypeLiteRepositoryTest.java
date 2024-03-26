@@ -47,34 +47,27 @@ public class CaseTypeLiteRepositoryTest {
     public void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
 
-        final CaseTypeEntity caseType = new CaseTypeEntity();
-        caseType.setReference("id");
-        caseType.setName("Test case");
-        caseType.setVersion(1);
-        caseType.setDescription("Some case type");
-        caseType.setJurisdiction(testJurisdiction);
-        caseType.setSecurityClassification(SecurityClassification.PUBLIC);
-        saveCaseTypeClearAndFlushSession(caseType);
-        caseType.setVersion(2);
-        saveCaseTypeClearAndFlushSession(caseType);
-        caseType.setVersion(3);
-        saveCaseTypeClearAndFlushSession(caseType);
+        createCaseType("id", 1, "Test case",
+            "Some case type", testJurisdiction, null);
+        createCaseType("id", 3, "Test case",
+            "Some case type", testJurisdiction, null);
+        createCaseType("id", 2, "Test case",
+            "Some case type", testJurisdiction, null);
 
-        final CaseTypeEntity caseType2 = new CaseTypeEntity();
-        caseType2.setReference("id2");
-        caseType2.setName("Test case 2");
-        caseType2.setVersion(1);
-        caseType2.setDescription("Another case type");
-        caseType2.setJurisdiction(testJurisdiction);
-        caseType2.setSecurityClassification(SecurityClassification.PUBLIC);
-        final StateEntity state = new StateEntity();
+        StateEntity state = new StateEntity();
         state.setReference("s1");
         state.setName("State 1");
         state.setDescription("A description");
-        caseType2.addState(state);
-        saveCaseTypeClearAndFlushSession(caseType2);
-        caseType2.setVersion(2);
-        saveCaseTypeClearAndFlushSession(caseType2);
+
+        createCaseType("id2", 1, "Test case 2",
+            "Another case type", testJurisdiction, state);
+
+        state = new StateEntity();
+        state.setReference("s1");
+        state.setName("State 1");
+        state.setDescription("A description");
+        createCaseType("id2", 2, "Test case 2",
+            "Another case type", testJurisdiction, state);
     }
 
 
@@ -82,14 +75,16 @@ public class CaseTypeLiteRepositoryTest {
     public void findByJurisdictionIdReturnsCurrentVersionOfCaseTypesWhenSeveralVersionsExist() {
         List<CaseTypeLiteEntity> caseTypeEntityOptional
             = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
-        assertTrue(caseTypeEntityOptional.size() == 2);
+        assertEquals(2, caseTypeEntityOptional.size());
 
-        CaseTypeLiteEntity caseTypeJurisdictionIdVersionReferenceIdx1 = caseTypeEntityOptional.get(1);
+        CaseTypeLiteEntity caseTypeJurisdictionIdVersionReferenceIdx1 = getCaseTypeLiteEntityByReference("id",
+            caseTypeEntityOptional);
         assertEquals(3, caseTypeJurisdictionIdVersionReferenceIdx1.getVersion().intValue());
         assertEquals("Test case", caseTypeJurisdictionIdVersionReferenceIdx1.getName());
         assertEquals("Some case type", caseTypeJurisdictionIdVersionReferenceIdx1.getDescription());
 
-        CaseTypeLiteEntity caseTypeJurisdictionIdVersionReferenceIdx2 = caseTypeEntityOptional.get(0);
+        CaseTypeLiteEntity caseTypeJurisdictionIdVersionReferenceIdx2 = getCaseTypeLiteEntityByReference("id2",
+            caseTypeEntityOptional);
         assertEquals(2, caseTypeJurisdictionIdVersionReferenceIdx2.getVersion().intValue());
         assertEquals("Test case 2", caseTypeJurisdictionIdVersionReferenceIdx2.getName());
         assertEquals("Another case type", caseTypeJurisdictionIdVersionReferenceIdx2.getDescription());
@@ -117,11 +112,20 @@ public class CaseTypeLiteRepositoryTest {
         // caseType entity only no child associations (lazy)
         SQLStatementCountValidator.assertSelectCount(1);
 
-        CaseTypeLiteEntity caseTypeLiteEntity = caseTypeEntityOptional.get(0);
+        CaseTypeLiteEntity caseTypeLiteEntity =
+            getCaseTypeLiteEntityByReference("id2", caseTypeEntityOptional);
+
 
         assertEquals(1, caseTypeLiteEntity.getStates().size());
 
         SQLStatementCountValidator.assertSelectCount(3);
+    }
+
+    private CaseTypeLiteEntity getCaseTypeLiteEntityByReference(String reference,
+                                                                List<CaseTypeLiteEntity> caseTypeEntityOptional) {
+        return caseTypeEntityOptional.stream()
+            .filter(c -> c.getReference().equals(reference))
+                .findFirst().orElse(new CaseTypeLiteEntity());
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType) {
@@ -130,4 +134,18 @@ public class CaseTypeLiteRepositoryTest {
         entityManager.clear();
     }
 
+    private void createCaseType(String reference, int version, String name, String description,
+                                JurisdictionEntity jurisdiction, StateEntity state) {
+        CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference(reference);
+        caseType.setName(name);
+        caseType.setVersion(version);
+        caseType.setDescription(description);
+        caseType.setJurisdiction(jurisdiction);
+        caseType.setSecurityClassification(SecurityClassification.PUBLIC);
+        if (state != null) {
+            caseType.addState(state);
+        }
+        saveCaseTypeClearAndFlushSession(caseType);
+    }
 }
