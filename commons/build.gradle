@@ -16,7 +16,7 @@ bootJar {
 }
 
 def versions = [
-        jackson         : '2.14.1'
+        jackson         : '2.16.0'
 ]
 
 dependencies {
