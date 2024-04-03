@@ -49,6 +49,7 @@ java:
     ELASTIC_SEARCH_CASE_INDEX_MAPPING_FIELDS_LIMIT: 10000
 
     WELSH_TRANSLATION_ENABLED: true
+    ENABLE_CASE_GROUP_ACCESS: true
 
     # Role-based authorization for CCD Admin Web
     ADMIN_WEB_AUTHORIZATION_ENABLED: false # Needs enabling once the appropriate roles are created in IdAM

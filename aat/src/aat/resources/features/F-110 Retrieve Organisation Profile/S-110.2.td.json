@@ -1,0 +1,30 @@
+{
+    "_guid_": "S-110.2",
+    "_extends_": "F-110_Test_Base_data",
+    "title": "Successfully return 200 success without content for non-existent organisationProfileId",
+    "specs": [
+        "an active profile in CCD",
+        "contains correctly configured values",
+        "contains an organisationProfileId that does not exists in CCD database",
+        "Retrieve Access Types operation of CCD Data Store",
+        "has a status of 200 success",
+        "does not contain any accessTypes"
+    ],
+    "request": {
+      "body": {
+        "organisationProfileIds": ["SOLS_PROFILE"]
+      }
+    },
+    "expectedResponse": {
+      "_extends_": "Common_200_Response",
+      "headers": {
+        "Content-Encoding": "gzip",
+        "Content-Type": "[[ANYTHING_PRESENT]]",
+        "Transfer-Encoding": "[[ANYTHING_PRESENT]]",
+        "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+      },
+      "body": {
+        "jurisdictions" : [ ]
+      }
+    }
+}

@@ -43,7 +43,6 @@ import static javax.persistence.GenerationType.SEQUENCE;
 )
 public class CaseTypeEntity implements Serializable, Versionable {
 
-    private static final long serialVersionUID = 542723327314434924L;
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = SEQUENCE, generator = "case_type_id_seq")
@@ -129,6 +128,16 @@ public class CaseTypeEntity implements Serializable, Versionable {
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<CategoryEntity> categories = new ArrayList<>();
+
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "case_type_id")
+    private final List<AccessTypeEntity> accessTypes = new ArrayList<>();
+
+    @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    @JoinColumn(name = "case_type_id")
+    private final List<AccessTypeRoleEntity> accessTypeRoles = new ArrayList<>();
 
     public Integer getId() {
         return id;
@@ -329,5 +338,13 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     public List<CategoryEntity> getCategories() {
         return categories;
+    }
+
+    public List<AccessTypeEntity> getAccessTypes() {
+        return accessTypes;
+    }
+
+    public List<AccessTypeRoleEntity> getAccessTypeRoles() {
+        return accessTypeRoles;
     }
 }

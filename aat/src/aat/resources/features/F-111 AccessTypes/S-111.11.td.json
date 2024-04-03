@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-111.11",
+  "_extends_": "F-111_Definition_Import_Test_Base_data",
+  "title": "Fail to import a definition file with AccessDefault set to an invalid value in AccessType",
+  "specs": [
+    "an active profile in CCD",
+    "contains a definition file with new tab AccessType with AccessDefault set to an invalid value"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/accesstypes/BEFTA_Master_Definition_AccessType_AccessDefaultIsInvalid.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "Invalid value 'YYes' is found in column 'AccessDefault' in the sheet 'AccessType'"
+    }
+  }
+}

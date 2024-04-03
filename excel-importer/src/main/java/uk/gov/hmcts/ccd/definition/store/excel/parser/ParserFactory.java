@@ -26,6 +26,8 @@ public class ParserFactory {
     private final HiddenFieldsValidator hiddenFieldsValidator;
     private final ChallengeQuestionParser challengeQuestionParser;
     private final CategoryParser categoryParser;
+    private final AccessTypesParser accessTypesParser;
+    private final AccessTypeRolesParser accessTypeRolesParser;
     private final SearchPartyValidator searchPartyValidator;
     private final SearchCriteriaValidator searchCriteriaValidator;
     private final CategoryIdValidator categoryIdValidator;
@@ -39,7 +41,10 @@ public class ParserFactory {
                          SpreadsheetValidator spreadsheetValidator,
                          HiddenFieldsValidator hiddenFieldsValidator,
                          ChallengeQuestionParser challengeQuestionParser,
-                         CategoryParser categoryParser, SearchPartyValidator searchPartyValidator,
+                         CategoryParser categoryParser,
+                         AccessTypesParser accessTypesParser,
+                         AccessTypeRolesParser accessTypeRolesParser,
+                         SearchPartyValidator searchPartyValidator,
                          SearchCriteriaValidator searchCriteriaValidator,
                          CategoryIdValidator categoryIdValidator,
                          ApplicationParams applicationParams, @Qualifier("validateExecutor") Executor executor) {
@@ -50,6 +55,8 @@ public class ParserFactory {
         this.hiddenFieldsValidator = hiddenFieldsValidator;
         this.challengeQuestionParser = challengeQuestionParser;
         this.categoryParser = categoryParser;
+        this.accessTypesParser = accessTypesParser;
+        this.accessTypeRolesParser = accessTypeRolesParser;
         this.searchPartyValidator = searchPartyValidator;
         this.searchCriteriaValidator = searchCriteriaValidator;
         this.categoryIdValidator = categoryIdValidator;
@@ -160,5 +167,13 @@ public class ParserFactory {
 
     public CategoryIdValidator createCategoryIdValidator() {
         return categoryIdValidator;
+    }
+
+    public AccessTypesParser createAccessTypesParser() {
+        return accessTypesParser;
+    }
+
+    public AccessTypeRolesParser createAccessTypeRolesParser() {
+        return accessTypeRolesParser;
     }
 }

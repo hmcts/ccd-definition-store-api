@@ -9,7 +9,9 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.mapper.FieldTypeListItemMapper;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
@@ -41,6 +43,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessControlList;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRoleField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventField;
@@ -321,6 +325,14 @@ public interface EntityToResponseDTOMapper {
 
     @Mapping(source = "caseType.reference", target = "caseTypeId")
     Category map(CategoryEntity categoryEntity);
+
+    @Mapping(source = "caseType.reference", target = "caseTypeId")
+    AccessTypeRoleField map(AccessTypeRoleEntity accessTypeRoleEntity);
+
+    @Mapping(source = "caseType.reference", target = "caseTypeId")
+    @Mapping(source = "caseType.jurisdiction.reference", target = "jurisdictionId")
+    @Mapping(source = "caseType.jurisdiction.name", target = "jurisdictionName")
+    AccessTypeField map(AccessTypeEntity accessTypeEntity);
 
     @Mapping(source = "caseType.reference", target = "id")
     @Mapping(source = "roleToAccessProfilesEntity.roleName", target = "name")

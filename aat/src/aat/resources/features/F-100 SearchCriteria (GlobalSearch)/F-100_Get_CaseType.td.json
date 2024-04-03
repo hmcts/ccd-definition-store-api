@@ -14,6 +14,8 @@
       "searchAliasFields": "[[ANYTHING_PRESENT]]",
       "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
       "searchParties": "[[ANYTHING_PRESENT]]",
+      "accessTypeRoles": "[[ANYTHING_PRESENT]]",
+      "accessTypes": "[[ANYTHING_PRESENT]]",
       "categories": "[[ANYTHING_PRESENT]]",
       "searchCriterias": [],
       "case_fields": "[[ANYTHING_PRESENT]]",
