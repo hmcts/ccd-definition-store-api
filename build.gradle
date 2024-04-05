@@ -104,9 +104,17 @@ allprojects {
     // Global constraints
     dependencies {
 
-        implementation('org.springframework.cloud:spring-cloud-starter-openfeign'){
-            version {
-                strictly '4.0.3'
+        implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+        constraints {
+            implementation('org.springframework.cloud:spring-cloud-starter-openfeign') {
+                version{
+                    strictly '4.0.3'
+                }
+            }
+            implementation('org.springframework.cloud:spring-cloud-starter') {
+                version{
+                    strictly '3.1.8'
+                }
             }
         }
 
@@ -167,7 +175,10 @@ allprojects {
             }
 
             dependencySubstitution {
-                substitute module("org.springframework.cloud:spring-cloud-commons:3.1.3") using module('org.springframework.cloud:spring-cloud-commons:3.1.8')
+                substitute module("org.springframework.cloud:spring-cloud-commons:3.1.3") using module("org.springframework.cloud:spring-cloud-commons:3.1.8")
+                substitute module("org.springframework.cloud:spring-cloud-starter:3.1.3") using module("org.springframework.cloud:spring-cloud-starter:3.1.8")
+                substitute module("org.springframework.cloud:spring-cloud-openfeign-core:3.1.3") using module("org.springframework.cloud:spring-cloud-openfeign-core:3.1.9")
+                substitute module("org.springframework.cloud:spring-cloud-starter-bootstrap:3.1.3") using module("org.springframework.cloud:spring-cloud-starter-bootstrap:3.1.8")
             }
 
         }
