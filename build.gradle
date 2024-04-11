@@ -55,7 +55,7 @@ ext {
     reformLogging= '6.0.1'
     appInsightsVersion = '2.4.1'
     restAssuredVersion = '4.3.0!!'
-    groovyVersion = '3.0.17!!'
+    groovyVersion = '3.0.19!!'
     tomcatVersion = '9.0.82'
     feignJackson = '11.6'
     beftaFwVersion = '8.8.5'
