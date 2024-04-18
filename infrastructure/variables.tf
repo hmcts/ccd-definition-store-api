@@ -82,5 +82,8 @@ variable "kv_subscription" {
   default     = "DCD-CNP-DEV"
   type        = string
   description = "Update this with the name of the subscription where the single server key vault is. Defaults to DCD-CNP-DEV."
+}
 
+variable "tenant_id" {
+  description = "(Required) The Azure Active Directory tenant ID that should be used for authenticating requests to the key vault. This is usually sourced from environment variables and not normally required to be specified."
 }
