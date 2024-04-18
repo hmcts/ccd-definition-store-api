@@ -98,7 +98,7 @@ allprojects {
         testImplementation ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}"){
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
-        implementation 'net.minidev:json-smart:2.4.7'
+        implementation 'net.minidev:json-smart:2.4.11'
     }
 
     // Global constraints
