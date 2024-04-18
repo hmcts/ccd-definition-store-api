@@ -16,6 +16,13 @@ locals {
 
 }
 
+resource "azurerm_resource_group" "rg" {
+  name     = "${var.product}-shared-${var.env}"
+  location = var.location
+
+  tags = var.common_tags
+}
+
 module "key-vault" {
   source                  = "git@github.com:hmcts/cnp-module-key-vault?ref=master"
   product                 = var.product
