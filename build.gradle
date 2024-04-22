@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.7.12'
+        springBootVersion = '2.7.18'
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -55,7 +55,7 @@ ext {
     reformLogging= '6.0.1'
     appInsightsVersion = '2.4.1'
     restAssuredVersion = '4.3.0!!'
-    groovyVersion = '3.0.17!!'
+    groovyVersion = '3.0.19!!'
     tomcatVersion = '9.0.82'
     feignJackson = '11.6'
     beftaFwVersion = '8.8.5'
@@ -104,14 +104,17 @@ allprojects {
     // Global constraints
     dependencies {
 
-        implementation('org.springframework.cloud:spring-cloud-starter-openfeign'){
-            version {
-                strictly '4.0.3'
+        implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+        constraints {
+            implementation('org.springframework.cloud:spring-cloud-starter-openfeign') {
+                version{
+                    strictly '4.0.3'
+                }
             }
-        }
-        implementation('org.springframework.cloud:spring-cloud-starter'){
-            version {
-                strictly '3.1.8'
+            implementation('org.springframework.cloud:spring-cloud-starter') {
+                version{
+                    strictly '3.1.8'
+                }
             }
         }
 
@@ -170,8 +173,10 @@ allprojects {
                     details.useVersion '32.1.3-jre'
                 }
             }
+
         }
     }
+
 }
 
 java {
@@ -281,8 +286,7 @@ subprojects { subproject ->
 
         // CVE-2021-29425
         implementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
-        implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.7'
-        implementation "org.springframework.cloud:spring-cloud-starter-bootstrap"
+        testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.8'
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.9'
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
