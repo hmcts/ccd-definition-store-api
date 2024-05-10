@@ -2,7 +2,7 @@
 -- Name: display_group_event_id_idx; Type: INDEX; Schema: display_group; Owner: -
 --
 
-CREATE INDEX CONCURRENTLY IF NOT EXISTS display_group_event_id_idx ON display_group USING btree (event_id);
+CREATE INDEX CONCURRENTLY IF NOT EXISTS idx_display_group_event_id ON display_group USING btree (event_id);
 
 --
 -- Name: idx_workbasket_input_case_field_case_field_id; Type: INDEX; Schema: workbasket_input_case; Owner: -
