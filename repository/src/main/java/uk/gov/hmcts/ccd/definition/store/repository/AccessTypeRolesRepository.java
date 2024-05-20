@@ -8,21 +8,45 @@ import java.util.List;
 
 public interface AccessTypeRolesRepository extends JpaRepository<AccessTypeRoleEntity, Integer> {
 
-    @Query("select atr from AccessTypeRoleEntity atr, CaseTypeLiteEntity ct, JurisdictionEntity j where"
-        + " atr.caseType.version = (select max(ct1.version) "
-        + " from CaseTypeLiteEntity ct1, AccessTypeRoleEntity atr1 where "
-        + " atr1.caseType = ct1.id and ct1.jurisdiction = j.id)"
-        + " and atr.caseType=ct.id"
-        + " and ct.jurisdiction = j.id")
+    @Query(value = "SELECT "
+        + "atr.* "
+        + "FROM access_type_role atr "
+        + "INNER JOIN case_type ct1 "
+        + "ON ct1.id = atr.case_type_id "
+        + "INNER JOIN ( "
+        + "SELECT  "
+        + "ct.id,ct.description,ct.jurisdiction_id,ct.name,ct.reference AS reference,ct.version "
+        + "FROM  case_type ct "
+        + "INNER JOIN jurisdiction j "
+        + "ON ct.jurisdiction_id = j.id "
+        + "INNER JOIN ("
+        + "SELECT reference,MAX(version) AS max_version "
+        + "FROM case_type "
+        + "GROUP BY reference) max_versions "
+        + "ON ct.reference = max_versions.reference "
+        + "AND ct.version = max_versions.max_version ) AS ct2 "
+        + "ON ct1.id = ct2.id ", nativeQuery = true)
     List<AccessTypeRoleEntity> findAllWithCaseTypeIds();
 
-    @Query("select atr from AccessTypeRoleEntity atr, CaseTypeLiteEntity ct, JurisdictionEntity j"
-          + " where atr.organisationProfileId in :organisationProfileIds"
-          + " and atr.caseType.version = (select max(ct1.version) "
-          + " from CaseTypeLiteEntity ct1, AccessTypeRoleEntity atr1 where "
-          + " atr1.caseType = ct1.id and ct1.jurisdiction = j.id)"
-          + " and atr.caseType=ct.id"
-          + " and ct.jurisdiction = j.id")
+    @Query(value = "SELECT "
+        + "atr.* "
+        + "FROM access_type_role atr "
+        + "INNER JOIN case_type ct1 "
+        + "ON ct1.id = atr.case_type_id "
+        + "INNER JOIN ( "
+        + "SELECT  "
+        + "ct.id,ct.description,ct.jurisdiction_id,ct.name,ct.reference AS reference,ct.version "
+        + "FROM  case_type ct "
+        + "INNER JOIN jurisdiction j "
+        + "ON ct.jurisdiction_id = j.id "
+        + "INNER JOIN ("
+        + "SELECT reference,MAX(version) AS max_version "
+        + "FROM case_type "
+        + "GROUP BY reference) max_versions "
+        + "ON ct.reference = max_versions.reference "
+        + "AND ct.version = max_versions.max_version ) AS ct2 "
+        + "ON ct1.id = ct2.id "
+        + "AND atr.organisation_profile_id in :organisationProfileIds", nativeQuery = true)
     List<AccessTypeRoleEntity> findByOrganisationProfileIds(List<String>  organisationProfileIds);
 
 }
