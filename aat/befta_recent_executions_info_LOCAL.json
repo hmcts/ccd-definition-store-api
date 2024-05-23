@@ -1,6 +1,0 @@
-{
-  "dataSetupEnvironment" : "LOCAL",
-  "lastExecutionTime" : "2024-05-23T08:44:46.339",
-  "lastExecutionProjectRepo" : "ccd-definition-store-api",
-  "lastExecutionProjectBranch" : "CCD-5322_retrieve_associated_latest_CaseTypeId"
-}
