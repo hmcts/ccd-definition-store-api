@@ -1,0 +1,115 @@
+{
+  "_guid_": "S-110.1a",
+  "_extends_": "F-110_Test_Base_data",
+  "title": "Successfully retrieve access types for provided organisationProfileIds",
+  "specs": [
+    "an active profile in CCD",
+    "contains correctly configured values",
+    "contains an organisationProfileId that exists in CCD database",
+    "contains an organisationProfileId and accessTypes exists in CCD database",
+    "Retrieve Access Types operation of CCD Data Store",
+    "contains the latest version of the accessTypes for organisationProfileId"
+  ],
+  "request": {
+    "body": {
+      "organisationProfileIds": ["OGD_DWP_PROFILE", "SOLICITOR_PROFILE"]
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "body":
+        {
+          "jurisdictionId" : "BEFTA_JURISDICTION_1",
+          "jurisdictionName" : "BEFTA_JURISDICTION_1",
+          "accessTypes" : [ {
+            "organisationProfileId" : "SOLICITOR_PROFILE",
+            "accessTypeId" : "BEFTA_SOLICITOR_1",
+            "accessMandatory" : true,
+            "accessDefault" : true,
+            "display" : true,
+            "description" : "BEFTA Solicitor Profile  Respondant for Org description",
+            "hint" : "BEFTA Solicitor Profile Respondant for Org hint",
+            "displayOrder" : 2,
+            "roles" : [ {
+              "caseTypeId" : "CaseAccessGroups_Casetype",
+              "organisationalRoleName" : "Role1",
+              "groupRoleName" : null,
+              "caseGroupIdTemplate" : null,
+              "groupAccessEnabled" : true
+            }, {
+              "caseTypeId" : "CaseAccessGroups_Casetype",
+              "organisationalRoleName" : "Role1",
+              "groupRoleName" : "Role1",
+              "caseGroupIdTemplate" : "BEFTA_JURISDICTION_1:$ORGID$",
+              "groupAccessEnabled" : true
+            } ]
+          }, {
+            "organisationProfileId" : "OGD_DWP_PROFILE",
+            "accessTypeId" : "BEFTA_SOLICITOR_1",
+            "accessMandatory" : true,
+            "accessDefault" : true,
+            "display" : true,
+            "description" : "BEFTA bulk Solicitor 2  Respondant for Org description2",
+            "hint" : "BEFTA bulk Solicitor 2 Respondant for Org hint2",
+            "displayOrder" : 1,
+            "roles" : [ {
+              "caseTypeId" : "CaseAccessGroups_Casetype",
+              "organisationalRoleName" : "Role1",
+              "groupRoleName" : null,
+              "caseGroupIdTemplate" : null,
+              "groupAccessEnabled" : true
+            }, {
+              "caseTypeId" : "CaseAccessGroups_Casetype",
+              "organisationalRoleName" : "Role1",
+              "groupRoleName" : "Role1",
+              "caseGroupIdTemplate" : "BEFTA_JURISDICTION_1:$ORGID$",
+              "groupAccessEnabled" : true
+            } ]
+          } ]
+        }, {
+          "jurisdictionId" : "BEFTA_MASTER",
+          "jurisdictionName" : "BEFTA Master",
+          "accessTypes" : [ {
+            "organisationProfileId" : "OGD_DWP_PROFILE",
+            "accessTypeId" : "BEFTA_SOLICITOR_2",
+            "accessMandatory" : true,
+            "accessDefault" : true,
+            "display" : true,
+            "description" : "BEFTA bulk Solicitor Respondant for Org description2",
+            "hint" : "BEFTA bulk Solicitor Respondant for Org hint2",
+            "displayOrder" : 2,
+            "roles" : [ {
+              "caseTypeId" : "FT_CaseAccessGroup",
+              "organisationalRoleName" : "Role1",
+              "groupRoleName" : null,
+              "caseGroupIdTemplate" : null,
+              "groupAccessEnabled" : true
+            }, {
+              "caseTypeId" : "FT_CaseAccessGroup",
+              "organisationalRoleName" : "Role1",
+              "groupRoleName" : "Role1",
+              "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
+              "groupAccessEnabled" : true
+            } ]
+          }, {
+            "organisationProfileId" : "SOLICITOR_PROFILE",
+            "accessTypeId" : "BEFTA_SOLICITOR_1",
+            "accessMandatory" : true,
+            "accessDefault" : true,
+            "display" : true,
+            "description" : "BEFTA bulk Solicitor Respondant for Org description",
+            "hint" : "BEFTA bulk Solicitor Respondant for Org hint",
+            "displayOrder" : 1,
+            "roles" : [ {
+              "caseTypeId" : "FT_CaseAccessGroup",
+              "organisationalRoleName" : "Role1",
+              "groupRoleName" : "Role1",
+              "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
+              "groupAccessEnabled" : true
+            } ]
+          } ]
+        } ]
+    }
+  }
+}
+
