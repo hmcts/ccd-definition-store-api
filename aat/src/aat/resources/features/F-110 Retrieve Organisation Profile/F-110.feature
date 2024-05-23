@@ -80,7 +80,7 @@ Feature: F-110: Retrieve Access Types
     Then a negative response is received
     And the response [has a status of 401 Unauthorised]
 
-  @S-110.6  @Ignore # more than one version of AccessTypeRoles
+  @S-110.6 # more than one version of AccessTypeRoles
   Scenario: Successfully return 200 success accessTypes of organisationProfileId and only latest version of AccessTypes
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
