@@ -23,6 +23,10 @@
     "body": {
       "jurisdictions": [
         {
+          "__ordering__": "ORDERED",
+          "__elementId__": "id"
+        },
+        {
           "jurisdictionId": "BEFTA_JURISDICTION_1",
           "jurisdictionName": "BEFTA_JURISDICTION_1",
           "accessTypes": [
@@ -36,6 +40,10 @@
               "hint": "BEFTA Solicitor Profile Respondant for Org hint",
               "displayOrder": 2,
               "roles": [
+                {
+                  "__ordering__": "ORDERED",
+                  "__elementId__": "id"
+                },
                 {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
@@ -62,6 +70,10 @@
               "hint": "BEFTA bulk Solicitor 2 Respondant for Org hint2",
               "displayOrder": 1,
               "roles": [
+                {
+                  "__ordering__": "ORDERED",
+                  "__elementId__": "id"
+                },
                 {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
@@ -93,7 +105,10 @@
               "description": "BEFTA bulk Solicitor Respondant for Org description2",
               "hint": "BEFTA bulk Solicitor Respondant for Org hint2",
               "displayOrder": 2,
-              "roles": [
+              "roles": [        {
+                "__ordering__": "ORDERED",
+                "__elementId__": "id"
+              },
                 {
                   "caseTypeId": "FT_CaseAccessGroup",
                   "organisationalRoleName": "Role1",

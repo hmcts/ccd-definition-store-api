@@ -83,6 +83,7 @@ Feature: F-110: Retrieve Access Types
   @S-110.6 # more than one version of AccessTypeRoles
   Scenario: Successfully return 200 success accessTypes of organisationProfileId and only latest version of AccessTypes
     Given a user with [an active profile in CCD]
+    And a call [to import definition file, multiple versions] will get the expected response as in [Import_CCD_BEFTA_RM_CT_JURISDICTION1]
     When a request is prepared with appropriate values
     And the request [contains correctly configured values]
     And the request [contains an organisationProfileId that exists in CCD database]
