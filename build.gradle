@@ -320,7 +320,7 @@ subprojects { subproject ->
         testImplementation "io.github.openfeign:feign-jackson:${feignJackson}"
         testImplementation 'io.github.openfeign.form:feign-form:3.8.0'
         testImplementation "org.exparity:hamcrest-date:2.0.4"
-        testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
+        testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"git
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
