@@ -27,6 +27,10 @@
           "jurisdictionName": "BEFTA_JURISDICTION_1",
           "accessTypes": [
             {
+              "__ordering__": "unordered",
+              "__elementId__": "organisationProfileId,accessTypeId"
+            },
+            {
               "organisationProfileId": "SOLICITOR_PROFILE",
               "accessTypeId": "BEFTA_SOLICITOR_1",
               "accessMandatory": true,
@@ -92,6 +96,10 @@
           "jurisdictionId": "BEFTA_MASTER",
           "jurisdictionName": "BEFTA Master",
           "accessTypes": [
+            {
+              "__ordering__": "unordered",
+              "__elementId__": "organisationProfileId,accessTypeId"
+            },
             {
               "organisationProfileId": "OGD_DWP_PROFILE",
               "accessTypeId": "BEFTA_SOLICITOR_2",
