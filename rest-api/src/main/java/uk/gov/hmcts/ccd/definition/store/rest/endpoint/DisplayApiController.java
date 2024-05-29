@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -27,6 +28,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.SearchResultDefinition
 import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageCollection;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketResult;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputDefinition;
+import uk.gov.hmcts.ccd.definition.store.rest.configuration.Resilience4jConfig;
 
 import java.util.Collections;
 import java.util.List;
@@ -98,6 +100,8 @@ public class DisplayApiController {
         @ApiResponse(code = 200, message = "A Case Wizard Page Collection"),
         @ApiResponse(code = 200, message = "Unexpected error")
     })
+    @Bulkhead(name = Resilience4jConfig.BULKHEAD_CASE_TYPE)
+    //@RateLimiter(name = Resilience4jConfig.RATE_LIMITER_EVENT_TRIGGERS)
     public WizardPageCollection displayWizardPageStructureIdGet(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("ctid") String caseTypeId,
         @ApiParam(value = "Event Reference", required = true) @PathVariable("etid") String eventReference) {

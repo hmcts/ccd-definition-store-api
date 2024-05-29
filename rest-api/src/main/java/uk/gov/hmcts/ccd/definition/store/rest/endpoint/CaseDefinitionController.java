@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
+import io.github.resilience4j.bulkhead.annotation.Bulkhead;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,6 +24,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
+
+import uk.gov.hmcts.ccd.definition.store.rest.configuration.Resilience4jConfig;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,6 +59,8 @@ public class CaseDefinitionController {
         @ApiResponse(code = 200, message = "A Case Type Schema"),
         @ApiResponse(code = 200, message = "Unexpected error")
     })
+    @Bulkhead(name = Resilience4jConfig.BULKHEAD_CASE_TYPE)
+    //@RateLimiter(name = Resilience4jConfig.RATE_LIMITER_CASE_TYPE)
     public CaseType dataCaseTypeIdGet(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id) {
         return caseTypeService.findByCaseTypeId(id).orElseThrow(() -> new NotFoundException(id));
@@ -124,6 +129,8 @@ public class CaseDefinitionController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "List of jurisdictions")
     })
+    @Bulkhead(name = Resilience4jConfig.BULKHEAD_JURISDICTIONS)
+    //@RateLimiter(name = Resilience4jConfig.RATE_LIMITER_JURISDICTIONS)
     public List<Jurisdiction> findJurisdictions(
         @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> idsOptional) {
 

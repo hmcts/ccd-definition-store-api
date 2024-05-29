@@ -18,7 +18,7 @@ import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
 class SwaggerConfigurationTest extends BaseTest {
 
-    private static final int EXPECTED_TOTAL_ENDPOINTS = 16;
+    private static final int EXPECTED_TOTAL_ENDPOINTS = 28;
     private static final String EXPECTED_APPLICATION_CONTEXT_NAME = "application-1";
 
     @Autowired
