@@ -29,7 +29,7 @@
           "accessTypes": [
             {
               "__ordering__": "unordered",
-              "__elementId__": "accessTypeId"
+              "__elementId__": "organisationProfileId,accessTypeId"
             },
             {
               "organisationProfileId": "OGD_DWP_PROFILE",

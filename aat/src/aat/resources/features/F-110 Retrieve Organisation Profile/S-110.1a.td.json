@@ -28,7 +28,7 @@
           "accessTypes": [
             {
               "__ordering__": "unordered",
-              "__elementId__": "organisationProfileId,accessTypeId"
+              "__elementId__": "organisationProfileId,accessTypeId, displayOrder"
             },
             {
               "organisationProfileId": "SOLICITOR_PROFILE",
@@ -98,7 +98,7 @@
           "accessTypes": [
             {
               "__ordering__": "unordered",
-              "__elementId__": "organisationProfileId,accessTypeId"
+              "__elementId__": "organisationProfileId,accessTypeId, displayOrder"
             },
             {
               "organisationProfileId": "OGD_DWP_PROFILE",
