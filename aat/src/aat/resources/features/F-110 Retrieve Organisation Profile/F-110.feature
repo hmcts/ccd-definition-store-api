@@ -27,7 +27,7 @@ Feature: F-110: Retrieve Access Types
     And the response has all other details as expected
     And the response [contains the latest version of the accessTypes for organisationProfileId]
 
-  @S-110.1b #
+  @S-110.1b #AC-1a of CCD-5322
   Scenario: Successfully return 200 success multiple jurisdiction and each case type under different jurisdiction will have their only access types
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values

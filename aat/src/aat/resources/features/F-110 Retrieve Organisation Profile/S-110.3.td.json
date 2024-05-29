@@ -43,19 +43,19 @@
               "roles": [
                 {
                   "__ordering__": "unordered",
-                  "__elementId__": "caseGroupIdTemplate"
+                  "__elementId__": "caseTypeId"
                 },
                 {
                   "caseTypeId": "FT_CaseAccessGroup",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": null,
-                  "caseGroupIdTemplate": null,
+                  "groupRoleName": "[[ANYTHING_PRESENT]]",
+                  "caseGroupIdTemplate": "[[ANYTHING_PRESENT]]",
                   "groupAccessEnabled": true
                 },
                 {
                   "caseTypeId": "FT_CaseAccessGroup",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "Role1",
+                  "groupRoleName": "[[ANYTHING_PRESENT]]",
                   "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
                   "groupAccessEnabled": true
                 }

@@ -23,10 +23,6 @@
     "body": {
       "jurisdictions": [
         {
-          "__ordering__": "ORDERED",
-          "__elementId__": "id"
-        },
-        {
           "jurisdictionId": "BEFTA_JURISDICTION_1",
           "jurisdictionName": "BEFTA_JURISDICTION_1",
           "accessTypes": [
@@ -41,21 +37,17 @@
               "displayOrder": 2,
               "roles": [
                 {
-                  "__ordering__": "ORDERED",
-                  "__elementId__": "id"
+                  "caseTypeId": "CaseAccessGroups_Casetype",
+                  "organisationalRoleName": "Role1",
+                  "groupRoleName": null,
+                  "caseGroupIdTemplate": null,
+                  "groupAccessEnabled": true
                 },
                 {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
                   "groupRoleName": "Role1",
                   "caseGroupIdTemplate": "BEFTA_JURISDICTION_1:$ORGID$",
-                  "groupAccessEnabled": true
-                },
-                {
-                  "caseTypeId": "CaseAccessGroups_Casetype",
-                  "organisationalRoleName": "Role1",
-                  "groupRoleName": null,
-                  "caseGroupIdTemplate": null,
                   "groupAccessEnabled": true
                 }
               ]
@@ -71,21 +63,17 @@
               "displayOrder": 1,
               "roles": [
                 {
-                  "__ordering__": "ORDERED",
-                  "__elementId__": "id"
+                  "caseTypeId": "CaseAccessGroups_Casetype",
+                  "organisationalRoleName": "Role1",
+                  "groupRoleName": null,
+                  "caseGroupIdTemplate": null,
+                  "groupAccessEnabled": true
                 },
                 {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
                   "groupRoleName": "Role1",
                   "caseGroupIdTemplate": "BEFTA_JURISDICTION_1:$ORGID$",
-                  "groupAccessEnabled": true
-                },
-                {
-                  "caseTypeId": "CaseAccessGroups_Casetype",
-                  "organisationalRoleName": "Role1",
-                  "groupRoleName": null,
-                  "caseGroupIdTemplate": null,
                   "groupAccessEnabled": true
                 }
               ]
@@ -105,22 +93,19 @@
               "description": "BEFTA bulk Solicitor Respondant for Org description2",
               "hint": "BEFTA bulk Solicitor Respondant for Org hint2",
               "displayOrder": 2,
-              "roles": [        {
-                "__ordering__": "ORDERED",
-                "__elementId__": "id"
-              },
-                {
-                  "caseTypeId": "FT_CaseAccessGroup",
-                  "organisationalRoleName": "Role1",
-                  "groupRoleName": "Role1",
-                  "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
-                  "groupAccessEnabled": true
-                },
+              "roles": [
                 {
                   "caseTypeId": "FT_CaseAccessGroup",
                   "organisationalRoleName": "Role1",
                   "groupRoleName": null,
                   "caseGroupIdTemplate": null,
+                  "groupAccessEnabled": true
+                },
+                {
+                  "caseTypeId": "FT_CaseAccessGroup",
+                  "organisationalRoleName": "Role1",
+                  "groupRoleName": "Role1",
+                  "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
                   "groupAccessEnabled": true
                 }
               ]
