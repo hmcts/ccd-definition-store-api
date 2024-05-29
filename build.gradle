@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.7.12'
+        springBootVersion = '2.7.18'
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -36,10 +36,10 @@ dependencyCheck {
 ext['elasticsearch.version'] = '7.17.1'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
-ext['spring-security.version'] = '5.7.10'
+ext['spring-security.version'] = '5.8.10'
 ext['jackson.version'] = '2.16.0'
 ext['snakeyaml.version'] = '2.0'
-ext['postgresql.version'] = '42.5.1'
+ext['postgresql.version'] = '42.5.5'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.17.1'
 
@@ -55,7 +55,7 @@ ext {
     reformLogging= '6.0.1'
     appInsightsVersion = '2.4.1'
     restAssuredVersion = '4.3.0!!'
-    groovyVersion = '3.0.17!!'
+    groovyVersion = '3.0.19!!'
     tomcatVersion = '9.0.82'
     feignJackson = '11.6'
     beftaFwVersion = '8.8.5'
@@ -104,14 +104,17 @@ allprojects {
     // Global constraints
     dependencies {
 
-        implementation('org.springframework.cloud:spring-cloud-starter-openfeign'){
-            version {
-                strictly '4.0.3'
+        implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+        constraints {
+            implementation('org.springframework.cloud:spring-cloud-starter-openfeign') {
+                version{
+                    strictly '4.0.3'
+                }
             }
-        }
-        implementation('org.springframework.cloud:spring-cloud-starter'){
-            version {
-                strictly '3.1.8'
+            implementation('org.springframework.cloud:spring-cloud-starter') {
+                version{
+                    strictly '3.1.8'
+                }
             }
         }
 
@@ -127,13 +130,14 @@ allprojects {
             }
         }
 
+        implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.5'
         implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
         implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
         // Overriding transitive dependency commons-compress due to CVE failures
-        implementation "org.apache.commons:commons-compress:1.21"
+        implementation "org.apache.commons:commons-compress:1.26.0"
         // CVE-2021-28170
         implementation "org.glassfish:jakarta.el:4.0.1"
 
@@ -170,8 +174,10 @@ allprojects {
                     details.useVersion '32.1.3-jre'
                 }
             }
+
         }
     }
+
 }
 
 java {
@@ -281,13 +287,12 @@ subprojects { subproject ->
 
         // CVE-2021-29425
         implementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
-        implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.7'
-        implementation "org.springframework.cloud:spring-cloud-starter-bootstrap"
+        testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.8'
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.9'
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testImplementation 'org.apiguardian:apiguardian-api:1.0.0'
-        testImplementation "org.postgresql:postgresql:42.5.1"
+        testImplementation "org.postgresql:postgresql:42.5.5"
         testImplementation "org.testcontainers:postgresql:1.17.2"
         testImplementation "org.hamcrest:hamcrest-core:${hamcrestVersion}"
         testImplementation "org.hamcrest:hamcrest-library:${hamcrestVersion}"
