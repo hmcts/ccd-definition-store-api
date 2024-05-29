@@ -37,10 +37,14 @@
               "displayOrder": 2,
               "roles": [
                 {
+                  "__ordering__": "unordered",
+                  "__elementId__": "caseTypeId"
+                },
+                {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": null,
-                  "caseGroupIdTemplate": null,
+                  "groupRoleName": "[[ANYTHING_PRESENT]]",
+                  "caseGroupIdTemplate": "[[ANYTHING_PRESENT]]",
                   "groupAccessEnabled": true
                 },
                 {
@@ -63,10 +67,14 @@
               "displayOrder": 1,
               "roles": [
                 {
+                  "__ordering__": "unordered",
+                  "__elementId__": "caseTypeId"
+                },
+                {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": null,
-                  "caseGroupIdTemplate": null,
+                  "groupRoleName": "[[ANYTHING_PRESENT]]",
+                  "caseGroupIdTemplate": "[[ANYTHING_PRESENT]]",
                   "groupAccessEnabled": true
                 },
                 {
@@ -95,10 +103,14 @@
               "displayOrder": 2,
               "roles": [
                 {
+                  "__ordering__": "unordered",
+                  "__elementId__": "caseTypeId"
+                },
+                {
                   "caseTypeId": "FT_CaseAccessGroup",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": null,
-                  "caseGroupIdTemplate": null,
+                  "groupRoleName": "[[ANYTHING_PRESENT]]",
+                  "caseGroupIdTemplate": "[[ANYTHING_PRESENT]]",
                   "groupAccessEnabled": true
                 },
                 {
