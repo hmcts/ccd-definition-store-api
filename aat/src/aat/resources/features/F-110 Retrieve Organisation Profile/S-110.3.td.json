@@ -48,14 +48,14 @@
                 {
                   "caseTypeId": "FT_CaseAccessGroup",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANYTHING_PRESENT]]",
-                  "caseGroupIdTemplate": "[[ANYTHING_PRESENT]]",
+                  "groupRoleName": "[[ANY_NULLABLE]]",
+                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
                   "groupAccessEnabled": true
                 },
                 {
                   "caseTypeId": "FT_CaseAccessGroup",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANYTHING_PRESENT]]",
+                  "groupRoleName": "[[ANY_NULLABLE]]",
                   "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
                   "groupAccessEnabled": true
                 }
