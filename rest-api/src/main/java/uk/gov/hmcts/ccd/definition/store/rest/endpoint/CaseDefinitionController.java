@@ -60,7 +60,6 @@ public class CaseDefinitionController {
         @ApiResponse(code = 200, message = "Unexpected error")
     })
     @Bulkhead(name = Resilience4jConfig.BULKHEAD_CASE_TYPE)
-    //@RateLimiter(name = Resilience4jConfig.RATE_LIMITER_CASE_TYPE)
     public CaseType dataCaseTypeIdGet(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("id") String id) {
         return caseTypeService.findByCaseTypeId(id).orElseThrow(() -> new NotFoundException(id));
@@ -130,7 +129,6 @@ public class CaseDefinitionController {
         @ApiResponse(code = 200, message = "List of jurisdictions")
     })
     @Bulkhead(name = Resilience4jConfig.BULKHEAD_JURISDICTIONS)
-    //@RateLimiter(name = Resilience4jConfig.RATE_LIMITER_JURISDICTIONS)
     public List<Jurisdiction> findJurisdictions(
         @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> idsOptional) {
 

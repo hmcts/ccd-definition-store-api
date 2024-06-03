@@ -100,8 +100,7 @@ public class DisplayApiController {
         @ApiResponse(code = 200, message = "A Case Wizard Page Collection"),
         @ApiResponse(code = 200, message = "Unexpected error")
     })
-    @Bulkhead(name = Resilience4jConfig.BULKHEAD_CASE_TYPE)
-    //@RateLimiter(name = Resilience4jConfig.RATE_LIMITER_EVENT_TRIGGERS)
+    @Bulkhead(name = Resilience4jConfig.BULKHEAD_EVENT_TRIGGERS)
     public WizardPageCollection displayWizardPageStructureIdGet(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("ctid") String caseTypeId,
         @ApiParam(value = "Event Reference", required = true) @PathVariable("etid") String eventReference) {

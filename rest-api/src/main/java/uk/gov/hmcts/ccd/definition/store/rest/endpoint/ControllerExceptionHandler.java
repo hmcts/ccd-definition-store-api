@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
 import com.google.common.collect.ImmutableMap;
 import io.github.resilience4j.bulkhead.BulkheadFullException;
-import io.github.resilience4j.ratelimiter.RequestNotPermitted;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -121,13 +120,6 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     Map<String, String> elasticSearchInitialisationException(ElasticSearchInitialisationException e) {
         LOG.error("ElasticSearch initialisation exception", e);
         return getMessage(e, "ElasticSearch initialisation exception: %s");
-    }
-
-    @ExceptionHandler({RequestNotPermitted.class})
-    @ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
-    public Map<String, String> handleRequestNotPermitted(RequestNotPermitted e) {
-        log(e);
-        return getMessage(e, "Request is not permitted: %s");
     }
 
     @ExceptionHandler({BulkheadFullException.class})
