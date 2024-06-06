@@ -252,9 +252,11 @@ subprojects { subproject ->
             }
         }
 
-        implementation group: 'org.apache.poi', name: 'poi', version: '5.2.5'
-        implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.5'
-        implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: '5.2.5'
+        // Purposefully capping the version of org.apache.poi:* to 4.1.2 to avoid issue
+        // NoSuchMethodError: org.apache.commons.io.IOUtils.byteArray() from commons-io:commons-io
+        implementation group: 'org.apache.poi', name: 'poi', version: '4.1.2'
+        implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '4.1.2'
+        implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: '4.1.2'
         implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
         implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.21'
 
@@ -343,7 +345,7 @@ subprojects { subproject ->
 
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.22.1'
 
-        testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.0.1'
+        testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.0.2'
 
         testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
 
