@@ -27,9 +27,7 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.apache.commons:commons-collections4:4.1"
     implementation "org.apache.commons:commons-lang3:3.11"
-    // Purposefully capping the version of org.apache.poi:poi-ooxml to 4.1.2 to avoid issue
-    // NoSuchMethodError: org.apache.commons.io.IOUtils.byteArray() from commons-io:commons-io
-    implementation "org.apache.poi:poi-ooxml:4.1.2"
+    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.5'
 }
 
 bootJar {
