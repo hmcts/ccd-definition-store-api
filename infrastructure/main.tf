@@ -1,5 +1,9 @@
 provider "azurerm" {
-  features {}
+  features {
+    resource_group {
+      prevent_deletion_if_contains_resources = false
+    }
+  }
 }
 
 locals {
@@ -43,63 +47,9 @@ data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
   key_vault_id = "${data.azurerm_key_vault.s2s_vault.id}"
 }
 
-
-////////////////////////////////
-// Populate Vault with DB info
-////////////////////////////////
-
-resource "azurerm_key_vault_secret" "POSTGRES-USER" {
-  name         = "${var.component}-POSTGRES-USER"
-  value        = module.definition-store-db-v11.user_name
-  key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
-}
-
-resource "azurerm_key_vault_secret" "POSTGRES-PASS" {
-  name         = "${var.component}-POSTGRES-PASS"
-  value        = module.definition-store-db-v11.postgresql_password
-  key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
-}
-
-resource "azurerm_key_vault_secret" "POSTGRES_HOST" {
-  name         = "${var.component}-POSTGRES-HOST"
-  value        = module.definition-store-db-v11.host_name
-  key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
-}
-
-resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
-  name         = "${var.component}-POSTGRES-PORT"
-  value        = module.definition-store-db-v11.postgresql_listen_port
-  key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
-}
-
-resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
-  name         = "${var.component}-POSTGRES-DATABASE"
-  value        = module.definition-store-db-v11.postgresql_database
-  key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
-}
-
-
-////////////////////////////////
-// DB version 11              //
-////////////////////////////////
-
-module "definition-store-db-v11" {
-  source          = "git@github.com:hmcts/cnp-module-postgres?ref=master"
-  product         = var.product
-  component       = var.component
-  name            = "${local.app_full_name}-postgres-db-v11"
-  location        = "${var.location}"
-  env             = "${var.env}"
-  subscription    = "${var.subscription}"
-  postgresql_user = "${var.postgresql_user}"
-  database_name   = "${var.database_name}"
-  postgresql_version = "11"
-  sku_name        = "${var.database_sku_name}"
-  sku_tier        = "GeneralPurpose"
-  sku_capacity    = "${var.database_sku_capacity}"
-  storage_mb      = "102400"
-  common_tags     = "${var.common_tags}"
-}
+///////////////////////
+// Postgres DB info  //
+///////////////////////
 
 module "postgresql_v15" {
   source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=master"
@@ -131,6 +81,10 @@ module "postgresql_v15" {
   pgsql_storage_mb = var.pgsql_storage_mb
 }
 
+////////////////////////////////////
+// Populate KeyVault with DB info //
+////////////////////////////////////
+
 resource "azurerm_key_vault_secret" "POSTGRES-USER-V15" {
   name         = "${var.component}-POSTGRES-USER-V15"
   value        = module.postgresql_v15.username
@@ -146,5 +100,17 @@ resource "azurerm_key_vault_secret" "POSTGRES-PASS-V15" {
 resource "azurerm_key_vault_secret" "POSTGRES-HOST-V15" {
   name         = "${var.component}-POSTGRES-HOST-V15"
   value        = module.postgresql_v15.fqdn
+  key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_PORT" {
+  name         = "${var.component}-POSTGRES-PORT"
+  value        = "5432"
+  key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
+}
+
+resource "azurerm_key_vault_secret" "POSTGRES_DATABASE" {
+  name         = "${var.component}-POSTGRES-DATABASE"
+  value        = var.database_name
   key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
