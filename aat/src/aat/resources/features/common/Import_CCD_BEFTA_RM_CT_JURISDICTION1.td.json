@@ -1,0 +1,29 @@
+{
+  "_guid_": "Import_CCD_BEFTA_RM_CT_JURISDICTION1",
+  "_extends_": "Import_Base_data",
+  "specs": [
+    "to import definition file, multiple versions"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "localFilePath": "build/tmp/definition_files_copy/CCD_BEFTA_RM_CT_JURISDICTION1.xlsx"
+        }
+      ]
+    }
+  },
+
+  "expectedResponse": {
+    "_extends_": "Common_201_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Case Definition data successfully imported"
+    }
+  }
+}
