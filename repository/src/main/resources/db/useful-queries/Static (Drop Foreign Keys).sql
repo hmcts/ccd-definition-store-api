@@ -32,10 +32,16 @@ ALTER TABLE public."event_pre_state" DROP CONSTRAINT "fk_event_pre_state_event_i
 ALTER TABLE public."event_pre_state" DROP CONSTRAINT "fk_event_pre_state_state_id";
 ALTER TABLE public."event_webhook" DROP CONSTRAINT "event_webhook_event_id_fkey";
 ALTER TABLE public."event_webhook" DROP CONSTRAINT "event_webhook_webhook_id_fkey";
+
+--start -- Added as part of CCD-4327
+ALTER TABLE public."complex_field" DROP CONSTRAINT "fk_complex_field_complex_field_type_id";
+ALTER TABLE public."complex_field" DROP CONSTRAINT "fk_complex_field_field_type_id";
 ALTER TABLE public."field_type" DROP CONSTRAINT "fk_field_type_base_field_type_id";
 ALTER TABLE public."field_type" DROP CONSTRAINT "fk_field_type_collection_field_type_id";
 ALTER TABLE public."field_type" DROP CONSTRAINT "fk_field_type_jurisdiction_id";
 ALTER TABLE public."field_type_list_item" DROP CONSTRAINT "fk_field_type_list_item_field_type_id";
+--end -- Added as part of CCD-4327
+
 ALTER TABLE public."jurisdiction_ui_config" DROP CONSTRAINT "fk_jurisdiction_ui_config_jurisdiction_id";
 ALTER TABLE public."role" DROP CONSTRAINT "fk_role_case_type_id_case_type_id";
 ALTER TABLE public."role_to_access_profiles" DROP CONSTRAINT "fk_case_field_role_to_access_profiles";

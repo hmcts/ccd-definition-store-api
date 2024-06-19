@@ -36,7 +36,7 @@ dependencyCheck {
 ext['elasticsearch.version'] = '7.17.1'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
-ext['spring-security.version'] = '5.7.10'
+ext['spring-security.version'] = '5.8.10'
 ext['jackson.version'] = '2.16.0'
 ext['snakeyaml.version'] = '2.0'
 ext['postgresql.version'] = '42.7.3'
@@ -137,7 +137,7 @@ allprojects {
         implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
         // Overriding transitive dependency commons-compress due to CVE failures
-        implementation "org.apache.commons:commons-compress:1.21"
+        implementation "org.apache.commons:commons-compress:1.26.0"
         // CVE-2021-28170
         implementation "org.glassfish:jakarta.el:4.0.1"
 
