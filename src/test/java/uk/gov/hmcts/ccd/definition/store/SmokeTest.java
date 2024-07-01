@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -10,9 +11,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class SmokeTest {
 
+    @Tag("smoke")
     @Test
     void alwaysGreen() { 
-        assertTrue(true);
         assertTrue(true);
     }
 }
