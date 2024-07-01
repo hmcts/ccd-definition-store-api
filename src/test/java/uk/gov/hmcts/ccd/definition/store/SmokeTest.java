@@ -13,5 +13,6 @@ class SmokeTest {
     @Test
     void alwaysGreen() { 
         assertTrue(true);
+        assertTrue(true);
     }
 }
