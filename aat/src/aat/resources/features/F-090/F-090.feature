@@ -18,7 +18,7 @@ Feature: F-090: 'ChangeOrganisationRequest' Base Complex Type
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains id of a case type with ChangeOrganisationRequest fields]
-    And it  is submitted to call the [Get Case Type Details] operation of [CCD Definition Store]
+    And it is submitted to call the [Get Case Type Details] operation of [CCD Definition Store]
     Then a positive response is received
     And the response [contains all details of the case type requested]
     And the response has all other details as expected
