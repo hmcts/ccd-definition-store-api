@@ -58,7 +58,7 @@ ext {
     groovyVersion = '3.0.19!!'
     tomcatVersion = '9.0.82'
     feignJackson = '11.6'
-    beftaFwVersion = '8.8.5'
+    beftaFwVersion = '9.0.2'
     limits = [
             'instruction': 99,
             'branch'     : 99,
