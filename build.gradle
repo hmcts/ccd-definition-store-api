@@ -39,7 +39,7 @@ ext['hibernate-validator.version'] = '6.0.20.Final'
 ext['spring-security.version'] = '5.8.10'
 ext['jackson.version'] = '2.16.0'
 ext['snakeyaml.version'] = '2.0'
-ext['postgresql.version'] = '42.5.5'
+ext['postgresql.version'] = '42.7.3'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.17.1'
 
@@ -292,7 +292,7 @@ subprojects { subproject ->
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testImplementation 'org.apiguardian:apiguardian-api:1.0.0'
-        testImplementation "org.postgresql:postgresql:42.5.5"
+        testImplementation "org.postgresql:postgresql:42.7.3"
         testImplementation "org.testcontainers:postgresql:1.17.2"
         testImplementation "org.hamcrest:hamcrest-core:${hamcrestVersion}"
         testImplementation "org.hamcrest:hamcrest-library:${hamcrestVersion}"
@@ -324,7 +324,7 @@ subprojects { subproject ->
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.21.13'
+        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.21.22'
 
         implementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
 

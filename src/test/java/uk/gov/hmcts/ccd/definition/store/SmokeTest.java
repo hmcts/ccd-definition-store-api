@@ -11,8 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SmokeTest {
 
     @Test
-    void alwaysGreen() {
+    void alwaysGreen() { 
         assertTrue(true);
     }
-
 }
