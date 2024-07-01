@@ -10,9 +10,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class SmokeTest {
 
+    @Tag("smoke")
     @Test
     void alwaysGreen() { 
-        assertTrue(true);
         assertTrue(true);
     }
 }
