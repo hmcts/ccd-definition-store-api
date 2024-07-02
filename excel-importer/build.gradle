@@ -25,9 +25,9 @@ dependencies {
     testImplementation project(":repository").sourceSets.test.output
 
     implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.apache.commons:commons-collections4:4.1"
-    implementation "org.apache.commons:commons-lang3:3.11"
-    implementation "org.apache.poi:poi-ooxml:5.2.2"
+    implementation "org.apache.commons:commons-collections4:4.4"
+    implementation "org.apache.commons:commons-lang3:3.14.0"
+    implementation "org.apache.poi:poi-ooxml:5.3.0"
 }
 
 bootJar {
