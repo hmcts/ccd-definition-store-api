@@ -67,3 +67,8 @@ ALTER TABLE public."case_field_acl" ADD CONSTRAINT "fk_case_field_acl_case_field
 ALTER TABLE public."case_field" ADD CONSTRAINT "fk_case_field_field_type_id" FOREIGN KEY (field_type_id) REFERENCES field_type(id);
 ALTER TABLE public."case_field" ADD CONSTRAINT "fk_case_field_case_type_id" FOREIGN KEY (case_type_id) REFERENCES case_type(id);
 ALTER TABLE public."banner" ADD CONSTRAINT "fk_banner_jurisdiction_id" FOREIGN KEY (jurisdiction_id) REFERENCES jurisdiction(id);
+
+--start -- in Prod but not in AAT
+ALTER TABLE public."access_type_role" ADD CONSTRAINT "fk_access_type_role_case_type_id" FOREIGN KEY (case_type_id) REFERENCES case_type(id);
+ALTER TABLE public."access_type" ADD CONSTRAINT "fk_access_type_case_type_id" FOREIGN KEY (case_type_id) REFERENCES case_type(id);
+--end -- in Prod but not in AAT
