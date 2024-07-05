@@ -82,7 +82,7 @@ BEGIN
     (SELECT id FROM case_field WHERE case_type_id IN
         (SELECT id FROM tmp_case_type_ids)
     );
-  
+
   DELETE FROM field_type_list_item WHERE field_type_id  in
     (SELECT field_type_id FROM case_field WHERE case_type_id IN
       (SELECT id FROM view__case_type_to_remove)
@@ -90,7 +90,7 @@ BEGIN
 
   DELETE FROM complex_field cf where field_type_id in
     (SELECT field_type_id FROM case_field WHERE case_type_id  IN
-        (SELECT id FROM tmp_case_type_ids)    
+        (SELECT id FROM tmp_case_type_ids)
   );
 
   DELETE FROM field_type WHERE id IN
@@ -141,6 +141,16 @@ BEGIN
 
   DELETE FROM case_type_acl WHERE case_type_id IN
     (SELECT id FROM tmp_case_type_ids);
+
+  -- start - new tables as of GA release
+
+  DELETE FROM access_type WHERE case_type_id IN
+      (SELECT id FROM tmp_case_type_ids);
+
+  DELETE FROM access_type_role WHERE case_type_id IN
+        (SELECT id FROM tmp_case_type_ids);
+
+  -- end - new tables as of GA release
 
   --Takes very long to complete (> 8min in AAT)
   --fk_role_case_type_id_case_type_id is indexed by default
