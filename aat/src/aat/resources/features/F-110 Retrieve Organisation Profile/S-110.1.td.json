@@ -31,8 +31,8 @@
           "accessMandatory" : true,
           "accessDefault" : true,
           "display" : true,
-          "description" : "BEFTA bulk Solicitor Respondent for Org description",
-          "hint" : "BEFTA bulk Solicitor Respondent for Org hint",
+          "description" : "BEFTA bulk Solicitor Respondant for Org description",
+          "hint" : "BEFTA bulk Solicitor Respondant for Org hint",
           "displayOrder" : 1,
           "roles" : [
             {
@@ -40,7 +40,7 @@
               "__elementId__": "caseTypeId"
             },
             {
-            "caseTypeId" : "FT_MasterCaseType",
+            "caseTypeId" : "FT_CaseAccessGroup",
             "organisationalRoleName" : "Role1",
             "groupRoleName" : "Role1",
             "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
