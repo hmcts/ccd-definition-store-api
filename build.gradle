@@ -293,7 +293,7 @@ subprojects { subproject ->
             exclude group: 'com.google.guava', module: 'guava'
         }
         implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15to18', version: '1.77'
-        
+
         testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap'
         implementation group: 'commons-io', name: 'commons-io', version: '2.16.1'
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
@@ -332,7 +332,7 @@ subprojects { subproject ->
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.22.2'
+        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.22.3'
 
         testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.0.2'
 
