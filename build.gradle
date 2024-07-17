@@ -332,7 +332,7 @@ subprojects { subproject ->
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions',  version: '7.22.3'
+        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.22.3'
 
         testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.0.2'
 
