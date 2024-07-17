@@ -36,7 +36,7 @@ tasks.named("processAatResources") {
 task highLevelDataSetup(type: JavaExec) {
     dependsOn aatClasses
 
-    main = "uk.gov.hmcts.ccd.definitionstore.befta.HighLevelDataSetupApp"
+    mainClass = "uk.gov.hmcts.ccd.definitionstore.befta.HighLevelDataSetupApp"
     classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
     jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
 }
@@ -109,7 +109,7 @@ task functional(type: Test) {
     doFirst {
         generateCucumberReports.enabled = true
         javaexec {
-            main = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
+            mainClass = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
             classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
             args = [
                      '--threads', '1', // current definition-store tests do not support multiple threads
@@ -183,7 +183,7 @@ jar {
     outputFormats = ['XML', 'HTML','CSV']
     mutationThreshold = 0
     coverageThreshold = 0
-    maxMutationsPerClass = 15
+    features = ["+CLASSLIMIT(limit[15])"]
     jvmArgs = ['-Xms1G','-Xmx3G']
     timestampedReports = false
     failWhenNoMutations = false
