@@ -24,7 +24,7 @@ java:
     # enable whenever required and provide host url to match with corresponding data-store-api
     ELASTIC_SEARCH_ENABLED: true
 
-    ELASTIC_SEARCH_HOST: elastic-ccd-poc.es.uksouth.azure.elastic-cloud.com
+    ELASTIC_SEARCH_HOST: https://elastic-ccd-poc.es.uksouth.azure.elastic-cloud.com
     ELASTIC_SEARCH_PORT: 443
 
     USER_PROFILE_HOST: http://ccd-user-profile-api-pr-399-java
