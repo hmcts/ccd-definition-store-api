@@ -25,7 +25,8 @@ java:
     ELASTIC_SEARCH_ENABLED: true
 
     ELASTIC_SEARCH_HOST: elastic-ccd-poc.es.uksouth.azure.elastic-cloud.com
-    ELASTIC_SEARCH_PORT: 9243
+    ELASTIC_SEARCH_PORT: 443
+    ELASTIC_SEARCH_SCHEME: https
 
     USER_PROFILE_HOST: http://ccd-user-profile-api-pr-399-java
 
