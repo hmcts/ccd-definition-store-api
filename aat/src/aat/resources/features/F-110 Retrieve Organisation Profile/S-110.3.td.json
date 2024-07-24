@@ -43,19 +43,19 @@
               "roles": [
                 {
                   "__ordering__": "unordered",
-                  "__elementId__": "caseTypeId"
+                  "__elementId__": "caseTypeId,groupRoleName"
                 },
                 {
-                  "caseTypeId": "FT_MasterCaseType",
+                  "caseTypeId": "FT_CaseAccessGroups",
                   "organisationalRoleName": "Role1",
                   "groupRoleName": "[[ANY_NULLABLE]]",
                   "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
                   "groupAccessEnabled": true
                 },
                 {
-                  "caseTypeId": "FT_MasterCaseType",
+                  "caseTypeId": "FT_CaseAccessGroups",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANY_NULLABLE]]",
+                  "groupRoleName": "Role1",
                   "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
                   "groupAccessEnabled": true
                 }
@@ -72,7 +72,7 @@
               "displayOrder": 1,
               "roles": [
                 {
-                  "caseTypeId": "FT_MasterCaseType",
+                  "caseTypeId": "FT_CaseAccessGroups",
                   "organisationalRoleName": "Role1",
                   "groupRoleName": "Role1",
                   "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
