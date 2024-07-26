@@ -32,7 +32,7 @@
           "accessTypes": [
             {
               "__ordering__": "unordered",
-              "__elementId__": "organisationProfileId,accessTypeId, displayOrder"
+              "__elementId__": "organisationProfileId,accessTypeId"
             },
             {
               "organisationProfileId": "SOLICITOR_PROFILE",
@@ -45,7 +45,7 @@
               "displayOrder": 2,
               "roles": [
                 {
-                  "__ordering__": "unordered",
+                  "__ordering__": "ordered",
                   "__elementId__": "caseTypeId"
                 },
                 {
@@ -75,7 +75,7 @@
               "displayOrder": 1,
               "roles": [
                 {
-                  "__ordering__": "unordered",
+                  "__ordering__": "ordered",
                   "__elementId__": "caseTypeId"
                 },
                 {
@@ -115,7 +115,7 @@
               "displayOrder": 2,
               "roles": [
                 {
-                  "__ordering__": "unordered",
+                  "__ordering__": "ordered",
                   "__elementId__": "caseTypeId"
                 },
                 {
