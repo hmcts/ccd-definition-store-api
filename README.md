@@ -131,7 +131,7 @@ Will run both F-105 and F-110:
 
 Will run only S-110.1:
 
-    ./gradlew functional -P tags="@S-110.1" 
+    ./gradlew functional -P tags="@S-110.1"
 
 ## LICENSE
 
