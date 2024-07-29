@@ -50,6 +50,7 @@ java:
 
     WELSH_TRANSLATION_ENABLED: true
     ENABLE_CASE_GROUP_ACCESS: true
+    ENABLE_CASE_GROUP_ACCESS_FILTERING: true
 
     # Role-based authorization for CCD Admin Web
     ADMIN_WEB_AUTHORIZATION_ENABLED: false # Needs enabling once the appropriate roles are created in IdAM
