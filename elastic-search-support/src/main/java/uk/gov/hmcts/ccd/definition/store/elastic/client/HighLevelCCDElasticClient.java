@@ -59,7 +59,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         String currentIndex = getCurrentAliasIndex(aliasName, aliasesResponse);
         log.info("upsert mapping of index {}", currentIndex);
         PutMappingRequest request = new PutMappingRequest(currentIndex);
-        //request.type(config.getCasesIndexType());
+        request.type(config.getCasesIndexType());
         request.source(caseTypeMapping, XContentType.JSON);
         AcknowledgedResponse acknowledgedResponse = elasticClient.indices().putMapping(request, RequestOptions.DEFAULT);
         log.info("mapping upserted: {}", acknowledgedResponse.isAcknowledged());
