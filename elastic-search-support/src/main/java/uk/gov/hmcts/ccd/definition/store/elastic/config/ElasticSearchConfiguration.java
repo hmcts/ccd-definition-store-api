@@ -5,6 +5,7 @@ import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.RestHighLevelClientBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -36,6 +37,13 @@ public class ElasticSearchConfiguration {
     public RestHighLevelClient restHighLevelClient() {
         RestClientBuilder builder = RestClient.builder(new HttpHost(
              config.getHost(), config.getPort(), config.getScheme()));
+
+        RestClient restClient = builder.build();
+        // Create the HLRC
+        RestHighLevelClient hlrc = new RestHighLevelClientBuilder(restClient)
+            .setApiCompatibilityMode(true)
+            .build();
+        // hlrc and esClient share the same httpClient
 
         RestClientBuilder.RequestConfigCallback requestConfigCallback = requestConfigBuilder ->
             requestConfigBuilder.setConnectTimeout(5000)
