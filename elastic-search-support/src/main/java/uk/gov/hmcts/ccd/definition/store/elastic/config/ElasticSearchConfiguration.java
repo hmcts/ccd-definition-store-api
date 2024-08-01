@@ -50,7 +50,7 @@ public class ElasticSearchConfiguration {
             .build();
         // hlrc and esClient share the same httpClient
 
-        return new RestHighLevelClient(builder);
+        return hlrc;
     }
 
     @Bean

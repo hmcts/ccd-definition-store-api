@@ -147,8 +147,9 @@ allprojects {
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
         implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
 
+        //using latest version at the moment 1/8/2024
         implementation 'co.elastic.clients:elasticsearch-java:8.14.3'
-        implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.4'
+        implementation 'org.elasticsearch.client:elasticsearch-rest-high-level-client:7.17.22'
 
         testImplementation "io.rest-assured:xml-path:${restAssuredVersion}"
         testImplementation "io.rest-assured:json-path:${restAssuredVersion}"
