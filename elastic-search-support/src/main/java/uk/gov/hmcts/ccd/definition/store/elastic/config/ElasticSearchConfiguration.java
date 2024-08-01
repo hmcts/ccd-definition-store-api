@@ -38,6 +38,11 @@ public class ElasticSearchConfiguration {
         RestClientBuilder builder = RestClient.builder(new HttpHost(
              config.getHost(), config.getPort(), config.getScheme()));
 
+        RestClientBuilder.RequestConfigCallback requestConfigCallback = requestConfigBuilder ->
+            requestConfigBuilder.setConnectTimeout(5000)
+                .setSocketTimeout(60000);
+        builder.setRequestConfigCallback(requestConfigCallback);
+
         RestClient restClient = builder.build();
         // Create the HLRC
         RestHighLevelClient hlrc = new RestHighLevelClientBuilder(restClient)
@@ -45,10 +50,6 @@ public class ElasticSearchConfiguration {
             .build();
         // hlrc and esClient share the same httpClient
 
-        RestClientBuilder.RequestConfigCallback requestConfigCallback = requestConfigBuilder ->
-            requestConfigBuilder.setConnectTimeout(5000)
-                .setSocketTimeout(60000);
-        builder.setRequestConfigCallback(requestConfigCallback);
         return new RestHighLevelClient(builder);
     }
 
