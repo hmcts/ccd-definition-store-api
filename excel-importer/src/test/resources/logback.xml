@@ -15,9 +15,7 @@
 
     <logger name="uk.gov.hmcts.ccd.definition.store.excel" level="DEBUG" />
 
-    <logger name="org.elasticsearch.client.RestClient" level="DEBUG" additivity="true">
-        <appender-ref ref="uk.gov.hmcts.ccd.definition.store.elastic.client" />
-    </logger>
+    <logger name="org.elasticsearch.client.RestClient" level="DEBUG" additivity="true"/>
 
     <root level="info">
         <appender-ref ref="STDOUT" />
