@@ -47,6 +47,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         String file = (alias.equalsIgnoreCase(GLOBAL_SEARCH))
             ? GLOBAL_SEARCH_CASES_INDEX_SETTINGS_JSON : CASES_INDEX_SETTINGS_JSON;
         request.settings(casesIndexSettings(file));
+        log.info("before call to elasticClient.indices().create {}", request);
         CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
         log.info("index created: {}", createIndexResponse.isAcknowledged());
         return createIndexResponse.isAcknowledged();
