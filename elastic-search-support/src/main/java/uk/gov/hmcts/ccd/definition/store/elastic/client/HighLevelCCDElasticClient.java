@@ -47,7 +47,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         String file = (alias.equalsIgnoreCase(GLOBAL_SEARCH))
             ? GLOBAL_SEARCH_CASES_INDEX_SETTINGS_JSON : CASES_INDEX_SETTINGS_JSON;
         request.settings(casesIndexSettings(file));
-        log.info("before call to elasticClient.indices().create \nsettings = {}, \nindicesOptions = {},"
+        log.debug("before call to elasticClient.indices().create \nsettings = {}, \nindicesOptions = {},"
                 + "\nmappings = {}, \naliases = {}, \nindices = {}",
             request.settings(), request.indicesOptions(), request.mappings(), request.aliases(), request.indices());
         CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
