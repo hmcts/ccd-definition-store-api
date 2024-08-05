@@ -1,0 +1,21 @@
+{
+  "_guid_": "F-110_Test_Base_data",
+  "productName": "CCD Definition Store",
+  "description": "Comprehensive root test bed data for F-119 Retrieve Organisation Profile test operations.",
+  "operationName": "Retrieve Access Types",
+  "specs": [
+		"an active profile in CCD"
+	],
+  "method": "POST",
+	"uri": "/retrieve-access-types",
+
+  "_extends_": "BeftaCaseworker3",
+
+	"request": {
+		"headers": {
+			"Authorization": "[[DEFAULT_AUTO_VALUE]]",
+			"ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+			"Content-Type": "application/json"
+		}
+	}
+}

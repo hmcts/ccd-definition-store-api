@@ -22,7 +22,9 @@
           "live_to": null,
           "other_case_reference": "TextField0"
         }
-      ]
+      ],
+      "accessTypeRoles": [],
+      "accessTypes": []
     }
   }
 }

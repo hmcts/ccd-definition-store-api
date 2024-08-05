@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '2.7.12'
+        springBootVersion = '2.7.18'
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
@@ -9,22 +9,24 @@ buildscript {
 
 plugins {
     id 'application'
-    id "org.springframework.boot" version '2.1.0.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id "org.springframework.boot" version '2.7.12'
+    id 'io.spring.dependency-management' version '1.1.5'
     id 'se.patrikerdes.use-latest-versions' version '0.2.7'
-    id 'com.github.ben-manes.versions' version '0.20.0'
-    id 'org.sonarqube' version '4.2.0.3129'
+    id 'com.github.ben-manes.versions' version '0.51.0'
+    id 'org.sonarqube' version '5.0.0.4638'
     id 'jacoco'
     id 'idea'
     id 'eclipse'
     id 'com.github.kt3k.coveralls' version "2.8.2"
-    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.23'
-    id 'info.solidsoft.pitest' version '1.5.1' apply(false)
+    id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
+    id 'info.solidsoft.pitest' version '1.15.0' apply(false)
     id 'org.jetbrains.gradle.plugin.idea-ext' version "0.7"
-    id 'uk.gov.hmcts.java' version '0.12.43'
+    id 'uk.gov.hmcts.java' version '0.12.57'
 }
 
-mainClassName = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
+application {
+    mainClass = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
+}
 
 apply from: './gradle/suppress.gradle'
 dependencyCheck {
@@ -36,10 +38,11 @@ dependencyCheck {
 ext['elasticsearch.version'] = '7.17.1'
 ext['javax-validation.version'] = '2.0.1.Final'
 ext['hibernate-validator.version'] = '6.0.20.Final'
-ext['spring-security.version'] = '5.7.8'
-ext['jackson.version'] = '2.15.3'
+ext['spring-security.version'] = '5.8.10'
+ext['springCloudVersion'] = '2021.0.8'
+ext['jackson.version'] = '2.16.0'
 ext['snakeyaml.version'] = '2.0'
-ext['postgresql.version'] = '42.5.1'
+ext['postgresql.version'] = '42.7.3'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.17.1'
 
@@ -55,10 +58,9 @@ ext {
     reformLogging= '6.0.1'
     appInsightsVersion = '2.4.1'
     restAssuredVersion = '4.3.0!!'
-    groovyVersion = '3.0.17!!'
-    tomcatVersion = '9.0.91!!'
+    groovyVersion = '3.0.19!!'
+    tomcatVersion = '9.0.91'
     feignJackson = '11.6'
-    beftaFwVersion = '8.8.4'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -103,13 +105,41 @@ allprojects {
 
     // Global constraints
     dependencies {
+
+        implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
+        constraints {
+            implementation('org.springframework.cloud:spring-cloud-starter-openfeign') {
+                version{
+                    strictly '4.0.3'
+                }
+            }
+            implementation('org.springframework.cloud:spring-cloud-starter') {
+                version{
+                    strictly '3.1.8'
+                }
+            }
+        }
+
+        implementation('org.springframework.security:spring-security-rsa'){
+            version {
+                strictly '1.0.12.RELEASE'
+            }
+        }
+
+        implementation('org.bouncycastle:bcprov-jdk18on') {
+            version {
+                strictly '1.77'
+            }
+        }
+
+        implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.5'
         implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
         implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
         // Overriding transitive dependency commons-compress due to CVE failures
-        implementation "org.apache.commons:commons-compress:1.21"
+        implementation "org.apache.commons:commons-compress:1.26.0"
         // CVE-2021-28170
         implementation "org.glassfish:jakarta.el:4.0.1"
 
@@ -122,7 +152,7 @@ allprojects {
         testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
         testImplementation "org.codehaus.groovy:groovy-xml:${groovyVersion}"
         testImplementation "org.codehaus.groovy:groovy-json:${groovyVersion}"
-        testImplementation 'com.github.hmcts:fortify-client:1.3.0:all'
+        testImplementation 'com.github.hmcts:fortify-client:1.4.2'
     }
 
     configurations.all {
@@ -146,8 +176,10 @@ allprojects {
                     details.useVersion '32.1.3-jre'
                 }
             }
+
         }
     }
+
 }
 
 java {
@@ -180,6 +212,12 @@ subprojects { subproject ->
         cucumberRuntime.extendsFrom(functionalRuntime)
     }
 
+    dependencyManagement {
+        imports {
+            mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+    }
+
     tasks.withType(Test).configureEach{
         // Added to handle Powermockito issues
         jvmArgs = jvmArgs + [
@@ -204,9 +242,10 @@ subprojects { subproject ->
     }
 
     dependencies {
-        implementation group: 'org.apache.poi', name: 'poi', version: '5.2.2'
-        implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.2'
-        implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: '5.2.2'
+
+        implementation group: 'org.apache.poi', name: 'poi', version: '5.2.5'
+        implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.5'
+        implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: '5.2.5'
         implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
         implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.21'
 
@@ -253,17 +292,15 @@ subprojects { subproject ->
         implementation (group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0') {
             exclude group: 'com.google.guava', module: 'guava'
         }
-        implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15on', version: '1.70'
+        implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15to18', version: '1.77'
 
-        // CVE-2021-29425
-        implementation group: 'commons-io', name: 'commons-io', version: '2.8.0'
-        implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap', version: '3.1.3'
-        implementation "org.springframework.cloud:spring-cloud-starter-bootstrap"
-        implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign', version: '3.1.3'
+        testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap'
+        implementation group: 'commons-io', name: 'commons-io', version: '2.16.1'
+        implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testImplementation 'org.apiguardian:apiguardian-api:1.0.0'
-        testImplementation "org.postgresql:postgresql:42.5.1"
+        testImplementation "org.postgresql:postgresql:42.7.3"
         testImplementation "org.testcontainers:postgresql:1.17.2"
         testImplementation "org.hamcrest:hamcrest-core:${hamcrestVersion}"
         testImplementation "org.hamcrest:hamcrest-library:${hamcrestVersion}"
@@ -295,9 +332,9 @@ subprojects { subproject ->
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.21.7'
+        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.22.3'
 
-        implementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
+        testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.0.2'
 
         testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
 
@@ -336,7 +373,7 @@ subprojects { subproject ->
                 logger.lifecycle("Checking coverage results: ${report}")
 
                 def parser = new XmlParser()
-                parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
+                parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
                 parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
                 def results = parser.parse(report)
 
@@ -398,7 +435,7 @@ sonarqube {
         property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**"
         property "sonar.exclusions", "**/AppInsightsConfiguration**"
         property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
-        property "sonar.jacoco.reportPaths", "${project.buildDir}/jacoco/junitPlatformTest.exec"
+        property "sonar.jacoco.reportPaths", "${buildDir}/jacoco/junitPlatformTest.exec"
         property "sonar.cpd.exclusions", "**/entity/*.java,**/model/*.java"
         property "sonar.jacoco.excludes", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java,**/TestingSupportController.java"
         property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java,**/TestingSupportController.java"
@@ -529,7 +566,7 @@ task reloadEnvSecrets {
 }
 
 task runRemoteDemo(type: JavaExec) {
-    mainClass = mainClassName
+    mainClass = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
     classpath = sourceSets.main.runtimeClasspath
     doFirst() {
         configRemoteRunTask(it, 'demo')

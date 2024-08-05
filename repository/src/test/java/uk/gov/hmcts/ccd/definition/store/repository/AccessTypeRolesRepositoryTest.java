@@ -9,7 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
@@ -20,6 +20,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity.toCaseTypeLiteEntity;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = {
@@ -48,20 +49,19 @@ public class AccessTypeRolesRepositoryTest {
         final CaseTypeEntity caseType = createCaseTypeEntity();
         saveCaseType(caseType);
 
-        final AccessTypeRolesEntity accessTypeRoles = createAccessTypeRolesEntity(caseType);
+        final AccessTypeRoleEntity accessTypeRoles = createAccessTypeRolesEntity(caseType);
         saveAccessTypeRoles(accessTypeRoles);
 
-        List<AccessTypeRolesEntity> accessTypeRolesList = accessTypeRolesRespository.findAllWithCaseTypeIds();
+        List<AccessTypeRoleEntity> accessTypeRolesList = accessTypeRolesRespository.findAllWithCaseTypeIds();
         assertThat(accessTypeRolesList.size(), is(1));
 
-        AccessTypeRolesEntity result = accessTypeRolesList.get(0);
+        AccessTypeRoleEntity result = accessTypeRolesList.get(0);
         assertThat(result.getId(), Is.is(1));
         assertThat(result.getLiveFrom(), Is.is(LocalDate.of(2023, Month.FEBRUARY, 12)));
         assertThat(result.getLiveTo(), Is.is(LocalDate.of(2027, Month.OCTOBER, 17)));
-        assertThat(result.getCaseTypeId().getId(), Is.is(caseType.getId()));
+        assertThat(result.getCaseType().getId(), Is.is(caseType.getId()));
         assertThat(result.getAccessTypeId(), Is.is("some access type id"));
         assertThat(result.getOrganisationProfileId(), Is.is("some org profile id"));
-        assertThat(result.getAccessMandatory(), Is.is(true));
 
     }
 
@@ -80,19 +80,13 @@ public class AccessTypeRolesRepositoryTest {
     }
 
     @NotNull
-    private AccessTypeRolesEntity createAccessTypeRolesEntity(CaseTypeEntity caseType) {
-        final AccessTypeRolesEntity accessTypeRoles = new AccessTypeRolesEntity();
+    private AccessTypeRoleEntity createAccessTypeRolesEntity(CaseTypeEntity caseType) {
+        final AccessTypeRoleEntity accessTypeRoles = new AccessTypeRoleEntity();
         accessTypeRoles.setLiveFrom(LocalDate.of(2023, Month.FEBRUARY, 12));
         accessTypeRoles.setLiveTo(LocalDate.of(2027, Month.OCTOBER, 17));
-        accessTypeRoles.setCaseTypeId(caseType);
+        accessTypeRoles.setCaseType(toCaseTypeLiteEntity(caseType));
         accessTypeRoles.setAccessTypeId("some access type id");
         accessTypeRoles.setOrganisationProfileId("some org profile id");
-        accessTypeRoles.setAccessMandatory(true);
-        accessTypeRoles.setAccessDefault(true);
-        accessTypeRoles.setDisplay(true);
-        accessTypeRoles.setDescription("some description");
-        accessTypeRoles.setHint("some hint");
-        accessTypeRoles.setDisplayOrder(1);
         accessTypeRoles.setOrganisationalRoleName("some org role name");
         accessTypeRoles.setGroupRoleName("some group role name");
         accessTypeRoles.setCaseAssignedRoleField("some case assigned role field");
@@ -107,7 +101,7 @@ public class AccessTypeRolesRepositoryTest {
         entityManager.clear();
     }
 
-    private void saveAccessTypeRoles(AccessTypeRolesEntity accessTypeRoles) {
+    private void saveAccessTypeRoles(AccessTypeRoleEntity accessTypeRoles) {
         accessTypeRolesRespository.save(accessTypeRoles);
         entityManager.flush();
         entityManager.clear();

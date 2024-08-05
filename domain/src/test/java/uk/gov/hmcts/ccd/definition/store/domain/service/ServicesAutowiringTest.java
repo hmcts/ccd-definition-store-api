@@ -48,6 +48,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.Sear
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldUnicityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.BannerRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
@@ -314,6 +315,12 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public AccessTypeRolesRepository accessTypeRolesRepository() {
             return mock(AccessTypeRolesRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public AccessTypesRepository accessTypeRepository() {
+            return mock(AccessTypesRepository.class);
         }
 
         @Bean

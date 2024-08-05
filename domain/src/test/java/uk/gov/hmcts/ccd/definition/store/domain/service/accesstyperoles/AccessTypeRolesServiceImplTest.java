@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRolesEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,9 +33,9 @@ public class AccessTypeRolesServiceImplTest {
     @DisplayName(
         "Should save the passed entities")
     void shouldSaveEntity() {
-        AccessTypeRolesEntity accessTypeRolesEntity = mock(AccessTypeRolesEntity.class);
-        List<AccessTypeRolesEntity> entitiesToSave = new ArrayList<>();
-        entitiesToSave.add(accessTypeRolesEntity);
+        AccessTypeRoleEntity accessTypeRoleEntity = mock(AccessTypeRoleEntity.class);
+        List<AccessTypeRoleEntity> entitiesToSave = new ArrayList<>();
+        entitiesToSave.add(accessTypeRoleEntity);
         classUnderTest.saveAll(entitiesToSave);
         verify(repository, times(1)).saveAll(eq(entitiesToSave));
     }
