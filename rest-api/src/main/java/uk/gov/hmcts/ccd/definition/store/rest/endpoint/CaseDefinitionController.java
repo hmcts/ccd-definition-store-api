@@ -105,6 +105,14 @@ public class CaseDefinitionController {
         return roleToAccessProfilesService.findRoleAssignmentsByCaseTypeId(caseTypeId);
     }
 
+    /**
+     * Find by jurisdiction id.
+     *
+     * @deprecated This endpoint is deprecated due to performance issues and is no longer used by any service from the
+     *             data store.
+     */
+    @Deprecated(forRemoval = true)
+    @SuppressWarnings("squid:S1133")
     @GetMapping(value = "/data/jurisdictions/{jurisdiction_id}/case-type",
         produces = {"application/json"})
     @ApiOperation(value = "Get case types",
