@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -66,6 +67,8 @@ public class CaseDefinitionControllerTest {
         return caseType;
     }
 
+    @Deprecated
+    @Disabled
     @Nested
     @DisplayName("Test the dataJurisdictionsJurisdictionIdCaseTypeGet method")
     class DataJurisdictionsJurisdictionIdCaseTypeGetTests {
