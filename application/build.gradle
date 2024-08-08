@@ -31,7 +31,7 @@ dependencies {
         exclude group: 'com.google.guava', module: 'guava'
     }
     implementation "org.flywaydb:flyway-core:6.5.7"
-    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.5.1'
+    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
 
     testImplementation project(":app-insights").sourceSets.main.output
     testImplementation project(":commons").sourceSets.main.output
@@ -59,7 +59,7 @@ pitest {
     outputFormats = ['XML', 'HTML', 'CSV']
     mutationThreshold = 0
     coverageThreshold = 0
-    maxMutationsPerClass = 15
+    features = ["+CLASSLIMIT(limit[15])"]
     jvmArgs = ['-Xms1G', '-Xmx3G']
     timestampedReports = false
     failWhenNoMutations = false

@@ -82,6 +82,21 @@ BEGIN
     (SELECT id FROM case_field WHERE case_type_id IN
         (SELECT id FROM tmp_case_type_ids)
     );
+  
+  DELETE FROM field_type_list_item WHERE field_type_id  in
+    (SELECT field_type_id FROM case_field WHERE case_type_id IN
+      (SELECT id FROM view__case_type_to_remove)
+  );
+
+  DELETE FROM complex_field cf where field_type_id in
+    (SELECT field_type_id FROM case_field WHERE case_type_id  IN
+        (SELECT id FROM tmp_case_type_ids)    
+  );
+
+  DELETE FROM field_type WHERE id IN
+   (SELECT field_type_id FROM case_field WHERE case_type_id IN
+       (SELECT id FROM tmp_case_type_ids)
+  );
 
   --takes very long to complete
   --fk_case_field_case_type_id is not indexed by default
