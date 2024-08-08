@@ -68,6 +68,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         return repository.caseTypeExistsInAnyJurisdiction(reference, jurisdictionId) > 0;
     }
 
+    @Deprecated
     @Transactional
     @Override
     public List<CaseType> findByJurisdictionId(String jurisdictionId) {
