@@ -594,12 +594,12 @@
               {
                 "code": "CaseCreated",
                 "label": "Create case",
-                "order": null
+                "order": 1
               },
               {
                 "code": "CaseUpdated",
                 "label": "Updated case",
-                "order": null
+                "order": 1
               }
             ],
             "complex_fields": [],

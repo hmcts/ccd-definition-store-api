@@ -74,6 +74,7 @@ public class StateMetadataCaseFieldEntityFactory implements MetadataCaseFieldEnt
             FieldTypeListItemEntity listItem = new FieldTypeListItemEntity();
             listItem.setValue(state.getReference());
             listItem.setLabel(state.getName());
+            listItem.setOrder(state.getOrder());
             return listItem;
         }).collect(Collectors.toList());
     }
