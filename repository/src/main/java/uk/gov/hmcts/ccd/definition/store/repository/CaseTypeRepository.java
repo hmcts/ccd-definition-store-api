@@ -18,6 +18,13 @@ public interface CaseTypeRepository extends VersionedDefinitionRepository<CaseTy
     @Query(SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE)
     Optional<CaseTypeEntity> findCurrentVersionForReference(@Param("caseTypeReference") String caseTypeReference);
 
+    /**
+     * Find by jurisdiction id.
+     *
+     * @deprecated This endpoint is deprecated due to performance issues
+     */
+    @Deprecated(forRemoval = true)
+    @SuppressWarnings("squid:S1133")
     @Query("select c from CaseTypeEntity c where c.version in (select max(cm.version) from CaseTypeEntity cm "
         + "where cm.reference=c.reference) and c.jurisdiction.reference=:jurisdictionReference")
     List<CaseTypeEntity> findByJurisdictionId(@Param("jurisdictionReference") String jurisdiction);
