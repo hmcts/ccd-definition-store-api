@@ -36,8 +36,8 @@
               "accessMandatory": true,
               "accessDefault": true,
               "display": true,
-              "description": "BEFTA Solicitor Profile  Respondant for Org description",
-              "hint": "BEFTA Solicitor Profile Respondant for Org hint",
+              "description": "BEFTA Solicitor Profile  Respondent for Org description",
+              "hint": "BEFTA Solicitor Profile Respondent for Org hint",
               "displayOrder": 2,
               "roles": [
                 {
@@ -66,8 +66,8 @@
               "accessMandatory": true,
               "accessDefault": true,
               "display": true,
-              "description": "BEFTA bulk Solicitor 2  Respondant for Org description2",
-              "hint": "BEFTA bulk Solicitor 2 Respondant for Org hint2",
+              "description": "BEFTA bulk Solicitor 2  Respondent for Org description2",
+              "hint": "BEFTA bulk Solicitor 2 Respondent for Org hint2",
               "displayOrder": 1,
               "roles": [
                 {
@@ -106,8 +106,8 @@
               "accessMandatory": true,
               "accessDefault": true,
               "display": true,
-              "description": "BEFTA bulk Solicitor Respondant for Org description2",
-              "hint": "BEFTA bulk Solicitor Respondant for Org hint2",
+              "description": "BEFTA bulk Solicitor Respondent for Org description2",
+              "hint": "BEFTA bulk Solicitor Respondent for Org hint2",
               "displayOrder": 2,
               "roles": [
                 {
@@ -136,8 +136,8 @@
               "accessMandatory": true,
               "accessDefault": true,
               "display": true,
-              "description": "BEFTA bulk Solicitor Respondant for Org description",
-              "hint": "BEFTA bulk Solicitor Respondant for Org hint",
+              "description": "BEFTA bulk Solicitor Respondent for Org description",
+              "hint": "BEFTA bulk Solicitor Respondent for Org hint",
               "displayOrder": 1,
               "roles": [
                 {
