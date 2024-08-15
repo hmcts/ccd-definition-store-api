@@ -32,8 +32,8 @@
           "accessMandatory" : true,
           "accessDefault" : true,
           "display" : true,
-          "description" : "BEFTA bulk Solicitor Respondant for Org description2",
-          "hint" : "BEFTA bulk Solicitor Respondant for Org hint2",
+          "description" : "BEFTA bulk Solicitor Respondent for Org description2",
+          "hint" : "BEFTA bulk Solicitor Respondent for Org hint2",
           "displayOrder" : 2,
           "roles" : [
             {

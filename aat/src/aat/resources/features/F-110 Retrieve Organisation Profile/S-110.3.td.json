@@ -42,24 +42,21 @@
               "displayOrder": 2,
               "roles": [
                 {
-                  "__ordering__": "unordered",
+                  "__ordering__": "ordered",
                   "__elementId__": "caseTypeId"
-                },
-                {
-                  "caseTypeId": "FT_MasterCaseType",
-                  "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANY_NULLABLE]]",
-                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
-                  "groupAccessEnabled": true
-                },
-                {
-                  "caseTypeId": "FT_MasterCaseType",
-                  "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANY_NULLABLE]]",
-                  "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
-                  "groupAccessEnabled": true
-                }
-              ]
+                }, {
+                  "caseTypeId" : "FT_CaseAccessGroups",
+                  "organisationalRoleName" : "Role1",
+                  "groupRoleName" : "[[ANY_NULLABLE]]",
+                  "caseGroupIdTemplate" : "[[ANY_NULLABLE]]",
+                  "groupAccessEnabled" : true
+                },{
+                "caseTypeId" : "FT_CaseAccessGroups",
+                "organisationalRoleName" : "Role1",
+                "groupRoleName" : "Role1",
+                "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
+                "groupAccessEnabled" : true
+              }]
             },
             {
               "organisationProfileId": "SOLICITOR_PROFILE",
@@ -72,7 +69,7 @@
               "displayOrder": 1,
               "roles": [
                 {
-                  "caseTypeId": "FT_MasterCaseType",
+                  "caseTypeId": "FT_CaseAccessGroups",
                   "organisationalRoleName": "Role1",
                   "groupRoleName": "Role1",
                   "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
