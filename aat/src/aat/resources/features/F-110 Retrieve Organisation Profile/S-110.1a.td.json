@@ -27,7 +27,7 @@
           "jurisdictionName": "BEFTA_JURISDICTION_1",
           "accessTypes": [
             {
-              "__ordering__": "ordered",
+              "__ordering__": "unordered",
               "__elementId__": "organisationProfileId,accessTypeId, displayOrder"
             },
             {
@@ -97,7 +97,7 @@
           "jurisdictionName": "BEFTA Master",
           "accessTypes": [
             {
-              "__ordering__": "ordered",
+              "__ordering__": "unordered",
               "__elementId__": "organisationProfileId,accessTypeId, displayOrder"
             },
             {
