@@ -97,7 +97,7 @@
           "jurisdictionName": "BEFTA Master",
           "accessTypes": [
             {
-              "__ordering__": "unordered",
+              "__ordering__": "ordered",
               "__elementId__": "organisationProfileId,accessTypeId, displayOrder"
             },
             {
