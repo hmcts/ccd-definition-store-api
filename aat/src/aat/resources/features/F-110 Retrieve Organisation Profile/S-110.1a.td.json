@@ -27,7 +27,7 @@
           "jurisdictionName": "BEFTA_JURISDICTION_1",
           "accessTypes": [
             {
-              "__ordering__": "unordered",
+              "__ordering__": "ordered",
               "__elementId__": "organisationProfileId,accessTypeId, displayOrder"
             },
             {
@@ -41,21 +41,21 @@
               "displayOrder": 2,
               "roles": [
                 {
-                  "__ordering__": "unordered",
+                  "__ordering__": "ordered",
                   "__elementId__": "caseTypeId"
-                },
-                {
-                  "caseTypeId": "CaseAccessGroups_Casetype",
-                  "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANY_NULLABLE]]",
-                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
-                  "groupAccessEnabled": true
                 },
                 {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
                   "groupRoleName": "Role1",
                   "caseGroupIdTemplate": "BEFTA_JURISDICTION_1:$ORGID$",
+                  "groupAccessEnabled": true
+                },
+                {
+                  "caseTypeId": "CaseAccessGroups_Casetype",
+                  "organisationalRoleName": "Role1",
+                  "groupRoleName": "[[ANY_NULLABLE]]",
+                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
                   "groupAccessEnabled": true
                 }
               ]
@@ -71,21 +71,21 @@
               "displayOrder": 1,
               "roles": [
                 {
-                  "__ordering__": "unordered",
+                  "__ordering__": "ordered",
                   "__elementId__": "caseTypeId"
-                },
-                {
-                  "caseTypeId": "CaseAccessGroups_Casetype",
-                  "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANY_NULLABLE]]",
-                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
-                  "groupAccessEnabled": true
                 },
                 {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
                   "groupRoleName": "Role1",
                   "caseGroupIdTemplate": "BEFTA_JURISDICTION_1:$ORGID$",
+                  "groupAccessEnabled": true
+                },
+                {
+                  "caseTypeId": "CaseAccessGroups_Casetype",
+                  "organisationalRoleName": "Role1",
+                  "groupRoleName": "[[ANY_NULLABLE]]",
+                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
                   "groupAccessEnabled": true
                 }
               ]
@@ -111,21 +111,21 @@
               "displayOrder": 2,
               "roles": [
                 {
-                  "__ordering__": "unordered",
+                  "__ordering__": "ordered",
                   "__elementId__": "caseTypeId"
-                },
-                {
-                  "caseTypeId": "FT_CaseAccessGroup",
-                  "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANY_NULLABLE]]",
-                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
-                  "groupAccessEnabled": true
                 },
                 {
                   "caseTypeId": "FT_CaseAccessGroup",
                   "organisationalRoleName": "Role1",
                   "groupRoleName": "Role1",
                   "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
+                  "groupAccessEnabled": true
+                },
+                {
+                  "caseTypeId": "FT_CaseAccessGroup",
+                  "organisationalRoleName": "Role1",
+                  "groupRoleName": "[[ANY_NULLABLE]]",
+                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
                   "groupAccessEnabled": true
                 }
               ]
