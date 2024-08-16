@@ -47,15 +47,15 @@
                 {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "Role1",
-                  "caseGroupIdTemplate": "BEFTA_JURISDICTION_1:$ORGID$",
+                  "groupRoleName": "[[ANY_NULLABLE]]",
+                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
                   "groupAccessEnabled": true
                 },
                 {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANY_NULLABLE]]",
-                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
+                  "groupRoleName": "Role1",
+                  "caseGroupIdTemplate": "BEFTA_JURISDICTION_1:$ORGID$",
                   "groupAccessEnabled": true
                 }
               ]
@@ -77,15 +77,15 @@
                 {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "Role1",
-                  "caseGroupIdTemplate": "BEFTA_JURISDICTION_1:$ORGID$",
+                  "groupRoleName": "[[ANY_NULLABLE]]",
+                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
                   "groupAccessEnabled": true
                 },
                 {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANY_NULLABLE]]",
-                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
+                  "groupRoleName": "Role1",
+                  "caseGroupIdTemplate": "BEFTA_JURISDICTION_1:$ORGID$",
                   "groupAccessEnabled": true
                 }
               ]
@@ -117,15 +117,15 @@
                 {
                   "caseTypeId": "FT_CaseAccessGroups",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "Role1",
-                  "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
+                  "groupRoleName": "[[ANY_NULLABLE]]",
+                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
                   "groupAccessEnabled": true
                 },
                 {
                   "caseTypeId": "FT_CaseAccessGroups",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANY_NULLABLE]]",
-                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
+                  "groupRoleName": "Role1",
+                  "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
                   "groupAccessEnabled": true
                 }
               ]
