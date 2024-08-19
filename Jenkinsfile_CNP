@@ -112,4 +112,6 @@ withPipeline(type, product, app) {
     afterAlways('functionalTest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
     }
+
+    echo "env.DEFINITION_STORE_URL_BASE = ${env.DEFINITION_STORE_URL_BASE}"
 }
