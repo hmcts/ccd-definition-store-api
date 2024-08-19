@@ -55,7 +55,7 @@ env.BEFTA_RETRY_MAX_ATTEMPTS = "3"
 env.BEFTA_RETRY_STATUS_CODES = "500,502,503,504"
 env.BEFTA_RETRY_MAX_DELAY = "1000"
 
-env.BEFTA_RETRY_NON_RETRYABLE_HTTP_METHODS = "PUT"
+env.BEFTA_RETRY_NON_RETRYABLE_HTTP_METHODS = "PUT,POST"
 
 env.DEFAULT_COLLECTION_ASSERTION_MODE="UNORDERED"
 // Prevent Docker hub rate limit errors by ensuring that testcontainers uses images from hmctspublic ACR
