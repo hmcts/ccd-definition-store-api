@@ -152,7 +152,7 @@ allprojects {
         testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
         testImplementation "org.codehaus.groovy:groovy-xml:${groovyVersion}"
         testImplementation "org.codehaus.groovy:groovy-json:${groovyVersion}"
-        testImplementation 'com.github.hmcts:fortify-client:1.4.2'
+        testImplementation 'com.github.hmcts:fortify-client:1.4.3:all'
     }
 
     configurations.all {
