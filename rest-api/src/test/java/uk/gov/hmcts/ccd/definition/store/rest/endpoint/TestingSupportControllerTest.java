@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 import static java.util.Collections.emptyList;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -55,18 +56,21 @@ public class TestingSupportControllerTest {
     @Test
     @DisplayName("Should execute delete queries")
     void shouldDeleteRecords() throws Exception {
-        when(session.createNativeQuery(anyString())).thenReturn(nativeQuery);
-        when(nativeQuery.setParameterList(anyString(), anyList()))
+        when(session.createNativeQuery(anyString()))
             .thenReturn(nativeQuery);
-        when(nativeQuery.setParameterList(anyString(), anyList(), isA(IntegerType.class)))
+        when(nativeQuery.setParameterList(eq("caseTypesWithChangeIds"), anyList()))
             .thenReturn(nativeQuery);
-
-        when(nativeQuery.list()).thenReturn(List.of("1","2"));
-        when(session.getTransaction()).thenReturn(transaction);
+        when(nativeQuery.setParameterList(eq("caseTypeIds"), anyList(), isA(IntegerType.class)))
+            .thenReturn(nativeQuery);
+        when(nativeQuery.list())
+            .thenReturn(List.of("1","2"));
+        when(session.getTransaction())
+            .thenReturn(transaction);
         mockMvc.perform(delete("/api/testing-support/cleanup-case-type/1")
                 .param("caseTypeIds", "Benefit"))
             .andDo(print())
             .andExpect(status().isOk());
+
         verify(session, times(29))
             .createNativeQuery(anyString());
     }
@@ -74,11 +78,14 @@ public class TestingSupportControllerTest {
     @Test
     @DisplayName("Should return case type not found")
     void shouldReturnNotFound() throws Exception {
-        when(session.createNativeQuery(anyString())).thenReturn(nativeQuery);
-        when(nativeQuery.setParameterList(anyString(), anyList()))
+        when(session.createNativeQuery(anyString()))
             .thenReturn(nativeQuery);
-        when(nativeQuery.list()).thenReturn(emptyList());
-        when(session.getTransaction()).thenReturn(transaction);
+        when(nativeQuery.setParameterList(eq("caseTypesWithChangeIds"), anyList()))
+            .thenReturn(nativeQuery);
+        when(nativeQuery.list())
+            .thenReturn(emptyList());
+        when(session.getTransaction())
+            .thenReturn(transaction);
         mockMvc.perform(delete("/api/testing-support/cleanup-case-type/1")
                 .param("caseTypeIds", "NoFound"))
             .andDo(print())
