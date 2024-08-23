@@ -57,7 +57,7 @@ public class TestingSupportController {
         session.beginTransaction();
 
         var ids = getCaseTypeIdsByReferences(session, caseTypesWithChangeIds);
-        if (ids.size() != caseIdList.size()) {
+        if (ids.isEmpty()) {
             throw new NotFoundException("Unable to find case type");
         }
 
@@ -73,7 +73,7 @@ public class TestingSupportController {
             .setParameterList("caseTypesWithChangeIds", caseTypesWithChangeIds)
             .list();
         session.getTransaction().commit();
-        List<Integer> intIds = new ArrayList<Integer>();
+        List<Integer> intIds = new ArrayList<>();
         for (Object s : ids) {
             intIds.add(Integer.valueOf(s.toString()));
         }
