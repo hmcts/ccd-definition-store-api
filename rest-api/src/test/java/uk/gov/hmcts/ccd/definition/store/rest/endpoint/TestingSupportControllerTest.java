@@ -30,7 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 @ExtendWith(MockitoExtension.class)
-public class TestingSupportControllerTest {
+class TestingSupportControllerTest {
     @Mock
     private SessionFactory sessionFactory;
     @Mock
