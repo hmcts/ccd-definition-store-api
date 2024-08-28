@@ -152,7 +152,7 @@ allprojects {
         testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
         testImplementation "org.codehaus.groovy:groovy-xml:${groovyVersion}"
         testImplementation "org.codehaus.groovy:groovy-json:${groovyVersion}"
-        testImplementation 'com.github.hmcts:fortify-client:1.4.2'
+        testImplementation 'com.github.hmcts:fortify-client:1.4.3:all'
     }
 
     configurations.all {
@@ -547,8 +547,6 @@ task fortifyScan(type: JavaExec)  {
     mainClass = "uk.gov.hmcts.fortifyclient.FortifyClientMainApp"
     classpath += sourceSets.test.runtimeClasspath
     jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
-    // The line below prevents the build from failing if the Fortify scan detects issues
-    ignoreExitValue = true
 }
 
 cucumberReports {

@@ -68,6 +68,13 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         return repository.caseTypeExistsInAnyJurisdiction(reference, jurisdictionId) > 0;
     }
 
+    /**
+     * Find by jurisdiction id.
+     *
+     * @deprecated This endpoint is deprecated due to performance issues
+     */
+    @Deprecated(forRemoval = true)
+    @SuppressWarnings("squid:S1133")
     @Transactional
     @Override
     public List<CaseType> findByJurisdictionId(String jurisdictionId) {

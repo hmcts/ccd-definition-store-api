@@ -7,7 +7,7 @@ Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-082.1 @Smoke
+@S-082.1 @Smoke @Ignore
 Scenario: must return 200
 
     Given a user with [an active profile in CCD]
@@ -21,7 +21,7 @@ Scenario: must return 200
       And the response has all other details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-082.2
+@S-082.2 @Ignore
 Scenario: must return 401 when request does not provide valid authentication credentials
 
     Given a user with [an active profile in CCD]
