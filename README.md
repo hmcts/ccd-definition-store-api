@@ -122,6 +122,6 @@ befta-fw library. To find out more about BEFTA Framework, see the repository and
 
 ## LICENSE
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details. 
 
 
