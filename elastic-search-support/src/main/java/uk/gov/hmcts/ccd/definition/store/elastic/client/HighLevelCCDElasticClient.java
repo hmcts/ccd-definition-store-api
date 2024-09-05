@@ -43,13 +43,10 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
     public boolean createIndex(String indexName, String alias) throws IOException {
         log.info("creating index {} with alias {}", indexName, alias);
         CreateIndexRequest request = new CreateIndexRequest(indexName);
-        request.alias(new Alias(alias).writeIndex(false));
+        request.alias(new Alias(alias));
         String file = (alias.equalsIgnoreCase(GLOBAL_SEARCH))
             ? GLOBAL_SEARCH_CASES_INDEX_SETTINGS_JSON : CASES_INDEX_SETTINGS_JSON;
         request.settings(casesIndexSettings(file));
-        log.debug("before call to elasticClient.indices().create \nsettings = {}, \nindicesOptions = {},"
-                + "\nmappings = {}, \naliases = {}, \nindices = {}",
-            request.settings(), request.indicesOptions(), request.mappings(), request.aliases(), request.indices());
         CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
         log.info("index created: {}", createIndexResponse.isAcknowledged());
         return createIndexResponse.isAcknowledged();
