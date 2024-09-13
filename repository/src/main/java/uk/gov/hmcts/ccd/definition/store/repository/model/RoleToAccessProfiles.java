@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.util.Date;
 import lombok.Data;
 
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 @Data
 public class RoleToAccessProfiles {
 
