@@ -16,6 +16,4 @@ public interface AccessProfileService {
     List<UserRole> getRoles(List<String> roles);
 
     List<UserRole> getRoles();
-
-    void deleteRole(String role);
 }
