@@ -102,7 +102,7 @@ allprojects {
         testImplementation ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}"){
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
-        implementation 'net.minidev:json-smart:2.4.7'
+        implementation 'net.minidev:json-smart:2.4.9'
     }
 
     // Global constraints
@@ -172,7 +172,7 @@ allprojects {
                 }
 
                 if (details.requested.group == 'com.nimbusds' && details.requested.name == 'nimbus-jose-jwt') {
-                    details.useVersion '9.21'
+                    details.useVersion '9.37.2'
                 }
                 if (details.requested.group == 'com.google.guava' && details.requested.name == 'guava') {
                     details.useVersion '32.1.3-jre'
@@ -249,7 +249,7 @@ subprojects { subproject ->
         implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.5'
         implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: '5.2.5'
         implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
-        implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.21'
+        implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.37.2'
 
         implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
