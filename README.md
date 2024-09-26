@@ -84,7 +84,7 @@ As a result the following containers will get created and started:
  - Database exposing port `5451`
  - API exposing ports `4451`
 
-#### Handling database
+#### Handling database 
 
 Database will get initiated when you run `docker-compose up` for the first time by execute all scripts from `database` directory.
 
