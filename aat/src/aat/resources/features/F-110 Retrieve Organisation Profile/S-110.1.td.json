@@ -23,32 +23,31 @@
           "__elementId__": "jurisdictionId"
         },
         {
-        "jurisdictionId" : "BEFTA_MASTER",
-        "jurisdictionName" : "BEFTA Master",
-        "accessTypes" : [ {
-          "organisationProfileId" : "SOLICITOR_PROFILE",
-          "accessTypeId" : "BEFTA_SOLICITOR_1",
-          "accessMandatory" : true,
-          "accessDefault" : true,
-          "display" : true,
-          "description" : "BEFTA bulk Solicitor Respondent for Org description",
-          "hint" : "BEFTA bulk Solicitor Respondent for Org hint",
-          "displayOrder" : 1,
-          "roles" : [
-            {
-              "__ordering__": "unordered",
-              "__elementId__": "caseTypeId"
-            },
-            {
-            "caseTypeId" : "FT_MasterCaseType",
-            "organisationalRoleName" : "Role1",
-            "groupRoleName" : "Role1",
-            "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
-            "groupAccessEnabled" : true
+          "jurisdictionId" : "BEFTA_MASTER",
+          "jurisdictionName" : "BEFTA Master",
+          "accessTypes" : [ {
+            "organisationProfileId" : "SOLICITOR_PROFILE",
+            "accessTypeId" : "BEFTA_SOLICITOR_1",
+            "accessMandatory" : true,
+            "accessDefault" : true,
+            "display" : true,
+            "description" : "BEFTA bulk Solicitor Respondent for Org description",
+            "hint" : "BEFTA bulk Solicitor Respondent for Org hint",
+            "displayOrder" : 1,
+            "roles" : [
+              {
+                "__ordering__": "unordered",
+                "__elementId__": "caseTypeId"
+              },
+              {
+                "caseTypeId" : "FT_MasterCaseType",
+                "organisationalRoleName" : "Role1",
+                "groupRoleName" : "Role1",
+                "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
+                "groupAccessEnabled" : true
+              } ]
           } ]
         } ]
-      } ]
     }
   }
 }
-
