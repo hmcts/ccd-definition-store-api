@@ -21,8 +21,8 @@ locals {
 }
 
 data "azurerm_key_vault" "ccd_shared_key_vault" {
-  name                = "${local.vaultName}"
-  resource_group_name = "${local.sharedResourceGroup}"
+  name                = local.vaultName
+  resource_group_name = local.sharedResourceGroup
 }
 
 data "azurerm_key_vault" "s2s_vault" {
@@ -44,7 +44,7 @@ resource "azurerm_storage_container" "imports_container" {
 
 data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
   name         = "microservicekey-ccd-definition"
-  key_vault_id = "${data.azurerm_key_vault.s2s_vault.id}"
+  key_vault_id = data.azurerm_key_vault.s2s_vault.id
 }
 
 ///////////////////////
@@ -56,13 +56,13 @@ module "postgresql_v15" {
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
   }
-  
-  admin_user_object_id = var.jenkins_AAD_objectId
-  business_area        = "cft"
-  common_tags          = var.common_tags
-  component            = var.component
-  env                  = var.env
-  subnet_suffix        = var.subnet_suffix
+
+  admin_user_object_id           = var.jenkins_AAD_objectId
+  business_area                  = "cft"
+  common_tags                    = var.common_tags
+  component                      = var.component
+  env                            = var.env
+  subnet_suffix                  = var.subnet_suffix
   force_user_permissions_trigger = "1"
   pgsql_databases = [
     {
