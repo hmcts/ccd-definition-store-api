@@ -195,7 +195,14 @@ public class CaseTypeObjectGraphTest {
 
         // Check states
         assertThat(fetched.getStates(), hasSize(2));
-        final StateEntity fetchedState1 = fetched.getStates().get(0);
+
+        StateEntity fetchedState1 = new StateEntity();
+        for (StateEntity state : fetched.getStates()) {
+            if (state.getReference().equals("stateId")) {
+                fetchedState1 = state;
+            }
+        }
+
         assertThat(fetchedState1.getReference(), equalTo("stateId"));
         assertThat(fetchedState1.getLiveFrom(), equalTo(TODAY));
         assertThat(fetchedState1.getLiveTo(), equalTo(TOMORROW));
