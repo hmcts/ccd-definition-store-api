@@ -11,7 +11,7 @@ def app = "definition-store-api"
 def branchesToSync = ['demo', 'ithc', 'perftest', 'develop']
 
 // Variables to switch pipeline logic and wiring per type of build
-def definitionStoreDevelopPr = "PR-575" // This doesn't change frequently, but when it does, only change this value.
+def definitionStoreDevelopPr = "PR-1468" // This doesn't change frequently, but when it does, only change this value.
 
 def secrets = [
     'ccd-${env}': [
@@ -93,6 +93,11 @@ withPipeline(type, product, app) {
     disableLegacyDeployment()
     enableHighLevelDataSetup()
 
+    afterAlways('test') {
+        // hmcts/cnp-jenkins-library may fail to copy artifacts after checkstyle error so repeat command (see /src/uk/gov/hmcts/contino/GradleBuilder.groovy)
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/checkstyle/*.html'
+    }
+
     afterAlways('smoketest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
     }
@@ -112,4 +117,6 @@ withPipeline(type, product, app) {
     afterAlways('functionalTest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
     }
+
+    echo "env.DEFINITION_STORE_URL_BASE = ${env.DEFINITION_STORE_URL_BASE}"
 }
