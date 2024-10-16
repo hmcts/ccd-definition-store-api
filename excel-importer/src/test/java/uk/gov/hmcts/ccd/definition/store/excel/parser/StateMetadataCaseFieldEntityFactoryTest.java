@@ -25,7 +25,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 import static org.mockito.internal.util.reflection.Whitebox.setInternalState;
 import static uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField.STATE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
@@ -42,7 +42,7 @@ class StateMetadataCaseFieldEntityFactoryTest {
 
     @BeforeEach
     void setUp() {
-        initMocks(this);
+        openMocks(this);
         factory = new StateMetadataCaseFieldEntityFactory(mock(FieldTypeRepository.class));
         setInternalState(factory, "versionedRepository", repository);
     }

@@ -25,7 +25,7 @@ import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
@@ -61,7 +61,7 @@ public class CaseTypeEntityCaseFieldsValidatorImplTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         when(caseFieldEntityValidator1.validate(any(), any())).thenReturn(new ValidationResult());
         when(caseFieldEntityValidator2.validate(any(), any())).thenReturn(new ValidationResult());

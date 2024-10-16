@@ -59,7 +59,7 @@ public class DisplayServiceTest {
 
     @BeforeEach
     public void setUpMocks() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Nested

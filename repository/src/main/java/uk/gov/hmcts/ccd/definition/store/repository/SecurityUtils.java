@@ -8,7 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.security.idam.IdamRepository;
 import uk.gov.hmcts.reform.authorisation.generators.AuthTokenGenerator;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
 
-import javax.inject.Named;
+import jakarta.inject.Named;
 
 @Named
 public class SecurityUtils {

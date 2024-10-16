@@ -22,7 +22,7 @@ public class EventEntityInvalidDefaultPostStateErrorTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(any(EventEntityInvalidDefaultPostStateError.class)))
             .thenReturn("Invalid Default Post State");
         CaseTypeEntity caseType = new CaseTypeEntity();

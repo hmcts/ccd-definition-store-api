@@ -3,7 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import com.google.common.base.Strings;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.Transient;
+import jakarta.persistence.Transient;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;

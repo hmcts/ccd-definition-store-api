@@ -11,7 +11,6 @@ import java.util.Date;
 public class ImportAudit {
 
     @Getter
-    @Setter
     @JsonProperty("date_imported")
     private String dateImported;
 

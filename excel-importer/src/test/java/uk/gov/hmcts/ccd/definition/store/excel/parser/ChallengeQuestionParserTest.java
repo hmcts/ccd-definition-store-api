@@ -18,7 +18,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.ChallengeQuestionValid
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
@@ -32,7 +32,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         parseContext = buildParseContext();
         this.challengeQuestionParser = new ChallengeQuestionParser(challengeQuestionValidator);
     }

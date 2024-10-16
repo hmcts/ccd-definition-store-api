@@ -27,7 +27,7 @@ public class ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParen
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(
             any(ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);

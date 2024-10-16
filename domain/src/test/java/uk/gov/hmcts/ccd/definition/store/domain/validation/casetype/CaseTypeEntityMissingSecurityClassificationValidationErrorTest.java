@@ -23,7 +23,7 @@ public class CaseTypeEntityMissingSecurityClassificationValidationErrorTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(
             any(CaseTypeEntityMissingSecurityClassificationValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);

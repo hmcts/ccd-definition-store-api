@@ -23,8 +23,8 @@ public abstract class GeneralImmutableJsonType<T> implements UserType {
     }
 
     @Override
-    public int[] sqlTypes() {
-        return new int[] {Types.JAVA_OBJECT};
+    public int getSqlType() {
+        return Types.JAVA_OBJECT;
     }
 
     @Override
@@ -44,10 +44,10 @@ public abstract class GeneralImmutableJsonType<T> implements UserType {
 
     @Override
     public Object nullSafeGet(ResultSet resultSet,
-                              String[] names,
+                              int pos,
                               SharedSessionContractImplementor sharedSessionContractImplementor,
                               Object o) throws HibernateException, SQLException {
-        final String cellContent = resultSet.getString(names[0]);
+        final String cellContent = resultSet.getString(pos);
         return JsonUtils.fromString(cellContent, dataType);
     }
 

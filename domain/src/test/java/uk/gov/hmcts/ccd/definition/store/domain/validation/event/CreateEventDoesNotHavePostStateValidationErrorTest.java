@@ -23,7 +23,7 @@ public class CreateEventDoesNotHavePostStateValidationErrorTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(
             any(CreateEventDoesNotHavePostStateValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);

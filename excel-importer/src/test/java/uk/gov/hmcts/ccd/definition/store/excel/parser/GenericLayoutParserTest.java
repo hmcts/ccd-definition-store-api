@@ -58,7 +58,7 @@ public class GenericLayoutParserTest {
 
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference(CASE_TYPE_ID);
         CaseTypeEntity caseTypeEntity2 = new CaseTypeEntity();

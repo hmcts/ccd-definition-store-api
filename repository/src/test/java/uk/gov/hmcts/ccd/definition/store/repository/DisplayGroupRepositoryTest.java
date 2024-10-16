@@ -27,7 +27,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose.EDIT;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose.VIEW;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType.PAGE;

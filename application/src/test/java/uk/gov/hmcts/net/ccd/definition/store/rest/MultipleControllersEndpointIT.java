@@ -30,7 +30,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -54,7 +54,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
@@ -97,7 +97,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
     public void shouldReturnThreeWorkbasketInputFieldsForTestAddressBookCase() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
             .file(file)
             .header(AUTHORIZATION, "Bearer testUser"))
             .andReturn();
@@ -127,7 +127,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
     public void shouldReturnTabsForTestAddressBookCase() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
             .file(file)
             .header(AUTHORIZATION, "Bearer testUser"))
             .andReturn();
@@ -163,7 +163,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
     public void shouldReturnThreeWizardPagesForTestAddressBookCase() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
             .file(file)
             .header(AUTHORIZATION, "Bearer testUser"))
             .andReturn();
@@ -195,7 +195,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
     public void shouldReturnSingleWizardPageForTestComplexAddressBookCase() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
             .file(file)
             .header(AUTHORIZATION, "Bearer testUser"))
             .andReturn();
@@ -290,7 +290,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
 
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+        MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
             .file(file)
             .header(AUTHORIZATION, "Bearer testUser"))
             .andReturn();

@@ -106,7 +106,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @Before
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(entityToDefinitionDataItemRegistry.getForEntity(anyObject())).thenReturn(Optional.empty());
     }
 

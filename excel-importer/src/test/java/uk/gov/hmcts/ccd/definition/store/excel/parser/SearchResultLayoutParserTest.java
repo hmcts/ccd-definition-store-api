@@ -34,7 +34,7 @@ public class SearchResultLayoutParserTest {
 
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         definitionSheets = new HashMap<>();
         classUnderTest = new SearchResultLayoutParser(

@@ -3,21 +3,21 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.LayoutSheetType;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToOne;
-import javax.persistence.JoinColumn;
-import javax.persistence.Transient;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.Id;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Transient;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Optional;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.IDENTITY;
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @MappedSuperclass
 public abstract class GenericLayoutEntity implements Serializable {

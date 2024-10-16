@@ -1,27 +1,19 @@
-buildscript {
-    ext {
-        springBootVersion = '2.7.18'
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
-}
-
 plugins {
     id 'application'
-    id "org.springframework.boot" version '2.7.12'
+    id 'jacoco'
+    id 'idea'
+    id 'eclipse'
+    id 'org.springframework.boot' version '3.0.13'
     id 'io.spring.dependency-management' version '1.1.5'
     id 'se.patrikerdes.use-latest-versions' version '0.2.7'
     id 'com.github.ben-manes.versions' version '0.51.0'
     id 'org.sonarqube' version '5.0.0.4638'
-    id 'jacoco'
-    id 'idea'
-    id 'eclipse'
     id 'com.github.kt3k.coveralls' version "2.8.2"
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
     id 'info.solidsoft.pitest' version '1.15.0' apply(false)
     id 'org.jetbrains.gradle.plugin.idea-ext' version "0.7"
     id 'uk.gov.hmcts.java' version '0.12.57'
+    id 'org.owasp.dependencycheck' version '10.0.4'
 }
 
 application {
@@ -35,32 +27,31 @@ dependencyCheck {
 
 //spring boot dependency override
 //overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.4.2 of Elastic
-ext['elasticsearch.version'] = '7.17.1'
-ext['javax-validation.version'] = '2.0.1.Final'
-ext['hibernate-validator.version'] = '6.0.20.Final'
-ext['spring-security.version'] = '5.8.10'
-ext['springCloudVersion'] = '2021.0.8'
-ext['jackson.version'] = '2.16.0'
-ext['snakeyaml.version'] = '2.0'
-ext['postgresql.version'] = '42.7.3'
-//overriding log4j2 default version 2.7 because of vulnerability issues
-ext['log4j2.version'] = '2.17.1'
-
-// end
-
 ext {
-    junitJupiterVersion = '5.7.0'
-    junitVintageVersion = '5.7.0'
-    springCloudVersion = '2021.0.3'
+    set('elasticsearch.version', '7.17.1')
+    set('spring-framework.version', '6.0.21')
+    set('spring-security.version', '6.0.8')
+    set('springCloudVersion', '2022.0.5')
+    set('jackson.version', '2.16.0')
+    set('snakeyaml.version', '2.2')
+    set('postgresql.version', '42.7.3')
+    //overriding log4j2 default version 2.7 because of vulnerability issues
+    set('log4j2.version', '2.17.1')
+
+    springBootVersion = '3.0.13'
+    junitJupiterVersion = '5.9.3'
+    junitVintageVersion = '5.9.3'
     springfoxSwaggerVersion = '3.0.0'
     hamcrestVersion = '1.3'
     powermockVersion = '2.0.9'
     reformLogging= '6.0.1'
+    apachePoiVersion = '5.3.0'
     appInsightsVersion = '2.4.1'
-    restAssuredVersion = '4.3.0!!'
-    groovyVersion = '3.0.19!!'
-    tomcatVersion = '9.0.91'
-    feignJackson = '11.6'
+    restAssuredVersion = '5.5.0'
+    groovyVersion = '4.0.23'
+    tomcatVersion = '10.1.31'
+    lombokVersion = '1.18.34'
+    feignJackson = '13.5'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -96,87 +87,42 @@ allprojects {
         elasticSearchVersion = '7.17.1'
     }
 
-    dependencies {
-        testImplementation ("org.springframework.boot:spring-boot-starter-test:${springBootVersion}"){
-            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-        }
-        implementation 'net.minidev:json-smart:2.4.9'
-    }
-
     // Global constraints
     dependencies {
 
+        // Spring
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
-        constraints {
-            implementation('org.springframework.cloud:spring-cloud-starter-openfeign') {
-                version{
-                    strictly '4.0.3'
-                }
-            }
-            implementation('org.springframework.cloud:spring-cloud-starter') {
-                version{
-                    strictly '3.1.8'
-                }
-            }
-        }
+        implementation 'org.springframework.cloud:spring-cloud-starter'
+        implementation 'org.springframework.security:spring-security-rsa'
 
-        implementation('org.springframework.security:spring-security-rsa'){
-            version {
-                strictly '1.0.12.RELEASE'
-            }
-        }
-
-        implementation('org.bouncycastle:bcprov-jdk18on') {
-            version {
-                strictly '1.77'
-            }
-        }
-
-        implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.5'
-        implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
-        implementation "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
-        implementation "org.apache.tomcat.embed:tomcat-embed-websocket:${tomcatVersion}"
-        implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
+        implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: tomcatVersion
+        implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-el', version: tomcatVersion
+        implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: tomcatVersion
+        implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.2.3'
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
-        // Overriding transitive dependency commons-compress due to CVE failures
-        implementation "org.apache.commons:commons-compress:1.26.0"
-        // CVE-2021-28170
-        implementation "org.glassfish:jakarta.el:4.0.1"
+
+        implementation group: 'net.minidev', name: 'json-smart', version: '2.4.9'
 
         // CVE-2021-42550
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
         implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
 
-        testImplementation "io.rest-assured:xml-path:${restAssuredVersion}"
-        testImplementation "io.rest-assured:json-path:${restAssuredVersion}"
-        testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
-        testImplementation "org.codehaus.groovy:groovy-xml:${groovyVersion}"
-        testImplementation "org.codehaus.groovy:groovy-json:${groovyVersion}"
-        testImplementation 'com.github.hmcts:fortify-client:1.4.3:all'
+        testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion, {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+
+        testImplementation group: 'io.rest-assured', name: 'xml-path', version: restAssuredVersion
+        testImplementation group: 'io.rest-assured', name: 'json-path', version: restAssuredVersion
+        testImplementation group: 'org.apache.groovy', name: 'groovy', version: groovyVersion
+        testImplementation group: 'org.apache.groovy', name: 'groovy-xml', version: groovyVersion
+        testImplementation group: 'org.apache.groovy', name: 'groovy-json', version: groovyVersion
+        testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.3'
     }
 
     configurations.all {
         collect { configuration ->
             configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
-        }
-        resolutionStrategy {
-            eachDependency { details ->
-                if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
-                    details.useVersion '2.8.5'
-                }
-
-                if (details.requested.group == 'com.google.code.gson' && details.requested.name == 'gson') {
-                    details.useVersion '2.9.0'
-                }
-
-                if (details.requested.group == 'com.nimbusds' && details.requested.name == 'nimbus-jose-jwt') {
-                    details.useVersion '9.37.2'
-                }
-                if (details.requested.group == 'com.google.guava' && details.requested.name == 'guava') {
-                    details.useVersion '32.1.3-jre'
-                }
-            }
-
         }
     }
 
@@ -243,80 +189,81 @@ subprojects { subproject ->
 
     dependencies {
 
-        implementation group: 'org.apache.poi', name: 'poi', version: '5.2.5'
-        implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.5'
-        implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: '5.2.5'
+        implementation group: 'org.apache.poi', name: 'poi', version: apachePoiVersion
+        implementation group: 'org.apache.poi', name: 'poi-ooxml', version: apachePoiVersion
+        implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: apachePoiVersion
         implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
         implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.37.2'
 
-        implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
+        implementation group: 'com.google.code.gson', name: 'gson', version: '2.11.0'
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
 
         implementation group: 'io.jsonwebtoken', name: 'jjwt', version:'0.9.1'
-        implementation (group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3') {
-            exclude group: 'com.google.guava', module: 'guava'
-        }
-        implementation (group: 'com.github.hmcts', name: 'idam-java-client', version: '2.0.1') {
-            exclude group: 'com.google.guava', module: 'guava'
-        }
+        implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.2.0'
+        implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.3'
 
-        compileOnly 'org.projectlombok:lombok:1.18.28'
-        annotationProcessor 'org.projectlombok:lombok:1.18.28'
 
-        testCompileOnly 'org.projectlombok:lombok:1.18.28'
-        testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+        implementation group: 'com.google.guava', name: 'guava', version: '33.1.0-jre'
+        implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'
+        implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.6.6'
+        implementation group: 'com.vladmihalcea', name: 'hibernate-types-60', version: '2.21.1'
+        implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
 
-        implementation "org.springframework.security:spring-security-web"
-        implementation "org.springframework.security:spring-security-config"
-        implementation "org.springframework.boot:spring-boot-starter-oauth2-client"
-        implementation "org.springframework.boot:spring-boot-starter-oauth2-resource-server"
+        compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+        annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
 
-        implementation "io.github.openfeign:feign-httpclient:${feignJackson}"
+        testCompileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+        testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
 
-        implementation('org.springframework.boot:spring-boot-starter-web')
-        implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
+        implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
+        implementation group: 'org.springframework.security', name: 'spring-security-web'
+        implementation group: 'org.springframework.security', name: 'spring-security-config'
+
+        implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: feignJackson
+
 
         implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
         implementation group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
-        implementation "org.elasticsearch:elasticsearch:${elasticSearchVersion}"
-        implementation "org.elasticsearch.client:elasticsearch-rest-high-level-client:${elasticSearchVersion}"
+        implementation group: 'org.elasticsearch', name: 'elasticsearch', version: elasticSearchVersion
+        implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: elasticSearchVersion
         implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
-        implementation('org.springframework.boot:spring-boot-starter-cache')
 
-        implementation 'org.flywaydb:flyway-core:6.5.7'
+        implementation group: 'org.flywaydb', name: 'flyway-core', version: '6.5.7'
 
-        implementation group: 'javax.inject', name: 'javax.inject', version: '1'
+        implementation group: 'jakarta.inject', name: 'jakarta.inject-api', version: '2.0.1'
 
-        implementation (group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0') {
-            exclude group: 'com.google.guava', module: 'guava'
-        }
+
+        implementation group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0'
         implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15to18', version: '1.77'
 
         testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap'
         implementation group: 'commons-io', name: 'commons-io', version: '2.16.1'
-        implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
+        implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
-        testImplementation 'org.apiguardian:apiguardian-api:1.0.0'
-        testImplementation "org.postgresql:postgresql:42.7.3"
-        testImplementation "org.testcontainers:postgresql:1.17.2"
-        testImplementation "org.hamcrest:hamcrest-core:${hamcrestVersion}"
-        testImplementation "org.hamcrest:hamcrest-library:${hamcrestVersion}"
-        testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
-        testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}"
-        testRuntimeOnly "org.junit.vintage:junit-vintage-engine:${junitVintageVersion}"
-        testImplementation "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}"
-        testImplementation('org.springframework.boot:spring-boot-starter-test')
+        testImplementation group: 'org.apiguardian', name: 'apiguardian-api', version: '1.0.0'
+        testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
+        testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.17.2'
+        testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
+        testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
+        testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
+        testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: junitVintageVersion
+        testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
+        testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
         testImplementation('org.springframework.cloud:spring-cloud-starter-contract-stub-runner:2.1.0.RELEASE') {
             exclude group: 'com.github.tomakehurst', module: 'wiremock-standalone'
             exclude group: 'commons-beanutils', module: 'commons-beanutils'
         }
-        testImplementation ('com.github.tomakehurst:wiremock-jre8:2.25.1')
-        testImplementation ('org.springframework.cloud:spring-cloud-contract-wiremock:2.2.1.RELEASE') {
-            exclude group: 'commons-beanutils', module: 'commons-beanutils'
-        }
+        testImplementation group: 'com.github.tomakehurst', name: 'wiremock-jre8', version: '2.25.1'
+        testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '2.2.1.RELEASE'
         testImplementation ("org.mockito:mockito-core:3.6.0") {
             exclude group: 'org.hamcrest'
         }
@@ -342,12 +289,6 @@ subprojects { subproject ->
         implementation group: 'junit', name: 'junit', version: '4.13.1'
         testImplementation group: 'junit', name: 'junit', version: '4.13.1'
         testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
-        implementation group: 'com.google.guava', name: 'guava', version: '32.1.3-jre'
-        implementation 'javax.validation:validation-api:2.0.1.Final'
-        implementation 'io.swagger:swagger-annotations:1.6.6'
-        implementation 'com.vladmihalcea:hibernate-types-52:2.16.3'
-        implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
-
     }
 
     // from https://github.com/junit-team/junit5/issues/1024'
@@ -363,7 +304,7 @@ subprojects { subproject ->
                 xml.outputLocation = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
 
             }
-
+74
             classDirectories.setFrom((classDirectories.files.collect {
                 fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**','**/AppInsightsConfiguration**'])
             }))
@@ -413,7 +354,7 @@ subprojects { subproject ->
     }
 
     test {
-        environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+       environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
         generateCucumberReports.enabled = false
         useJUnitPlatform()
 
@@ -490,11 +431,6 @@ bootJar {
     archiveFileName = 'case-definition-store-api.jar'
 }
 
-// Although there are no sources to compile, Jenkins pipeline needs the jar file to be here
-dependencies {
-    implementation project(':application')
-}
-
 task smoke(type: Test, dependsOn: ":aat:smoke")
 
 task functional(type: Test, dependsOn: ":aat:functional")
@@ -529,6 +465,7 @@ task dependencyCheck(dependsOn: dependencyCheckAnalyze)
 configurations { codacy }
 
 dependencies {
+    implementation project(':application')
     codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
 }
 task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {

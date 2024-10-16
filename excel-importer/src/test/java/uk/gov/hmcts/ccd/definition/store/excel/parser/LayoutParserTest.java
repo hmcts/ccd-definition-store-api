@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.verify;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_EVENT_TO_FIELDS;
@@ -58,7 +58,7 @@ class LayoutParserTest {
 
     @BeforeEach
     void init() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         caseTypeEntity = buildCaseTypeEntity();
         caseFieldEntity = buildCaseFieldEntity();

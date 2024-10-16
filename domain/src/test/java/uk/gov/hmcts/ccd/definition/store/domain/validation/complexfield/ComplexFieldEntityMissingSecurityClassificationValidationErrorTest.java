@@ -23,7 +23,7 @@ public class ComplexFieldEntityMissingSecurityClassificationValidationErrorTest 
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(
             any(ComplexFieldEntityMissingSecurityClassificationValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);

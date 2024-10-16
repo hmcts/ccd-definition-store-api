@@ -47,7 +47,7 @@ public class AmSwitchValidatorTest {
 
     @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         doReturn(ccdOnlyWriteCaseTypes).when(goodApplicationParams).getCaseTypesWithAmWrittenOnlyToCcd();
         doReturn(amOnlyWriteCaseTypes).when(goodApplicationParams).getCaseTypesWithAmWrittenOnlyToAm();
         doReturn(bothWriteCaseTypes).when(goodApplicationParams).getCaseTypesWithAmWrittenToBoth();

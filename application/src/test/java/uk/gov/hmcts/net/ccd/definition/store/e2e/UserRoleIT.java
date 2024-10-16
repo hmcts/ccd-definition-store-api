@@ -27,7 +27,7 @@
 //import static org.hamcrest.CoreMatchers.notNullValue;
 //import static org.hamcrest.CoreMatchers.nullValue;
 //import static org.hamcrest.core.Is.is;
-//import static org.junit.Assert.assertThat;
+//import static org.hamcrest.MatcherAssert.assertThat;
 //import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 //import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 //import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;

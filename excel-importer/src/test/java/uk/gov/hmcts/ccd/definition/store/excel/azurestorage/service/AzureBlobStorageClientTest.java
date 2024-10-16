@@ -49,7 +49,7 @@ public class AzureBlobStorageClientTest {
     public void setUp() {
         cloudBlobContainer = PowerMockito.mock(CloudBlobContainer.class);
         cloudBlockBlob = PowerMockito.mock(CloudBlockBlob.class);
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         clientUnderTest = new AzureBlobStorageClient(cloudBlobContainer, dateTimeStringGenerator);
     }
 

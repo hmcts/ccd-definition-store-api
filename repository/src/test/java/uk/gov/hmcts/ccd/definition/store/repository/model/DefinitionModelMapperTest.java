@@ -46,7 +46,7 @@ class DefinitionModelMapperTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         setupMockJurisdictionEntity();
         setupMockDefinitionEntity();
         definition = createDefinition();

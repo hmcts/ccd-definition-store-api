@@ -1,10 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
 import static java.util.Collections.emptyList;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isA;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -19,7 +19,6 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
-import org.hibernate.type.IntegerType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -60,7 +59,7 @@ class TestingSupportControllerTest {
             .thenReturn(nativeQuery);
         when(nativeQuery.setParameterList(eq("caseTypesWithChangeIds"), anyList()))
             .thenReturn(nativeQuery);
-        when(nativeQuery.setParameterList(eq("caseTypeIds"), anyList(), isA(IntegerType.class)))
+        when(nativeQuery.setParameterList(eq("caseTypeIds"), anyList(), any(Class.class)))
             .thenReturn(nativeQuery);
         when(nativeQuery.list())
             .thenReturn(List.of("1","2"));

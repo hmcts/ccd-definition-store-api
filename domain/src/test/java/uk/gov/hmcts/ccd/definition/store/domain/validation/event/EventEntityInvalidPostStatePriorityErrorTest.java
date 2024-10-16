@@ -22,7 +22,7 @@ public class EventEntityInvalidPostStatePriorityErrorTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(any(EventEntityInvalidPostStatePriorityError.class)))
             .thenReturn("Duplicate Post state");
         CaseTypeEntity caseType = new CaseTypeEntity();

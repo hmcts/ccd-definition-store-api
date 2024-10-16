@@ -80,7 +80,7 @@ class DefinitionServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new DefinitionServiceImpl(jurisdictionRepository, decoratedRepository, mapper);
         setupMockJurisdictionEntity();
         setupMockDefinition(definition, "Mock definition", null);
