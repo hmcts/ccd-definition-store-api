@@ -30,7 +30,7 @@ public class FieldTypeParserTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @SuppressWarnings("checkstyle:LineLength")

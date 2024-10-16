@@ -45,7 +45,7 @@ public class EventComplexTypeShowConditionValidatorImplTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new EventComplexTypeShowConditionValidatorImpl(
             showConditionExtractor,
             new CaseFieldEntityUtil());

@@ -19,7 +19,7 @@ import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 class MetadataCaseFieldParserTest {
 
@@ -33,7 +33,7 @@ class MetadataCaseFieldParserTest {
 
     @BeforeEach
     void setUp() {
-        initMocks(this);
+        openMocks(this);
         metadataCaseFieldParser = new MetadataCaseFieldParser(parseContext, registry);
     }
 

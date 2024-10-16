@@ -24,7 +24,7 @@ public class CaseTypeEntityInvalidAccessProfileValidationErrorTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         final CaseTypeACLEntity entity = buildCaseTypeUserRoleEntity("1yLLoMwpA7");
         classUnderTest = new CaseTypeEntityInvalidAccessProfileValidationError(entity,
             new AuthorisationValidationContext(entity.getCaseType()));

@@ -51,7 +51,7 @@ public class EventCaseFieldParserTest {
 
     @Before
     public void setUp() throws InvalidShowConditionException {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(parseContext.getCaseFieldForCaseType(any(), any())).thenReturn(CASE_FIELD);
         when(showConditionParser.parseShowCondition(any())).thenReturn(
             new ShowCondition.Builder().showConditionExpression(PARSED_SHOW_CONDITION).build()

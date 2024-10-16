@@ -23,7 +23,7 @@ public class EventEntityEnableConditionReferencesInvalidCaseFieldErrorTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(
             any(EventEntityEnableConditionReferencesInvalidCaseFieldError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);

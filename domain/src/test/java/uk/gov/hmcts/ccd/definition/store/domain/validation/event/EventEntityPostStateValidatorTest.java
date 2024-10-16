@@ -53,7 +53,7 @@ public class EventEntityPostStateValidatorTest {
 
     @Before
     public void setUp() throws InvalidShowConditionException {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new EventEntityPostStateValidator(showConditionExtractor, caseTypeEntityUtil);
         caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference("TestCaseType");

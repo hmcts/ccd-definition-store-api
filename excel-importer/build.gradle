@@ -25,8 +25,8 @@ dependencies {
     testImplementation project(":repository").sourceSets.test.output
 
     implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.apache.commons:commons-collections4:4.1"
-    implementation "org.apache.commons:commons-lang3:3.11"
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
     implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.5'
 }
 
