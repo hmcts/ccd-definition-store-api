@@ -263,6 +263,17 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
+    public void shouldParseEventWithChainedEventEnablingCondition() {
+        final String validEventEnablingCondition = "(FieldA!=\"\" AND FieldB=\"I'm innocent\") OR (FieldC=\"I'm guilty\")";
+        item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
+        definitionSheet.addDataItem(item);
+        final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
+        assertThat(eventEntities.size(), is(1));
+        entity = new ArrayList<>(eventEntities).get(0);
+        assertEvent(entity);
+    }
+
+    @Test
     public void shouldFailParseEventWithEmptyEventEnablingCondition() {
         final String validEventEnablingCondition = " ";
         item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
