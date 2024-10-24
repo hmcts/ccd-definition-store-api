@@ -30,13 +30,12 @@ dependencies {
     }
     implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.2.0'
     implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
-    implementation group: 'io.springfox', name: 'springfox-boot-starter', version: springfoxSwaggerVersion
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
     implementation group: 'com.google.guava', name: 'guava', version: '33.1.0-jre'
     implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'
     implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.20.Final'
     implementation group: 'jakarta.el', name: 'jakarta.el-api', version: '6.0.1'
-    implementation group: 'org.flywaydb', name: 'flyway-core', version: '6.5.7'
+    implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
     testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
     testImplementation project(":commons").sourceSets.main.output
     implementation group: 'com.vladmihalcea', name: 'hibernate-types-60', version: '2.21.1'

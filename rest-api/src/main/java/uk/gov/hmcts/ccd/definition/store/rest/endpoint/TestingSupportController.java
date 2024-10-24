@@ -71,7 +71,9 @@ public class TestingSupportController {
     }
 
     private List<Integer> getCaseTypeIdsByReferences(Session session, List<String> caseTypesWithChangeIds) {
-        var ids = session.createNativeQuery("SELECT id FROM case_type WHERE reference IN ( :caseTypesWithChangeIds );", Integer.class)
+        var ids = session.createNativeQuery(
+                "SELECT id FROM case_type WHERE reference IN ( :caseTypesWithChangeIds );", 
+                Integer.class)
             .setParameterList("caseTypesWithChangeIds", caseTypesWithChangeIds)
             .list();
         session.getTransaction().commit();

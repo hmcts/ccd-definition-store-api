@@ -42,7 +42,7 @@ dependencies {
     implementation (project(':repository')) {
         exclude group: 'org.mapstruct', module: 'mapstruct'
     }
-    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
+    
     implementation group: 'commons-validator', name: 'commons-validator', version: '1.9.0'
     implementation "org.mapstruct:mapstruct-jdk8:${orgMapstructVersion}"
     implementation "org.mapstruct:mapstruct-processor:${orgMapstructVersion}"

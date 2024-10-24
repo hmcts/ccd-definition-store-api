@@ -20,7 +20,7 @@ dependencies {
     implementation project(':rest-api')
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
-    testImplementation group: 'io.springfox', name: 'springfox-boot-starter', version: springfoxSwaggerVersion
+    testImplementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
     testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
 }
 

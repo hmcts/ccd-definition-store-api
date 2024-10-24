@@ -73,7 +73,7 @@ class JwtGrantedAuthoritiesConverterTest {
         when(jwt.getClaim(anyString())).thenReturn("access_token");
         when(jwt.getTokenValue()).thenReturn("access_token");
         UserInfo userInfo = mock(UserInfo.class);
-        List roles = new ArrayList();
+        List<String> roles = new ArrayList<>();
         when(userInfo.getRoles()).thenReturn(roles);
         when(idamRepository.getUserInfo(anyString())).thenReturn(userInfo);
         Collection<GrantedAuthority> authorities = converter.convert(jwt);
@@ -89,7 +89,7 @@ class JwtGrantedAuthoritiesConverterTest {
         when(jwt.getClaim(anyString())).thenReturn("access_token");
         when(jwt.getTokenValue()).thenReturn("access_token");
         UserInfo userInfo = mock(UserInfo.class);
-        List roles = new ArrayList();
+        List<String> roles = new ArrayList<>();
         roles.add("citizen");
         when(userInfo.getRoles()).thenReturn(roles);
         when(idamRepository.getUserInfo(anyString())).thenReturn(userInfo);

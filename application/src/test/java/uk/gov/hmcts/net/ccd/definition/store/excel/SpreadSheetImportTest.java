@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -100,7 +101,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
                 .file(file)
-                .header(AUTHORIZATION, "Bearer testUser")) //
+                .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
 
             assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
@@ -130,6 +131,7 @@ public class SpreadSheetImportTest extends BaseTest {
             stubForPutDictionaryReturns4XX(getDictionaryRequest());
 
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
+            
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
@@ -354,7 +356,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
         String expected = readFileToString(new File(getClass().getClassLoader()
             .getResource(fileName)
-            .toURI()));
+            .toURI()), Charset.defaultCharset());
         expected = expected.replaceAll("#date",
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
