@@ -24,7 +24,7 @@ public class CaseTypeEntityInvalidCrudValidationErrorTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         final CaseTypeACLEntity caseTypeACLEntity = buildCaseTypeUserRoleEntity("NGITB");
         classUnderTest = new CaseTypeEntityInvalidCrudValidationError(caseTypeACLEntity,
             new AuthorisationValidationContext(caseTypeACLEntity.getCaseType()));

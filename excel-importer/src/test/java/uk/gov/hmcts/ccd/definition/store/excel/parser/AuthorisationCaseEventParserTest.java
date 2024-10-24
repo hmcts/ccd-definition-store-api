@@ -64,7 +64,7 @@ class AuthorisationCaseEventParserTest {
 
     @BeforeEach
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         final ParseContext context = new ParseContext();
 
         given(mockAccessProfileEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);

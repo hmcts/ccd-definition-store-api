@@ -67,7 +67,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     @BeforeEach
     public void setup() {
         parseContext = new ParseContext();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         //setup case type
         when(caseTypeEntity.getReference()).thenReturn(CASE_TYPE_ID_1);

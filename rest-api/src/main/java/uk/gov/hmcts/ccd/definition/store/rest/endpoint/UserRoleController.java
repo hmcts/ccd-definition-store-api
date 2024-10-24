@@ -22,7 +22,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.AccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.Base64;
 import java.util.List;
 

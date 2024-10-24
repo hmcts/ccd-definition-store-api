@@ -23,7 +23,7 @@ public class EventEntityMissingSecurityClassificationValidationErrorTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(
             any(EventEntityMissingSecurityClassificationValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);

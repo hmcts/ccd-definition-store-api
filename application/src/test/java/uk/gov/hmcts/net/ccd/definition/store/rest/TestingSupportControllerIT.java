@@ -29,7 +29,7 @@ public class TestingSupportControllerIT extends BaseTest {
         try (final InputStream inputStream =
                  new ClassPathResource("/CCD_TestDefinition_TestingSupportData.xlsx", getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
                     .file(file)
                     .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();

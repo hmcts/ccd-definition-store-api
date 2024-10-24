@@ -13,7 +13,7 @@ import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsCollectionContaining.hasItems;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.labelFieldType;

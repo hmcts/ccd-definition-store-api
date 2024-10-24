@@ -25,7 +25,7 @@ public class EventEntityHasLessRestrictiveSecurityClassificationThanParentValida
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(
             any(EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);

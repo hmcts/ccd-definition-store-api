@@ -3,7 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 class ValidationResultTest {
 

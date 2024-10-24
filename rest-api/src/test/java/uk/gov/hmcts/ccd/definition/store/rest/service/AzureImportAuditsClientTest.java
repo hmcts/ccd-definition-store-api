@@ -28,7 +28,7 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -96,7 +96,7 @@ public class AzureImportAuditsClientTest {
         blobsPage2 = mock(ResultSegment.class);
         blobsPage3 = mock(ResultSegment.class);
 
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         // create the mock to return by getInstance()
         SSLContext context = PowerMockito.mock(SSLContext.class);

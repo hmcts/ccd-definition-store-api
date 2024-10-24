@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class ElasticsearchErrorHandlerTest {
@@ -29,7 +29,7 @@ class ElasticsearchErrorHandlerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         messageBuilderA = new TestElasticsearchErrorMessageBuilder(".*PATTERN ONE.*", "ERROR MESSAGE ONE");
         messageBuilderB = new TestElasticsearchErrorMessageBuilder("PATTERN TWO .+", "ERROR MESSAGE TWO");
         errorMessageBuilders = Arrays.asList(messageBuilderA, messageBuilderB);
