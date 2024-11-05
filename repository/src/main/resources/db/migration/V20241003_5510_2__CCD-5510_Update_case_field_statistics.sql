@@ -1,3 +1,3 @@
-ALTER TABLE case_field ALTER COLUMN case_type_id SET STATISTICS 1000;
+ALTER TABLE public.case_field ALTER COLUMN case_type_id SET STATISTICS 1000;
 
-ANALYZE case_field;
+ANALYZE public.case_field;
