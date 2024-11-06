@@ -9,7 +9,7 @@ buildscript {
 
 plugins {
     id 'application'
-    id "org.springframework.boot" version '2.7.12'
+    id "org.springframework.boot" version '2.7.18'
     id 'io.spring.dependency-management' version '1.1.5'
     id 'se.patrikerdes.use-latest-versions' version '0.2.7'
     id 'com.github.ben-manes.versions' version '0.51.0'
@@ -184,7 +184,7 @@ allprojects {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -262,11 +262,11 @@ subprojects { subproject ->
             exclude group: 'com.google.guava', module: 'guava'
         }
 
-        compileOnly 'org.projectlombok:lombok:1.18.28'
-        annotationProcessor 'org.projectlombok:lombok:1.18.28'
+        compileOnly 'org.projectlombok:lombok:1.18.34'
+        annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
-        testCompileOnly 'org.projectlombok:lombok:1.18.28'
-        testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+        testCompileOnly 'org.projectlombok:lombok:1.18.34'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
 
         implementation "org.springframework.security:spring-security-web"
         implementation "org.springframework.security:spring-security-config"
@@ -301,7 +301,7 @@ subprojects { subproject ->
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testImplementation 'org.apiguardian:apiguardian-api:1.0.0'
         testImplementation "org.postgresql:postgresql:42.7.3"
-        testImplementation "org.testcontainers:postgresql:1.17.2"
+        testImplementation "org.testcontainers:postgresql:1.20.2"
         testImplementation "org.hamcrest:hamcrest-core:${hamcrestVersion}"
         testImplementation "org.hamcrest:hamcrest-library:${hamcrestVersion}"
         testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
