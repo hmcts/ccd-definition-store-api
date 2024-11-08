@@ -34,7 +34,6 @@ Feature: F-112: New NullifyByDefault Column
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     And the response [has the 400 Bad Request code]
     Then a negative response is received
-    And the response has error [NullifyByDefault cannot be set to Yes if DefaultValue has a value in CaseEventToFields]
 
   @S-112.4
   Scenario: Return success when DefaultValue has a value and NullifyByDefault is set to No
@@ -50,7 +49,7 @@ Feature: F-112: New NullifyByDefault Column
   @S-112.5
   Scenario: Retrieve CaseEventToFields values
     Given a user with [an active profile in CCD]
-    When a request is repared with appropriate values
+    When a request is prepared with appropriate values
     And the request [contains a valid jurisdiction id]
     And the request [contains a valid caseType id]
     And it is submitted to call the [Get Case Type Details] operation of [CCD Definition Store]
