@@ -1,8 +1,7 @@
 {
   "_guid_": "S-112.1",
-  "_extends_": "Get_CaseType",
-  "title": "Import Definition file with correctly configured NullifyByDefault in the CaseEventToFields tab",
-
+  "_extends_": "Import_Base_data",
+  "title": "Import Definition file  with correctly configured NullifyByDefault in the CaseEventToFields tab",
   "specs": [
     "an active profile in CCD and with CCD-import role",
     "contains a definition file that contains NullifyByDefault new field and NullifyByDefault is set to Yes",

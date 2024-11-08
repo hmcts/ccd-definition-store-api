@@ -6,7 +6,7 @@
 		"an active profile in CCD and with CCD-import role",
 		"contains a definition file that contains NullifyByDefault new field and NullifyByDefault is set to Yes",
     "contains a definition file that contains DefaultValue field has a value set",
-    "has the 400 Bad Request code]"
+    "has the 400 Bad Request code"
 	],
   "request": {
     "body": {
@@ -19,7 +19,7 @@
     }
   },
   "expectedResponse": {
-    "responseCode": 422,
+    "responseCode": 400,
     "responseMessage": "Bad Request",
     "headers": {
       "Content-Encoding": "[[ANYTHING_PRESENT]]",
