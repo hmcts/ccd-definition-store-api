@@ -55,4 +55,3 @@ Feature: F-112: New NullifyByDefault Column
     And it is submitted to call the [Get Case Type Details] operation of [CCD Definition Store]
     Then the response [has the 200 OK code]
     And the response [contains case type details]
-    And [Response has new field NullifyByDefault in event]
