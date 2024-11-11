@@ -31,7 +31,7 @@ java:
     DEFINITION_STORE_DB_MAX_POOL_SIZE: 25
 
 
-    DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp,aac_manage_case_assignment
+    DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp,aac_manage_case_assignment,xui_webapp
 
     # Storage Account
     AZURE_STORAGE_BLOB_CONTAINER_REFERENCE: ccd-definition-store-api-imports-{{ .Values.global.environment }}
