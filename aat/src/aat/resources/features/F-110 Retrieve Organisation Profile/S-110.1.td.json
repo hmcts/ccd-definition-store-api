@@ -40,7 +40,7 @@
               "__elementId__": "caseTypeId"
             },
             {
-            "caseTypeId" : "FT_MasterCaseType",
+            "caseTypeId" : "FT_CaseAccessGroups",
             "organisationalRoleName" : "Role1",
             "groupRoleName" : "Role1",
             "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
