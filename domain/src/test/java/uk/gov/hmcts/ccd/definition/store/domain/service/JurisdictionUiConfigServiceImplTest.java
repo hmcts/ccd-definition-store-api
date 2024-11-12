@@ -18,7 +18,7 @@ import java.util.List;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
@@ -48,7 +48,7 @@ class JurisdictionUiConfigServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new JurisdictionUiConfigServiceImpl(jurisdictionUiConfigRepository, dtoMapper);
         jurisdictionUiConfig1.setId(reference);
         jurisdictionUiConfigEntity1.setShuttered(false);

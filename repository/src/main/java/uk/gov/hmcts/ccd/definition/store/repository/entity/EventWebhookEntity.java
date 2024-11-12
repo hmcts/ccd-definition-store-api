@@ -1,21 +1,22 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
+
+import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WebhookType;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 /**
  * This is a joining type for modelling Event Webhooks.
@@ -23,11 +24,6 @@ import javax.persistence.Table;
  * event (Start, PreSubmit and PostSubmit at time of writing).
  * See {@link EventEntity#webhooks}
  */
-@TypeDef(
-    name = "webhook_type_enum",
-    typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name = "type", value = "uk.gov.hmcts.ccd.definition.store.repository.model.WebhookType")
-)
 @Entity(name = "EventWebhookEntity")
 @Table(name = "event_webhook")
 public class EventWebhookEntity {
@@ -46,11 +42,9 @@ public class EventWebhookEntity {
     private EventEntity event;
 
     @Column(name = "webhook_type")
-    @Type(type = "webhook_type_enum")
+    @Enumerated(EnumType.STRING)
+    @Type(PostgreSQLEnumType.class)
     private WebhookType type;
-
-    private EventWebhookEntity() {
-    }
 
     public EventWebhookEntity(EventEntity event, WebhookEntity webhook, WebhookType type) {
         this.event = event;

@@ -3,33 +3,28 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import java.io.Serializable;
 import java.util.Objects;
 
-import static javax.persistence.GenerationType.SEQUENCE;
+import static jakarta.persistence.GenerationType.SEQUENCE;
 
-import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
+
+import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.ManyToOne;
-import javax.persistence.FetchType;
-import javax.persistence.CascadeType;
-import javax.persistence.JoinColumn;
-import javax.persistence.Transient;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Transient;
 
 @Table(name = "complex_field")
 @Entity
-@TypeDef(
-    name = "pgsql_securityclassification_enum",
-    typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name = "type",
-        value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
-)
 public class ComplexFieldEntity implements FieldEntity, Serializable {
 
     @Id
@@ -53,7 +48,8 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
     private boolean searchable = true;
 
     @Column(name = "security_classification")
-    @Type(type = "pgsql_securityclassification_enum")
+    @Enumerated(EnumType.STRING)
+    @Type(PostgreSQLEnumType.class)
     private SecurityClassification securityClassification;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

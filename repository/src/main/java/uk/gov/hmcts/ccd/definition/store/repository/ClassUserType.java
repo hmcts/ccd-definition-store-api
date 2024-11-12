@@ -21,8 +21,8 @@ public class ClassUserType implements UserType {
     }
 
     @Override
-    public int[] sqlTypes() {
-        return new int[] {Types.JAVA_OBJECT};
+    public int getSqlType() {
+        return Types.JAVA_OBJECT;
     }
 
     @Override
@@ -42,10 +42,10 @@ public class ClassUserType implements UserType {
 
     @Override
     public Object nullSafeGet(ResultSet resultSet,
-                              String[] names,
+                              int pos,
                               SharedSessionContractImplementor sharedSessionContractImplementor,
                               Object o) throws HibernateException, SQLException {
-        final String className = resultSet.getString(names[0]);
+        final String className = resultSet.getString(pos);
         return getClass(className);
     }
 

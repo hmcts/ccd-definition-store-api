@@ -36,7 +36,7 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
@@ -58,7 +58,7 @@ class DisplayGroupAdapterServiceTest {
 
     @BeforeEach
     public void setUpMocks() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new DisplayGroupAdapterService(displayGroupRepository,
             caseTypeLiteRepository,
             eventRepository,

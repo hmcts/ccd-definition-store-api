@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
@@ -46,7 +47,7 @@ import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubForPutDictionaryReturns200;
 import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubForPutDictionaryReturns4XX;
@@ -98,9 +99,9 @@ public class SpreadSheetImportTest extends BaseTest {
 
             stubForPutDictionaryReturns200(getDictionaryRequest());
 
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
                 .file(file)
-                .header(AUTHORIZATION, "Bearer testUser")) //
+                .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
 
             assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
@@ -129,7 +130,8 @@ public class SpreadSheetImportTest extends BaseTest {
 
             stubForPutDictionaryReturns4XX(getDictionaryRequest());
 
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
+            
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
@@ -162,7 +164,7 @@ public class SpreadSheetImportTest extends BaseTest {
                  new ClassPathResource(EXCEL_FILE_WITH_ACCESS_PROFILE_ALIAS, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
             stubForPutDictionaryReturns200(getDictionaryRequest());
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser")) //
                 .andReturn();
@@ -203,7 +205,7 @@ public class SpreadSheetImportTest extends BaseTest {
                 .willReturn(WireMock.aResponse().withStatus(403)));
 
             // when I import a definition file
-            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser")).andReturn();
 
@@ -317,7 +319,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
     private MvcResult performAndGetMvcResult(InputStream inputStream) throws Exception {
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        return mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+        return mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
             .file(file)
             .header(AUTHORIZATION, "Bearer testUser"))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -326,7 +328,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
     private MvcResult performAndGetMvcResult(InputStream inputStream, ResultMatcher resultMatcher) throws Exception {
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        return mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+        return mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
             .file(file)
             .header(AUTHORIZATION, "Bearer testUser"))
             .andExpect(resultMatcher)
@@ -354,7 +356,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
         String expected = readFileToString(new File(getClass().getClassLoader()
             .getResource(fileName)
-            .toURI()));
+            .toURI()), Charset.defaultCharset());
         expected = expected.replaceAll("#date",
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 

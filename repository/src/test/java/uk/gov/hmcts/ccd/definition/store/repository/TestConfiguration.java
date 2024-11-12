@@ -74,7 +74,7 @@ public class TestConfiguration {
         return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes,
             corsProperties.toCorsConfiguration(),
             new EndpointLinksResolver(allEndpoints, basePath),
-            shouldRegisterLinksMapping, null);
+            shouldRegisterLinksMapping);
     }
 
     private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties, Environment environment,
