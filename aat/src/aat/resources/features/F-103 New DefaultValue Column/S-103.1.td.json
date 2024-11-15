@@ -130,7 +130,7 @@
               "publish": "[[ANYTHING_PRESENT]]",
               "publish_as": null,
               "default_value": null,
-              "nullify_by_default": false,
+              "nullify_by_default": true,
               "case_fields_complex": []
             },
             {
