@@ -240,28 +240,6 @@
         {
           "case_type_id": "FT_CaseAccessCategories",
           "disabled": false,
-          "read_only": true,
-          "authorisations": "auth1",
-          "access_profiles": "caseworker-befta_master",
-          "live_from": "[[ANYTHING_PRESENT]]",
-          "live_to": null,
-          "role_name": "Role1",
-          "case_access_categories": "TestValue"
-        },
-        {
-          "case_type_id": "FT_CaseAccessCategories",
-          "disabled": false,
-          "read_only": false,
-          "authorisations": "auth1",
-          "access_profiles": "caseworker-befta_master",
-          "live_from": "[[ANYTHING_PRESENT]]",
-          "live_to": null,
-          "role_name": "Role1",
-          "case_access_categories": "Civil/Standard,Criminal/Serious"
-        },
-        {
-          "case_type_id": "FT_CaseAccessCategories",
-          "disabled": false,
           "read_only": false,
           "authorisations": null,
           "access_profiles": "caseworker-befta_master",
@@ -269,6 +247,28 @@
           "live_to": null,
           "role_name": "idam:caseworker-befta_master",
           "case_access_categories": "Civil/Standard,Criminal/Serious"
+        },
+        {
+          "case_type_id": "FT_CaseAccessCategories",
+          "disabled": false,
+          "read_only": false,
+          "authorisations": "auth1",
+          "access_profiles": "caseworker-befta_master",
+          "live_from": "[[ANYTHING_PRESENT]]",
+          "live_to": null,
+          "role_name": "Role1",
+          "case_access_categories": "Civil/Standard,Criminal/Serious"
+        },
+        {
+          "case_type_id": "FT_CaseAccessCategories",
+          "disabled": false,
+          "read_only": true,
+          "authorisations": "auth1",
+          "access_profiles": "caseworker-befta_master",
+          "live_from": "[[ANYTHING_PRESENT]]",
+          "live_to": null,
+          "role_name": "Role1",
+          "case_access_categories": "TestValue"
         }
       ],
       "searchCriterias": [],
@@ -633,12 +633,12 @@
               {
                 "code": "CaseUpdated",
                 "label": "Update case",
-                "order": null
+                "order": 1
               },
               {
                 "code": "CaseCreated",
                 "label": "Create case",
-                "order": null
+                "order": 1
               }
             ],
             "complex_fields": [],
