@@ -186,11 +186,11 @@
 					"fixed_list_items" : [ {
 						"code" : "extraDetailsAdded",
 						"label" : "Extra Details Added",
-						"order" : null
+						"order" : 1
 					}, {
 						"code" : "CaseCreated",
 						"label" : "Create case",
-						"order" : null
+						"order" : 1
 					} ],
 					"complex_fields" : [ ],
 					"collection_field_type" : null

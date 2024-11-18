@@ -70,7 +70,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
     private static final String GET_CASE_TYPES_COUNT_QUERY = "SELECT COUNT(*) FROM case_type";
 
-    private static final String RESPONSE_JSON_V45 = "GetCaseTypesResponseForCCD_TestDefinition_V45.json";
+    private static final String RESPONSE_JSON_V55 = "GetCaseTypesResponseForCCD_TestDefinition_V55.json";
 
     private static final String EXPECTED_USER_PROFILES = "[{\"id\":\"user1@hmcts.net\","
         + "\"work_basket_default_jurisdiction\":\"TEST\","
@@ -346,7 +346,7 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertBody(String contentAsString) throws IOException, URISyntaxException, JSONException {
-        assertBody(contentAsString, RESPONSE_JSON_V45);
+        assertBody(contentAsString, RESPONSE_JSON_V55);
     }
 
     private void assertBody(String contentAsString, String fileName)

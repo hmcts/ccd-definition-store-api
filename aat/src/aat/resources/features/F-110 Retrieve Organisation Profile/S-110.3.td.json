@@ -29,7 +29,7 @@
           "accessTypes": [
             {
               "__ordering__": "unordered",
-              "__elementId__": "accessTypeId"
+              "__elementId__": "organisationProfileId,accessTypeId"
             },
             {
               "organisationProfileId": "OGD_DWP_PROFILE",
@@ -42,22 +42,20 @@
               "displayOrder": 2,
               "roles": [
                 {
-                  "__ordering__": "unordered",
-                  "__elementId__": "caseGroupIdTemplate"
-                },
-                {
-                  "caseTypeId": "FT_MasterCaseType",
-                  "organisationalRoleName": "Role1",
-                  "groupRoleName": null,
-                  "caseGroupIdTemplate": null,
-                  "groupAccessEnabled": true
-                },
-                {
-                  "caseTypeId": "FT_MasterCaseType",
-                  "organisationalRoleName": "Role1",
-                  "groupRoleName": "Role1",
-                  "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
-                  "groupAccessEnabled": true
+                  "__ordering__": "ordered",
+                  "__elementId__": "caseTypeId"
+                },{
+                  "caseTypeId" : "FT_CaseAccessGroups",
+                  "organisationalRoleName" : "Role1",
+                  "groupRoleName" : "[[ANY_NULLABLE]]",
+                  "caseGroupIdTemplate" : "[[ANY_NULLABLE]]",
+                  "groupAccessEnabled" : true
+                },{
+                  "caseTypeId" : "FT_CaseAccessGroups",
+                  "organisationalRoleName" : "Role1",
+                  "groupRoleName" : "Role1",
+                  "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
+                  "groupAccessEnabled" : true
                 }
               ]
             },
@@ -72,7 +70,7 @@
               "displayOrder": 1,
               "roles": [
                 {
-                  "caseTypeId": "FT_MasterCaseType",
+                  "caseTypeId": "FT_CaseAccessGroups",
                   "organisationalRoleName": "Role1",
                   "groupRoleName": "Role1",
                   "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
