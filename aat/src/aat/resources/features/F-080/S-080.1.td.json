@@ -58,7 +58,7 @@
               "publish": false,
               "publish_as": null,
               "default_value": null,
-              "nullify_by_default": false,
+              "nullify_by_default": true,
               "case_fields_complex": []
             },
             {
@@ -235,7 +235,7 @@
       "roleToAccessProfiles": [
         {
           "__ordering__": "ORDERED",
-          "__elementId__": "case_type_id,role_name,case_access_categories"
+          "__elementId__": "case_type_id"
         },
         {
           "case_type_id": "FT_CaseAccessCategories",
@@ -633,12 +633,12 @@
               {
                 "code": "CaseUpdated",
                 "label": "Update case",
-                "order": null
+                "order": 1
               },
               {
                 "code": "CaseCreated",
                 "label": "Create case",
-                "order": null
+                "order": 1
               }
             ],
             "complex_fields": [],
