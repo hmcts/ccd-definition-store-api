@@ -47,14 +47,15 @@
                 },{
                   "caseTypeId" : "FT_CaseAccessGroups",
                   "organisationalRoleName" : "Role1",
-                  "groupRoleName" : "[[ANY_NULLABLE]]",
-                  "caseGroupIdTemplate" : "[[ANY_NULLABLE]]",
-                  "groupAccessEnabled" : true
-                },{
-                  "caseTypeId" : "FT_CaseAccessGroups",
-                  "organisationalRoleName" : "Role1",
                   "groupRoleName" : "Role1",
                   "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
+                  "groupAccessEnabled" : true
+                },
+                {
+                  "caseTypeId" : "FT_CaseAccessGroups",
+                  "organisationalRoleName" : "Role1",
+                  "groupRoleName" : "[[ANY_NULLABLE]]",
+                  "caseGroupIdTemplate" : "[[ANY_NULLABLE]]",
                   "groupAccessEnabled" : true
                 }
               ]
