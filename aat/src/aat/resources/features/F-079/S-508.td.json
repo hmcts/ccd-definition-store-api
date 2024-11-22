@@ -22,7 +22,7 @@
         "live_from": "2017-01-01T00:00:00.000+0000",
         "live_until": null
       },
-      "name": "FT-DateTime Fomratting",
+      "name": "FT-DateTime Formatting",
       "jurisdiction": {
         "id": "BEFTA_MASTER",
         "name": "BEFTA Master",

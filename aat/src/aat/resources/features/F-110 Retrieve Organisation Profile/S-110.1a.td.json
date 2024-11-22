@@ -97,6 +97,10 @@
           "jurisdictionName": "BEFTA Master",
           "accessTypes": [
             {
+              "__ordering__": "unordered",
+              "__elementId__": "organisationProfileId,accessTypeId, displayOrder"
+            },
+            {
               "organisationProfileId": "OGD_DWP_PROFILE",
               "accessTypeId": "BEFTA_SOLICITOR_2",
               "accessMandatory": true,
@@ -107,17 +111,21 @@
               "displayOrder": 2,
               "roles": [
                 {
+                  "__ordering__": "ordered",
+                  "__elementId__": "caseTypeId"
+                },
+                {
                   "caseTypeId": "FT_CaseAccessGroups",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "Role1",
-                  "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
+                  "groupRoleName": "[[ANY_NULLABLE]]",
+                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
                   "groupAccessEnabled": true
                 },
                 {
                   "caseTypeId": "FT_CaseAccessGroups",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": null,
-                  "caseGroupIdTemplate": null,
+                  "groupRoleName": "Role1",
+                  "caseGroupIdTemplate": "BEFTA_MASTER:$ORGID$",
                   "groupAccessEnabled": true
                 }
               ]
