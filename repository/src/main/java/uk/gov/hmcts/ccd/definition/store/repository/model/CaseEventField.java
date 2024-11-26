@@ -22,6 +22,7 @@ public class CaseEventField {
     private Boolean publish;
     private String publishAs;
     private String defaultValue;
+    private Boolean nullifyByDefault;
     private List<CaseEventFieldComplex> caseEventFieldComplex = new ArrayList<>();
 
     /**
@@ -189,4 +190,18 @@ public class CaseEventField {
     public void setCaseEventFieldComplex(List<CaseEventFieldComplex> eventComplexTypeEntities) {
         this.caseEventFieldComplex = eventComplexTypeEntities;
     }
+
+    /**
+     * allows services to define nullify by default value (yes/no).
+     **/
+    @ApiModelProperty(value = "allows services to define nullify by default value for case fields")
+    @JsonProperty("nullify_by_default")
+    public Boolean getNullifyByDefault() {
+        return nullifyByDefault;
+    }
+
+    public void setNullifyByDefault(Boolean nullifyByDefault) {
+        this.nullifyByDefault = nullifyByDefault;
+    }
+
 }
