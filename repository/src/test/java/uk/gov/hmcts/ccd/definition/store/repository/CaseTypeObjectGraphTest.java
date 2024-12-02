@@ -113,7 +113,7 @@ public class CaseTypeObjectGraphTest {
         caseType.addCaseField(cf);
 
         final EventEntity e1 = createEvent("eid", "ename", 0, SecurityClassification.PRIVATE);
-        e1.addEventCaseField(helper.createEventCaseField(cf, DisplayContext.READONLY, "showCond", true, ""));
+        e1.addEventCaseField(helper.createEventCaseField(cf, DisplayContext.READONLY, "showCond", true, "", false));
         final EventEntity e2 = createEvent("eid2", "ename2", 1, SecurityClassification.RESTRICTED);
         final StateEntity s1 = createState("stateId", "stateName", "desc", 3, TODAY, TOMORROW);
         final StateEntity s2 = createState("stateId2", "stateName2", "desc2", 3, TODAY, TOMORROW);

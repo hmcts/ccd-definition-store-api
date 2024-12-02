@@ -1,0 +1,33 @@
+{
+	"_guid_": "S-112.3",
+	"_extends_": "Import_Base_data",
+	"title": "Import Definition file without the NullifyByDefault column in the CaseEventToFields tab",
+	"specs": [
+		"an active profile in CCD and with CCD-import role",
+		"contains a definition file that contains NullifyByDefault new field and NullifyByDefault is set to Yes",
+    "contains a definition file that contains DefaultValue field has a value set",
+    "has the 400 Bad Request code"
+	],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/NullifyByDefault/BEFTA_Master_Definition_DefaultValue_Has_Value_NullifyByDefault_Yes.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "NullifyByDefault cannot be set to Yes if DefaultValue has a value in CaseEventToFields"
+    }
+  }
+}
