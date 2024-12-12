@@ -20,7 +20,7 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
           ref: master
       - name: Set up Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
