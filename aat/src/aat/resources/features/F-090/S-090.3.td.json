@@ -56,7 +56,8 @@
           "publish" : false,
           "publish_as" : null,
           "default_value" : null,
-          "case_fields_complex" : [
+          "nullify_by_default": false,
+            "case_fields_complex" : [
             {
               "__ordering__": "UNORDERED",
               "__elementId__": "reference"
@@ -95,7 +96,8 @@
           "publish" : false,
           "publish_as" : null,
           "default_value" : null,
-          "case_fields_complex" : [
+          "nullify_by_default": false,
+            "case_fields_complex" : [
             {
               "__ordering__": "UNORDERED",
               "__elementId__": "reference"
@@ -154,7 +156,8 @@
           "publish" : false,
           "publish_as" : null,
           "default_value" : null,
-          "case_fields_complex" : [
+          "nullify_by_default": false,
+            "case_fields_complex" : [
             {
               "__ordering__": "UNORDERED",
               "__elementId__": "reference"
@@ -311,7 +314,8 @@
           "publish" : false,
           "publish_as" : null,
           "default_value" : null,
-          "case_fields_complex" : [
+          "nullify_by_default": false,
+            "case_fields_complex" : [
             {
               "__ordering__": "UNORDERED",
               "__elementId__": "reference"
@@ -350,7 +354,8 @@
           "publish" : false,
           "publish_as" : null,
           "default_value" : null,
-          "case_fields_complex" : [
+          "nullify_by_default": false,
+            "case_fields_complex" : [
             {
               "__ordering__": "UNORDERED",
               "__elementId__": "reference"
@@ -409,7 +414,8 @@
           "publish" : false,
           "publish_as" : null,
           "default_value" : null,
-          "case_fields_complex" : [
+          "nullify_by_default": false,
+            "case_fields_complex" : [
             {
               "__ordering__": "UNORDERED",
               "__elementId__": "reference"
@@ -1669,11 +1675,11 @@
           "fixed_list_items" : [ {
             "code" : "CaseCreated",
             "label" : "Create case",
-            "order" : null
+            "order" : 1
           }, {
             "code" : "CaseUpdated",
             "label" : "Updated case",
-            "order" : null
+            "order" : 1
           } ],
           "complex_fields" : [ ],
           "collection_field_type" : null

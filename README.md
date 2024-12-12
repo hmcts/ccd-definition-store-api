@@ -25,24 +25,24 @@ simply ignored
 
 ### Prerequisites
 
-- [Open JDK 17](https://openjdk.java.net/)
+- [Open JDK 21](https://openjdk.java.net/)
 - [Docker](https://www.docker.com)
 
 #### Environment variables
 
 The following environment variables are required:
 
-| Name | Default | Description |
-|------|---------|-------------|
-| DEFINITION_STORE_DB_USERNAME | - | Username for database |
-| DEFINITION_STORE_DB_PASSWORD | - | Password for database |
-| DEFINITION_STORE_DB_USE_SSL | - | set to `true` if SSL is to be enabled. `false` recommended for local environments. |
-| DEFINITION_STORE_IDAM_KEY | - | Definition store's IDAM S2S micro-service secret key. This must match the IDAM instance it's being run against. |
-| DEFINITION_STORE_S2S_AUTHORISED_SERVICES | ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp,aac_manage_case_assignment | Authorised micro-service names for S2S calls |
-| IDAM_USER_URL | - | Base URL for IdAM's User API service (idam-app). `http://localhost:4501` for the dockerised local instance or tunneled `dev` instance. |
-| IDAM_S2S_URL | - | Base URL for IdAM's S2S API service (service-auth-provider). `http://localhost:4502` for the dockerised local instance or tunneled `dev` instance. |
-| USER_PROFILE_HOST | - | Base URL for the User Profile service. `http://localhost:4453` for the dockerised local instance. |
-| AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY | - | secrets for Microsoft Insights logging, can be a dummy string in local |
+| Name | Default                                                                     | Description |
+|------|-----------------------------------------------------------------------------|-------------|
+| DEFINITION_STORE_DB_USERNAME | -                                                                           | Username for database |
+| DEFINITION_STORE_DB_PASSWORD | -                                                                           | Password for database |
+| DEFINITION_STORE_DB_USE_SSL | -                                                                           | set to `true` if SSL is to be enabled. `false` recommended for local environments. |
+| DEFINITION_STORE_IDAM_KEY | -                                                                           | Definition store's IDAM S2S micro-service secret key. This must match the IDAM instance it's being run against. |
+| DEFINITION_STORE_S2S_AUTHORISED_SERVICES | ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp,aac_manage_case_assignment,xui_webapp | Authorised micro-service names for S2S calls |
+| IDAM_USER_URL | -                                                                           | Base URL for IdAM's User API service (idam-app). `http://localhost:4501` for the dockerised local instance or tunneled `dev` instance. |
+| IDAM_S2S_URL | -                                                                           | Base URL for IdAM's S2S API service (service-auth-provider). `http://localhost:4502` for the dockerised local instance or tunneled `dev` instance. |
+| USER_PROFILE_HOST | -                                                                           | Base URL for the User Profile service. `http://localhost:4453` for the dockerised local instance. |
+| AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY | -                                                                           | secrets for Microsoft Insights logging, can be a dummy string in local |
 
 ### Building
 
@@ -119,6 +119,19 @@ Spring application entry point and configuration.
 ### Functional Tests
 The functional tests are located in `aat` folder. The tests are written using 
 befta-fw library. To find out more about BEFTA Framework, see the repository and its README [here](https://github.com/hmcts/befta-fw).
+
+Will run all the FT's:
+
+    ./gradlew functional
+
+#####  Some Functional Tests
+Will run both F-105 and F-110:
+
+    ./gradlew functional -P tags="@F-105 or @F-110"
+
+Will run only S-110.1:
+
+    ./gradlew functional -P tags="@S-110.1"
 
 ## LICENSE
 
