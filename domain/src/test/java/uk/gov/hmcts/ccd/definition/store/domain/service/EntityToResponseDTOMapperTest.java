@@ -150,6 +150,7 @@ class  EntityToResponseDTOMapperTest {
             eventCaseFieldEntity.setPublish(true);
             eventCaseFieldEntity.setPublishAs("PublishAs test");
             eventCaseFieldEntity.setDefaultValue("DefaultValue test");
+            eventCaseFieldEntity.setNullifyByDefault(true);
 
             CaseEventField caseEventField = spyOnClassUnderTest.map(
                 eventCaseFieldEntity
@@ -172,7 +173,9 @@ class  EntityToResponseDTOMapperTest {
                 () -> assertEquals("publishAs", eventCaseFieldEntity.getPublishAs(),
                                    caseEventField.getPublishAs()),
                 () -> assertEquals("defaultValue", eventCaseFieldEntity.getDefaultValue(),
-                                   caseEventField.getDefaultValue())
+                                   caseEventField.getDefaultValue()),
+                () -> assertEquals("nullifyByDefault", eventCaseFieldEntity.getNullifyByDefault(),
+                    caseEventField.getNullifyByDefault())
             );
         }
 
