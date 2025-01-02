@@ -16,7 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.rules.C
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.DuplicateFoundException;
 
-import javax.persistence.OptimisticLockException;
+import jakarta.persistence.OptimisticLockException;
 import java.io.IOException;
 import java.util.Map;
 
