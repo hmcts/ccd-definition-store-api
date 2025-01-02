@@ -113,7 +113,7 @@ public class CaseTypeObjectGraphTest {
         caseType.addCaseField(cf);
 
         final EventEntity e1 = createEvent("eid", "ename", 0, SecurityClassification.PRIVATE);
-        e1.addEventCaseField(helper.createEventCaseField(cf, DisplayContext.READONLY, "showCond", true, ""));
+        e1.addEventCaseField(helper.createEventCaseField(cf, DisplayContext.READONLY, "showCond", true, "", false));
         final EventEntity e2 = createEvent("eid2", "ename2", 1, SecurityClassification.RESTRICTED);
         final StateEntity s1 = createState("stateId", "stateName", "desc", 3, TODAY, TOMORROW);
         final StateEntity s2 = createState("stateId2", "stateName2", "desc2", 3, TODAY, TOMORROW);
@@ -195,7 +195,14 @@ public class CaseTypeObjectGraphTest {
 
         // Check states
         assertThat(fetched.getStates(), hasSize(2));
-        final StateEntity fetchedState1 = fetched.getStates().get(0);
+
+        StateEntity fetchedState1 = new StateEntity();
+        for (StateEntity state : fetched.getStates()) {
+            if (state.getReference().equals("stateId")) {
+                fetchedState1 = state;
+            }
+        }
+
         assertThat(fetchedState1.getReference(), equalTo("stateId"));
         assertThat(fetchedState1.getLiveFrom(), equalTo(TODAY));
         assertThat(fetchedState1.getLiveTo(), equalTo(TOMORROW));

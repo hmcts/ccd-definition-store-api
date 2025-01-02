@@ -68,10 +68,12 @@ public class EventCaseFieldParserTest {
         String label = "label";
         String hint = "hint";
         String defaultValue = "defaultValue";
+        Boolean nullifyByDefault = false;
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
         DefinitionDataItem definitionDataItem = definitionDataItem(
-            caseFieldId, displayContext, originalShowCondition, label, hint, false, false, null, null, defaultValue);
+            caseFieldId, displayContext, originalShowCondition, label, hint,
+            false, false, null, null, defaultValue, nullifyByDefault);
         when(hiddenFieldsValidator.parseHiddenFields(definitionDataItem)).thenReturn(Boolean.FALSE);
         EventCaseFieldEntity eventCaseFieldEntity = classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem);
 
@@ -82,6 +84,7 @@ public class EventCaseFieldParserTest {
         assertFalse(eventCaseFieldEntity.getPublish());
         assertNull(eventCaseFieldEntity.getPublishAs());
         assertEquals(defaultValue, eventCaseFieldEntity.getDefaultValue());
+        assertEquals(nullifyByDefault, eventCaseFieldEntity.getNullifyByDefault());
         assertEquals(label, eventCaseFieldEntity.getLabel());
         assertEquals(hint, eventCaseFieldEntity.getHintText());
 
@@ -102,10 +105,11 @@ public class EventCaseFieldParserTest {
         String originalShowCondition = "Original Show Condition";
         String publishAs = "publishAsTest";
         String defaultValue = "";
+        Boolean nullifyByDefault = false;
         DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
 
         DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, originalShowCondition,
-            null, null, true, true, publishAs, null, defaultValue);
+            null, null, true, true, publishAs, null, defaultValue, nullifyByDefault);
 
         when(showConditionParser.parseShowCondition(any())).thenThrow(
             new InvalidShowConditionException("")
@@ -120,6 +124,7 @@ public class EventCaseFieldParserTest {
         assertEquals(Boolean.TRUE, eventCaseFieldEntity.getPublish());
         assertEquals(publishAs, eventCaseFieldEntity.getPublishAs());
         assertEquals(defaultValue, eventCaseFieldEntity.getDefaultValue());
+        assertEquals(nullifyByDefault, eventCaseFieldEntity.getNullifyByDefault());
 
         verify(entityToDefinitionDataItemRegistry).addDefinitionDataItemForEntity(
             eq(eventCaseFieldEntity), eq(definitionDataItem));
@@ -138,12 +143,57 @@ public class EventCaseFieldParserTest {
         DisplayContextColumn displayContext = new DisplayContextColumn("COMPLEX", DisplayContext.COMPLEX);
 
         DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, null,
-            null, null, true, true, null, caseEventId, "");
+            null, null, true, true, null, caseEventId, "", false);
 
         MapperException exception = assertThrows(MapperException.class,
             () -> classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem));
 
         assertEquals(expectedError, exception.getMessage());
+    }
+
+    @Test
+    public void shouldErrorWhenDefaultValuePresentAndNullifyByDefaultIsTrue() {
+        String caseFieldId = "Case Field Id";
+        String caseTypeId = "Case Type Id";
+        String originalShowCondition = "Original Show Condition";
+        String label = "label";
+        String hint = "hint";
+        String defaultValue = "defaultValue";
+        Boolean nullifyByDefault = true;
+        DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
+
+        DefinitionDataItem definitionDataItem = definitionDataItem(
+            caseFieldId, displayContext, originalShowCondition, label, hint,
+            false, false, null, null, defaultValue, nullifyByDefault);
+        when(hiddenFieldsValidator.parseHiddenFields(definitionDataItem)).thenReturn(Boolean.FALSE);
+
+        String expectedError = "NullifyByDefault cannot be set to Yes if DefaultValue "
+            + "has a value in CaseEventToFields";
+
+        MapperException exception = assertThrows(MapperException.class,
+            () -> classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem));
+        assertEquals(expectedError, exception.getMessage());
+    }
+
+    @Test
+    public void shouldReadValuesWhenDefaultValueNotPresentAndNullifyByDefaultIsTrue() {
+        String caseFieldId = "Case Field Id";
+        String caseTypeId = "Case Type Id";
+        String originalShowCondition = "Original Show Condition";
+        String label = "label";
+        String hint = "hint";
+        String defaultValue = "";
+        Boolean nullifyByDefault = true;
+        DisplayContextColumn displayContext = new DisplayContextColumn("OPTIONAL", DisplayContext.OPTIONAL);
+
+        DefinitionDataItem definitionDataItem = definitionDataItem(
+            caseFieldId, displayContext, originalShowCondition, label, hint,
+            false, false, null, null, defaultValue, nullifyByDefault);
+        when(hiddenFieldsValidator.parseHiddenFields(definitionDataItem)).thenReturn(Boolean.FALSE);
+
+        EventCaseFieldEntity eventCaseFieldEntity = classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem);
+        assertEquals(defaultValue, eventCaseFieldEntity.getDefaultValue());
+        assertEquals(nullifyByDefault, eventCaseFieldEntity.getNullifyByDefault());
     }
 
     private DefinitionDataItem definitionDataItem(String caseFieldId,
@@ -155,7 +205,8 @@ public class EventCaseFieldParserTest {
                                                   Boolean publish,
                                                   String publishAs,
                                                   String caseEventId,
-                                                  String defaultValue) {
+                                                  String defaultValue,
+                                                  Boolean nullifyByDefault) {
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
 
         when(definitionDataItem.getString(eq(ColumnName.CASE_FIELD_ID))).thenReturn(caseFieldId);
@@ -168,6 +219,7 @@ public class EventCaseFieldParserTest {
         when(definitionDataItem.getString(ColumnName.CASE_EVENT_ID)).thenReturn(caseEventId);
         when(definitionDataItem.getString(ColumnName.PUBLISH_AS)).thenReturn(publishAs);
         when(definitionDataItem.getString(ColumnName.DEFAULT_VALUE)).thenReturn(defaultValue);
+        when(definitionDataItem.getBooleanOrDefault(ColumnName.NULLIFY_BY_DEFAULT, false)).thenReturn(nullifyByDefault);
 
         return definitionDataItem;
     }

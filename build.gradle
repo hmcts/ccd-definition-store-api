@@ -51,6 +51,7 @@ ext {
     tomcatVersion = '10.1.31'
     lombokVersion = '1.18.34'
     feignJackson = '13.5'
+    beftaFwVersion = '9.0.2'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -79,6 +80,7 @@ allprojects {
             url  "https://jitpack.io"
         }
     }
+
 
     apply plugin: 'java'
 
@@ -276,9 +278,9 @@ subprojects { subproject ->
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.22.3'
+        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.24.0'
 
-        testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.0.2'
+        testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
 
         testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
 

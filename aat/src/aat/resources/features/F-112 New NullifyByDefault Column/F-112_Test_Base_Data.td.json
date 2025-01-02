@@ -1,0 +1,14 @@
+{
+	"_guid_": "F-112_Test_Base_Data",
+  "_extends_": "Get_Operation_Base_Data_on_Definition_Store",
+
+	"operationName": "Get Case Type Details",
+	"uri": "/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}",
+	"request": {
+	 "pathVariables": {
+		"uid": "[[DEFAULT_AUTO_VALUE]]",
+		"jid": "BEFTA_MASTER",
+		"ctid": "FT_CaseAccessCategories"
+	 }
+	}
+}
