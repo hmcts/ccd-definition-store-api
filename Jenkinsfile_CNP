@@ -81,8 +81,9 @@ withPipeline(type, product, app) {
     }
 
     if (env.BRANCH_NAME.startsWith("PR-")) {
-        //environmentOfDependencies = env.BRANCH_NAME.toLowerCase()
-        //env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-${environmentOfDependencies}.preview.platform.hmcts.net"
+        
+        environmentOfDependencies = env.BRANCH_NAME.toLowerCase()
+        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-${environmentOfDependencies}.preview.platform.hmcts.net"
     }
 
     syncBranchesWithMaster(branchesToSync)
