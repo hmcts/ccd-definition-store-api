@@ -43,52 +43,52 @@ java:
             CREATE DATABASE "role_assignment" WITH OWNER = javapostgres ENCODING = 'UTF-8' CONNECTION LIMIT = -1;
             CREATE DATABASE "ts_translation_service" WITH OWNER = javapostgres ENCODING = 'UTF-8' CONNECTION LIMIT = -1;
 
+ccd:
+  enabled: true
   ccd:
-    enabled: true
-    ccd:
-      s2s:
-        enabled: false
-      dataStore:
-        enabled: false
-      adminWeb:
-        enabled: false
-      definitionImporter:
-        enabled: false
-      userProfileImporter:
-        enabled: false
-      apiGatewayWeb:
-        enabled: false
-      ras:
-        enabled: false
-      elastic:
-        enabled: false
-      postgresql:
-        enabled: false
+    s2s:
+      enabled: false
+    dataStore:
+      enabled: false
+    adminWeb:
+      enabled: false
+    definitionImporter:
+      enabled: false
+    userProfileImporter:
+      enabled: false
+    apiGatewayWeb:
+      enabled: false
+    ras:
+      enabled: false
+    elastic:
+      enabled: false
+    postgresql:
+      enabled: false
 
-    ingressHost: ${SERVICE_FQDN}
+  ingressHost: ${SERVICE_FQDN}
 
-    global:
-      ccdDefinitionStoreUrl: http://${SERVICE_NAME}-ccd-definition-store
-      ccdUserProfileUrl: http://${SERVICE_NAME}-ccd-user-profile-api
-      dmStoreUrl: http://dm-store-aat.service.core-compute-aat.internal
-      idamApiUrl: https://idam-api.aat.platform.hmcts.net
-      idamWebUrl: https://idam-web-public.aat.platform.hmcts.net
-      s2sUrl: http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
-      enableKeyVaults: true
-      devMode: true
+  global:
+    ccdDefinitionStoreUrl: http://${SERVICE_NAME}-ccd-definition-store
+    ccdUserProfileUrl: http://${SERVICE_NAME}-ccd-user-profile-api
+    dmStoreUrl: http://dm-store-aat.service.core-compute-aat.internal
+    idamApiUrl: https://idam-api.aat.platform.hmcts.net
+    idamWebUrl: https://idam-web-public.aat.platform.hmcts.net
+    s2sUrl: http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
+    enableKeyVaults: true
+    devMode: true
 
-    ccd-user-profile-api:
-      java:
-        ingressHost: ccd-user-profile-api-${SERVICE_FQDN}
-        image: hmctspublic.azurecr.io/ccd/user-profile-api:latest
-        imagePullPolicy: Always
-        environment:
-          USER_PROFILE_DB_HOST: "{{ .Release.Name }}-postgresql"
-          USER_PROFILE_DB_USERNAME: "{{ .Values.postgresql.auth.username}}"
-          USER_PROFILE_DB_PASSWORD: "{{ .Values.postgresql.auth.password}}"
-          USER_PROFILE_DB_OPTIONS: ""
-        secrets:
-          USER_PROFILE_DB_PASSWORD:
-            secretRef: "{{ .Values.global.postgresSecret }}"
-            key: PASSWORD
-            disabled: true
+  ccd-user-profile-api:
+    java:
+      ingressHost: ccd-user-profile-api-${SERVICE_FQDN}
+      image: hmctspublic.azurecr.io/ccd/user-profile-api:latest
+      imagePullPolicy: Always
+      environment:
+        USER_PROFILE_DB_HOST: "{{ .Release.Name }}-postgresql"
+        USER_PROFILE_DB_USERNAME: "{{ .Values.postgresql.auth.username}}"
+        USER_PROFILE_DB_PASSWORD: "{{ .Values.postgresql.auth.password}}"
+        USER_PROFILE_DB_OPTIONS: ""
+      secrets:
+        USER_PROFILE_DB_PASSWORD:
+          secretRef: "{{ .Values.global.postgresSecret }}"
+          key: PASSWORD
+          disabled: true
