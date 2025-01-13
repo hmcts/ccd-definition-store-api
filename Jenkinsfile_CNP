@@ -74,6 +74,11 @@ withPipeline(type, product, app) {
         enableSlackNotifications('#ccd-pr-builds')
     }
 
+    if (env.BRANCH_NAME.startsWith("PR-")) {
+
+        environmentOfDependencies = env.BRANCH_NAME.toLowerCase()
+        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-${environmentOfDependencies}.preview.platform.hmcts.net"
+    }
 
     syncBranchesWithMaster(branchesToSync)
     overrideVaultEnvironments(vaultOverrides)
