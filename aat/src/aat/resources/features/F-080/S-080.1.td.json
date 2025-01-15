@@ -190,6 +190,11 @@
       ],
       "states": [
         {
+          "__operator__": "equivalent",
+          "__ordering__": "unordered",
+          "__elementId__": "id"
+        },
+        {
           "id": "CaseCreated",
           "name": "Create case",
           "description": null,
