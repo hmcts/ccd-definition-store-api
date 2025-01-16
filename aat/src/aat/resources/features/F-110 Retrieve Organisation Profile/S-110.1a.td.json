@@ -28,7 +28,7 @@
           "accessTypes": [
             {
               "__ordering__": "unordered",
-              "__elementId__": "organisationProfileId,accessTypeId, displayOrder"
+              "__elementId__": "organisationProfileId,accessTypeId,displayOrder"
             },
             {
               "organisationProfileId": "SOLICITOR_PROFILE",
@@ -41,14 +41,14 @@
               "displayOrder": 2,
               "roles": [
                 {
-                  "__ordering__": "ordered",
-                  "__elementId__": "caseTypeId"
+                  "__ordering__": "unordered",
+                  "__elementId__": "caseGroupIdTemplate,groupRoleName"
                 },
                 {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANY_NULLABLE]]",
-                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
+                  "groupRoleName": null,
+                  "caseGroupIdTemplate": null,
                   "groupAccessEnabled": true
                 },
                 {
@@ -71,14 +71,14 @@
               "displayOrder": 1,
               "roles": [
                 {
-                  "__ordering__": "ordered",
-                  "__elementId__": "caseTypeId"
+                  "__ordering__": "unordered",
+                  "__elementId__": "caseGroupIdTemplate,groupRoleName"
                 },
                 {
                   "caseTypeId": "CaseAccessGroups_Casetype",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANY_NULLABLE]]",
-                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
+                  "groupRoleName": null,
+                  "caseGroupIdTemplate": null,
                   "groupAccessEnabled": true
                 },
                 {
@@ -112,14 +112,14 @@
               "displayOrder": 2,
               "roles": [
                 {
-                  "__ordering__": "ordered",
-                  "__elementId__": "caseTypeId"
+                  "__ordering__": "unordered",
+                  "__elementId__": "caseGroupIdTemplate,groupRoleName"
                 },
                 {
                   "caseTypeId": "FT_CaseAccessGroups",
                   "organisationalRoleName": "Role1",
-                  "groupRoleName": "[[ANY_NULLABLE]]",
-                  "caseGroupIdTemplate": "[[ANY_NULLABLE]]",
+                  "groupRoleName": null,
+                  "caseGroupIdTemplate": null,
                   "groupAccessEnabled": true
                 },
                 {
