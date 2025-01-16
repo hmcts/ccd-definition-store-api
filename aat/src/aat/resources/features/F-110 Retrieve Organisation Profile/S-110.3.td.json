@@ -42,8 +42,8 @@
               "displayOrder": 2,
               "roles": [
                 {
-                  "__ordering__": "ordered",
-                  "__elementId__": "caseTypeId"
+                  "__ordering__": "unordered",
+                  "__elementId__": "caseGroupIdTemplate,groupRoleName"
                 },                {
                   "caseTypeId" : "FT_CaseAccessGroups",
                   "organisationalRoleName" : "Role1",
