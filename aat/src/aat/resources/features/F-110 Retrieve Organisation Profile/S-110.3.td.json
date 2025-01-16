@@ -47,8 +47,8 @@
                 },                {
                   "caseTypeId" : "FT_CaseAccessGroups",
                   "organisationalRoleName" : "Role1",
-                  "groupRoleName" : "[[ANY_NULLABLE]]",
-                  "caseGroupIdTemplate" : "[[ANY_NULLABLE]]",
+                  "groupRoleName" : null,
+                  "caseGroupIdTemplate" : null,
                   "groupAccessEnabled" : true
                 },
                 {
