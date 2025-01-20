@@ -50,6 +50,8 @@ ccd:
       enabled: false
     dataStore:
       enabled: true
+    definitionStore:
+      enabled: false
     adminWeb:
       enabled: false
     definitionImporter:
