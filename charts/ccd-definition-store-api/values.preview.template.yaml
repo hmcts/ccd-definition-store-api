@@ -49,7 +49,7 @@ ccd:
     s2s:
       enabled: false
     dataStore:
-      enabled: true
+      enabled: false
     definitionStore:
       enabled: false
     adminWeb:
@@ -63,7 +63,7 @@ ccd:
     ras:
       enabled: false
     elastic:
-      enabled: false
+      enabled: true
     postgresql:
       enabled: false
 
