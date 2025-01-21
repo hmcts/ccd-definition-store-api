@@ -15,7 +15,7 @@ dependencies:
     repository: 'https://hmctspublic.azurecr.io/helm/v1/repo/'
     condition: ccd.enabled
   - name: ts-translation-service
-    version: 0.1.8
+    version: 0.1.7
     repository: 'https://hmctspublic.azurecr.io/helm/v1/repo/'
     condition: ts.enabled
 
