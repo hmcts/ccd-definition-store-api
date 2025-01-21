@@ -96,5 +96,5 @@ ccd:
           disabled: true
           
   elasticsearch:
-    nameOverride: ${SERVICE_NAME}-es-master
+    nameOverride: ${SERVICE_NAME}-es
     
