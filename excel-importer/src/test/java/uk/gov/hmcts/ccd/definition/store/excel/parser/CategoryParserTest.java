@@ -44,7 +44,7 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
 
     @Before
     public void setup() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         parseContext = buildParseContext();
         this.categoryParser = new CategoryParser(categoryValidator);
     }

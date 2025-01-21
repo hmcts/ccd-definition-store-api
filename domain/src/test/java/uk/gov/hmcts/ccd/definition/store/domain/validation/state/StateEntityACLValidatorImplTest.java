@@ -11,7 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class StateEntityACLValidatorImplTest {
     private StateEntity stateEntity;

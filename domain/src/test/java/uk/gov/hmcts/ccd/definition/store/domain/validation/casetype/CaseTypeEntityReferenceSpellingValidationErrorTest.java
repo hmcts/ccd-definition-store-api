@@ -23,7 +23,7 @@ public class CaseTypeEntityReferenceSpellingValidationErrorTest {
 
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(any(
             CaseTypeEntityReferenceSpellingValidationError.class)))
             .thenReturn(OVERRIDDEN_ERROR_MESSAGE);

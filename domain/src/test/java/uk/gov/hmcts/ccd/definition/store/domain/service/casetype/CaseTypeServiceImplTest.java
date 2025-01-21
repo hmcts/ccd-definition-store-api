@@ -47,7 +47,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
@@ -105,7 +105,7 @@ class CaseTypeServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         caseTypeEntity1.setReference(CASE_TYPE_REFERENCE_1);
         caseTypeEntity2.setReference(CASE_TYPE_REFERENCE_2);
         caseTypeEntity3.setReference(CASE_TYPE_REFERENCE_3);
