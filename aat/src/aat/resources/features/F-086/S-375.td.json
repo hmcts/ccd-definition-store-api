@@ -85,7 +85,7 @@
            "retain_hidden_value" : null
          }, {
              "complex_field_element_id" : "OrganisationPolicyField2.newCase",
-             "display_context" : "OPTIONAL",
+             "display_context" : "HIDDEN",
              "label" : null,
              "hint_text" : null,
              "show_condition" : null,
@@ -298,7 +298,7 @@
            "retain_hidden_value" : null
          }, {
              "complex_field_element_id" : "OrganisationPolicyField1.newCase",
-             "display_context" : "OPTIONAL",
+             "display_context" : "HIDDEN",
              "label" : null,
              "hint_text" : null,
              "show_condition" : null,
