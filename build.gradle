@@ -150,6 +150,8 @@ allprojects {
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.13'
         implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.13'
 
+        implementation group: 'org.json', name: 'json', version: '20240303'
+
         testImplementation "io.rest-assured:xml-path:${restAssuredVersion}"
         testImplementation "io.rest-assured:json-path:${restAssuredVersion}"
         testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
