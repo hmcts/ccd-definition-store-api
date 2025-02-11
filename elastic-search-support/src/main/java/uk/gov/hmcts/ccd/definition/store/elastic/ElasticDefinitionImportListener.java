@@ -2,6 +2,8 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.ElasticsearchStatusException;
+import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
+import org.elasticsearch.client.GetAliasesResponse;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -54,6 +56,7 @@ public abstract class ElasticDefinitionImportListener {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
+                String aliasName = elasticClient.getAlias(baseIndexName).getAliases().keySet().toString();
                 if (!elasticClient.aliasExists(baseIndexName)) {
                     String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
                     String alias = baseIndexName;
