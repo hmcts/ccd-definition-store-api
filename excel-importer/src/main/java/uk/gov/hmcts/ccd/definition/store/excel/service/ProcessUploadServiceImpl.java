@@ -35,10 +35,14 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
         this.azureStorageConfiguration = azureStorageConfiguration;
     }
 
+    @Transactional
+    public ResponseEntity processUpload(MultipartFile file) throws IOException {
+        return processUpload(file, false, true); // Default values
+    }
 
     @Transactional
     @Override
-    public ResponseEntity processUpload(MultipartFile file) throws IOException {
+    public ResponseEntity processUpload(MultipartFile file, boolean reindex, boolean deleteOldIndex) throws IOException {
 
         if (file == null || file.getSize() == 0) {
             throw new IOException(IMPORT_FILE_ERROR);

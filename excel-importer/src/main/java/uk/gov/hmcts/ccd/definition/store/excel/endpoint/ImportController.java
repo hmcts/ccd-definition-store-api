@@ -32,9 +32,12 @@ public class ImportController {
         this.processUploadServiceImpl = processUploadServiceImpl;
     }
 
-    //add 2 new params
     @RequestMapping(value = URI_IMPORT, method = RequestMethod.POST)
-    public ResponseEntity processUpload(@RequestParam("file") MultipartFile file) throws IOException {
-        return processUploadServiceImpl.processUpload(file);
+    public ResponseEntity processUpload(@RequestParam("file") MultipartFile file,
+                                        @RequestParam(value = "reindex", required = false, defaultValue = "false")
+                                        boolean reindex,
+                                        @RequestParam(value = "deleteoldindex", required = false, defaultValue = "true")
+                                        boolean deleteOldIndex) throws IOException {
+        return processUploadServiceImpl.processUpload(file, reindex, deleteOldIndex);
     }
 }
