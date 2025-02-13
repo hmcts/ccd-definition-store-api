@@ -120,7 +120,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     private DefinitionImportedEvent newEvent(CaseTypeEntity... caseTypes) {
-        return new DefinitionImportedEvent(newArrayList(caseTypes));
+        return new DefinitionImportedEvent(newArrayList(caseTypes), false, true);
     }
 
     private static class TestDefinitionImportListener extends ElasticDefinitionImportListener {

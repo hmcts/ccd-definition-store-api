@@ -6,7 +6,20 @@ import java.util.List;
 
 public class DefinitionImportedEvent extends ImportEvent<List<CaseTypeEntity>> {
 
-    public DefinitionImportedEvent(List<CaseTypeEntity> caseTypes) {
+    private final boolean reindex;
+    private final boolean deleteOldIndex;
+
+    public DefinitionImportedEvent(List<CaseTypeEntity> caseTypes, boolean reindex, boolean deleteOldIndex) {
         super(caseTypes);
+        this.reindex = reindex;
+        this.deleteOldIndex = deleteOldIndex;
+    }
+
+    public boolean isReindex() {
+        return reindex;
+    }
+
+    public boolean isDeleteOldIndex() {
+        return deleteOldIndex;
     }
 }

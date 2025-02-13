@@ -23,6 +23,7 @@ import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.transform;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -60,7 +61,7 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     void testListeningToDefinitionImportedEvent() throws IOException {
         CaseTypeEntity caseType = createCaseType();
 
-        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
+        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType), false, true));
 
         verify(client).createIndex(anyString(), anyString());
         verify(client).upsertMapping(anyString(), anyString());
@@ -70,7 +71,7 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     void testListeningToDefinitionImportedEventWithDynamicLists() throws IOException {
         CaseTypeEntity caseType = createCaseTypeWithDynamicLists();
 
-        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
+        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType), false, true));
 
         verify(client).createIndex(anyString(), anyString());
         verify(client).upsertMapping(anyString(), anyString());

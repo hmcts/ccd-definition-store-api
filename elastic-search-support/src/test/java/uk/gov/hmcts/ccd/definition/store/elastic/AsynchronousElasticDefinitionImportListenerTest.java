@@ -59,7 +59,7 @@ public class AsynchronousElasticDefinitionImportListenerTest {
     }
 
     private DefinitionImportedEvent newEvent(CaseTypeEntity... caseTypes) {
-        return new DefinitionImportedEvent(newArrayList(caseTypes));
+        return new DefinitionImportedEvent(newArrayList(caseTypes), false, true);
     }
 }
 

@@ -96,7 +96,8 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
             .addField(nonSearchableCollectionField)
             .addField(nonSearchableComplexCollectionField).build();
 
-        DefinitionImportedEvent event = new DefinitionImportedEvent(Collections.singletonList(caseTypeEntity));
+        DefinitionImportedEvent event = new DefinitionImportedEvent(Collections.singletonList(caseTypeEntity),
+            false, true);
 
         definitionImportListener.onDefinitionImported(event);
 
@@ -121,7 +122,8 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
             .addField(baseTypeField2)
             .build();
 
-        DefinitionImportedEvent event = new DefinitionImportedEvent(Arrays.asList(caseTypeEntity1, caseTypeEntity2));
+        DefinitionImportedEvent event = new DefinitionImportedEvent(Arrays.asList(caseTypeEntity1, caseTypeEntity2),
+            false, true);
 
         definitionImportListener.onDefinitionImported(event);
 
