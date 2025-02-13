@@ -70,7 +70,7 @@ class ElasticsearchIndexControllerTest {
 
         assertAll(
             () -> verify(caseTypeRepository).findAllLatestVersions(),
-            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(caseTypes),
+            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(caseTypes, false, true),
             () -> assertThat(result.getTotal(), is(3)),
             () -> assertThat(result.getCaseTypesByJurisdiction().keySet().size(), is(2)),
             () -> assertThat(result.getCaseTypesByJurisdiction().get(JURISDICTION_1).size(), is(2)),
@@ -87,7 +87,7 @@ class ElasticsearchIndexControllerTest {
 
         assertAll(
             () -> verify(caseTypeRepository).findAllLatestVersions(),
-            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(caseTypes),
+            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(caseTypes, false, true),
             () -> assertThat(result.getTotal(), is(3)),
             () -> assertThat(result.getCaseTypesByJurisdiction().keySet().size(), is(2)),
             () -> assertThat(result.getCaseTypesByJurisdiction().get(JURISDICTION_1).size(), is(2)),
@@ -103,7 +103,7 @@ class ElasticsearchIndexControllerTest {
         IndicesCreationResult result = controller.createElasticsearchIndices(List.of(CASE_TYPE_1, CASE_TYPE_3));
 
         assertAll(
-            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(caseTypeCaptor.capture()),
+            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(caseTypeCaptor.capture(), false, true),
             () -> assertThat(caseTypeCaptor.getValue().size(), is(2)),
             () -> assertThat(caseTypeCaptor.getValue().get(0).getReference(), is(CASE_TYPE_1)),
             () -> assertThat(caseTypeCaptor.getValue().get(1).getReference(), is(CASE_TYPE_3)),

@@ -133,7 +133,7 @@ public class ElasticDefinitionImportListenerTest {
 
         @Override
         public void onDefinitionImported(DefinitionImportedEvent event) {
-            super.initialiseElasticSearch(event.getContent());
+            super.initialiseElasticSearch(event.getContent(), event.isReindex(), event.isDeleteOldIndex());
         }
     }
 }

@@ -66,7 +66,7 @@ public class ElasticsearchIndexController {
         List<CaseTypeEntity> caseTypesToIndex = CollectionUtils.isEmpty(caseTypeIds)
             ? caseTypeRepository.findAllLatestVersions()
             : caseTypeRepository.findAllLatestVersions(caseTypeIds);
-        elasticDefinitionImportListener.initialiseElasticSearch(caseTypesToIndex);
+        elasticDefinitionImportListener.initialiseElasticSearch(caseTypesToIndex, false, true);
         return new IndicesCreationResult(caseTypesToIndex);
     }
 

@@ -30,6 +30,6 @@ public class SynchronousElasticDefinitionImportListener extends ElasticDefinitio
         log.info("Errors initialising ElasticSearch will fail the definition import");
         boolean reindex = event.isReindex();
         boolean deleteOldIndex = event.isDeleteOldIndex();
-        super.initialiseElasticSearch(event.getContent());
+        super.initialiseElasticSearch(event.getContent(), reindex, deleteOldIndex);
     }
 }

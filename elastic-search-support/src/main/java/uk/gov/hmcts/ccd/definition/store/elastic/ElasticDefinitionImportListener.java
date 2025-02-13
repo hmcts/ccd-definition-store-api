@@ -47,7 +47,7 @@ public abstract class ElasticDefinitionImportListener {
      * The HighLevelCCDElasticClient is injected every time with a new ES client which opens new connections
      */
     @Transactional
-    public void initialiseElasticSearch(List<CaseTypeEntity> caseTypes) {
+    public void initialiseElasticSearch(List<CaseTypeEntity> caseTypes, boolean reindex, boolean deleteOldIndex) {
         HighLevelCCDElasticClient elasticClient = null;
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
