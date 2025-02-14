@@ -3,7 +3,9 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
+import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
 import org.elasticsearch.client.GetAliasesResponse;
+import org.elasticsearch.common.settings.Settings;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -56,16 +58,26 @@ public abstract class ElasticDefinitionImportListener {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
-                String aliasName = elasticClient.getAlias(baseIndexName).getAliases().keySet().toString();
                 if (!elasticClient.aliasExists(baseIndexName)) {
                     String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
                     String alias = baseIndexName;
                     elasticClient.createIndex(actualIndexName, alias);
                 }
-
-                caseMapping = mappingGenerator.generateMapping(caseType);
-                log.debug("case mapping: {}", caseMapping);
-                elasticClient.upsertMapping(baseIndexName, caseMapping);
+                if (reindex) {
+                    //set readonly
+                    UpdateSettingsRequest updateSettingsRequest = new UpdateSettingsRequest(baseIndexName);
+                    Settings settings = Settings.builder()
+                        .put("index.blocks.read_only", true)
+                        .build();
+                    updateSettingsRequest.settings(settings);
+                    //generate mapping with incremented case type version
+                    //String caseTypeName = elasticClient.getAlias(baseIndexName).getAliases().keySet().toString();
+                    //caseMapping = mappingGenerator.generateMapping(caseType);
+                    //initiate asynscrhonous elasticsearch reindexing request
+                    log.debug("case mapping: {}", caseMapping);
+                } else {
+                    elasticClient.upsertMapping(baseIndexName, caseMapping);
+                }
             }
         } catch (ElasticsearchStatusException exc) {
             logMapping(caseMapping);
