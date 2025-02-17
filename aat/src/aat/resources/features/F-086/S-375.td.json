@@ -84,6 +84,14 @@
            "default_value" : "[Defendant]",
            "retain_hidden_value" : null
          }, {
+             "complex_field_element_id" : "OrganisationPolicyField2.newCase",
+             "display_context" : "HIDDEN",
+             "label" : null,
+             "hint_text" : null,
+             "show_condition" : null,
+             "default_value" : null,
+             "retain_hidden_value" : null
+           }, {
            "complex_field_element_id" : "OrganisationPolicyField2.OrgPolicyReference",
            "display_context" : "OPTIONAL",
            "label" : null,
@@ -289,6 +297,14 @@
            "default_value" : null,
            "retain_hidden_value" : null
          }, {
+             "complex_field_element_id" : "OrganisationPolicyField1.newCase",
+             "display_context" : "HIDDEN",
+             "label" : null,
+             "hint_text" : null,
+             "show_condition" : null,
+             "default_value" : null,
+             "retain_hidden_value" : null
+           }, {
            "complex_field_element_id" : "OrganisationPolicyField1.OrgPolicyCaseAssignedRole",
            "display_context" : "OPTIONAL",
            "label" : null,

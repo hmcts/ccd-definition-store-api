@@ -581,6 +581,11 @@
       ],
       "states": [
         {
+          "__operator__": "equivalent",
+          "__ordering__": "unordered",
+          "__elementId__": "id"
+        },
+        {
           "id": "CaseUpdated",
           "name": "Updated case",
           "description": null,
@@ -1266,6 +1271,34 @@
                 "field_type": {
                   "id": "Email",
                   "type": "Email",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [],
+                  "complex_fields": [],
+                  "collection_field_type": null
+                },
+                "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null,
+                "retain_hidden_value": null,
+                "category_id": null
+              },
+              {
+                "metadata": false,
+                "id" : "newCase",
+                "case_type_id" : null,
+                "label" : "Indicate a new case",
+                "hint_text": null,
+                "field_type": {
+                  "id" : "YesOrNo",
+                  "type" : "YesOrNo",
                   "min": null,
                   "max": null,
                   "regular_expression": null,
