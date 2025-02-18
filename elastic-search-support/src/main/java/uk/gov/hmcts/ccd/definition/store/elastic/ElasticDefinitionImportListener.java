@@ -18,6 +18,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 public abstract class ElasticDefinitionImportListener {
@@ -71,7 +73,8 @@ public abstract class ElasticDefinitionImportListener {
                         .build();
                     updateSettingsRequest.settings(settings);
                     //generate mapping with incremented case type version
-                    //String caseTypeName = elasticClient.getAlias(baseIndexName).getAliases().keySet().toString();
+                    String caseTypeName = elasticClient.getAlias(baseIndexName).getAliases().keySet().toString();
+                    String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
                     //caseMapping = mappingGenerator.generateMapping(caseType);
                     //initiate asynscrhonous elasticsearch reindexing request
                     log.debug("case mapping: {}", caseMapping);
@@ -89,6 +92,28 @@ public abstract class ElasticDefinitionImportListener {
             if (elasticClient != null) {
                 elasticClient.close();
             }
+        }
+    }
+
+    private String incrementIndexNumber(String indexName) {
+        String caseTypeNameTrimmed = indexName.replaceAll("^\\[(.*)\\]$", "$1");
+
+        Pattern pattern = Pattern.compile("^(.*-)(\\d+)$");
+        Matcher matcher = pattern.matcher(caseTypeNameTrimmed);
+
+        if (matcher.find()) {
+            String prefix = matcher.group(1);
+            String numberStr = matcher.group(2);
+
+            int incremented = Integer.parseInt(numberStr) + 1;
+            String formattedNumber = String.format("%0" + numberStr.length() + "d", incremented);
+
+            String incrementedIndexName = prefix + formattedNumber;
+            System.out.println("Incremented index name: " + incrementedIndexName);
+            return incrementedIndexName;
+        } else {
+            System.out.println("No numeric part found to increment.");
+            return null;
         }
     }
 
