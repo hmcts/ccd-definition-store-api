@@ -72,10 +72,12 @@ public abstract class ElasticDefinitionImportListener {
                         .put("index.blocks.read_only", true)
                         .build();
                     updateSettingsRequest.settings(settings);
-                    //generate mapping with incremented case type version
+                    //create new index number
                     String caseTypeName = elasticClient.getAlias(baseIndexName).getAliases().keySet().toString();
                     String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
-                    //caseMapping = mappingGenerator.generateMapping(caseType);
+                    //create mappings for new index
+                    elasticClient.createIndex(incrementedCaseTypeName, baseIndexName);
+                    caseMapping = mappingGenerator.generateMapping(caseType);
                     //initiate asynscrhonous elasticsearch reindexing request
                     log.debug("case mapping: {}", caseMapping);
                 } else {
@@ -108,7 +110,7 @@ public abstract class ElasticDefinitionImportListener {
             int incremented = Integer.parseInt(numberStr) + 1;
             String formattedNumber = String.format("%0" + numberStr.length() + "d", incremented);
 
-            String incrementedIndexName = prefix + formattedNumber;
+            String incrementedIndexName = "[" + prefix + formattedNumber + "]";
             System.out.println("Incremented index name: " + incrementedIndexName);
             return incrementedIndexName;
         } else {
