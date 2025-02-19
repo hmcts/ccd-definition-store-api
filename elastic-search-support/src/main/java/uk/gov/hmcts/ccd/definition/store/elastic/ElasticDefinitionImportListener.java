@@ -73,7 +73,8 @@ public abstract class ElasticDefinitionImportListener {
                         .build();
                     updateSettingsRequest.settings(settings);
                     //create new index number
-                    String caseTypeName = elasticClient.getAlias(baseIndexName).getAliases().keySet().toString();
+                    GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
+                    String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
                     String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
                     //create mappings for new index
                     elasticClient.createIndex(incrementedCaseTypeName, baseIndexName);
@@ -98,10 +99,8 @@ public abstract class ElasticDefinitionImportListener {
     }
 
     private String incrementIndexNumber(String indexName) {
-        String caseTypeNameTrimmed = indexName.replaceAll("^\\[(.*)\\]$", "$1");
-
         Pattern pattern = Pattern.compile("^(.*-)(\\d+)$");
-        Matcher matcher = pattern.matcher(caseTypeNameTrimmed);
+        Matcher matcher = pattern.matcher(indexName);
 
         if (matcher.find()) {
             String prefix = matcher.group(1);
@@ -110,7 +109,7 @@ public abstract class ElasticDefinitionImportListener {
             int incremented = Integer.parseInt(numberStr) + 1;
             String formattedNumber = String.format("%0" + numberStr.length() + "d", incremented);
 
-            String incrementedIndexName = "[" + prefix + formattedNumber + "]";
+            String incrementedIndexName = prefix + formattedNumber;
             System.out.println("Incremented index name: " + incrementedIndexName);
             return incrementedIndexName;
         } else {
