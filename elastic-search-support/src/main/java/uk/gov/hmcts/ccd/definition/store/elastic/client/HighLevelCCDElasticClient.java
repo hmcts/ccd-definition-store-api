@@ -2,16 +2,21 @@ package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
+import org.elasticsearch.client.Cancellable;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.index.reindex.ReindexRequest;
 import org.elasticsearch.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
@@ -105,5 +110,32 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         Collections.sort(indices);
         log.info("found following indexes for alias {}: {}", indexName, indices);
         return Iterables.getLast(indices);
+    }
+
+    public Boolean reindexData(String oldIndex, String newIndex) {
+        final Boolean[] status = {false};
+        ReindexRequest request = new ReindexRequest();
+        request.setSourceIndices(oldIndex);
+        request.setDestIndex(newIndex);
+
+        ActionListener<BulkByScrollResponse> listener = new ActionListener<>() {
+
+            @Override
+            public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
+                log.info("Reindexing Completed");
+                log.info("Reindexing Summary: {}", bulkByScrollResponse.getStatus());
+                status[0] = true;
+            }
+
+            @Override
+            public void onFailure(Exception e) {
+                ;
+                log.error("Reindexing failed", e);
+                status[0] = false;
+
+            }
+        };
+        Cancellable response = elasticClient.reindexAsync(request, RequestOptions.DEFAULT, listener);
+        return status[0];
     }
 }

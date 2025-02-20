@@ -72,15 +72,27 @@ public abstract class ElasticDefinitionImportListener {
                         .put("index.blocks.read_only", true)
                         .build();
                     updateSettingsRequest.settings(settings);
+
                     //create new index number
                     GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
                     String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
                     String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
+
                     //create mappings for new index
                     elasticClient.createIndex(incrementedCaseTypeName, baseIndexName);
                     caseMapping = mappingGenerator.generateMapping(caseType);
-                    //initiate asynscrhonous elasticsearch reindexing request
                     log.debug("case mapping: {}", caseMapping);
+
+                    //initiate async elasticsearch reindexing request
+                    if (elasticClient.reindexData(baseIndexName, incrementedCaseTypeName)){
+                        //if success update alias to new index
+                        log.info("Reindexing successful, updating alias to new index");
+                    }
+                    else {
+                        log.info("Reindexing failed, deleting new index and setting old index to writable");
+                        //if failed delete new index, set old index writable
+                    }
+
                 } else {
                     elasticClient.upsertMapping(baseIndexName, caseMapping);
                 }
