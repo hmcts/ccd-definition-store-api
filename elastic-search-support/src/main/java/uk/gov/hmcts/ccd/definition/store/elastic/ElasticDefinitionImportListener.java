@@ -84,7 +84,7 @@ public abstract class ElasticDefinitionImportListener {
                     log.debug("case mapping: {}", caseMapping);
 
                     //initiate async elasticsearch reindexing request
-                    if (elasticClient.reindexData(baseIndexName, incrementedCaseTypeName)){
+                    if (elasticClient.reindexData(caseTypeName, incrementedCaseTypeName)){
                         //if success update alias to new index
                         log.info("Reindexing successful, updating alias to new index");
                     }
@@ -92,6 +92,7 @@ public abstract class ElasticDefinitionImportListener {
                         log.info("Reindexing failed, deleting new index and setting old index to writable");
                         //if failed delete new index, set old index writable
                     }
+                    //return 201, set taskID as header
 
                 } else {
                     elasticClient.upsertMapping(baseIndexName, caseMapping);
