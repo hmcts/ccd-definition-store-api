@@ -73,6 +73,16 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
     }
 
     @Override
+    public boolean indexAndMapping(String indexName, String aliasName, String caseTypeMapping) throws IOException {
+        //create index and mapping but no alias
+        CreateIndexRequest request = new CreateIndexRequest(indexName);
+        CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
+        log.info("index created: {}", createIndexResponse.isAcknowledged());
+        upsertMapping(aliasName, caseTypeMapping);
+        return createIndexResponse.isAcknowledged();
+    }
+
+    @Override
     public boolean aliasExists(String alias) throws IOException {
         GetAliasesRequest request = new GetAliasesRequest(alias);
         boolean exists = elasticClient.indices().existsAlias(request, RequestOptions.DEFAULT);
@@ -120,6 +130,8 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
             ReindexRequest request = new ReindexRequest();
             request.setSourceIndices(oldIndex);
             request.setDestIndex(newIndex);
+            log.info("Reindexing from {} to {}", oldIndex, newIndex);
+            log.info("Reindexing initiating");
 
             elasticClient.reindexAsync(request, RequestOptions.DEFAULT, new ActionListener<>() {
 

@@ -78,13 +78,11 @@ public abstract class ElasticDefinitionImportListener {
                     GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
                     String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
 
-                    //create new index with incremented number
+                    //create new index and mapping with incremented number
                     String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
-                    elasticClient.createIndex(incrementedCaseTypeName, baseIndexName);
-                    //
-                    ////create mappings for new index
-                    //caseMapping = mappingGenerator.generateMapping(caseType);
-                    //log.debug("case mapping: {}", caseMapping);
+                    caseMapping = mappingGenerator.generateMapping(caseType);
+                    log.debug("case mapping: {}", caseMapping);
+                    elasticClient.indexAndMapping(incrementedCaseTypeName, baseIndexName, caseMapping);
 
                     //initiate async elasticsearch reindexing request
                     CompletableFuture<Boolean> future = elasticClient.reindexData(caseTypeName, incrementedCaseTypeName);
