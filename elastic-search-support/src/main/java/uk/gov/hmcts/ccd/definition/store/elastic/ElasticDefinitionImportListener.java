@@ -18,6 +18,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -73,26 +74,31 @@ public abstract class ElasticDefinitionImportListener {
                         .build();
                     updateSettingsRequest.settings(settings);
 
-                    //create new index number
+                    //get current alias index
                     GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
                     String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
+
+                    //create new index with incremented number
                     String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
+                    elasticClient.createIndex(incrementedCaseTypeName, baseIndexName);
 
                     //create mappings for new index
-                    elasticClient.createIndex(incrementedCaseTypeName, baseIndexName);
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
 
                     //initiate async elasticsearch reindexing request
-                    elasticClient.reindexData(caseTypeName, incrementedCaseTypeName).thenAccept(success -> {
-                        if (success) {
-                            //if success update alias to new index
-                            log.info("Reindexing successful, updating alias to new index");
-                        } else {
-                            log.info("Reindexing failed, deleting new index and setting old index to writable");
-                            //if failed delete new index, set old index writable
-                        }
+                    CompletableFuture<Boolean> future = elasticClient.reindexData(caseTypeName, incrementedCaseTypeName);
+
+                    future.thenAccept(success -> {
+                        //if success update alias to new index
+                        log.info("Reindexing successful, updating alias to new index");
+                    }).exceptionally(ex -> {
+                        log.info("Reindexing failed, deleting new index and setting old index to writable");
+                        return null;
+                        //if failed delete new index, set old index writable
                     });
+                    //for debugging
+                    future.join();
                     //return 201, set taskID as header
 
                 } else {
