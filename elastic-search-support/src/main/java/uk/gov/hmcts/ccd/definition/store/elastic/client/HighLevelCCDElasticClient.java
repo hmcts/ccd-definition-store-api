@@ -10,6 +10,7 @@ import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
+import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.Cancellable;
@@ -115,7 +116,16 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         return Iterables.getLast(indices);
     }
 
-    public boolean indexAndMapping(String indexName, String aliasName, String caseTypeMapping) throws IOException {
+    public void setIndexReadOnly(String indexName, boolean readyOnly) throws IOException {
+        UpdateSettingsRequest updateSettingsRequest = new UpdateSettingsRequest(indexName);
+        Settings settings = Settings.builder()
+            .put("index.blocks.read_only", readyOnly)
+            .build();
+        updateSettingsRequest.settings(settings);
+        elasticClient.indices().putSettings(updateSettingsRequest, RequestOptions.DEFAULT);
+    }
+
+    public boolean createIndexAndMapping(String indexName, String aliasName, String caseTypeMapping) throws IOException {
         //create index and mapping but no alias
         CreateIndexRequest request = new CreateIndexRequest(indexName);
         CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
@@ -138,13 +148,13 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         return aliasResponse.isAcknowledged();
     }
 
-    public boolean removeOldIndex(String oldIndex) throws IOException {
-        DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(oldIndex);
+    public boolean removeIndex(String indexName) throws IOException {
+        DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(indexName);
         AcknowledgedResponse deleteResponse = elasticClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
         if (deleteResponse.isAcknowledged()) {
-            log.info("Deleted old index: {}", oldIndex);
+            log.info("Deleted index: {}", indexName);
         } else {
-            log.info("Failed to delete old index: {}", oldIndex);
+            log.info("Failed to delete index: {}", indexName);
         }
         return deleteResponse.isAcknowledged();
     }

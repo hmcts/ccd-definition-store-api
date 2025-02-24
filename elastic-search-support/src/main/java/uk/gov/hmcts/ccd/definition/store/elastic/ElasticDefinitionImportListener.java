@@ -68,11 +68,7 @@ public abstract class ElasticDefinitionImportListener {
                 }
                 if (reindex) {
                     //set readonly
-                    UpdateSettingsRequest updateSettingsRequest = new UpdateSettingsRequest(baseIndexName);
-                    Settings settings = Settings.builder()
-                        .put("index.blocks.read_only", true)
-                        .build();
-                    updateSettingsRequest.settings(settings);
+                    elasticClient.setIndexReadOnly(baseIndexName, true);
 
                     //get current alias index
                     GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
@@ -82,38 +78,11 @@ public abstract class ElasticDefinitionImportListener {
                     String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
-                    elasticClient.indexAndMapping(incrementedCaseTypeName, baseIndexName, caseMapping);
+                    elasticClient.createIndexAndMapping(incrementedCaseTypeName, baseIndexName, caseMapping);
 
-                    //initiate async elasticsearch reindexing request
-                    CompletableFuture<Boolean> future = elasticClient.reindexData(caseTypeName, incrementedCaseTypeName);
-
-                    HighLevelCCDElasticClient finalElasticClient = elasticClient;
-                    future.thenAccept(success -> {
-                        //if success update alias to new index
-                        log.info("Reindexing successful, updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
-                        try {
-                            finalElasticClient.updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                        // check if deleteOldIndex is true
-                        if (deleteOldIndex) {
-                            try {
-                                log.info("Deleting old index {}", caseTypeName);
-                                finalElasticClient.removeOldIndex(caseTypeName);
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    }).exceptionally(ex -> {
-                        log.info("Reindexing failed, deleting new index and setting old index to writable");
-                        return null;
-                        //if failed delete new index, set old index writable
-                    });
-                    //for debugging
-                    future.join();
-                    //return 201, set taskID as header
-
+                    //initiate reindexing
+                    handleReindexing(elasticClient, baseIndexName, caseTypeName, incrementedCaseTypeName, deleteOldIndex);
+                    //return http 201 to client
                 } else {
                     elasticClient.upsertMapping(baseIndexName, caseMapping);
                 }
@@ -129,6 +98,39 @@ public abstract class ElasticDefinitionImportListener {
                 elasticClient.close();
             }
         }
+    }
+
+    private void handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
+                                  String caseTypeName, String incrementedCaseTypeName, boolean deleteOldIndex) {
+        //initiate async elasticsearch reindexing request
+        CompletableFuture<Boolean> future = elasticClient.reindexData(caseTypeName, incrementedCaseTypeName);
+
+        future
+            .thenAccept(success -> {
+            try {
+                //if success update alias to new index, if deleteOldIndex true, delete old index
+                log.info("Reindexing successful, updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
+                elasticClient.updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
+                if (deleteOldIndex) {
+                    log.info("Deleting old index {}", caseTypeName);
+                    elasticClient.removeIndex(caseTypeName);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).exceptionally(ex -> {
+            try {
+                //if failed delete new index, set old index writable, need testing
+                log.info("Reindexing failed, error: {}", ex.getMessage());
+                elasticClient.removeIndex(incrementedCaseTypeName);
+                log.info("{} deleted", incrementedCaseTypeName);
+                elasticClient.setIndexReadOnly(caseTypeName, false);
+                log.info("{} set to writable", caseTypeName);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return null;
+        });
     }
 
     private String incrementIndexNumber(String indexName) {
