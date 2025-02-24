@@ -81,10 +81,10 @@ public abstract class ElasticDefinitionImportListener {
                     //create new index with incremented number
                     String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
                     elasticClient.createIndex(incrementedCaseTypeName, baseIndexName);
-
-                    //create mappings for new index
-                    caseMapping = mappingGenerator.generateMapping(caseType);
-                    log.debug("case mapping: {}", caseMapping);
+                    //
+                    ////create mappings for new index
+                    //caseMapping = mappingGenerator.generateMapping(caseType);
+                    //log.debug("case mapping: {}", caseMapping);
 
                     //initiate async elasticsearch reindexing request
                     CompletableFuture<Boolean> future = elasticClient.reindexData(caseTypeName, incrementedCaseTypeName);
