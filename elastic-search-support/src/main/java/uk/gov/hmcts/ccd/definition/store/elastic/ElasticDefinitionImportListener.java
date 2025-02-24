@@ -87,9 +87,16 @@ public abstract class ElasticDefinitionImportListener {
                     //initiate async elasticsearch reindexing request
                     CompletableFuture<Boolean> future = elasticClient.reindexData(caseTypeName, incrementedCaseTypeName);
 
+                    HighLevelCCDElasticClient finalElasticClient = elasticClient;
                     future.thenAccept(success -> {
                         //if success update alias to new index
-                        log.info("Reindexing successful, updating alias to new index");
+                        log.info("Reindexing successful, updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
+                        try {
+                            finalElasticClient.updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                        //check if old index can be deleted
                     }).exceptionally(ex -> {
                         log.info("Reindexing failed, deleting new index and setting old index to writable");
                         return null;

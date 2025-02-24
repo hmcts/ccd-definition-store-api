@@ -4,6 +4,7 @@ import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.alias.Alias;
+import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
@@ -83,6 +84,21 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
     }
 
     @Override
+    public boolean updateAlias(String aliasName, String oldIndex, String newIndex) throws IOException {
+        IndicesAliasesRequest aliasRequest = new IndicesAliasesRequest();
+        aliasRequest.addAliasAction(IndicesAliasesRequest.AliasActions.remove().index(oldIndex).alias(aliasName));
+        aliasRequest.addAliasAction(IndicesAliasesRequest.AliasActions.add().index(newIndex).alias(aliasName));
+
+        AcknowledgedResponse aliasResponse = elasticClient.indices().updateAliases(aliasRequest, RequestOptions.DEFAULT);
+        if (aliasResponse.isAcknowledged()) {
+            log.info("Alias updated: {} now points to {}", aliasName, newIndex);
+        } else {
+            log.info("Alias update failed: {} still points to {}", aliasName, oldIndex);
+        }
+        return aliasResponse.isAcknowledged();
+    }
+
+    @Override
     public boolean aliasExists(String alias) throws IOException {
         GetAliasesRequest request = new GetAliasesRequest(alias);
         boolean exists = elasticClient.indices().existsAlias(request, RequestOptions.DEFAULT);
@@ -130,8 +146,8 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
             ReindexRequest request = new ReindexRequest();
             request.setSourceIndices(oldIndex);
             request.setDestIndex(newIndex);
-            log.info("Reindexing from {} to {}", oldIndex, newIndex);
             log.info("Reindexing initiating");
+            log.info("Reindexing from {} to {}", oldIndex, newIndex);
 
             elasticClient.reindexAsync(request, RequestOptions.DEFAULT, new ActionListener<>() {
 

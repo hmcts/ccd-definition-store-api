@@ -10,6 +10,8 @@ public interface CCDElasticClient {
 
     boolean indexAndMapping(String indexName, String aliasName, String caseTypeMapping) throws IOException;
 
+    boolean updateAlias(String alias, String oldIndex, String newIndex) throws IOException;
+
     boolean aliasExists(String alias) throws IOException;
 
     void close();
