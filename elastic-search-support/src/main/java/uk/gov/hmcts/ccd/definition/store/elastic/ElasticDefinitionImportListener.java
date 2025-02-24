@@ -96,7 +96,15 @@ public abstract class ElasticDefinitionImportListener {
                         } catch (IOException e) {
                             throw new RuntimeException(e);
                         }
-                        //check if old index can be deleted
+                        // check if deleteOldIndex is true
+                        if (deleteOldIndex) {
+                            try {
+                                log.info("Deleting old index {}", caseTypeName);
+                                finalElasticClient.removeOldIndex(caseTypeName);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
                     }).exceptionally(ex -> {
                         log.info("Reindexing failed, deleting new index and setting old index to writable");
                         return null;

@@ -8,6 +8,7 @@ import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
 import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
+import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
 import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
@@ -74,31 +75,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
     }
 
     @Override
-    public boolean indexAndMapping(String indexName, String aliasName, String caseTypeMapping) throws IOException {
-        //create index and mapping but no alias
-        CreateIndexRequest request = new CreateIndexRequest(indexName);
-        CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
-        log.info("index created: {}", createIndexResponse.isAcknowledged());
-        upsertMapping(aliasName, caseTypeMapping);
-        return createIndexResponse.isAcknowledged();
-    }
-
-    @Override
-    public boolean updateAlias(String aliasName, String oldIndex, String newIndex) throws IOException {
-        IndicesAliasesRequest aliasRequest = new IndicesAliasesRequest();
-        aliasRequest.addAliasAction(IndicesAliasesRequest.AliasActions.remove().index(oldIndex).alias(aliasName));
-        aliasRequest.addAliasAction(IndicesAliasesRequest.AliasActions.add().index(newIndex).alias(aliasName));
-
-        AcknowledgedResponse aliasResponse = elasticClient.indices().updateAliases(aliasRequest, RequestOptions.DEFAULT);
-        if (aliasResponse.isAcknowledged()) {
-            log.info("Alias updated: {} now points to {}", aliasName, newIndex);
-        } else {
-            log.info("Alias update failed: {} still points to {}", aliasName, oldIndex);
-        }
-        return aliasResponse.isAcknowledged();
-    }
-
-    @Override
     public boolean aliasExists(String alias) throws IOException {
         GetAliasesRequest request = new GetAliasesRequest(alias);
         boolean exists = elasticClient.indices().existsAlias(request, RequestOptions.DEFAULT);
@@ -137,6 +113,40 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         Collections.sort(indices);
         log.info("found following indexes for alias {}: {}", indexName, indices);
         return Iterables.getLast(indices);
+    }
+
+    public boolean indexAndMapping(String indexName, String aliasName, String caseTypeMapping) throws IOException {
+        //create index and mapping but no alias
+        CreateIndexRequest request = new CreateIndexRequest(indexName);
+        CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
+        log.info("index created: {}", createIndexResponse.isAcknowledged());
+        upsertMapping(aliasName, caseTypeMapping);
+        return createIndexResponse.isAcknowledged();
+    }
+
+    public boolean updateAlias(String aliasName, String oldIndex, String newIndex) throws IOException {
+        IndicesAliasesRequest aliasRequest = new IndicesAliasesRequest();
+        aliasRequest.addAliasAction(IndicesAliasesRequest.AliasActions.remove().index(oldIndex).alias(aliasName));
+        aliasRequest.addAliasAction(IndicesAliasesRequest.AliasActions.add().index(newIndex).alias(aliasName));
+
+        AcknowledgedResponse aliasResponse = elasticClient.indices().updateAliases(aliasRequest, RequestOptions.DEFAULT);
+        if (aliasResponse.isAcknowledged()) {
+            log.info("Alias updated: {} now points to {}", aliasName, newIndex);
+        } else {
+            log.info("Alias update failed: {} still points to {}", aliasName, oldIndex);
+        }
+        return aliasResponse.isAcknowledged();
+    }
+
+    public boolean removeOldIndex(String oldIndex) throws IOException {
+        DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(oldIndex);
+        AcknowledgedResponse deleteResponse = elasticClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
+        if (deleteResponse.isAcknowledged()) {
+            log.info("Deleted old index: {}", oldIndex);
+        } else {
+            log.info("Failed to delete old index: {}", oldIndex);
+        }
+        return deleteResponse.isAcknowledged();
     }
 
     public CompletableFuture<Boolean> reindexData(String oldIndex, String newIndex) {
