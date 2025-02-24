@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 
 import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener.GLOBAL_SEARCH;
 
@@ -112,30 +113,33 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         return Iterables.getLast(indices);
     }
 
-    public Boolean reindexData(String oldIndex, String newIndex) {
-        final Boolean[] status = {false};
-        ReindexRequest request = new ReindexRequest();
-        request.setSourceIndices(oldIndex);
-        request.setDestIndex(newIndex);
+    public CompletableFuture<Boolean> reindexData(String oldIndex, String newIndex) {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
 
-        ActionListener<BulkByScrollResponse> listener = new ActionListener<>() {
+        try {
+            ReindexRequest request = new ReindexRequest();
+            request.setSourceIndices(oldIndex);
+            request.setDestIndex(newIndex);
 
-            @Override
-            public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
-                log.info("Reindexing Completed");
-                log.info("Reindexing Summary: {}", bulkByScrollResponse.getStatus());
-                status[0] = true;
-            }
+            elasticClient.reindexAsync(request, RequestOptions.DEFAULT, new ActionListener<>() {
 
-            @Override
-            public void onFailure(Exception e) {
-                ;
-                log.error("Reindexing failed", e);
-                status[0] = false;
+                @Override
+                public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
+                    log.info("Reindexing Completed");
+                    log.info("Reindexing Summary: {}", bulkByScrollResponse.getStatus());
+                    future.complete(true);
+                }
 
-            }
-        };
-        Cancellable response = elasticClient.reindexAsync(request, RequestOptions.DEFAULT, listener);
-        return status[0];
+                @Override
+                public void onFailure(Exception e) {
+                    log.error("Reindexing failed", e);
+                    future.complete(false);
+                }
+            });
+        } catch (Exception e) {
+            log.error("Error initiating reindexing", e);
+            future.complete(false);
+        }
+        return future;
     }
 }
