@@ -54,7 +54,7 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
             byte[] bytes = baos.toByteArray();
             LOG.info("Importing Definition file...");
             final DefinitionFileUploadMetadata metadata =
-                importService.importFormDefinitions(new ByteArrayInputStream(bytes));
+                importService.importFormDefinitions(new ByteArrayInputStream(bytes), reindex, deleteOldIndex);
 
             if (azureStorageConfiguration != null
                 && azureStorageConfiguration.isAzureUploadEnabled()

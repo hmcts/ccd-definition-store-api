@@ -60,7 +60,7 @@ class ProcessUploadServiceTest {
         metadata.setJurisdiction("TEST");
         metadata.addCaseType("TestCaseType");
         metadata.setUserId("user@hmcts.net");
-        when(importService.importFormDefinitions(any())).thenReturn(metadata);
+        when(importService.importFormDefinitions(any(), false, true)).thenReturn(metadata);
         when(importService.getImportWarnings()).thenReturn(Collections.emptyList());
     }
 
@@ -111,7 +111,7 @@ class ProcessUploadServiceTest {
     @Test
     void invalidUpload() throws Exception {
 
-        willThrow(new IOException("boo")).given(importService).importFormDefinitions(any());
+        willThrow(new IOException("boo")).given(importService).importFormDefinitions(any(), false, true);
 
         final IOException
             exception =

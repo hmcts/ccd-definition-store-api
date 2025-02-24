@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface ImportService {
 
-    DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream) throws IOException;
+    DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream, boolean reindex, boolean deleteOldIndex) throws IOException;
 
     List<String> getImportWarnings();
 }
