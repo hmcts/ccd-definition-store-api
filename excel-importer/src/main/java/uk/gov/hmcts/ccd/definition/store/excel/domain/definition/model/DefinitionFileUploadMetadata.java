@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -12,6 +15,9 @@ public class DefinitionFileUploadMetadata {
     private String jurisdiction;
     private List<String> caseTypes;
     private String userId;
+    @Setter
+    @Getter
+    private String taskId;
 
     public String getJurisdiction() {
         return jurisdiction;

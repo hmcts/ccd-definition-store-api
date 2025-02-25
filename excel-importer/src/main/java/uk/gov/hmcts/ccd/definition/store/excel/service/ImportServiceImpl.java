@@ -297,7 +297,8 @@ public class ImportServiceImpl implements ImportService {
         logger.info("Importing spreadsheet: User profiles: OK");
 
         //testing
-        applicationEventPublisher.publishEvent(new DefinitionImportedEvent(caseTypes, true, true));
+        DefinitionImportedEvent event = new DefinitionImportedEvent(caseTypes, reindex, deleteOldIndex);
+        applicationEventPublisher.publishEvent(event);
 
         logger.info("Importing spreadsheet: OK: For jurisdiction {}", jurisdiction.getReference());
 
@@ -338,6 +339,8 @@ public class ImportServiceImpl implements ImportService {
         if (applicationParams.isWelshTranslationEnabled()) {
             translationService.processDefinitionSheets(definitionSheets);
         }
+
+        metadata.setTaskId(event.getTaskId());
 
         return metadata;
     }

@@ -1,7 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import com.google.common.collect.Iterables;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.util.EntityUtils;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
@@ -15,7 +18,10 @@ import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.Cancellable;
 import org.elasticsearch.client.GetAliasesResponse;
+import org.elasticsearch.client.Request;
 import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.ResponseListener;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
@@ -159,34 +165,43 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         return deleteResponse.isAcknowledged();
     }
 
-    public CompletableFuture<Boolean> reindexData(String oldIndex, String newIndex) {
-        CompletableFuture<Boolean> future = new CompletableFuture<>();
+    public CompletableFuture<String> reindexData(String oldIndex, String newIndex) {
+        CompletableFuture<String> future = new CompletableFuture<>();
 
         try {
-            ReindexRequest request = new ReindexRequest();
-            request.setSourceIndices(oldIndex);
-            request.setDestIndex(newIndex);
-            log.info("Reindexing initiating");
-            log.info("Reindexing from {} to {}", oldIndex, newIndex);
+            String jsonBody = String.format(
+                "{ \"source\": { \"index\": \"%s\" }, \"dest\": { \"index\": \"%s\" } }",
+                oldIndex, newIndex
+            );
 
-            elasticClient.reindexAsync(request, RequestOptions.DEFAULT, new ActionListener<>() {
+            // send reindex request with wait_for_completion=false for asynchronus reindexing to get task id
+            Request request = new Request("POST", "_reindex?wait_for_completion=false");
+            request.setJsonEntity(jsonBody);
 
+            elasticClient.getLowLevelClient().performRequestAsync(request, new ResponseListener() {
                 @Override
-                public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
-                    log.info("Reindexing Completed");
-                    log.info("Reindexing Summary: {}", bulkByScrollResponse.getStatus());
-                    future.complete(true);
+                public void onSuccess(Response response) {
+                    try {
+                        String responseBody = EntityUtils.toString(response.getEntity());
+                        JsonObject jsonResponse = JsonParser.parseString(responseBody).getAsJsonObject();
+                        String taskId = jsonResponse.get("task").getAsString();
+                        log.info("Reindexing Completed, Task ID: {}", taskId);
+                        future.complete(taskId);
+                    } catch (Exception e) {
+                        future.completeExceptionally(e);
+                    }
                 }
 
                 @Override
                 public void onFailure(Exception e) {
                     log.error("Reindexing failed", e);
-                    future.complete(false);
+                    future.completeExceptionally(e);
                 }
             });
+
         } catch (Exception e) {
-            log.error("Error initiating reindexing", e);
-            future.complete(false);
+            log.error("Exception starting reindexing", e);
+            future.completeExceptionally(e);
         }
         return future;
     }

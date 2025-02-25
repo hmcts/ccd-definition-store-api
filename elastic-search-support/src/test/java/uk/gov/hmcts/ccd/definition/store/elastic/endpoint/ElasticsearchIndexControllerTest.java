@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.model.IndicesCreationResult;
+import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -67,10 +68,11 @@ class ElasticsearchIndexControllerTest {
     @Test
     void shouldTriggerElasticsearchIndicesCreationWithEmptyList() {
         IndicesCreationResult result = controller.createElasticsearchIndices(Collections.emptyList());
+        DefinitionImportedEvent event = new DefinitionImportedEvent(caseTypes, false, true);
 
         assertAll(
             () -> verify(caseTypeRepository).findAllLatestVersions(),
-            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(caseTypes, false, true),
+            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(event),
             () -> assertThat(result.getTotal(), is(3)),
             () -> assertThat(result.getCaseTypesByJurisdiction().keySet().size(), is(2)),
             () -> assertThat(result.getCaseTypesByJurisdiction().get(JURISDICTION_1).size(), is(2)),
@@ -84,10 +86,11 @@ class ElasticsearchIndexControllerTest {
     @Test
     void shouldTriggerElasticsearchIndicesCreationWithNullList() {
         IndicesCreationResult result = controller.createElasticsearchIndices(null);
+        DefinitionImportedEvent event = new DefinitionImportedEvent(caseTypes, false, true);
 
         assertAll(
             () -> verify(caseTypeRepository).findAllLatestVersions(),
-            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(caseTypes, false, true),
+            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(event),
             () -> assertThat(result.getTotal(), is(3)),
             () -> assertThat(result.getCaseTypesByJurisdiction().keySet().size(), is(2)),
             () -> assertThat(result.getCaseTypesByJurisdiction().get(JURISDICTION_1).size(), is(2)),
@@ -101,9 +104,10 @@ class ElasticsearchIndexControllerTest {
     @Test
     void shouldTriggerElasticsearchIndicesCreationWithProvidedCaseTypes() {
         IndicesCreationResult result = controller.createElasticsearchIndices(List.of(CASE_TYPE_1, CASE_TYPE_3));
+        DefinitionImportedEvent event = new DefinitionImportedEvent(caseTypeCaptor.capture(), false, true);
 
         assertAll(
-            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(caseTypeCaptor.capture(), false, true),
+            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(event),
             () -> assertThat(caseTypeCaptor.getValue().size(), is(2)),
             () -> assertThat(caseTypeCaptor.getValue().get(0).getReference(), is(CASE_TYPE_1)),
             () -> assertThat(caseTypeCaptor.getValue().get(1).getReference(), is(CASE_TYPE_3)),

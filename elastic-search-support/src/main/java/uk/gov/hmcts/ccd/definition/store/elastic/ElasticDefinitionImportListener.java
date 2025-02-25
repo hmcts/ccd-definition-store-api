@@ -2,10 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import lombok.extern.slf4j.Slf4j;
 import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
-import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
 import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.common.settings.Settings;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -52,7 +49,11 @@ public abstract class ElasticDefinitionImportListener {
      * The HighLevelCCDElasticClient is injected every time with a new ES client which opens new connections
      */
     @Transactional
-    public void initialiseElasticSearch(List<CaseTypeEntity> caseTypes, boolean reindex, boolean deleteOldIndex) {
+    public void initialiseElasticSearch( DefinitionImportedEvent event) {
+        List<CaseTypeEntity> caseTypes = event.getContent();
+        boolean reindex = event.isReindex();
+        boolean deleteOldIndex = event.isDeleteOldIndex();
+
         HighLevelCCDElasticClient elasticClient = null;
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
@@ -81,8 +82,9 @@ public abstract class ElasticDefinitionImportListener {
                     elasticClient.createIndexAndMapping(incrementedCaseTypeName, baseIndexName, caseMapping);
 
                     //initiate reindexing
-                    handleReindexing(elasticClient, baseIndexName, caseTypeName, incrementedCaseTypeName, deleteOldIndex);
-                    //return http 201 to client
+                    CompletableFuture<String> taskId = handleReindexing(elasticClient, baseIndexName, caseTypeName, incrementedCaseTypeName, deleteOldIndex);
+                    event.setTaskId(taskId.get());
+
                 } else {
                     elasticClient.upsertMapping(baseIndexName, caseMapping);
                 }
@@ -100,21 +102,24 @@ public abstract class ElasticDefinitionImportListener {
         }
     }
 
-    private void handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
+    private CompletableFuture<String> handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
                                   String caseTypeName, String incrementedCaseTypeName, boolean deleteOldIndex) {
         //initiate async elasticsearch reindexing request
-        CompletableFuture<Boolean> future = elasticClient.reindexData(caseTypeName, incrementedCaseTypeName);
+        CompletableFuture<String> taskIdFuture = elasticClient.reindexData(caseTypeName, incrementedCaseTypeName);
 
-        future
-            .thenAccept(success -> {
+        taskIdFuture
+            .thenApply(taskId -> {
             try {
                 //if success update alias to new index, if deleteOldIndex true, delete old index
+                log.info("Reindexing task id: {}", taskId);
                 log.info("Reindexing successful, updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
                 elasticClient.updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
+
                 if (deleteOldIndex) {
                     log.info("Deleting old index {}", caseTypeName);
                     elasticClient.removeIndex(caseTypeName);
                 }
+                return taskId;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -129,8 +134,9 @@ public abstract class ElasticDefinitionImportListener {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            return null;
+            return "Failed";
         });
+        return taskIdFuture;
     }
 
     private String incrementIndexNumber(String indexName) {

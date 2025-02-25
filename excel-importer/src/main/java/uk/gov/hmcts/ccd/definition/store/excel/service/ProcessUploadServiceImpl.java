@@ -70,9 +70,12 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
                 }
                 return ResponseEntity.status(HttpStatus.CREATED)
                     .header(IMPORT_WARNINGS_HEADER, importService.getImportWarnings().toArray(new String[0]))
+                    .header("Elasticsearch-Reindex-Task", metadata.getTaskId())
                     .body(SUCCESSFULLY_CREATED);
             }
-            return ResponseEntity.status(HttpStatus.CREATED).body(SUCCESSFULLY_CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED)
+                .header("Elasticsearch-Reindex-Task", metadata.getTaskId())
+                .body(SUCCESSFULLY_CREATED);
         }
     }
 }
