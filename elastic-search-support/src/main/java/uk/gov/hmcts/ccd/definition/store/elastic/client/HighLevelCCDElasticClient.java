@@ -131,12 +131,21 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         elasticClient.indices().putSettings(updateSettingsRequest, RequestOptions.DEFAULT);
     }
 
-    public boolean createIndexAndMapping(String indexName, String aliasName, String caseTypeMapping) throws IOException {
+    //TODO: Cleanup
+    public boolean createIndexAndMapping(String indexName, String caseTypeMapping) throws IOException {
         //create index and mapping but no alias
         CreateIndexRequest request = new CreateIndexRequest(indexName);
+        request.settings(casesIndexSettings(CASES_INDEX_SETTINGS_JSON));
         CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
         log.info("index created: {}", createIndexResponse.isAcknowledged());
-        upsertMapping(aliasName, caseTypeMapping);
+
+        PutMappingRequest request2 = new PutMappingRequest(indexName);
+        request2.source(caseTypeMapping, XContentType.JSON);
+        request2.type(config.getCasesIndexType());
+
+        AcknowledgedResponse acknowledgedResponse = elasticClient.indices().putMapping(request2, RequestOptions.DEFAULT);
+        log.info("mapping upserted: {}", acknowledgedResponse.isAcknowledged());
+
         return createIndexResponse.isAcknowledged();
     }
 

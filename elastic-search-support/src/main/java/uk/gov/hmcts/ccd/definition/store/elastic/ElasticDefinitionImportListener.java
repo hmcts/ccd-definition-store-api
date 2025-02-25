@@ -79,7 +79,7 @@ public abstract class ElasticDefinitionImportListener {
                     String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
-                    elasticClient.createIndexAndMapping(incrementedCaseTypeName, baseIndexName, caseMapping);
+                    elasticClient.createIndexAndMapping(incrementedCaseTypeName, caseMapping);
 
                     //initiate reindexing
                     CompletableFuture<String> taskId = handleReindexing(elasticClient, baseIndexName, caseTypeName, incrementedCaseTypeName, deleteOldIndex);
