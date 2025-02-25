@@ -113,6 +113,8 @@ public abstract class ElasticDefinitionImportListener {
                 //if success update alias to new index, if deleteOldIndex true, delete old index
                 log.info("Reindexing task id: {}", taskId);
                 log.info("Reindexing successful, updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
+                //set writable
+                elasticClient.setIndexReadOnly(baseIndexName, false);
                 elasticClient.updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
 
                 if (deleteOldIndex) {
