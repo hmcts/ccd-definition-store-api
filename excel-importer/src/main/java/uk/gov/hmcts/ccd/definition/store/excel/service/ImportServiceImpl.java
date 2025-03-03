@@ -296,7 +296,6 @@ public class ImportServiceImpl implements ImportService {
             userDetails.getEmail());
         logger.info("Importing spreadsheet: User profiles: OK");
 
-        //testing
         DefinitionImportedEvent event = new DefinitionImportedEvent(caseTypes, reindex, deleteOldIndex);
         applicationEventPublisher.publishEvent(event);
 

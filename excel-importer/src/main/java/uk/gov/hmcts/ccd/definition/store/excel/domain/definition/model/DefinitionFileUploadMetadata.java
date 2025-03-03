@@ -12,19 +12,13 @@ import java.util.stream.Collectors;
  */
 public class DefinitionFileUploadMetadata {
 
-    private String jurisdiction;
+    @Setter private String jurisdiction;
     private List<String> caseTypes;
-    private String userId;
-    @Setter
-    @Getter
-    private String taskId;
+    @Setter private String userId;
+    @Setter @Getter private String taskId;
 
     public String getJurisdiction() {
         return jurisdiction;
-    }
-
-    public void setJurisdiction(final String jurisdiction) {
-        this.jurisdiction = jurisdiction;
     }
 
     public List<String> getCaseTypes() {
@@ -33,10 +27,6 @@ public class DefinitionFileUploadMetadata {
 
     public String getUserId() {
         return userId;
-    }
-
-    public void setUserId(final String userId) {
-        this.userId = userId;
     }
 
     public void addCaseType(final String caseType) {

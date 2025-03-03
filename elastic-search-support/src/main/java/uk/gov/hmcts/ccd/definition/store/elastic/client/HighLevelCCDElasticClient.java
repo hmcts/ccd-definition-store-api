@@ -5,18 +5,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.util.EntityUtils;
-import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
-import org.elasticsearch.action.admin.indices.create.CreateIndexRequest;
-import org.elasticsearch.action.admin.indices.create.CreateIndexResponse;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequest;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
+import org.elasticsearch.client.indices.PutMappingRequest;
 import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
-import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.Cancellable;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.RequestOptions;
@@ -24,8 +21,6 @@ import org.elasticsearch.client.Response;
 import org.elasticsearch.client.ResponseListener;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.index.reindex.ReindexRequest;
 import org.elasticsearch.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
@@ -74,7 +69,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         String currentIndex = getCurrentAliasIndex(aliasName, aliasesResponse);
         log.info("upsert mapping of index {}", currentIndex);
         PutMappingRequest request = new PutMappingRequest(currentIndex);
-        request.type(config.getCasesIndexType());
         request.source(caseTypeMapping, XContentType.JSON);
         AcknowledgedResponse acknowledgedResponse = elasticClient.indices().putMapping(request, RequestOptions.DEFAULT);
         log.info("mapping upserted: {}", acknowledgedResponse.isAcknowledged());
@@ -139,11 +133,10 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
         log.info("index created: {}", createIndexResponse.isAcknowledged());
 
-        PutMappingRequest request2 = new PutMappingRequest(indexName);
-        request2.source(caseTypeMapping, XContentType.JSON);
-        request2.type(config.getCasesIndexType());
+        PutMappingRequest putRequest = new PutMappingRequest(indexName);
+        putRequest.source(caseTypeMapping, XContentType.JSON);
 
-        AcknowledgedResponse acknowledgedResponse = elasticClient.indices().putMapping(request2, RequestOptions.DEFAULT);
+        AcknowledgedResponse acknowledgedResponse = elasticClient.indices().putMapping(putRequest, RequestOptions.DEFAULT);
         log.info("mapping upserted: {}", acknowledgedResponse.isAcknowledged());
 
         return createIndexResponse.isAcknowledged();
