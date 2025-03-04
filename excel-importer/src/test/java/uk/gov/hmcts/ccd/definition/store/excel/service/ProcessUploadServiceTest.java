@@ -68,7 +68,7 @@ class ProcessUploadServiceTest {
     @Test
     void validUploadAzureEnabled() throws Exception {
         when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
-        val result = processUploadService.processUpload(file);
+        val result = processUploadService.processUpload(file, false, true);
         verify(fileStorageService).uploadFile(file, metadata);
         assertEquals(result.getStatusCode(), HttpStatus.CREATED);
         assertEquals(result.getBody(), processUploadService.SUCCESSFULLY_CREATED);
@@ -80,7 +80,7 @@ class ProcessUploadServiceTest {
         when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
         final IOException
             exception =
-            assertThrows(IOException.class, () -> processUploadService.processUpload(null));
+            assertThrows(IOException.class, () -> processUploadService.processUpload(null, false, true));
         assertThat(exception.getMessage(), is(IMPORT_FILE_ERROR));
     }
 
@@ -93,7 +93,7 @@ class ProcessUploadServiceTest {
         when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
         final IOException
             exception =
-            assertThrows(IOException.class, () -> processUploadService.processUpload(fileTest));
+            assertThrows(IOException.class, () -> processUploadService.processUpload(fileTest, false, true));
         assertThat(exception.getMessage(), is(IMPORT_FILE_ERROR));
     }
 
@@ -101,7 +101,7 @@ class ProcessUploadServiceTest {
     @Test
     void validUploadAzureDisabled() throws Exception {
         when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(false);
-        val result = processUploadService.processUpload(file);
+        val result = processUploadService.processUpload(file, false, true);
         verify(fileStorageService, never()).uploadFile(file, metadata);
         assertEquals(result.getStatusCode(), HttpStatus.CREATED);
         assertEquals(result.getBody(), processUploadService.SUCCESSFULLY_CREATED);
@@ -115,7 +115,7 @@ class ProcessUploadServiceTest {
 
         final IOException
             exception =
-            assertThrows(IOException.class, () -> processUploadService.processUpload(file));
+            assertThrows(IOException.class, () -> processUploadService.processUpload(file, false, true));
         assertThat(exception.getMessage(), is("boo"));
     }
 
@@ -126,7 +126,7 @@ class ProcessUploadServiceTest {
         final String firstWarning = "First warning";
         final String secondWarning = "Second warning";
         when(importService.getImportWarnings()).thenReturn(Arrays.asList(firstWarning, secondWarning));
-        val result = processUploadService.processUpload(file);
+        val result = processUploadService.processUpload(file, false, true);
         assertEquals(result.getStatusCode(), HttpStatus.CREATED);
         assertEquals(result.getBody(), processUploadService.SUCCESSFULLY_CREATED);
         assertEquals(result.getHeaders().get(processUploadService.IMPORT_WARNINGS_HEADER),
@@ -138,7 +138,7 @@ class ProcessUploadServiceTest {
     void invalidUploadDueToNullValues() throws Exception {
         val processUploadServiceTest =
             new ProcessUploadServiceImpl(importService, null, null);
-        val result = processUploadServiceTest.processUpload(file);
+        val result = processUploadServiceTest.processUpload(file, false, true);
         assertEquals(result.getStatusCode(), HttpStatus.CREATED);
         assertEquals(result.getBody(), processUploadService.SUCCESSFULLY_CREATED);
     }

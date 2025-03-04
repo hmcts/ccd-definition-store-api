@@ -116,10 +116,10 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         return Iterables.getLast(indices);
     }
 
-    public void setIndexReadOnly(String indexName, boolean readyOnly) throws IOException {
+    public void setIndexReadOnly(String indexName, boolean readOnly) throws IOException {
         UpdateSettingsRequest updateSettingsRequest = new UpdateSettingsRequest(indexName);
         Settings settings = Settings.builder()
-            .put("index.blocks.read_only", readyOnly)
+            .put("index.blocks.read_only", readOnly)
             .build();
         updateSettingsRequest.settings(settings);
         elasticClient.indices().putSettings(updateSettingsRequest, RequestOptions.DEFAULT);

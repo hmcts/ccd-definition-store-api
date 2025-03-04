@@ -155,8 +155,7 @@ public abstract class ElasticDefinitionImportListener {
             log.info("incremented index name: {}", incrementedIndexName);
             return incrementedIndexName;
         } else {
-            log.info("no numeric part found to increment.");
-            return null;
+            throw new IllegalArgumentException("Invalid index name format: " + indexName);
         }
     }
 

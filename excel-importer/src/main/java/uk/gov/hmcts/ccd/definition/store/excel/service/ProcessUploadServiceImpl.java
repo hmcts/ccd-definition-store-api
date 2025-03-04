@@ -35,12 +35,6 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
         this.azureStorageConfiguration = azureStorageConfiguration;
     }
 
-    //TODO: Remove this method
-    @Transactional
-    public ResponseEntity processUpload(MultipartFile file) throws IOException {
-        return processUpload(file, false, true); // Default values
-    }
-
     @Transactional
     @Override
     public ResponseEntity processUpload(MultipartFile file, boolean reindex, boolean deleteOldIndex) throws IOException {
