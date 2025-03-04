@@ -111,14 +111,13 @@ public abstract class ElasticDefinitionImportListener {
             .thenApply(taskId -> {
             try {
                 //if success update alias to new index, if deleteOldIndex true, delete old index
-                log.info("Reindexing task id: {}", taskId);
-                log.info("Reindexing successful, updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
+                log.info("updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
                 //set writable
                 elasticClient.setIndexReadOnly(baseIndexName, false);
                 elasticClient.updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
 
                 if (deleteOldIndex) {
-                    log.info("Deleting old index {}", caseTypeName);
+                    log.info("deleting old index {}", caseTypeName);
                     elasticClient.removeIndex(caseTypeName);
                 }
                 return taskId;
@@ -128,7 +127,7 @@ public abstract class ElasticDefinitionImportListener {
         }).exceptionally(ex -> {
             try {
                 //if failed delete new index, set old index writable, need testing
-                log.info("Reindexing failed, error: {}", ex.getMessage());
+                log.info("reindexing failed, error: {}", ex.getMessage());
                 elasticClient.removeIndex(incrementedCaseTypeName);
                 log.info("{} deleted", incrementedCaseTypeName);
                 elasticClient.setIndexReadOnly(caseTypeName, false);
@@ -153,10 +152,10 @@ public abstract class ElasticDefinitionImportListener {
             String formattedNumber = String.format("%0" + numberStr.length() + "d", incremented);
 
             String incrementedIndexName = prefix + formattedNumber;
-            System.out.println("Incremented index name: " + incrementedIndexName);
+            log.info("incremented index name: {}", incrementedIndexName);
             return incrementedIndexName;
         } else {
-            System.out.println("No numeric part found to increment.");
+            log.info("no numeric part found to increment.");
             return null;
         }
     }

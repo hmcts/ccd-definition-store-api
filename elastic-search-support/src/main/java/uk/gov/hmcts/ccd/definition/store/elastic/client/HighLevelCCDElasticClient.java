@@ -149,9 +149,9 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
 
         AcknowledgedResponse aliasResponse = elasticClient.indices().updateAliases(aliasRequest, RequestOptions.DEFAULT);
         if (aliasResponse.isAcknowledged()) {
-            log.info("Alias updated: {} now points to {}", aliasName, newIndex);
+            log.info("alias successfully updated: {} now points to {}", oldIndex, newIndex);
         } else {
-            log.info("Alias update failed: {} still points to {}", aliasName, oldIndex);
+            log.info("alias update failed: {} still points to {}", oldIndex, oldIndex);
         }
         return aliasResponse.isAcknowledged();
     }
@@ -160,9 +160,9 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
         DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(indexName);
         AcknowledgedResponse deleteResponse = elasticClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
         if (deleteResponse.isAcknowledged()) {
-            log.info("Deleted index: {}", indexName);
+            log.info("successfully deleted index: {}", indexName);
         } else {
-            log.info("Failed to delete index: {}", indexName);
+            log.info("failed to delete index: {}", indexName);
         }
         return deleteResponse.isAcknowledged();
     }
@@ -187,7 +187,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
                         String responseBody = EntityUtils.toString(response.getEntity());
                         JsonObject jsonResponse = JsonParser.parseString(responseBody).getAsJsonObject();
                         String taskId = jsonResponse.get("task").getAsString();
-                        log.info("Reindexing Completed, Task ID: {}", taskId);
+                        log.info("reindexing successful, Task ID: {}", taskId);
                         future.complete(taskId);
                     } catch (Exception e) {
                         future.completeExceptionally(e);
@@ -196,13 +196,13 @@ public class HighLevelCCDElasticClient implements CCDElasticClient {
 
                 @Override
                 public void onFailure(Exception e) {
-                    log.error("Reindexing failed", e);
+                    log.error("reindexing failed", e);
                     future.completeExceptionally(e);
                 }
             });
 
         } catch (Exception e) {
-            log.error("Exception starting reindexing", e);
+            log.error("exception starting reindexing", e);
             future.completeExceptionally(e);
         }
         return future;
