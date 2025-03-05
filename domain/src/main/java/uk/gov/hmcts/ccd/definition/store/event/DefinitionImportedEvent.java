@@ -10,8 +10,7 @@ public class DefinitionImportedEvent extends ImportEvent<List<CaseTypeEntity>> {
 
     private final boolean reindex;
     private final boolean deleteOldIndex;
-    @Setter @Getter
-    private String taskId;
+    @Setter @Getter private String taskId;
 
     public DefinitionImportedEvent(List<CaseTypeEntity> caseTypes, boolean reindex, boolean deleteOldIndex) {
         super(caseTypes);

@@ -67,7 +67,8 @@ public class ElasticsearchIndexController {
         List<CaseTypeEntity> caseTypesToIndex = CollectionUtils.isEmpty(caseTypeIds)
             ? caseTypeRepository.findAllLatestVersions()
             : caseTypeRepository.findAllLatestVersions(caseTypeIds);
-        DefinitionImportedEvent event = new DefinitionImportedEvent(caseTypesToIndex, false, false);
+        //testing
+        DefinitionImportedEvent event = new DefinitionImportedEvent(caseTypesToIndex, false, true);
         elasticDefinitionImportListener.initialiseElasticSearch(event);
         return new IndicesCreationResult(caseTypesToIndex);
     }
