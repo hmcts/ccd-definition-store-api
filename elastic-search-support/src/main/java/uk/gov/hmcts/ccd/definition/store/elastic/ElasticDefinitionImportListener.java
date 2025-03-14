@@ -86,6 +86,8 @@ public abstract class ElasticDefinitionImportListener {
                     event.setTaskId(taskId.get());
 
                 } else {
+                    caseMapping = mappingGenerator.generateMapping(caseType);
+                    log.debug("case mapping: {}", caseMapping);
                     elasticClient.upsertMapping(baseIndexName, caseMapping);
                 }
             }
