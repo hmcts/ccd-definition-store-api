@@ -1,8 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import org.elasticsearch.client.GetAliasesResponse;
+import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -17,11 +20,19 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -44,11 +55,11 @@ public class ElasticDefinitionImportListenerTest {
     @Mock
     private CaseMappingGenerator caseMappingGenerator;
 
-    @Mock
-    private ElasticsearchErrorHandler elasticsearchErrorHandler;
-
     private CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA").withReference("caseTypeA").build();
     private CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB").withReference("caseTypeB").build();
+    private final String baseIndexName = "casetypea";
+    private final String caseTypeName = "casetypea-0001";
+    private final String incrementedCaseTypeName = "casetypea-0002";
 
     @BeforeEach
     public void setUp() {
@@ -119,8 +130,117 @@ public class ElasticDefinitionImportListenerTest {
         });
     }
 
+    @Test
+    public void IfReindexTrueAndDeleteOldIndexTrue() throws IOException, ExecutionException, InterruptedException {
+        mockAliasResponse();
+
+        CompletableFuture<String> mockFuture = CompletableFuture.completedFuture("taskId");
+        when(ccdElasticClient.reindexData(anyString(), anyString()))
+            .thenReturn(mockFuture);
+
+        listener.onDefinitionImported(newReindexDeleteOldIndexEvent(caseA));
+
+        //check set readonly, created new index, alias updated to new index, returns task id
+        verify(ccdElasticClient).setIndexReadOnly("casetypea", true);
+        verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
+        verify(ccdElasticClient).createIndexAndMapping(incrementedCaseTypeName, "caseMapping");
+        verify(ccdElasticClient).reindexData(caseTypeName, incrementedCaseTypeName);
+        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
+        verify(ccdElasticClient).updateAlias(baseIndexName, "casetypea-0001", incrementedCaseTypeName);
+        assertEquals("taskId", mockFuture.get());
+
+        //check old task id deleted
+        verify(ccdElasticClient).removeIndex(caseTypeName);
+        ArgumentCaptor<String> oldIndexCaptor = ArgumentCaptor.forClass(String.class);
+        verify(ccdElasticClient).removeIndex(oldIndexCaptor.capture());
+        assertEquals(caseTypeName, oldIndexCaptor.getValue());
+    }
+
+    @Test
+    public void IfReindexTrueAndDeleteOldIndexFalse() throws IOException, ExecutionException, InterruptedException {
+        mockAliasResponse();
+
+        CompletableFuture<String> mockFuture = CompletableFuture.completedFuture("taskId");
+        when(ccdElasticClient.reindexData(anyString(), anyString()))
+            .thenReturn(mockFuture);
+
+        listener.onDefinitionImported(newReindexEvent(caseA));
+
+        //check set readonly, created new index, alias updated to new index, returns task id
+        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, true);
+        verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
+        verify(ccdElasticClient).createIndexAndMapping(incrementedCaseTypeName, "caseMapping");
+        verify(ccdElasticClient).reindexData(caseTypeName, incrementedCaseTypeName);
+        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
+        verify(ccdElasticClient).updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
+        assertEquals("taskId", mockFuture.get());
+
+        //check old task id not deleted
+        verify(ccdElasticClient, never()).removeIndex(caseTypeName);
+    }
+
+    @Test
+    public void IfReindexFalseAndDeleteOldIndexFalse() throws IOException {
+        //should be same behaviour as default reindex false old index true
+        when(config.getCasesIndexNameFormat()).thenReturn("%s");
+        when(caseMappingGenerator.generateMapping(caseA)).thenReturn("caseMapping");
+
+        listener.onDefinitionImported(newEventDeleteOldIndex(caseA));
+
+        //don't call reindex, generate and upsert mapping
+        verify(ccdElasticClient, never()).reindexData(anyString(), anyString());
+        verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
+        verify(ccdElasticClient).upsertMapping("casetypea", "caseMapping");
+        // check deleteOldIndex is not called
+        verify(ccdElasticClient, never()).removeIndex(anyString());
+    }
+
+    @Test
+    public void deleteNewIndexIfReindexingFails() throws IOException {
+        mockAliasResponse();
+
+        CompletableFuture<String> failedFuture = new CompletableFuture<>();
+        failedFuture.completeExceptionally(new RuntimeException("Elasticsearch reindexing failed"));
+
+        when(ccdElasticClient.reindexData(caseTypeName, incrementedCaseTypeName)).thenReturn(failedFuture);
+
+        assertThrows(ElasticSearchInitialisationException.class, () ->
+        listener.onDefinitionImported(newReindexDeleteOldIndexEvent(caseA)));
+
+        //delete new index, set old index writable, close connection
+        verify(ccdElasticClient).removeIndex(incrementedCaseTypeName);
+        verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
+        verify(ccdElasticClient).close();
+    }
+
+    private void mockAliasResponse() throws IOException {
+        when(config.getCasesIndexNameFormat()).thenReturn("%s");
+        when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
+
+        GetAliasesResponse aliasResponse = mock(GetAliasesResponse.class);
+        Map<String, Set<AliasMetadata>> aliasMap = new HashMap<>();
+        aliasMap.put(caseTypeName,
+            Collections.singleton(AliasMetadata.builder(baseIndexName).build()));
+        when(aliasResponse.getAliases()).thenReturn(aliasMap);
+        when(ccdElasticClient.getAlias(anyString())).thenReturn(aliasResponse);
+
+        when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
+    }
+
     private DefinitionImportedEvent newEvent(CaseTypeEntity... caseTypes) {
         return new DefinitionImportedEvent(newArrayList(caseTypes), false, true);
+    }
+
+    private DefinitionImportedEvent newEventDeleteOldIndex(CaseTypeEntity... caseTypes) {
+        return new DefinitionImportedEvent(newArrayList(caseTypes), false, false);
+    }
+
+    private DefinitionImportedEvent newReindexDeleteOldIndexEvent(CaseTypeEntity... caseTypes) {
+        return new DefinitionImportedEvent(newArrayList(caseTypes), true, true);
+    }
+
+    private DefinitionImportedEvent newReindexEvent(CaseTypeEntity... caseTypes) {
+        return new DefinitionImportedEvent(newArrayList(caseTypes), true, false);
     }
 
     private static class TestDefinitionImportListener extends ElasticDefinitionImportListener {
