@@ -2,11 +2,11 @@ description: Helm chart for the HMCTS CCD Definition Store
 name: ccd-definition-store-api
 apiVersion: v2
 home: https://github.com/hmcts/ccd-definition-store-api
-version: 1.6.20
+version: 1.6.21
 maintainers:
   - name: HMCTS CCD Dev Team
     email: ccd-devops@HMCTS.NET
 dependencies:
   - name: java
-    version: 5.2.0
-    repository: 'https://hmctspublic.azurecr.io/helm/v1/repo/'
+    version: 5.3.0
+    repository: 'oci://hmctspublic.azurecr.io/helm'
