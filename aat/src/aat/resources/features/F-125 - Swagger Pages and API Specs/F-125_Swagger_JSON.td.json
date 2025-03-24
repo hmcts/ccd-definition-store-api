@@ -2,7 +2,7 @@
   "_guid_": "F-125_Swagger_JSON",
   "title": "Verify swagger JSON Content",
 
-  "productName": "CCD Data Store",
+  "productName": "CCD Definition Store",
   "operationName": "Get Swagger JSON",
 
   "method": "GET",

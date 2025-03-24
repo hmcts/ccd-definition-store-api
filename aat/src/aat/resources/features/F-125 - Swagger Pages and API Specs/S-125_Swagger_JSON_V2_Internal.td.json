@@ -9,7 +9,7 @@
 
   "request" :{
     "pathVariables" : {
-      "ccd-data-store-api-version": "ccd-definition-store-api.v2_internal.json"
+      "ccd-definition-store-api-version": "ccd-definition-store-api.v2_internal.json"
     }
   },
 
