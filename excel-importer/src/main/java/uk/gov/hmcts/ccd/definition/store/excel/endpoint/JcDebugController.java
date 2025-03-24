@@ -10,11 +10,26 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@Api(value = "jcdebug")
 public class JcDebugController {
 
-    @RequestMapping(value = "jcdebug", method = RequestMethod.POST)
-    public ResponseEntity<String> jcdebug(@RequestParam("file") MultipartFile file) {
-        return new ResponseEntity<>("JcDebugController (POST with RequestParam file)", HttpStatus.OK);
+    @RequestMapping(value  =  "jcGetWithoutFile", method = RequestMethod.GET)
+    public ResponseEntity<String> jcGetWithoutFile() {
+        return new ResponseEntity<>("jcGetWithoutFile", HttpStatus.OK);
+    }
+
+    @RequestMapping(value  =  "jcPostWithoutFile", method = RequestMethod.POST)
+    public ResponseEntity<String> jcPostWithoutFile() {
+        return new ResponseEntity<>("jcPostWithoutFile", HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value  =  "jcGetWithFile", method = RequestMethod.GET)
+    public ResponseEntity<String> jcGetWithFile(@RequestParam("file") MultipartFile file) {
+        return new ResponseEntity<>("jcGetWithFile", HttpStatus.OK);
+    }
+
+    @RequestMapping(value  =  "jcPostWithFile", method = RequestMethod.POST)
+    public ResponseEntity<String> jcPostWithFile(@RequestParam("file") MultipartFile file) {
+        return new ResponseEntity<>("jcPostWithFile", HttpStatus.OK);
     }
 }
