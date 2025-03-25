@@ -163,6 +163,13 @@ public class ImportServiceImpl implements ImportService {
         this.applicationParams = applicationParams;
     }
 
+    private void jclog(final String message) {
+        logger.info("JCDEBUG: info: ImportServiceImpl: " + message);
+        logger.warn("JCDEBUG: warn: ImportServiceImpl: " + message);
+        logger.error("JCDEBUG: error: ImportServiceImpl: " + message);
+        logger.debug("JCDEBUG: debug: ImportServiceImpl: " + message);
+    }
+
     /**
      * Imports the Case Definition data and inserts it into the database.
      *
@@ -176,6 +183,7 @@ public class ImportServiceImpl implements ImportService {
      */
     @Override
     public DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream) throws IOException {
+        jclog("importFormDefinitions() #0");
         logger.debug("Importing spreadsheet...");
 
         final Map<String, DefinitionSheet> definitionSheets = spreadsheetParser.parse(inputStream);
@@ -188,6 +196,7 @@ public class ImportServiceImpl implements ImportService {
         /*
             1 - Jurisdiction
          */
+        jclog("importFormDefinitions() #1 Jurisdiction...");
         logger.debug("Importing spreadsheet: Jurisdiction...");
 
         final JurisdictionParser jurisdictionParser = parserFactory.createJurisdictionParser();
@@ -213,6 +222,7 @@ public class ImportServiceImpl implements ImportService {
         /*
             2 - Field types
          */
+        jclog("importFormDefinitions() #2 Field types...");
         logger.debug("Importing spreadsheet: Field types...");
 
         // Initialise parse context with existing types
@@ -232,12 +242,14 @@ public class ImportServiceImpl implements ImportService {
         /*
             3 - metadata fields
          */
+        jclog("importFormDefinitions() #3 Metadata fields...");
         parseContext.registerMetadataFields(caseFieldRepository
             .findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA));
 
         /*
             4- Case Type
          */
+        jclog("importFormDefinitions() #4 Case types...");
         logger.debug("Importing spreadsheet: Case types...");
 
         final CaseTypeParser caseTypeParser = parserFactory.createCaseTypeParser(parseContext);
@@ -252,6 +264,7 @@ public class ImportServiceImpl implements ImportService {
         /*
             5 - UI definition
          */
+        jclog("importFormDefinitions() #5 UI definition...");
         logger.debug("Importing spreadsheet: UI definition...");
 
         final LayoutParser layoutParser = parserFactory.createLayoutParser(parseContext);
@@ -285,6 +298,7 @@ public class ImportServiceImpl implements ImportService {
         /*
             6 - User profiles
          */
+        jclog("importFormDefinitions() #6 User profiles...");
         logger.debug("Importing spreadsheet: User profiles...");
 
         final UserProfilesParser userProfilesParser = parserFactory.createUserProfileParser();
@@ -311,6 +325,7 @@ public class ImportServiceImpl implements ImportService {
         metadata.setUserId(userDetails.getEmail());
 
         // ChallengeQuestion
+        jclog("importFormDefinitions() #7 ChallengeQuestion...");
         if (definitionSheets.get(SheetName.CHALLENGE_QUESTION_TAB.getName()) != null) {
             logger.debug("Importing spreadsheet: NewChallengeQuestion...");
             final ChallengeQuestionParser challengeQuestionParser =
@@ -338,6 +353,7 @@ public class ImportServiceImpl implements ImportService {
             translationService.processDefinitionSheets(definitionSheets);
         }
 
+        jclog("importFormDefinitions() #8 OK");
         return metadata;
     }
 

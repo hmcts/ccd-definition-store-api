@@ -35,31 +35,46 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
         this.azureStorageConfiguration = azureStorageConfiguration;
     }
 
+    private void jclog(final String message) {
+        LOG.info("JCDEBUG: info: ProcessUploadServiceImpl: " + message);
+        LOG.warn("JCDEBUG: warn: ProcessUploadServiceImpl: " + message);
+        LOG.error("JCDEBUG: error: ProcessUploadServiceImpl: " + message);
+        LOG.debug("JCDEBUG: debug: ProcessUploadServiceImpl: " + message);
+    }
 
     @Transactional
     @Override
     public ResponseEntity processUpload(MultipartFile file) throws IOException {
 
+        jclog("processUpload() #1");
         if (file == null || file.getSize() == 0) {
             throw new IOException(IMPORT_FILE_ERROR);
         } else {
+            jclog("processUpload() #2");
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             try (final InputStream inputStream = file.getInputStream()) {
                 IOUtils.copy(inputStream, baos);
             }
             byte[] bytes = baos.toByteArray();
             LOG.info("Importing Definition file...");
+            jclog("processUpload() #3 ---> importService.importFormDefinitions()");
             final DefinitionFileUploadMetadata metadata =
                 importService.importFormDefinitions(new ByteArrayInputStream(bytes));
+            jclog("processUpload() #4 <--- importService.importFormDefinitions() ");
 
             if (azureStorageConfiguration != null
                 && azureStorageConfiguration.isAzureUploadEnabled()
                 && fileStorageService != null) {
                 LOG.info("Uploading Definition file to Azure Storage...");
+                jclog("processUpload() #5 ---> fileStorageService.uploadFile()");
                 fileStorageService.uploadFile(file, metadata);
+                jclog("processUpload() #6 <--- fileStorageService.uploadFile()");
+            } else {
+                jclog("processUpload() #7");
             }
 
             if (!importService.getImportWarnings().isEmpty()) {
+                jclog("processUpload() #8 (" + importService.getImportWarnings().size() + " warnings)");
                 for (String warning : importService.getImportWarnings()) {
                     LOG.warn(warning);
                 }
@@ -67,6 +82,7 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
                     .header(IMPORT_WARNINGS_HEADER, importService.getImportWarnings().toArray(new String[0]))
                     .body(SUCCESSFULLY_CREATED);
             }
+            jclog("processUpload() #9 (no warnings)");
             return ResponseEntity.status(HttpStatus.CREATED).body(SUCCESSFULLY_CREATED);
         }
     }
