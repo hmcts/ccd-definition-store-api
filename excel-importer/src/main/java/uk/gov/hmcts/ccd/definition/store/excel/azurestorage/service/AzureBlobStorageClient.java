@@ -3,8 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service;
 import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -26,7 +24,7 @@ import static uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsCl
 @ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
 public class AzureBlobStorageClient implements FileStorageClient {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AzureBlobStorageClient.class);
+    private final AzureBlobStorageClientLogger logger = new AzureBlobStorageClientLogger();
 
     private final CloudBlobContainer cloudBlobContainer;
     private final DateTimeStringGenerator dateTimeStringGenerator;
@@ -36,13 +34,6 @@ public class AzureBlobStorageClient implements FileStorageClient {
                                   DateTimeStringGenerator dateTimeStringGenerator) {
         this.cloudBlobContainer = cloudBlobContainer;
         this.dateTimeStringGenerator = dateTimeStringGenerator;
-    }
-
-    private void jclog(final String message) {
-        LOG.info("JCDEBUG: info: AzureBlobStorageClient: " + message);
-        LOG.warn("JCDEBUG: warn: AzureBlobStorageClient: " + message);
-        LOG.error("JCDEBUG: error: AzureBlobStorageClient: " + message);
-        LOG.debug("JCDEBUG: debug: AzureBlobStorageClient: " + message);
     }
 
     @PostConstruct
@@ -55,19 +46,19 @@ public class AzureBlobStorageClient implements FileStorageClient {
     @Override
     public void uploadFile(MultipartFile multipartFile, DefinitionFileUploadMetadata metadata) {
 
-        jclog("uploadFile() #1");
+        logger.jclog("uploadFile() #1");
         try (final InputStream inputStream = multipartFile.getInputStream()) {
-            jclog("uploadFile() #2");
+            logger.jclog("uploadFile() #2");
             final CloudBlockBlob blob = getCloudFile(dateTimeStringGenerator.generateCurrentDateTime()
                 + "_" + multipartFile.getOriginalFilename());
-            jclog("uploadFile() #3");
+            logger.jclog("uploadFile() #3");
             blob.setMetadata(createMetadataMap(metadata));
-            jclog("uploadFile() #4  (size = " + multipartFile.getSize() + ")");
+            logger.jclog("uploadFile() #4  (size = " + (multipartFile == null ? "NULL" : multipartFile.getSize()) + ")");
             blob.upload(inputStream, multipartFile.getSize());
-            jclog("uploadFile() #5 OK");
+            logger.jclog("uploadFile() #5 OK");
 
         } catch (URISyntaxException | StorageException | IOException e) {
-            jclog("uploadFile() #6 Exception: " + e.getMessage());
+            logger.jclog("uploadFile() #6 Exception: " + e.getMessage());
             throw new FileStorageException(e);
         }
 
