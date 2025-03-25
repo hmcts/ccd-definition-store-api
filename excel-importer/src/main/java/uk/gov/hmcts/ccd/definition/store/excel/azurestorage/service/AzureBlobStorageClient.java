@@ -53,7 +53,7 @@ public class AzureBlobStorageClient implements FileStorageClient {
                 + "_" + multipartFile.getOriginalFilename());
             logger.jclog("uploadFile() #3");
             blob.setMetadata(createMetadataMap(metadata));
-            logger.jclog("uploadFile() #4  (size = " + (multipartFile == null ? "NULL" : multipartFile.getSize()) + ")");
+            logger.jclog("uploadFile() #4 (size = " + (multipartFile == null ? "NULL" : multipartFile.getSize()) + ")");
             blob.upload(inputStream, multipartFile.getSize());
             logger.jclog("uploadFile() #5 OK");
 
