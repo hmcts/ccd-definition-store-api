@@ -35,7 +35,7 @@ import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListe
 
 @Slf4j
 @SuppressWarnings("java:S1874")
-public class HighLevelCCDElasticClient implements CCDElasticClient {
+public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseable {
 
     private static final String CASES_INDEX_SETTINGS_JSON = "/casesIndexSettings.json";
     private static final String GLOBAL_SEARCH_CASES_INDEX_SETTINGS_JSON = "/globalSearchCasesIndexSettings.json";

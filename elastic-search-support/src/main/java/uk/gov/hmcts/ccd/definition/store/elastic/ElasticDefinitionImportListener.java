@@ -111,28 +111,28 @@ public abstract class ElasticDefinitionImportListener {
 
         taskIdFuture
             .thenApply(taskId -> {
-            try {
+            try {HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject();
                 //if success update alias to new index, if deleteOldIndex true, delete old index
                 log.info("updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
                 //set writable
-                elasticClient.setIndexReadOnly(baseIndexName, false);
-                elasticClient.updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
+                asyncElasticClient.setIndexReadOnly(baseIndexName, false);
+                asyncElasticClient.updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
 
                 if (deleteOldIndex) {
                     log.info("deleting old index {}", caseTypeName);
-                    elasticClient.removeIndex(caseTypeName);
+                    asyncElasticClient.removeIndex(caseTypeName);
                 }
                 return taskId;
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         }).exceptionally(ex -> {
-            try {
+            try {HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject();
                 //if failed delete new index, set old index writable, need testing
                 log.info("reindexing failed, error: {}", ex.getMessage());
-                elasticClient.removeIndex(incrementedCaseTypeName);
+                asyncElasticClient.removeIndex(incrementedCaseTypeName);
                 log.info("{} deleted", incrementedCaseTypeName);
-                elasticClient.setIndexReadOnly(caseTypeName, false);
+                asyncElasticClient.setIndexReadOnly(caseTypeName, false);
                 log.info("{} set to writable", caseTypeName);
             } catch (IOException e) {
                 throw new RuntimeException(e);

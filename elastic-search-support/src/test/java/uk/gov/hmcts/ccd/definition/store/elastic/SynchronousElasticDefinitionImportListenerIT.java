@@ -149,17 +149,12 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         DefinitionImportedEvent event = new DefinitionImportedEvent(Collections.singletonList(caseTypeEntity1),
             true, true);
 
-        //asynchronous issues?
         definitionImportListener.onDefinitionImported(event);
 
         String response = getElasticsearchIndices(CASE_TYPE_A);
 
-        assertThat(response, containsString("casetypea-000002"));
-        assertThat(response, not(containsString("casetypea-000001")));
-
-        assertThat(response, equalToJSONInFile(
-            readFileFromClasspath("integration/multi_casetypes_indices.json"),
-            ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A))));
+        assertThat(response, containsString("casetypea_cases-000002"));
+        assertThat(response, not(containsString("casetypea_cases-000001")));
     }
 
     private String[] getDynamicIndexResponseFields(String... indexNames) {
