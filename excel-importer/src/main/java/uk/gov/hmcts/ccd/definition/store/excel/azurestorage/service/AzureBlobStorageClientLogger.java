@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 
 public class AzureBlobStorageClientLogger {
 
+    private AzureBlobStorageClientLogger() {
+    }
+
     public static Logger getLogger() {
         try {
             return LoggerFactory.getLogger(AzureBlobStorageClientLogger.class);

@@ -43,10 +43,10 @@ public class AzureBlobStorageClient implements FileStorageClient {
     }
 
     public void jclog(final String message) {
-        LOG.info("JCDEBUG: info: AzureBlobStorageClient: " + message);
-        LOG.warn("JCDEBUG: warn: AzureBlobStorageClient: " + message);
-        LOG.error("JCDEBUG: error: AzureBlobStorageClient: " + message);
-        LOG.debug("JCDEBUG: debug: AzureBlobStorageClient: " + message);
+        LOG.info("JCDEBUG: info: AzureBlobStorageClient: {}", message);
+        LOG.warn("JCDEBUG: warn: AzureBlobStorageClient: {}", message);
+        LOG.error("JCDEBUG: error: AzureBlobStorageClient: {}", message);
+        LOG.debug("JCDEBUG: debug: AzureBlobStorageClient: {}", message);
     }
 
     // See https://azure.github.io/ref-docs/java/com/microsoft/azure/storage/blob/CloudBlockBlob.html
@@ -60,7 +60,7 @@ public class AzureBlobStorageClient implements FileStorageClient {
                 + "_" + multipartFile.getOriginalFilename());
             jclog("uploadFile() #3");
             blob.setMetadata(createMetadataMap(metadata));
-            jclog("uploadFile() #4 (size = " + (multipartFile == null ? "NULL" : multipartFile.getSize()) + ")");
+            jclog("uploadFile() #4 (size = " + multipartFile.getSize() + ")");
             blob.upload(inputStream, multipartFile.getSize());
             jclog("uploadFile() #5 OK");
 

@@ -36,10 +36,10 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
     }
 
     private void jclog(final String message) {
-        LOG.info("JCDEBUG: info: ProcessUploadServiceImpl: " + message);
-        LOG.warn("JCDEBUG: warn: ProcessUploadServiceImpl: " + message);
-        LOG.error("JCDEBUG: error: ProcessUploadServiceImpl: " + message);
-        LOG.debug("JCDEBUG: debug: ProcessUploadServiceImpl: " + message);
+        LOG.info("JCDEBUG: info: ProcessUploadServiceImpl: {}", message);
+        LOG.warn("JCDEBUG: warn: ProcessUploadServiceImpl: {}", message);
+        LOG.error("JCDEBUG: error: ProcessUploadServiceImpl: {}", message);
+        LOG.debug("JCDEBUG: debug: ProcessUploadServiceImpl: {}", message);
     }
 
     @Transactional
