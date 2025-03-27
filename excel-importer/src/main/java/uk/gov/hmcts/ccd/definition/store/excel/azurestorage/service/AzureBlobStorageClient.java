@@ -3,6 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service;
 import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -20,11 +22,16 @@ import java.util.HashMap;
 import static uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient.CASE_TYPES;
 import static uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient.USER_ID;
 
+// Command to run unit tests :-
+// ./gradlew excel-importer:test --tests uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClientTest
+// ./gradlew excel-importer:test --tests uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClientTest.testInit
+// ./gradlew excel-importer:test --tests uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClientTest.testUploadFile
+
 @Service(value = "azureBlobStorageClient")
 @ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
 public class AzureBlobStorageClient implements FileStorageClient {
 
-    private final AzureBlobStorageClientLogger logger = new AzureBlobStorageClientLogger();
+    private static final Logger LOG = AzureBlobStorageClientLogger.getLogger();
 
     private final CloudBlobContainer cloudBlobContainer;
     private final DateTimeStringGenerator dateTimeStringGenerator;
@@ -41,24 +48,30 @@ public class AzureBlobStorageClient implements FileStorageClient {
         cloudBlobContainer.createIfNotExists();
     }
 
+    public void jclog(final String message) {
+        LOG.info("JCDEBUG: info: AzureBlobStorageClient: " + message);
+        LOG.warn("JCDEBUG: warn: AzureBlobStorageClient: " + message);
+        LOG.error("JCDEBUG: error: AzureBlobStorageClient: " + message);
+        LOG.debug("JCDEBUG: debug: AzureBlobStorageClient: " + message);
+    }
+
     // See https://azure.github.io/ref-docs/java/com/microsoft/azure/storage/blob/CloudBlockBlob.html
     // See https://azure.github.io/ref-docs/java/com/microsoft/azure/storage/blob/BlobRequestOptions.html
     @Override
     public void uploadFile(MultipartFile multipartFile, DefinitionFileUploadMetadata metadata) {
-
-        logger.jclog("uploadFile() #1");
+        jclog("uploadFile() #1");
         try (final InputStream inputStream = multipartFile.getInputStream()) {
-            logger.jclog("uploadFile() #2");
+            jclog("uploadFile() #2");
             final CloudBlockBlob blob = getCloudFile(dateTimeStringGenerator.generateCurrentDateTime()
                 + "_" + multipartFile.getOriginalFilename());
-            logger.jclog("uploadFile() #3");
+            jclog("uploadFile() #3");
             blob.setMetadata(createMetadataMap(metadata));
-            logger.jclog("uploadFile() #4 (size = " + (multipartFile == null ? "NULL" : multipartFile.getSize()) + ")");
+            jclog("uploadFile() #4 (size = " + (multipartFile == null ? "NULL" : multipartFile.getSize()) + ")");
             blob.upload(inputStream, multipartFile.getSize());
-            logger.jclog("uploadFile() #5 OK");
+            jclog("uploadFile() #5 OK");
 
         } catch (URISyntaxException | StorageException | IOException e) {
-            logger.jclog("uploadFile() #6 Exception: " + e.getMessage());
+            jclog("uploadFile() #6 Exception: " + e.getMessage());
             throw new FileStorageException(e);
         }
 

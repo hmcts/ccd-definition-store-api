@@ -147,8 +147,8 @@ allprojects {
         implementation "org.glassfish:jakarta.el:4.0.1"
 
         // CVE-2021-42550
-        implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.13'
-        implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.13'
+        implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.18'
+        implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.5.18'
 
         implementation group: 'org.json', name: 'json', version: '20240303'
 
