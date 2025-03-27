@@ -21,11 +21,6 @@ import java.util.HashMap;
 import static uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient.CASE_TYPES;
 import static uk.gov.hmcts.ccd.definition.store.rest.service.AzureImportAuditsClient.USER_ID;
 
-// Command to run unit tests :-
-// ./gradlew excel-importer:test --tests uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClientTest
-// ./gradlew excel-importer:test --tests uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClientTest.testInit
-// ./gradlew excel-importer:test --tests uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClientTest.testUploadFile
-
 @Service(value = "azureBlobStorageClient")
 @ConditionalOnProperty(name = "azure.storage.definition-upload-enabled")
 public class AzureBlobStorageClient implements FileStorageClient {
