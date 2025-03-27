@@ -136,7 +136,8 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         PutMappingRequest putRequest = new PutMappingRequest(indexName);
         putRequest.source(caseTypeMapping, XContentType.JSON);
 
-        AcknowledgedResponse acknowledgedResponse = elasticClient.indices().putMapping(putRequest, RequestOptions.DEFAULT);
+        AcknowledgedResponse acknowledgedResponse = elasticClient.indices()
+            .putMapping(putRequest, RequestOptions.DEFAULT);
         log.info("mapping upserted: {}", acknowledgedResponse.isAcknowledged());
 
         return createIndexResponse.isAcknowledged();
@@ -147,7 +148,8 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         aliasRequest.addAliasAction(IndicesAliasesRequest.AliasActions.remove().index(oldIndex).alias(aliasName));
         aliasRequest.addAliasAction(IndicesAliasesRequest.AliasActions.add().index(newIndex).alias(aliasName));
 
-        AcknowledgedResponse aliasResponse = elasticClient.indices().updateAliases(aliasRequest, RequestOptions.DEFAULT);
+        AcknowledgedResponse aliasResponse = elasticClient.indices()
+            .updateAliases(aliasRequest, RequestOptions.DEFAULT);
         if (aliasResponse.isAcknowledged()) {
             log.info("alias successfully updated: {} now points to {}", oldIndex, newIndex);
         } else {
@@ -158,7 +160,8 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     public boolean removeIndex(String indexName) throws IOException {
         DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(indexName);
-        AcknowledgedResponse deleteResponse = elasticClient.indices().delete(deleteIndexRequest, RequestOptions.DEFAULT);
+        AcknowledgedResponse deleteResponse = elasticClient.indices()
+            .delete(deleteIndexRequest, RequestOptions.DEFAULT);
         if (deleteResponse.isAcknowledged()) {
             log.info("successfully deleted index: {}", indexName);
         } else {
