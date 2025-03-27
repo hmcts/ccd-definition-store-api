@@ -131,7 +131,8 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void initialiseElasticSearchWhenReindexAndDeleteOldIndexAreTrue() throws IOException, ExecutionException, InterruptedException {
+    public void initialiseElasticSearchWhenReindexAndDeleteOldIndexAreTrue() throws IOException, ExecutionException,
+        InterruptedException {
         mockAliasResponse();
 
         CompletableFuture<String> mockFuture = CompletableFuture.completedFuture("taskId");
@@ -157,7 +158,8 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void initialiseElasticSearchWhenReindexTrueAndDeleteOldIndexFalse() throws IOException, ExecutionException, InterruptedException {
+    public void initialiseElasticSearchWhenReindexTrueAndDeleteOldIndexFalse() throws IOException, ExecutionException,
+        InterruptedException {
         mockAliasResponse();
 
         CompletableFuture<String> mockFuture = CompletableFuture.completedFuture("taskId");
