@@ -9,6 +9,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
@@ -34,6 +35,9 @@ public class AsynchronousElasticDefinitionImportListenerTest {
 
     @Mock
     private CcdElasticSearchProperties config;
+
+    @Mock
+    private CaseMappingGenerator caseMappingGenerator;
 
     private final CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA")
         .withReference("caseTypeA").build();
