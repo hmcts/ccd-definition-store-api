@@ -195,7 +195,7 @@ public class ElasticDefinitionImportListenerTest {
         verify(ccdElasticClient, never()).reindexData(anyString(), anyString());
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).upsertMapping("casetypea", "caseMapping");
-        // check deleteOldIndex is not called
+        //check deleteOldIndex is not called
         verify(ccdElasticClient, never()).removeIndex(anyString());
     }
 
