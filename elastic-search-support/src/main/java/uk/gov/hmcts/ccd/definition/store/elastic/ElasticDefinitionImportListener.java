@@ -106,7 +106,8 @@ public abstract class ElasticDefinitionImportListener {
     }
 
     private CompletableFuture<String> handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
-                                                       String caseTypeName, String incrementedCaseTypeName, boolean deleteOldIndex) {
+                                                       String caseTypeName, String incrementedCaseTypeName,
+                                                       boolean deleteOldIndex) {
         //initiate async elasticsearch reindexing request
         CompletableFuture<String> taskIdFuture = elasticClient.reindexData(caseTypeName, incrementedCaseTypeName);
 
