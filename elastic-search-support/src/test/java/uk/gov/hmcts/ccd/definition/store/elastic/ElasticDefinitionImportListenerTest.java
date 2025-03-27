@@ -55,8 +55,10 @@ public class ElasticDefinitionImportListenerTest {
     @Mock
     private CaseMappingGenerator caseMappingGenerator;
 
-    private CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA").withReference("caseTypeA").build();
-    private CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB").withReference("caseTypeB").build();
+    private final CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA")
+        .withReference("caseTypeA").build();
+    private final CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB")
+        .withReference("caseTypeB").build();
     private final String baseIndexName = "casetypea";
     private final String caseTypeName = "casetypea-0001";
     private final String incrementedCaseTypeName = "casetypea-0002";

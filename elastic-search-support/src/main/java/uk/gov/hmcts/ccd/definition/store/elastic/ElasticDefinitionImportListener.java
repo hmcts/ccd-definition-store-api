@@ -45,7 +45,7 @@ public abstract class ElasticDefinitionImportListener {
 
     /**
      * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new
-     * HighLevelCCDElasticClient on each import and we close it once the import is completed.
+     * HighLevelCCDElasticClient on each import, we close it once the import is completed.
      * The HighLevelCCDElasticClient is injected every time with a new ES client which opens new connections
      */
     @Transactional
@@ -54,18 +54,15 @@ public abstract class ElasticDefinitionImportListener {
         boolean reindex = event.isReindex();
         boolean deleteOldIndex = event.isDeleteOldIndex();
 
-        HighLevelCCDElasticClient elasticClient = null;
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
-        try {
-            elasticClient = clientFactory.getObject();
+        try (HighLevelCCDElasticClient elasticClient = clientFactory.getObject()) {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
                 if (!elasticClient.aliasExists(baseIndexName)) {
                     String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
-                    String alias = baseIndexName;
-                    elasticClient.createIndex(actualIndexName, alias);
+                    elasticClient.createIndex(actualIndexName, baseIndexName);
                 }
                 if (reindex) {
                     //set readonly
@@ -98,10 +95,6 @@ public abstract class ElasticDefinitionImportListener {
         } catch (Exception exc) {
             logMapping(caseMapping);
             throw new ElasticSearchInitialisationException(exc);
-        } finally {
-            if (elasticClient != null) {
-                elasticClient.close();
-            }
         }
     }
 

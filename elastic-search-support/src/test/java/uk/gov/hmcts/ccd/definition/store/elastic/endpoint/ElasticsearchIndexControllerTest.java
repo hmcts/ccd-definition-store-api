@@ -19,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -45,8 +45,6 @@ class ElasticsearchIndexControllerTest {
     @Captor
     private ArgumentCaptor<DefinitionImportedEvent> eventCaptor;
 
-    private List<CaseTypeEntity> caseTypes;
-
     private static final String JURISDICTION_1 = "J1";
     private static final String JURISDICTION_2 = "J2";
     private static final String CASE_TYPE_1 = "CT1";
@@ -56,7 +54,7 @@ class ElasticsearchIndexControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        caseTypes = new ArrayList<>();
+        List<CaseTypeEntity> caseTypes = new ArrayList<>();
         caseTypes.add(createCaseType(CASE_TYPE_1, JURISDICTION_1));
         caseTypes.add(createCaseType(CASE_TYPE_2, JURISDICTION_1));
         caseTypes.add(createCaseType(CASE_TYPE_3, JURISDICTION_2));
@@ -107,7 +105,7 @@ class ElasticsearchIndexControllerTest {
 
         assertAll(
             () -> assertThat(capturedEvent.getContent().size(), is(2)),
-            () -> assertThat(capturedEvent.getContent().get(0).getReference(), is(CASE_TYPE_1)),
+            () -> assertThat(capturedEvent.getContent().getFirst().getReference(), is(CASE_TYPE_1)),
             () -> assertThat(capturedEvent.getContent().get(1).getReference(), is(CASE_TYPE_3)),
             () -> assertThat(result.getTotal(), is(2)),
             () -> assertThat(result.getCaseTypesByJurisdiction().keySet().size(), is(2)),

@@ -22,9 +22,9 @@ import java.io.InputStream;
 public class ProcessUploadServiceImpl implements ProcessUploadService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProcessUploadServiceImpl.class);
-    private ImportServiceImpl importService;
-    private FileStorageService fileStorageService;
-    private AzureStorageConfiguration azureStorageConfiguration;
+    private final ImportServiceImpl importService;
+    private final FileStorageService fileStorageService;
+    private final AzureStorageConfiguration azureStorageConfiguration;
 
     @Autowired
     public ProcessUploadServiceImpl(ImportServiceImpl importService,

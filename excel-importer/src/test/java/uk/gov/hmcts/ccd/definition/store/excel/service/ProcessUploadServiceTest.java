@@ -19,9 +19,9 @@ import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willThrow;
@@ -89,7 +89,7 @@ class ProcessUploadServiceTest {
     void invalidUploadAzureEnabledDueToFileZero() {
         String str = "";
         byte[] bytes = str.getBytes();
-        val fileTest = new MockMultipartFile("name",bytes);
+        val fileTest = new MockMultipartFile("name", bytes);
         when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
         final IOException
             exception =
