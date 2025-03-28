@@ -165,9 +165,6 @@ public class ImportServiceImpl implements ImportService {
 
     private void jclog(final String message) {
         logger.info("JCDEBUG: info: ImportServiceImpl: {}", message);
-        logger.warn("JCDEBUG: warn: ImportServiceImpl: {}", message);
-        logger.error("JCDEBUG: error: ImportServiceImpl: {}", message);
-        logger.debug("JCDEBUG: debug: ImportServiceImpl: {}", message);
     }
 
     /**

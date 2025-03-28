@@ -37,9 +37,6 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
 
     private void jclog(final String message) {
         LOG.info("JCDEBUG: info: ProcessUploadServiceImpl: {}", message);
-        LOG.warn("JCDEBUG: warn: ProcessUploadServiceImpl: {}", message);
-        LOG.error("JCDEBUG: error: ProcessUploadServiceImpl: {}", message);
-        LOG.debug("JCDEBUG: debug: ProcessUploadServiceImpl: {}", message);
     }
 
     @Transactional
@@ -82,7 +79,7 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
                     .header(IMPORT_WARNINGS_HEADER, importService.getImportWarnings().toArray(new String[0]))
                     .body(SUCCESSFULLY_CREATED);
             }
-            jclog("processUpload() #9 (no warnings)");
+            jclog("processUpload() #9 (OK , no warnings)");
             return ResponseEntity.status(HttpStatus.CREATED).body(SUCCESSFULLY_CREATED);
         }
     }

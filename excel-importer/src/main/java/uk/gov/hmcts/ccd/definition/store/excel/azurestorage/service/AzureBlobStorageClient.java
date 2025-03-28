@@ -44,9 +44,6 @@ public class AzureBlobStorageClient implements FileStorageClient {
 
     public void jclog(final String message) {
         LOG.info("JCDEBUG: info: AzureBlobStorageClient: {}", message);
-        LOG.warn("JCDEBUG: warn: AzureBlobStorageClient: {}", message);
-        LOG.error("JCDEBUG: error: AzureBlobStorageClient: {}", message);
-        LOG.debug("JCDEBUG: debug: AzureBlobStorageClient: {}", message);
     }
 
     // See https://azure.github.io/ref-docs/java/com/microsoft/azure/storage/blob/CloudBlockBlob.html
