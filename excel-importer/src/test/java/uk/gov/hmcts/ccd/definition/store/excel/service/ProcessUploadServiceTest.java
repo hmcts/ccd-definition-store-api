@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -60,7 +61,7 @@ class ProcessUploadServiceTest {
         metadata.setJurisdiction("TEST");
         metadata.addCaseType("TestCaseType");
         metadata.setUserId("user@hmcts.net");
-        when(importService.importFormDefinitions(any(), false, true)).thenReturn(metadata);
+        when(importService.importFormDefinitions(any(), eq(false), eq(true))).thenReturn(metadata);
         when(importService.getImportWarnings()).thenReturn(Collections.emptyList());
     }
 
@@ -111,7 +112,7 @@ class ProcessUploadServiceTest {
     @Test
     void invalidUpload() throws Exception {
 
-        willThrow(new IOException("boo")).given(importService).importFormDefinitions(any(), false, true);
+        willThrow(new IOException("boo")).given(importService).importFormDefinitions(any(), eq(false), eq(true));
 
         final IOException
             exception =
