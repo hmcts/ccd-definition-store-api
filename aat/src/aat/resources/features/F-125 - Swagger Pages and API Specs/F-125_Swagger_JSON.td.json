@@ -3,7 +3,7 @@
   "title": "Verify swagger JSON Content",
 
   "productName": "CCD Definition Store",
-  "operationName": "Get Swagger JSON",
+  "operationName": "Get Swagger Json API",
 
   "method": "GET",
   "uri": "https://hmcts.github.io/cnp-api-docs/specs/{ccd-definition-store-api-version}",
