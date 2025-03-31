@@ -39,10 +39,8 @@ public class AsynchronousElasticDefinitionImportListenerTest {
     @Mock
     private CaseMappingGenerator caseMappingGenerator;
 
-    private final CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA")
-        .withReference("caseTypeA").build();
-    private final CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB")
-        .withReference("caseTypeB").build();
+    private CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA").withReference("caseTypeA").build();
+    private CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB").withReference("caseTypeB").build();
 
     @BeforeEach
     public void setUp() {
@@ -61,7 +59,7 @@ public class AsynchronousElasticDefinitionImportListenerTest {
     }
 
     private DefinitionImportedEvent newEvent(CaseTypeEntity... caseTypes) {
-        return new DefinitionImportedEvent(newArrayList(caseTypes), false, true);
+        return new DefinitionImportedEvent(newArrayList(caseTypes));
     }
 }
 

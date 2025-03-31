@@ -6,11 +6,12 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.util.List;
 
+@Getter
 public class DefinitionImportedEvent extends ImportEvent<List<CaseTypeEntity>> {
 
     private final boolean reindex;
     private final boolean deleteOldIndex;
-    @Setter @Getter private String taskId;
+    @Setter private String taskId;
 
     public DefinitionImportedEvent(List<CaseTypeEntity> caseTypes, boolean reindex, boolean deleteOldIndex) {
         super(caseTypes);
@@ -18,11 +19,9 @@ public class DefinitionImportedEvent extends ImportEvent<List<CaseTypeEntity>> {
         this.deleteOldIndex = deleteOldIndex;
     }
 
-    public boolean isReindex() {
-        return reindex;
-    }
-
-    public boolean isDeleteOldIndex() {
-        return deleteOldIndex;
+    public DefinitionImportedEvent(List<CaseTypeEntity> caseTypes) {
+        super(caseTypes);
+        this.reindex = false;
+        this.deleteOldIndex = true;
     }
 }

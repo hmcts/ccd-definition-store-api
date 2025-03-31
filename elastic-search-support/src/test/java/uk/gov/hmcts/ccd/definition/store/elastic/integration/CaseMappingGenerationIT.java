@@ -61,7 +61,7 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     void testListeningToDefinitionImportedEvent() throws IOException {
         CaseTypeEntity caseType = createCaseType();
 
-        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType), false, true));
+        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
         verify(client).createIndex(anyString(), anyString());
         verify(client).upsertMapping(anyString(), anyString());
@@ -71,7 +71,7 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     void testListeningToDefinitionImportedEventWithDynamicLists() throws IOException {
         CaseTypeEntity caseType = createCaseTypeWithDynamicLists();
 
-        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType), false, true));
+        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
         verify(client).createIndex(anyString(), anyString());
         verify(client).upsertMapping(anyString(), anyString());

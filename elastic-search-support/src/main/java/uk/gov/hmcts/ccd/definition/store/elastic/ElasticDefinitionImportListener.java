@@ -53,11 +53,9 @@ public abstract class ElasticDefinitionImportListener {
         boolean reindex = event.isReindex();
         boolean deleteOldIndex = event.isDeleteOldIndex();
 
-        HighLevelCCDElasticClient elasticClient = null;
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
-        try {
-            elasticClient = clientFactory.getObject();
+        try (HighLevelCCDElasticClient elasticClient = clientFactory.getObject()) {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
@@ -83,7 +81,6 @@ public abstract class ElasticDefinitionImportListener {
                     CompletableFuture<String> taskId = handleReindexing(elasticClient, baseIndexName, caseTypeName,
                         incrementedCaseTypeName, deleteOldIndex);
                     event.setTaskId(taskId.get());
-
                 } else {
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
@@ -99,10 +96,6 @@ public abstract class ElasticDefinitionImportListener {
         } catch (Exception exc) {
             logMapping(caseMapping);
             throw new ElasticSearchInitialisationException(exc);
-        } finally {
-            if (elasticClient != null) {
-                elasticClient.close();
-            }
         }
     }
 
@@ -115,8 +108,8 @@ public abstract class ElasticDefinitionImportListener {
         taskIdFuture
             .thenApply(taskId -> {
                 try {
-                    HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject();
                     //if success set writable and update alias to new index
+                    HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject();
                     log.info("updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
                     asyncElasticClient.setIndexReadOnly(baseIndexName, false);
                     asyncElasticClient.updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);

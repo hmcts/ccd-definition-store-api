@@ -228,7 +228,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     private DefinitionImportedEvent newEvent(CaseTypeEntity... caseTypes) {
-        return new DefinitionImportedEvent(newArrayList(caseTypes), false, true);
+        return new DefinitionImportedEvent(newArrayList(caseTypes));
     }
 
     private DefinitionImportedEvent newEventDeleteOldIndex(CaseTypeEntity... caseTypes) {
