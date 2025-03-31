@@ -125,7 +125,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         elasticClient.indices().putSettings(updateSettingsRequest, RequestOptions.DEFAULT);
     }
 
-    //TODO: Cleanup
     public boolean createIndexAndMapping(String indexName, String caseTypeMapping) throws IOException {
         //create index and mapping but no alias
         CreateIndexRequest request = new CreateIndexRequest(indexName);

@@ -16,8 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.concurrent.CompletionException;
 
 @Slf4j
 public abstract class ElasticDefinitionImportListener {
@@ -54,9 +53,11 @@ public abstract class ElasticDefinitionImportListener {
         boolean reindex = event.isReindex();
         boolean deleteOldIndex = event.isDeleteOldIndex();
 
+        HighLevelCCDElasticClient elasticClient = null;
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
-        try (HighLevelCCDElasticClient elasticClient = clientFactory.getObject()) {
+        try {
+            elasticClient = clientFactory.getObject();
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
@@ -92,9 +93,16 @@ public abstract class ElasticDefinitionImportListener {
         } catch (ElasticsearchStatusException exc) {
             logMapping(caseMapping);
             throw elasticsearchErrorHandler.createException(exc, currentCaseType);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            logMapping(caseMapping);
         } catch (Exception exc) {
             logMapping(caseMapping);
             throw new ElasticSearchInitialisationException(exc);
+        } finally {
+            if (elasticClient != null) {
+                elasticClient.close();
+            }
         }
     }
 
@@ -108,9 +116,8 @@ public abstract class ElasticDefinitionImportListener {
             .thenApply(taskId -> {
                 try {
                     HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject();
-                    //if success update alias to new index, if deleteOldIndex true, delete old index
+                    //if success set writable and update alias to new index
                     log.info("updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
-                    //set writable
                     asyncElasticClient.setIndexReadOnly(baseIndexName, false);
                     asyncElasticClient.updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
 
@@ -120,19 +127,19 @@ public abstract class ElasticDefinitionImportListener {
                     }
                     return taskId;
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new CompletionException(e);
                 }
             }).exceptionally(ex -> {
                 try {
+                    //if failed delete new index, set old index writable
                     HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject();
-                    //if failed delete new index, set old index writable, need testing
                     log.info("reindexing failed, error: {}", ex.getMessage());
                     asyncElasticClient.removeIndex(incrementedCaseTypeName);
                     log.info("{} deleted", incrementedCaseTypeName);
                     asyncElasticClient.setIndexReadOnly(caseTypeName, false);
                     log.info("{} set to writable", caseTypeName);
                 } catch (IOException e) {
-                    throw new RuntimeException(e);
+                    throw new CompletionException(e);
                 }
                 return "Failed";
             });
@@ -140,22 +147,16 @@ public abstract class ElasticDefinitionImportListener {
     }
 
     private String incrementIndexNumber(String indexName) {
-        Pattern pattern = Pattern.compile("^(.*-)(\\d+)$");
-        Matcher matcher = pattern.matcher(indexName);
+        String[] parts = indexName.split("-");
+        String prefix = parts[0] + "-";
+        String numberStr = parts[1];
 
-        if (matcher.find()) {
-            String prefix = matcher.group(1);
-            String numberStr = matcher.group(2);
+        int incremented = Integer.parseInt(numberStr) + 1;
+        String formattedNumber = String.format("%0" + numberStr.length() + "d", incremented);
 
-            int incremented = Integer.parseInt(numberStr) + 1;
-            String formattedNumber = String.format("%0" + numberStr.length() + "d", incremented);
-
-            String incrementedIndexName = prefix + formattedNumber;
-            log.info("incremented index name: {}", incrementedIndexName);
-            return incrementedIndexName;
-        } else {
-            throw new IllegalArgumentException("Invalid index name format: " + indexName);
-        }
+        String incrementedIndexName = prefix + formattedNumber;
+        log.info("incremented index name: {}", incrementedIndexName);
+        return incrementedIndexName;
     }
 
     private String baseIndexName(CaseTypeEntity caseType) {

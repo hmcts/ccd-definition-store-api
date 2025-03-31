@@ -133,7 +133,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void initialiseElasticSearchWhenReindexAndDeleteOldIndexAreTrue() throws IOException, ExecutionException,
+    void initialiseElasticSearchWhenReindexAndDeleteOldIndexAreTrue() throws IOException, ExecutionException,
         InterruptedException {
         mockAliasResponse();
 
@@ -143,7 +143,6 @@ public class ElasticDefinitionImportListenerTest {
 
         listener.onDefinitionImported(newReindexDeleteOldIndexEvent(caseA));
 
-        //check set readonly, created new index, alias updated to new index, returns task id
         verify(ccdElasticClient).setIndexReadOnly("casetypea", true);
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).createIndexAndMapping(incrementedCaseTypeName, "caseMapping");
@@ -152,7 +151,6 @@ public class ElasticDefinitionImportListenerTest {
         verify(ccdElasticClient).updateAlias(baseIndexName, "casetypea-0001", incrementedCaseTypeName);
         assertEquals("taskId", mockFuture.get());
 
-        //check old task id deleted
         verify(ccdElasticClient).removeIndex(caseTypeName);
         ArgumentCaptor<String> oldIndexCaptor = ArgumentCaptor.forClass(String.class);
         verify(ccdElasticClient).removeIndex(oldIndexCaptor.capture());
@@ -160,7 +158,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void initialiseElasticSearchWhenReindexTrueAndDeleteOldIndexFalse() throws IOException, ExecutionException,
+    void initialiseElasticSearchWhenReindexTrueAndDeleteOldIndexFalse() throws IOException, ExecutionException,
         InterruptedException {
         mockAliasResponse();
 
@@ -170,7 +168,6 @@ public class ElasticDefinitionImportListenerTest {
 
         listener.onDefinitionImported(newReindexEvent(caseA));
 
-        //check set readonly, created new index, alias updated to new index, returns task id
         verify(ccdElasticClient).setIndexReadOnly(baseIndexName, true);
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).createIndexAndMapping(incrementedCaseTypeName, "caseMapping");
@@ -179,28 +176,26 @@ public class ElasticDefinitionImportListenerTest {
         verify(ccdElasticClient).updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
         assertEquals("taskId", mockFuture.get());
 
-        //check old task id not deleted
         verify(ccdElasticClient, never()).removeIndex(caseTypeName);
     }
 
     @Test
-    public void initialiseElasticSearchWhenReindexAndDeleteOldIndexAreFalse() throws IOException {
-        //should be same behaviour as default reindex false old index true
+    void initialiseElasticSearchWhenReindexAndDeleteOldIndexAreFalse() throws IOException {
+        //expected behaviour should be same as default (reindex false and old index true)
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(caseMappingGenerator.generateMapping(caseA)).thenReturn("caseMapping");
 
         listener.onDefinitionImported(newEventDeleteOldIndex(caseA));
 
-        //don't call reindex, generate and upsert mapping
         verify(ccdElasticClient, never()).reindexData(anyString(), anyString());
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).upsertMapping("casetypea", "caseMapping");
-        //check deleteOldIndex is not called
+
         verify(ccdElasticClient, never()).removeIndex(anyString());
     }
 
     @Test
-    public void deletesNewIndexWhenReindexingFails() throws IOException {
+    void deletesNewIndexWhenReindexingFails() throws IOException {
         mockAliasResponse();
 
         CompletableFuture<String> failedFuture = new CompletableFuture<>();
@@ -208,10 +203,11 @@ public class ElasticDefinitionImportListenerTest {
 
         when(ccdElasticClient.reindexData(caseTypeName, incrementedCaseTypeName)).thenReturn(failedFuture);
 
-        assertThrows(ElasticSearchInitialisationException.class, () ->
-            listener.onDefinitionImported(newReindexDeleteOldIndexEvent(caseA)));
+        DefinitionImportedEvent event = newReindexDeleteOldIndexEvent(caseA);
 
-        //delete new index, set old index writable, close connection
+        assertThrows(ElasticSearchInitialisationException.class, () ->
+            listener.onDefinitionImported(event));
+
         verify(ccdElasticClient).removeIndex(incrementedCaseTypeName);
         verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
         verify(ccdElasticClient).close();
