@@ -14,8 +14,7 @@ Scenario: must show Swagger UI page APIs
 
      Then a positive response is received,
       And the response has all the details as expected
-      And a call [to observe the swagger ui content] will get the expected response as in [S-125_Swagger_UI].
-
+      And a call [to observe the swagger UI content] will get the expected response as in [S-125_Swagger_UI].
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 @S-125.2
 Scenario: must show Swagger Json APIs

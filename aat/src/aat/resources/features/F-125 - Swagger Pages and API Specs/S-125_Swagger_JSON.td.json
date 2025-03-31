@@ -28,8 +28,8 @@
         "title": "Api Documentation",
         "contact":"[[ANYTHING_PRESENT]]",
         "license": "[[ANYTHING_PRESENT]]",
-        "version": "[[ANYTHING_PRESENT]]"
-
+        "version": "[[ANYTHING_PRESENT]]",
+        "termsOfService": "[[ANYTHING_PRESENT]]"
       }
     }
   }
