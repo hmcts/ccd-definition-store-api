@@ -104,7 +104,6 @@ public abstract class ElasticDefinitionImportListener {
     private CompletableFuture<String> handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
                                                        String caseTypeName, String incrementedCaseTypeName,
                                                        boolean deleteOldIndex) {
-        //TODO: will it delete the new index if failed at this stage or just reindexing?
         //initiate async elasticsearch reindexing request
         CompletableFuture<String> reindexFuture = elasticClient.reindexData(caseTypeName, incrementedCaseTypeName)
             .exceptionally(ex -> {
@@ -125,11 +124,6 @@ public abstract class ElasticDefinitionImportListener {
 
         //if success set writable and update alias to new index
         return reindexFuture.thenApply(taskId -> {
-            //TODO: Go back if null?
-            if (taskId == null || "Failed".equals(taskId)) {
-                return taskId;
-            }
-
             try {
                 HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject();
                 log.info("updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
