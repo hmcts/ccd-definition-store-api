@@ -47,7 +47,7 @@ ext['postgresql.version'] = '42.7.3'
 ext['log4j2.version'] = '2.17.1'
 //overriding for easy access to the version for FT testing
 ext['beftaFwVersion'] = '9.2.3'
-ext['ccdTestDefinitionVersion'] = '7.26.1'
+ext['ccdTestDefinitionVersion'] = '7.26.1-prerelease-CCD-5329'
 
 // end
 
