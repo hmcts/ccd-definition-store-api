@@ -4,7 +4,6 @@ on:
     branches:
       - master
       - RDM-10747
-      - CFTS-6684-Swagger-Enpoint-Tests
 
 jobs:
   build:
