@@ -37,8 +37,7 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
 
     @Transactional
     @Override
-    public ResponseEntity processUpload(MultipartFile file, boolean reindex, boolean deleteOldIndex)
-        throws IOException {
+    public ResponseEntity processUpload(MultipartFile file, boolean reindex, boolean deleteOldIndex) throws IOException {
 
         if (file == null || file.getSize() == 0) {
             throw new IOException(IMPORT_FILE_ERROR);
@@ -59,18 +58,20 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
                 fileStorageService.uploadFile(file, metadata);
             }
 
+            ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.status(HttpStatus.CREATED);
+
             if (!importService.getImportWarnings().isEmpty()) {
                 for (String warning : importService.getImportWarnings()) {
                     LOG.warn(warning);
                 }
-                return ResponseEntity.status(HttpStatus.CREATED)
-                    .header(IMPORT_WARNINGS_HEADER, importService.getImportWarnings().toArray(new String[0]))
-                    .header("Elasticsearch-Reindex-Task", metadata.getTaskId())
-                    .body(SUCCESSFULLY_CREATED);
+                responseBuilder.header(IMPORT_WARNINGS_HEADER, importService.getImportWarnings().toArray(new String[0]));
             }
-            return ResponseEntity.status(HttpStatus.CREATED)
-                .header("Elasticsearch-Reindex-Task", metadata.getTaskId())
-                .body(SUCCESSFULLY_CREATED);
+
+            if (reindex) {
+                responseBuilder.header("Elasticsearch-Reindex-Task", metadata.getTaskId());
+            }
+
+            return responseBuilder.body(SUCCESSFULLY_CREATED);
         }
     }
 }

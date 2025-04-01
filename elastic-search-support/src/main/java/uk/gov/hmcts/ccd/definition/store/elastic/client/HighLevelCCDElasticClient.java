@@ -126,12 +126,13 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     }
 
     public boolean createIndexAndMapping(String indexName, String caseTypeMapping) throws IOException {
-        //create index and mapping but no alias
+        //create new index
         CreateIndexRequest request = new CreateIndexRequest(indexName);
         request.settings(casesIndexSettings(CASES_INDEX_SETTINGS_JSON));
         CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
         log.info("index created: {}", createIndexResponse.isAcknowledged());
 
+        //upsert mapping to new index
         PutMappingRequest putRequest = new PutMappingRequest(indexName);
         putRequest.source(caseTypeMapping, XContentType.JSON);
 

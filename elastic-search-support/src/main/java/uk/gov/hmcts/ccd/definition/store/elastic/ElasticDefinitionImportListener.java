@@ -59,6 +59,7 @@ public abstract class ElasticDefinitionImportListener {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
+                //if alias doesn't exist create index and alias
                 if (!elasticClient.aliasExists(baseIndexName)) {
                     String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
                     elasticClient.createIndex(actualIndexName, baseIndexName);
@@ -69,9 +70,10 @@ public abstract class ElasticDefinitionImportListener {
 
                     //get current alias index
                     GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
+                    //TODO: handle multiple aliases
                     String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
 
-                    //create new index and mapping with incremented number
+                    //create new index with generated mapping and incremented case type name (no alias update yet)
                     String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
@@ -102,27 +104,10 @@ public abstract class ElasticDefinitionImportListener {
     private CompletableFuture<String> handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
                                                        String caseTypeName, String incrementedCaseTypeName,
                                                        boolean deleteOldIndex) {
+        //TODO: will it delete the new index if failed at this stage or just reindexing?
         //initiate async elasticsearch reindexing request
-        CompletableFuture<String> taskIdFuture = elasticClient.reindexData(caseTypeName, incrementedCaseTypeName);
-
-        taskIdFuture
-            .thenApply(taskId -> {
-                try {
-                    //if success set writable and update alias to new index
-                    HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject();
-                    log.info("updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
-                    asyncElasticClient.setIndexReadOnly(baseIndexName, false);
-                    asyncElasticClient.updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
-
-                    if (deleteOldIndex) {
-                        log.info("deleting old index {}", caseTypeName);
-                        asyncElasticClient.removeIndex(caseTypeName);
-                    }
-                    return taskId;
-                } catch (IOException e) {
-                    throw new CompletionException(e);
-                }
-            }).exceptionally(ex -> {
+        CompletableFuture<String> reindexFuture = elasticClient.reindexData(caseTypeName, incrementedCaseTypeName)
+            .exceptionally(ex -> {
                 try {
                     //if failed delete new index, set old index writable
                     HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject();
@@ -132,11 +117,34 @@ public abstract class ElasticDefinitionImportListener {
                     asyncElasticClient.setIndexReadOnly(caseTypeName, false);
                     log.info("{} set to writable", caseTypeName);
                 } catch (IOException e) {
+                    log.error("failed to clean up after reindexing failure", e);
                     throw new CompletionException(e);
                 }
-                return "Failed";
+                throw new CompletionException(ex);
             });
-        return taskIdFuture;
+
+        //if success set writable and update alias to new index
+        return reindexFuture.thenApply(taskId -> {
+            //TODO: Go back if null?
+            if (taskId == null || "Failed".equals(taskId)) {
+                return taskId;
+            }
+
+            try {
+                HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject();
+                log.info("updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
+                asyncElasticClient.setIndexReadOnly(baseIndexName, false);
+                asyncElasticClient.updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
+                if (deleteOldIndex) {
+                    log.info("deleting old index {}", caseTypeName);
+                    asyncElasticClient.removeIndex(caseTypeName);
+                }
+                return taskId;
+            } catch (IOException e) {
+                log.error("failed to clean up after reindexing success", e);
+                throw new CompletionException(e);
+            }
+        });
     }
 
     private String incrementIndexNumber(String indexName) {
