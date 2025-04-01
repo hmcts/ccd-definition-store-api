@@ -146,6 +146,7 @@ public abstract class ElasticDefinitionImportListener {
         String numberStr = parts[1];
 
         int incremented = Integer.parseInt(numberStr) + 1;
+        @SuppressWarnings("java:S3457")
         String formattedNumber = String.format("%0" + numberStr.length() + "d", incremented);
 
         String incrementedIndexName = prefix + formattedNumber;
