@@ -70,7 +70,6 @@ public abstract class ElasticDefinitionImportListener {
 
                     //get current alias index
                     GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
-                    //TODO: handle multiple aliases
                     String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
 
                     //create new index with generated mapping and incremented case type name (no alias update yet)
