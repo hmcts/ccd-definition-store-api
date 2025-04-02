@@ -21,11 +21,17 @@ public class IdamRepository {
         this.idamClient = idamClient;
     }
 
+    private void jclog(final String message) {
+        log.info("JCDEBUG: info: IdamRepository: {}", message);
+        log.error("JCDEBUG: info: IdamRepository: {}", message);
+    }
+
     @Cacheable(value = "userInfoCache")
     public UserInfo getUserInfo(String jwtToken) {
         try {
             return idamClient.getUserInfo("Bearer " + jwtToken);
         } catch (FeignException e) {
+            jclog("FEIGN EXCEPTION: " + e.getMessage());
             log.error("FeignException: retrieve user info: {}", e.getMessage());
 
             if (isClientError(e)) {
@@ -33,6 +39,9 @@ public class IdamRepository {
             } else {
                 throw new ServiceException(e.getMessage(), e);
             }
+        } catch (Exception e) {
+            jclog("EXCEPTION: " + e.getMessage());
+            throw new ServiceException(e.getMessage(), e);
         }
     }
 
