@@ -5,6 +5,9 @@
 
   "specs": [
     "to observe the swagger UI content"
-  ]
+  ],
+
+  "request" :{
+  }
 }
 
