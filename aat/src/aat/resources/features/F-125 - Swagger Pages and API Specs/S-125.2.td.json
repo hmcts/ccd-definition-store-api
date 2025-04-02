@@ -1,7 +1,7 @@
 {
   "_guid_": "S-125.2",
   "title": "Must return a positive appropriate response when Swagger JSON URL is accessed",
-  "_extends_": "F-125_Swagger_JSON",
+  "_extends_": "F-125_Test_Swagger_JSON_Base_Data",
 
   "specs": [
     "to observe the swagger json content"
