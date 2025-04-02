@@ -20,7 +20,9 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.ResponseListener;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.tasks.TaskSubmissionResponse;
 import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.index.reindex.ReindexRequest;
 import org.elasticsearch.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
@@ -173,39 +175,20 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     public CompletableFuture<String> reindexData(String oldIndex, String newIndex) {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        try {
-            String jsonBody = String.format(
-                "{ \"source\": { \"index\": \"%s\" }, \"dest\": { \"index\": \"%s\" } }",
-                oldIndex, newIndex
-            );
+        try{
+            ReindexRequest reindexRequest = new ReindexRequest();
+            reindexRequest.setSourceIndices(oldIndex);
+            reindexRequest.setDestIndex(newIndex);
+            reindexRequest.setRefresh(true);
 
-            // send reindex request with wait_for_completion=false for asynchronus reindexing to get task id
-            Request request = new Request("POST", "_reindex?wait_for_completion=false");
-            request.setJsonEntity(jsonBody);
+            TaskSubmissionResponse reindexSubmission = elasticClient
+                .submitReindexTask(reindexRequest, RequestOptions.DEFAULT);
 
-            elasticClient.getLowLevelClient().performRequestAsync(request, new ResponseListener() {
-                @Override
-                public void onSuccess(Response response) {
-                    try {
-                        String responseBody = EntityUtils.toString(response.getEntity());
-                        JsonObject jsonResponse = JsonParser.parseString(responseBody).getAsJsonObject();
-                        String taskId = jsonResponse.get("task").getAsString();
-                        log.info("reindexing successful, Task ID: {}", taskId);
-                        future.complete(taskId);
-                    } catch (Exception e) {
-                        future.completeExceptionally(e);
-                    }
-                }
-
-                @Override
-                public void onFailure(Exception e) {
-                    log.error("reindexing failed", e);
-                    future.completeExceptionally(e);
-                }
-            });
-
+            String taskId = reindexSubmission.getTask();
+            log.info("reindexing successful, Task ID: {}", taskId);
+            future.complete(taskId);
         } catch (Exception e) {
-            log.error("exception starting reindexing", e);
+            log.error("reindexing failed", e);
             future.completeExceptionally(e);
         }
         return future;

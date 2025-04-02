@@ -35,9 +35,9 @@ public class ImportController {
     @RequestMapping(value = URI_IMPORT, method = RequestMethod.POST)
     public ResponseEntity<String> processUpload(@RequestParam("file") MultipartFile file,
                                         @RequestParam(value = "reindex", required = false, defaultValue = "false")
-                                        boolean reindex,
+                                        Boolean reindex,
                                         @RequestParam(value = "deleteOldIndex", required = false, defaultValue = "true")
-                                        boolean deleteOldIndex) throws IOException {
+                                        Boolean deleteOldIndex) throws IOException {
         return processUploadServiceImpl.processUpload(file, reindex, deleteOldIndex);
     }
 }

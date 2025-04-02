@@ -175,8 +175,8 @@ public class ImportServiceImpl implements ImportService {
      *                                of attribute headers
      */
     @Override
-    public DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream, boolean reindex,
-                                                              boolean deleteOldIndex) throws IOException {
+    public DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream, Boolean reindex,
+                                                              Boolean deleteOldIndex) throws IOException {
         logger.debug("Importing spreadsheet...");
 
         final Map<String, DefinitionSheet> definitionSheets = spreadsheetParser.parse(inputStream);

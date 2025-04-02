@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.springframework.beans.factory.ObjectFactory;
@@ -40,7 +41,8 @@ public abstract class ElasticDefinitionImportListener {
         this.elasticsearchErrorHandler = elasticsearchErrorHandler;
     }
 
-    public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
+    public abstract void onDefinitionImported(DefinitionImportedEvent event)
+        throws IOException;
 
     /**
      * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new
@@ -94,6 +96,7 @@ public abstract class ElasticDefinitionImportListener {
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
             logMapping(caseMapping);
+            throw new ElasticSearchInitialisationException(ie);
         } catch (Exception exc) {
             logMapping(caseMapping);
             throw new ElasticSearchInitialisationException(exc);
@@ -142,12 +145,15 @@ public abstract class ElasticDefinitionImportListener {
 
     private String incrementIndexNumber(String indexName) {
         String[] parts = indexName.split("-");
+        if (parts.length != 2) {
+            throw new IllegalArgumentException("Invalid index name format: " + indexName);
+        }
+
         String prefix = parts[0] + "-";
         String numberStr = parts[1];
 
         int incremented = Integer.parseInt(numberStr) + 1;
-        @SuppressWarnings("java:S3457")
-        String formattedNumber = String.format("%0" + numberStr.length() + "d", incremented);
+        String formattedNumber = StringUtils.leftPad(String.valueOf(incremented), numberStr.length(), '0');
 
         String incrementedIndexName = prefix + formattedNumber;
         log.info("incremented index name: {}", incrementedIndexName);

@@ -141,7 +141,7 @@ public class ElasticDefinitionImportListenerTest {
         when(ccdElasticClient.reindexData(anyString(), anyString()))
             .thenReturn(mockFuture);
 
-        listener.onDefinitionImported(newReindexDeleteOldIndexEvent(caseA));
+        listener.onDefinitionImported(newEvent(true, true, caseA));
 
         verify(ccdElasticClient).setIndexReadOnly("casetypea", true);
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
@@ -166,7 +166,7 @@ public class ElasticDefinitionImportListenerTest {
         when(ccdElasticClient.reindexData(anyString(), anyString()))
             .thenReturn(mockFuture);
 
-        listener.onDefinitionImported(newReindexEvent(caseA));
+        listener.onDefinitionImported(newEvent(true, false, caseA));
 
         verify(ccdElasticClient).setIndexReadOnly(baseIndexName, true);
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
@@ -185,7 +185,7 @@ public class ElasticDefinitionImportListenerTest {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(caseMappingGenerator.generateMapping(caseA)).thenReturn("caseMapping");
 
-        listener.onDefinitionImported(newEventDeleteOldIndex(caseA));
+        listener.onDefinitionImported(newEvent(false, false, caseA));
 
         verify(ccdElasticClient, never()).reindexData(anyString(), anyString());
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
@@ -203,7 +203,7 @@ public class ElasticDefinitionImportListenerTest {
 
         when(ccdElasticClient.reindexData(caseTypeName, incrementedCaseTypeName)).thenReturn(failedFuture);
 
-        DefinitionImportedEvent event = newReindexDeleteOldIndexEvent(caseA);
+        DefinitionImportedEvent event = newEvent(true, true, caseA);
 
         assertThrows(ElasticSearchInitialisationException.class, () ->
             listener.onDefinitionImported(event));
@@ -231,16 +231,8 @@ public class ElasticDefinitionImportListenerTest {
         return new DefinitionImportedEvent(newArrayList(caseTypes));
     }
 
-    private DefinitionImportedEvent newEventDeleteOldIndex(CaseTypeEntity... caseTypes) {
-        return new DefinitionImportedEvent(newArrayList(caseTypes), false, false);
-    }
-
-    private DefinitionImportedEvent newReindexDeleteOldIndexEvent(CaseTypeEntity... caseTypes) {
-        return new DefinitionImportedEvent(newArrayList(caseTypes), true, true);
-    }
-
-    private DefinitionImportedEvent newReindexEvent(CaseTypeEntity... caseTypes) {
-        return new DefinitionImportedEvent(newArrayList(caseTypes), true, false);
+    private DefinitionImportedEvent newEvent(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity... caseTypes) {
+        return new DefinitionImportedEvent(newArrayList(caseTypes), reindex, deleteOldIndex);
     }
 
     private static class TestDefinitionImportListener extends ElasticDefinitionImportListener {
