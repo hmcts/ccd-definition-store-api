@@ -37,7 +37,7 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
 
     @Transactional
     @Override
-    public ResponseEntity processUpload(MultipartFile file, boolean reindex, boolean deleteOldIndex)
+    public ResponseEntity<String> processUpload(MultipartFile file, boolean reindex, boolean deleteOldIndex)
         throws IOException {
 
         if (file == null || file.getSize() == 0) {
