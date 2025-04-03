@@ -317,7 +317,7 @@ public class ImportServiceImplTest {
 
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(BAD_FILE);
 
-        service.importFormDefinitions(inputStream);
+        service.importFormDefinitions(inputStream, false, true);
     }
 
     @Test(expected = MissingAccessProfilesException.class)
@@ -342,7 +342,7 @@ public class ImportServiceImplTest {
             .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        service.importFormDefinitions(inputStream);
+        service.importFormDefinitions(inputStream, false, true);
     }
 
     @Test
@@ -367,7 +367,7 @@ public class ImportServiceImplTest {
         final InputStream inputStream = getClass().getClassLoader()
             .getResourceAsStream(GOOD_FILE_MISSING_ACCESS_TYPES_ROLES_TAB);
 
-        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream);
+        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, true);
         assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
         assertEquals(2, metadata.getCaseTypes().size());
         assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
@@ -405,7 +405,7 @@ public class ImportServiceImplTest {
 
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream);
+        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, true);
         assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
         assertEquals(2, metadata.getCaseTypes().size());
         assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
@@ -440,7 +440,7 @@ public class ImportServiceImplTest {
             .willReturn(state);
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream);
+        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, true);
         assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
         assertEquals(2, metadata.getCaseTypes().size());
         assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
@@ -539,7 +539,7 @@ public class ImportServiceImplTest {
         state.setDataFieldType(DataFieldType.METADATA);
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        assertThrows(MapperException.class, () -> service.importFormDefinitions(inputStream));
+        assertThrows(MapperException.class, () -> service.importFormDefinitions(inputStream, false, true));
     }
 
     private FieldTypeEntity buildBaseType(final String reference) {

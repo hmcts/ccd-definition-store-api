@@ -10,6 +10,7 @@ import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.model.IndicesCreationResult;
+import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -18,9 +19,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
@@ -42,9 +43,7 @@ class ElasticsearchIndexControllerTest {
     private ElasticGlobalSearchListener elasticGlobalSearchListener;
 
     @Captor
-    private ArgumentCaptor<List<CaseTypeEntity>> caseTypeCaptor;
-
-    private List<CaseTypeEntity> caseTypes;
+    private ArgumentCaptor<DefinitionImportedEvent> eventCaptor;
 
     private static final String JURISDICTION_1 = "J1";
     private static final String JURISDICTION_2 = "J2";
@@ -55,7 +54,7 @@ class ElasticsearchIndexControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
-        caseTypes = new ArrayList<>();
+        List<CaseTypeEntity> caseTypes = new ArrayList<>();
         caseTypes.add(createCaseType(CASE_TYPE_1, JURISDICTION_1));
         caseTypes.add(createCaseType(CASE_TYPE_2, JURISDICTION_1));
         caseTypes.add(createCaseType(CASE_TYPE_3, JURISDICTION_2));
@@ -67,10 +66,10 @@ class ElasticsearchIndexControllerTest {
     @Test
     void shouldTriggerElasticsearchIndicesCreationWithEmptyList() {
         IndicesCreationResult result = controller.createElasticsearchIndices(Collections.emptyList());
+        verify(elasticDefinitionImportListener).initialiseElasticSearch(eventCaptor.capture());
 
         assertAll(
             () -> verify(caseTypeRepository).findAllLatestVersions(),
-            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(caseTypes),
             () -> assertThat(result.getTotal(), is(3)),
             () -> assertThat(result.getCaseTypesByJurisdiction().keySet().size(), is(2)),
             () -> assertThat(result.getCaseTypesByJurisdiction().get(JURISDICTION_1).size(), is(2)),
@@ -84,10 +83,10 @@ class ElasticsearchIndexControllerTest {
     @Test
     void shouldTriggerElasticsearchIndicesCreationWithNullList() {
         IndicesCreationResult result = controller.createElasticsearchIndices(null);
+        verify(elasticDefinitionImportListener).initialiseElasticSearch(eventCaptor.capture());
 
         assertAll(
             () -> verify(caseTypeRepository).findAllLatestVersions(),
-            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(caseTypes),
             () -> assertThat(result.getTotal(), is(3)),
             () -> assertThat(result.getCaseTypesByJurisdiction().keySet().size(), is(2)),
             () -> assertThat(result.getCaseTypesByJurisdiction().get(JURISDICTION_1).size(), is(2)),
@@ -101,12 +100,13 @@ class ElasticsearchIndexControllerTest {
     @Test
     void shouldTriggerElasticsearchIndicesCreationWithProvidedCaseTypes() {
         IndicesCreationResult result = controller.createElasticsearchIndices(List.of(CASE_TYPE_1, CASE_TYPE_3));
+        verify(elasticDefinitionImportListener).initialiseElasticSearch(eventCaptor.capture());
+        DefinitionImportedEvent capturedEvent = eventCaptor.getValue();
 
         assertAll(
-            () -> verify(elasticDefinitionImportListener).initialiseElasticSearch(caseTypeCaptor.capture()),
-            () -> assertThat(caseTypeCaptor.getValue().size(), is(2)),
-            () -> assertThat(caseTypeCaptor.getValue().get(0).getReference(), is(CASE_TYPE_1)),
-            () -> assertThat(caseTypeCaptor.getValue().get(1).getReference(), is(CASE_TYPE_3)),
+            () -> assertThat(capturedEvent.getContent().size(), is(2)),
+            () -> assertThat(capturedEvent.getContent().getFirst().getReference(), is(CASE_TYPE_1)),
+            () -> assertThat(capturedEvent.getContent().get(1).getReference(), is(CASE_TYPE_3)),
             () -> assertThat(result.getTotal(), is(2)),
             () -> assertThat(result.getCaseTypesByJurisdiction().keySet().size(), is(2)),
             () -> assertThat(result.getCaseTypesByJurisdiction().get(JURISDICTION_1).size(), is(1)),
