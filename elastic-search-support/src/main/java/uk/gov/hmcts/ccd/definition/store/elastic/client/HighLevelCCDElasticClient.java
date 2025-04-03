@@ -1,25 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import com.google.common.collect.Iterables;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.util.EntityUtils;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.client.indices.CreateIndexRequest;
-import org.elasticsearch.client.indices.CreateIndexResponse;
-import org.elasticsearch.client.indices.PutMappingRequest;
 import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.client.Request;
 import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.Response;
-import org.elasticsearch.client.ResponseListener;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.CreateIndexResponse;
+import org.elasticsearch.client.indices.PutMappingRequest;
 import org.elasticsearch.client.tasks.TaskSubmissionResponse;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.reindex.ReindexRequest;
@@ -175,7 +169,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     public CompletableFuture<String> reindexData(String oldIndex, String newIndex) {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        try{
+        try {
             ReindexRequest reindexRequest = new ReindexRequest();
             reindexRequest.setSourceIndices(oldIndex);
             reindexRequest.setDestIndex(newIndex);
