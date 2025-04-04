@@ -50,11 +50,11 @@ public class ImportController {
     @RequestMapping(value = URI_IMPORT, method = RequestMethod.POST)
     public ResponseEntity processUpload(@RequestParam("file") MultipartFile file, HttpServletRequest request)
         throws IOException {
-        jclog("processUpload() #1  (updated 3rd April)");
+        jclog("processUpload() #1  (updated 4th April)");
         jclog("processUpload() #2  ,  " + request.getRequestURI() + "  ,  " + request.getRequestURL());
         try {
             ResponseEntity responseEntity = processUploadServiceImpl.processUpload(file);
-            jclog("processUpload() #3 (OK)");
+            jclog("processUpload() #3 (OK) " + responseEntity.getStatusCode() + "  ,  " + responseEntity.getBody());
             return responseEntity;
         } catch (Exception e) {
             jclog("processUpload() #4 (ERROR) " + e.getMessage());
