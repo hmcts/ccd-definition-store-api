@@ -23,9 +23,10 @@ public class JcTestController {
         try {
             Thread.sleep(300000);  // 5 minutes
         } catch (InterruptedException e) {
+            jclog("jctest() InterruptedException: " + e.getMessage());
         }
         ResponseEntity responseEntity = ResponseEntity.ok("JcTestController.jctest()");
-        jclog("jctest()  " + responseEntity.getStatusCode() + "  ,  " + responseEntity.getBody());
+        jclog("jctest() " + responseEntity.getStatusCode() + "  ,  " + responseEntity.getBody());
         return responseEntity;
     }
 }
