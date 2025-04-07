@@ -143,7 +143,7 @@ public abstract class ElasticDefinitionImportListener {
         });
     }
 
-    private String incrementIndexNumber(String indexName) {
+    String incrementIndexNumber(String indexName) {
         String[] parts = indexName.split("-");
         if (parts.length != 2) {
             throw new IllegalArgumentException("Invalid index name format: " + indexName);

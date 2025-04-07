@@ -24,6 +24,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.BDDMockito.willThrow;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
@@ -61,7 +62,7 @@ class ProcessUploadServiceTest {
         metadata.setJurisdiction("TEST");
         metadata.addCaseType("TestCaseType");
         metadata.setUserId("user@hmcts.net");
-        when(importService.importFormDefinitions(any(), eq(false), eq(true))).thenReturn(metadata);
+        when(importService.importFormDefinitions(any(), anyBoolean(), anyBoolean())).thenReturn(metadata);
         when(importService.getImportWarnings()).thenReturn(Collections.emptyList());
     }
 
@@ -72,7 +73,17 @@ class ProcessUploadServiceTest {
         val result = processUploadService.processUpload(file, false, true);
         verify(fileStorageService).uploadFile(file, metadata);
         assertEquals(result.getStatusCode(), HttpStatus.CREATED);
+        assertEquals(result.getBody(), ProcessUploadService.SUCCESSFULLY_CREATED);
+    }
+
+    @Test
+    void validUploadWithReindex() throws Exception {
+        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
+        val result = processUploadService.processUpload(file, true, true);
+        verify(fileStorageService).uploadFile(file, metadata);
+        assertEquals(result.getStatusCode(), HttpStatus.CREATED);
         assertEquals(result.getBody(), processUploadService.SUCCESSFULLY_CREATED);
+        assertEquals(result.getHeaders().getFirst("Elasticsearch-Reindex-Task"), metadata.getTaskId());
     }
 
     @DisplayName("Upload - Green non-path, Azure enabled")

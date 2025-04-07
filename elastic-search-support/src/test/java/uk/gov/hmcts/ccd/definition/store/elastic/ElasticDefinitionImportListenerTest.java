@@ -29,9 +29,12 @@ import java.util.concurrent.ExecutionException;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -60,12 +63,12 @@ public class ElasticDefinitionImportListenerTest {
     private final CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB")
         .withReference("caseTypeB").build();
     private final String baseIndexName = "casetypea";
-    private final String caseTypeName = "casetypea-0001";
-    private final String incrementedCaseTypeName = "casetypea-0002";
+    private final String caseTypeName = "casetypea-000001";
+    private final String incrementedCaseTypeName = "casetypea-000002";
 
     @BeforeEach
     public void setUp() {
-        when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
+        lenient().when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
     }
 
     @Test
@@ -143,12 +146,12 @@ public class ElasticDefinitionImportListenerTest {
 
         listener.onDefinitionImported(newEvent(true, true, caseA));
 
-        verify(ccdElasticClient).setIndexReadOnly("casetypea", true);
+        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, true);
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).createIndexAndMapping(incrementedCaseTypeName, "caseMapping");
         verify(ccdElasticClient).reindexData(caseTypeName, incrementedCaseTypeName);
         verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
-        verify(ccdElasticClient).updateAlias(baseIndexName, "casetypea-0001", incrementedCaseTypeName);
+        verify(ccdElasticClient).updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
         assertEquals("taskId", mockFuture.get());
 
         verify(ccdElasticClient).removeIndex(caseTypeName);
@@ -189,7 +192,7 @@ public class ElasticDefinitionImportListenerTest {
 
         verify(ccdElasticClient, never()).reindexData(anyString(), anyString());
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
-        verify(ccdElasticClient).upsertMapping("casetypea", "caseMapping");
+        verify(ccdElasticClient).upsertMapping(baseIndexName, "caseMapping");
 
         verify(ccdElasticClient, never()).removeIndex(anyString());
     }
@@ -199,7 +202,7 @@ public class ElasticDefinitionImportListenerTest {
         mockAliasResponse();
 
         CompletableFuture<String> failedFuture = new CompletableFuture<>();
-        failedFuture.completeExceptionally(new RuntimeException("Elasticsearch reindexing failed"));
+        failedFuture.completeExceptionally(new RuntimeException("reindexing failed"));
 
         when(ccdElasticClient.reindexData(caseTypeName, incrementedCaseTypeName)).thenReturn(failedFuture);
 
@@ -211,6 +214,43 @@ public class ElasticDefinitionImportListenerTest {
         verify(ccdElasticClient).removeIndex(incrementedCaseTypeName);
         verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
         verify(ccdElasticClient).close();
+    }
+
+    @Test
+    void shouldIncrementIndexNumber() {
+        String result = listener.incrementIndexNumber(caseTypeName);
+        assertEquals(incrementedCaseTypeName, result);
+    }
+
+    @Test
+    void incrementToDoubleDigitIndexNumber() {
+        String result = listener.incrementIndexNumber("casetype-000009");
+        assertEquals("casetype-000010", result);
+    }
+
+    @Test
+    void throwExceptionWhenIndexFormatIsInvalid() {
+        Exception ex = assertThrows(IllegalArgumentException.class, () ->
+            listener.incrementIndexNumber("invalidindex"));
+
+        assertTrue(ex.getMessage().contains("Invalid index name format"));
+    }
+
+    @Test
+    void testConstructorWithAllArguments() {
+        DefinitionImportedEvent event = newEvent(true, true, caseA);
+
+        assertTrue(event.isReindex());
+        assertTrue(event.isDeleteOldIndex());
+    }
+
+    @Test
+    void testConstructorWithDefaults() {
+        DefinitionImportedEvent event = newEvent(caseA);
+
+        //default parameters are reindex = false and deleteOldIndex = true
+        assertFalse(event.isReindex());
+        assertTrue(event.isDeleteOldIndex());
     }
 
     private void mockAliasResponse() throws IOException {
