@@ -85,7 +85,7 @@ variable "email_address_key" {
 }
 
 variable "cpu_threshold" {
-  default     = 5
+  default     = 1
   type        = number
   description = "Average CPU utilisation threshold"
 }
