@@ -100,3 +100,4 @@ variable "storage_threshold" {
   default     = 0.5
   type        = number
   description = "Average storage utilisation threshold"
+}
