@@ -8,6 +8,9 @@
   ],
 
   "request" :{
+    "pathVariables" : {
+      "": ""
+    }
   }
 }
 
