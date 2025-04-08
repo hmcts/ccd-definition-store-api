@@ -20,6 +20,8 @@ import java.util.Collections;
 import java.util.Iterator;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
@@ -132,10 +134,31 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
             ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A, CASE_TYPE_B))));
     }
 
+    @Test
+    void shouldReindex() throws IOException, JSONException {
+        CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
+
+        CaseTypeEntity caseTypeEntity1 = caseTypeBuilder
+            .withJurisdiction("JUR")
+            .withReference(CASE_TYPE_A)
+            .addField(baseTypeField1)
+            .build();
+
+        DefinitionImportedEvent event = new DefinitionImportedEvent(Collections.singletonList(caseTypeEntity1),
+            true, true);
+
+        definitionImportListener.onDefinitionImported(event);
+
+        String response = getElasticsearchIndices(CASE_TYPE_A);
+
+        assertThat(response, containsString("casetypea_cases-000002"));
+        assertThat(response, not(containsString("casetypea_cases-000001")));
+    }
+
     private String[] getDynamicIndexResponseFields(String... indexNames) {
         return Arrays.stream(indexNames)
             .map(String::toLowerCase)
-            .map(index -> new String[] {
+            .map(index -> new String[]{
                 // Paths of fields which may have a different value each time an index is created
                 index + "_cases-000001.settings.index.creation_date",
                 index + "_cases-000001.settings.index.uuid",
