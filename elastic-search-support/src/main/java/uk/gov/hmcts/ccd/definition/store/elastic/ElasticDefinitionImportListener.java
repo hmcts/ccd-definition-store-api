@@ -94,8 +94,8 @@ public abstract class ElasticDefinitionImportListener {
             logMapping(caseMapping);
             throw elasticsearchErrorHandler.createException(exc, currentCaseType);
         } catch (InterruptedException ie) {
-            Thread.currentThread().interrupt();
             logMapping(caseMapping);
+            Thread.currentThread().interrupt();
             throw new ElasticSearchInitialisationException(ie);
         } catch (Exception exc) {
             logMapping(caseMapping);
