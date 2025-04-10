@@ -22,6 +22,6 @@ public class DefinitionImportedEvent extends ImportEvent<List<CaseTypeEntity>> {
     public DefinitionImportedEvent(List<CaseTypeEntity> caseTypes) {
         super(caseTypes);
         this.reindex = false;
-        this.deleteOldIndex = true;
+        this.deleteOldIndex = false;
     }
 }

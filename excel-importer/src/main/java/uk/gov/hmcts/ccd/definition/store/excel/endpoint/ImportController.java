@@ -36,7 +36,7 @@ public class ImportController {
     public ResponseEntity<String> processUpload(@RequestParam("file") MultipartFile file,
                                         @RequestParam(value = "reindex", required = false, defaultValue = "false")
                                         Boolean reindex,
-                                        @RequestParam(value = "deleteOldIndex", required = false, defaultValue = "true")
+                                        @RequestParam(value = "deleteOldIndex", required = false, defaultValue = "false")
                                         Boolean deleteOldIndex) throws IOException {
         return processUploadServiceImpl.processUpload(file, reindex, deleteOldIndex);
     }
