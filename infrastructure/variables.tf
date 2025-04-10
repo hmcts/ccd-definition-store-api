@@ -71,3 +71,15 @@ variable "force_user_permissions_trigger" {
   type        = string
   description = "Update this to a new value to force the user permissions script to run again"
 }
+
+variable "action_group_name" {
+  description = "The name of the Action Group to create."
+  type        = string
+  default     = "action_group"
+}
+
+variable "email_address_key" {
+  description = "Email address key in azure Key Vault."
+  type        = string
+  default     = "db-alert-monitoring-email-address"
+}
