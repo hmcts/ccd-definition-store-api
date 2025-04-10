@@ -57,12 +57,12 @@ class ImportControllerTest {
     void validUploadAzureEnabled() throws Exception {
         val expectedResult = "Case Definition data successfully imported";
         val response = ResponseEntity.status(HttpStatus.CREATED).body(expectedResult);
-        when(processUploadServiceImpl.processUpload(file, false, true)).thenReturn(response);
+        when(processUploadServiceImpl.processUpload(file, false, false)).thenReturn(response);
 
         mockMvc.perform(multipart(URI_IMPORT).file(file))
             .andExpect(status().isCreated())
             .andExpect(content().string("Case Definition data successfully imported"));
-        verify(processUploadServiceImpl).processUpload(file, false, true);
+        verify(processUploadServiceImpl).processUpload(file, false, false);
     }
 
     @DisplayName("Upload - Green path, Azure disabled")
@@ -70,11 +70,11 @@ class ImportControllerTest {
     void validUploadAzureDisabled() throws Exception {
         val expectedResult = "Case Definition data successfully imported";
         val response = ResponseEntity.status(HttpStatus.CREATED).body(expectedResult);
-        when(processUploadServiceImpl.processUpload(file, false, true)).thenReturn(response);
+        when(processUploadServiceImpl.processUpload(file, false, false)).thenReturn(response);
 
         mockMvc.perform(multipart(URI_IMPORT).file(file))
             .andExpect(status().isCreated())
             .andExpect(content().string(expectedResult));
-        verify(processUploadServiceImpl).processUpload(file, false, true);
+        verify(processUploadServiceImpl).processUpload(file, false, false);
     }
 }

@@ -183,12 +183,12 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    void initialiseElasticSearchWhenReindexAndDeleteOldIndexAreFalse() throws IOException {
-        //expected behaviour should be same as default (reindex false and old index true)
+    void initialiseElasticSearchWhenReindexFalseAndDeleteOldIndexTrue() throws IOException {
+        //expected behaviour should be same as default (reindex false and old index false)
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(caseMappingGenerator.generateMapping(caseA)).thenReturn("caseMapping");
 
-        listener.onDefinitionImported(newEvent(false, false, caseA));
+        listener.onDefinitionImported(newEvent(false, true, caseA));
 
         verify(ccdElasticClient, never()).reindexData(anyString(), anyString());
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
@@ -248,9 +248,9 @@ public class ElasticDefinitionImportListenerTest {
     void testConstructorWithDefaults() {
         DefinitionImportedEvent event = newEvent(caseA);
 
-        //default parameters are reindex = false and deleteOldIndex = true
+        //default parameters are reindex = false and deleteOldIndex = false
         assertFalse(event.isReindex());
-        assertTrue(event.isDeleteOldIndex());
+        assertFalse(event.isDeleteOldIndex());
     }
 
     private void mockAliasResponse() throws IOException {
