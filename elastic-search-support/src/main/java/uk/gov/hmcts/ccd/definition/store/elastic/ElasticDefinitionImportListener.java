@@ -67,9 +67,6 @@ public abstract class ElasticDefinitionImportListener {
                     elasticClient.createIndex(actualIndexName, baseIndexName);
                 }
                 if (reindex) {
-                    //set readonly
-                    elasticClient.setIndexReadOnly(baseIndexName, true);
-
                     //get current alias index
                     GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
                     String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
@@ -78,6 +75,7 @@ public abstract class ElasticDefinitionImportListener {
                     String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
+                    elasticClient.setIndexReadOnly(baseIndexName, true);
                     elasticClient.createIndexAndMapping(incrementedCaseTypeName, caseMapping);
 
                     //initiate reindexing
@@ -104,19 +102,20 @@ public abstract class ElasticDefinitionImportListener {
     }
 
     private CompletableFuture<String> handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
-                                                       String caseTypeName, String incrementedCaseTypeName,
+                                                       String oldIndex, String newIndex,
                                                        boolean deleteOldIndex) {
+
         //initiate async elasticsearch reindexing request
-        CompletableFuture<String> reindexFuture = elasticClient.reindexData(caseTypeName, incrementedCaseTypeName)
+        CompletableFuture<String> reindexFuture = elasticClient.reindexData(oldIndex, newIndex)
             .exceptionally(ex -> {
                 try {
                     //if failed delete new index, set old index writable
                     HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject();
-                    log.info("reindexing failed, error: {}", ex.getMessage());
-                    asyncElasticClient.removeIndex(incrementedCaseTypeName);
-                    log.info("{} deleted", incrementedCaseTypeName);
-                    asyncElasticClient.setIndexReadOnly(caseTypeName, false);
-                    log.info("{} set to writable", caseTypeName);
+                    log.error("reindexing failed", ex);
+                    asyncElasticClient.removeIndex(newIndex);
+                    log.info("{} deleted", newIndex);
+                    asyncElasticClient.setIndexReadOnly(oldIndex, false);
+                    log.info("{} set to writable", oldIndex);
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing failure", e);
                     throw new CompletionException(e);
@@ -128,12 +127,12 @@ public abstract class ElasticDefinitionImportListener {
         return reindexFuture.thenApply(taskId -> {
             try {
                 HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject();
-                log.info("updating alias from {} to {}", caseTypeName, incrementedCaseTypeName);
+                log.info("updating alias from {} to {}", oldIndex, newIndex);
                 asyncElasticClient.setIndexReadOnly(baseIndexName, false);
-                asyncElasticClient.updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
+                asyncElasticClient.updateAlias(baseIndexName, oldIndex, newIndex);
                 if (deleteOldIndex) {
-                    log.info("deleting old index {}", caseTypeName);
-                    asyncElasticClient.removeIndex(caseTypeName);
+                    log.info("deleting old index {}", oldIndex);
+                    asyncElasticClient.removeIndex(oldIndex);
                 }
                 return taskId;
             } catch (IOException e) {
