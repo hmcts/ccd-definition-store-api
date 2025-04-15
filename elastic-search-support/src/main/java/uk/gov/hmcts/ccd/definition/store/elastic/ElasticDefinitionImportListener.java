@@ -18,6 +18,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 public abstract class ElasticDefinitionImportListener {
@@ -143,13 +145,15 @@ public abstract class ElasticDefinitionImportListener {
     }
 
     String incrementIndexNumber(String indexName) {
-        String[] parts = indexName.split("-");
-        if (parts.length != 2) {
-            throw new IllegalArgumentException("Invalid index name format: " + indexName);
+        Pattern pattern = Pattern.compile("(.+_cases-)(\\d+)$");
+        Matcher matcher = pattern.matcher(indexName);
+
+        if (!matcher.matches() || matcher.groupCount() < 2) {
+            throw new IllegalArgumentException("invalid index name format: " + indexName);
         }
 
-        String prefix = parts[0] + "-";
-        String numberStr = parts[1];
+        String prefix = matcher.group(1);
+        String numberStr = matcher.group(2);
 
         int incremented = Integer.parseInt(numberStr) + 1;
         String formattedNumber = StringUtils.leftPad(String.valueOf(incremented), numberStr.length(), '0');
