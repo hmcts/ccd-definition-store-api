@@ -4,9 +4,11 @@
         CVE-2024-38820 refer [https://tools.hmcts.net/jira/browse/CFTS-6913]
         CVE-2025-24813 refer [Ticket]
         CVE-2024-45772 refer [Ticket]
+        CVE-2023-6378 refer [Ticket]
     </notes>
     <cve>CVE-2024-38820</cve>
     <cve>CVE-2025-24813</cve>
     <cve>CVE-2024-45772</cve>
+    <cve>CVE-2023-6378</cve>
   </suppress>
 </suppressions>
