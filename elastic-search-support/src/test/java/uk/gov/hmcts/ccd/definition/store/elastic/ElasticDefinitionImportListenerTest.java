@@ -63,8 +63,8 @@ public class ElasticDefinitionImportListenerTest {
     private final CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB")
         .withReference("caseTypeB").build();
     private final String baseIndexName = "casetypea";
-    private final String caseTypeName = "casetypea-000001";
-    private final String incrementedCaseTypeName = "casetypea-000002";
+    private final String caseTypeName = "casetypea_cases-000001";
+    private final String incrementedCaseTypeName = "casetypea_cases-000002";
 
     @BeforeEach
     public void setUp() {
@@ -224,8 +224,14 @@ public class ElasticDefinitionImportListenerTest {
 
     @Test
     void incrementToDoubleDigitIndexNumber() {
-        String result = listener.incrementIndexNumber("casetype-000009");
-        assertEquals("casetype-000010", result);
+        String result = listener.incrementIndexNumber("casetypea_cases-000009");
+        assertEquals("casetypea_cases-000010", result);
+    }
+
+    @Test
+    void incrementIndexNumberWithDash() {
+        String result = listener.incrementIndexNumber("casetype-a_cases-000001");
+        assertEquals("casetype-a_cases-000002", result);
     }
 
     @Test
@@ -233,7 +239,7 @@ public class ElasticDefinitionImportListenerTest {
         Exception ex = assertThrows(IllegalArgumentException.class, () ->
             listener.incrementIndexNumber("invalidindex"));
 
-        assertTrue(ex.getMessage().contains("Invalid index name format"));
+        assertTrue(ex.getMessage().contains("invalid index name format"));
     }
 
     @Test
