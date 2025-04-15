@@ -19,9 +19,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
+import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
@@ -135,7 +137,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     }
 
     @Test
-    void shouldReindex() throws IOException, JSONException {
+    void shouldReindex() throws JSONException {
         CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
 
         CaseTypeEntity caseTypeEntity1 = caseTypeBuilder
@@ -149,10 +151,11 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
         definitionImportListener.onDefinitionImported(event);
 
-        String response = getElasticsearchIndices(CASE_TYPE_A);
-
-        assertThat(response, containsString("casetypea_cases-000002"));
-        assertThat(response, not(containsString("casetypea_cases-000001")));
+        await().atMost(5, SECONDS).untilAsserted(() -> {
+            String response = getElasticsearchIndices(CASE_TYPE_A);
+            assertThat(response, containsString("casetypea_cases-000002"));
+            assertThat(response, not(containsString("casetypea_cases-000001")));
+        });
     }
 
     private String[] getDynamicIndexResponseFields(String... indexNames) {
