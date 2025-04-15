@@ -1,7 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,8 +26,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,11 +34,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.doAnswer;
 
 @ExtendWith(MockitoExtension.class)
 public class ElasticDefinitionImportListenerTest {
@@ -136,23 +138,28 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    void initialiseElasticSearchWhenReindexAndDeleteOldIndexAreTrue() throws IOException, ExecutionException,
-        InterruptedException {
+    void initialiseElasticSearchWhenReindexAndDeleteOldIndexAreTrue() throws IOException {
         mockAliasResponse();
 
-        CompletableFuture<String> mockFuture = CompletableFuture.completedFuture("taskId");
-        when(ccdElasticClient.reindexData(anyString(), anyString()))
-            .thenReturn(mockFuture);
+        doAnswer(invocation -> {
+            ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
+            BulkByScrollResponse mockResponse = mock(BulkByScrollResponse.class);
+            listener.onResponse(mockResponse);
+            return null;
+        }).when(ccdElasticClient).reindexData(
+            eq(caseTypeName),
+            eq(incrementedCaseTypeName),
+            any()
+        );
 
         listener.onDefinitionImported(newEvent(true, true, caseA));
 
         verify(ccdElasticClient).setIndexReadOnly(baseIndexName, true);
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).createIndexAndMapping(incrementedCaseTypeName, "caseMapping");
-        verify(ccdElasticClient).reindexData(caseTypeName, incrementedCaseTypeName);
+        verify(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
         verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
         verify(ccdElasticClient).updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
-        assertEquals("taskId", mockFuture.get());
 
         verify(ccdElasticClient).removeIndex(caseTypeName);
         ArgumentCaptor<String> oldIndexCaptor = ArgumentCaptor.forClass(String.class);
@@ -161,36 +168,40 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    void initialiseElasticSearchWhenReindexTrueAndDeleteOldIndexFalse() throws IOException, ExecutionException,
-        InterruptedException {
+    void initialiseElasticSearchWhenReindexTrueAndDeleteOldIndexFalse() throws IOException {
         mockAliasResponse();
 
-        CompletableFuture<String> mockFuture = CompletableFuture.completedFuture("taskId");
-        when(ccdElasticClient.reindexData(anyString(), anyString()))
-            .thenReturn(mockFuture);
+        doAnswer(invocation -> {
+            ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
+            BulkByScrollResponse mockResponse = mock(BulkByScrollResponse.class);
+            listener.onResponse(mockResponse);
+            return null;
+        }).when(ccdElasticClient).reindexData(
+            eq(caseTypeName),
+            eq(incrementedCaseTypeName),
+            any()
+        );
 
         listener.onDefinitionImported(newEvent(true, false, caseA));
 
         verify(ccdElasticClient).setIndexReadOnly(baseIndexName, true);
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).createIndexAndMapping(incrementedCaseTypeName, "caseMapping");
-        verify(ccdElasticClient).reindexData(caseTypeName, incrementedCaseTypeName);
+        verify(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
         verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
         verify(ccdElasticClient).updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
-        assertEquals("taskId", mockFuture.get());
-
         verify(ccdElasticClient, never()).removeIndex(caseTypeName);
     }
 
     @Test
-    void initialiseElasticSearchWhenReindexFalseAndDeleteOldIndexTrue() throws IOException {
+    void shouldNotInitialiseElasticSearchWhenReindexFalseAndDeleteOldIndexTrue() throws IOException {
         //expected behaviour should be same as default (reindex false and old index false)
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(caseMappingGenerator.generateMapping(caseA)).thenReturn("caseMapping");
 
         listener.onDefinitionImported(newEvent(false, true, caseA));
 
-        verify(ccdElasticClient, never()).reindexData(anyString(), anyString());
+        verify(ccdElasticClient, never()).reindexData(anyString(), anyString(), any());
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).upsertMapping(baseIndexName, "caseMapping");
 
@@ -201,10 +212,11 @@ public class ElasticDefinitionImportListenerTest {
     void deletesNewIndexWhenReindexingFails() throws IOException {
         mockAliasResponse();
 
-        CompletableFuture<String> failedFuture = new CompletableFuture<>();
-        failedFuture.completeExceptionally(new RuntimeException("reindexing failed"));
-
-        when(ccdElasticClient.reindexData(caseTypeName, incrementedCaseTypeName)).thenReturn(failedFuture);
+        doAnswer(invocation -> {
+            ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
+            listener.onFailure(new RuntimeException("reindexing failed"));
+            return null;
+        }).when(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
 
         DefinitionImportedEvent event = newEvent(true, true, caseA);
 

@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
@@ -14,8 +15,8 @@ import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.PutMappingRequest;
-import org.elasticsearch.client.tasks.TaskSubmissionResponse;
 import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.index.reindex.ReindexRequest;
 import org.elasticsearch.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.concurrent.CompletableFuture;
 
 import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener.GLOBAL_SEARCH;
 
@@ -166,25 +166,17 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         return deleteResponse.isAcknowledged();
     }
 
-    public CompletableFuture<String> reindexData(String oldIndex, String newIndex) {
-        CompletableFuture<String> future = new CompletableFuture<>();
+    public void reindexData(String oldIndex, String newIndex, ActionListener<BulkByScrollResponse> listener) {
+        ReindexRequest reindexRequest = new ReindexRequest();
+        reindexRequest.setSourceIndices(oldIndex);
+        reindexRequest.setDestIndex(newIndex);
+        reindexRequest.setRefresh(true);
 
-        try {
-            ReindexRequest reindexRequest = new ReindexRequest();
-            reindexRequest.setSourceIndices(oldIndex);
-            reindexRequest.setDestIndex(newIndex);
-            reindexRequest.setRefresh(true);
-
-            TaskSubmissionResponse reindexSubmission = elasticClient
-                .submitReindexTask(reindexRequest, RequestOptions.DEFAULT);
-
-            String taskId = reindexSubmission.getTask();
-            log.info("reindexing successful, Task ID: {}", taskId);
-            future.complete(taskId);
-        } catch (Exception e) {
-            log.error("reindexing failed", e);
-            future.completeExceptionally(e);
-        }
-        return future;
+        //doesn't return taskID
+        elasticClient.reindexAsync(
+            reindexRequest,
+            RequestOptions.DEFAULT,
+            listener
+        );
     }
 }
