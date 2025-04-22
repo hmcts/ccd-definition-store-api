@@ -44,8 +44,7 @@ public abstract class ElasticDefinitionImportListener {
         this.elasticsearchErrorHandler = elasticsearchErrorHandler;
     }
 
-    public abstract void onDefinitionImported(DefinitionImportedEvent event)
-        throws IOException;
+    public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
 
     /**
      * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new
@@ -60,9 +59,8 @@ public abstract class ElasticDefinitionImportListener {
 
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
-        HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
 
-        try {
+        try (HighLevelCCDElasticClient elasticClient = clientFactory.getObject();) {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
@@ -86,7 +84,7 @@ public abstract class ElasticDefinitionImportListener {
                     //initiate reindexing
                     handleReindexing(elasticClient, baseIndexName, caseTypeName, incrementedCaseTypeName,
                         deleteOldIndex);
-                    //dummy value
+                    //dummy value for phase 1
                     event.setTaskId("taskID");
                 } else {
                     caseMapping = mappingGenerator.generateMapping(caseType);

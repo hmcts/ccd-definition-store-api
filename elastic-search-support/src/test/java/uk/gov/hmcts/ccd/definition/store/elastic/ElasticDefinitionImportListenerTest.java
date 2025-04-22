@@ -1,9 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.rest.RestStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -59,6 +61,9 @@ public class ElasticDefinitionImportListenerTest {
 
     @Mock
     private CaseMappingGenerator caseMappingGenerator;
+
+    @Mock
+    private ElasticsearchErrorHandler elasticsearchErrorHandler;
 
     private final CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA")
         .withReference("caseTypeA").build();
@@ -128,6 +133,27 @@ public class ElasticDefinitionImportListenerTest {
         verify(ccdElasticClient).upsertMapping("casetypea", "caseMapping");
         verify(ccdElasticClient).upsertMapping("casetypeb", "caseMapping");
     }
+
+    @Test
+    public void shouldWrapElasticsearchStatusExceptionInInitialisationException() throws IOException {
+        mockAliasResponse();
+
+        // mock upsertMapping to throw ElasticsearchStatusException
+        when(ccdElasticClient.upsertMapping(anyString(), anyString()))
+            .thenThrow(new ElasticsearchStatusException("Simulated ES error", RestStatus.BAD_REQUEST));
+
+        ElasticSearchInitialisationException wrapped = new ElasticSearchInitialisationException(new RuntimeException("wrapped"));
+        when(elasticsearchErrorHandler.createException(any(), eq(caseA))).thenReturn(wrapped);
+
+        ElasticSearchInitialisationException thrown = assertThrows(
+            ElasticSearchInitialisationException.class,
+            () -> listener.onDefinitionImported(newEvent(caseA))
+        );
+
+        assertEquals(wrapped, thrown);
+        verify(elasticsearchErrorHandler).createException(any(ElasticsearchStatusException.class), eq(caseA));
+    }
+
 
     @Test
     public void throwsElasticSearchInitialisationExceptionOnErrors() {
@@ -272,17 +298,17 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     private void mockAliasResponse() throws IOException {
-        when(config.getCasesIndexNameFormat()).thenReturn("%s");
-        when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
+        lenient().when(config.getCasesIndexNameFormat()).thenReturn("%s");
+        lenient().when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
 
         GetAliasesResponse aliasResponse = mock(GetAliasesResponse.class);
         Map<String, Set<AliasMetadata>> aliasMap = new HashMap<>();
         aliasMap.put(caseTypeName,
             Collections.singleton(AliasMetadata.builder(baseIndexName).build()));
-        when(aliasResponse.getAliases()).thenReturn(aliasMap);
-        when(ccdElasticClient.getAlias(anyString())).thenReturn(aliasResponse);
+        lenient().when(aliasResponse.getAliases()).thenReturn(aliasMap);
+        lenient().when(ccdElasticClient.getAlias(anyString())).thenReturn(aliasResponse);
 
-        when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
+        lenient().when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
     }
 
     private DefinitionImportedEvent newEvent(CaseTypeEntity... caseTypes) {
