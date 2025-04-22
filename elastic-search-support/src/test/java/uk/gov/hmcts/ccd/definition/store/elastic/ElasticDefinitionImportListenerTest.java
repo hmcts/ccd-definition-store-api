@@ -142,7 +142,8 @@ public class ElasticDefinitionImportListenerTest {
         when(ccdElasticClient.upsertMapping(anyString(), anyString()))
             .thenThrow(new ElasticsearchStatusException("Simulated ES error", RestStatus.BAD_REQUEST));
 
-        ElasticSearchInitialisationException wrapped = new ElasticSearchInitialisationException(new RuntimeException("wrapped"));
+        ElasticSearchInitialisationException wrapped =
+            new ElasticSearchInitialisationException(new RuntimeException("wrapped"));
         when(elasticsearchErrorHandler.createException(any(), eq(caseA))).thenReturn(wrapped);
 
         ElasticSearchInitialisationException thrown = assertThrows(
