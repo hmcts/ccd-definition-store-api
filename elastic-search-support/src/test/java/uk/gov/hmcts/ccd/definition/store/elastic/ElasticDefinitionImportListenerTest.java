@@ -37,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -252,7 +253,8 @@ public class ElasticDefinitionImportListenerTest {
 
         verify(ccdElasticClient).removeIndex(incrementedCaseTypeName);
         verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
-        verify(ccdElasticClient).close();
+        //using a single mock, so close() is called twice (in event listener and reindexing failure handler)
+        verify(ccdElasticClient, atLeast(2)).close();
     }
 
     @Test
