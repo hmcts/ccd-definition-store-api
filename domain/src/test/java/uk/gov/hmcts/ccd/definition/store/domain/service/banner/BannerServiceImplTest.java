@@ -35,7 +35,7 @@ class BannerServiceImplTest {
     private BannerServiceImpl classUnderTest;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new BannerServiceImpl(bannerRepository, dtoMapper);
     }

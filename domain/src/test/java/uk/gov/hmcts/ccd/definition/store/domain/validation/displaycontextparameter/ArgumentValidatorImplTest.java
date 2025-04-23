@@ -15,7 +15,7 @@ public class ArgumentValidatorImplTest {
     private ArgumentValidatorImpl validator;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         validator = new ArgumentValidatorImpl();
     }

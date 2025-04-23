@@ -42,7 +42,7 @@ class GenericLayoutEntityElementPathValidatorImplTest {
     private CaseFieldEntity caseField;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         validator = new GenericLayoutEntityElementPathValidatorImpl(new CaseFieldEntityUtil());
 
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();

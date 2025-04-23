@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 
@@ -51,8 +53,7 @@ public class EventComplexTypeEntity implements Serializable {
     private Integer order;
 
     @Column(name = "display_context", nullable = false)
-    @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType.class)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private DisplayContext displayContext;
 
     @Column(name = "show_condition")

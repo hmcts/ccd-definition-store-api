@@ -24,7 +24,7 @@ public class DateTimeEntryValidatorImplTest {
     private DateTimeFormatParser dateTimeFormatParser;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         validator = new DateTimeEntryValidatorImpl(dateTimeFormatParser);
     }

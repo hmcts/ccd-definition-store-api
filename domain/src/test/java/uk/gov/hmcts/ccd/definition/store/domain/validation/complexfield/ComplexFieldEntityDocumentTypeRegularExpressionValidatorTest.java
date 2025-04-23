@@ -28,7 +28,7 @@ class ComplexFieldEntityDocumentTypeRegularExpressionValidatorTest {
     private final ComplexFieldEntity complexField = new ComplexFieldEntity();
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
 
         fieldType.setReference(BASE_DOCUMENT);

@@ -19,7 +19,7 @@ class FieldTypeMappingErrorMessageBuilderTest {
     private CaseTypeEntity caseType = new CaseTypeBuilder().withReference("CaseTypeId").build();
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         messageBuilder = new FieldTypeMappingErrorMessageBuilder();
     }
 

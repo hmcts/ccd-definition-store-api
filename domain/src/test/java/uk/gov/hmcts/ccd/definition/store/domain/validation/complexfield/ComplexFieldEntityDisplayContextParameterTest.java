@@ -33,7 +33,7 @@ public class ComplexFieldEntityDisplayContextParameterTest {
     private ComplexFieldValidator.ValidationContext caseFieldComplexFieldEntityValidator;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         validator = new ComplexFieldEntityDisplayContextParameterValidatorImpl(displayContextParameterValidatorFactory);
         when(displayContextParameterValidatorFactory.getValidator(Mockito.any()))

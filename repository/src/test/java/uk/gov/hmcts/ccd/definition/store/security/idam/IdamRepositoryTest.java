@@ -43,13 +43,8 @@ class IdamRepositoryTest {
     private AutoCloseable autoCloseable;
 
     @BeforeEach
-    void setUp() {
-        autoCloseable = MockitoAnnotations.openMocks(this);
-    }
-
-    @AfterEach
-    void tearDown() throws Exception {
-        autoCloseable.close();
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

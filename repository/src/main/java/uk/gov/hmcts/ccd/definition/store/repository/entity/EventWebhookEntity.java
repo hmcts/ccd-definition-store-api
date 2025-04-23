@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WebhookType;
@@ -42,8 +44,7 @@ public class EventWebhookEntity {
     private EventEntity event;
 
     @Column(name = "webhook_type")
-    @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType.class)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private WebhookType type;
 
     public EventWebhookEntity(EventEntity event, WebhookEntity webhook, WebhookType type) {

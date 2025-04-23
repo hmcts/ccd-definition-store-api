@@ -36,7 +36,7 @@ class CategoryIdValidatorTest {
     private CategoryEntity divorceDocsCategoryEntity = new CategoryEntity();
 
     @BeforeEach
-    void setup() {
+    public void setUp() {
         categoryValidator = new CategoryIdValidator();
         divorceDocsCategoryEntity.setCategoryId(DIVORCE_DOCS);
     }

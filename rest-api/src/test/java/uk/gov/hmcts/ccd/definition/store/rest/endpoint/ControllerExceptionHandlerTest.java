@@ -34,7 +34,7 @@ class ControllerExceptionHandlerTest {
     private ControllerExceptionHandler handler;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         handler = new ControllerExceptionHandler();
     }
 
@@ -44,8 +44,8 @@ class ControllerExceptionHandlerTest {
 
         final ResponseEntity<Object> response = handler.handleException(exception, mock(WebRequest.class));
 
-        Assert.assertThat(response.getBody().toString(), CoreMatchers.equalTo("Outer message\nInner message"));
-        Assert.assertThat(response.getStatusCode(), CoreMatchers.equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(response.getBody().toString(), CoreMatchers.equalTo("Outer message\nInner message"));
+        assertThat(response.getStatusCode(), CoreMatchers.equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Test
@@ -59,9 +59,9 @@ class ControllerExceptionHandlerTest {
 
         final ResponseEntity<Object> response = handler.handleException(exception, mock(WebRequest.class));
 
-        Assert.assertThat(response.getBody().toString(), CoreMatchers.equalTo("Depth 1\nDepth 2\nDepth 3\nDepth "
+        assertThat(response.getBody().toString(), CoreMatchers.equalTo("Depth 1\nDepth 2\nDepth 3\nDepth "
             + "4\nDepth 5"));
-        Assert.assertThat(response.getStatusCode(), CoreMatchers.equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(response.getStatusCode(), CoreMatchers.equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Test
@@ -71,8 +71,8 @@ class ControllerExceptionHandlerTest {
 
         final ResponseEntity<Object> response = handler.handleConflict(exception, mock(WebRequest.class));
 
-        Assert.assertThat(response.getStatusCode(), CoreMatchers.equalTo(HttpStatus.CONFLICT));
-        Assert.assertThat(response.getBody().toString(), CoreMatchers.equalTo("Outer message\nInner message"));
+        assertThat(response.getStatusCode(), CoreMatchers.equalTo(HttpStatus.CONFLICT));
+        assertThat(response.getBody().toString(), CoreMatchers.equalTo("Outer message\nInner message"));
     }
 
     @Test
@@ -81,8 +81,8 @@ class ControllerExceptionHandlerTest {
 
         final ResponseEntity<Object> response = handler.handleBadRequest(exception, mock(WebRequest.class));
 
-        Assert.assertThat(response.getStatusCode(), CoreMatchers.equalTo(HttpStatus.BAD_REQUEST));
-        Assert.assertThat(response.getBody().toString(), CoreMatchers.equalTo("Invalid request"));
+        assertThat(response.getStatusCode(), CoreMatchers.equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(response.getBody().toString(), CoreMatchers.equalTo("Invalid request"));
     }
 
     @Nested

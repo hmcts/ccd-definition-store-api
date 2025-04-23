@@ -33,7 +33,7 @@ public class ChallengeQuestionTabServiceImplTest {
     private ChallengeQuestionTabServiceImpl challengeQuestionTabServiceImpl;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         this.challengeQuestionTabServiceImpl = new ChallengeQuestionTabServiceImpl(
             challengeQuestionTabRepository, dtoMapper);

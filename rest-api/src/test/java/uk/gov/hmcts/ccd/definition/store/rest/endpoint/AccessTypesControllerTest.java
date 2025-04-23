@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,7 +13,7 @@ import org.mockito.Spy;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -42,6 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertFalse;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -63,9 +63,9 @@ public class AccessTypesControllerTest {
     private AccessTypesController controller;
     @Spy
     private  EntityToResponseDTOMapper entityToResponseDTOMapper = new EntityToResponseDTOMapperImpl();
-    @MockBean
+    @MockitoBean
     private AccessTypesRepository accessTypesRepository;
-    @MockBean
+    @MockitoBean
     private AccessTypeRolesRepository accessTypeRolesRepository;
     private MockMvc mockMvc;
     private final List<String> orgProfileIds = List.of(new String[]{"SOLICITOR_ORG", "SOLICITOR_ORG"});
@@ -240,11 +240,11 @@ public class AccessTypesControllerTest {
 
         AccessTypeJurisdictionResults finalAccessTypeJurisdictionResults = accessTypeJurisdictionResults;
         assertAll(
-            () -> MatcherAssert.assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().size(),
+            () -> assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().size(),
                 is(2)),
             () -> greaterThan(finalAccessTypeJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypes().size()),
-            () -> MatcherAssert.assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().get(0)
+            () -> assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypes().get(0).getOrganisationProfileId(), is(orgProfileIds.get(0)))
         );
 
@@ -285,11 +285,11 @@ public class AccessTypesControllerTest {
 
         AccessTypeJurisdictionResults finalAccessTypeJurisdictionResults = accessTypeJurisdictionResults;
         assertAll(
-            () -> MatcherAssert.assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().size(),
+            () -> assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().size(),
                 is(2)),
             () -> greaterThan(finalAccessTypeJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypes().size()),
-            () -> MatcherAssert.assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().get(0)
+            () -> assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypes().get(0).getOrganisationProfileId(), is(orgProfileIds.get(0)))
         );
 
@@ -331,11 +331,11 @@ public class AccessTypesControllerTest {
 
         AccessTypeJurisdictionResults finalAccessTypeJurisdictionResults = accessTypeJurisdictionResults;
         assertAll(
-            () -> MatcherAssert.assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().size(),
+            () -> assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().size(),
                 is(2)),
             () -> greaterThan(finalAccessTypeJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypes().size()),
-            () -> MatcherAssert.assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().get(0)
+            () -> assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypes().get(0).getOrganisationProfileId(), is(orgProfileIds.get(0)))
         );
 
@@ -374,11 +374,11 @@ public class AccessTypesControllerTest {
 
         AccessTypeJurisdictionResults finalAccessTypeJurisdictionResults = accessTypeJurisdictionResults;
         assertAll(
-            () -> MatcherAssert.assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().size(),
+            () -> assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().size(),
                 is(2)),
             () -> greaterThan(finalAccessTypeJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypes().size()),
-            () -> MatcherAssert.assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().get(0)
+            () -> assertThat(finalAccessTypeJurisdictionResults.getJurisdictions().get(0)
                 .getAccessTypes().get(0).getOrganisationProfileId(), is(orgProfileIds.get(0)))
         );
 

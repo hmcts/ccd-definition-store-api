@@ -20,11 +20,11 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class FieldTypeServiceImplTest {
 
@@ -136,7 +136,7 @@ public class FieldTypeServiceImplTest {
             assertEquals("Invalid type", ex.getValidationResult().getValidationErrors().get(0).getDefaultMessage());
         }
 
-        verifyZeroInteractions(repository);
+        verifyNoMoreInteractions(repository);
     }
 
     private ValidationResult validationResultWithError(ValidationError validationError) {

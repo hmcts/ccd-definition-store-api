@@ -19,7 +19,7 @@ import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType.METADATA;
@@ -35,7 +35,7 @@ class MetadataFieldServiceImplTest {
     private MetadataFieldServiceImpl metadataFieldService;
 
     @BeforeEach
-    void setup() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         metadataFieldService = new MetadataFieldServiceImpl(caseFieldRepository, dtoMapper);
     }
@@ -72,7 +72,7 @@ class MetadataFieldServiceImplTest {
         List<CaseField> metadataFields = metadataFieldService.getCaseMetadataFields();
 
         assertThat(metadataFields.isEmpty(), is(true));
-        verifyZeroInteractions(dtoMapper);
+        verifyNoMoreInteractions(dtoMapper);
     }
 
 }

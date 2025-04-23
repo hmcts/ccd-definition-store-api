@@ -36,7 +36,7 @@ class GenericLayoutEntityValidatorImplTest {
     private CaseFieldEntity caseField;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         validator = new GenericLayoutEntityValidatorImpl();
 
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();

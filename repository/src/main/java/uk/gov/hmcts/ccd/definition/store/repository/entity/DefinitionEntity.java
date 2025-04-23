@@ -49,7 +49,6 @@ public class DefinitionEntity implements Serializable, Versionable {
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType.class)
     private DefinitionStatus status;
 
     @Column(name = "data", nullable = false, columnDefinition = "jsonb")

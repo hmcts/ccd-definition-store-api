@@ -21,7 +21,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -92,7 +92,7 @@ class ImportAuditControllerTest {
             mvcResult =
             mockMvcNullAzureImportAuditsClient.perform(get(URL_IMPORT_AUDITS)).andExpect(status().isOk()).andReturn();
         assertThat(mvcResult.getResponse().getContentAsString(), is("[]"));
-        verifyZeroInteractions(azureImportAuditsClient);
+        verifyNoMoreInteractions(azureImportAuditsClient);
     }
 
     private ImportAudit buildImportAudit() throws URISyntaxException {

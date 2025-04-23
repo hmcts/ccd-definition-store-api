@@ -25,7 +25,7 @@ class DocumentTypeRegularExpressionValidatorTest {
     private final FieldTypeEntity fieldType = new FieldTypeEntity();
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         fieldType.setReference(BASE_DOCUMENT);
     }

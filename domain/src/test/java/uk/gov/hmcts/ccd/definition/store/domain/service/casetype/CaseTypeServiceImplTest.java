@@ -50,13 +50,13 @@ import static org.junit.Assert.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.same;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
@@ -104,7 +104,7 @@ class CaseTypeServiceImplTest {
     private CaseTypeServiceImpl classUnderTest;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         caseTypeEntity1.setReference(CASE_TYPE_REFERENCE_1);
         caseTypeEntity2.setReference(CASE_TYPE_REFERENCE_2);
@@ -409,7 +409,7 @@ class CaseTypeServiceImplTest {
             List<CaseType> caseTypes = classUnderTest.findByJurisdictionId(jurisdiction);
 
             verify(caseTypeRepository).findByJurisdictionId(same(jurisdiction));
-            verifyZeroInteractions(dtoMapper);
+            verifyNoMoreInteractions(dtoMapper);
 
             assertTrue(caseTypes.isEmpty());
         }
@@ -426,7 +426,7 @@ class CaseTypeServiceImplTest {
             List<CaseType> caseTypes = classUnderTest.findByJurisdictionId(jurisdiction);
 
             verify(caseTypeRepository).findByJurisdictionId(same(jurisdiction));
-            verifyZeroInteractions(dtoMapper);
+            verifyNoMoreInteractions(dtoMapper);
 
             assertTrue(caseTypes.isEmpty());
         }

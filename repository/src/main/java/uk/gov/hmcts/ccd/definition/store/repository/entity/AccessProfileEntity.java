@@ -1,9 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
 import jakarta.persistence.Column;
@@ -11,8 +11,6 @@ import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
@@ -48,8 +46,7 @@ public class AccessProfileEntity implements Serializable {
     private LocalDateTime createdAt;
 
     @Column(name = "security_classification")
-    @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType.class)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private SecurityClassification securityClassification;
 
     public Integer getId() {

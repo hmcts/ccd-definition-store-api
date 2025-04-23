@@ -2,7 +2,9 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
@@ -48,8 +50,7 @@ public class EventCaseFieldEntity implements Serializable {
     private final List<EventComplexTypeEntity> eventComplexTypes = new ArrayList<>();
 
     @Column(name = "display_context", nullable = false)
-    @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType.class)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private DisplayContext displayContext;
 
     @Column(name = "display_context_parameter")

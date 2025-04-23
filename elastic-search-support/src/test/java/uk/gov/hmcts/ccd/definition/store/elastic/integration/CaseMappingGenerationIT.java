@@ -6,8 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchBaseTest;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -23,7 +24,7 @@ import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
@@ -45,14 +46,14 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     @Autowired
     private CaseMappingGenerator mappingGenerator;
 
-    @MockBean
+    @MockitoBean
     private HighLevelCCDElasticClient client;
 
     @Mock
     private ObjectFactory<HighLevelCCDElasticClient> clientObjectFactory;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         when(clientObjectFactory.getObject()).thenReturn(client);
     }
 

@@ -3,17 +3,16 @@ plugins {
     id 'jacoco'
     id 'idea'
     id 'eclipse'
-    id 'org.springframework.boot' version '3.0.13'
-    id 'io.spring.dependency-management' version '1.1.5'
-    id 'se.patrikerdes.use-latest-versions' version '0.2.7'
+    id 'org.springframework.boot' version '3.4.1'
+    id 'io.spring.dependency-management' version '1.1.7'
     id 'com.github.ben-manes.versions' version '0.51.0'
-    id 'org.sonarqube' version '5.0.0.4638'
-    id 'com.github.kt3k.coveralls' version "2.8.2"
+    id 'org.sonarqube' version '6.0.1.5171'
+    id 'com.github.kt3k.coveralls' version "2.12.2"
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
     id 'info.solidsoft.pitest' version '1.15.0' apply(false)
-    id 'org.jetbrains.gradle.plugin.idea-ext' version "0.7"
-    id 'uk.gov.hmcts.java' version '0.12.57'
-    id 'org.owasp.dependencycheck' version '10.0.4'
+    id 'org.jetbrains.gradle.plugin.idea-ext' version "1.1.9"
+    id 'uk.gov.hmcts.java' version '0.12.63'
+    id 'org.owasp.dependencycheck' version '11.1.1'
 }
 
 application {
@@ -26,32 +25,34 @@ dependencyCheck {
 }
 
 ext {
-    set('elasticsearch.version', '7.17.1')
-    set('spring-framework.version', '6.0.21')
-    set('spring-security.version', '6.0.8')
-    set('springCloudVersion', '2022.0.5')
-    set('jackson.version', '2.16.0')
-    set('snakeyaml.version', '2.2')
-    set('postgresql.version', '42.7.3')
-    //overriding log4j2 default version 2.7 because of vulnerability issues
-    set('log4j2.version', '2.17.1')
+    set('elasticsearch.version', '8.16.2')
+    set('spring-framework.version', '6.2.1')
+    set('spring-security.version', '6.4.2')
+    set('springCloudVersion', '2024.0.0')
+    set('jackson.version', '2.16.1')
+    set('snakeyaml.version', '2.3')
+    set('log4j2.version', '2.24.3')
 
-    springBootVersion = '3.0.13'
-    junitJupiterVersion = '5.9.3'
-    junitVintageVersion = '5.9.3'
-    springDocVersion = '2.6.0'
-    hamcrestVersion = '1.3'
+    junitJupiterVersion = '5.11.4'
+    junitVintageVersion = '5.11.4'
+    springDocVersion = '2.8.3'
+    hamcrestVersion = '3.0'
     flywayVersion = '8.5.13'
-    powermockVersion = '2.0.9'
     reformLogging= '6.1.6'
-    apachePoiVersion = '5.3.0'
+    apachePoiVersion = '5.4.0'
     appInsightsVersion = '2.4.1'
     restAssuredVersion = '5.5.0'
-    groovyVersion = '4.0.23'
-    tomcatVersion = '10.1.31'
-    lombokVersion = '1.18.34'
+    groovyVersion = '4.0.24'
+    lombokVersion = '1.18.38'
+    jjwtVersion = '0.12.6'
     feignJackson = '13.5'
-    beftaFwVersion = '9.0.2'
+    gsonVersion = '2.11.0'
+    elasticSearchVersion = '7.17.1'
+    mockitoVersion = '5.15.2'
+    testcontainersVersion = '1.20.2'
+    serviceAuthVersion = '5.2.0'
+    ccdTestDefinitionVersion = '7.24.2'
+    beftaFwVersion = '9.2.0'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -84,23 +85,22 @@ allprojects {
 
     apply plugin: 'java'
 
-    ext {
-        elasticSearchVersion = '7.17.1'
-    }
-
     // Global constraints
     dependencies {
+
+        // start::CVE Vulnerability dependency overrides 
+
+
+
+        // end::CVE Vulnerability dependency overrides
 
         // Spring
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
         implementation 'org.springframework.cloud:spring-cloud-starter'
-        implementation 'org.springframework.security:spring-security-rsa'
+        implementation 'org.springframework.security:spring-security-rsa:1.1.5'
 
-        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
-        implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-core', version: tomcatVersion
-        implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-el', version: tomcatVersion
-        implementation group: 'org.apache.tomcat.embed', name: 'tomcat-embed-websocket', version: tomcatVersion
-        implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.2.3'
+        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.5'
+        implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.4.1'
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
 
         implementation group: 'net.minidev', name: 'json-smart', version: '2.4.9'
@@ -118,7 +118,7 @@ allprojects {
         testImplementation group: 'org.apache.groovy', name: 'groovy', version: groovyVersion
         testImplementation group: 'org.apache.groovy', name: 'groovy-xml', version: groovyVersion
         testImplementation group: 'org.apache.groovy', name: 'groovy-json', version: groovyVersion
-        testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.3'
+        testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.6', classifier: 'all'
 
     }
 
@@ -196,19 +196,21 @@ subprojects { subproject ->
         implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: apachePoiVersion
         implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
-        implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '9.37.2'
+        implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.0.1'
 
-        implementation group: 'com.google.code.gson', name: 'gson', version: '2.11.0'
+        implementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
 
-        implementation group: 'io.jsonwebtoken', name: 'jjwt', version:'0.9.1'
-        implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.2.0'
+        implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: jjwtVersion
+        implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: jjwtVersion
+        implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: jjwtVersion
+        implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: serviceAuthVersion
         implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.3'
 
 
-        implementation group: 'com.google.guava', name: 'guava', version: '33.1.0-jre'
+        implementation group: 'com.google.guava', name: 'guava', version: '33.3.1-jre'
         implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'
         implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.6.6'
         implementation group: 'com.vladmihalcea', name: 'hibernate-types-60', version: '2.21.1'
@@ -252,8 +254,7 @@ subprojects { subproject ->
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testImplementation group: 'org.apiguardian', name: 'apiguardian-api', version: '1.0.0'
-        testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
-        testImplementation group: 'org.testcontainers', name: 'postgresql', version: '1.20.2'
+        testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainersVersion
         testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
         testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
@@ -264,20 +265,14 @@ subprojects { subproject ->
         testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-contract-stub-runner'
 
         testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '4.1.4'
-        testImplementation ("org.mockito:mockito-core:3.6.0") {
-            exclude group: 'org.hamcrest'
-        }
-
-        testImplementation "org.mockito:mockito-all:1.10.19"
-        testImplementation 'org.mockito:mockito-junit-jupiter:3.6.0'
+        testImplementation group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
+        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
         testImplementation 'com.github.npathai:hamcrest-optional:2.0.0'
         testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
         testImplementation "io.github.openfeign:feign-jackson:${feignJackson}"
         testImplementation 'io.github.openfeign.form:feign-form:3.8.0'
         testImplementation "org.exparity:hamcrest-date:2.0.4"
         testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
-        testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
-        testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: ccdTestDefinitionVersion
 
@@ -466,7 +461,7 @@ configurations { codacy }
 
 dependencies {
     implementation project(':application')
-    codacy 'com.github.codacy:codacy-coverage-reporter:-SNAPSHOT'
+    codacy 'com.github.codacy:codacy-coverage-reporter:6.2.0'
 }
 task sendCoverageToCodacy(type: JavaExec, dependsOn: jacocoTestReport) {
     mainClass = "com.codacy.CodacyCoverageReporter"

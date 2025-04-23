@@ -6,11 +6,10 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -21,7 +20,8 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -55,7 +55,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     CaseDataAPIApplication.class,
     TestConfiguration.class,
@@ -84,17 +84,17 @@ public abstract class BaseTest {
     @Value("${wiremock.server.port}")
     protected Integer wiremockPort;
 
-    @MockBean
+    @MockitoBean
     protected FileStorageService fileStorageService;
 
     // Mock the AzureBlobStorageClient component, to prevent it being initialised (which requires connection to Azure
     // Storage) during application startup when testing
-    @MockBean
+    @MockitoBean
     private AzureBlobStorageClient storageClient;
 
     // Mock the AzureStorageConfiguration component, to prevent it being initialised (which requires connection to Azure
     // Storage) during application startup when testing
-    @MockBean
+    @MockitoBean
     private AzureStorageConfiguration azureStorageConfiguration;
 
     protected MockMvc mockMvc;

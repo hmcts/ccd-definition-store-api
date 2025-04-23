@@ -28,7 +28,7 @@ public class CaseTypeEntityFieldLabelValidatorTest {
     CaseTypeEntityFieldLabelValidator caseTypeEntityFieldLabelValidator = new CaseTypeEntityFieldLabelValidator();
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         caseField.setReference("case field");
         caseType.addCaseField(caseField);
     }

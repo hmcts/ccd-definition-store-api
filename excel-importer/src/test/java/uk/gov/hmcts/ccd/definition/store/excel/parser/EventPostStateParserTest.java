@@ -4,8 +4,9 @@ import java.util.List;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -20,7 +21,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class EventPostStateParserTest extends ParserTestBase {
 
     private static final String STATE_DEFAULT = "DefaultPostState";
@@ -101,7 +102,7 @@ public class EventPostStateParserTest extends ParserTestBase {
         SpreadsheetParsingException thrown = assertThrows(SpreadsheetParsingException.class,
             () -> postStateParser.parse(NO_PRIORITY_ENABLING_CONDITION));
 
-        Assert.assertThat(thrown.getMessage(), is("Invalid Post State "
+        assertThat(thrown.getMessage(), is("Invalid Post State "
             + "ApprovalRequired(FieldA!=\"\" AND FieldB=\"I'm innocent\")"));
     }
 
@@ -110,7 +111,7 @@ public class EventPostStateParserTest extends ParserTestBase {
         SpreadsheetParsingException thrown = assertThrows(SpreadsheetParsingException.class,
             () -> postStateParser.parse(IN_VALID_POST_STATE_CONDITION));
 
-        Assert.assertThat(thrown.getMessage(), is("Invalid Post State Condition "
+        assertThat(thrown.getMessage(), is("Invalid Post State Condition "
             + "ApprovalRequired(FieldA!=\"\" AND FieldB\"I'm innocent\")"));
     }
 

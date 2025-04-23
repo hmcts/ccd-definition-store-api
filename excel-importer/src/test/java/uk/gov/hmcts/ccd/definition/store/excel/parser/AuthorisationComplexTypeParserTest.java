@@ -135,7 +135,7 @@ public class AuthorisationComplexTypeParserTest {
         definitionSheets.remove(AUTHORISATION_COMPLEX_TYPE.getName());
         MapperException thrown = assertThrows(MapperException.class,
             () -> classUnderTest.parseAll(definitionSheets, caseType));
-        Assert.assertThat(thrown.getMessage(), is("No AuthorisationComplexType tab found in configuration"));
+        assertThat(thrown.getMessage(), is("No AuthorisationComplexType tab found in configuration"));
     }
 
     @Test
@@ -162,7 +162,7 @@ public class AuthorisationComplexTypeParserTest {
 
         MapperException thrown = assertThrows(MapperException.class,
             () -> classUnderTest.parseAll(definitionSheets, caseType));
-        Assert.assertThat(thrown.getMessage(), is("Unknown CaseField 'Some Case Field' for CaseType "
+        assertThat(thrown.getMessage(), is("Unknown CaseField 'Some Case Field' for CaseType "
             + "'Some Case Type' in worksheet 'AuthorisationComplexType'"));
     }
 

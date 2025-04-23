@@ -38,9 +38,9 @@ class EventCaseFieldMetadataValidatorImplTest {
         ValidationResult result = validator.validate(eventCaseFieldEntity, context);
 
         assertThat(result.getValidationErrors(), hasSize(1));
-        Assert.assertThat(result.getValidationErrors().get(0),
+        assertThat(result.getValidationErrors().get(0),
             instanceOf(EventCaseFieldMetadataValidatorImpl.ValidationError.class));
-        Assert.assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
+        assertThat(result.getValidationErrors().get(0).getDefaultMessage(), is(
             "'[FIELD]' is a metadata field and cannot be editable for event with reference 'event'"));
     }
 

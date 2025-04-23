@@ -35,7 +35,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
     private EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         validator = new EventCaseFieldDateTimeDisplayContextParameterValidatorImpl(
             displayContextParameterValidatorFactory);

@@ -15,10 +15,6 @@ bootJar {
     enabled = false
 }
 
-def versions = [
-        jackson         : '2.16.0'
-]
-
 dependencies {
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: versions.jackson
+    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind'
 }

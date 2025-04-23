@@ -22,7 +22,7 @@ class CaseRoleEntityMandatoryFieldsValidatorImplTest {
     private CaseRoleEntityMandatoryFieldsValidatorImpl classUnderTest;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         caseRoleEntity = new CaseRoleEntity();
         classUnderTest = new CaseRoleEntityMandatoryFieldsValidatorImpl();
         caseTypeEntity = new CaseTypeEntity();

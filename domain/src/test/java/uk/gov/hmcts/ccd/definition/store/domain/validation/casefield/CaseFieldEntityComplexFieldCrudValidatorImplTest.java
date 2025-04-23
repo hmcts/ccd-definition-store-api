@@ -21,7 +21,7 @@ class CaseFieldEntityComplexFieldCrudValidatorImplTest {
     private CaseFieldEntityValidationContext context;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         classUnderTest = new CaseFieldEntityComplexFieldCrudValidatorImpl();
         complexFieldACLEntity = new ComplexFieldACLEntity();
         complexFieldACLEntity.setListElementCode(LIST_ELEMENT_CODE);

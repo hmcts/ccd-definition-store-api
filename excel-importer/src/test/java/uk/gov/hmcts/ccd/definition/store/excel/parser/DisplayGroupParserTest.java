@@ -48,7 +48,7 @@ class DisplayGroupParserTest extends ParserTestBase {
     private static final String ACCESS_PROFILE = "AccessProfile1";
 
     @BeforeEach
-    void setup() {
+    public void setUp() {
 
         init();
 

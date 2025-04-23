@@ -68,7 +68,7 @@ public class CaseFieldParserTest extends ParserTestBase {
         assertThat(entity.getFieldType(), is(field));
         assertThat(entity.isSearchable(), is(true));
         assertThat(entity.getCategoryId(), is("Category Id"));
-        MatcherAssert.assertThat(
+        assertThat(
             entityToDefinitionDataItemRegistry.getForEntity(entity), Matchers.is(Optional.of(dataItem)));
     }
 

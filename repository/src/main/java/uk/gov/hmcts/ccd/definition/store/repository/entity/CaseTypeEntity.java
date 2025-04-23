@@ -11,8 +11,6 @@ import java.util.Optional;
 import java.util.Set;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -24,9 +22,9 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Type;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
-import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
 import static jakarta.persistence.CascadeType.ALL;
@@ -66,8 +64,7 @@ public class CaseTypeEntity implements Serializable, Versionable {
     private String description;
 
     @Column(name = "security_classification")
-    @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType.class)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private SecurityClassification securityClassification;
 
     @ManyToOne(fetch = LAZY, cascade = ALL)

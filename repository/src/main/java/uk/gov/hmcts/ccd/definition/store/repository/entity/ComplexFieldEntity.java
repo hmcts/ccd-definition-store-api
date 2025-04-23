@@ -5,7 +5,9 @@ import java.util.Objects;
 
 import static jakarta.persistence.GenerationType.SEQUENCE;
 
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.Type;
+import org.hibernate.type.SqlTypes;
 
 import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
@@ -48,8 +50,7 @@ public class ComplexFieldEntity implements FieldEntity, Serializable {
     private boolean searchable = true;
 
     @Column(name = "security_classification")
-    @Enumerated(EnumType.STRING)
-    @Type(PostgreSQLEnumType.class)
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private SecurityClassification securityClassification;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

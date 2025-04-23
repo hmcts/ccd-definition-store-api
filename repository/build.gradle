@@ -28,18 +28,19 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa") {
         exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
     }
-    implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.2.0'
-    implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
+    implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client'
+    implementation group: 'commons-beanutils', name: 'commons-beanutils'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
-    implementation group: 'com.google.guava', name: 'guava', version: '33.1.0-jre'
-    implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'
+    implementation group: 'com.google.guava', name: 'guava'
+    implementation group: 'jakarta.validation', name: 'jakarta.validation-api'
     implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.20.Final'
     implementation group: 'jakarta.el', name: 'jakarta.el-api', version: '6.0.1'
-    implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
-    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.19.0'
-    testImplementation project(":commons").sourceSets.main.output
-    implementation group: 'com.vladmihalcea', name: 'hibernate-types-60', version: '2.21.1'
+    implementation group: 'org.flywaydb', name: 'flyway-core'
+    implementation group: 'com.vladmihalcea', name: 'hibernate-types-60'
 
+
+    testImplementation group: 'org.assertj', name: 'assertj-core'
+    testImplementation project(":commons").sourceSets.main.output
     testImplementation group: 'com.vladmihalcea', name: 'db-util', version: '1.0.5'
 }
 

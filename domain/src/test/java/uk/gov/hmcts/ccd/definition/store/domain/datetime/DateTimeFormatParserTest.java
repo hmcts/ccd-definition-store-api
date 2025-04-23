@@ -19,7 +19,7 @@ public class DateTimeFormatParserTest {
     private static final Pattern DEFAULT_PATTERN = Pattern.compile("VzOXxZ");
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         parser = new DateTimeFormatParser();
     }
 

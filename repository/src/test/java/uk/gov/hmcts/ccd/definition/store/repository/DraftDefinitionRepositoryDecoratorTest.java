@@ -2,11 +2,11 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
+import static org.apache.commons.lang3.RandomStringUtils.secure;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNot.not;
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus.DRAFT;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus.PUBLISHED;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
@@ -123,7 +123,7 @@ public class DraftDefinitionRepositoryDecoratorTest {
         final DefinitionEntity definitionEntity = classUnderTest.findByJurisdictionIdAndVersion(JURISDICTION_ID, 2);
         final Long l1 = definitionEntity.getOptimisticLock();
         final LocalDateTime lastModified = definitionEntity.getLastModified();
-        final String newCaseTypes = randomAlphanumeric(31);
+        final String newCaseTypes = secure().nextAlphanumeric(31);
         definitionEntity.setCaseTypes(newCaseTypes);
 
         final DefinitionEntity saved = classUnderTest.simpleSave(definitionEntity);

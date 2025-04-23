@@ -22,7 +22,7 @@ class CaseRoleEntityFieldValueValidatorImplTest {
     private CaseRoleEntityFieldValueValidatorImpl classUnderTest;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         caseRoleEntity = new CaseRoleEntity();
         caseRoleEntity.setName("some name");
         caseRoleEntity.setReference("[SOMEREF]");

@@ -31,7 +31,7 @@ class JwtGrantedAuthoritiesConverterTest {
     private JwtGrantedAuthoritiesConverter converter;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 

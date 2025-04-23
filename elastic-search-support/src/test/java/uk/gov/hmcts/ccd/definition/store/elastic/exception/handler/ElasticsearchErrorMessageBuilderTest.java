@@ -19,7 +19,7 @@ class ElasticsearchErrorMessageBuilderTest {
     private CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         messageBuilder = new TestElasticsearchErrorMessageBuilder(".*REASON.*", "MESSAGE");
     }
 

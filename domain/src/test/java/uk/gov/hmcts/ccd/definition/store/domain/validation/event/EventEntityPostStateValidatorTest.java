@@ -176,7 +176,7 @@ public class EventEntityPostStateValidatorTest {
 
         assertNotNull(validationResult, "validation result should not be null");
         assertThat(validationResult.getValidationErrors().size(), is(0));
-        Assert.assertThat(validationResult.isValid(), CoreMatchers.is(true));
+        assertThat(validationResult.isValid(), CoreMatchers.is(true));
     }
 
     private ShowCondition mockShowCondition() throws InvalidShowConditionException {

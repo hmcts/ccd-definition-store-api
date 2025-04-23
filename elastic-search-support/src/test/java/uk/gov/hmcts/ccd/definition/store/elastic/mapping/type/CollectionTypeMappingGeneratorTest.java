@@ -31,7 +31,7 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
     private CollectionTypeMappingGenerator collectionTypeMapper;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         super.setup();
 
         when(config.getSecurityClassificationMapping()).thenReturn("securityClassificationMapping");

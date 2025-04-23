@@ -75,7 +75,7 @@ class SearchPartyValidatorTest {
     private SearchPartyValidator searchPartyValidator;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         setUpCollectionFieldNameFieldType();
     }
 

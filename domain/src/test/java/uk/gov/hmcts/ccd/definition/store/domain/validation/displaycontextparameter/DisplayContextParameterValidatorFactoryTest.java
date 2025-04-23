@@ -24,7 +24,7 @@ public class DisplayContextParameterValidatorFactoryTest {
     private DateTimeFormatParser dateTimeFormatParser;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 

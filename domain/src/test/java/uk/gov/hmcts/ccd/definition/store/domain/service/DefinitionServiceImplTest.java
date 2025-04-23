@@ -79,7 +79,7 @@ class DefinitionServiceImplTest {
     private DefinitionServiceImpl classUnderTest;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new DefinitionServiceImpl(jurisdictionRepository, decoratedRepository, mapper);
         setupMockJurisdictionEntity();

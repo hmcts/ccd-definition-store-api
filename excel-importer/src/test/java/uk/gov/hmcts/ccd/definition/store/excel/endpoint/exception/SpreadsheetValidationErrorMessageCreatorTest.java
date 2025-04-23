@@ -91,7 +91,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -107,7 +107,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.openMocks(this);
-        when(entityToDefinitionDataItemRegistry.getForEntity(anyObject())).thenReturn(Optional.empty());
+        when(entityToDefinitionDataItemRegistry.getForEntity(any())).thenReturn(Optional.empty());
     }
 
     @SuppressWarnings("checkstyle:LineLength")

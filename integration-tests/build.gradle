@@ -21,7 +21,7 @@ dependencies {
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     testImplementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
-    testImplementation group: 'org.postgresql', name: 'postgresql', version: '42.7.4'
+    testImplementation group: 'org.postgresql', name: 'postgresql'
 }
 
 // To help obscure gradle problem

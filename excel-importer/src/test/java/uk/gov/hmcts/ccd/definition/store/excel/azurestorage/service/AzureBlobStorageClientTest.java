@@ -5,15 +5,13 @@ import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
@@ -30,8 +28,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({CloudBlobContainer.class, CloudBlockBlob.class})
+@ExtendWith(SpringExtension.class)
 public class AzureBlobStorageClientTest {
 
     private static final String DATE_TIME_PREFIX = "20181004120000";
@@ -47,8 +44,8 @@ public class AzureBlobStorageClientTest {
 
     @Before
     public void setUp() {
-        cloudBlobContainer = PowerMockito.mock(CloudBlobContainer.class);
-        cloudBlockBlob = PowerMockito.mock(CloudBlockBlob.class);
+        cloudBlobContainer = mock(CloudBlobContainer.class);
+        cloudBlockBlob = mock(CloudBlockBlob.class);
         MockitoAnnotations.openMocks(this);
         clientUnderTest = new AzureBlobStorageClient(cloudBlobContainer, dateTimeStringGenerator);
     }

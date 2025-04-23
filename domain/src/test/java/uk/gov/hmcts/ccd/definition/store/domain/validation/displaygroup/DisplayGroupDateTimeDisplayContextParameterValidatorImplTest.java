@@ -31,7 +31,7 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImplTest {
     private DisplayContextParameterValidator displayContextParameterValidator;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         validator = new DisplayGroupDateTimeDisplayContextParameterValidatorImpl(
             displayContextParameterValidatorFactory);

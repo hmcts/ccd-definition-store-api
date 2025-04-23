@@ -41,7 +41,7 @@ class RoleToAccessProfilesServiceImplTest {
     private CaseTypeRepository caseTypeRepository;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new RoleToAccessProfilesServiceImpl(repository, dtoMapper, caseTypeRepository);
     }

@@ -29,10 +29,10 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK;
@@ -283,7 +283,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         assertTrue(classUnderTest.validate(
             eventCaseFieldEntityWithNullShowCondition, eventCaseFieldEntityValidationContext).isValid());
 
-        verifyZeroInteractions(showConditionExtractor);
+        verifyNoMoreInteractions(showConditionExtractor);
     }
 
     @Test
@@ -300,7 +300,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         assertTrue(classUnderTest.validate(
             eventCaseFieldEntityWithBlankShowCondition, eventCaseFieldEntityValidationContext).isValid());
 
-        verifyZeroInteractions(showConditionExtractor);
+        verifyNoMoreInteractions(showConditionExtractor);
 
     }
 

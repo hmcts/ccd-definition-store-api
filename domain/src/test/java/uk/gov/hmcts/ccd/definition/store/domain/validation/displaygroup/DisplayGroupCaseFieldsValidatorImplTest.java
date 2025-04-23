@@ -18,7 +18,7 @@ import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -55,8 +55,8 @@ public class DisplayGroupCaseFieldsValidatorImplTest {
         displayGroup.addDisplayGroupCaseField(e1);
         displayGroup.addDisplayGroupCaseField(e2);
         displayGroup.setType(DisplayGroupType.TAB);
-        when(validator1.validate(anyObject())).thenReturn(new ValidationResult(ve1));
-        when(validator2.validate(anyObject())).thenReturn(new ValidationResult(ve2));
+        when(validator1.validate(any())).thenReturn(new ValidationResult(ve1));
+        when(validator2.validate(any())).thenReturn(new ValidationResult(ve2));
 
         ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
         assertThat(result.getValidationErrors(), hasSize(2));
@@ -72,8 +72,8 @@ public class DisplayGroupCaseFieldsValidatorImplTest {
 
         displayGroup.addDisplayGroupCaseField(e1);
         displayGroup.addDisplayGroupCaseField(e2);
-        when(validator1.validate(anyObject())).thenReturn(ValidationResult.SUCCESS);
-        when(validator2.validate(anyObject())).thenReturn(ValidationResult.SUCCESS);
+        when(validator1.validate(any())).thenReturn(ValidationResult.SUCCESS);
+        when(validator2.validate(any())).thenReturn(ValidationResult.SUCCESS);
 
         ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
 
