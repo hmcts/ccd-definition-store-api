@@ -29,7 +29,7 @@ ext {
     set('spring-framework.version', '6.2.1')
     set('spring-security.version', '6.4.2')
     set('springCloudVersion', '2024.0.0')
-    set('jackson.version', '2.16.1')
+    set('jackson.version', '2.16.0')
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.24.3')
 
@@ -51,8 +51,8 @@ ext {
     mockitoVersion = '5.15.2'
     testcontainersVersion = '1.20.2'
     serviceAuthVersion = '5.2.0'
-    ccdTestDefinitionVersion = '7.24.2'
-    beftaFwVersion = '9.2.0'
+    ccdTestDefinitionVersion = '7.25.1'
+    beftaFwVersion = '9.2.3'
     limits = [
             'instruction': 99,
             'branch'     : 99,
