@@ -1,7 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
@@ -9,9 +10,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +24,7 @@ public class ComplexFieldEntitySecurityClassificationValidatorImplTest {
 
     private ComplexFieldEntitySecurityClassificationValidatorImpl classUnderTest;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         classUnderTest = new ComplexFieldEntitySecurityClassificationValidatorImpl();
     }

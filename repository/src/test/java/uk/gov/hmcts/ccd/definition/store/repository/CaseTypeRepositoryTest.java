@@ -1,36 +1,37 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
-import jakarta.persistence.EntityManager;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.Collection;
-import java.util.stream.Collectors;
-
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 
 @ExtendWith(SpringExtension.class)
@@ -60,7 +61,7 @@ public class CaseTypeRepositoryTest {
     private JurisdictionEntity testJurisdiction;
     private JurisdictionEntity testJurisdictionWithCaseTypeACL;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
         this.testJurisdictionWithCaseTypeACL = testHelper.createJurisdiction(

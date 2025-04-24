@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import org.junit.Before;
-import org.junit.Test;
+
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.display.DisplayService;
@@ -24,8 +23,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -44,7 +46,7 @@ public class DisplayApiControllerTest {
 
     private ChallengeQuestionTabService challengeQuestionTabService;
 
-    @Before
+    @BeforeEach
     public void setup() {
         displayService = mock(DisplayService.class);
         bannerService = mock(BannerService.class);

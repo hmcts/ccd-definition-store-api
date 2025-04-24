@@ -1,11 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import org.junit.Before;
+
 import org.junit.Rule;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnit;
 import org.mockito.junit.MockitoRule;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
@@ -15,6 +16,7 @@ import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.BDDMockito.given;
 
 public class CaseFieldEntityACLValidatorImplTest {
@@ -34,7 +36,7 @@ public class CaseFieldEntityACLValidatorImplTest {
     @Mock
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext;
 
-    @Before
+    @BeforeEach
     public void setup() {
 
         caseFieldAccessProfile = new CaseFieldACLEntity();

@@ -1,7 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -28,8 +29,9 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.Assert.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 
 public class LayoutServiceImplTest {
@@ -48,7 +50,7 @@ public class LayoutServiceImplTest {
 
     private LayoutServiceImpl classUnderTest;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new LayoutServiceImpl(
@@ -91,23 +93,26 @@ public class LayoutServiceImplTest {
         assertThat(savedDisplayGroupEntities, allOf(hasItem(entity1), hasItem(entity2)));
     }
 
-    @Test(expected = ValidationException.class)
+    @Test
     public void shouldFailIfCaseFieldIsNotProvidedForWorkbasketInput() {
+
         GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
         entity1.setCaseType(createCaseTypeEntity("FamilyDetails"));
 
-        classUnderTest.createGenerics(singletonList(entity1));
+        assertThrows(ValidationException.class, 
+            () -> classUnderTest.createGenerics(singletonList(entity1)));
     }
 
-    @Test(expected = ValidationException.class)
+    @Test
     public void shouldFailIfCaseTypeIsNotProvidedForWorkbasketInput() {
         GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
         entity1.setCaseField(createCaseFieldEntity("ComplexCollectionComplex"));
 
-        classUnderTest.createGenerics(singletonList(entity1));
+        assertThrows(ValidationException.class, 
+            () -> classUnderTest.createGenerics(singletonList(entity1)));
     }
 
-    @Test(expected = ValidationException.class)
+    @Test
     public void pageTypeDisplayGroupMustFailIfEventIsNotProvided() {
         DisplayGroupEntity dg1 = new DisplayGroupEntity();
         dg1.setType(DisplayGroupType.PAGE);
@@ -116,7 +121,8 @@ public class LayoutServiceImplTest {
         dg2.setType(DisplayGroupType.PAGE);
         final List<DisplayGroupEntity> displayGroupEntities = asList(dg1, dg2);
 
-        classUnderTest.createDisplayGroups(displayGroupEntities);
+        assertThrows(ValidationException.class, 
+            () -> classUnderTest.createDisplayGroups(displayGroupEntities));
     }
 
     @Test

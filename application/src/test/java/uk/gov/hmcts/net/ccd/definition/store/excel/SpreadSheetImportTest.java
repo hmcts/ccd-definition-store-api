@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.client.WireMock;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matcher;
 import org.json.JSONException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.core.io.ClassPathResource;
@@ -46,7 +46,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubForPutDictionaryReturns200;
@@ -237,9 +237,9 @@ public class SpreadSheetImportTest extends BaseTest {
             containsString("Invalid Case Definition sheet - no Definition data attribute headers found"));
 
         // Check that no Definition data has been persisted.
-        assertEquals("Unexpected number of rows returned from case_type_items table",
-            0,
-            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
+        assertEquals(0,
+            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class),
+            "Unexpected number of rows returned from case_type_items table");
     }
 
     /**
@@ -260,9 +260,10 @@ public class SpreadSheetImportTest extends BaseTest {
             containsString("A definition must contain a WorkBasketResultFields sheet"));
 
         // Check that no Definition data has been persisted.
-        assertEquals("Unexpected number of rows returned from case_type_items table",
+        assertEquals(
             0,
-            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
+            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class),
+            "Unexpected number of rows returned from case_type_items table");
     }
 
     @Test
@@ -277,12 +278,12 @@ public class SpreadSheetImportTest extends BaseTest {
         WireMock.verify(0, putRequestedFor(urlEqualTo("/user-profile/users")));
 
         // Check that no Definition data has been persisted.
-        assertEquals("Unexpected number of rows returned from case_type_items table",
-            0,
-            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
-        assertEquals("data stored during a failed import",
-            0,
-            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
+        assertEquals(0,
+            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class),
+            "Unexpected number of rows returned from case_type_items table");
+        assertEquals(0,
+            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class),
+            "data stored during a failed import");
     }
 
     @Test

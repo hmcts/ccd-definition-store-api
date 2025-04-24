@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 

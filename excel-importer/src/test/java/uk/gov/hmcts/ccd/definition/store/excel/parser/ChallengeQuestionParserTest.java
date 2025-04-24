@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.challengequestion.BaseChallengeQuestionTest;
@@ -17,8 +10,18 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.ChallengeQuestionValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 
-import static org.hamcrest.Matchers.is;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
@@ -30,7 +33,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     private ChallengeQuestionParser challengeQuestionParser;
     private ParseContext parseContext;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
         parseContext = buildParseContext();
@@ -118,12 +121,13 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
         return challengeQuestionParser.parse(map, parseContext);
     }
 
-    @Test(expected = ValidationException.class)
+    @Test
     public void failDueToDuplicatedIDs() {
         doThrow(new ValidationException(new ValidationResult()))
             .when(challengeQuestionValidator)
             .validate(any(), any());
-        challengeQuestionParser.parse(createDefinitionSheets(true), parseContext);
+        assertThrows(ValidationException.class, () ->
+            challengeQuestionParser.parse(createDefinitionSheets(true), parseContext));
     }
 
     private Map<String, DefinitionSheet> createDefinitionSheets(boolean failTest) {

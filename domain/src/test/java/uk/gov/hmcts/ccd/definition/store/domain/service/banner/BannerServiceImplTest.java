@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.banner;
 
 import com.google.common.collect.Lists;
-import org.junit.Assert;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,6 +15,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -50,7 +51,7 @@ class BannerServiceImplTest {
         doReturn(banners).when(bannerRepository).findAllByReference(anyList());
         List<String> references = Lists.newArrayList("Test", "Divorce");
         List<Banner> bannersReturned = classUnderTest.getAll(references);
-        Assert.assertEquals(2, bannersReturned.size());
+       assertEquals(2, bannersReturned.size());
     }
 
     @Test
@@ -60,7 +61,7 @@ class BannerServiceImplTest {
         List<Banner> banners = Lists.newArrayList();
         doReturn(banners).when(bannerRepository).findAllByReference(anyList());
         List<Banner> bannersReturned = classUnderTest.getAll(Lists.newArrayList());
-        Assert.assertEquals(0, bannersReturned.size());
+       assertEquals(0, bannersReturned.size());
     }
 
     @Test

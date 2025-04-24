@@ -1,12 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 
 import com.google.common.collect.Sets;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -24,6 +25,7 @@ import java.util.Set;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.Mockito.mock;
 
 public class EventEntityEnablingConditionValidatorTest {
@@ -39,7 +41,7 @@ public class EventEntityEnablingConditionValidatorTest {
 
     private EventEntityValidationContext eventEntityValidationContext;
 
-    @Before
+    @BeforeEach
     public void setUp() throws InvalidShowConditionException {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new EventEntityEnablingConditionValidator(showConditionExtractor, caseTypeEntityUtil);

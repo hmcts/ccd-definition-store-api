@@ -1,7 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.rules;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
@@ -9,14 +10,15 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import java.time.LocalDate;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import org.junit.jupiter.api.BeforeEach;
 
 public class LiveDatesRuleTest {
 
     private LiveDatesRule rule;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         rule = new LiveDatesRule();
     }
@@ -46,7 +48,7 @@ public class LiveDatesRuleTest {
         String result = rule.validate(caseTypeEntity);
 
         // Then - assert that validation fails with the expected message
-        assertEquals("Unexpected error message", "A Case Type must have a Live From date", result);
+        assertEquals("A Case Type must have a Live From date", result, "Unexpected error message");
     }
 
     @Test
@@ -66,6 +68,6 @@ public class LiveDatesRuleTest {
         String result = rule.validate(caseTypeEntity);
 
         // Then - assert that validation fails with the expected message
-        assertEquals("Unexpected error message", "The Live From date must be before the Live Until date", result);
+        assertEquals("The Live From date must be before the Live Until date", result, "Unexpected error message");
     }
 }

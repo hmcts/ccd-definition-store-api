@@ -1,15 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeEach;
+
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceValidator.CASE_TYPE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceValidator.NULL_REFERENCE;
 
@@ -19,7 +23,7 @@ public class CaseTypeEntityReferenceValidatorTest {
     private CaseTypeEntity caseType;
     private final CaseTypeEntityReferenceValidator classUnderTest = new CaseTypeEntityReferenceValidator();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         caseType = new CaseTypeEntity();
     }
@@ -69,7 +73,7 @@ public class CaseTypeEntityReferenceValidatorTest {
         assertAll(
             () -> assertEquals(1, result.getValidationErrors().size()),
             () -> assertFalse(result.isValid()),
-            () -> assertEquals(NULL_REFERENCE, result.getValidationErrors().get(0).getDefaultMessage())
+            () -> assertEquals(result.getValidationErrors().get(0).getDefaultMessage(), NULL_REFERENCE)
         );
     }
 
@@ -79,7 +83,7 @@ public class CaseTypeEntityReferenceValidatorTest {
         final ValidationResult result = classUnderTest.validate(caseType);
 
         assertAll(
-            () -> assertEquals(caseTypeReference, 0, result.getValidationErrors().size()),
+            () -> assertEquals(0, result.getValidationErrors().size(), caseTypeReference),
             () -> assertTrue(result.isValid())
         );
     }
@@ -90,7 +94,7 @@ public class CaseTypeEntityReferenceValidatorTest {
         final ValidationResult result = classUnderTest.validate(caseType);
 
         assertAll(
-            () -> assertEquals(caseTypeReference, 1, result.getValidationErrors().size()),
+            () -> assertEquals(1, result.getValidationErrors().size(), caseTypeReference),
             () -> assertFalse(result.isValid()),
             () -> assertEquals(String.format(CASE_TYPE_ERROR_MESSAGE, caseTypeReference),
                                result.getValidationErrors().get(0).getDefaultMessage())

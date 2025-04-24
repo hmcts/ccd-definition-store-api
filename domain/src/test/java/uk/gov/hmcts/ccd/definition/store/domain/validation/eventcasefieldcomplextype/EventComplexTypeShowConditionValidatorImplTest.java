@@ -1,10 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+
+
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
@@ -22,11 +19,16 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEnti
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -43,7 +45,7 @@ public class EventComplexTypeShowConditionValidatorImplTest {
 
     private EventComplexTypeShowConditionValidatorImpl classUnderTest;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new EventComplexTypeShowConditionValidatorImpl(
@@ -187,7 +189,7 @@ public class EventComplexTypeShowConditionValidatorImplTest {
         assertFalse(validationResult.isValid());
 
         assertEquals(1, validationResult.getValidationErrors().size());
-        Assert.assertTrue(validationResult.getValidationErrors()
+       assertTrue(validationResult.getValidationErrors()
             .get(0) instanceof EventComplexTypeEntityInvalidShowConditionError);
     }
 
@@ -238,7 +240,7 @@ public class EventComplexTypeShowConditionValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(1, validationResult.getValidationErrors().size());
-        Assert.assertTrue(validationResult.getValidationErrors()
+       assertTrue(validationResult.getValidationErrors()
             .get(0) instanceof EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError);
 
     }

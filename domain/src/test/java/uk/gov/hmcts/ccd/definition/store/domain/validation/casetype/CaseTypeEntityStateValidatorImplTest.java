@@ -1,7 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -34,7 +35,7 @@ public class CaseTypeEntityStateValidatorImplTest {
     @InjectMocks
     private CaseTypeEntityStateValidatorImpl classUnderTest;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new CaseTypeEntityStateValidatorImpl(Arrays.asList(crudValidatorImpl, userRoleValidatorImpl));

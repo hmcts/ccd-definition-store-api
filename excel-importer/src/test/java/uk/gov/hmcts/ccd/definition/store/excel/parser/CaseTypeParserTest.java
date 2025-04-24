@@ -1,13 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InOrder;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
@@ -15,10 +7,19 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
 
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
@@ -64,7 +65,7 @@ public class CaseTypeParserTest extends ParserTestBase {
     @Mock
     private SearchAliasFieldParser searchAliasFieldParser;
 
-    @Before
+    @BeforeEach
     public void setup() {
 
         init();
@@ -172,7 +173,7 @@ public class CaseTypeParserTest extends ParserTestBase {
         assertThat(getCaseWebhook.getTimeouts().size(), is(4));
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFail_whenDuplicateCaseTypeId() {
         final DefinitionDataItem caseTypeItem = new DefinitionDataItem(SheetName.CASE_TYPE.getName());
         caseTypeItem.addAttribute(ColumnName.ID.toString(), CASE_TYPE_UNDER_TEST);
@@ -190,12 +191,8 @@ public class CaseTypeParserTest extends ParserTestBase {
         final ParseResult<CaseTypeEntity> parseResult = caseTypeParser.parseAll(definitionSheets);
         assertThat(parseResult.getAllResults().size(), is(1));
 
-        try {
-            parseResult.getAllResults().get(0);
-        } catch (SpreadsheetParsingException ex) {
-            Assertions.assertThat(ex).hasMessage("Multiple case type definitions for ID: Some Case Type");
-            throw ex;
-        }
+        SpreadsheetParsingException ex = assertThrows(SpreadsheetParsingException.class, () -> parseResult.getAllResults().get(0));
+        Assertions.assertThat(ex).hasMessage("Multiple case type definitions for ID: Some Case Type");
 
     }
 }

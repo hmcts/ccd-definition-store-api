@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -18,10 +11,18 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEnti
 
 import java.util.Optional;
 
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
@@ -45,7 +46,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
 
     private DefinitionSheet definitionSheet;
 
-    @Before
+    @BeforeEach
     public void setup() {
 
         init();
@@ -54,31 +55,25 @@ public class ListFieldTypeParserTest extends ParserTestBase {
         definitionSheet = new DefinitionSheet();
     }
 
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void shouldFail_whenNoBaseTypeFoundForFixedList() {
         given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.empty());
-
-        try {
-            new ListFieldTypeParser(parseContext, spreadsheetValidator);
-        } catch (InvalidImportException ex) {
-            Assertions.assertThat(ex).hasMessage("No base type found for: FixedList");
-            throw ex;
-        }
+        InvalidImportException ex = assertThrows(InvalidImportException.class, () ->
+            new ListFieldTypeParser(parseContext, spreadsheetValidator));
+        
+        Assertions.assertThat(ex).hasMessage("No base type found for: FixedList");
     }
 
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void shouldFail_whenNoBaseTypeFoundForMultiSelectList() {
 
         given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.of(fieldFixedList));
         given(parseContext.getBaseType(BASE_RADIO_FIXED_LIST)).willReturn(Optional.of(fieldFixedRadioList));
         given(parseContext.getBaseType(BASE_MULTI_SELECT_LIST)).willReturn(Optional.empty());
 
-        try {
-            new ListFieldTypeParser(parseContext, spreadsheetValidator);
-        } catch (InvalidImportException ex) {
-            Assertions.assertThat(ex).hasMessage("No base type found for: MultiSelectList");
-            throw ex;
-        }
+        InvalidImportException ex = assertThrows(InvalidImportException.class, () ->
+            new ListFieldTypeParser(parseContext, spreadsheetValidator));
+        Assertions.assertThat(ex).hasMessage("No base type found for: MultiSelectList");
     }
 
     @Test

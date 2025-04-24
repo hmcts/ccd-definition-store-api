@@ -1,14 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.common.TestLoggerUtils;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -28,13 +19,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.BDDMockito.given;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -71,7 +72,7 @@ public class EventParserTest extends ParserTestBase {
 
     private ShowConditionParser showConditionParser;
 
-    @Before
+    @BeforeEach
     public void setup() {
         init();
         parseContext = mock(ParseContext.class);
@@ -96,7 +97,7 @@ public class EventParserTest extends ParserTestBase {
         listAppender = TestLoggerUtils.setupLogger();
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         TestLoggerUtils.teardownLogger();
 
@@ -105,15 +106,12 @@ public class EventParserTest extends ParserTestBase {
         }
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFail_whenDefinitionSheetNotDefined() {
         assertEntityAddedToRegistry = false;
-        try {
-            eventParser.parseAll(definitionSheets, caseType);
-        } catch (SpreadsheetParsingException ex) {
-            assertThat(ex.getMessage(), is("At least one event must be defined for case type: Some Case Type"));
-            throw ex;
-        }
+        SpreadsheetParsingException ex = assertThrows(SpreadsheetParsingException.class, () ->
+            eventParser.parseAll(definitionSheets, caseType));
+        assertThat(ex.getMessage(), is("At least one event must be defined for case type: Some Case Type"));
     }
 
     @Test
@@ -287,13 +285,14 @@ public class EventParserTest extends ParserTestBase {
         assertEvent(entity);
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFailParseEventWithInvalidEventEnablingCondition() {
         assertEntityAddedToRegistry = false;
         final String validEventEnablingCondition = "aaa. x.bbb=\"some-value\"";
         item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
         definitionSheet.addDataItem(item);
-        eventParser.parseAll(definitionSheets, caseType);
+        assertThrows(SpreadsheetParsingException.class, () -> 
+            eventParser.parseAll(definitionSheets, caseType));
     }
 
     @Test

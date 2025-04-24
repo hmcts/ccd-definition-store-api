@@ -16,7 +16,6 @@ hs_err_pid*
 # ide generated files
 *.sublime-project
 *.sublime-workspace
-*.project
 
 # IntelliJ IDEA files
 .idea/

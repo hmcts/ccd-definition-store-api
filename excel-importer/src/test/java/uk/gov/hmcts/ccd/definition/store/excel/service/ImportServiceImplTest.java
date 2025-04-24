@@ -1,10 +1,81 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles.AccessTypeRolesService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.accesstypes.AccessTypesService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
+import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
+import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
+import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypeRolesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypesParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.CategoryParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.CategoryIdValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
+import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
+import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
+
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
+
+import com.google.common.collect.Lists;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
@@ -45,7 +116,11 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASELINK;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUP;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_MESSAGE;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_FLAGS;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_JUDICIAL_USER;
@@ -54,85 +129,9 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_PARTY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_CRITERIA;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_PARTY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_TTL;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_MESSAGE;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUP;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
-
-import com.google.common.collect.Lists;
-
-import java.io.InputStream;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
-import uk.gov.hmcts.ccd.definition.store.domain.service.accesstyperoles.AccessTypeRolesService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.accesstypes.AccessTypesService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
-import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.LayoutService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAccessProfileService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
-import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
-import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
-import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypeRolesParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypesParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.CategoryParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ChallengeQuestionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItemRegistry;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
-import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.CategoryIdValidator;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidator;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
-import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
-import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
-import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -253,7 +252,7 @@ public class ImportServiceImplTest {
     @Mock
     private AccessTypeRolesService accessTypeRolesService;
 
-    @Before
+    @BeforeEach
     public void setup() {
         Map<MetadataField, MetadataCaseFieldEntityFactory> registry = new HashMap<>();
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
@@ -306,7 +305,7 @@ public class ImportServiceImplTest {
         given(accessProfileRepository.findAll()).willReturn(Arrays.asList(accessProfileEntity));
     }
 
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void shouldNotImportDefinition() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
@@ -316,11 +315,10 @@ public class ImportServiceImplTest {
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
 
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(BAD_FILE);
-
-        service.importFormDefinitions(inputStream);
+        assertThrows(InvalidImportException.class, () -> service.importFormDefinitions(inputStream));
     }
 
-    @Test(expected = MissingAccessProfilesException.class)
+    @Test
     public void importDefinitionThrowsMissingAccessProfiles() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
@@ -342,7 +340,7 @@ public class ImportServiceImplTest {
             .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        service.importFormDefinitions(inputStream);
+        assertThrows(MissingAccessProfilesException.class, () -> service.importFormDefinitions(inputStream));
     }
 
     @Test

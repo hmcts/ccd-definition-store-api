@@ -1,7 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
@@ -12,8 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import org.junit.jupiter.api.BeforeEach;
 
 public class EventCaseFieldPublishValidatorImplTest {
 
@@ -26,7 +29,7 @@ public class EventCaseFieldPublishValidatorImplTest {
     final EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
         new EventCaseFieldEntityValidationContext(eventId, allEventCaseFieldEntitiesForEventCase, caseRoles);
 
-    @Before
+    @BeforeEach
     public void setUp() {
         caseRoles.add("ROLE1");
         caseRoles.add("ROLE2");

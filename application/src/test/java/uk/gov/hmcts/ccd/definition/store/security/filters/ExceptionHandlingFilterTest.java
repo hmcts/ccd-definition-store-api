@@ -4,10 +4,8 @@ import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
+
 import org.apache.catalina.connector.ClientAbortException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -19,10 +17,14 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @ExtendWith(MockitoExtension.class)
 public class ExceptionHandlingFilterTest {
@@ -43,7 +45,7 @@ public class ExceptionHandlingFilterTest {
     private static final String EXCEPTION_LOGGER_TYPE =
         "uk.gov.hmcts.ccd.definition.store.security.filters.ExceptionHandlingFilter";
 
-    @Before
+    @BeforeEach
     public void setUp() {
         filter = new ExceptionHandlingFilter();
         request = new MockHttpServletRequest();
@@ -58,7 +60,7 @@ public class ExceptionHandlingFilterTest {
         logger.addAppender(listAppender);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         listAppender.stop();
         logger.detachAppender(listAppender);

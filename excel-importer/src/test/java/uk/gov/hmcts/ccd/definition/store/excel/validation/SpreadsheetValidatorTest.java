@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import org.junit.Before;
-import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -14,96 +12,92 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.is;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class SpreadsheetValidatorTest {
 
     private SpreadsheetValidator validator = new SpreadsheetValidator();
     private Map<String, DefinitionSheet> definitionSheets;
-    private DisplayContextParameterValidator displayContextParameterValidator = new DisplayContextParameterValidator();
 
-    @Before
+    @BeforeEach
     public void setup() {
         definitionSheets = new LinkedHashMap<>();
         validator = new SpreadsheetValidator();
     }
 
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void shouldFail_whenCaseTypeIDValueExceedsMaxLength() {
         String columnName = "ID";
         String sheetName = "CaseType";
         int rowNumber = 6;
-        try {
+        InvalidImportException ex = assertThrows(InvalidImportException.class, () -> {
             validator.validate(sheetName, columnName,
-                "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
-        } catch (InvalidImportException ex) {
-            String rowNumberInfo = " at row number '" + rowNumber + "'";
-            assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(
+                    "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
+        });
+        String rowNumberInfo = " at row number '" + rowNumber + "'";
+        assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(
                 sheetName, columnName, 70, rowNumberInfo)));
-            throw ex;
-        }
+
     }
 
-    @Test()
+    @Test
     public void shouldPass_withNonExistingColumnName() {
         String columnName = "CRUD";
         int rowNumber = 6;
-        try {
-            validator.validate(
-                "sheet",
-                columnName,
-                "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue",
-                rowNumber);
-        } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is(
-                "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
-            throw ex;
-        }
+        InvalidImportException ex = assertThrows(InvalidImportException.class, () -> {
+            validator.validate("sheet", columnName,
+                    "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
+        });
+
+        assertThat(ex.getMessage(), is(
+                "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber "
+                        + rowNumber));
     }
 
-    @Test()
+    @Test
     public void shouldPass_whenMaxLengthNotConfigured() {
         String columnName = "nonExistingColumnName";
         int rowNumber = 6;
         try {
             validator.validate("sheet", columnName,
-                "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
+                    "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
         } catch (InvalidImportException ex) {
             assertThat(ex.getMessage(), is(
-                "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber " + rowNumber));
+                    "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber "
+                            + rowNumber));
             throw ex;
         }
     }
 
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void shouldFail_whenBlankSheetName() {
-        try {
+        InvalidImportException ex = assertThrows(InvalidImportException.class, () -> {
             validator.validate("sheet", new DefinitionSheet(), Collections.emptyList());
-        } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is(
+        });
+        assertThat(ex.getMessage(), is(
                 "Error processing sheet \"sheet\": Invalid Case Definition sheet - "
-                    + "no Definition name found in Cell A1"));
-            throw ex;
-        }
+                        + "no Definition name found in Cell A1"));
     }
 
-    @Test(expected = InvalidImportException.class)
+    @Test
     public void shouldFail_whenEmptyHeader() {
         final DefinitionSheet definitionSheet = new DefinitionSheet();
         definitionSheet.setName("name");
 
-        try {
+        InvalidImportException ex = assertThrows(InvalidImportException.class, () -> {
             validator.validate("sheet", definitionSheet, Collections.emptyList());
-        } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is(
+        });
+        assertThat(ex.getMessage(), is(
                 "Error processing sheet \"sheet\": Invalid Case Definition sheet - "
-                    + "no Definition data attribute headers found"));
-            throw ex;
-        }
+                        + "no Definition data attribute headers found"));
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidate_WithHeadings() {
         final DefinitionSheet definitionSheet = new DefinitionSheet();
         definitionSheet.setName("name");
@@ -111,47 +105,42 @@ public class SpreadsheetValidatorTest {
         // This test case ould fail if an exception is thrown; nothing else to assert.
         validator.validate("sheet", definitionSheet, Arrays.asList("N G I T B"));
 
-        // Could have used Latest AssertJ to assert no exception is thrown but it is not in POM
+        // Could have used Latest AssertJ to assert no exception is thrown but it is not
+        // in POM
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenNoJurisdictioinSheet() {
-        try {
+        MapperException ex = assertThrows(MapperException.class, () -> {
             validator.validate(definitionSheets);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("A definition must contain exactly one Jurisdiction"));
-            throw ex;
-        }
+        });
+        assertThat(ex.getMessage(), is("A definition must contain exactly one Jurisdiction"));
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenNoJurisdictioinDataItems() {
 
         addDefinitionSheet(SheetName.JURISDICTION);
 
-        try {
+        MapperException ex = assertThrows(MapperException.class, () -> {
             validator.validate(definitionSheets);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("A definition must contain exactly one Jurisdiction"));
-            throw ex;
-        }
+        });
+        assertThat(ex.getMessage(), is("A definition must contain exactly one Jurisdiction"));
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenNoCaseTypeSheet() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
 
-        try {
+        MapperException ex = assertThrows(MapperException.class, () -> {
             validator.validate(definitionSheets);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("A definition must contain at least one Case Type"));
-            throw ex;
-        }
+        });
+        assertThat(ex.getMessage(), is("A definition must contain at least one Case Type"));
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenNoCaseTypeDataItem() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -159,15 +148,13 @@ public class SpreadsheetValidatorTest {
 
         addDefinitionSheet(SheetName.CASE_TYPE);
 
-        try {
+        MapperException ex = assertThrows(MapperException.class, () -> {
             validator.validate(definitionSheets);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("A definition must contain at least one Case Type"));
-            throw ex;
-        }
+        });
+        assertThat(ex.getMessage(), is("A definition must contain at least one Case Type"));
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenNoCaseFieldSheet() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -176,15 +163,13 @@ public class SpreadsheetValidatorTest {
         final DefinitionSheet sheetCT = addDefinitionSheet(SheetName.CASE_TYPE);
         addDataItem(sheetCT);
 
-        try {
+        MapperException ex = assertThrows(MapperException.class, () -> {
             validator.validate(definitionSheets);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("A definition must contain a Case Field worksheet"));
-            throw ex;
-        }
+        });
+        assertThat(ex.getMessage(), is("A definition must contain a Case Field worksheet"));
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenNoComplexTypesSheet() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -195,15 +180,13 @@ public class SpreadsheetValidatorTest {
 
         addDefinitionSheet(SheetName.CASE_FIELD);
 
-        try {
+        MapperException ex = assertThrows(MapperException.class, () -> {
             validator.validate(definitionSheets);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("A definition must contain a Complex Types worksheet"));
-            throw ex;
-        }
+        });
+        assertThat(ex.getMessage(), is("A definition must contain a Complex Types worksheet"));
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenNoFixedListSheet() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -215,15 +198,13 @@ public class SpreadsheetValidatorTest {
         addDefinitionSheet(SheetName.CASE_FIELD);
         addDefinitionSheet(SheetName.COMPLEX_TYPES);
 
-        try {
+        MapperException ex = assertThrows(MapperException.class, () -> {
             validator.validate(definitionSheets);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("A definition must contain a Fixed List worksheet"));
-            throw ex;
-        }
+        });
+        assertThat(ex.getMessage(), is("A definition must contain a Fixed List worksheet"));
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldVaidate_WithAllWorkSheetsInPlace() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -244,7 +225,8 @@ public class SpreadsheetValidatorTest {
         // This test case ould fail if an exception is thrown; nothing else to assert.
         validator.validate(definitionSheets);
 
-        // Could have used Latest AssertJ to assert no exception is thrown but it is not in POM
+        // Could have used Latest AssertJ to assert no exception is thrown but it is not
+        // in POM
     }
 
     private DefinitionSheet addDefinitionSheet(SheetName sheetName) {

@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import com.google.common.collect.Lists;
-import lombok.val;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -12,8 +7,14 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
-import static org.hamcrest.Matchers.containsString;
+import com.google.common.collect.Lists;
+import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class CategoryValidatorTest {
@@ -36,7 +37,7 @@ public class CategoryValidatorTest {
     private CategoryValidator categoryValidator;
     private DefinitionDataItem definitionDataItem;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
         parseContext = buildParseContext();

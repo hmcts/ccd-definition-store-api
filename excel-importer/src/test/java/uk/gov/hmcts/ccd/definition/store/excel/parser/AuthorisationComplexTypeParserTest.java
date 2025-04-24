@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.junit.Assert;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

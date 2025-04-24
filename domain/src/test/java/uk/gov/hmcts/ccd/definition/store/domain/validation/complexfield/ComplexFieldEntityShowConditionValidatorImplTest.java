@@ -1,7 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
@@ -33,7 +34,7 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
     ComplexFieldEntityShowConditionValidatorImpl testObj;
     ComplexFieldEntity complexField;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         testObj = new ComplexFieldEntityShowConditionValidatorImpl(mockShowConditionParser);

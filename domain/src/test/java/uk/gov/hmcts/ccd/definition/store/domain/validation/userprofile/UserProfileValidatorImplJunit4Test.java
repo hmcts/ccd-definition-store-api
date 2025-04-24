@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.userprofile;
 
-import org.junit.Before;
-import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -11,10 +9,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -34,7 +35,7 @@ public class UserProfileValidatorImplJunit4Test {
     private JurisdictionEntity jurisdiction;
     private CaseTypeEntity caseTypeEntity;
 
-    @Before
+    @BeforeEach
     public void init() {
         validator = new UserProfileValidatorImpl();
         jurisdiction = new JurisdictionEntity();

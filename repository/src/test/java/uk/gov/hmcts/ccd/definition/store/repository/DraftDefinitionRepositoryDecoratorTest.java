@@ -1,13 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.transaction.annotation.Transactional;
+
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -17,13 +10,22 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
 import static org.apache.commons.lang3.RandomStringUtils.secure;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus.DRAFT;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus.PUBLISHED;
 
@@ -51,7 +53,7 @@ public class DraftDefinitionRepositoryDecoratorTest {
 
     private static final String JURISDICTION_ID = "G4TqDskxuR";
 
-    @Before
+    @BeforeEach
     public void setUp() throws IOException {
         testJurisdiction = testHelper.createJurisdiction();
         final JurisdictionEntity

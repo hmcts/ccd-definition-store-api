@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import lombok.val;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.challengequestion.BaseChallengeQuestionTest;
@@ -19,8 +14,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.is;
+import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
@@ -42,7 +44,7 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
     private CategoryParser categoryParser;
     private ParseContext parseContext;
 
-    @Before
+    @BeforeEach
     public void setup() {
         MockitoAnnotations.openMocks(this);
         parseContext = buildParseContext();
@@ -69,12 +71,13 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
         assertThat(parseContext.getCategory(CASE_TYPE, CATEGORY_ID), is(categoryEntities.get(0)));
     }
 
-    @Test(expected = ValidationException.class)
+    @Test
     public void failDueToDuplicatedIDs() {
         doThrow(new ValidationException(new ValidationResult()))
             .when(categoryValidator)
             .validate(any(), any());
-        categoryParser.parse(createDefinitionSheets(), parseContext);
+        assertThrows(ValidationException.class, () ->
+            categoryParser.parse(createDefinitionSheets(), parseContext));
     }
 
 

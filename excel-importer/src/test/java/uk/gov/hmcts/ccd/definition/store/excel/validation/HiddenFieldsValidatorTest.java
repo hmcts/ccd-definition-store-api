@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import org.junit.Before;
-import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -11,39 +9,40 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertFalse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class HiddenFieldsValidatorTest {
 
     private HiddenFieldsValidator validator = new HiddenFieldsValidator();
     private Map<String, DefinitionSheet> definitionSheets;
 
-    @Before
+    @BeforeEach
     public void setup() {
         definitionSheets = new LinkedHashMap<>();
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenNoShowConditionInCaseEventToFields() {
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         definitionDataItem.addAttribute(ColumnName.FIELD_SHOW_CONDITION, null);
         definitionDataItem.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, Boolean.TRUE);
         definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
 
-        try {
-            validator.parseHiddenFields(definitionDataItem);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("'retainHiddenValue' can only be configured for a field that uses a "
+        MapperException exception = assertThrows(MapperException.class,
+                () -> validator.parseHiddenFields(definitionDataItem));
+        assertThat(exception.getMessage(), is("'retainHiddenValue' can only be configured for a field that uses a "
                 + "showCondition. Field ['fieldId'] on ['CaseEventToFields'] does not use a showCondition"));
-            throw ex;
-        }
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidate_ForCaseEventToFields() {
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         definitionDataItem.addAttribute(ColumnName.FIELD_SHOW_CONDITION, "x=yes");
@@ -53,23 +52,20 @@ public class HiddenFieldsValidatorTest {
         assertTrue(validator.parseHiddenFields(definitionDataItem));
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenInvalidBoolean() {
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         definitionDataItem.addAttribute(ColumnName.FIELD_SHOW_CONDITION, null);
         definitionDataItem.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, "blah");
         definitionDataItem.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
 
-        try {
-            validator.parseHiddenFields(definitionDataItem);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is(
+        MapperException exception = assertThrows(MapperException.class,
+                () -> validator.parseHiddenFields(definitionDataItem));
+        assertThat(exception.getMessage(), is(
                 "Invalid value 'blah' is found in column 'RetainHiddenValue' in the sheet 'CaseEventToFields'"));
-            throw ex;
-        }
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidate_ForComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -106,7 +102,7 @@ public class HiddenFieldsValidatorTest {
 
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenRetainHiddenValueIsFalseInCaseEventToFieldsButTrueForComplexTypes() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -140,17 +136,13 @@ public class HiddenFieldsValidatorTest {
 
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
-        try {
-            validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("'retainHiddenValue' has been incorrectly configured or is invalid "
+        MapperException exception = assertThrows(MapperException.class,
+                () -> validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
+        assertThat(exception.getMessage(), is("'retainHiddenValue' has been incorrectly configured or is invalid "
                 + "for fieldID ['fieldId'] on ['CaseEventToFields']"));
-            throw ex;
-        }
     }
 
-
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidate_whenMultipleReferencesOfCaseFieldsInCaseEvents() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -192,7 +184,7 @@ public class HiddenFieldsValidatorTest {
         assertTrue(validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidate_whenMultipleReferencesOfDifferentCaseFieldsInCaseEvents() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -245,7 +237,7 @@ public class HiddenFieldsValidatorTest {
         assertTrue(validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidate_whenMultipleReferencesOfDifferentCaseFieldsInCaseEventsForNestedComplex() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -306,7 +298,7 @@ public class HiddenFieldsValidatorTest {
         assertTrue(validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidate_whenMultipleReferencesOfDifferentCaseFieldsInCaseEventsCollection() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -360,7 +352,7 @@ public class HiddenFieldsValidatorTest {
         assertTrue(validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidate_whenMultipleReferencesOfDifferentCaseFieldsInCaseEvents2() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -413,7 +405,7 @@ public class HiddenFieldsValidatorTest {
         assertTrue(validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidate_whenCaseFieldsInCaseEventHasNoShowConditionOrRetainHiddenValue() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -449,8 +441,7 @@ public class HiddenFieldsValidatorTest {
         assertFalse(validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
     }
 
-
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenCaseFieldsInCaseEventHasRetainHiddenValueOfNullAtTopLevel() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -484,16 +475,13 @@ public class HiddenFieldsValidatorTest {
 
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
-        try {
-            validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(), is("'retainHiddenValue' has been incorrectly configured or is invalid "
+        MapperException ex = assertThrows(MapperException.class,
+                () -> validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
+        assertThat(ex.getMessage(), is("'retainHiddenValue' has been incorrectly configured or is invalid "
                 + "for fieldID ['fieldId'] on ['CaseEventToFields']"));
-            throw ex;
-        }
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidate_whenCaseFieldsInCaseEventHasRetainHiddenValueOfNull() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -529,8 +517,7 @@ public class HiddenFieldsValidatorTest {
         assertFalse(validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
     }
 
-
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenRetainHiddenValueIsNotABooleanForSubFieldsOfComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -562,16 +549,13 @@ public class HiddenFieldsValidatorTest {
 
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
-        try {
-            validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(),
+        MapperException ex = assertThrows(MapperException.class,
+                () -> validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
+        assertThat(ex.getMessage(),
                 is("Invalid value 'blah' is found in column 'RetainHiddenValue' in the sheet 'ComplexTypes'"));
-            throw ex;
-        }
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidate_ForCaseEventComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -619,7 +603,7 @@ public class HiddenFieldsValidatorTest {
 
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidateTrue_ForCaseEventComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -667,7 +651,7 @@ public class HiddenFieldsValidatorTest {
 
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidateToNull_ForCaseEventComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -715,7 +699,7 @@ public class HiddenFieldsValidatorTest {
 
     }
 
-    @Test(expected = Test.None.class)
+    @Test
     public void shouldValidateToFalse_ForCaseEventComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -763,7 +747,7 @@ public class HiddenFieldsValidatorTest {
 
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenRetainHiddenValueIsInvalid() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -807,17 +791,14 @@ public class HiddenFieldsValidatorTest {
 
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
-        try {
-            validator.parseCaseEventComplexTypesHiddenFields(definitionDataItem, definitionSheets);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(),
+        MapperException ex = assertThrows(MapperException.class,
+                () -> validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
+        assertThat(ex.getMessage(),
                 is("Invalid value 'blah' is found in column "
-                    + "'RetainHiddenValue' in the sheet 'EventToComplexTypes'"));
-            throw ex;
-        }
+                        + "'RetainHiddenValue' in the sheet 'EventToComplexTypes'"));
     }
 
-    @Test(expected = MapperException.class)
+    @Test
     public void shouldFail_whenRetainHiddenValueIsNotSetForComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
@@ -862,18 +843,15 @@ public class HiddenFieldsValidatorTest {
 
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
-        try {
-            validator.parseCaseEventComplexTypesHiddenFields(definitionDataItem, definitionSheets);
-        } catch (MapperException ex) {
-            assertThat(ex.getMessage(),
+        MapperException ex = assertThrows(MapperException.class,
+                () -> validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
+
+        assertThat(ex.getMessage(),
                 is("'retainHiddenValue' on CaseEventToComplexTypes can only be configured for a field that "
-                    + "uses a showCondition. Field ['ComplexTypeFieldId'] on ['CaseEventToFields'] does not use "
-                    + "a showCondition"));
-            throw ex;
-        }
+                        + "uses a showCondition. Field ['ComplexTypeFieldId'] on ['CaseEventToFields'] does not use "
+                        + "a showCondition"));
 
     }
-
 
     private DefinitionSheet addDefinitionSheet(SheetName sheetName) {
         final DefinitionSheet sheet = new DefinitionSheet();

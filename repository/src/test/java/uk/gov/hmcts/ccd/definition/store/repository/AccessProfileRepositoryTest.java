@@ -1,7 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -9,20 +20,12 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-
-import jakarta.persistence.EntityManager;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.RESTRICTED;
 
@@ -65,7 +68,7 @@ public class AccessProfileRepositoryTest {
 
     private final CaseTypeEntity caseType = new CaseTypeEntity();
 
-    @Before
+    @BeforeEach
     public void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
 
@@ -116,12 +119,13 @@ public class AccessProfileRepositoryTest {
         assertThat(caseRoleEntities.size(), is(0));
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test
     public void shouldFailWhenCreateDuplicateCaseRoles() {
         final CaseRoleEntity entity = new CaseRoleEntity();
         entity.setReference(CASE_ROLE_REFERENCE);
         entity.setSecurityClassification(RESTRICTED);
-        caseRoleRepository.saveAndFlush(entity);
+        assertThrows(DataIntegrityViolationException.class, () ->
+            caseRoleRepository.saveAndFlush(entity));
     }
 
     @Test
@@ -171,12 +175,13 @@ public class AccessProfileRepositoryTest {
         assertThat(afterSave.getSecurityClassification(), is(RESTRICTED));
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
+    @Test
     public void shouldFailWhenCreateDuplicateAccessProfiles() {
         final AccessProfileEntity entity = new AccessProfileEntity();
         entity.setReference("xyz = '3'");
         entity.setSecurityClassification(RESTRICTED);
-        accessProfileRepository.saveAndFlush(entity);
+        assertThrows(DataIntegrityViolationException.class, () ->
+            accessProfileRepository.saveAndFlush(entity));
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType, AccessProfileEntity accessProfile) {

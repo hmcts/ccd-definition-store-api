@@ -1,16 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.excel.util.mapper;
 
-import org.junit.Test;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ColumnNameTest {
 
@@ -21,9 +21,8 @@ public class ColumnNameTest {
     public void testRequiredColumnsForJurisdiction() {
 
         assertRequired(
-            SheetName.JURISDICTION,
-            Arrays.asList(ColumnName.NAME, ColumnName.ID)
-        );
+                SheetName.JURISDICTION,
+                Arrays.asList(ColumnName.NAME, ColumnName.ID));
 
     }
 
@@ -31,42 +30,36 @@ public class ColumnNameTest {
     public void testRequiredColumnsForCaseEventToFields() {
 
         assertRequired(
-            SheetName.CASE_EVENT_TO_FIELDS,
-            Arrays.asList(ColumnName.CASE_FIELD_ID, ColumnName.CASE_TYPE_ID,
-                ColumnName.CASE_EVENT_ID, ColumnName.PAGE_ID)
-        );
+                SheetName.CASE_EVENT_TO_FIELDS,
+                Arrays.asList(ColumnName.CASE_FIELD_ID, ColumnName.CASE_TYPE_ID,
+                        ColumnName.CASE_EVENT_ID, ColumnName.PAGE_ID));
 
     }
 
     private void assertRequired(SheetName sheetName, List<ColumnName> requiredColumns) {
         for (ColumnName columnName : ColumnName.values()) {
-            boolean required
-                = requiredColumns.contains(columnName);
+            boolean required = requiredColumns.contains(columnName);
             assertEquals(
-                String.format(
-                    "Expected column %s on %s to be %s", columnName, sheetName,
-                    required == true ? "required" : "not required"),
-                ColumnName.isRequired(sheetName, columnName),
-                required
-            );
+                    ColumnName.isRequired(sheetName, columnName),
+                    required,
+                    String.format(
+                            "Expected column %s on %s to be %s", columnName, sheetName,
+                            required == true ? "required" : "not required"));
         }
     }
 
     @Test
     public void verifyTestColumnAliasConfig() {
         assertAll(
-            () -> assertTrue(
-                String.format(
-                    "Expected column %s to have aliases", COLUMN_WITH_ALIAS),
-                COLUMN_WITH_ALIAS.getAliases().length > 0
-            ),
-            () -> assertEquals(
-                String.format(
-                    "Expected column %s to have no aliases", COLUMN_WITHOUT_ALIAS),
-                0,
-                COLUMN_WITHOUT_ALIAS.getAliases().length
-            )
-        );
+                () -> assertTrue(
+                        COLUMN_WITH_ALIAS.getAliases().length > 0,
+                        String.format(
+                                "Expected column %s to have aliases", COLUMN_WITH_ALIAS)),
+                () -> assertEquals(
+                        0,
+                        COLUMN_WITHOUT_ALIAS.getAliases().length,
+                        String.format(
+                                "Expected column %s to have no aliases", COLUMN_WITHOUT_ALIAS)));
     }
 
     @Test
@@ -91,9 +84,8 @@ public class ColumnNameTest {
 
         // ASSERT
         assertFalse(
-            String.format("Expected column %s to not match value: '%s'", testColumn.name(), testValue),
-            result
-        );
+                result,
+                String.format("Expected column %s to not match value: '%s'", testColumn.name(), testValue));
     }
 
     @Test
@@ -113,9 +105,8 @@ public class ColumnNameTest {
 
         // ASSERT
         assertFalse(
-            String.format("Expected column %s to not match value: '%s'", testColumn.name(), testValue),
-            result
-        );
+                result,
+                String.format("Expected column %s to not match value: '%s'", testColumn.name(), testValue));
     }
 
     private void assertNameOrAliasMatch(ColumnName testColumn, boolean checkAlias) {
@@ -135,37 +126,35 @@ public class ColumnNameTest {
 
         // ASSERT
         assertAll(
-            () -> assertTrue(
-                    String.format(
-                        "Expected column %s to match on %s: '%s'", testColumn.name(), testType, testValue),
-                    result
-                ),
-            () -> assertTrue(
-                    String.format(
-                        "Expected column %s to match on %s: '%s'", testColumn.name(), testType, testValueUpperCase),
-                    resultUpperCase
-                ),
-            () -> assertTrue(
-                    String.format(
-                        "Expected column %s to match on %s: '%s'", testColumn.name(), testType, testValueLowerCase),
-                    resultLowerCase
-                ),
-            () -> assertTrue(
-                    String.format(
-                        "Expected column %s to match on %s: '%s'", testColumn.name(), testType, testValueMixedCase),
-                    resultMixedCase
-                )
-        );
+                () -> assertTrue(
+                        result,
+                        String.format(
+                                "Expected column %s to match on %s: '%s'", testColumn.name(), testType, testValue)),
+                () -> assertTrue(
+                        resultUpperCase,
+                        String.format(
+                                "Expected column %s to match on %s: '%s'", testColumn.name(), testType,
+                                testValueUpperCase)),
+                () -> assertTrue(
+                        resultLowerCase,
+                        String.format(
+                                "Expected column %s to match on %s: '%s'", testColumn.name(), testType,
+                                testValueLowerCase)),
+                () -> assertTrue(
+                        resultMixedCase,
+                        String.format(
+                                "Expected column %s to match on %s: '%s'", testColumn.name(), testType,
+                                testValueMixedCase)));
     }
 
     private String toMixedCase(String value) {
         char[] charArray = value.toCharArray();
 
         return IntStream
-            .range(0, charArray.length)
-            .mapToObj(i -> i % 2 == 0 ? Character.toUpperCase(charArray[i]) : Character.toLowerCase(charArray[i]))
-            .map(Object::toString)
-            .collect(Collectors.joining());
+                .range(0, charArray.length)
+                .mapToObj(i -> i % 2 == 0 ? Character.toUpperCase(charArray[i]) : Character.toLowerCase(charArray[i]))
+                .map(Object::toString)
+                .collect(Collectors.joining());
     }
 
 }

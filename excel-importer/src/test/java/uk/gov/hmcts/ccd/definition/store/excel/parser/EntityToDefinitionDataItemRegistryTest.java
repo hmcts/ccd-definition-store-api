@@ -1,18 +1,21 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.junit.Before;
-import org.junit.Test;
+
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 
 public class EntityToDefinitionDataItemRegistryTest {
 
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
     }

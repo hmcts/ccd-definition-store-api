@@ -1,15 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype;
 
-import org.junit.Before;
-import org.junit.Test;
+
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import java.util.Arrays;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 
@@ -21,7 +23,7 @@ public class FieldTypeValidationContextFactoryTest {
     private FieldTypeRepository typeRepository;
     private FieldTypeValidationContextFactory factory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         typeRepository = mock(FieldTypeRepository.class);
 

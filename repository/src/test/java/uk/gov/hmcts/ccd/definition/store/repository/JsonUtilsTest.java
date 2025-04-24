@@ -1,16 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import java.time.LocalDate;
+
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.assertj.core.api.Assertions;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
-
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class JsonUtilsTest {
 
@@ -30,17 +31,15 @@ public class JsonUtilsTest {
         assertThat(JsonUtils.fromString(s, LocalDate.class), is(LocalDate.of(2020, 02, 20)));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldFail_whenObjectCannotBeMappedAsString() {
         final LocalDate date = LocalDate.of(2020, 02, 20);
         final String s = JsonUtils.toString(date);
 
-        try {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             JsonUtils.fromString(s, String.class);
-        } catch (IllegalArgumentException ex) {
-            Assertions.assertThat(ex).hasMessageContaining(" cannot be transformed to Json object");
-            throw ex;
-        }
+        });
+        Assertions.assertThat(ex).hasMessageContaining(" cannot be transformed to Json object");
     }
 
     @Test
@@ -60,21 +59,17 @@ public class JsonUtilsTest {
         assertThat(JsonUtils.fromNode(s, LocalDate.class), is(LocalDate.of(2020, 02, 20)));
     }
 
-    @Test(expected = MismatchedInputException.class)
+    @Test
     public void shouldFail_whenObjectCannotBeMappedAsJsonNode() throws Throwable {
         final LocalDate date = LocalDate.of(2020, 02, 20);
         final JsonNode s = JsonUtils.toJsonNodeTree(date);
 
-        try {
+        MismatchedInputException ex = assertThrows(MismatchedInputException.class, () -> {
             JsonUtils.fromNode(s, String.class);
-        } catch (IllegalArgumentException ex) {
-            final Throwable cause = ex.getCause();
-            assertThat(cause, instanceOf(JsonMappingException.class));
-            Assertions.assertThat(cause).hasMessageContaining(
+        });
+        final Throwable cause = ex.getCause();
+        assertThat(cause, instanceOf(JsonMappingException.class));
+        Assertions.assertThat(cause).hasMessageContaining(
                 "Cannot deserialize value of type `java.lang.String` from Array value");
-            throw cause;
-        }
     }
 }
-
-

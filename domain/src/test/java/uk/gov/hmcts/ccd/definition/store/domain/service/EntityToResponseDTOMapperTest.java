@@ -102,10 +102,10 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
@@ -157,25 +157,33 @@ class  EntityToResponseDTOMapperTest {
             );
 
             assertAll(
-                () -> assertEquals("displayContext", eventCaseFieldEntity.getDisplayContext().name(),
-                                   caseEventField.getDisplayContext()),
-                () -> assertEquals("showCondition", eventCaseFieldEntity.getShowCondition(),
-                                   caseEventField.getShowCondition()),
-                () -> assertEquals("showSummaryChangeOption", eventCaseFieldEntity.getShowSummaryChangeOption(),
-                                   caseEventField.getShowSummaryChangeOption()),
-                () -> assertEquals("showSummaryContentOption",
-                                   eventCaseFieldEntity.getShowSummaryContentOption(),
-                                   caseEventField.getShowSummaryContentOption()),
-                () -> assertEquals("retainHiddenValue", eventCaseFieldEntity.getRetainHiddenValue(),
-                                   caseEventField.getRetainHiddenValue()),
-                () -> assertEquals("publish", eventCaseFieldEntity.getPublish(),
-                                   caseEventField.getPublish()),
-                () -> assertEquals("publishAs", eventCaseFieldEntity.getPublishAs(),
-                                   caseEventField.getPublishAs()),
-                () -> assertEquals("defaultValue", eventCaseFieldEntity.getDefaultValue(),
-                                   caseEventField.getDefaultValue()),
-                () -> assertEquals("nullifyByDefault", eventCaseFieldEntity.getNullifyByDefault(),
-                    caseEventField.getNullifyByDefault())
+                () -> assertEquals(eventCaseFieldEntity.getDisplayContext().name(),
+                                   caseEventField.getDisplayContext(),
+                                   "displayContext"),
+                () -> assertEquals(eventCaseFieldEntity.getShowCondition(),
+                                   caseEventField.getShowCondition(),
+                                   "showCondition"),
+                () -> assertEquals(eventCaseFieldEntity.getShowSummaryChangeOption(),
+                                   caseEventField.getShowSummaryChangeOption(),
+                                   "showSummaryChangeOption"),
+                () -> assertEquals(eventCaseFieldEntity.getShowSummaryContentOption(),
+                                   caseEventField.getShowSummaryContentOption(),
+                                   "showSummaryContentOption"),
+                () -> assertEquals(eventCaseFieldEntity.getRetainHiddenValue(),
+                                   caseEventField.getRetainHiddenValue(),
+                                   "retainHiddenValue"),
+                () -> assertEquals(eventCaseFieldEntity.getPublish(),
+                                   caseEventField.getPublish(),
+                                   "publish"),
+                () -> assertEquals(eventCaseFieldEntity.getPublishAs(),
+                                   caseEventField.getPublishAs(),
+                                   "publishAs"),
+                () -> assertEquals(eventCaseFieldEntity.getDefaultValue(),
+                                   caseEventField.getDefaultValue(),
+                                   "defaultValue"),
+                () -> assertEquals(eventCaseFieldEntity.getNullifyByDefault(),
+                    caseEventField.getNullifyByDefault(),
+                    "nullifyByDefault")
             );
         }
 
@@ -214,34 +222,42 @@ class  EntityToResponseDTOMapperTest {
 
             assertAll(
                 () -> assertThat(caseEventField.getCaseEventFieldComplex().size(), is(2)),
-                () -> assertEquals("showCondition",
+                () -> assertEquals(
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getShowCondition(),
-                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getShowCondition()),
-                () -> assertEquals("hint",
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getShowCondition(),
+                    "showCondition"),
+                () -> assertEquals(
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getHint(),
-                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getHint()),
-                () -> assertEquals("label",
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getHint(),
+                    "hint"),
+                () -> assertEquals(
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getLabel(),
-                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getLabel()),
-                () -> assertEquals("displayContext",
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getLabel(),
+                    "label"),
+                () -> assertEquals(
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getDisplayContext(),
-                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDisplayContext()),
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDisplayContext(),
+                    "displayContext"),
 
-                () -> assertEquals("DefaultValue1",
+                () -> assertEquals(
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getDefaultValue(),
-                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDefaultValue()),
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getDefaultValue(),
+                    "DefaultValue1"),
 
-                () -> assertEquals("publish",
+                () -> assertEquals(
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getPublish(),
-                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getPublish()),
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getPublish(),
+                    "publish"),
 
-                () -> assertEquals("publishAs",
+                () -> assertEquals(
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getPublishAs(),
-                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getPublishAs()),
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getPublishAs(),
+                    "publishAs"),
 
-                () -> assertEquals("order",
+                () -> assertEquals(
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getOrder(),
-                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getOrder())
+                    findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getOrder(),
+                    "order")
             );
         }
     }

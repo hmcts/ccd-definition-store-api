@@ -1,10 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -22,8 +18,14 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -46,7 +48,7 @@ public class EventCaseFieldComplexTypeParserTest {
     @InjectMocks
     private EventCaseFieldComplexTypeParser eventCaseFieldComplexTypeParser;
 
-    @Before
+    @BeforeEach
     public void setUp() throws InvalidShowConditionException {
         MockitoAnnotations.openMocks(this);
         when(showConditionParser.parseShowCondition(any())).thenReturn(

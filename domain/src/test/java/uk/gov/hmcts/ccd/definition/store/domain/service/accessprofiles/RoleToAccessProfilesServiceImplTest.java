@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles;
 
 import com.google.common.collect.Lists;
-import org.junit.Assert;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -56,7 +57,7 @@ class RoleToAccessProfilesServiceImplTest {
         doReturn(roleToAccessProfileEntities).when(repository).findByCaseTypeReferenceIn(anyList());
         List<String> references = Lists.newArrayList("Test", "Divorce");
         List<RoleToAccessProfiles> valuesReturned = classUnderTest.findByCaseTypeReferences(references);
-        Assert.assertEquals(2, valuesReturned.size());
+        assertEquals(2, valuesReturned.size());
     }
 
     @Test
@@ -68,7 +69,7 @@ class RoleToAccessProfilesServiceImplTest {
         roleToAccessProfileEntities.add(createRoleToAccessProfile("TestRole2", "solicitor"));
         doReturn(roleToAccessProfileEntities).when(repository).findByRoleName(anyString());
         List<RoleToAccessProfiles> valuesReturned = classUnderTest.findByRoleName("Divorce");
-        Assert.assertEquals(2, valuesReturned.size());
+       assertEquals(2, valuesReturned.size());
     }
 
     @Test
@@ -78,7 +79,7 @@ class RoleToAccessProfilesServiceImplTest {
         List<RoleToAccessProfilesEntity> roleToAccessProfileEntities = Lists.newArrayList();
         doReturn(roleToAccessProfileEntities).when(repository).findByCaseTypeReferenceIn(anyList());
         List<RoleToAccessProfiles> valuesReturned = classUnderTest.findByCaseTypeReferences(Lists.newArrayList());
-        Assert.assertEquals(0, valuesReturned.size());
+       assertEquals(0, valuesReturned.size());
     }
 
     @Test
@@ -106,7 +107,7 @@ class RoleToAccessProfilesServiceImplTest {
         doReturn(roleToAccessProfileEntities).when(repository).findRoleToAccessProfilesEntityByCaseType(caseType);
 
         List<RoleAssignment> valuesReturned = classUnderTest.findRoleAssignmentsByCaseTypeId(caseType);
-        Assert.assertEquals(2, valuesReturned.size());
+       assertEquals(2, valuesReturned.size());
     }
 
     @Test
@@ -119,7 +120,7 @@ class RoleToAccessProfilesServiceImplTest {
         doReturn(Lists.newArrayList()).when(repository).findRoleToAccessProfilesEntityByCaseType(caseType);
 
         List<RoleAssignment> valuesReturned = classUnderTest.findRoleAssignmentsByCaseTypeId(caseType);
-        Assert.assertEquals(0, valuesReturned.size());
+       assertEquals(0, valuesReturned.size());
     }
 
 

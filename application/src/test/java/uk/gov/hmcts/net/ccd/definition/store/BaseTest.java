@@ -3,9 +3,7 @@ package uk.gov.hmcts.net.ccd.definition.store;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
+
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
 import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
 import uk.gov.hmcts.ccd.definition.store.JacksonUtils;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
@@ -40,7 +39,9 @@ import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
 import uk.gov.hmcts.net.ccd.definition.store.wiremock.config.WireMockTestConfiguration;
 
 import jakarta.inject.Inject;
+
 import javax.sql.DataSource;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
@@ -51,7 +52,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -103,7 +108,7 @@ public abstract class BaseTest {
 
     protected static final ObjectMapper mapper = new ObjectMapper();
 
-    @BeforeClass
+    @BeforeAll
     public static void init() {
         mapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
     }
@@ -116,7 +121,7 @@ public abstract class BaseTest {
     @Mock
     protected SecurityContext securityContext;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         // reset wiremock counters
         WireMock.resetAllRequests();
@@ -147,7 +152,7 @@ public abstract class BaseTest {
                 JacksonUtils.getHashMapTypeReference()
             ));
         } catch (IOException e) {
-            Assert.fail("Incorrect JSON structure: " + resultSet.getString("display_object"));
+            fail("Incorrect JSON structure: " + resultSet.getString("display_object"));
         }
         displayItemsData.setDisplayItemVersion(resultSet.getInt("display_item_version"));
         displayItemsData.setType(resultSet.getString("type"));
@@ -157,10 +162,11 @@ public abstract class BaseTest {
 
     protected void assertResponseCode(MvcResult mvcResult, int httpResponseCode) throws UnsupportedEncodingException {
         MockHttpServletResponse response = mvcResult.getResponse();
-        assertEquals("Expected [" + httpResponseCode + "] but was [" + response.getStatus() + "]"
-                + " Body was [\n" + response.getContentAsString() + "\n]",
+        assertEquals(
             httpResponseCode,
-            mvcResult.getResponse().getStatus()
+            mvcResult.getResponse().getStatus(),
+            "Expected [" + httpResponseCode + "] but was [" + response.getStatus() + "]"
+                + " Body was [\n" + response.getContentAsString() + "\n]"
         );
     }
 

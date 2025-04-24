@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.assertj.core.api.Assertions;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
@@ -16,8 +11,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-import static org.hamcrest.core.Is.is;
+import org.assertj.core.api.Assertions;
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
@@ -27,7 +28,7 @@ public class CaseFieldParserTest extends ParserTestBase {
 
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
-    @Before
+    @BeforeEach
     public void setup() {
 
         init();
@@ -41,15 +42,12 @@ public class CaseFieldParserTest extends ParserTestBase {
         definitionSheets.put(SheetName.CASE_FIELD.getName(), definitionSheet);
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
+    @Test
     public void shouldFail_whenNoFieldsAreDefinedForCaseType() {
-        try {
-            caseFieldParser.parseAll(definitionSheets, caseType);
-        } catch (SpreadsheetParsingException ex) {
-            Assertions.assertThat(ex).hasMessageContaining(
+        SpreadsheetParsingException ex = assertThrows(SpreadsheetParsingException.class, () ->
+            caseFieldParser.parseAll(definitionSheets, caseType));
+        Assertions.assertThat(ex).hasMessageContaining(
                 "At least one case field must be defined for case type: Some Case Type");
-            throw ex;
-        }
     }
 
     @Test

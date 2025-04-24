@@ -1,15 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.state;
 
-import org.junit.Before;
-import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 public class StateEntityCrudValidatorImplTest {
     private StateEntity stateEntity;
@@ -17,7 +18,7 @@ public class StateEntityCrudValidatorImplTest {
     private StateEntityValidationContext context;
     private StateEntityCrudValidatorImpl validator;
 
-    @Before
+    @BeforeEach
     public void setup() {
 
         validator = new StateEntityCrudValidatorImpl();

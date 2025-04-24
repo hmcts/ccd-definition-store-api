@@ -3,7 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
@@ -72,7 +72,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -215,8 +215,8 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
 
         for (Class validatorClass : componentClasses) {
             assertTrue(
-                String.format("Instance of %s not found", validatorClass.getCanonicalName()),
-                containsInstance(components, validatorClass)
+                containsInstance(components, validatorClass),
+                String.format("Instance of %s not found", validatorClass.getCanonicalName())
             );
         }
 

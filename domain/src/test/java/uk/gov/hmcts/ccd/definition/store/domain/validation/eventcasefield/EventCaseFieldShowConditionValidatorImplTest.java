@@ -1,10 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+
+
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
@@ -22,18 +23,22 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+
 import static junit.framework.TestCase.assertTrue;
+
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
+
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
@@ -46,7 +51,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
 
     private EventCaseFieldShowConditionValidatorImpl classUnderTest;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new EventCaseFieldShowConditionValidatorImpl(
@@ -169,7 +174,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(1, validationResult.getValidationErrors().size());
-        Assert.assertTrue(validationResult.getValidationErrors().get(0)
+       assertTrue(validationResult.getValidationErrors().get(0)
             instanceof EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);
 
     }
@@ -264,7 +269,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         assertFalse(validationResult.isValid());
 
         assertEquals(1, validationResult.getValidationErrors().size());
-        Assert.assertTrue(validationResult.getValidationErrors().get(0)
+       assertTrue(validationResult.getValidationErrors().get(0)
             instanceof EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);
 
     }
@@ -327,7 +332,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         assertFalse(validationResult.isValid());
 
         assertEquals(1, validationResult.getValidationErrors().size());
-        Assert.assertTrue(
+       assertTrue(
             validationResult.getValidationErrors().get(0) instanceof EventCaseFieldEntityInvalidShowConditionError);
 
     }
