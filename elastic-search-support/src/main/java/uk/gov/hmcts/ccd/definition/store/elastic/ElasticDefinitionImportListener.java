@@ -60,7 +60,7 @@ public abstract class ElasticDefinitionImportListener {
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
 
-        try (HighLevelCCDElasticClient elasticClient = clientFactory.getObject();) {
+        try (HighLevelCCDElasticClient elasticClient = clientFactory.getObject()) {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
@@ -82,7 +82,7 @@ public abstract class ElasticDefinitionImportListener {
                     elasticClient.createIndexAndMapping(incrementedCaseTypeName, caseMapping);
 
                     //initiate reindexing
-                    handleReindexing(elasticClient, baseIndexName, caseTypeName, incrementedCaseTypeName,
+                    handleReindexing(baseIndexName, caseTypeName, incrementedCaseTypeName,
                         deleteOldIndex);
                     //dummy value for phase 1
                     event.setTaskId("taskID");
@@ -101,14 +101,14 @@ public abstract class ElasticDefinitionImportListener {
         }
     }
 
-    private void handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
+    private void handleReindexing(String baseIndexName,
                                   String oldIndex, String newIndex,
                                   boolean deleteOldIndex) {
-
+        HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
         elasticClient.reindexData(oldIndex, newIndex, new ActionListener<>() {
             @Override
             public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
-                try (HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
+                try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
                     //if success set writable and update alias to new index
                     log.info("updating alias from {} to {}", oldIndex, newIndex);
                     asyncElasticClient.setIndexReadOnly(baseIndexName, false);
@@ -125,7 +125,7 @@ public abstract class ElasticDefinitionImportListener {
 
             @Override
             public void onFailure(Exception ex) {
-                try (HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
+                try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
                     //if failed delete new index, set old index writable
                     log.error("reindexing failed", ex);
                     asyncElasticClient.removeIndex(newIndex);
