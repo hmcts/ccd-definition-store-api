@@ -18,8 +18,8 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 public class EventPostStateParserTest extends ParserTestBase {
@@ -55,7 +55,7 @@ public class EventPostStateParserTest extends ParserTestBase {
         definitionSheets.put(SheetName.CASE_EVENT.getName(), definitionSheet);
         caseEventToFieldsSheet = new DefinitionSheet();
         definitionSheets.put(SheetName.CASE_EVENT_TO_FIELDS.getName(), caseEventToFieldsSheet);
-        when(parseContext.getStateForCaseType(anyString(), anyString())).thenReturn(new StateEntity());
+        lenient().when(parseContext.getStateForCaseType(anyString(), anyString())).thenReturn(new StateEntity());
     }
 
     @Test

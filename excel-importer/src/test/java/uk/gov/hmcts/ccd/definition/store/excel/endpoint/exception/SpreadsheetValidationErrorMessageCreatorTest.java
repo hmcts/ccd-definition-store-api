@@ -1749,15 +1749,6 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     }
 
-    private EventCaseFieldEntity eventCaseFieldEntity(EventEntity eventEntity, CaseFieldEntity caseFieldEntity) {
-
-        EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
-        eventCaseFieldEntity.setEvent(eventEntity);
-        eventCaseFieldEntity.setCaseField(caseFieldEntity);
-        return eventCaseFieldEntity;
-
-    }
-
     private CaseTypeACLEntity caseTypeACLEntity(final String crud) {
         final CaseTypeACLEntity entity = new CaseTypeACLEntity();
         setAuthorisation(entity, crud);

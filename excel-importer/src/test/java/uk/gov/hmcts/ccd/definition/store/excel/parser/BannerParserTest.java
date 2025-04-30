@@ -1,25 +1,22 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import java.util.Optional;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 class BannerParserTest extends ParserTestBase {
@@ -30,10 +27,6 @@ class BannerParserTest extends ParserTestBase {
 
     private BannerParser bannerParser;
 
-    @Mock
-    private JurisdictionEntity jurisdiction;
-
-
     @BeforeEach
     public void setup() {
 
@@ -42,7 +35,6 @@ class BannerParserTest extends ParserTestBase {
         bannerParser = new BannerParser(parseContext);
 
         definitionSheets.put(SheetName.BANNER.getName(), definitionSheet);
-        given(parseContext.getJurisdiction()).willReturn(jurisdiction);
     }
 
     @Test

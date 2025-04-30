@@ -1,14 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import org.assertj.core.api.Assertions;
-import org.assertj.core.util.Lists;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
@@ -56,8 +47,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEn
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketInputCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessControlList;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeField;
-import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRoleField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseEventFieldComplex;
@@ -97,16 +88,26 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
+import org.assertj.core.util.Lists;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.sameInstance;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;

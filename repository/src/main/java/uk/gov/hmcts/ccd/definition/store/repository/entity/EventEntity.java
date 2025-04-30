@@ -1,16 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import com.google.common.collect.Maps;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+import uk.gov.hmcts.ccd.definition.store.repository.model.WebhookType;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.Maps;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,12 +29,7 @@ import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.Type;
 import org.hibernate.type.SqlTypes;
-
-import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.model.WebhookType;
 
 import static jakarta.persistence.CascadeType.ALL;
 import static jakarta.persistence.FetchType.LAZY;

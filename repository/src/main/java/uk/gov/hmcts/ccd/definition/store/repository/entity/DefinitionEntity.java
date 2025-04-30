@@ -1,14 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import java.io.Serializable;
+import java.time.LocalDateTime;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
-
-
-import org.hibernate.annotations.UpdateTimestamp;
-import com.vladmihalcea.hibernate.type.basic.PostgreSQLEnumType;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,8 +15,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Version;
-import java.io.Serializable;
-import java.time.LocalDateTime;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import static jakarta.persistence.FetchType.LAZY;
 import static jakarta.persistence.GenerationType.IDENTITY;

@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
-
-
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
@@ -21,24 +15,25 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEnti
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-
 import static junit.framework.TestCase.assertTrue;
-
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
@@ -54,9 +49,8 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        classUnderTest = new EventCaseFieldShowConditionValidatorImpl(
-            showConditionExtractor,
-            new CaseFieldEntityUtil());
+        classUnderTest = new EventCaseFieldShowConditionValidatorImpl(showConditionExtractor,
+                new CaseFieldEntityUtil());
     }
 
     @Test
@@ -64,41 +58,29 @@ public class EventCaseFieldShowConditionValidatorImplTest {
 
         String matchingCaseFieldId = "complexName";
         String matchingCaseFieldKey = matchingCaseFieldId
-            + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode.AddressUKCode.Country";
+                + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode.AddressUKCode.Country";
         String showCondition = matchingCaseFieldKey + "=\"UK\"";
 
-        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(
-            null,
-            showCondition);
+        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(null, showCondition);
 
-        when(showConditionExtractor.parseShowCondition(any())).thenReturn(
-            new ShowCondition.Builder().showConditionExpression(showCondition).field(matchingCaseFieldKey).build());
+        when(showConditionExtractor.parseShowCondition(any())).thenReturn(new ShowCondition.Builder()
+                .showConditionExpression(showCondition).field(matchingCaseFieldKey).build());
 
-        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
-            new EventCaseFieldEntityValidationContext("EventId",
-                asList(
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId1"),
-                        null),
-                    eventCaseFieldEntity(
-                        caseFieldEntity(matchingCaseFieldId,
-                            exampleFieldTypeEntityWithComplexFields()),
-                        null),
-                    eventCaseFieldEntityWithShowCondition,
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId2"),
-                        null),
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId2"),
-                        null),
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId2"),
-                        null)
-                )
-            );
+        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext
+                = new EventCaseFieldEntityValidationContext(
+                        "EventId", asList(
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId1"), null),
+                                eventCaseFieldEntity(caseFieldEntity(matchingCaseFieldId,
+                                        exampleFieldTypeEntityWithComplexFields()), null),
+                                eventCaseFieldEntityWithShowCondition,
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId2"), null),
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId2"), null),
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId2"),
+                                        null)));
 
-        assertTrue(classUnderTest.validate(eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext)
-            .isValid());
+        assertTrue(classUnderTest
+                .validate(eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext)
+                .isValid());
     }
 
     @Test
@@ -108,28 +90,21 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         String matchingCaseFieldKey = matchingCaseFieldId + ".NamePrefix";
         String showCondition = matchingCaseFieldKey + "=\"Mr.\"";
 
-        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(
-            null,
-            showCondition);
+        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(null, showCondition);
 
-        when(showConditionExtractor.parseShowCondition(any())).thenReturn(
-            new ShowCondition.Builder().showConditionExpression(showCondition).field(matchingCaseFieldKey).build());
+        when(showConditionExtractor.parseShowCondition(any())).thenReturn(new ShowCondition.Builder()
+                .showConditionExpression(showCondition).field(matchingCaseFieldKey).build());
 
-        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
-            new EventCaseFieldEntityValidationContext("EventId",
-                asList(
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId1"),
-                        null),
-                    eventCaseFieldEntity(
-                        caseFieldEntity(matchingCaseFieldId,
-                            exampleFieldTypeEntityWithComplexFields()),
-                        null)
-                )
-            );
+        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext
+                = new EventCaseFieldEntityValidationContext(
+                        "EventId", asList(
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId1"), null),
+                                eventCaseFieldEntity(caseFieldEntity(matchingCaseFieldId,
+                                        exampleFieldTypeEntityWithComplexFields()), null)));
 
-        assertTrue(classUnderTest.validate(eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext)
-            .isValid());
+        assertTrue(classUnderTest
+                .validate(eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext)
+                .isValid());
     }
 
     @Test
@@ -139,88 +114,59 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         String matchingCaseFieldKey = matchingCaseFieldId + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode";
         String showCondition = matchingCaseFieldKey + "=\"Moreno\"";
 
-        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(
-            null,
-            showCondition);
+        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(null, showCondition);
 
-        when(showConditionExtractor.parseShowCondition(any())).thenReturn(
-            new ShowCondition.Builder().showConditionExpression(showCondition).field(matchingCaseFieldKey).build());
+        when(showConditionExtractor.parseShowCondition(any())).thenReturn(new ShowCondition.Builder()
+                .showConditionExpression(showCondition).field(matchingCaseFieldKey).build());
 
-        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
-            new EventCaseFieldEntityValidationContext("EventId",
-                asList(
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId1"),
-                        null),
-                    eventCaseFieldEntity(
-                        caseFieldEntity(matchingCaseFieldId,
-                            exampleFieldTypeEntityWithComplexFields()),
-                        null),
-                    eventCaseFieldEntityWithShowCondition,
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId2"),
-                        null),
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId2"),
-                        null),
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId2"),
-                        null)
-                )
-            );
+        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext
+                = new EventCaseFieldEntityValidationContext(
+                        "EventId", asList(
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId1"), null),
+                                eventCaseFieldEntity(caseFieldEntity(matchingCaseFieldId,
+                                        exampleFieldTypeEntityWithComplexFields()), null),
+                                eventCaseFieldEntityWithShowCondition,
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId2"), null),
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId2"), null),
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId2"),
+                                        null)));
 
         ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntityWithShowCondition,
-            eventCaseFieldEntityValidationContext);
+                eventCaseFieldEntityValidationContext);
 
         assertFalse(validationResult.isValid());
         assertEquals(1, validationResult.getValidationErrors().size());
-       assertTrue(validationResult.getValidationErrors().get(0)
-            instanceof EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);
+        assertTrue(validationResult.getValidationErrors().get(
+                0) instanceof EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);
 
     }
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void anotherEventCaseFieldExistsWithSameCaseFieldIdAsEventFieldEntityWithShowConditionSet_validValidationResultReturned()
-        throws InvalidShowConditionException {
+            throws InvalidShowConditionException {
 
         String matchingCaseFieldId = "MatchingCaseFieldId";
         String showCondition = matchingCaseFieldId + "=true";
 
-        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(
-            null,
-            showCondition
-        );
+        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(null, showCondition);
 
-        when(showConditionExtractor.parseShowCondition(any())).thenReturn(
-            new ShowCondition.Builder().field(matchingCaseFieldId).build()
-        );
+        when(showConditionExtractor.parseShowCondition(any()))
+                .thenReturn(new ShowCondition.Builder().field(matchingCaseFieldId).build());
 
-        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
-            new EventCaseFieldEntityValidationContext("EventId",
-                asList(
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId1"),
-                        null
-                    ),
-                    eventCaseFieldEntityWithShowCondition,
-                    eventCaseFieldEntity(
-                        caseFieldEntity(matchingCaseFieldId),
-                        null
-                    ),
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId2"),
-                        null
-                    ),
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId3"),
-                        null
-                    )
-                )
-            );
+        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext
+                = new EventCaseFieldEntityValidationContext(
+                        "EventId",
+                        asList(eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId1"), null),
+                                eventCaseFieldEntityWithShowCondition,
+                                eventCaseFieldEntity(caseFieldEntity(matchingCaseFieldId), null),
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId2"), null),
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId3"),
+                                        null)));
 
-        assertTrue(classUnderTest.validate(eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext)
-            .isValid());
+        assertTrue(classUnderTest
+                .validate(eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext)
+                .isValid());
 
         verify(showConditionExtractor).parseShowCondition(eq(showCondition));
     }
@@ -228,65 +174,49 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     @SuppressWarnings("checkstyle:LineLength")
     @Test
     public void noOtherEventCaseFieldExistsWithSameCaseFieldIdAsEventFieldEntityWithShowConditionSet_invalidValidationResultReturned()
-        throws InvalidShowConditionException {
+            throws InvalidShowConditionException {
 
         String matchingCaseFieldId = "MatchingCaseFieldId";
         String showCondition = matchingCaseFieldId + "=true";
 
-        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(
-            null,
-            showCondition
-        );
+        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(null, showCondition);
 
-        when(showConditionExtractor.parseShowCondition(any())).thenReturn(
-            new ShowCondition.Builder().field(matchingCaseFieldId).build()
-        );
+        when(showConditionExtractor.parseShowCondition(any()))
+                .thenReturn(new ShowCondition.Builder().field(matchingCaseFieldId).build());
 
-        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
-            new EventCaseFieldEntityValidationContext("EventId",
-                asList(
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId1"),
-                        null
-                    ),
-                    eventCaseFieldEntityWithShowCondition,
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId2"),
-                        null
-                    ),
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId3"),
-                        null
-                    )
-                )
-            );
+        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext
+                = new EventCaseFieldEntityValidationContext(
+                        "EventId",
+                        asList(eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId1"), null),
+                                eventCaseFieldEntityWithShowCondition,
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId2"), null),
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId3"),
+                                        null)));
 
-        ValidationResult validationResult = classUnderTest.validate(
-            eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext);
+        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntityWithShowCondition,
+                eventCaseFieldEntityValidationContext);
 
         verify(showConditionExtractor).parseShowCondition(eq(showCondition));
 
         assertFalse(validationResult.isValid());
 
         assertEquals(1, validationResult.getValidationErrors().size());
-       assertTrue(validationResult.getValidationErrors().get(0)
-            instanceof EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);
+        assertTrue(validationResult.getValidationErrors().get(
+                0) instanceof EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);
 
     }
 
     @Test
     public void eventCaseFieldEntityWithNullShowCondition_validValidationResultReturned() {
 
-        EventCaseFieldEntity eventCaseFieldEntityWithNullShowCondition = eventCaseFieldEntity(
-            null,
-            null
-        );
+        EventCaseFieldEntity eventCaseFieldEntityWithNullShowCondition = eventCaseFieldEntity(null, null);
 
-        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
-            new EventCaseFieldEntityValidationContext("EventId", emptyList());
+        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext
+                = new EventCaseFieldEntityValidationContext(
+                        "EventId", emptyList());
 
-        assertTrue(classUnderTest.validate(
-            eventCaseFieldEntityWithNullShowCondition, eventCaseFieldEntityValidationContext).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntityWithNullShowCondition,
+                eventCaseFieldEntityValidationContext).isValid());
 
         verifyNoMoreInteractions(showConditionExtractor);
     }
@@ -294,16 +224,14 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     @Test
     public void eventCaseFieldEntityWithBlankShowCondition_validValidationResultReturned() {
 
-        EventCaseFieldEntity eventCaseFieldEntityWithBlankShowCondition = eventCaseFieldEntity(
-            null,
-            "     "
-        );
+        EventCaseFieldEntity eventCaseFieldEntityWithBlankShowCondition = eventCaseFieldEntity(null, "     ");
 
-        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
-            new EventCaseFieldEntityValidationContext("EventId", emptyList());
+        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext
+                = new EventCaseFieldEntityValidationContext(
+                        "EventId", emptyList());
 
-        assertTrue(classUnderTest.validate(
-            eventCaseFieldEntityWithBlankShowCondition, eventCaseFieldEntityValidationContext).isValid());
+        assertTrue(classUnderTest.validate(eventCaseFieldEntityWithBlankShowCondition,
+                eventCaseFieldEntityValidationContext).isValid());
 
         verifyNoMoreInteractions(showConditionExtractor);
 
@@ -311,71 +239,59 @@ public class EventCaseFieldShowConditionValidatorImplTest {
 
     @Test
     public void invalidShowConditionExceptionThrown_validValidationResultReturned()
-        throws InvalidShowConditionException {
+            throws InvalidShowConditionException {
 
         String showCondition = "InvalidShowCondition";
-        EventCaseFieldEntity eventCaseFieldEntityWithInvalidShowCondition = eventCaseFieldEntity(
-            null,
-            showCondition
-        );
+        EventCaseFieldEntity eventCaseFieldEntityWithInvalidShowCondition = eventCaseFieldEntity(null,
+                showCondition);
 
-        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
-            new EventCaseFieldEntityValidationContext(null, null);
+        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext
+                = new EventCaseFieldEntityValidationContext(
+                        null, null);
 
-        when(showConditionExtractor.parseShowCondition(any())).thenThrow(new InvalidShowConditionException(null));
+        when(showConditionExtractor.parseShowCondition(any()))
+                .thenThrow(new InvalidShowConditionException(null));
 
         ValidationResult validationResult = classUnderTest.validate(
-            eventCaseFieldEntityWithInvalidShowCondition, eventCaseFieldEntityValidationContext);
+                eventCaseFieldEntityWithInvalidShowCondition, eventCaseFieldEntityValidationContext);
 
         verify(showConditionExtractor).parseShowCondition(eq(showCondition));
 
         assertFalse(validationResult.isValid());
 
         assertEquals(1, validationResult.getValidationErrors().size());
-       assertTrue(
-            validationResult.getValidationErrors().get(0) instanceof EventCaseFieldEntityInvalidShowConditionError);
+        assertTrue(validationResult.getValidationErrors()
+                .get(0) instanceof EventCaseFieldEntityInvalidShowConditionError);
 
     }
 
     @Test
     public void shouldReturnInvalidResultWhenAnyCaseFieldUsedInAndConditionsDoNotMatchEventCaseFields()
-        throws InvalidShowConditionException {
+            throws InvalidShowConditionException {
 
         String matchingCaseFieldId1 = "MatchingCaseFieldId1";
         String matchingCaseFieldId2 = "MatchingCaseFieldId2";
         String showCondition = matchingCaseFieldId1 + "=true AND " + matchingCaseFieldId2 + "=true";
 
-        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(
-            null,
-            showCondition
-        );
+        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(null, showCondition);
 
-        when(showConditionExtractor.parseShowCondition(any())).thenReturn(
-            new ShowCondition.Builder().field(matchingCaseFieldId1).field(matchingCaseFieldId2).build()
-        );
+        when(showConditionExtractor.parseShowCondition(any())).thenReturn(new ShowCondition.Builder()
+                .field(matchingCaseFieldId1).field(matchingCaseFieldId2).build());
 
-        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
-            new EventCaseFieldEntityValidationContext("EventId",
-                asList(
-                    eventCaseFieldEntity(
-                        caseFieldEntity("MatchingCaseFieldId1"),
-                        null
-                    ),
-                    eventCaseFieldEntityWithShowCondition,
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId2"),
-                        null
-                    )
-                )
-            );
+        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext
+                = new EventCaseFieldEntityValidationContext(
+                        "EventId",
+                        asList(eventCaseFieldEntity(caseFieldEntity("MatchingCaseFieldId1"), null),
+                                eventCaseFieldEntityWithShowCondition, eventCaseFieldEntity(
+                                        caseFieldEntity("NonMatchingCaseFieldId2"), null)));
 
-        ValidationResult validationResult = classUnderTest.validate(
-            eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext);
+        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntityWithShowCondition,
+                eventCaseFieldEntityValidationContext);
 
         assertThat(validationResult.isValid(), is(false));
         assertThat(validationResult.getValidationErrors(), hasSize(1));
         assertThat(validationResult.getValidationErrors().get(0),
-            instanceOf(EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError.class));
+                instanceOf(EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError.class));
 
         verify(showConditionExtractor).parseShowCondition(eq(showCondition));
     }
@@ -385,68 +301,65 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         String field = MetadataField.STATE.getReference();
         String showCondition = field + "=\"TODO\"";
 
-        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(
-            null,
-            showCondition
-        );
+        EventCaseFieldEntity eventCaseFieldEntityWithShowCondition = eventCaseFieldEntity(null, showCondition);
 
-        when(showConditionExtractor.parseShowCondition(any())).thenReturn(
-            new ShowCondition.Builder().field(field).build()
-        );
+        when(showConditionExtractor.parseShowCondition(any()))
+                .thenReturn(new ShowCondition.Builder().field(field).build());
 
-        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
-            new EventCaseFieldEntityValidationContext("EventId",
-                asList(
-                    eventCaseFieldEntityWithShowCondition,
-                    eventCaseFieldEntity(
-                        caseFieldEntity("NonMatchingCaseFieldId"),
-                        null
-                    )
-                )
-            );
+        EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext
+                = new EventCaseFieldEntityValidationContext(
+                        "EventId", asList(eventCaseFieldEntityWithShowCondition,
+                                eventCaseFieldEntity(caseFieldEntity("NonMatchingCaseFieldId"), null)));
 
-        ValidationResult validationResult = classUnderTest.validate(
-            eventCaseFieldEntityWithShowCondition, eventCaseFieldEntityValidationContext);
+        ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntityWithShowCondition,
+                eventCaseFieldEntityValidationContext);
 
         assertThat(validationResult.isValid(), is(true));
     }
 
     private static FieldTypeEntity exampleFieldTypeEntityWithComplexFields() {
-        return fieldTypeEntity("FullName",
-            asList(
-                complexFieldEntity(
-                    "NamePrefix",
-                    fixedListFieldTypeEntity(
-                        "FixedList-PreFix",
-                        asList(
-                            fieldTypeListItemEntity("Mr.", "Mr."),
-                            fieldTypeListItemEntity("Mrs.", "Mrs.")))),
-                complexFieldEntity("FirstName", fieldTypeEntity("Text", emptyList())),
-                complexFieldEntity("MiddleName", fieldTypeEntity("Text", emptyList())),
-                complexFieldEntity("LastNameWithSomeCplxFields", fieldTypeEntity("FullName1",
-                    asList(
-                        complexFieldEntity("LastName", fieldTypeEntity("Text", emptyList())),
-                        complexFieldEntity("SomeComplexFieldsCode",
-                            fieldTypeEntity("SomeComplexFields",
-                                asList(
-                                    complexFieldEntity("AddressUKCode", addressUKFieldTypeEntity()),
-                                    complexFieldEntity("AddressGlobalCode", addressGlobalFieldTypeEntity()),
-                                    complexFieldEntity("AddressGlobalUKCode", addressGlobalUKFieldTypeEntity()),
-                                    complexFieldEntity("OrderSummaryCode", orderSummaryFieldTypeEntity()),
-                                    complexFieldEntity("SecondSurname", fieldTypeEntity(
-                                        "Text", emptyList()))
-                                )))
-                    ))))
-        );
+        return fieldTypeEntity(
+                "FullName", asList(
+                        complexFieldEntity("NamePrefix", fixedListFieldTypeEntity(
+                                "FixedList-PreFix",
+                                asList(fieldTypeListItemEntity("Mr.", "Mr."),
+                                        fieldTypeListItemEntity("Mrs.",
+                                                "Mrs.")))),
+                        complexFieldEntity("FirstName", fieldTypeEntity("Text",
+                                emptyList())),
+                        complexFieldEntity("MiddleName", fieldTypeEntity("Text", emptyList())),
+                        complexFieldEntity("LastNameWithSomeCplxFields", fieldTypeEntity(
+                                "FullName1",
+                                asList(complexFieldEntity(
+                                        "LastName",
+                                        fieldTypeEntity("Text", emptyList())),
+                                        complexFieldEntity(
+                                                "SomeComplexFieldsCode",
+                                                fieldTypeEntity("SomeComplexFields",
+                                                        asList(complexFieldEntity(
+                                                                "AddressUKCode",
+                                                                addressUKFieldTypeEntity()),
+                                                                complexFieldEntity(
+                                                                        "AddressGlobalCode",
+                                                                        addressGlobalFieldTypeEntity()),
+                                                                complexFieldEntity(
+                                                                        "AddressGlobalUKCode",
+                                                                        addressGlobalUKFieldTypeEntity()),
+                                                                complexFieldEntity(
+                                                                        "OrderSummaryCode",
+                                                                        orderSummaryFieldTypeEntity()),
+                                                                complexFieldEntity(
+                                                                        "SecondSurname",
+                                                                        fieldTypeEntity("Text",
+                                                                                emptyList()))))))))));
     }
 
     private static FieldTypeEntity orderSummaryFieldTypeEntity() {
         return fieldTypeEntity(PREDEFINED_COMPLEX_ORDER_SUMMARY,
-            asList(
-                complexFieldEntity("PaymentReference", fieldTypeEntity("Text", emptyList())),
-                complexFieldEntity("PaymentTotal", fieldTypeEntity("MoneyGBP", emptyList())),
-                complexFieldEntity("Fees", fieldTypeEntity("FeesList", emptyList()))
-            ));
+                asList(complexFieldEntity("PaymentReference", fieldTypeEntity("Text", emptyList())),
+                        complexFieldEntity("PaymentTotal",
+                                fieldTypeEntity("MoneyGBP", emptyList())),
+                        complexFieldEntity("Fees", fieldTypeEntity("FeesList", emptyList()))));
     }
 
     private static FieldTypeEntity addressUKFieldTypeEntity() {
@@ -462,19 +375,18 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     }
 
     private static FieldTypeEntity address(String reference) {
-        return fieldTypeEntity(reference,
-            asList(
+        return fieldTypeEntity(reference, asList(
                 complexFieldEntity("AddressLine1", fieldTypeEntity("TextMax150", emptyList())),
                 complexFieldEntity("AddressLine2", fieldTypeEntity("TextMax50", emptyList())),
                 complexFieldEntity("AddressLine3", fieldTypeEntity("TextMax50", emptyList())),
                 complexFieldEntity("PostTown", fieldTypeEntity("TextMax50", emptyList())),
                 complexFieldEntity("County", fieldTypeEntity("TextMax50", emptyList())),
                 complexFieldEntity("PostCode", fieldTypeEntity("TextMax14", emptyList())),
-                complexFieldEntity("Country", fieldTypeEntity("TextMax50", emptyList()))
-            ));
+                complexFieldEntity("Country", fieldTypeEntity("TextMax50", emptyList()))));
     }
 
-    private static EventCaseFieldEntity eventCaseFieldEntity(CaseFieldEntity caseFieldEntity, String showCondition) {
+    private static EventCaseFieldEntity eventCaseFieldEntity(CaseFieldEntity caseFieldEntity,
+            String showCondition) {
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         eventCaseFieldEntity.setEvent(new EventEntity());
         eventCaseFieldEntity.setCaseField(caseFieldEntity);
@@ -497,7 +409,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     }
 
     private static FieldTypeEntity fieldTypeEntity(String reference,
-                                                   List<ComplexFieldEntity> complexFieldEntityList) {
+            List<ComplexFieldEntity> complexFieldEntityList) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(reference);
         fieldTypeEntity.addComplexFields(complexFieldEntityList);
@@ -512,7 +424,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     }
 
     private static FieldTypeEntity fixedListFieldTypeEntity(String reference,
-                                                            List<FieldTypeListItemEntity> listItemEntities) {
+            List<FieldTypeListItemEntity> listItemEntities) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(reference);
         fieldTypeEntity.addListItems(listItemEntities);

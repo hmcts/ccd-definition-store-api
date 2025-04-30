@@ -1,22 +1,23 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
 
-import org.junit.Rule;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
-
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
+import org.junit.Rule;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnit;
+import org.mockito.junit.MockitoRule;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.jupiter.api.BeforeEach;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 public class CaseTypeEntityACLValidatorImplTest {
 
@@ -34,6 +35,7 @@ public class CaseTypeEntityACLValidatorImplTest {
 
     @BeforeEach
     public void setup() {
+        openMocks(this);
 
         validator = new CaseTypeEntityACLValidatorImpl();
 

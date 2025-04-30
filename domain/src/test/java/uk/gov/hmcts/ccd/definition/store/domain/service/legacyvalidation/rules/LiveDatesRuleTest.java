@@ -1,8 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.rules;
 
 
-import org.junit.jupiter.api.Test;
-
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
@@ -10,9 +8,11 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import java.time.LocalDate;
 import java.util.Date;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
-import org.junit.jupiter.api.BeforeEach;
 
 public class LiveDatesRuleTest {
 
@@ -34,7 +34,7 @@ public class LiveDatesRuleTest {
         String result = rule.validate(caseTypeEntity);
 
         // Then - assert that validation passes
-        assertNull("Expected validation to pass", result);
+        assertNull(result, "Expected validation to pass");
     }
 
     @Test

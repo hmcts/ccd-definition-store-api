@@ -79,8 +79,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -289,20 +289,19 @@ public class ImportServiceImplTest {
             accessTypeRolesService,
             applicationParams);
 
-        given(jurisdiction.getReference()).willReturn(JURISDICTION_NAME);
+        lenient().doReturn(JURISDICTION_NAME).when(jurisdiction).getReference();
 
         final IdamProperties idamProperties = new IdamProperties();
         idamProperties.setId("445");
         idamProperties.setEmail("user@hmcts.net");
 
-        doReturn(idamProperties).when(idamProfileClient).getLoggedInUserDetails();
-
-        when(applicationParams.isWelshTranslationEnabled()).thenReturn(true);
-        when(applicationParams.isCaseGroupAccessFilteringEnabled()).thenReturn(true);
+        lenient().doReturn(idamProperties).when(idamProfileClient).getLoggedInUserDetails();
+        lenient().when(applicationParams.isWelshTranslationEnabled()).thenReturn(true);
+        lenient().when(applicationParams.isCaseGroupAccessFilteringEnabled()).thenReturn(true);
 
         AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
         accessProfileEntity.setReference(ACCESS_PROFILE_1);
-        given(accessProfileRepository.findAll()).willReturn(Arrays.asList(accessProfileEntity));
+        lenient().doReturn(Arrays.asList(accessProfileEntity)).when(accessProfileRepository).findAll();
     }
 
     @Test

@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles;
 
-import com.google.common.collect.Lists;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.RoleToAccessProfilesRepository;
@@ -18,6 +11,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.google.common.collect.Lists;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -48,8 +48,7 @@ class RoleToAccessProfilesServiceImplTest {
     }
 
     @Test
-    @DisplayName(
-        "Should get Role To Access Profile for the passed case type references")
+    @DisplayName("Should get Role To Access Profile for the passed case type references")
     void shouldGetRoleToAccessProfilesForValidCaseTypeId() {
         List<RoleToAccessProfilesEntity> roleToAccessProfileEntities = Lists.newArrayList();
         roleToAccessProfileEntities.add(createRoleToAccessProfile("TestRole1", "judge"));
@@ -61,30 +60,27 @@ class RoleToAccessProfilesServiceImplTest {
     }
 
     @Test
-    @DisplayName(
-        "Should get Role To Access Profile for the passed role name")
+    @DisplayName("Should get Role To Access Profile for the passed role name")
     void shouldGetRoleToAccessProfilesForValidRoleName() {
         List<RoleToAccessProfilesEntity> roleToAccessProfileEntities = Lists.newArrayList();
         roleToAccessProfileEntities.add(createRoleToAccessProfile("TestRole1", "judge"));
         roleToAccessProfileEntities.add(createRoleToAccessProfile("TestRole2", "solicitor"));
         doReturn(roleToAccessProfileEntities).when(repository).findByRoleName(anyString());
         List<RoleToAccessProfiles> valuesReturned = classUnderTest.findByRoleName("Divorce");
-       assertEquals(2, valuesReturned.size());
+        assertEquals(2, valuesReturned.size());
     }
 
     @Test
-    @DisplayName(
-        "Should get empty Role To Access Profiles list for the passed empty case type references")
+    @DisplayName("Should get empty Role To Access Profiles list for the passed empty case type references")
     void shouldGetEmptyRoleToAccessProfilesListForEmptyCaseType() {
         List<RoleToAccessProfilesEntity> roleToAccessProfileEntities = Lists.newArrayList();
         doReturn(roleToAccessProfileEntities).when(repository).findByCaseTypeReferenceIn(anyList());
         List<RoleToAccessProfiles> valuesReturned = classUnderTest.findByCaseTypeReferences(Lists.newArrayList());
-       assertEquals(0, valuesReturned.size());
+        assertEquals(0, valuesReturned.size());
     }
 
     @Test
-    @DisplayName(
-        "Should save the passed entities")
+    @DisplayName("Should save the passed entities")
     void shouldSaveEntity() {
         RoleToAccessProfilesEntity roleToAccessProfilesEntity = mock(RoleToAccessProfilesEntity.class);
         List<RoleToAccessProfilesEntity> entitiesToSave = new ArrayList<>();
@@ -94,8 +90,7 @@ class RoleToAccessProfilesServiceImplTest {
     }
 
     @Test
-    @DisplayName(
-        "Should get Case Role To Access Profile for the passed case type")
+    @DisplayName("Should get Case Role To Access Profile for the passed case type")
     void shouldGetCaseRolesForAPassedCaseType() {
         var version = 333333;
         var caseType = "caseType";
@@ -107,12 +102,11 @@ class RoleToAccessProfilesServiceImplTest {
         doReturn(roleToAccessProfileEntities).when(repository).findRoleToAccessProfilesEntityByCaseType(caseType);
 
         List<RoleAssignment> valuesReturned = classUnderTest.findRoleAssignmentsByCaseTypeId(caseType);
-       assertEquals(2, valuesReturned.size());
+        assertEquals(2, valuesReturned.size());
     }
 
     @Test
-    @DisplayName(
-        "Should get an empty Case Role To Access Profile for the passed case type")
+    @DisplayName("Should get an empty Case Role To Access Profile for the passed case type")
     void shouldGetAnEmptyCaseRolesForAPassedCaseType() {
         var version = 333333;
         var caseType = "caseType";
@@ -120,9 +114,8 @@ class RoleToAccessProfilesServiceImplTest {
         doReturn(Lists.newArrayList()).when(repository).findRoleToAccessProfilesEntityByCaseType(caseType);
 
         List<RoleAssignment> valuesReturned = classUnderTest.findRoleAssignmentsByCaseTypeId(caseType);
-       assertEquals(0, valuesReturned.size());
+        assertEquals(0, valuesReturned.size());
     }
-
 
     private RoleToAccessProfilesEntity createRoleToAccessProfile(String roleName, String accessProfiles) {
         RoleToAccessProfilesEntity roleToAccessProfilesEntity = new RoleToAccessProfilesEntity();

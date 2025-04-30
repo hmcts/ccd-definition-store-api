@@ -1,14 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.integration;
 
-import java.io.IOException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchBaseTest;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -22,6 +13,16 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
+
+import java.io.IOException;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.ApplicationEventPublisher;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -46,7 +47,7 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     @Autowired
     private CaseMappingGenerator mappingGenerator;
 
-    @MockitoBean
+    @MockBean
     private HighLevelCCDElasticClient client;
 
     @Mock

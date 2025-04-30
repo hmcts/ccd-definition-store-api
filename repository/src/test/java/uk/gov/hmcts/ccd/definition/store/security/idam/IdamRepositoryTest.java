@@ -1,19 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.security.idam;
 
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
-import feign.FeignException;
-import feign.Request;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.reform.authorisation.exceptions.InvalidTokenException;
 import uk.gov.hmcts.reform.authorisation.exceptions.ServiceException;
 import uk.gov.hmcts.reform.idam.client.IdamClient;
@@ -22,6 +8,20 @@ import uk.gov.hmcts.reform.idam.client.models.UserInfo;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import feign.FeignException;
+import feign.Request;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;

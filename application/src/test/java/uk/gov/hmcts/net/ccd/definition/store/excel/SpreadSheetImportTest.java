@@ -1,21 +1,5 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import org.apache.http.HttpStatus;
-import org.hamcrest.Matcher;
-import org.json.JSONException;
-import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.Translation;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
@@ -33,6 +17,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
+import org.apache.http.HttpStatus;
+import org.hamcrest.Matcher;
+import org.json.JSONException;
+import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
+
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
@@ -44,10 +44,10 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubForPutDictionaryReturns200;
 import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubForPutDictionaryReturns4XX;
@@ -362,12 +362,6 @@ public class SpreadSheetImportTest extends BaseTest {
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         JSONAssert.assertEquals(removeGuids(expected), removeGuids(contentAsString), JSONCompareMode.LENIENT);
-    }
-
-    private String formatJsonString(String string) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writerWithDefaultPrettyPrinter()
-            .writeValueAsString(objectMapper.readValue(string, Object.class));
     }
 
     private String removeGuids(String response) throws IOException {
