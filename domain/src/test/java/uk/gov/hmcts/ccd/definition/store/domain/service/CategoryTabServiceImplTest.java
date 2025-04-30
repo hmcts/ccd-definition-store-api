@@ -23,8 +23,8 @@ public class CategoryTabServiceImplTest {
     private CategoryTabServiceImpl categoryTabServiceImpl;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
         this.categoryTabServiceImpl = new CategoryTabServiceImpl(categoryTabRepository);
     }
 

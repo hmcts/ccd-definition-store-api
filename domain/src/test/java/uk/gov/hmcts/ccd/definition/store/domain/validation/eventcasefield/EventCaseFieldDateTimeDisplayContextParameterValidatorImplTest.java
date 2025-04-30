@@ -16,7 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
@@ -35,8 +35,8 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
     private EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
         validator = new EventCaseFieldDateTimeDisplayContextParameterValidatorImpl(
             displayContextParameterValidatorFactory);
         when(displayContextParameterValidatorFactory.getValidator(Mockito.any()))

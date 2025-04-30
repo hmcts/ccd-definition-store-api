@@ -30,7 +30,7 @@ class ProxyControllerTest {
     private ProxyService proxyService;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         this.controller = new ProxyController(proxyService);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
             .setControllerAdvice(new ControllerExceptionHandler())

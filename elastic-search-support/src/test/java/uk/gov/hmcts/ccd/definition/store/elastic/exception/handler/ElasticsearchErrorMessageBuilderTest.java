@@ -8,7 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticsearchError;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -19,7 +19,7 @@ class ElasticsearchErrorMessageBuilderTest {
     private CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         messageBuilder = new TestElasticsearchErrorMessageBuilder(".*REASON.*", "MESSAGE");
     }
 

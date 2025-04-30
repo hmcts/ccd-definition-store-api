@@ -1,8 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.mockito.MockitoAnnotations;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
@@ -11,16 +12,17 @@ import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.BeforeEach;
 
 public class DisplayGroupColumnNumberValidatorTest {
 
     DisplayGroupColumnNumberValidator testObj;
     DisplayGroupCaseFieldEntity entity;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         testObj = new DisplayGroupColumnNumberValidator();
         entity = new DisplayGroupCaseFieldEntity();
     }

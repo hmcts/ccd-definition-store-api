@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype;
 
-import org.junit.Before;
-import org.junit.Test;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -12,9 +11,12 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class EventComplexTypePublishValidatorImplTest {
 
@@ -27,7 +29,7 @@ public class EventComplexTypePublishValidatorImplTest {
     final EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
         new EventCaseFieldEntityValidationContext(eventId, allEventCaseFieldEntitiesForEventCase, caseRoles);
 
-    @Before
+    @BeforeEach
     public void setUp() {
         eventComplexTypeEntity.setReference("reference");
         caseRoles.add("ROLE1");

@@ -1,7 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,9 +17,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @DisplayName("CaseType Entity Validator Implementation Tests")
@@ -34,9 +35,9 @@ public class CaseTypeEntityStateValidatorImplTest {
     @InjectMocks
     private CaseTypeEntityStateValidatorImpl classUnderTest;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new CaseTypeEntityStateValidatorImpl(Arrays.asList(crudValidatorImpl, userRoleValidatorImpl));
         caseType = new CaseTypeEntity();
         caseType.setReference("Case Type I");

@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 
@@ -42,7 +42,7 @@ class GenericLayoutEntityElementPathValidatorImplTest {
     private CaseFieldEntity caseField;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         validator = new GenericLayoutEntityElementPathValidatorImpl(new CaseFieldEntityUtil());
 
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();

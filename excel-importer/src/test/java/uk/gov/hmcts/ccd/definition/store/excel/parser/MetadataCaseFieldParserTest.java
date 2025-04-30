@@ -15,11 +15,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Matchers.anyListOf;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 class MetadataCaseFieldParserTest {
 
@@ -32,8 +32,8 @@ class MetadataCaseFieldParserTest {
     private Map<MetadataField, MetadataCaseFieldEntityFactory> registry;
 
     @BeforeEach
-    void setUp() {
-        initMocks(this);
+    public void setUp() {
+        openMocks(this);
         metadataCaseFieldParser = new MetadataCaseFieldParser(parseContext, registry);
     }
 
@@ -54,7 +54,7 @@ class MetadataCaseFieldParserTest {
             () -> assertThat(caseFields.iterator().next(), equalTo(caseField)),
             () -> verify(registry).get(MetadataField.STATE),
             () -> verify(factory).createCaseFieldEntity(parseContext, caseTypeEntity),
-            () -> verify(parseContext).registerMetadataFields(anyListOf(CaseFieldEntity.class))
+            () -> verify(parseContext).registerMetadataFields(anyList())
         );
 
     }

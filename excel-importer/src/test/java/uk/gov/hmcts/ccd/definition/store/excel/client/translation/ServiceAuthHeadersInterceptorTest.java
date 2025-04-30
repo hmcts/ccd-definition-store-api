@@ -23,8 +23,8 @@ class ServiceAuthHeadersInterceptorTest {
     private RequestTemplate template;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
         template = new RequestTemplate();
     }
 

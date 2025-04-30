@@ -1,8 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.TestValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
@@ -18,13 +19,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.BeforeEach;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class FieldTypeServiceImplTest {
 
@@ -35,7 +37,7 @@ public class FieldTypeServiceImplTest {
     private FieldTypeServiceImpl fieldTypeService;
     private FieldTypeValidationContextFactory validationContextFactory;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         repository = mock(FieldTypeRepository.class);
         doReturn(Optional.of(0)).when(repository).findLastVersion(Mockito.anyString());
@@ -136,7 +138,7 @@ public class FieldTypeServiceImplTest {
             assertEquals("Invalid type", ex.getValidationResult().getValidationErrors().get(0).getDefaultMessage());
         }
 
-        verifyZeroInteractions(repository);
+        verifyNoMoreInteractions(repository);
     }
 
     private ValidationResult validationResultWithError(ValidationError validationError) {

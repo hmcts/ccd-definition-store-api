@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.searchparty;
 
 import com.google.common.collect.Lists;
-import org.junit.Assert;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,6 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.SearchParty;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
@@ -43,7 +44,7 @@ class SearchPartyServiceImplTest {
         searchPartyEntities.add(createSearchParty());
         doReturn(searchPartyEntities).when(repository).findBySearchPartyName("name");
         List<SearchParty> valuesReturned = sut.findSearchPartyName("name");
-        Assert.assertEquals(2, valuesReturned.size());
+        assertEquals(2, valuesReturned.size());
     }
 
     @Test

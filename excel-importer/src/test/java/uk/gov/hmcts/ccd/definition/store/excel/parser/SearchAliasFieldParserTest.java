@@ -57,8 +57,8 @@ class SearchAliasFieldParserTest {
     private SearchAliasFieldParser parser;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
         parser = new SearchAliasFieldParser(parseContext);
     }
 

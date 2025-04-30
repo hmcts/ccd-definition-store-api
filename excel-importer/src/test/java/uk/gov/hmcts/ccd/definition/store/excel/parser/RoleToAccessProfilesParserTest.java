@@ -30,7 +30,7 @@ class RoleToAccessProfilesParserTest extends ParserTestBase {
     private RoleToAccessProfilesParser underTest;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         init();
         parseContext = mock(ParseContext.class);
         underTest = new RoleToAccessProfilesParser();

@@ -23,8 +23,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 
-import javax.persistence.OptimisticLockException;
-import javax.persistence.PersistenceException;
+import jakarta.persistence.OptimisticLockException;
+import jakarta.persistence.PersistenceException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Base64;
@@ -71,8 +71,8 @@ class UserRoleControllerTest {
     private AccessProfileService accessProfileService;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
             .setControllerAdvice(new ControllerExceptionHandler())
             .build();

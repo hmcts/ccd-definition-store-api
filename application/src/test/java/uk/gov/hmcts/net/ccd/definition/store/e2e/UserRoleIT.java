@@ -3,8 +3,8 @@
 //
 //import com.fasterxml.jackson.databind.ObjectMapper;
 //import org.exparity.hamcrest.date.DateMatchers;
-//import org.junit.Before;
-//import org.junit.Test;
+//
+//import org.junit.jupiter.api.Test;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.http.MediaType;
 //import org.springframework.jdbc.core.JdbcTemplate;
@@ -27,7 +27,7 @@
 //import static org.hamcrest.CoreMatchers.notNullValue;
 //import static org.hamcrest.CoreMatchers.nullValue;
 //import static org.hamcrest.core.Is.is;
-//import static org.junit.Assert.assertThat;
+//import static org.hamcrest.MatcherAssert.assertThat;
 //import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 //import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 //import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;

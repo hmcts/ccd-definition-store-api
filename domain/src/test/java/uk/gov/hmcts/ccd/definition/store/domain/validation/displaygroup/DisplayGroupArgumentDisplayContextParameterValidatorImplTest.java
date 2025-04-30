@@ -29,7 +29,7 @@ class DisplayGroupArgumentDisplayContextParameterValidatorImplTest {
     private DisplayContextParameterValidator displayContextParameterValidator;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         MockitoAnnotations.openMocks(this);
         validator = new DisplayGroupArgumentDisplayContextParameterValidatorImpl(
             displayContextParameterValidatorFactory);

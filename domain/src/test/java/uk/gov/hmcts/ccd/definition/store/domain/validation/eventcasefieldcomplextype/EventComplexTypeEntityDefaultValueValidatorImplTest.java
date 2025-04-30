@@ -1,7 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield.EventCaseFieldEntityValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
@@ -10,9 +11,11 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventComplexTypeEntit
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
+
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefieldcomplextype.EventComplexTypeEntityDefaultValueValidatorImpl.ORGANISATION_POLICY_ROLE;
 
 public class EventComplexTypeEntityDefaultValueValidatorImplTest {
@@ -30,7 +33,7 @@ public class EventComplexTypeEntityDefaultValueValidatorImplTest {
     final EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
         new EventCaseFieldEntityValidationContext(eventId, allEventCaseFieldEntitiesForEventCase, caseRoles);
 
-    @Before
+    @BeforeEach
     public void setUp() {
         eventCaseFieldEntity.setReference(ORGANISATION_POLICY_ROLE);
         caseRoles.add(ROLE1);

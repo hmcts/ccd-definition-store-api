@@ -1,6 +1,6 @@
 package uk.gov.hmcts.net.ccd.definition.store;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -16,7 +16,7 @@ public class SwaggerGeneratorTest extends BaseTest {
     @DisplayName("Generate swagger documentation for all APIs")
     @Test
     public void generateDocs() throws Exception {
-        ResultActions perform = mockMvc.perform(get("/v2/api-docs"));
+        ResultActions perform = mockMvc.perform(get("/v3/api-docs"));
         byte[] specs = perform
             .andExpect(status().isOk())
             .andReturn()

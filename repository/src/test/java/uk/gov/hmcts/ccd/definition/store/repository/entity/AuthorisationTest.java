@@ -13,7 +13,7 @@ class AuthorisationTest {
     Authorisation other;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         classUnderTest = new ComplexFieldACLEntity();
         classUnderTest.setCreate(false);
         classUnderTest.setRead(false);

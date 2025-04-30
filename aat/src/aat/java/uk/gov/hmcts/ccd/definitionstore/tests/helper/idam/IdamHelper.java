@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.helper.idam;
 
 import feign.Feign;
-import feign.codec.Decoder;
 import feign.jackson.JacksonDecoder;
 import feign.jackson.JacksonEncoder;
 
@@ -16,7 +15,7 @@ public class IdamHelper {
     private static final String BASIC = "Basic ";
 
     private final Map<String, AuthenticatedUser> users = new HashMap<>();
-    private final Decoder.Default defaultDecoder = new Decoder.Default();
+    // private final Decoder.Default defaultDecoder = new Decoder.Default(); // TODO remove
 
     private final IdamApi idamApi;
     private final OAuth2 oauth2;

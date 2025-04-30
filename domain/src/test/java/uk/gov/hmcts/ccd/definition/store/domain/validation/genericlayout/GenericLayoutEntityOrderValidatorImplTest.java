@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("Generic Layout Entity Order Validator Implementation Tests")
@@ -36,7 +36,7 @@ class GenericLayoutEntityOrderValidatorImplTest {
     private CaseFieldEntity caseField;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         validator = new GenericLayoutEntityOrderValidatorImpl();
 
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();

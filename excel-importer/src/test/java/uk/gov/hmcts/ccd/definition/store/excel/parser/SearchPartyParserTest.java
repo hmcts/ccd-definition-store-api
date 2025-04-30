@@ -4,8 +4,9 @@ import com.google.common.collect.Sets;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -22,7 +23,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 class SearchPartyParserTest extends ParserTestBase {
 
     private static final String CASE_TYPE_ID_1 = "TestCaseTypeID_1";
@@ -41,7 +42,7 @@ class SearchPartyParserTest extends ParserTestBase {
     private SearchPartyParser parser;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         init();
         parseContext = mock(ParseContext.class);
         parser = new SearchPartyParser();

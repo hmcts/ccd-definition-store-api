@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.NoSuchElementException;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -24,8 +24,8 @@ public class DisplayContextParameterValidatorFactoryTest {
     private DateTimeFormatParser dateTimeFormatParser;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

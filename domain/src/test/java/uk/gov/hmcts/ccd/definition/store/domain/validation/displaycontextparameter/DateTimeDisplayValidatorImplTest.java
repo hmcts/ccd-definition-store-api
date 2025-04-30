@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.datetime.InvalidDateTimeFormatEx
 import uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
@@ -24,8 +24,8 @@ public class DateTimeDisplayValidatorImplTest {
     private DateTimeFormatParser dateTimeFormatParser;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
         validator = new DateTimeDisplayValidatorImpl(dateTimeFormatParser);
     }
 
