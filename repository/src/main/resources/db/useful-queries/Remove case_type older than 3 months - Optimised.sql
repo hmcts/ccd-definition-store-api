@@ -8,6 +8,19 @@ BEGIN;
 -- - public.case_field
 -- =========================================
 
+-- ==========================================
+-- - The following tables also need cleaning up
+-- - to be done later
+-- -      search_alias_field
+-- -      field_type_list_item
+-- -      complex_field
+-- -      event
+-- -      role_to_access_profiles
+-- -      search_criteria
+-- -      search_party
+-- -      category
+-- ==========================================
+
 -- These queries are designed to be run in a controlled environment where the data integrity and relationships are well understood.
 -- Always ensure to backup your data before running such delete operations.
 
