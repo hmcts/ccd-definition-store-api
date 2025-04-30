@@ -11,42 +11,42 @@ BEGIN;
 -- These queries are designed to be run in a controlled environment where the data integrity and relationships are well understood.
 -- Always ensure to backup your data before running such delete operations.
 
-WITH case_type_ids_to_remove AS (
-    SELECT ct.id
-    FROM case_type ct
-    INNER JOIN (
-        SELECT reference, MAX(version) AS max_version
-        FROM case_type
-        GROUP BY reference
-    ) grouped_ct
-    ON ct.reference = grouped_ct.reference
-    WHERE ct.version != grouped_ct.max_version
-      AND ct.created_at <= NOW() - INTERVAL '3 months'
-),
-valid_field_type_ids AS (
-    SELECT id
-    FROM field_type
-    WHERE reference IN ('Text', 'Number', 'DateTime')
-      AND jurisdiction_id IS NULL
-    ORDER BY version
-    LIMIT 1
-),
-removable_case_fields AS (
-    SELECT id, case_type_id
-    FROM case_field
-    WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-      AND field_type_id NOT IN (SELECT id FROM valid_field_type_ids)
-),
-removable_events AS (
-    SELECT id
-    FROM event
-    WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-),
-removable_states AS (
-    SELECT id
-    FROM state
-    WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-)
+CREATE TEMP TABLE case_type_ids_to_remove AS
+SELECT ct.id
+FROM case_type ct
+INNER JOIN (
+    SELECT reference, MAX(version) AS max_version
+    FROM case_type
+    GROUP BY reference
+) grouped_ct
+ON ct.reference = grouped_ct.reference
+WHERE ct.version != grouped_ct.max_version
+  AND ct.created_at <= NOW() - INTERVAL '3 months';
+
+-- Create a temporary table (valid_field_type_ids) to hold the IDs of field types that are static (base types) and should not be deleted.
+CREATE TEMP TABLE valid_field_type_ids AS
+SELECT id
+FROM field_type
+WHERE jurisdiction_id IS NULL;
+
+-- Create a temporary table (removable_case_fields) to hold the IDs of case fields that are not static (base types)
+CREATE TEMP TABLE removable_case_fields AS
+SELECT id, case_type_id
+FROM case_field
+WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+  AND field_type_id NOT IN (SELECT id FROM valid_field_type_ids);
+
+-- Create a temporary table (removable_events) to hold the IDs of events that are associated with the case types to be removed
+CREATE TEMP TABLE removable_events AS
+SELECT id
+FROM event
+	WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
+
+-- Create a temporary table (removable_states) to hold the IDs of states that are associated with the case types to be removed
+CREATE TEMP TABLE removable_states AS
+SELECT id
+FROM state
+	WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
 
 -- Case field related deletes
 DELETE FROM case_field_acl WHERE case_field_id IN (SELECT id FROM removable_case_fields);
@@ -58,6 +58,23 @@ WHERE event_case_field_id IN (
     JOIN removable_case_fields rcf ON ecf.case_field_id = rcf.id
     WHERE ecf.event_id IN (SELECT id FROM removable_events)
 );
+
+--Not Sure if this is required yet
+DELETE FROM event_case_field_complex_type
+USING event_case_field, case_field
+WHERE event_case_field_complex_type.event_case_field_id  = event_case_field.id
+  AND event_case_field.case_field_id  = case_field.id
+  AND event_case_field.event_id IN (SELECT id FROM removable_events)
+  AND case_field.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+  AND field_type_id NOT IN (SELECT id FROM valid_field_type_ids);
+
+--Not Sure if this is required yet
+DELETE FROM challenge_question
+USING case_type
+WHERE challenge_question.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+AND case_type.id = challenge_question.case_type_id
+  AND case_type.jurisdiction_id IS NOT NULL;
+
 DELETE FROM event_case_field WHERE case_field_id IN (SELECT id FROM removable_case_fields);
 DELETE FROM complex_field_acl WHERE case_field_id IN (SELECT id FROM removable_case_fields);
 DELETE FROM search_result_case_field WHERE case_field_id IN (SELECT id FROM removable_case_fields);
