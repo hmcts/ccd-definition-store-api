@@ -123,7 +123,8 @@ public enum ColumnName {
     GROUP_ROLE_NAME("GroupRoleName"),
     CASE_ASSIGNED_ROLE_FIELD("CaseAssignedRoleField"),
     GROUP_ACCESS_ENABLED("GroupAccessEnabled"),
-    CASE_GROUP_ID_TEMPLATE("CaseAccessGroupIDTemplate");
+    CASE_GROUP_ID_TEMPLATE("CaseAccessGroupIDTemplate"),
+    NULLIFY_BY_DEFAULT("NullifyByDefault");
 
     private final String name;
     private final String[] aliases;

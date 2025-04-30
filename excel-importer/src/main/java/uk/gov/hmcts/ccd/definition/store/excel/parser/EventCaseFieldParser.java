@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
@@ -52,7 +53,12 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
         validateDisplayContextForPublish(eventCaseFieldDefinition, eventCaseField);
         eventCaseField.setPublish(eventCaseFieldDefinition.getBooleanOrDefault(ColumnName.PUBLISH, false));
         eventCaseField.setPublishAs(eventCaseFieldDefinition.getString(ColumnName.PUBLISH_AS));
-        eventCaseField.setDefaultValue(eventCaseFieldDefinition.getString(ColumnName.DEFAULT_VALUE));
+
+        String defaultValue = eventCaseFieldDefinition.getString(ColumnName.DEFAULT_VALUE);
+        boolean nullifyByDefault = eventCaseFieldDefinition.getBooleanOrDefault(ColumnName.NULLIFY_BY_DEFAULT, false);
+        validateNullifyByDefaultAndDefaultValue(defaultValue, nullifyByDefault, eventCaseFieldDefinition);
+        eventCaseField.setDefaultValue(defaultValue);
+        eventCaseField.setNullifyByDefault(nullifyByDefault);
 
         this.entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(
             eventCaseField, eventCaseFieldDefinition);
@@ -75,6 +81,15 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
                     + "Please only use the Publish overrides in EventToComplexTypes.",
                 eventCaseFieldDefinition.getString(ColumnName.CASE_FIELD_ID),
                 eventCaseFieldDefinition.getString(ColumnName.CASE_EVENT_ID)));
+        }
+    }
+
+    private void validateNullifyByDefaultAndDefaultValue(String defaultValue,
+                                                         boolean  nullifyByDefault,
+                                                         DefinitionDataItem eventCaseFieldDefinition) {
+        if (nullifyByDefault && StringUtils.isNotEmpty(defaultValue)) {
+            throw new MapperException("NullifyByDefault cannot be set to Yes if DefaultValue "
+                + "has a value in CaseEventToFields");
         }
     }
 }

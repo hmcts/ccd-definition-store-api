@@ -9,7 +9,7 @@ buildscript {
 
 plugins {
     id 'application'
-    id "org.springframework.boot" version '2.7.12'
+    id "org.springframework.boot" version '2.7.18'
     id 'io.spring.dependency-management' version '1.1.5'
     id 'se.patrikerdes.use-latest-versions' version '0.2.7'
     id 'com.github.ben-manes.versions' version '0.51.0'
@@ -45,7 +45,9 @@ ext['snakeyaml.version'] = '2.0'
 ext['postgresql.version'] = '42.7.3'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.17.1'
-
+//overriding for easy access to the version for FT testing
+ext['beftaFwVersion'] = '9.2.3'
+ext['ccdTestDefinitionVersion'] = '7.25.1'
 // end
 
 ext {
@@ -89,6 +91,7 @@ allprojects {
             url  "https://jitpack.io"
         }
     }
+
 
     apply plugin: 'java'
 
@@ -144,8 +147,10 @@ allprojects {
         implementation "org.glassfish:jakarta.el:4.0.1"
 
         // CVE-2021-42550
-        implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.10'
-        implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.10'
+        implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.13'
+        implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.13'
+
+        implementation group: 'org.json', name: 'json', version: '20240303'
 
         testImplementation "io.rest-assured:xml-path:${restAssuredVersion}"
         testImplementation "io.rest-assured:json-path:${restAssuredVersion}"
@@ -184,7 +189,7 @@ allprojects {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
@@ -262,11 +267,11 @@ subprojects { subproject ->
             exclude group: 'com.google.guava', module: 'guava'
         }
 
-        compileOnly 'org.projectlombok:lombok:1.18.28'
-        annotationProcessor 'org.projectlombok:lombok:1.18.28'
+        compileOnly 'org.projectlombok:lombok:1.18.34'
+        annotationProcessor 'org.projectlombok:lombok:1.18.34'
 
-        testCompileOnly 'org.projectlombok:lombok:1.18.28'
-        testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
+        testCompileOnly 'org.projectlombok:lombok:1.18.34'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.34'
 
         implementation "org.springframework.security:spring-security-web"
         implementation "org.springframework.security:spring-security-config"
@@ -301,7 +306,7 @@ subprojects { subproject ->
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testImplementation 'org.apiguardian:apiguardian-api:1.0.0'
         testImplementation "org.postgresql:postgresql:42.7.3"
-        testImplementation "org.testcontainers:postgresql:1.17.2"
+        testImplementation "org.testcontainers:postgresql:1.20.2"
         testImplementation "org.hamcrest:hamcrest-core:${hamcrestVersion}"
         testImplementation "org.hamcrest:hamcrest-library:${hamcrestVersion}"
         testImplementation "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}"
@@ -332,9 +337,9 @@ subprojects { subproject ->
         testImplementation group: 'org.powermock', name: 'powermock-api-mockito2', version: powermockVersion
         testImplementation group: 'org.powermock', name: 'powermock-module-junit4', version: powermockVersion
 
-        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: '7.22.3'
+        testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: ccdTestDefinitionVersion
 
-        testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: '9.0.2'
+        testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
 
         testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
 
@@ -373,7 +378,7 @@ subprojects { subproject ->
                 logger.lifecycle("Checking coverage results: ${report}")
 
                 def parser = new XmlParser()
-                parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
+                parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
                 parser.setFeature("http://apache.org/xml/features/disallow-doctype-decl", false)
                 def results = parser.parse(report)
 

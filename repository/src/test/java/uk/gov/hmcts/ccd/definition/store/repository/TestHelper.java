@@ -101,7 +101,8 @@ public class TestHelper {
                                                      DisplayContext displayContext,
                                                      String showCondition,
                                                      Boolean ssco,
-                                                     String defaultValue) {
+                                                     String defaultValue,
+                                                     Boolean nullifyByDefault) {
         EventCaseFieldEntity ecf = new EventCaseFieldEntity();
         ecf.setCaseField(caseField);
         ecf.setDisplayContext(displayContext);
@@ -109,6 +110,7 @@ public class TestHelper {
         ecf.setShowSummaryChangeOption(ssco);
         ecf.setPublish(false);
         ecf.setDefaultValue(defaultValue);
+        ecf.setNullifyByDefault(nullifyByDefault);
         return ecf;
     }
 

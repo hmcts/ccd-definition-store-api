@@ -10,17 +10,18 @@ import java.util.Optional;
 public interface CaseTypeLiteRepository extends DefinitionRepository<CaseTypeLiteEntity, Integer> {
 
     @Query(value = "SELECT "
-        + "ct.id,ct.description,ct.jurisdiction_id,ct.name,ct.reference AS reference,ct.version "
-        + "FROM  case_type ct "
-        + "INNER JOIN jurisdiction j "
-        + "ON ct.jurisdiction_id = j.id "
+        + "ct.id, ct.description, ct.jurisdiction_id, ct.name, ct.reference AS reference, ct.version "
+        + "FROM case_type ct "
         + "INNER JOIN ("
-        + "SELECT reference,MAX(version) AS max_version "
-        + "FROM case_type "
-        + "GROUP BY reference) max_versions "
+        + "    SELECT ct.reference, MAX(ct.version) AS max_version "
+        + "    FROM case_type ct "
+        + "    JOIN jurisdiction j "
+        + "    ON j.id = ct.jurisdiction_id "
+        + "    WHERE j.reference = :jurisdictionReference "
+        + "    GROUP BY ct.reference"
+        + ") max_versions "
         + "ON ct.reference = max_versions.reference "
-        + "AND ct.version = max_versions.max_version "
-        + "WHERE j.reference = :jurisdictionReference", nativeQuery = true)
+        + "AND ct.version = max_versions.max_version", nativeQuery = true)
     List<CaseTypeLiteEntity> findByJurisdictionId(@Param("jurisdictionReference") String jurisdiction);
 
     @Query("select c from CaseTypeLiteEntity c where c.reference=:caseTypeReference "

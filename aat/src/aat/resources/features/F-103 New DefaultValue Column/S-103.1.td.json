@@ -53,6 +53,7 @@
               "publish": "[[ANYTHING_PRESENT]]",
               "publish_as": null,
               "default_value": null,
+              "nullify_by_default": true,
               "case_fields_complex": "[[ANYTHING_PRESENT]]"
             },
             {
@@ -68,6 +69,7 @@
               "publish": false,
               "publish_as": null,
               "default_value": null,
+              "nullify_by_default": false,
               "case_fields_complex": []
             }
           ],
@@ -128,6 +130,7 @@
               "publish": "[[ANYTHING_PRESENT]]",
               "publish_as": null,
               "default_value": null,
+              "nullify_by_default": false,
               "case_fields_complex": []
             },
             {
@@ -143,6 +146,7 @@
               "publish": "[[ANYTHING_PRESENT]]",
               "publish_as": null,
               "default_value": null,
+              "nullify_by_default": false,
               "case_fields_complex": "[[ANYTHING_PRESENT]]"
             }
           ],

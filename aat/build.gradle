@@ -87,6 +87,8 @@ task smoke(type: Test) {
     outputs.upToDateWhen { false }
 }
 
+def tags = (findProperty('tags') == null) ? 'not @Ignore' : '(' + findProperty('tags') + ') and not @Ignore'
+
 task functional(type: Test) {
     description = 'Executes functional tests against the CCD Definition Store Instance just deployed'
     setTestClassesDirs(sourceSets.aat.output.classesDirs)
@@ -112,7 +114,7 @@ task functional(type: Test) {
             args = [
                      '--threads', '1', // current definition-store tests do not support multiple threads
                      '--plugin', "json:${rootDir}/target/cucumber.json",
-                     '--tags', 'not @Ignore',
+                     '--tags', "${tags}",
                      '--glue', 'uk.gov.hmcts.befta.player', 'src/aat/resources/features'
                    ]
             jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]

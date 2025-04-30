@@ -1,0 +1,32 @@
+{
+  "_guid_": "S-112.1",
+  "_extends_": "Import_Base_data",
+  "title": "Import Definition file  with correctly configured NullifyByDefault in the CaseEventToFields tab",
+  "specs": [
+    "an active profile in CCD and with CCD-import role",
+    "contains a definition file that contains NullifyByDefault new field and NullifyByDefault is set to Yes",
+    "has the 200 OK code"
+  ],
+
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "localFilePath": "build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_201_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Case Definition data successfully imported"
+    }
+  }
+}

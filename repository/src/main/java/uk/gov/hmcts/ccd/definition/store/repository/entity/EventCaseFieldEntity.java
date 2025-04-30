@@ -85,6 +85,9 @@ public class EventCaseFieldEntity implements Serializable {
     @Column(name = "default_value")
     private String defaultValue;
 
+    @Column(name = "nullify_by_default")
+    private Boolean nullifyByDefault;
+
     public DisplayContext getDisplayContext() {
         return displayContext;
     }
@@ -200,5 +203,13 @@ public class EventCaseFieldEntity implements Serializable {
 
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
+    }
+
+    public Boolean getNullifyByDefault() {
+        return nullifyByDefault;
+    }
+
+    public void setNullifyByDefault(Boolean nullifyByDefault) {
+        this.nullifyByDefault = nullifyByDefault;
     }
 }

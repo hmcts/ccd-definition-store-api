@@ -115,7 +115,7 @@
 					"fixed_list_items" : [ {
 						"code" : "CaseCreated",
 						"label" : "Create case",
-						"order" : null
+						"order" : 1
 					} ],
 					"complex_fields" : [ ],
 					"collection_field_type" : null

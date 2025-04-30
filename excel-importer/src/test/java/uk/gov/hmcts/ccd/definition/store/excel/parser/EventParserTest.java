@@ -223,7 +223,8 @@ public class EventParserTest extends ParserTestBase {
         assertThat(entity.getPreStates(), empty());
 
         assertLogged(listAppender,
-            "Parsing event case fields for case type Some Case Type and event event id: No event case fields found");
+            "Parsing event case fields for case type Some Case Type and event event id: No event case fields"
+                + " found");
     }
 
     @Test
@@ -254,6 +255,18 @@ public class EventParserTest extends ParserTestBase {
     @Test
     public void shouldParseEventWithEventEnablingCondition() {
         final String validEventEnablingCondition = "FieldA!=\"\" AND FieldB=\"I'm innocent\"";
+        item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
+        definitionSheet.addDataItem(item);
+        final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
+        assertThat(eventEntities.size(), is(1));
+        entity = new ArrayList<>(eventEntities).get(0);
+        assertEvent(entity);
+    }
+
+    @Test
+    public void shouldParseEventWithChainedEventEnablingCondition() {
+        final String validEventEnablingCondition = "(FieldA!=\"\" AND FieldB=\"I'm innocent\") "
+            + "OR (FieldC=\"I'm guilty\")";
         item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
         definitionSheet.addDataItem(item);
         final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);

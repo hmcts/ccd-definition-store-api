@@ -22,7 +22,7 @@
         "live_from": "2017-01-01T00:00:00.000+0000",
         "live_until": null
       },
-      "name": "FT-DateTime Fomratting",
+      "name": "FT-DateTime Formatting",
       "jurisdiction": {
         "id": "BEFTA_MASTER",
         "name": "BEFTA Master",
@@ -427,19 +427,19 @@
             "type": "FixedList",
             "fixed_list_items": [
               {
-                "code": "DONE",
-                "label": "Done",
-                "order": null
+                "code": "TODO",
+                "label": "To do",
+                "order": 1
               },
               {
                 "code": "IN_PROGRESS",
                 "label": "In progress",
-                "order": null
+                "order": 2
               },
               {
-                "code": "TODO",
-                "label": "To do",
-                "order": null
+                "code": "DONE",
+                "label": "Done",
+                "order": 3
               }
             ]
           },

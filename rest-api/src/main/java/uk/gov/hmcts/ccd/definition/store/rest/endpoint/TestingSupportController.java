@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
@@ -27,6 +28,7 @@ import java.util.List;
 @RestController
 @Api(value = "/api/testing-support")
 @RequestMapping(value = "/api/testing-support")
+@Slf4j
 public class TestingSupportController {
 
     private final SessionFactory sessionFactory;
@@ -50,6 +52,8 @@ public class TestingSupportController {
         @ApiParam(value = "Change ID", required = true) @PathVariable("changeId") BigInteger changeId,
         @ApiParam(value = "Case Type ID", required = true) @RequestParam("caseTypeIds") String caseTypeIds) {
 
+        log.info("Invoked for changeId {} and caseTypeIds {} ", changeId, caseTypeIds);
+
         var caseIdList = Arrays.stream(caseTypeIds.split(",")).toList();
         var caseTypesWithChangeIds = caseIdList.stream().map(caseTypeId -> caseTypeId + "-" + changeId).toList();
 
@@ -57,7 +61,7 @@ public class TestingSupportController {
         session.beginTransaction();
 
         var ids = getCaseTypeIdsByReferences(session, caseTypesWithChangeIds);
-        if (ids.size() != caseIdList.size()) {
+        if (ids.isEmpty()) {
             throw new NotFoundException("Unable to find case type");
         }
 
@@ -66,6 +70,8 @@ public class TestingSupportController {
         sql.forEach(sqlStatement -> executeSql(session, sqlStatement, ids));
 
         session.close();
+
+        log.info("Deleted records for changeId {} and caseTypeIds {} ", changeId, caseTypeIds);
     }
 
     private List<Integer> getCaseTypeIdsByReferences(Session session, List<String> caseTypesWithChangeIds) {
@@ -73,7 +79,7 @@ public class TestingSupportController {
             .setParameterList("caseTypesWithChangeIds", caseTypesWithChangeIds)
             .list();
         session.getTransaction().commit();
-        List<Integer> intIds = new ArrayList<Integer>();
+        List<Integer> intIds = new ArrayList<>();
         for (Object s : ids) {
             intIds.add(Integer.valueOf(s.toString()));
         }
