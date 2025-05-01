@@ -149,6 +149,25 @@ WHERE id IN (SELECT id FROM case_type_ids_to_remove)
 -- Note: The jurisdiction_id check is to ensure we only delete case types that are not system-defined.
 -- This is important to prevent accidental deletion of system case types.
 
+-- clean up extra tables where redundant data may exist
+-- Do not use just yet
+-- Start
+DELETE FROM search_alias_field WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
+DELETE FROM search_criteria WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
+DELETE FROM search_party WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
+DELETE FROM category WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
+DELETE FROM role_to_access_profiles WHERE role_id IN (SELECT id FROM role WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove));
+DELETE FROM role_to_access_profiles WHERE access_profile_id IN (SELECT id FROM access_profile WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove));
+DELETE FROM role_to_access_profiles WHERE access_profile_id IN (SELECT id FROM access_profile WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove));
+DELETE FROM role_to_access_profiles WHERE role_id IN (SELECT id FROM role WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove));
+
+DELETE FROM complex_field cf
+WHERE field_type_id IN
+    (
+      SELECT field_type_id FROM case_field WHERE case_type_id  IN (SELECT id FROM case_type_ids_to_remove)
+    ) AND field_type_id NOT IN (SELECT id FROM valid_field_type_ids);
+--- End
+
 COMMIT;
 
 
