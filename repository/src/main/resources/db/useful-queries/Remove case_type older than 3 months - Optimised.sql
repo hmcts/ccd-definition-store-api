@@ -32,7 +32,7 @@ BEGIN
   END;
 END $$;
 
-BEGIN;
+--BEGIN;
 
 -- =========================================
 -- ⚠️ Tables containing static (base types)
@@ -68,7 +68,7 @@ INNER JOIN (
 ) grouped_ct
 ON ct.reference = grouped_ct.reference
 WHERE ct.version != grouped_ct.max_version
-  AND ct.created_at <= NOW() - INTERVAL '3 months' LIMIT 1000;
+  AND ct.created_at <= NOW() - INTERVAL '3 months' ORDER BY id ASC LIMIT 500;
 
 -- Create a temporary table (valid_field_type_ids) to hold the IDs of field types that are static (base types) and should not be deleted.
 CREATE TEMP TABLE valid_field_type_ids AS
@@ -159,49 +159,38 @@ WHERE id IN (
 AND id NOT IN (SELECT id FROM valid_field_type_ids)
 AND jurisdiction_id IS NOT NULL;
 
+-- user this
 DELETE FROM case_field_acl WHERE case_field_id IN
-(
-	SELECT DISTINCT (case_field_id) FROM case_field_acl cfa
-	JOIN case_field cf ON cfa.case_field_id = cf.id
-	WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-);
+    (SELECT id FROM case_field WHERE case_type_id IN
+        (SELECT id FROM case_type_ids_to_remove)
+    );
 
-DELETE FROM display_group_case_field WHERE case_field_id IN
-(
-	SELECT DISTINCT (case_field_id) FROM display_group_case_field cfa
-	JOIN case_field cf ON cfa.case_field_id = cf.id
-	WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-);
+DELETE FROM display_group_case_field WHERE display_group_id IN
+    (SELECT id FROM display_group WHERE case_type_id IN
+        (SELECT id FROM case_type_ids_to_remove)
+    );
 
 DELETE FROM event_case_field_complex_type WHERE event_case_field_id IN
-(
-	SELECT id FROM event_case_field WHERE event_id IN
-    (
-    	SELECT id FROM event WHERE case_type_id IN
-        (SELECT id FROM case_type_ids_to_remove)
-    )
-);
+    (SELECT id FROM event_case_field WHERE event_id IN
+        (SELECT id FROM event WHERE case_type_id IN
+            (SELECT id FROM case_type_ids_to_remove)
+        )
+    );
 
-DELETE FROM event_case_field WHERE case_field_id IN
-(
-	SELECT DISTINCT (case_field_id) FROM event_case_field cfa
-	JOIN case_field cf ON cfa.case_field_id = cf.id
-	WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-);
+DELETE FROM event_case_field_complex_type WHERE event_case_field_id IN
+    (SELECT id FROM event_case_field WHERE event_id IN
+        (SELECT id FROM event WHERE case_type_id IN
+            (SELECT id FROM case_type_ids_to_remove)
+        )
+    );
 
 DELETE FROM complex_field_acl WHERE case_field_id IN
-(
-	SELECT DISTINCT (case_field_id) FROM complex_field_acl cfa
-	JOIN case_field cf ON cfa.case_field_id = cf.id
-	WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-);
+    (SELECT id FROM case_field WHERE case_type_id IN
+        (SELECT id FROM case_type_ids_to_remove)
+    );
 
-DELETE FROM search_cases_result_fields  WHERE case_field_id IN
-(
-	SELECT DISTINCT (case_field_id) FROM search_cases_result_fields cfa
-	JOIN case_field cf ON cfa.case_field_id = cf.id
-	WHERE cfa.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-);
+DELETE FROM search_cases_result_fields WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
 
 DELETE FROM search_input_case_field WHERE case_type_id IN
     (SELECT id FROM case_type_ids_to_remove);
@@ -215,15 +204,31 @@ DELETE FROM workbasket_case_field  WHERE case_type_id IN
 DELETE FROM workbasket_input_case_field WHERE case_type_id IN
     (SELECT id FROM case_type_ids_to_remove);
 
+DELETE FROM event_case_field WHERE event_id IN
+    (SELECT id FROM event WHERE case_type_id IN
+        (SELECT id FROM case_type_ids_to_remove)
+    );
+
 DELETE FROM case_field cf WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove);
 
 DELETE FROM role_to_access_profiles WHERE case_type_id IN
     (SELECT id FROM case_type_ids_to_remove);
 
+DELETE FROM display_group_case_field WHERE display_group_id IN
+    (SELECT id FROM display_group WHERE case_type_id IN
+        (SELECT id FROM case_type_ids_to_remove)
+    );
+
 DELETE FROM display_group WHERE case_type_id IN
     (SELECT id FROM case_type_ids_to_remove);
 
 DELETE FROM event WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM search_criteria WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM search_party WHERE case_type_id IN
     (SELECT id FROM case_type_ids_to_remove);
 
 DELETE FROM role WHERE case_type_id IN
@@ -237,7 +242,7 @@ WHERE id IN (SELECT id FROM case_type_ids_to_remove)
 -- Note: The jurisdiction_id check is to ensure we only delete case types that are not system-defined.
 -- This is important to prevent accidental deletion of system case types.
 
-COMMIT;
+--COMMIT;
 
 -- Clean up temp tables after transaction completes
 DO $$
