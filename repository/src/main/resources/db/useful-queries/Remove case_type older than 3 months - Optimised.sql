@@ -1,3 +1,37 @@
+-- Clean up temp tables after transaction completes
+DO $$
+BEGIN
+  BEGIN
+    DROP TABLE IF EXISTS case_type_ids_to_remove;
+  EXCEPTION WHEN OTHERS THEN
+    -- ignore error
+  END;
+
+  BEGIN
+    DROP TABLE IF EXISTS valid_field_type_ids;
+  EXCEPTION WHEN OTHERS THEN
+    -- ignore error
+  END;
+
+  BEGIN
+    DROP TABLE IF EXISTS removable_case_fields;
+  EXCEPTION WHEN OTHERS THEN
+    -- ignore error
+  END;
+
+  BEGIN
+    DROP TABLE IF EXISTS removable_events;
+  EXCEPTION WHEN OTHERS THEN
+    -- ignore error
+  END;
+
+  BEGIN
+    DROP TABLE IF EXISTS removable_states;
+  EXCEPTION WHEN OTHERS THEN
+    -- ignore error
+  END;
+END $$;
+
 BEGIN;
 
 -- =========================================
@@ -25,7 +59,7 @@ BEGIN;
 -- Always ensure to backup your data before running such delete operations.
 
 CREATE TEMP TABLE case_type_ids_to_remove AS
-SELECT ct.id
+SELECT id
 FROM case_type ct
 INNER JOIN (
     SELECT reference, MAX(version) AS max_version
@@ -34,7 +68,7 @@ INNER JOIN (
 ) grouped_ct
 ON ct.reference = grouped_ct.reference
 WHERE ct.version != grouped_ct.max_version
-  AND ct.created_at <= NOW() - INTERVAL '3 months';
+  AND ct.created_at <= NOW() - INTERVAL '3 months' LIMIT 1000;
 
 -- Create a temporary table (valid_field_type_ids) to hold the IDs of field types that are static (base types) and should not be deleted.
 CREATE TEMP TABLE valid_field_type_ids AS
@@ -72,22 +106,6 @@ WHERE event_case_field_id IN (
     WHERE ecf.event_id IN (SELECT id FROM removable_events)
 );
 
---Not Sure if this is required yet
-DELETE FROM event_case_field_complex_type
-USING event_case_field, case_field
-WHERE event_case_field_complex_type.event_case_field_id  = event_case_field.id
-  AND event_case_field.case_field_id  = case_field.id
-  AND event_case_field.event_id IN (SELECT id FROM removable_events)
-  AND case_field.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-  AND field_type_id NOT IN (SELECT id FROM valid_field_type_ids);
-
---Not Sure if this is required yet
-DELETE FROM challenge_question
-USING case_type
-WHERE challenge_question.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-AND case_type.id = challenge_question.case_type_id
-  AND case_type.jurisdiction_id IS NOT NULL;
-
 DELETE FROM event_case_field WHERE case_field_id IN (SELECT id FROM removable_case_fields);
 DELETE FROM complex_field_acl WHERE case_field_id IN (SELECT id FROM removable_case_fields);
 DELETE FROM search_result_case_field WHERE case_field_id IN (SELECT id FROM removable_case_fields);
@@ -104,15 +122,15 @@ DELETE FROM case_field WHERE id IN (SELECT id FROM removable_case_fields);
 
 -- Other related deletions
 DELETE FROM case_type_acl WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
-DELETE FROM display_group WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM display_group_case_field WHERE case_field_id IN (SELECT id FROM removable_case_fields);
+
 DELETE FROM event_post_state WHERE case_event_id IN (SELECT id FROM removable_events);
 DELETE FROM event_acl WHERE event_id IN (SELECT id FROM removable_events);
 DELETE FROM event_pre_state WHERE event_id IN (SELECT id FROM removable_events);
 DELETE FROM event_webhook WHERE event_id IN (SELECT id FROM removable_events);
-DELETE FROM "event" WHERE id IN (SELECT id FROM removable_events);
 DELETE FROM state_acl WHERE state_id IN (SELECT id FROM removable_states);
 DELETE FROM state WHERE id IN (SELECT id FROM removable_states);
-DELETE FROM role WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
 
 -- Redundant search/workbasket deletes
 DELETE FROM search_cases_result_fields
@@ -141,6 +159,76 @@ WHERE id IN (
 AND id NOT IN (SELECT id FROM valid_field_type_ids)
 AND jurisdiction_id IS NOT NULL;
 
+DELETE FROM case_field_acl WHERE case_field_id IN
+(
+	SELECT DISTINCT (case_field_id) FROM case_field_acl cfa
+	JOIN case_field cf ON cfa.case_field_id = cf.id
+	WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+);
+
+DELETE FROM display_group_case_field WHERE case_field_id IN
+(
+	SELECT DISTINCT (case_field_id) FROM display_group_case_field cfa
+	JOIN case_field cf ON cfa.case_field_id = cf.id
+	WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+);
+
+DELETE FROM event_case_field_complex_type WHERE event_case_field_id IN
+(
+	SELECT id FROM event_case_field WHERE event_id IN
+    (
+    	SELECT id FROM event WHERE case_type_id IN
+        (SELECT id FROM case_type_ids_to_remove)
+    )
+);
+
+DELETE FROM event_case_field WHERE case_field_id IN
+(
+	SELECT DISTINCT (case_field_id) FROM event_case_field cfa
+	JOIN case_field cf ON cfa.case_field_id = cf.id
+	WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+);
+
+DELETE FROM complex_field_acl WHERE case_field_id IN
+(
+	SELECT DISTINCT (case_field_id) FROM complex_field_acl cfa
+	JOIN case_field cf ON cfa.case_field_id = cf.id
+	WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+);
+
+DELETE FROM search_cases_result_fields  WHERE case_field_id IN
+(
+	SELECT DISTINCT (case_field_id) FROM search_cases_result_fields cfa
+	JOIN case_field cf ON cfa.case_field_id = cf.id
+	WHERE cfa.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+);
+
+DELETE FROM search_input_case_field WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM search_result_case_field WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM workbasket_case_field  WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM workbasket_input_case_field WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM case_field cf WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM role_to_access_profiles WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM display_group WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM event WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM role WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
 -- Final cleanup: remove the case_type entries
 DELETE FROM case_type
 WHERE id IN (SELECT id FROM case_type_ids_to_remove)
@@ -149,26 +237,38 @@ WHERE id IN (SELECT id FROM case_type_ids_to_remove)
 -- Note: The jurisdiction_id check is to ensure we only delete case types that are not system-defined.
 -- This is important to prevent accidental deletion of system case types.
 
--- clean up extra tables where redundant data may exist
--- Do not use just yet
--- Start
-DELETE FROM search_alias_field WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
-DELETE FROM search_criteria WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
-DELETE FROM search_party WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
-DELETE FROM category WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
-DELETE FROM role_to_access_profiles WHERE role_id IN (SELECT id FROM role WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove));
-DELETE FROM role_to_access_profiles WHERE access_profile_id IN (SELECT id FROM access_profile WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove));
-DELETE FROM role_to_access_profiles WHERE access_profile_id IN (SELECT id FROM access_profile WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove));
-DELETE FROM role_to_access_profiles WHERE role_id IN (SELECT id FROM role WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove));
-
-DELETE FROM complex_field cf
-WHERE field_type_id IN
-    (
-      SELECT field_type_id FROM case_field WHERE case_type_id  IN (SELECT id FROM case_type_ids_to_remove)
-    ) AND field_type_id NOT IN (SELECT id FROM valid_field_type_ids);
---- End
-
 COMMIT;
 
+-- Clean up temp tables after transaction completes
+DO $$
+BEGIN
+  BEGIN
+    DROP TABLE IF EXISTS case_type_ids_to_remove;
+  EXCEPTION WHEN OTHERS THEN
+    -- ignore error
+  END;
 
+  BEGIN
+    DROP TABLE IF EXISTS valid_field_type_ids;
+  EXCEPTION WHEN OTHERS THEN
+    -- ignore error
+  END;
 
+  BEGIN
+    DROP TABLE IF EXISTS removable_case_fields;
+  EXCEPTION WHEN OTHERS THEN
+    -- ignore error
+  END;
+
+  BEGIN
+    DROP TABLE IF EXISTS removable_events;
+  EXCEPTION WHEN OTHERS THEN
+    -- ignore error
+  END;
+
+  BEGIN
+    DROP TABLE IF EXISTS removable_states;
+  EXCEPTION WHEN OTHERS THEN
+    -- ignore error
+  END;
+END $$;
