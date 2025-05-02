@@ -1,3 +1,56 @@
+/*
+
+--Execute the following DROP statements before starting the cleanup
+ALTER TABLE public."role" DROP CONSTRAINT case_type_id_check;
+ALTER TABLE public."role"
+DROP CONSTRAINT unique_role_case_type_id_role_reference;
+ALTER TABLE public."role" DROP CONSTRAINT "fk_role_case_type_id_case_type_id";
+ALTER TABLE public."case_field_acl" DROP CONSTRAINT "fk_case_field_acl_role_id_role_id";
+ALTER TABLE public."case_type_acl" DROP CONSTRAINT "fk_case_type_acl_role_id_role_id";
+ALTER TABLE public."complex_field_acl" DROP CONSTRAINT "fk_complex_field_acl_role_id_role_id";
+ALTER TABLE public."display_group" DROP CONSTRAINT "fk_display_group_role_id";
+ALTER TABLE public."search_input_case_field" DROP CONSTRAINT "fk_display_group_role_id";
+ALTER TABLE public."search_result_case_field" DROP CONSTRAINT "fk_display_group_role_id";
+ALTER TABLE public."workbasket_case_field" DROP CONSTRAINT "fk_display_group_role_id";
+ALTER TABLE public."workbasket_input_case_field" DROP CONSTRAINT "fk_display_group_role_id";
+ALTER TABLE public."search_cases_result_fields" DROP CONSTRAINT "fk_search_cases_result_fields_role_id_role_id";
+ALTER TABLE public."state_acl" DROP CONSTRAINT "fk_state_acl_role_id_role_id";
+ALTER TABLE public."event_acl" DROP CONSTRAINT "fk_event_acl_role_id_role_id";
+
+--DO THE DELETIONS
+
+--Execute the following ADD statements after the cleanup
+ALTER TABLE public."role" ADD CONSTRAINT "fk_role_case_type_id_case_type_id" FOREIGN KEY (case_type_id) REFERENCES case_type(id);
+ALTER TABLE public."role"
+ADD CONSTRAINT unique_role_case_type_id_role_reference
+UNIQUE (case_type_id, reference);
+ALTER TABLE public."role"
+ADD CONSTRAINT case_type_id_check CHECK (
+  (
+    CASE
+      WHEN dtype = 'CASEROLE' THEN
+        CASE
+          WHEN case_type_id IS NOT NULL THEN 1
+          ELSE 0
+        END
+      ELSE 1
+    END = 1
+  )
+);
+ALTER TABLE public."case_field_acl" ADD CONSTRAINT "fk_case_field_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+ALTER TABLE public."case_type_acl" ADD CONSTRAINT "fk_case_type_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+ALTER TABLE public."complex_field_acl" ADD CONSTRAINT "fk_complex_field_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+ALTER TABLE public."workbasket_input_case_field" ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+ALTER TABLE public."workbasket_case_field" ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+ALTER TABLE public."search_result_case_field" ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+ALTER TABLE public."search_input_case_field" ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+ALTER TABLE public."display_group" ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+ALTER TABLE public."event_acl" ADD CONSTRAINT "fk_event_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+ALTER TABLE public."search_cases_result_fields" ADD CONSTRAINT "fk_search_cases_result_fields_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+ALTER TABLE public."state_acl" ADD CONSTRAINT "fk_state_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+ALTER TABLE public."event_acl" ADD CONSTRAINT "fk_event_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+*/
+
 -- Clean up temp tables after transaction completes
 DO $$
 BEGIN
@@ -68,7 +121,7 @@ INNER JOIN (
 ) grouped_ct
 ON ct.reference = grouped_ct.reference
 WHERE ct.version != grouped_ct.max_version
-  AND ct.created_at <= NOW() - INTERVAL '3 months' ORDER BY id ASC LIMIT 500;
+  AND ct.created_at <= NOW() - INTERVAL '3 months' ORDER BY id ASC LIMIT 6000;
 
 -- Create a temporary table (valid_field_type_ids) to hold the IDs of field types that are static (base types) and should not be deleted.
 CREATE TEMP TABLE valid_field_type_ids AS
@@ -149,7 +202,7 @@ DELETE FROM workbasket_case_field
 WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
   AND case_field_id IN (SELECT id FROM removable_case_fields);
 
--- Optional: remove orphan field_types
+-- remove orphan field_types
 DELETE FROM field_type
 WHERE id IN (
     SELECT DISTINCT field_type_id
@@ -159,7 +212,6 @@ WHERE id IN (
 AND id NOT IN (SELECT id FROM valid_field_type_ids)
 AND jurisdiction_id IS NOT NULL;
 
--- user this
 DELETE FROM case_field_acl WHERE case_field_id IN
     (SELECT id FROM case_field WHERE case_type_id IN
         (SELECT id FROM case_type_ids_to_remove)
@@ -168,13 +220,6 @@ DELETE FROM case_field_acl WHERE case_field_id IN
 DELETE FROM display_group_case_field WHERE display_group_id IN
     (SELECT id FROM display_group WHERE case_type_id IN
         (SELECT id FROM case_type_ids_to_remove)
-    );
-
-DELETE FROM event_case_field_complex_type WHERE event_case_field_id IN
-    (SELECT id FROM event_case_field WHERE event_id IN
-        (SELECT id FROM event WHERE case_type_id IN
-            (SELECT id FROM case_type_ids_to_remove)
-        )
     );
 
 DELETE FROM event_case_field_complex_type WHERE event_case_field_id IN
@@ -231,13 +276,22 @@ DELETE FROM search_criteria WHERE case_type_id IN
 DELETE FROM search_party WHERE case_type_id IN
     (SELECT id FROM case_type_ids_to_remove);
 
-DELETE FROM role WHERE case_type_id IN
+DELETE FROM search_alias_field WHERE case_type_id IN
     (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM category WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM challenge_question WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM "role" WHERE case_type_id IN
+			(SELECT id FROM case_type_ids_to_remove);
 
 -- Final cleanup: remove the case_type entries
 DELETE FROM case_type
-WHERE id IN (SELECT id FROM case_type_ids_to_remove)
-  AND jurisdiction_id IS NOT NULL;
+	WHERE id IN (SELECT id FROM case_type_ids_to_remove)
+	  AND jurisdiction_id IS NOT NULL;
 
 -- Note: The jurisdiction_id check is to ensure we only delete case types that are not system-defined.
 -- This is important to prevent accidental deletion of system case types.
