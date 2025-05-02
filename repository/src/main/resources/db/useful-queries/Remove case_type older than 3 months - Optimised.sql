@@ -1,6 +1,13 @@
 /*
 
 --Execute the following DROP statements before starting the cleanup
+
+--May require these missing index's
+--CREATE INDEX IF NOT EXISTS idx_role_case_type_id ON "role" (case_type_id);
+--CREATE INDEX IF NOT EXISTS idx_case_type_id ON case_type (id);
+--CREATE INDEX IF NOT EXISTS idx_role_id ON "role" (id);
+--CREATE INDEX IF NOT EXISTS idx_user_role_id ON "role" (user_role_id);
+
 ALTER TABLE public."role" DROP CONSTRAINT case_type_id_check;
 ALTER TABLE public."role"
 DROP CONSTRAINT unique_role_case_type_id_role_reference;
@@ -48,7 +55,7 @@ ALTER TABLE public."display_group" ADD CONSTRAINT "fk_display_group_role_id" FOR
 ALTER TABLE public."event_acl" ADD CONSTRAINT "fk_event_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
 ALTER TABLE public."search_cases_result_fields" ADD CONSTRAINT "fk_search_cases_result_fields_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
 ALTER TABLE public."state_acl" ADD CONSTRAINT "fk_state_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
-ALTER TABLE public."event_acl" ADD CONSTRAINT "fk_event_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+
 */
 
 -- Clean up temp tables after transaction completes
