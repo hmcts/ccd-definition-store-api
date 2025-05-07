@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.integration;
 
-import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -21,6 +20,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
+
+import java.io.IOException;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.Matchers.anyString;
