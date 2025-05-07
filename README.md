@@ -120,18 +120,28 @@ Spring application entry point and configuration.
 The functional tests are located in `aat` folder. The tests are written using 
 befta-fw library. To find out more about BEFTA Framework, see the repository and its README [here](https://github.com/hmcts/befta-fw).
 
+#### To Run the Functional Tests (FT)
+
+#####  All Functional Tests
+
 Will run all the FT's:
 
-    ./gradlew functional
+```bash
+./gradlew functional
+```
 
 #####  Some Functional Tests
 Will run both F-105 and F-110:
 
-    ./gradlew functional -P tags="@F-105 or @F-110"
+```bash
+./gradlew functional -P tags="@F-105 or @F-110"
+```
 
 Will run only S-110.1:
 
-    ./gradlew functional -P tags="@S-110.1"
+```bash
+./gradlew functional -P tags="@S-110.1"
+```
 
 ## LICENSE
 
