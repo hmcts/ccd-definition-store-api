@@ -79,13 +79,13 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     @Test
     public void failAnswerFormatForSmallestExpression() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
-            String answer = "${OrganisationField.OrganisationName}:[CLAIMANT]";
+            String answer = "${OrganisationField.OrganisationName}:[CCCCCC]";
             challengeQuestionValidator.validate(parseContext,
                     Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
                             QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
         });
         assertThat(exception.getMessage(),
-                is("ChallengeQuestionTab Invalid value: ${OrganisationField.OrganisationName}:[CLAIMANT] "
+                is("ChallengeQuestionTab Invalid value: ${OrganisationField.OrganisationName}:[CCCCCC] "
                         + "is not a valid Answer, Please check the expression format and the roles."));
     }
 

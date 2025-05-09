@@ -22,6 +22,11 @@ sourceSets {
     }
 }
 
+configurations {
+    aatImplementation.extendsFrom(testImplementation)
+    aatRuntime.extendsFrom(testRuntimeOnly)
+}
+
 dependencies {
     implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client'
     implementation group: 'org.awaitility', name: 'awaitility', version: '3.1.6'

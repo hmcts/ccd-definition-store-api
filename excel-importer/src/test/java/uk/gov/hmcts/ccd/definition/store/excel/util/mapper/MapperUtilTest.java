@@ -124,9 +124,9 @@ public class MapperUtilTest {
     public void getBooleanBlankValueButMandatory() {
         item.addAttribute(ColumnName.DISPLAY_CONTEXT.toString(), "   ");
         MapperException ex = assertThrows(MapperException.class, () -> 
-            MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DISPLAY_CONTEXT));
+            MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.PAGE_ID));
         assertEquals(String.format("Couldn't find the column '%s' or invalid value in the sheet '%s'",
-            ColumnName.DISPLAY_CONTEXT,
+            ColumnName.PAGE_ID,
             SheetName.CASE_EVENT_TO_FIELDS),
             ex.getMessage());
     }

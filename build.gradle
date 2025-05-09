@@ -82,6 +82,10 @@ allprojects {
         }
     }
 
+    configurations {
+        mockitoAgent
+        codacy
+    }
 
     apply plugin: 'java'
 
@@ -155,8 +159,6 @@ subprojects { subproject ->
     configurations {
         providedRuntime
 
-        aatImplementation.extendsFrom(testImplementation)
-        aatRuntime.extendsFrom(testRuntimeOnly)
         cucumberRuntime.extendsFrom(functionalRuntime)
     }
 
@@ -169,6 +171,7 @@ subprojects { subproject ->
     tasks.withType(Test).configureEach{
         // Added to handle Powermockito issues
         jvmArgs = jvmArgs + [
+                "-javaagent:${configurations.mockitoAgent.asPath}",
                 '--add-opens=java.base/java.lang=ALL-UNNAMED',
                 '--add-opens=java.base/java.util=ALL-UNNAMED',
                 '--add-opens=java.base/java.lang.invoke=ALL-UNNAMED',
@@ -248,6 +251,10 @@ subprojects { subproject ->
         implementation group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0'
         implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15to18', version: '1.77'
 
+        testImplementation libs.mockito
+        mockitoAgent(libs.mockito) {
+            transitive = false;
+        }
         testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap'
         implementation group: 'commons-io', name: 'commons-io', version: '2.16.1'
         implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
@@ -299,7 +306,7 @@ subprojects { subproject ->
                 xml.outputLocation = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
 
             }
-74
+
             classDirectories.setFrom((classDirectories.files.collect {
                 fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**','**/AppInsightsConfiguration**'])
             }))
@@ -456,8 +463,6 @@ task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
 
 // for cnp pipeline
 task dependencyCheck(dependsOn: dependencyCheckAnalyze)
-
-configurations { codacy }
 
 dependencies {
     implementation project(':application')

@@ -824,6 +824,7 @@ public class HiddenFieldsValidatorTest {
         definitionDataItem3.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, null);
         definitionDataItem3.addAttribute(ColumnName.CASE_FIELD_ID, "ComplexTypeFieldId");
         definitionDataItem3.addAttribute(ColumnName.LIST_ELEMENT_CODE, "");
+        definitionDataItem3.addAttribute(ColumnName.FIELD_TYPE, "Text");
         definitionDataItem3.addAttribute(ColumnName.ID, "ComplexType");
         sheetComplexTypes.addDataItem(definitionDataItem3);
 
@@ -844,7 +845,7 @@ public class HiddenFieldsValidatorTest {
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
         MapperException ex = assertThrows(MapperException.class,
-                () -> validator.parseComplexTypesHiddenFields(definitionDataItem, definitionSheets));
+                () -> validator.parseCaseEventComplexTypesHiddenFields(definitionDataItem, definitionSheets));
 
         assertThat(ex.getMessage(),
                 is("'retainHiddenValue' on CaseEventToComplexTypes can only be configured for a field that "

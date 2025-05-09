@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
 import org.assertj.core.api.Assertions;
@@ -64,11 +63,11 @@ public class JsonUtilsTest {
         final LocalDate date = LocalDate.of(2020, 02, 20);
         final JsonNode s = JsonUtils.toJsonNodeTree(date);
 
-        MismatchedInputException ex = assertThrows(MismatchedInputException.class, () -> {
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             JsonUtils.fromNode(s, String.class);
         });
         final Throwable cause = ex.getCause();
-        assertThat(cause, instanceOf(JsonMappingException.class));
+        assertThat(cause, instanceOf(MismatchedInputException.class));
         Assertions.assertThat(cause).hasMessageContaining(
                 "Cannot deserialize value of type `java.lang.String` from Array value");
     }

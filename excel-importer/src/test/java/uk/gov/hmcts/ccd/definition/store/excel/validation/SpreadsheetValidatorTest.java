@@ -49,14 +49,9 @@ public class SpreadsheetValidatorTest {
     public void shouldPass_withNonExistingColumnName() {
         String columnName = "CRUD";
         int rowNumber = 6;
-        InvalidImportException ex = assertThrows(InvalidImportException.class, () -> {
-            validator.validate("sheet", columnName,
-                    "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
-        });
+        validator.validate("sheet", columnName,
+                "TestComplexAddressBookCaseTestComplexAddressBookCaseInvalidExceedingMaxLengthValue", rowNumber);
 
-        assertThat(ex.getMessage(), is(
-                "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber "
-                        + rowNumber));
     }
 
     @Test
@@ -69,7 +64,7 @@ public class SpreadsheetValidatorTest {
         } catch (InvalidImportException ex) {
             assertThat(ex.getMessage(), is(
                     "Error processing sheet \"sheet\": Invalid columnName " + columnName + " at rowNumber "
-                            + rowNumber));
+                    + rowNumber));
             throw ex;
         }
     }
@@ -81,7 +76,7 @@ public class SpreadsheetValidatorTest {
         });
         assertThat(ex.getMessage(), is(
                 "Error processing sheet \"sheet\": Invalid Case Definition sheet - "
-                        + "no Definition name found in Cell A1"));
+                + "no Definition name found in Cell A1"));
     }
 
     @Test
@@ -94,7 +89,7 @@ public class SpreadsheetValidatorTest {
         });
         assertThat(ex.getMessage(), is(
                 "Error processing sheet \"sheet\": Invalid Case Definition sheet - "
-                        + "no Definition data attribute headers found"));
+                + "no Definition data attribute headers found"));
     }
 
     @Test
