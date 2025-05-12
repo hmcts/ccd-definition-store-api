@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
@@ -98,7 +99,17 @@ public class SearchResultObjectGraphTest {
         f.setCaseField(caseFieldEntity);
         f.setLabel(label);
         f.setOrder(order);
+        f.setAccessProfile(createAccessProfile());
         return f;
+    }
+
+    private AccessProfileEntity createAccessProfile() {
+        final AccessProfileEntity accessProfile = new AccessProfileEntity();
+        accessProfile.setReference("access profile ref");
+        accessProfile.setName("access profile name");
+        accessProfile.setDescription("access profile description");
+        accessProfile.setSecurityClassification(SecurityClassification.PUBLIC);
+        return accessProfile;
     }
 
     private CaseFieldEntity getCaseField(final CaseTypeEntity caseType, final String reference) {

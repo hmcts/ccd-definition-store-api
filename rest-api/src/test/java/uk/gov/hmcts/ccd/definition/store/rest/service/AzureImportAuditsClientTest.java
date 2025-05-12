@@ -18,9 +18,11 @@ import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.BlobProperties;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -32,6 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -70,6 +73,7 @@ public class AzureImportAuditsClientTest {
 
     private SSLContext context;
 
+    private MockedStatic<SSLContext> sslContextMockedStatic;
     private SSLSocketFactory socketFactory;
 
     @BeforeEach
@@ -95,10 +99,11 @@ public class AzureImportAuditsClientTest {
         MockitoAnnotations.openMocks(this);
 
         // create the mock to return by getInstance()
-        SSLContext context = mock(SSLContext.class);
+        context = mock(SSLContext.class);
+        SSLContext.setDefault(context);
 
         // mock the static method getInstance() to return above created mock context
-        mock(SSLContext.class);
+        sslContextMockedStatic = mockStatic(SSLContext.class);
         when(SSLContext.getInstance(SSL_CONTEXT_PROTOCOL_1_DOT_2)).thenReturn(context);
         when(SSLContext.getInstance(SSL_CONTEXT_PROTOCOL_TLS)).thenReturn(context);
 
@@ -153,8 +158,12 @@ public class AzureImportAuditsClientTest {
         }
     }
 
-    @Test
+    @AfterEach
+    public void tearDown() {
+        sslContextMockedStatic.close();
+    }
 
+    @Test
     public void shouldFetchAllImportAuditsInCorrectDescOrder() throws Exception {
         final List<ImportAudit> audits = subject.fetchLatestImportAudits();
         assertThat(audits.size(), is(5));

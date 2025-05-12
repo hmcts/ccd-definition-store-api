@@ -42,6 +42,10 @@ public class EventWebhookEntity {
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private WebhookType type;
 
+    private EventWebhookEntity() {
+        // Default constructor for Hibernate
+    }
+
     public EventWebhookEntity(EventEntity event, WebhookEntity webhook, WebhookType type) {
         this.event = event;
         this.webhook = webhook;

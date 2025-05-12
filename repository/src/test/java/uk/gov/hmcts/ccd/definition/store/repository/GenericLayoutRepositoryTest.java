@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
@@ -96,6 +97,7 @@ public class GenericLayoutRepositoryTest {
         f.setCaseField(caseFieldEntity);
         f.setLabel(label);
         f.setOrder(order);
+        f.setAccessProfile(createAccessProfile());
         return f;
     }
 
@@ -134,7 +136,17 @@ public class GenericLayoutRepositoryTest {
         f.setCaseField(caseFieldEntity);
         f.setLabel(label);
         f.setOrder(order);
+        f.setAccessProfile(createAccessProfile());
         return f;
+    }
+
+    private AccessProfileEntity createAccessProfile() {
+        final AccessProfileEntity accessProfile = new AccessProfileEntity();
+        accessProfile.setReference("access_profile");
+        accessProfile.setName("access_profile");
+        accessProfile.setDescription("access_profile");
+        accessProfile.setSecurityClassification(SecurityClassification.PUBLIC);
+        return accessProfile;
     }
 
     @Test
@@ -171,6 +183,7 @@ public class GenericLayoutRepositoryTest {
         f.setCaseField(caseFieldEntity);
         f.setLabel(label);
         f.setOrder(order);
+        f.setAccessProfile(createAccessProfile());
         return f;
     }
 
@@ -208,6 +221,7 @@ public class GenericLayoutRepositoryTest {
         f.setCaseField(caseFieldEntity);
         f.setLabel(label);
         f.setOrder(order);
+        f.setAccessProfile(createAccessProfile());
         return f;
     }
 

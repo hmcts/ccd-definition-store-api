@@ -139,6 +139,7 @@ public class CaseTypeObjectGraphTest {
 
         EventPostStateEntity eventPostStateEntity = new EventPostStateEntity();
         eventPostStateEntity.setPostStateReference(s1.getReference());
+        eventPostStateEntity.setEnablingCondition("");
         e1.addEventPostState(eventPostStateEntity);
 
         WebhookEntity h1 = createWebHook("url1", 3, 5, 6, 7, 8);

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
@@ -150,9 +151,19 @@ public class DisplayGroupRepositoryTest {
         dg.setType(type);
         dg.setPurpose(purpose);
         dg.setShowCondition(showCondition);
+        dg.setAccessProfile(createAccessProfile());
         addDisplayGroupField(getCaseField(caseType, "cf1"), dg, 1, null);
         addDisplayGroupField(getCaseField(caseType, "cf2"), dg, 2, 2);
         return dg;
+    }
+
+    private AccessProfileEntity createAccessProfile() {
+        final AccessProfileEntity accessProfile = new AccessProfileEntity();
+        accessProfile.setReference("access profile ref");
+        accessProfile.setName("access profile name");
+        accessProfile.setDescription("access profile description");
+        accessProfile.setSecurityClassification(SecurityClassification.PUBLIC);
+        return accessProfile;
     }
 
     private CaseFieldEntity getCaseField(final CaseTypeEntity caseType, final String reference) {
