@@ -1,12 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.hikari;
 
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.zaxxer.hikari.HikariDataSource;
-
 import java.util.ArrayList;
 
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.boot.actuate.context.properties.ConfigurationPropertiesReportEndpoint;
-import org.springframework.boot.actuate.endpoint.SanitizingFunction;
 import org.springframework.boot.actuate.endpoint.Show;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +14,7 @@ import org.springframework.stereotype.Component;
 public class HikariConfigurationPropertiesReportEndpoint extends ConfigurationPropertiesReportEndpoint {
 
     public HikariConfigurationPropertiesReportEndpoint() {
-        super(new ArrayList<SanitizingFunction>(), Show.ALWAYS);
+        super(new ArrayList<>(), Show.ALWAYS);
     }
 
     @Override

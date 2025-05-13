@@ -1,22 +1,22 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SharedSessionContractImplementor;
-import org.hibernate.usertype.UserType;
-import org.springframework.util.ObjectUtils;
-
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
-public abstract class GeneralImmutableJsonType<T> implements UserType {
+import org.hibernate.HibernateException;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
+import org.hibernate.usertype.UserType;
+import org.springframework.util.ObjectUtils;
+
+public abstract class GeneralImmutableJsonType<T> implements UserType<T> {
 
     // The Type name to be placed on @UserType annotation
     public static final String TYPE = "uk.gov.hmcts.ccd.definition.data.GeneralImmutableJsonType";
 
-    private final Class<T> dataType;
+    protected final Class<T> dataType;
 
     public GeneralImmutableJsonType(Class<T> type) {
         this.dataType = type;
@@ -43,7 +43,7 @@ public abstract class GeneralImmutableJsonType<T> implements UserType {
     }
 
     @Override
-    public Object nullSafeGet(ResultSet resultSet,
+    public T nullSafeGet(ResultSet resultSet,
                               int pos,
                               SharedSessionContractImplementor sharedSessionContractImplementor,
                               Object o) throws HibernateException, SQLException {
@@ -88,15 +88,15 @@ public abstract class GeneralImmutableJsonType<T> implements UserType {
      * For Immutable Object this is simple.
      */
     @Override
-    public Object assemble(Serializable cached, Object owner) {
-        return cached;
+    public T assemble(Serializable cached, Object owner) {
+        return (T) cached;
     }
 
     /**
      * For Immutable Object this is simple.
      */
     @Override
-    public Object replace(Object original, Object target, Object owner) {
+    public T replace(T original, T target, Object owner) {
         return original;
     }
 }
