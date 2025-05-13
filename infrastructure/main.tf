@@ -18,6 +18,8 @@ locals {
   // Storage Account
   storageAccountName = "${var.raw_product}shared${var.env}"
 
+  db_name = "${local.app_full_name}-postgres-db-v15"
+
 }
 
 data "azurerm_key_vault" "ccd_shared_key_vault" {
@@ -56,7 +58,7 @@ module "postgresql_v15" {
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
   }
-  
+
   admin_user_object_id = var.jenkins_AAD_objectId
   business_area        = "cft"
   common_tags          = var.common_tags
