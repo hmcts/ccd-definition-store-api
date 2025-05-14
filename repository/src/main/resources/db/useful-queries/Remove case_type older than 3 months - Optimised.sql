@@ -295,6 +295,12 @@ DELETE FROM challenge_question WHERE case_type_id IN
 DELETE FROM "role" WHERE case_type_id IN
 			(SELECT id FROM case_type_ids_to_remove);
 
+DELETE FROM access_type_role WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
+DELETE FROM access_type WHERE case_type_id IN
+    (SELECT id FROM case_type_ids_to_remove);
+
 -- Final cleanup: remove the case_type entries
 DELETE FROM case_type
 	WHERE id IN (SELECT id FROM case_type_ids_to_remove)
