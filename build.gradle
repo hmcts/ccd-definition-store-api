@@ -89,7 +89,7 @@ allprojects {
         mavenCentral()
         google()
         maven {
-            url  "https://jitpack.io"
+            url 'https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1'
         }
     }
 
@@ -354,6 +354,19 @@ subprojects { subproject ->
         implementation 'com.vladmihalcea:hibernate-types-52:2.16.3'
         implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
 
+    }
+
+    publishing {
+        repositories {
+            maven {
+                name = "AzureArtifacts"
+                url = uri("https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1")
+                credentials {
+                    username = System.getenv("AZURE_DEVOPS_ARTIFACT_USERNAME")
+                    password = System.getenv("AZURE_DEVOPS_ARTIFACT_TOKEN")
+                }
+            }
+        }
     }
 
     // from https://github.com/junit-team/junit5/issues/1024'
