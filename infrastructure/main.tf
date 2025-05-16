@@ -74,14 +74,17 @@ module "postgresql_v15" {
   pgsql_server_configuration = [
     {
       name  = "azure.extensions"
-      value = "plpgsql,pg_stat_statements,pg_buffercache,hypopg"
+      value = "pg_stat_statements,pg_buffercache,hypopg"
     }
   ]
-  pgsql_version    = "15"
-  product          = var.product
-  name             = "${local.app_full_name}-postgres-db-v15"
-  pgsql_sku        = var.pgsql_sku
-  pgsql_storage_mb = var.pgsql_storage_mb
+  pgsql_version               = "15"
+  product                     = var.product
+  name                        = local.db_name
+  pgsql_sku                   = var.pgsql_sku
+  pgsql_storage_mb            = var.pgsql_storage_mb
+  action_group_name           = join("-", [var.action_group_name, local.db_name, var.env])
+  email_address_key           = var.email_address_key
+  email_address_key_vault_id  = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
 
 ////////////////////////////////////
