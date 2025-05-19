@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.model.IndicesCreationResult;
+import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
@@ -66,7 +67,8 @@ public class ElasticsearchIndexController {
         List<CaseTypeEntity> caseTypesToIndex = CollectionUtils.isEmpty(caseTypeIds)
             ? caseTypeRepository.findAllLatestVersions()
             : caseTypeRepository.findAllLatestVersions(caseTypeIds);
-        elasticDefinitionImportListener.initialiseElasticSearch(caseTypesToIndex);
+        DefinitionImportedEvent event = new DefinitionImportedEvent(caseTypesToIndex);
+        elasticDefinitionImportListener.initialiseElasticSearch(event);
         return new IndicesCreationResult(caseTypesToIndex);
     }
 
