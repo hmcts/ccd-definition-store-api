@@ -58,6 +58,7 @@ module "postgresql_v15" {
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
   }
+
   admin_user_object_id = var.jenkins_AAD_objectId
   business_area        = "cft"
   common_tags          = var.common_tags
