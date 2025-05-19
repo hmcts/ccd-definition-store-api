@@ -17,8 +17,6 @@ dependencies {
 
     implementation project(':domain')
     implementation project(':repository')
-    implementation "org.elasticsearch.client:elasticsearch-rest-high-level-client:${elasticSearchVersion}"
-    implementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
     // need these for command line to pass in the gradle version,
     // intellij does not need the next 2 lines though
     testImplementation project(path: ':domain', configuration: 'testOutput')

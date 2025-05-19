@@ -1,11 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import java.io.Serializable;
+import java.util.List;
+
 import com.google.common.collect.Lists;
-import com.vladmihalcea.hibernate.type.array.IntArrayType;
-import org.hibernate.annotations.Type;
-
-
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,8 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
-import java.io.Serializable;
-import java.util.List;
 
 @Table(name = "webhook")
 @Entity
@@ -28,7 +24,6 @@ public class WebhookEntity implements Serializable {
     @Column(name = "url")
     private String url;
 
-    @Type(IntArrayType.class)
     @Column(
         name = "timeouts",
         columnDefinition = "integer[]"

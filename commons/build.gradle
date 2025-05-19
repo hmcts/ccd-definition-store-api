@@ -14,7 +14,3 @@ jar {
 bootJar {
     enabled = false
 }
-
-dependencies {
-    implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind'
-}

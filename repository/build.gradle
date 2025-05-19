@@ -25,23 +25,13 @@ ext {
 
 dependencies {
     implementation project(':commons')
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa") {
-        exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
-    }
-    implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client'
-    implementation group: 'commons-beanutils', name: 'commons-beanutils'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
-    implementation group: 'com.google.guava', name: 'guava'
-    implementation group: 'jakarta.validation', name: 'jakarta.validation-api'
-    implementation group: 'org.hibernate.validator', name: 'hibernate-validator', version: '6.0.20.Final'
     implementation group: 'jakarta.el', name: 'jakarta.el-api', version: '6.0.1'
-    implementation group: 'org.flywaydb', name: 'flyway-core'
-    implementation group: 'com.vladmihalcea', name: 'hibernate-types-60'
 
 
     testImplementation group: 'org.assertj', name: 'assertj-core'
     testImplementation project(":commons").sourceSets.main.output
-    testImplementation group: 'com.vladmihalcea', name: 'db-util', version: '1.0.5'
+    testImplementation group: 'com.vladmihalcea', name: 'db-util', version: '1.0.7'
 }
 
 pitest {

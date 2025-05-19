@@ -179,6 +179,7 @@ public class CaseTypeObjectGraphTest {
         )));
 
         final List<EventEntity> fetchedEvents = fetched.getEvents();
+        assertThat(fetchedEvents.size(), equalTo(2));
         assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookStart() != null
             && x.getWebhookStart().getTimeouts().equals(Lists.newArrayList(3, 5, 6, 7, 8))));
         assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPreSubmit() != null
@@ -187,8 +188,10 @@ public class CaseTypeObjectGraphTest {
             && x.getWebhookPostSubmit().getTimeouts().equals(Lists.newArrayList(23, 5, 6))));
         assertThat(fetchedEvents, hasItem(hasProperty(
             "securityClassification", equalTo(SecurityClassification.PRIVATE))));
-        assertThat(fetchedEvents.get(1).getEventCaseFields(), hasSize(1));
-        EventCaseFieldEntity eventCaseFieldEntity = fetchedEvents.get(1).getEventCaseFields().get(0);
+        Optional<EventEntity> ee = fetchedEvents.stream()
+            .filter(fes -> !fes.getEventCaseFields().isEmpty()).findFirst();
+        assertTrue(ee.isPresent());
+        EventCaseFieldEntity eventCaseFieldEntity = ee.get().getEventCaseFields().get(0);
         assertThat(eventCaseFieldEntity.getCaseField().getReference(), equalTo(cf.getReference()));
         assertThat(eventCaseFieldEntity.getEvent().getReference(), equalTo(e1.getReference()));
         assertThat(eventCaseFieldEntity.getDisplayContext(), equalTo(DisplayContext.READONLY));

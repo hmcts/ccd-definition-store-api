@@ -25,11 +25,8 @@ dependencies {
     implementation project(':elastic-search-support')
     implementation project(':repository')
     implementation project(':domain')
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
-    implementation group: 'org.flywaydb', name: 'flyway-core'
-    runtimeOnly group: 'org.postgresql', name: 'postgresql'
 
     testImplementation project(":app-insights").sourceSets.main.output
     testImplementation project(":commons").sourceSets.main.output

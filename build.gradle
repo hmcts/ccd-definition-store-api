@@ -41,16 +41,15 @@ ext {
     reformLogging= '6.1.6'
     apachePoiVersion = '5.4.0'
     appInsightsVersion = '2.4.1'
-    restAssuredVersion = '5.5.0'
-    groovyVersion = '4.0.24'
+    restAssuredVersion = '5.5.1'
+    groovyVersion = '4.0.26'
     lombokVersion = '1.18.38'
     jjwtVersion = '0.12.6'
     feignJackson = '13.5'
     gsonVersion = '2.11.0'
     elasticSearchVersion = '7.17.1'
     mockitoVersion = '5.15.2'
-    testcontainersVersion = '1.20.2'
-    serviceAuthVersion = '5.2.0'
+    testcontainersVersion = '1.21.0'
     ccdTestDefinitionVersion = '7.25.1'
     beftaFwVersion = '9.2.0'
     limits = [
@@ -94,29 +93,31 @@ allprojects {
 
         // start::CVE Vulnerability dependency overrides 
 
-
+        implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5' // spring-cloud-starter-openfeign
+        implementation group: 'commons-io', name: 'commons-io', version: '2.16.1' // spring-cloud-starter-openfeign
 
         // end::CVE Vulnerability dependency overrides
+
 
         // Spring
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
         implementation 'org.springframework.cloud:spring-cloud-starter'
-        implementation 'org.springframework.security:spring-security-rsa:1.1.5'
 
         implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.5'
+        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.4.Final'
         implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.4.1'
-        implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
 
         implementation group: 'net.minidev', name: 'json-smart', version: '2.4.9'
 
         // CVE-2021-42550
-        implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.8'
-        implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.5.8'
+        implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.18'
+        implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.5.18'
 
         testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
 
+        testImplementation group: 'io.rest-assured', name: 'rest-assured', version: restAssuredVersion
         testImplementation group: 'io.rest-assured', name: 'xml-path', version: restAssuredVersion
         testImplementation group: 'io.rest-assured', name: 'json-path', version: restAssuredVersion
         testImplementation group: 'org.apache.groovy', name: 'groovy', version: groovyVersion
@@ -124,12 +125,6 @@ allprojects {
         testImplementation group: 'org.apache.groovy', name: 'groovy-json', version: groovyVersion
         testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.6', classifier: 'all'
 
-    }
-
-    configurations.all {
-        collect { configuration ->
-            configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
-        }
     }
 
 }
@@ -194,103 +189,94 @@ subprojects { subproject ->
 
     dependencies {
 
-        implementation group: 'org.apache.poi', name: 'poi', version: apachePoiVersion
-        implementation group: 'org.apache.poi', name: 'poi-ooxml', version: apachePoiVersion
-        implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: apachePoiVersion
-        implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
-        implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0'
-        implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.0.1'
+        // start::CVE Vulnerability dependency overrides 
 
-        implementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
-        implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
-        implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
-        implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
-
-        implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: jjwtVersion
-        implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: jjwtVersion
-        implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: jjwtVersion
-        implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: serviceAuthVersion
-        implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.3'
+        implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.0.1' // spring-boot-starter-oauth2-client
+        implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0' // azure-storage
+        implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4' // poi-ooxml
 
 
-        implementation group: 'com.google.guava', name: 'guava', version: '33.3.1-jre'
-        implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'
-        implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.6.6'
-        implementation group: 'com.vladmihalcea', name: 'hibernate-types-60', version: '2.21.1'
-        implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
 
-        compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
-        annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+        testImplementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2' // spring-cloud-contract-stub-runner
+        testImplementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4' // spring-cloud-contract-stub-runner
 
-        testCompileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
-        testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+        // end::CVE Vulnerability dependency overrides
 
+
+        // Spring
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-resource-server'
+        implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web'
         implementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-openfeign'
         implementation group: 'org.springframework.security', name: 'spring-security-web'
         implementation group: 'org.springframework.security', name: 'spring-security-config'
 
-        implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: feignJackson
+        // HMCTS
+        implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.2.0'
+        implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.3'
+        implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
 
-
+        implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
+        implementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
+        implementation group: 'com.google.guava', name: 'guava', version: '33.3.1-jre'
+        implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
+        implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
+        implementation group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0'
+        implementation group: 'com.vladmihalcea', name: 'hibernate-types-60', version: '2.21.1'
         implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
-        implementation group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
+        implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: feignJackson
+        implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: jjwtVersion
+        implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: jjwtVersion
+        implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: jjwtVersion
+        implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.6.6'
+        implementation group: 'jakarta.inject', name: 'jakarta.inject-api', version: '2.0.1'
+        implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'
+        implementation group: 'org.apache.poi', name: 'poi', version: apachePoiVersion
+        implementation group: 'org.apache.poi', name: 'poi-ooxml', version: apachePoiVersion
+        implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: apachePoiVersion
         implementation group: 'org.elasticsearch', name: 'elasticsearch', version: elasticSearchVersion
         implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: elasticSearchVersion
-        implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
-
         implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
-
-        implementation group: 'jakarta.inject', name: 'jakarta.inject-api', version: '2.0.1'
-
-
-        implementation group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0'
-        implementation group: 'org.bouncycastle', name: 'bcpkix-jdk15to18', version: '1.77'
+        implementation group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
+        compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+        annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
 
         testImplementation libs.mockito
         mockitoAgent(libs.mockito) {
             transitive = false;
         }
+
+        testCompileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+        testAnnotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
+
+        testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
         testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap'
-        implementation group: 'commons-io', name: 'commons-io', version: '2.16.1'
-        implementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
+        testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-contract-stub-runner'
+        testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '4.1.4'
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
-        testImplementation group: 'org.apiguardian', name: 'apiguardian-api', version: '1.0.0'
-        testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainersVersion
-        testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
-        testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
         testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
         testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: junitVintageVersion
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
-        testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
-        testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-contract-stub-runner'
+        testImplementation group: 'org.apiguardian', name: 'apiguardian-api', version: '1.1.2'
+        testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainersVersion
+        testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
+        testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
 
-        testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '4.1.4'
         testImplementation group: 'org.mockito', name: 'mockito-core', version: mockitoVersion
         testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: mockitoVersion
-        testImplementation 'com.github.npathai:hamcrest-optional:2.0.0'
+        testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
         testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
-        testImplementation "io.github.openfeign:feign-jackson:${feignJackson}"
-        testImplementation 'io.github.openfeign.form:feign-form:3.8.0'
-        testImplementation "org.exparity:hamcrest-date:2.0.4"
-        testImplementation "io.rest-assured:rest-assured:${restAssuredVersion}"
-
+        testImplementation group: 'io.github.openfeign', name: 'feign-jackson', version: feignJackson
+        testImplementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
+        testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.4'
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: ccdTestDefinitionVersion
-
         testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
-
-        testImplementation group: 'commons-lang', name: 'commons-lang', version: '2.6'
-
-        // https://mvnrepository.com/artifact/junit/junit
-        implementation group: 'junit', name: 'junit', version: '4.13.1'
-        testImplementation group: 'junit', name: 'junit', version: '4.13.1'
-        testImplementation 'info.solidsoft.gradle.pitest:gradle-pitest-plugin:1.4.0'
+        testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.4.0'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024'
