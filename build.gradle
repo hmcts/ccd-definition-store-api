@@ -240,6 +240,7 @@ subprojects { subproject ->
         implementation group: 'org.elasticsearch', name: 'elasticsearch', version: elasticSearchVersion
         implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: elasticSearchVersion
         implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
+        implementation group: 'org.flywaydb', name: 'flyway-database-postgresql', version: flywayVersion
         implementation group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
         compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
         annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
