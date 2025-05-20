@@ -1,25 +1,27 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
@@ -40,7 +42,7 @@ public class BannerRepositoryTest {
     private static final String JURISDICTION_REFERENCE_1 = "PROBATE";
     private static final String JURISDICTION_REFERENCE_2 = "DIVORCE";
 
-    @Before
+    @BeforeEach
     public void setUp() {
         JurisdictionEntity testJurisdiction1 = testHelper.createJurisdiction(JURISDICTION_REFERENCE_1, "", "");
         JurisdictionEntity testJurisdiction2 = testHelper.createJurisdiction(JURISDICTION_REFERENCE_2, "", "");

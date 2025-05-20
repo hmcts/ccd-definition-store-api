@@ -9,7 +9,7 @@ import org.mockito.MockitoAnnotations;
 import java.io.IOException;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ProxyServiceTest {
@@ -18,8 +18,8 @@ class ProxyServiceTest {
     private ProxyService proxyService;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

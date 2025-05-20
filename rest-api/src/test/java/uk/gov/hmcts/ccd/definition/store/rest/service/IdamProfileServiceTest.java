@@ -42,7 +42,7 @@ class IdamProfileServiceTest {
     private ArgumentCaptor<Class<IdamProperties>> idamPropertiesClassCaptor;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         client = new IdamProfileClient(securityUtils);
         UserInfo userInfo = UserInfo.builder()
             .uid(USER_ID)

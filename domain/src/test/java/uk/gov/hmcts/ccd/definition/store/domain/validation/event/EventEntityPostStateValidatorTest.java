@@ -1,18 +1,21 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 
 import com.google.common.collect.Sets;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+
+
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -26,7 +29,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventPostStateEntity;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.Mockito.mock;
+
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.showcondition.BaseShowConditionTest.caseFieldEntity;
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.showcondition.BaseShowConditionTest.exampleFieldTypeEntityWithComplexFields;
 
@@ -51,9 +56,9 @@ public class EventEntityPostStateValidatorTest {
 
     private EventEntityValidationContext eventEntityValidationContext;
 
-    @Before
+    @BeforeEach
     public void setUp() throws InvalidShowConditionException {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new EventEntityPostStateValidator(showConditionExtractor, caseTypeEntityUtil);
         caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference("TestCaseType");
@@ -176,7 +181,7 @@ public class EventEntityPostStateValidatorTest {
 
         assertNotNull(validationResult, "validation result should not be null");
         assertThat(validationResult.getValidationErrors().size(), is(0));
-        Assert.assertThat(validationResult.isValid(), CoreMatchers.is(true));
+        assertThat(validationResult.isValid(), CoreMatchers.is(true));
     }
 
     private ShowCondition mockShowCondition() throws InvalidShowConditionException {

@@ -35,8 +35,8 @@ class SearchAliasFieldTypeValidatorTest {
     private SearchAliasFieldTypeValidator validator;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
         validator = new SearchAliasFieldTypeValidator(repository);
     }
 

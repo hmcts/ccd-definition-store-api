@@ -53,8 +53,8 @@ class ElasticsearchIndexControllerTest {
     private static final String CASE_TYPE_3 = "CT3";
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
         caseTypes = new ArrayList<>();
         caseTypes.add(createCaseType(CASE_TYPE_1, JURISDICTION_1));
         caseTypes.add(createCaseType(CASE_TYPE_2, JURISDICTION_1));

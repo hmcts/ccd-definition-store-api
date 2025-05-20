@@ -1,17 +1,20 @@
 package uk.gov.hmcts.net.ccd.definition.store.rest;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+import org.junit.jupiter.api.BeforeEach;
 
 public class BaseTypeControllerTests extends BaseTest {
 
@@ -24,7 +27,7 @@ public class BaseTypeControllerTests extends BaseTest {
         + "|((\\+44\\s?\\d{3}|\\(?0\\d{3}\\)?)\\s?\\d{3}\\s?\\d{4})"
         + "|((\\+44\\s?\\d{2}|\\(?0\\d{2}\\)?)\\s?\\d{4}\\s?\\d{4}))(\\s?\\#(\\d{4}|\\d{3}))?$";
 
-    @Before
+    @BeforeEach
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
@@ -38,7 +41,7 @@ public class BaseTypeControllerTests extends BaseTest {
 
         FieldType[] baseTypes = BaseTest.mapper.readValue(result.getResponse().getContentAsString(), FieldType[].class);
 
-        assertEquals("Unexpected number of Base Types", 27, baseTypes.length);
+        assertEquals(27, baseTypes.length, "Unexpected number of Base Types");
 
         assertThat(baseTypes)
             .withFailMessage("Unexpected Base Type and Id")

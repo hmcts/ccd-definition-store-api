@@ -1,10 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
 import com.google.common.collect.Lists;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -17,8 +18,9 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyObject;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.BeforeEach;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -42,9 +44,9 @@ public class DisplayGroupCaseFieldsValidatorImplTest {
     ValidationError ve2;
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         testObj = new DisplayGroupCaseFieldsValidatorImpl(Lists.newArrayList(validator1, validator2));
         displayGroup = new DisplayGroupEntity();
     }
@@ -55,8 +57,8 @@ public class DisplayGroupCaseFieldsValidatorImplTest {
         displayGroup.addDisplayGroupCaseField(e1);
         displayGroup.addDisplayGroupCaseField(e2);
         displayGroup.setType(DisplayGroupType.TAB);
-        when(validator1.validate(anyObject())).thenReturn(new ValidationResult(ve1));
-        when(validator2.validate(anyObject())).thenReturn(new ValidationResult(ve2));
+        when(validator1.validate(any())).thenReturn(new ValidationResult(ve1));
+        when(validator2.validate(any())).thenReturn(new ValidationResult(ve2));
 
         ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
         assertThat(result.getValidationErrors(), hasSize(2));
@@ -72,8 +74,8 @@ public class DisplayGroupCaseFieldsValidatorImplTest {
 
         displayGroup.addDisplayGroupCaseField(e1);
         displayGroup.addDisplayGroupCaseField(e2);
-        when(validator1.validate(anyObject())).thenReturn(ValidationResult.SUCCESS);
-        when(validator2.validate(anyObject())).thenReturn(ValidationResult.SUCCESS);
+        when(validator1.validate(any())).thenReturn(ValidationResult.SUCCESS);
+        when(validator2.validate(any())).thenReturn(ValidationResult.SUCCESS);
 
         ValidationResult result = testObj.validate(displayGroup, UNUSED_DISPLAY_GROUPS);
 

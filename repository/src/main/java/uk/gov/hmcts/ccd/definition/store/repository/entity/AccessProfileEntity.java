@@ -1,37 +1,28 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import static javax.persistence.GenerationType.SEQUENCE;
+import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Table(name = "role")
 @Entity
-@TypeDef(
-    name = "pgsql_securityclassification_enum",
-    typeClass = PostgreSQLEnumType.class,
-    parameters = @Parameter(name = "type",
-        value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
-)
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dtype", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("USERROLE")
@@ -55,8 +46,7 @@ public class AccessProfileEntity implements Serializable {
     private LocalDateTime createdAt;
 
     @Column(name = "security_classification")
-    @Enumerated(EnumType.STRING)
-    @Type(type = "pgsql_securityclassification_enum")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private SecurityClassification securityClassification;
 
     public Integer getId() {

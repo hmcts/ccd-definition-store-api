@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class FieldTypeMappingErrorMessageBuilderTest {
@@ -19,7 +19,7 @@ class FieldTypeMappingErrorMessageBuilderTest {
     private CaseTypeEntity caseType = new CaseTypeBuilder().withReference("CaseTypeId").build();
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         messageBuilder = new FieldTypeMappingErrorMessageBuilder();
     }
 

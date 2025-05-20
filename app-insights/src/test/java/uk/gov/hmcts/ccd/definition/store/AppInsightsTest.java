@@ -21,8 +21,8 @@ class AppInsightsTest {
     private TelemetryClient telemetryClient;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
         TelemetryContext telemetryContext = new TelemetryContext();
         telemetryContext.setInstrumentationKey("some-key");
         doReturn(telemetryContext).when(telemetryClient).getContext();

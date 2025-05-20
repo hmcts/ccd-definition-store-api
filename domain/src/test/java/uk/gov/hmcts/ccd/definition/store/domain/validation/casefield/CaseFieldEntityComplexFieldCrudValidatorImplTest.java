@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CaseFieldEntityComplexFieldCrudValidatorImplTest {
@@ -21,7 +21,7 @@ class CaseFieldEntityComplexFieldCrudValidatorImplTest {
     private CaseFieldEntityValidationContext context;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         classUnderTest = new CaseFieldEntityComplexFieldCrudValidatorImpl();
         complexFieldACLEntity = new ComplexFieldACLEntity();
         complexFieldACLEntity.setListElementCode(LIST_ELEMENT_CODE);

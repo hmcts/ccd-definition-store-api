@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CaseRoleEntityUniquenessValidatorImplTest {
@@ -21,7 +21,7 @@ class CaseRoleEntityUniquenessValidatorImplTest {
     private CaseRoleEntityUniquenessValidatorImpl classUnderTest;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         classUnderTest = new CaseRoleEntityUniquenessValidatorImpl();
         caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setName("Case Type One");

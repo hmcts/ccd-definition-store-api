@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 @DisplayName("CaseRoleEntity Mandatory Field Validator Tests")
@@ -22,7 +22,7 @@ class CaseRoleEntityMandatoryFieldsValidatorImplTest {
     private CaseRoleEntityMandatoryFieldsValidatorImpl classUnderTest;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         caseRoleEntity = new CaseRoleEntity();
         classUnderTest = new CaseRoleEntityMandatoryFieldsValidatorImpl();
         caseTypeEntity = new CaseTypeEntity();

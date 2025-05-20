@@ -25,7 +25,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -79,8 +79,8 @@ class DefinitionServiceImplTest {
     private DefinitionServiceImpl classUnderTest;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new DefinitionServiceImpl(jurisdictionRepository, decoratedRepository, mapper);
         setupMockJurisdictionEntity();
         setupMockDefinition(definition, "Mock definition", null);

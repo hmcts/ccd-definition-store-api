@@ -22,8 +22,8 @@ class IdamProfileClientTest {
     private IdamProfileClient profileClient;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

@@ -24,8 +24,8 @@ public class AccessTypeRolesServiceImplTest {
     private AccessTypeRolesRepository repository;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new AccessTypeRolesServiceImpl(repository);
     }
 

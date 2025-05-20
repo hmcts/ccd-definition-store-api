@@ -1,11 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
 import com.google.common.collect.Lists;
+
 import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
@@ -20,12 +22,14 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyString;
+import static org.hamcrest.MatcherAssert.assertThat;
+import org.junit.jupiter.api.BeforeEach;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.showcondition.BaseShowConditionTest.caseFieldEntity;
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.showcondition.BaseShowConditionTest.exampleFieldTypeEntityWithComplexFields;
 
@@ -38,9 +42,9 @@ public class PageShowConditionValidatorImplTest {
     private PageShowConditionValidatorImpl testObj;
     private DisplayGroupEntity displayGroup;
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         testObj = new PageShowConditionValidatorImpl(mockShowConditionParser, new CaseFieldEntityUtil());
         displayGroup = new DisplayGroupEntity();
     }

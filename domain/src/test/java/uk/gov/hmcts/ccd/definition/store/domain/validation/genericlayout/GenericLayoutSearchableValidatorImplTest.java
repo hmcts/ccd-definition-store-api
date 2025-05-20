@@ -23,8 +23,8 @@ class GenericLayoutSearchableValidatorImplTest {
     private GenericLayoutEntity entity;
 
     @BeforeEach
-    void setUp() {
-        MockitoAnnotations.initMocks(this);
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
         validator = new GenericLayoutSearchableValidatorImpl();
     }
 
