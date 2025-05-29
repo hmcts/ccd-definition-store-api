@@ -48,22 +48,17 @@ ts:
 
 ts-translation-service:
   java:
-    image: hmctspublic.azurecr.io/ts/translation-service:latest
+    releaseNameOverride: ${SERVICE_NAME}-translation-service
+    ingressHost: ts-${SERVICE_FQDN}
     imagePullPolicy: Always
-    releaseNameOverride: "{{ .Release.Name }}-ts-translation-service"
-    ingressHost: ""
+    keyVaults: [ ]
     environment:
-      IDAM_OIDC_URL: https://idam-web-public.aat.platform.hmcts.net
-      OIDC_ISSUER: https://forgerock-am.service.core-compute-idam-aat.internal:8443/openam/oauth2/hmcts
-      IDAM_API_URL: https://idam-api.aat.platform.hmcts.net
-      S2S_URL: http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
-      TESTING_SUPPORT_ENABLED: false
-      TS_TRANSLATION_SERVICE_DB_HOST: "{{ .Release.Name }}-postgresql"
-      TS_TRANSLATION_SERVICE_DB_NAME: "ts_translation_service"
-      TS_TRANSLATION_SERVICE_DB_USERNAME: "{{ .Values.postgresql.auth.username}}"
-      TS_TRANSLATION_SERVICE_DB_PASSWORD: "{{ .Values.postgresql.auth.password}}"
-      TS_TRANSLATION_SERVICE_DB_OPTIONS: "?stringtype=unspecified"
+      TS_TRANSLATION_SERVICE_DB_HOST: ${SERVICE_NAME}-postgresql
+      TS_TRANSLATION_SERVICE_DB_NAME: ts_translation_service
+      TS_TRANSLATION_SERVICE_DB_USERNAME: hmcts
+      TS_TRANSLATION_SERVICE_DB_PASSWORD: hmcts
       TS_TRANSLATION_SERVICE_DB_PORT: 5432
+      TS_TRANSLATION_SERVICE_DB_OPTIONS: ?stringtype=unspecified
 
 
 ccd:
