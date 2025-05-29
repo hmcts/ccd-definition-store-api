@@ -45,9 +45,9 @@ ext['snakeyaml.version'] = '2.0'
 ext['postgresql.version'] = '42.7.3'
 //overriding log4j2 default version 2.7 because of vulnerability issues
 ext['log4j2.version'] = '2.17.1'
-ext['beftaFwVersion'] = '9.2.0'
-ext['ccdTestDefinitionVersion'] = '7.24.2'
-
+//overriding for easy access to the version for FT testing
+ext['beftaFwVersion'] = '9.2.3'
+ext['ccdTestDefinitionVersion'] = '7.25.1'
 // end
 
 ext {
@@ -149,6 +149,8 @@ allprojects {
         // CVE-2021-42550
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.2.13'
         implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.2.13'
+
+        implementation group: 'org.json', name: 'json', version: '20240303'
 
         testImplementation "io.rest-assured:xml-path:${restAssuredVersion}"
         testImplementation "io.rest-assured:json-path:${restAssuredVersion}"
