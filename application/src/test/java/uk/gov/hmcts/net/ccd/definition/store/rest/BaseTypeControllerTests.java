@@ -1,20 +1,20 @@
 package uk.gov.hmcts.net.ccd.definition.store.rest;
 
 
+import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
+import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
+
+import java.util.stream.Stream;
+
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
-import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import org.junit.jupiter.api.BeforeEach;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BaseTypeControllerTests extends BaseTest {
 
@@ -42,38 +42,46 @@ public class BaseTypeControllerTests extends BaseTest {
         FieldType[] baseTypes = BaseTest.mapper.readValue(result.getResponse().getContentAsString(), FieldType[].class);
 
         assertEquals(27, baseTypes.length, "Unexpected number of Base Types");
+        assertContainsFieldType(baseTypes, "Text", "Text");
+        assertContainsFieldType(baseTypes, "Number", "Number");
+        assertContainsFieldType(baseTypes, "Email", "Email");
+        assertContainsFieldType(baseTypes, "YesOrNo", "YesOrNo");
+        assertContainsFieldType(baseTypes, "Date", "Date");
+        assertContainsFieldType(baseTypes, "FixedList", "FixedList");
+        assertContainsFieldType(baseTypes, "Postcode", "Postcode", POST_CODE_REGEX);
+        assertContainsFieldType(baseTypes, "MoneyGBP", "MoneyGBP");
+        assertContainsFieldType(baseTypes, "PhoneUK", "PhoneUK", PHONE_NUMBER_REGEX);
+        assertContainsFieldType(baseTypes, "TextArea", "TextArea");
+        assertContainsFieldType(baseTypes, "Complex", "Complex");
+        assertContainsFieldType(baseTypes, "Collection", "Collection");
+        assertContainsFieldType(baseTypes, "MultiSelectList", "MultiSelectList");
+        assertContainsFieldType(baseTypes, "Document", "Document");
+        assertContainsFieldType(baseTypes, "Label", "Label");
+        assertContainsFieldType(baseTypes, "DateTime", "DateTime");
+        assertContainsFieldType(baseTypes, "CasePaymentHistoryViewer", "CasePaymentHistoryViewer");
+        assertContainsFieldType(baseTypes, "FixedRadioList", "FixedRadioList");
+        assertContainsFieldType(baseTypes, "CaseHistoryViewer", "CaseHistoryViewer");
+        assertContainsFieldType(baseTypes, "DynamicList", "DynamicList");
+        assertContainsFieldType(baseTypes, "Region", "Region");
+        assertContainsFieldType(baseTypes, "BaseLocation", "BaseLocation");
+        assertContainsFieldType(baseTypes, "DynamicRadioList", "DynamicRadioList");
+        assertContainsFieldType(baseTypes, "DynamicMultiSelectList", "DynamicMultiSelectList");
+        assertContainsFieldType(baseTypes, "WaysToPay", "WaysToPay");
+        assertContainsFieldType(baseTypes, "FlagLauncher", "FlagLauncher");
+        assertContainsFieldType(baseTypes, "ComponentLauncher", "ComponentLauncher");
+    }
+    
+    private void assertContainsFieldType(FieldType[] baseTypes, String id, String type) {
+        assertTrue(Stream.of(baseTypes)
+            .anyMatch(baseType -> baseType.getType().equals(type) && baseType.getId().equals(id)),
+            "Base Type not found: " + id + " with Type: " + type);
+    }
 
-        assertThat(baseTypes)
-            .withFailMessage("Unexpected Base Type and Id")
-            .extracting(FieldType::getId, FieldType::getType, FieldType::getRegularExpression)
-            .containsExactlyInAnyOrder(
-                tuple("Text", "Text", null),
-                tuple("Number", "Number", null),
-                tuple("Email", "Email", null),
-                tuple("YesOrNo", "YesOrNo", null),
-                tuple("Date", "Date", null),
-                tuple("FixedList", "FixedList", null),
-                tuple("Postcode", "Postcode", POST_CODE_REGEX),
-                tuple("MoneyGBP", "MoneyGBP", null),
-                tuple("PhoneUK", "PhoneUK", PHONE_NUMBER_REGEX),
-                tuple("TextArea", "TextArea", null),
-                tuple("Complex", "Complex", null),
-                tuple("Collection", "Collection", null),
-                tuple("MultiSelectList", "MultiSelectList", null),
-                tuple("Document", "Document", null),
-                tuple("Label", "Label", null),
-                tuple("DateTime", "DateTime", null),
-                tuple("CasePaymentHistoryViewer", "CasePaymentHistoryViewer", null),
-                tuple("FixedRadioList", "FixedRadioList", null),
-                tuple("CaseHistoryViewer", "CaseHistoryViewer", null),
-                tuple("DynamicList", "DynamicList", null),
-                tuple("Region", "Region", null),
-                tuple("BaseLocation", "BaseLocation", null),
-                tuple("DynamicRadioList", "DynamicRadioList", null),
-                tuple("DynamicMultiSelectList", "DynamicMultiSelectList", null),
-                tuple("WaysToPay", "WaysToPay", null),
-                tuple("FlagLauncher", "FlagLauncher", null),
-                tuple("ComponentLauncher", "ComponentLauncher", null)
-            );
+    private void assertContainsFieldType(FieldType[] baseTypes, String id, String type, String regex) {
+        assertTrue(Stream.of(baseTypes)
+            .anyMatch(baseType -> baseType.getType().equals(type) 
+                && baseType.getId().equals(id) 
+                && baseType.getRegularExpression().equals(regex)),
+            "Base Type not found: " + id + " with Type: " + type + " and Regex: " + regex);
     }
 }

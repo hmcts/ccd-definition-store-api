@@ -24,7 +24,6 @@ import java.util.Optional;
 
 import jakarta.persistence.EntityManager;
 import org.apache.commons.lang3.StringUtils;
-import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -181,11 +180,11 @@ public class CaseTypeObjectGraphTest {
         final List<EventEntity> fetchedEvents = fetched.getEvents();
         assertThat(fetchedEvents.size(), equalTo(2));
         assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookStart() != null
-            && x.getWebhookStart().getTimeouts().equals(Lists.newArrayList(3, 5, 6, 7, 8))));
+            && x.getWebhookStart().getTimeouts().equals(List.of(3, 5, 6, 7, 8))));
         assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPreSubmit() != null
-            && x.getWebhookPreSubmit().getTimeouts().equals(Lists.newArrayList(3, 50, 6, 20))));
+            && x.getWebhookPreSubmit().getTimeouts().equals(List.of(3, 50, 6, 20))));
         assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPostSubmit() != null
-            && x.getWebhookPostSubmit().getTimeouts().equals(Lists.newArrayList(23, 5, 6))));
+            && x.getWebhookPostSubmit().getTimeouts().equals(List.of(23, 5, 6))));
         assertThat(fetchedEvents, hasItem(hasProperty(
             "securityClassification", equalTo(SecurityClassification.PRIVATE))));
         Optional<EventEntity> ee = fetchedEvents.stream()
@@ -393,7 +392,7 @@ public class CaseTypeObjectGraphTest {
     private WebhookEntity createWebHook(final String url, final Integer... timeouts) {
         final WebhookEntity webhook = new WebhookEntity();
         webhook.setUrl(url);
-        webhook.setTimeouts(Lists.newArrayList(timeouts));
+        webhook.setTimeouts(List.of(timeouts));
         return webhook;
     }
 

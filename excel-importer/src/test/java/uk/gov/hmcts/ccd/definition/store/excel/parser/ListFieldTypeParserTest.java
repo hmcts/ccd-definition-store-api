@@ -11,7 +11,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEnti
 
 import java.util.Optional;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
@@ -61,7 +61,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
         InvalidImportException ex = assertThrows(InvalidImportException.class, () ->
             new ListFieldTypeParser(parseContext, spreadsheetValidator));
         
-        Assertions.assertThat(ex).hasMessage("No base type found for: FixedList");
+        assertThat(ex.getMessage(), containsString("No base type found for: FixedList"));
     }
 
     @Test
@@ -73,7 +73,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
 
         InvalidImportException ex = assertThrows(InvalidImportException.class, () ->
             new ListFieldTypeParser(parseContext, spreadsheetValidator));
-        Assertions.assertThat(ex).hasMessage("No base type found for: MultiSelectList");
+        assertThat(ex.getMessage(), containsString("No base type found for: MultiSelectList"));
     }
 
     @Test

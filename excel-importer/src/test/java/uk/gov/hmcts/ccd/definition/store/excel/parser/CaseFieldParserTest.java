@@ -11,12 +11,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
-import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
@@ -46,8 +46,8 @@ public class CaseFieldParserTest extends ParserTestBase {
     public void shouldFail_whenNoFieldsAreDefinedForCaseType() {
         SpreadsheetParsingException ex = assertThrows(SpreadsheetParsingException.class, () ->
             caseFieldParser.parseAll(definitionSheets, caseType));
-        Assertions.assertThat(ex).hasMessageContaining(
-                "At least one case field must be defined for case type: Some Case Type");
+        assertThat(ex.getMessage(), containsString(
+                "At least one case field must be defined for case type: Some Case Type"));
     }
 
     @Test

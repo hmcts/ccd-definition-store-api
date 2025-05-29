@@ -100,8 +100,7 @@ public class SpreadsheetValidatorTest {
         // This test case ould fail if an exception is thrown; nothing else to assert.
         validator.validate("sheet", definitionSheet, Arrays.asList("N G I T B"));
 
-        // Could have used Latest AssertJ to assert no exception is thrown but it is not
-        // in POM
+        // Could have used Latest AssertJ to assert no exception is thrown but it is not in POM
     }
 
     @Test
@@ -220,8 +219,7 @@ public class SpreadsheetValidatorTest {
         // This test case ould fail if an exception is thrown; nothing else to assert.
         validator.validate(definitionSheets);
 
-        // Could have used Latest AssertJ to assert no exception is thrown but it is not
-        // in POM
+        // Could have used Latest AssertJ to assert no exception is thrown but it is not in POM
     }
 
     private DefinitionSheet addDefinitionSheet(SheetName sheetName) {

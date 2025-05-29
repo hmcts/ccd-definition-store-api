@@ -11,17 +11,17 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DefinitionDataItemTest {
@@ -38,8 +38,8 @@ public class DefinitionDataItemTest {
         MapperException ex = assertThrows(MapperException.class, () -> {
             item.findAttribute(ColumnName.ID);
         });
-        Assertions.assertThat(ex).hasMessageContaining(
-            "Couldn't find the column ID in the sheet CaseEvent");
+        assertThat(ex.getMessage(), containsString(
+            "Couldn't find the column ID in the sheet CaseEvent"));
     }
 
     @Test
@@ -50,15 +50,15 @@ public class DefinitionDataItemTest {
             item.findAttribute(ColumnName.ID);
         });
         
-        Assertions.assertThat(ex).hasMessageContaining(
-            "There's a missing value in the column 'ID' or invalid value in the sheet 'CaseEvent'");
+        assertThat(ex.getMessage(), containsString(
+            "There's a missing value in the column 'ID' or invalid value in the sheet 'CaseEvent'"));
     }
 
     @Test
     public void shouldSucceed_whenRequiredAttributeKeyIsUsingAnAlias() {
         item.addAttribute(ColumnName.ACCESS_PROFILE.getAliases()[0], "Access Profile Value");
 
-        Assertions.assertThat(item.findAttribute(ColumnName.ACCESS_PROFILE)).isEqualTo("Access Profile Value");
+        assertEquals("Access Profile Value", item.findAttribute(ColumnName.ACCESS_PROFILE));
     }
 
     @Test
@@ -144,8 +144,8 @@ public class DefinitionDataItemTest {
             item.getBoolean(ColumnName.DEFAULT_HIDDEN);
         });
         
-        Assertions.assertThat(ex).hasMessageContaining(
-                "Invalid value 'k' is found in column 'DefaultHidden' in the sheet 'CaseEvent'");
+        assertThat(ex.getMessage(), containsString(
+                "Invalid value 'k' is found in column 'DefaultHidden' in the sheet 'CaseEvent'"));
     }
 
     @Test

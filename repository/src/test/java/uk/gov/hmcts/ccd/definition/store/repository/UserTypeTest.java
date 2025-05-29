@@ -20,7 +20,7 @@ public class UserTypeTest {
     public void testClassUserType() throws SQLException {
         
         ClassUserType classUserType = new ClassUserType();
-        assertEquals(classUserType.getSqlType(), Types.JAVA_OBJECT);
+        assertEquals(Types.JAVA_OBJECT, classUserType.getSqlType());
 
         ResultSet resultSet = mock(ResultSet.class);
         when(resultSet.getString(1)).thenReturn("java.lang.String");
@@ -31,8 +31,8 @@ public class UserTypeTest {
     @Test
     public void testGeneralImmutableJsonType() throws HibernateException, SQLException {
         GIJT<Banner> gijt = new GIJT<Banner>(Banner.class);
-        assertEquals(gijt.getSqlType(), Types.JAVA_OBJECT);
-        assertEquals(gijt.returnedClass(), Banner.class);
+        assertEquals(Types.JAVA_OBJECT, gijt.getSqlType());
+        assertEquals(Banner.class, gijt.returnedClass());
 
         ResultSet resultSet = mock(ResultSet.class);
         when(resultSet.getString(1)).thenReturn("{\"id\":\"value\"}");

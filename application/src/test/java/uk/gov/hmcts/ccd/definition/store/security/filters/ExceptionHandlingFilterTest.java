@@ -1,11 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.security.filters;
 
+import java.io.IOException;
+import java.util.List;
+
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
-
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.catalina.connector.ClientAbortException;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -14,17 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
-import java.util.List;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
 public class ExceptionHandlingFilterTest {
@@ -73,7 +71,7 @@ public class ExceptionHandlingFilterTest {
             .doFilter(Mockito.eq(request), Mockito.eq(response));
         filter.doFilterInternal(request, response, filterChain);
 
-        assertThat(response.getStatus()).isEqualTo(502);
+        assertEquals(502, response.getStatus());
         assertLogging();
     }
 
@@ -85,7 +83,7 @@ public class ExceptionHandlingFilterTest {
             .doFilter(Mockito.eq(request), Mockito.eq(response));
         filter.doFilterInternal(request, response, filterChain);
 
-        assertThat(response.getStatus()).isEqualTo(500);
+        assertEquals(500, response.getStatus());
         assertLogging();
     }
 
@@ -93,8 +91,8 @@ public class ExceptionHandlingFilterTest {
         List<ILoggingEvent> logsList = listAppender.list;
         ILoggingEvent lastLogEntry = logsList.get(logsList.size() - 1);
 
-        assertThat(lastLogEntry.getLevel()).isEqualTo(Level.ERROR);
-        assertThat(lastLogEntry.getLoggerName()).isEqualTo(EXCEPTION_LOGGER_TYPE);
-        assertThat(lastLogEntry.getMessage()).contains(EXCEPTION_MESSAGE);
+        assertEquals(Level.ERROR, lastLogEntry.getLevel());
+        assertEquals(EXCEPTION_LOGGER_TYPE, lastLogEntry.getLoggerName());
+        assertEquals(EXCEPTION_MESSAGE, lastLogEntry.getMessage());
     }
 }

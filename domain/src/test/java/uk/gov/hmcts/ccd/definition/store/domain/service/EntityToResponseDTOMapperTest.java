@@ -88,8 +88,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import org.assertj.core.api.Assertions;
-import org.assertj.core.util.Lists;
 import org.hamcrest.BaseMatcher;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -107,6 +105,7 @@ import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.spy;
@@ -933,7 +932,7 @@ class  EntityToResponseDTOMapperTest {
         private WebhookEntity webHook(String url, Integer... retriesTimeouts) {
             WebhookEntity webhookEntity = new WebhookEntity();
             webhookEntity.setUrl(url);
-            webhookEntity.setTimeouts(Lists.newArrayList(retriesTimeouts));
+            webhookEntity.setTimeouts(List.of(retriesTimeouts));
             return webhookEntity;
         }
 
@@ -1791,20 +1790,18 @@ class  EntityToResponseDTOMapperTest {
 
             final RoleToAccessProfiles actualRoleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
 
-            Assertions.assertThat(actualRoleToAccessProfiles)
-                .isNotNull()
-                .satisfies(actual -> {
-                    Assertions.assertThat(actual.getCaseTypeId()).isEqualTo("CaseTypeReference");
-                    Assertions.assertThat(actual.getRoleName()).isEqualTo("judge");
-                    Assertions.assertThat(actual.getLiveFrom()).isEqualTo(liveFrom);
-                    Assertions.assertThat(actual.getLiveTo()).isEqualTo(liveTo);
-                    Assertions.assertThat(actual.getReadOnly()).isTrue();
-                    Assertions.assertThat(actual.getDisabled()).isTrue();
-                    Assertions.assertThat(actual.getAuthorisations()).isEqualTo("auth1,auth2");
-                    Assertions.assertThat(actual.getAccessProfiles())
-                        .isEqualTo("caseworker-befta_master,caseworker-befta_master-solicitor");
-                    Assertions.assertThat(actual.getCaseAccessCategories()).isEqualTo("Cat1,Cat2");
-                });
+            assertNotNull(actualRoleToAccessProfiles);
+            
+            assertEquals("CaseTypeReference", actualRoleToAccessProfiles.getCaseTypeId());
+            assertEquals("judge", actualRoleToAccessProfiles.getRoleName());
+            assertEquals(liveFrom, actualRoleToAccessProfiles.getLiveFrom());
+            assertEquals(liveTo, actualRoleToAccessProfiles.getLiveTo());
+            assertTrue(actualRoleToAccessProfiles.getReadOnly());
+            assertTrue(actualRoleToAccessProfiles.getDisabled());
+            assertEquals("auth1,auth2", actualRoleToAccessProfiles.getAuthorisations());
+            assertEquals("caseworker-befta_master,caseworker-befta_master-solicitor", 
+                actualRoleToAccessProfiles.getAccessProfiles());
+            assertEquals("Cat1,Cat2", actualRoleToAccessProfiles.getCaseAccessCategories());
         }
 
         @Test
@@ -1815,9 +1812,7 @@ class  EntityToResponseDTOMapperTest {
 
             final RoleToAccessProfiles actualRoleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
 
-            Assertions.assertThat(actualRoleToAccessProfiles)
-                .isNotNull()
-                .isEqualTo(expectedRoleToAccessProfiles);
+            assertEquals(expectedRoleToAccessProfiles, actualRoleToAccessProfiles);
         }
     }
 

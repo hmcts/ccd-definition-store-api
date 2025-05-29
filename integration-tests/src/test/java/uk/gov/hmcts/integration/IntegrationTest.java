@@ -1,5 +1,8 @@
 package uk.gov.hmcts.integration;
 
+import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
+
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -9,7 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.apache.http.HttpHeaders.AUTHORIZATION;
 import static org.apache.http.HttpHeaders.CONTENT_TYPE;

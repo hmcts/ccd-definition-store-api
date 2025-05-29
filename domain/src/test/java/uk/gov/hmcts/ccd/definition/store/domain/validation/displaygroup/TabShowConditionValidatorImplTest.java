@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
-import org.assertj.core.util.Lists;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.DisplayName;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
@@ -22,31 +15,33 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-
 import static junit.framework.TestCase.assertTrue;
-
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.jupiter.api.BeforeEach;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
 
 public class TabShowConditionValidatorImplTest {
-    private static final List<DisplayGroupEntity> UNUSED_DISPLAY_GROUPS =
-        com.google.common.collect.Lists.newArrayList();
+    private static final List<DisplayGroupEntity> UNUSED_DISPLAY_GROUPS = new ArrayList<>();
 
     @Mock
     private ShowConditionParser mockShowConditionParser;
@@ -60,7 +55,7 @@ public class TabShowConditionValidatorImplTest {
         MockitoAnnotations.openMocks(this);
         testObj = new TabShowConditionValidatorImpl(mockShowConditionParser, new CaseFieldEntityUtil());
         displayGroup = new DisplayGroupEntity();
-        allTabDisplayGroups = Lists.newArrayList();
+        allTabDisplayGroups = new ArrayList<>();
     }
 
     @Test

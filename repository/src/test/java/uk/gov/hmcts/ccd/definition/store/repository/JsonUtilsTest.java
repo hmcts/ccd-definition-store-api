@@ -4,12 +4,12 @@ import java.time.LocalDate;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.exc.MismatchedInputException;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class JsonUtilsTest {
@@ -38,7 +38,7 @@ public class JsonUtilsTest {
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             JsonUtils.fromString(s, String.class);
         });
-        Assertions.assertThat(ex).hasMessageContaining(" cannot be transformed to Json object");
+        assertThat(ex.getMessage(), containsString(" cannot be transformed to Json object"));
     }
 
     @Test
@@ -68,7 +68,7 @@ public class JsonUtilsTest {
         });
         final Throwable cause = ex.getCause();
         assertThat(cause, instanceOf(MismatchedInputException.class));
-        Assertions.assertThat(cause).hasMessageContaining(
-                "Cannot deserialize value of type `java.lang.String` from Array value");
+        assertThat(cause.getMessage(), containsString(
+                "Cannot deserialize value of type `java.lang.String` from Array value"));
     }
 }
