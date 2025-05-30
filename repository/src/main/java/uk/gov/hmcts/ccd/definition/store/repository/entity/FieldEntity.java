@@ -1,15 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import com.google.common.base.Strings;
-import org.apache.commons.lang3.StringUtils;
-
-import jakarta.persistence.Transient;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.google.common.base.Strings;
+import jakarta.persistence.Transient;
+import org.apache.commons.lang3.StringUtils;
 
 import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
@@ -101,7 +101,7 @@ public interface FieldEntity extends Serializable {
             return Optional.of(this);
         }
         if (this.getFieldType().getChildren().isEmpty()) {
-            Optional.empty();
+            return Optional.empty();
         }
 
         return reduce(this.getFieldType().getChildren(), getPathElements(path));

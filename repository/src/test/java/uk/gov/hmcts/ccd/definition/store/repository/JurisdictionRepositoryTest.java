@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class JurisdictionRepositoryTest {
+class JurisdictionRepositoryTest {
 
     @Autowired
     private JurisdictionRepository jurisdictionRepository;
@@ -38,7 +38,7 @@ public class JurisdictionRepositoryTest {
     private TestHelper testHelper;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         testHelper.createJurisdiction("ref1", "name1", "desc1");
         testHelper.createJurisdiction("ref1", "name1.2", "desc1.2");
         testHelper.createJurisdiction("ref2", "name2", "desc2");
@@ -49,7 +49,7 @@ public class JurisdictionRepositoryTest {
     }
 
     @Test
-    public void getSpecificJurisdictionDefinitions() {
+    void getSpecificJurisdictionDefinitions() {
 
         List<JurisdictionEntity> result = jurisdictionRepository.findAllLatestVersionByReference(
             newArrayList("ref1", "ref2", "ref4"));
@@ -63,7 +63,7 @@ public class JurisdictionRepositoryTest {
     }
 
     @Test
-    public void getAllJurisdictionDefinitinon() {
+    void getAllJurisdictionDefinitinon() {
 
         List<JurisdictionEntity> result = jurisdictionRepository.findAllLatestVersion();
 

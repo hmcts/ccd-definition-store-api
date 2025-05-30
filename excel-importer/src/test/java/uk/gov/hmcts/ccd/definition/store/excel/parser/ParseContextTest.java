@@ -31,7 +31,7 @@ class ParseContextTest {
     private ParseContext parseContext;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         parseContext = new ParseContext();
     }
 

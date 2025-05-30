@@ -8,17 +8,17 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.text.MatchesPattern.matchesPattern;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class CaseTypeVersionInformationTest {
+class CaseTypeVersionInformationTest {
 
     @Test
-    public void testJson() throws JsonProcessingException {
+    void testJson() throws JsonProcessingException {
         final CaseTypeVersionInformation version = new CaseTypeVersionInformation(678);
         final ObjectMapper objectMapper = new ObjectMapper();
         assertThat(objectMapper.writeValueAsString(version), is("{\"version\":678}"));
     }
 
     @Test
-    public void testGetterAndToString() {
+    void testGetterAndToString() {
         final CaseTypeVersionInformation version = new CaseTypeVersionInformation(679);
         assertThat(version.getVersion(), is(679));
         assertThat(version.toString(),

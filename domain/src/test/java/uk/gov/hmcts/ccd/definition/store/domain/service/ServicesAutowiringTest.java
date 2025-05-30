@@ -79,12 +79,12 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration
-public class ServicesAutowiringTest implements ApplicationContextAware {
+class ServicesAutowiringTest implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
     @Test
-    public void caseTypeServiceHasAllRequiredValidatorsWiredIntoList() {
+    void caseTypeServiceHasAllRequiredValidatorsWiredIntoList() {
 
         CaseTypeService caseTypeService
             = applicationContext.getAutowireCapableBeanFactory().getBean(CaseTypeService.class);
@@ -181,7 +181,7 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
     }
 
     @Test
-    public void fieldTypeServiceHasAllRequiredValidatorsWiredIntoList() {
+    void fieldTypeServiceHasAllRequiredValidatorsWiredIntoList() {
 
         FieldTypeService fieldTypeService
             = applicationContext.getAutowireCapableBeanFactory().getBean(FieldTypeService.class);

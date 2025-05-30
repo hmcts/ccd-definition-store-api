@@ -21,7 +21,7 @@ class CaseRoleEntityUniquenessValidatorImplTest {
     private CaseRoleEntityUniquenessValidatorImpl classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         classUnderTest = new CaseRoleEntityUniquenessValidatorImpl();
         caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setName("Case Type One");

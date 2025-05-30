@@ -35,7 +35,7 @@ class CaseTypeEntityCaseRoleValidatorImplTest {
     private CaseTypeEntity caseType;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new CaseTypeEntityCaseRoleValidatorImpl(Arrays.asList(mandatoryValidator,
             fieldValueValidator, uniquenessValidator));

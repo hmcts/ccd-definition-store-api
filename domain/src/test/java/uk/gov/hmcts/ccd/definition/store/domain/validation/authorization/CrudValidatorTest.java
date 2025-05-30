@@ -2,37 +2,37 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.authorization;
 
 import org.junit.jupiter.api.Test;
 
-import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 
-public class CrudValidatorTest {
+class CrudValidatorTest {
 
     @Test
-    public void validateBlankCrud() {
+    void validateBlankCrud() {
         final boolean result = CrudValidator.isValidCrud("   ");
         assertThat(result, is(false));
     }
 
     @Test
-    public void validateLongCrud() {
+    void validateLongCrud() {
         final boolean result = CrudValidator.isValidCrud("CRUDcr");
         assertThat(result, is(false));
     }
 
     @Test
-    public void validateNullCrud() {
+    void validateNullCrud() {
         final boolean result = CrudValidator.isValidCrud(null);
         assertThat(result, is(false));
     }
 
     @Test
-    public void validateInvalidCrud() {
+    void validateInvalidCrud() {
         final boolean result = CrudValidator.isValidCrud("xcr");
         assertThat(result, is(false));
     }
 
     @Test
-    public void shouldHaveEmptyResult_whenValidCrud() {
+    void shouldHaveEmptyResult_whenValidCrud() {
         final boolean result = CrudValidator.isValidCrud("cr U ");
         assertThat(result, is(true));
     }

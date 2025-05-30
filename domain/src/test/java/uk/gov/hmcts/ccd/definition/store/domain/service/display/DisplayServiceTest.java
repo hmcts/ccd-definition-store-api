@@ -41,7 +41,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class DisplayServiceTest {
+class DisplayServiceTest {
 
     @Mock
     private GenericLayoutRepository genericLayoutRepository;
@@ -59,7 +59,7 @@ public class DisplayServiceTest {
     private DisplayService classUnderTest;
 
     @BeforeEach
-    public void setUpMocks() {
+    void setUpMocks() {
         MockitoAnnotations.openMocks(this);
     }
 
@@ -67,7 +67,7 @@ public class DisplayServiceTest {
     class FindTabStructureForCaseTypeTests {
 
         @Test
-        public void shouldReturnCaseTabCollectionWithEmptyTabsAndChannelsList_whenNoDisplayGroupEntitiesForCaseType() {
+        void shouldReturnCaseTabCollectionWithEmptyTabsAndChannelsList_whenNoDisplayGroupEntitiesForCaseType() {
 
             String caseTypeId = "CaseTypeId";
 
@@ -84,7 +84,7 @@ public class DisplayServiceTest {
 
         @SuppressWarnings("checkstyle:LineLength")
         @Test
-        public void shouldReturnCaseTabCollectionWithPopulatedChannelsAndTabsLists_whenDisplayGroupEntitiesExistForCaseType() {
+        void shouldReturnCaseTabCollectionWithPopulatedChannelsAndTabsLists_whenDisplayGroupEntitiesExistForCaseType() {
 
             String caseTypeId = "CaseTypeId";
 
@@ -131,7 +131,7 @@ public class DisplayServiceTest {
     class FindSearchInputDefinitionForCaseType {
 
         @Test
-        public void shouldReturnEquivalentSearchInputDefinition_whenSearchInputCaseFieldEntitiesExist() {
+        void shouldReturnEquivalentSearchInputDefinition_whenSearchInputCaseFieldEntitiesExist() {
 
             String caseTypeId = "CaseTypeId";
 
@@ -165,7 +165,7 @@ public class DisplayServiceTest {
 
         @SuppressWarnings("checkstyle:LineLength")
         @Test
-        public void shouldReturnSearchInputDefinitionWithEmptySearchInputFieldList_whenNoSearchInputCaseFieldEntitiesForCaseType() {
+        void shouldReturnSearchInputDefinitionWithEmptySearchInputFieldList_whenNoSearchInputCaseFieldEntitiesForCaseType() {
 
             String caseTypeId = "CaseTypeId";
 
@@ -186,7 +186,7 @@ public class DisplayServiceTest {
     class FindSearchResultDefinitionForCaseType {
 
         @Test
-        public void shouldReturnEquivalentSearchResultDefinition_whenSearchResultCaseFieldEntitiesExist() {
+        void shouldReturnEquivalentSearchResultDefinition_whenSearchResultCaseFieldEntitiesExist() {
 
             String caseTypeId = "CaseTypeId";
 
@@ -220,7 +220,7 @@ public class DisplayServiceTest {
 
         @SuppressWarnings("checkstyle:LineLength")
         @Test
-        public void shouldReturnSearchResultDefinitionWithEmptySearchResultFieldList_whenNoSearchResultCaseFieldEntitiesForCaseType() {
+        void shouldReturnSearchResultDefinitionWithEmptySearchResultFieldList_whenNoSearchResultCaseFieldEntitiesForCaseType() {
 
             String caseTypeId = "CaseTypeId";
 
@@ -294,7 +294,7 @@ public class DisplayServiceTest {
     class FindWorkBasketResultDefinitionForCaseType {
 
         @Test
-        public void shouldReturnEquivalentWorkBasketResult_whenWorkBasketCaseFieldEntitiesExist() {
+        void shouldReturnEquivalentWorkBasketResult_whenWorkBasketCaseFieldEntitiesExist() {
 
             String caseTypeId = "CaseTypeId";
 
@@ -327,7 +327,7 @@ public class DisplayServiceTest {
 
         @SuppressWarnings("checkstyle:LineLength")
         @Test
-        public void shouldReturnWorkBasketResultWithEmptySearchResultFieldList_whenNoWorkBasketCaseFieldEntitiesForCaseType() {
+        void shouldReturnWorkBasketResultWithEmptySearchResultFieldList_whenNoWorkBasketCaseFieldEntitiesForCaseType() {
 
             String caseTypeId = "CaseTypeId";
 
@@ -400,7 +400,7 @@ public class DisplayServiceTest {
     class FindWizardPageForCaseType {
 
         @Test
-        public void delegatesToDisplayGroupAdapterService() {
+        void delegatesToDisplayGroupAdapterService() {
             String caseTypeId = "CaseTypeId";
             String createCaseEvent = "createCaseEvent";
 

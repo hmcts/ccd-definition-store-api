@@ -42,7 +42,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupTy
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class DisplayGroupRepositoryTest {
+class DisplayGroupRepositoryTest {
 
     private static final String CASE_TYPE_REFERENCE = "CaseTypeRef";
     private static final String SHOW_CONDITION = "showCondition";
@@ -63,7 +63,7 @@ public class DisplayGroupRepositoryTest {
     private VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
 
         caseTypeV1 = versionedCaseTypeRepository.save(caseTypeEntity());
@@ -73,7 +73,7 @@ public class DisplayGroupRepositoryTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void shouldReturnDisplayGroupEntityForLatestCaseTypeVersion_whenDisplayGroupEntitesExistAcrossMultipleVersionsOfCaseType() {
+    void shouldReturnDisplayGroupEntityForLatestCaseTypeVersion_whenDisplayGroupEntitesExistAcrossMultipleVersionsOfCaseType() {
 
         createDisplayGroupsForCase(caseTypeV1);
         createDisplayGroupsForCase(caseTypeV2);

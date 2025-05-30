@@ -35,7 +35,7 @@ class RoleToAccessProfilesValidatorTest {
     private CaseTypeEntity caseTypeEntity2;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         parseContext = mock(ParseContext.class);
         validator = new RoleToAccessProfilesValidator();
 

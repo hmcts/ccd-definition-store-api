@@ -34,7 +34,7 @@ class SearchCasesResultLayoutParserTest {
     private Map<String, DefinitionSheet> definitionSheets;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
 
         definitionSheets = new HashMap<>();

@@ -35,7 +35,7 @@ class MetadataFieldServiceImplTest {
     private MetadataFieldServiceImpl metadataFieldService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         metadataFieldService = new MetadataFieldServiceImpl(caseFieldRepository, dtoMapper);
     }

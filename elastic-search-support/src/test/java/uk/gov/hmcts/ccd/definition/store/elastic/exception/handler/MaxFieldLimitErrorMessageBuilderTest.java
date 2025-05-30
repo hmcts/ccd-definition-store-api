@@ -19,7 +19,7 @@ class MaxFieldLimitErrorMessageBuilderTest {
     private CaseTypeEntity caseType = new CaseTypeBuilder().withReference("CaseTypeId").build();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         messageBuilder = new MaxFieldLimitErrorMessageBuilder();
     }
 

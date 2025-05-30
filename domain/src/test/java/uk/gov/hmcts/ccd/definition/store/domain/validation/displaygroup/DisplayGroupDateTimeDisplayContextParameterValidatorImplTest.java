@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-public class DisplayGroupDateTimeDisplayContextParameterValidatorImplTest {
+class DisplayGroupDateTimeDisplayContextParameterValidatorImplTest {
 
     private DisplayGroupCaseFieldValidator validator;
 
@@ -31,7 +31,7 @@ public class DisplayGroupDateTimeDisplayContextParameterValidatorImplTest {
     private DisplayContextParameterValidator displayContextParameterValidator;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         validator = new DisplayGroupDateTimeDisplayContextParameterValidatorImpl(
             displayContextParameterValidatorFactory);

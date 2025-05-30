@@ -15,7 +15,7 @@ import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
-public class StateEntityACLValidatorImplTest {
+class StateEntityACLValidatorImplTest {
     private StateEntity stateEntity;
     private AccessProfileEntity accessProfileEntity;
     private StateACLEntity stateACLEntity;
@@ -23,7 +23,7 @@ public class StateEntityACLValidatorImplTest {
     private StateEntityValidationContext stateEntityValidationContext;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         validator = new StateEntityACLValidatorImpl();
         stateACLEntity = new StateACLEntity();
         accessProfileEntity = new AccessProfileEntity();
@@ -38,7 +38,7 @@ public class StateEntityACLValidatorImplTest {
     }
 
     @Test
-    public void shouldHaveValidationErrorWhenAccessProfileNotFound() {
+    void shouldHaveValidationErrorWhenAccessProfileNotFound() {
         stateACLEntity.setAccessProfile(null);
         stateACLEntity.setAccessProfileId("nf_access_profile_id");
 
@@ -51,7 +51,7 @@ public class StateEntityACLValidatorImplTest {
     }
 
     @Test
-    public void shouldHaveNoValidationErrorWhenAccessProfileFound() {
+    void shouldHaveNoValidationErrorWhenAccessProfileFound() {
         stateACLEntity.setAccessProfile(accessProfileEntity);
 
         final ValidationResult result = validator.validate(stateEntity, stateEntityValidationContext);

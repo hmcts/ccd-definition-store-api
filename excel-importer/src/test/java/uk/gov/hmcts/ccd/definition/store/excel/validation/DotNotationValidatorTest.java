@@ -52,7 +52,7 @@ class DotNotationValidatorTest {
     private DotNotationValidator dotNotationValidator;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         parseContext = buildParseContext();
         listAppender = TestLoggerUtils.setupLogger();
     }

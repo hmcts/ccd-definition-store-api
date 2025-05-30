@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class CaseTypeLiteRepositoryTest {
+class CaseTypeLiteRepositoryTest {
 
     @Autowired
     private CaseTypeLiteRepository classUnderTest;
@@ -45,7 +45,7 @@ public class CaseTypeLiteRepositoryTest {
     private JurisdictionEntity testJurisdiction;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
 
         createCaseType("id", 1, "Test case",
@@ -73,7 +73,7 @@ public class CaseTypeLiteRepositoryTest {
 
 
     @Test
-    public void findByJurisdictionIdReturnsCurrentVersionOfCaseTypesWhenSeveralVersionsExist() {
+    void findByJurisdictionIdReturnsCurrentVersionOfCaseTypesWhenSeveralVersionsExist() {
         List<CaseTypeLiteEntity> caseTypeEntityOptional
             = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
         assertEquals(2, caseTypeEntityOptional.size());
@@ -96,14 +96,14 @@ public class CaseTypeLiteRepositoryTest {
     }
 
     @Test
-    public void emptyListReturnedWhenNoCaseTypesForJurisdiction() {
+    void emptyListReturnedWhenNoCaseTypesForJurisdiction() {
         List<CaseTypeLiteEntity> caseTypeEntityOptional
             = classUnderTest.findByJurisdictionId("Non Existing Jurisdiction");
         assertTrue(caseTypeEntityOptional.isEmpty());
     }
 
     @Test
-    public void checkSQLStatementCounts() {
+    void checkSQLStatementCounts() {
 
         SQLStatementCountValidator.reset();
 

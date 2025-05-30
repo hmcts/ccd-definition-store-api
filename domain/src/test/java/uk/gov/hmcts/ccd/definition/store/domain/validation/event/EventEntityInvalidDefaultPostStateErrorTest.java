@@ -1,21 +1,21 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 
 
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class EventEntityInvalidDefaultPostStateErrorTest {
+class EventEntityInvalidDefaultPostStateErrorTest {
 
     @Mock
     private ValidationErrorMessageCreator mockValidationErrorMessageCreator;
@@ -23,7 +23,7 @@ public class EventEntityInvalidDefaultPostStateErrorTest {
     private EventEntityInvalidDefaultPostStateError classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(any(EventEntityInvalidDefaultPostStateError.class)))
             .thenReturn("Invalid Default Post State");
@@ -35,7 +35,7 @@ public class EventEntityInvalidDefaultPostStateErrorTest {
     }
 
     @Test
-    public void testDefaultMessage() {
+    void testDefaultMessage() {
         assertEquals(
             "Non-conditional post state is required for case type 'TestCaseType', event 'createCase'",
             classUnderTest.getDefaultMessage()
@@ -43,7 +43,7 @@ public class EventEntityInvalidDefaultPostStateErrorTest {
     }
 
     @Test
-    public void testCreateMessage() {
+    void testCreateMessage() {
         assertEquals("Invalid Default Post State", classUnderTest.createMessage(mockValidationErrorMessageCreator));
         verify(mockValidationErrorMessageCreator).createErrorMessage(classUnderTest);
     }

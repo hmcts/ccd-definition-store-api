@@ -33,7 +33,7 @@ class SeaarchCriteriaParserTest extends ParserTestBase {
     private SearchCriteriaParser parser;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         init();
         parseContext = mock(ParseContext.class);
         parser = new SearchCriteriaParser();

@@ -253,7 +253,7 @@ public class ImportServiceImplTest {
     private AccessTypeRolesService accessTypeRolesService;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         Map<MetadataField, MetadataCaseFieldEntityFactory> registry = new HashMap<>();
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
@@ -305,7 +305,7 @@ public class ImportServiceImplTest {
     }
 
     @Test
-    public void shouldNotImportDefinition() throws Exception {
+    void shouldNotImportDefinition() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(buildBaseType(BASE_FIXED_LIST),
@@ -318,7 +318,7 @@ public class ImportServiceImplTest {
     }
 
     @Test
-    public void importDefinitionThrowsMissingAccessProfiles() throws Exception {
+    void importDefinitionThrowsMissingAccessProfiles() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
 
@@ -343,7 +343,7 @@ public class ImportServiceImplTest {
     }
 
     @Test
-    public void shouldImportDefinitionWhenMissingAccessTypeAndAccessTypeRoleTab() throws Exception {
+    void shouldImportDefinitionWhenMissingAccessTypeAndAccessTypeRoleTab() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
 
@@ -382,7 +382,7 @@ public class ImportServiceImplTest {
     }
 
     @Test
-    public void shouldImportDefinition2() throws Exception {
+    void shouldImportDefinition2() throws Exception {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
 
@@ -420,7 +420,7 @@ public class ImportServiceImplTest {
     }
 
     @Test
-    public void shouldVerifyAccessWhenWelshTranslationDisabled() throws Exception {
+    void shouldVerifyAccessWhenWelshTranslationDisabled() throws Exception {
         when(applicationParams.isWelshTranslationEnabled()).thenReturn(false);
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
@@ -455,7 +455,7 @@ public class ImportServiceImplTest {
 
 
     @Test
-    public void shouldReturnImportWarnings() {
+    void shouldReturnImportWarnings() {
         Map<MetadataField, MetadataCaseFieldEntityFactory> registry = new HashMap<>();
         registry.put(MetadataField.STATE, metadataCaseFieldEntityFactory);
 
@@ -502,7 +502,7 @@ public class ImportServiceImplTest {
     }
 
     @Test
-    public void shouldThrowMapperException() {
+    void shouldThrowMapperException() {
         given(hiddenFieldsValidator.parseComplexTypesHiddenFields(any(), any())).willThrow(MapperException.class);
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(

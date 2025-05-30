@@ -8,7 +8,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-public class DisplayContextParameterTest {
+class DisplayContextParameterTest {
 
     private static final String DATE_TIME_ENTRY_PARAMETER = "#DATETIMEENTRY(HHmmss)";
 

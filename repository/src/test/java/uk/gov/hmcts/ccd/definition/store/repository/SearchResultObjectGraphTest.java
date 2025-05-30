@@ -33,7 +33,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class SearchResultObjectGraphTest {
+class SearchResultObjectGraphTest {
 
     @Autowired
     private CaseTypeRepository caseTypeRepository;
@@ -49,7 +49,7 @@ public class SearchResultObjectGraphTest {
     private VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
 
         final JurisdictionEntity jurisdiction = helper.createJurisdiction();
@@ -68,7 +68,7 @@ public class SearchResultObjectGraphTest {
     }
 
     @Test
-    public void saveDisplayGroup() {
+    void saveDisplayGroup() {
 
         final SearchResultCaseFieldEntity f = createSearchResultCaseField(
             caseType, getCaseField(caseType, "cf1"), "label dg", 4);

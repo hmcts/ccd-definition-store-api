@@ -20,21 +20,21 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class DefinitionDataItemTest {
+class DefinitionDataItemTest {
 
     private DefinitionDataItem item;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         item = new DefinitionDataItem(SheetName.CASE_EVENT.toString());
     }
 
     @Test
-    public void shouldFail_whenRequiredAttributeDoesNotExist() {
+    void shouldFail_whenRequiredAttributeDoesNotExist() {
         MapperException ex = assertThrows(MapperException.class, () -> {
             item.findAttribute(ColumnName.ID);
         });
@@ -43,7 +43,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void shouldFail_whenRequiredAttributeIsBlank() {
+    void shouldFail_whenRequiredAttributeIsBlank() {
         item.addAttribute(ColumnName.ID.toString(), "");
 
         MapperException ex = assertThrows(MapperException.class, () -> {
@@ -55,20 +55,20 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void shouldSucceed_whenRequiredAttributeKeyIsUsingAnAlias() {
+    void shouldSucceed_whenRequiredAttributeKeyIsUsingAnAlias() {
         item.addAttribute(ColumnName.ACCESS_PROFILE.getAliases()[0], "Access Profile Value");
 
         assertEquals("Access Profile Value", item.findAttribute(ColumnName.ACCESS_PROFILE));
     }
 
     @Test
-    public void shouldGetNull_whenBigDecimalAttributeDoesNotExist() {
+    void shouldGetNull_whenBigDecimalAttributeDoesNotExist() {
         final BigDecimal result = item.getBigDecimal(ColumnName.DISPLAY_ORDER);
         assertThat(result, is(nullValue()));
     }
 
     @Test
-    public void shouldGetBigDecimal() {
+    void shouldGetBigDecimal() {
         item.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
 
         final BigDecimal result = item.getBigDecimal(ColumnName.DISPLAY_ORDER);
@@ -76,7 +76,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void shouldFail_whenInvalidBigDecimal() {
+    void shouldFail_whenInvalidBigDecimal() {
         item.addAttribute(ColumnName.DISPLAY_ORDER, "Wonderful train journey");
         MapperException ex = assertThrows(MapperException.class, () -> {
             item.getBigDecimal(ColumnName.DISPLAY_ORDER);
@@ -84,7 +84,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void shouldGetInteger() {
+    void shouldGetInteger() {
         item.addAttribute(ColumnName.DISPLAY_ORDER, "1.0");
 
         final Integer result = item.getInteger(ColumnName.DISPLAY_ORDER);
@@ -92,7 +92,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void shouldFail_whenInvalidInteger() {
+    void shouldFail_whenInvalidInteger() {
         item.addAttribute(ColumnName.DISPLAY_ORDER, "Wonderful train journey");
         MapperException ex = assertThrows(MapperException.class, () -> {
             item.getBigDecimal(ColumnName.DISPLAY_ORDER);
@@ -100,7 +100,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void shouldGetLocalDate() {
+    void shouldGetLocalDate() {
         Date date = new Date();
 
         item.addAttribute(ColumnName.LIVE_TO, date);
@@ -110,7 +110,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void shouldFail_whenInvalidLocalDate() {
+    void shouldFail_whenInvalidLocalDate() {
         item.addAttribute(ColumnName.LIVE_TO, "Wonderful train journey");
         MapperException ex = assertThrows(MapperException.class, () -> {
             item.getLocalDate(ColumnName.LIVE_TO);
@@ -119,7 +119,7 @@ public class DefinitionDataItemTest {
 
 
     @Test
-    public void shouldGetBoolean() {
+    void shouldGetBoolean() {
         assertBooleanValue("yes", TRUE);
         assertBooleanValue("y", TRUE);
         assertBooleanValue("t", TRUE);
@@ -131,14 +131,14 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void shouldGetBooleanOrDefault() {
+    void shouldGetBooleanOrDefault() {
         assertBooleanValueWithDefault("yes", false, TRUE);
         assertBooleanValueWithDefault("no", true, FALSE);
         assertBooleanValueWithDefault(null, true, TRUE);
     }
 
     @Test
-    public void shouldFail_whenInvalidBoolean() {
+    void shouldFail_whenInvalidBoolean() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN, "k");
         MapperException ex = assertThrows(MapperException.class, () -> {
             item.getBoolean(ColumnName.DEFAULT_HIDDEN);
@@ -149,7 +149,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void securityClassificationColumnIsPublicLowerCase_called_publicSecurityClassificationEnumValueReturned() {
+    void securityClassificationColumnIsPublicLowerCase_called_publicSecurityClassificationEnumValueReturned() {
         SecurityClassificationColumn securityClassificationColumn
             = definitionDataItemWithSecurityClassificationColumnValue("public").getSecurityClassification();
 
@@ -158,7 +158,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void securityClassificationColumnIsPublicUpperCase_called_publicSecurityClassificationEnumValueReturned() {
+    void securityClassificationColumnIsPublicUpperCase_called_publicSecurityClassificationEnumValueReturned() {
         SecurityClassificationColumn securityClassificationColumn
             = definitionDataItemWithSecurityClassificationColumnValue("PUBLIC").getSecurityClassification();
 
@@ -167,7 +167,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void securityClassificationColumnIsPublicMixedCase_called_publicSecurityClassificationEnumValueReturned() {
+    void securityClassificationColumnIsPublicMixedCase_called_publicSecurityClassificationEnumValueReturned() {
         SecurityClassificationColumn securityClassificationColumn
             = definitionDataItemWithSecurityClassificationColumnValue("pUbLiC").getSecurityClassification();
 
@@ -177,7 +177,7 @@ public class DefinitionDataItemTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void securityClassificationColumnIsNotAValidEnumConstant_SecurityClassificationColumnReturnedWithNullSecurityClassification() {
+    void securityClassificationColumnIsNotAValidEnumConstant_SecurityClassificationColumnReturnedWithNullSecurityClassification() {
         SecurityClassificationColumn securityClassificationColumn
             = definitionDataItemWithSecurityClassificationColumnValue("NotValid").getSecurityClassification();
 
@@ -186,7 +186,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void displayContextColumnIsOptionalLowerCase_called_OptionalDisplayContextEnumValueReturned() {
+    void displayContextColumnIsOptionalLowerCase_called_OptionalDisplayContextEnumValueReturned() {
         DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("optional")
             .getDisplayContext();
 
@@ -195,7 +195,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void displayContextColumnIsOptionalUpperCase_called_OptionalDisplayContextEnumValueReturned() {
+    void displayContextColumnIsOptionalUpperCase_called_OptionalDisplayContextEnumValueReturned() {
         DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("OPTIONAL")
             .getDisplayContext();
 
@@ -204,7 +204,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void displayContextColumnIsOptionalMixedCase_called_OptionalDisplayContextEnumValueReturned() {
+    void displayContextColumnIsOptionalMixedCase_called_OptionalDisplayContextEnumValueReturned() {
         DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("oPtiONal")
             .getDisplayContext();
 
@@ -213,7 +213,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void displayContextColumnIsNotAValidEnumConstant_displayContextColumnReturnedWithNulldisplayContext() {
+    void displayContextColumnIsNotAValidEnumConstant_displayContextColumnReturnedWithNulldisplayContext() {
         DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("NotValid")
             .getDisplayContext();
 
@@ -222,7 +222,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void shouldGetCaseFiledId() {
+    void shouldGetCaseFiledId() {
         String caseFieldId = "a_field_id";
         item.addAttribute(ColumnName.CASE_FIELD_ID, caseFieldId);
 
@@ -230,7 +230,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void shouldGetCaseFiledIdFromID() {
+    void shouldGetCaseFiledIdFromID() {
         String id = "ID";
         String listElementCode = "listECode";
         item.addAttribute(ColumnName.ID, id);

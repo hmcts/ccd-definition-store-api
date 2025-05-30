@@ -42,7 +42,7 @@ class IdamProfileServiceTest {
     private ArgumentCaptor<Class<IdamProperties>> idamPropertiesClassCaptor;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         client = new IdamProfileClient(securityUtils);
         UserInfo userInfo = UserInfo.builder()
             .uid(USER_ID)
@@ -54,7 +54,7 @@ class IdamProfileServiceTest {
 
     @DisplayName("Should get logged in user details")
     @Test
-    public void shouldGetLoggedInUserDetails() {
+    void shouldGetLoggedInUserDetails() {
         final IdamProperties expectedIdamProperties = client.getLoggedInUserDetails();
         assertEquals(USER_ID, expectedIdamProperties.getId());
         assertEquals("emailId@a.com", expectedIdamProperties.getEmail());

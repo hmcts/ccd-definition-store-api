@@ -19,18 +19,18 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class HiddenFieldsValidatorTest {
+class HiddenFieldsValidatorTest {
 
     private HiddenFieldsValidator validator = new HiddenFieldsValidator();
     private Map<String, DefinitionSheet> definitionSheets;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         definitionSheets = new LinkedHashMap<>();
     }
 
     @Test
-    public void shouldFail_whenNoShowConditionInCaseEventToFields() {
+    void shouldFail_whenNoShowConditionInCaseEventToFields() {
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         definitionDataItem.addAttribute(ColumnName.FIELD_SHOW_CONDITION, null);
         definitionDataItem.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, Boolean.TRUE);
@@ -43,7 +43,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldValidate_ForCaseEventToFields() {
+    void shouldValidate_ForCaseEventToFields() {
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         definitionDataItem.addAttribute(ColumnName.FIELD_SHOW_CONDITION, "x=yes");
         definitionDataItem.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, Boolean.TRUE);
@@ -53,7 +53,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenInvalidBoolean() {
+    void shouldFail_whenInvalidBoolean() {
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         definitionDataItem.addAttribute(ColumnName.FIELD_SHOW_CONDITION, null);
         definitionDataItem.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, "blah");
@@ -66,7 +66,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldValidate_ForComplexType() {
+    void shouldValidate_ForComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -103,7 +103,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenRetainHiddenValueIsFalseInCaseEventToFieldsButTrueForComplexTypes() {
+    void shouldFail_whenRetainHiddenValueIsFalseInCaseEventToFieldsButTrueForComplexTypes() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -143,7 +143,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldValidate_whenMultipleReferencesOfCaseFieldsInCaseEvents() {
+    void shouldValidate_whenMultipleReferencesOfCaseFieldsInCaseEvents() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -185,7 +185,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldValidate_whenMultipleReferencesOfDifferentCaseFieldsInCaseEvents() {
+    void shouldValidate_whenMultipleReferencesOfDifferentCaseFieldsInCaseEvents() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -238,7 +238,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldValidate_whenMultipleReferencesOfDifferentCaseFieldsInCaseEventsForNestedComplex() {
+    void shouldValidate_whenMultipleReferencesOfDifferentCaseFieldsInCaseEventsForNestedComplex() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -299,7 +299,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldValidate_whenMultipleReferencesOfDifferentCaseFieldsInCaseEventsCollection() {
+    void shouldValidate_whenMultipleReferencesOfDifferentCaseFieldsInCaseEventsCollection() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -353,7 +353,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldValidate_whenMultipleReferencesOfDifferentCaseFieldsInCaseEvents2() {
+    void shouldValidate_whenMultipleReferencesOfDifferentCaseFieldsInCaseEvents2() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -406,7 +406,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldValidate_whenCaseFieldsInCaseEventHasNoShowConditionOrRetainHiddenValue() {
+    void shouldValidate_whenCaseFieldsInCaseEventHasNoShowConditionOrRetainHiddenValue() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -442,7 +442,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenCaseFieldsInCaseEventHasRetainHiddenValueOfNullAtTopLevel() {
+    void shouldFail_whenCaseFieldsInCaseEventHasRetainHiddenValueOfNullAtTopLevel() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -482,7 +482,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldValidate_whenCaseFieldsInCaseEventHasRetainHiddenValueOfNull() {
+    void shouldValidate_whenCaseFieldsInCaseEventHasRetainHiddenValueOfNull() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -518,7 +518,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenRetainHiddenValueIsNotABooleanForSubFieldsOfComplexType() {
+    void shouldFail_whenRetainHiddenValueIsNotABooleanForSubFieldsOfComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -556,7 +556,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldValidate_ForCaseEventComplexType() {
+    void shouldValidate_ForCaseEventComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -604,7 +604,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldValidateTrue_ForCaseEventComplexType() {
+    void shouldValidateTrue_ForCaseEventComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -652,7 +652,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldValidateToNull_ForCaseEventComplexType() {
+    void shouldValidateToNull_ForCaseEventComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -700,7 +700,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldValidateToFalse_ForCaseEventComplexType() {
+    void shouldValidateToFalse_ForCaseEventComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -748,7 +748,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenRetainHiddenValueIsInvalid() {
+    void shouldFail_whenRetainHiddenValueIsInvalid() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -799,7 +799,7 @@ public class HiddenFieldsValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenRetainHiddenValueIsNotSetForComplexType() {
+    void shouldFail_whenRetainHiddenValueIsNotSetForComplexType() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);

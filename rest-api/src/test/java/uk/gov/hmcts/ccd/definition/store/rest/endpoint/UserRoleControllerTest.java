@@ -71,7 +71,7 @@ class UserRoleControllerTest {
     private AccessProfileService accessProfileService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
             .setControllerAdvice(new ControllerExceptionHandler())

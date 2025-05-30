@@ -58,7 +58,7 @@ import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubFo
  * @author Daniel Lam (A533913)
  */
 @TestPropertySource(properties = {"ccd.authorised.services=ccd_data"})
-public class SpreadSheetImportTest extends BaseTest {
+class SpreadSheetImportTest extends BaseTest {
     private static final String TEST_CASE_TYPE = "TestAddressBookCase";
     private static final String CASE_TYPE_DEF_URL = "/api/data/caseworkers/cid/jurisdictions/jid/case-types/"
         + TEST_CASE_TYPE;
@@ -249,7 +249,7 @@ public class SpreadSheetImportTest extends BaseTest {
      * @throws Exception On error running test
      */
     @Test
-    public void rollbackFailedDefinitionFileImport() throws Exception {
+    void rollbackFailedDefinitionFileImport() throws Exception {
         InputStream inputStream = new ClassPathResource("/ccd_testdefinition-missing-WorkBasketResultFields.xlsx",
             getClass()).getInputStream();
         final MvcResult result = performAndGetMvcResult(inputStream);
@@ -267,7 +267,7 @@ public class SpreadSheetImportTest extends BaseTest {
     }
 
     @Test
-    public void userProfileIsNotStoredWhenImportFails() throws Exception {
+    void userProfileIsNotStoredWhenImportFails() throws Exception {
 
         WireMock.reset();
 

@@ -6,12 +6,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 
-import org.junit.Rule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
@@ -20,10 +17,7 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.MockitoAnnotations.openMocks;
 
-public class CaseFieldEntityACLValidatorImplTest {
-
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
+class CaseFieldEntityACLValidatorImplTest {
 
     private CaseFieldEntityACLValidatorImpl validator;
 
@@ -38,7 +32,7 @@ public class CaseFieldEntityACLValidatorImplTest {
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         openMocks(this);
         caseFieldAccessProfile = new CaseFieldACLEntity();
 
@@ -52,7 +46,7 @@ public class CaseFieldEntityACLValidatorImplTest {
     }
 
     @Test
-    public void shouldHaveValidationErrorWhenUserNotFound() {
+    void shouldHaveValidationErrorWhenUserNotFound() {
 
         caseFieldAccessProfile.setAccessProfile(null);
         caseFieldAccessProfile.setAccessProfileId("nf_access_profile_id");
@@ -66,7 +60,7 @@ public class CaseFieldEntityACLValidatorImplTest {
     }
 
     @Test
-    public void shouldHaveNoValidationErrorWhenAccessProfileFound() {
+    void shouldHaveNoValidationErrorWhenAccessProfileFound() {
 
         caseFieldAccessProfile.setAccessProfile(accessProfileEntity);
 

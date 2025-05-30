@@ -17,7 +17,7 @@ import java.math.BigInteger;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-public class TestingSupportControllerIT extends BaseTest {
+class TestingSupportControllerIT extends BaseTest {
 
     private static final String CLEANUP_CASE_TYPE_URL = "/api/testing-support/cleanup-case-type/%s?caseTypeIds=%s";
 
@@ -25,7 +25,7 @@ public class TestingSupportControllerIT extends BaseTest {
     private static final Logger LOG = LoggerFactory.getLogger(TestingSupportControllerIT.class);
 
     @Test
-    public void shouldReturnCaseType() throws Exception {
+    void shouldReturnCaseType() throws Exception {
         try (final InputStream inputStream =
                  new ClassPathResource("/CCD_TestDefinition_TestingSupportData.xlsx", getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);

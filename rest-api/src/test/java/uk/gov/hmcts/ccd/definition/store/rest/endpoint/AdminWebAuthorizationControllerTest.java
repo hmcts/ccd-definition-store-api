@@ -39,7 +39,7 @@ class AdminWebAuthorizationControllerTest {
     private AdminWebAuthorizationProperties adminWebAuthorizationProperties;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         given(idamProfileClient.getLoggedInUserDetails()).willReturn(buildIdamProperties());
         final AdminWebAuthorizationController controller = new AdminWebAuthorizationController(idamProfileClient,
             adminWebAuthorizationProperties);

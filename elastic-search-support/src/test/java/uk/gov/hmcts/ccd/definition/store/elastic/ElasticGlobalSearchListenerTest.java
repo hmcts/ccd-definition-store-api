@@ -30,7 +30,7 @@ class ElasticGlobalSearchListenerTest {
     private ObjectFactory<HighLevelCCDElasticClient> clientObjectFactory;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
     }
 

@@ -22,7 +22,7 @@ class IdamProfileClientTest {
     private IdamProfileClient profileClient;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 

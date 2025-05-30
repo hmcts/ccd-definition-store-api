@@ -1,14 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 
 
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
@@ -16,7 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationErrorTest {
+class EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationErrorTest {
 
     private static final String OVERRIDDEN_ERROR_MESSAGE = "The overridden error message";
 
@@ -26,7 +26,7 @@ public class EventEntityHasLessRestrictiveSecurityClassificationThanParentValida
     private EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(
             any(EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError.class)))
@@ -39,7 +39,7 @@ public class EventEntityHasLessRestrictiveSecurityClassificationThanParentValida
     }
 
     @Test
-    public void testDefaultMessage() {
+    void testDefaultMessage() {
         assertEquals(
             "Security classification for Event with reference 'Event Reference' "
                 + "has a less restrictive security classification of 'PUBLIC' than its parent CaseType "
@@ -49,7 +49,7 @@ public class EventEntityHasLessRestrictiveSecurityClassificationThanParentValida
     }
 
     @Test
-    public void testCreateMessage() {
+    void testCreateMessage() {
         assertEquals(OVERRIDDEN_ERROR_MESSAGE, classUnderTest.createMessage(mockValidationErrorMessageCreator));
         verify(mockValidationErrorMessageCreator).createErrorMessage(classUnderTest);
     }

@@ -1,15 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import uk.gov.hmcts.ccd.definition.store.domain.validation.TestValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -23,21 +13,29 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static junit.framework.TestCase.assertFalse;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
 
-public class CaseTypeEntityEventValidatorImplTest {
+class CaseTypeEntityEventValidatorImplTest {
 
     private static final String CASE_TYPE_NAME = "Case Type Name";
 
@@ -64,7 +62,7 @@ public class CaseTypeEntityEventValidatorImplTest {
     private CaseTypeEntityEventValidatorImpl classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
 
         when(eventEntityValidator1.validate(any(), any())).thenReturn(new ValidationResult());
@@ -76,7 +74,7 @@ public class CaseTypeEntityEventValidatorImplTest {
     }
 
     @Test
-    public void caseFieldsAllValid_allValidatorsCalledWithContextBuiltFromCaseType_EmptyValidationResultReturned() {
+    void caseFieldsAllValid_allValidatorsCalledWithContextBuiltFromCaseType_EmptyValidationResultReturned() {
 
         ValidationResult validationResult = classUnderTest.validate(caseType);
 
@@ -89,7 +87,7 @@ public class CaseTypeEntityEventValidatorImplTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void caseFields1And3AreInvalid_allValidatorsCalledWithContextBuiltFromCaseType_ValidationResultWithErrorsForCaseFieldEntity1And3Returned() {
+    void caseFields1And3AreInvalid_allValidatorsCalledWithContextBuiltFromCaseType_ValidationResultWithErrorsForCaseFieldEntity1And3Returned() {
 
         when(eventEntityValidator1.validate(eq(eventEntity1), any()))
             .thenReturn(validationResultWithError(validationErrorWithDefaultMessage(

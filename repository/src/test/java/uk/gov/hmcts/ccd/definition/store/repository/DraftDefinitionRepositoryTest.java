@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class DraftDefinitionRepositoryTest {
+class DraftDefinitionRepositoryTest {
 
     @Autowired
     private DraftDefinitionRepository classUnderTest;
@@ -43,7 +43,7 @@ public class DraftDefinitionRepositoryTest {
     private DefinitionEntity definitionEntity;
 
     @BeforeEach
-    public void setUp() throws IOException {
+    void setUp() throws IOException {
         testJurisdiction = testHelper.createJurisdiction();
 
         definitionEntity = testHelper.buildDefinition(testJurisdiction, "Test definition");
@@ -53,7 +53,7 @@ public class DraftDefinitionRepositoryTest {
     }
 
     @Test
-    public void shouldCreateNewDefinition() {
+    void shouldCreateNewDefinition() {
         classUnderTest.save(definitionEntity);
 
         entityManager.flush();

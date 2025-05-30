@@ -59,7 +59,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class FieldTypeRepositoryTest {
+class FieldTypeRepositoryTest {
 
     @Autowired
     private FieldTypeRepository fieldTypeRepository;
@@ -68,13 +68,13 @@ public class FieldTypeRepositoryTest {
     private static FieldTypeEntity textBaseType;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         versionedFieldTypeRepository = new VersionedDefinitionRepositoryDecorator<>(fieldTypeRepository);
         textBaseType = canRetrieveBaseType();
     }
 
     @Test
-    public void canExtendBaseType() {
+    void canExtendBaseType() {
 
         final FieldTypeEntity newType = new FieldTypeEntity();
         newType.setBaseFieldType(textBaseType);
@@ -97,7 +97,7 @@ public class FieldTypeRepositoryTest {
     }
 
     @Test
-    public void canCreateFixedListType() {
+    void canCreateFixedListType() {
         final Optional<FieldTypeEntity> fixedListType = fieldTypeRepository
             .findFirstByReferenceOrderByVersionDesc("FixedList");
 
@@ -137,7 +137,7 @@ public class FieldTypeRepositoryTest {
     }
 
     @Test
-    public void canCreateCollectionType() {
+    void canCreateCollectionType() {
         final Optional<FieldTypeEntity> collectionType = fieldTypeRepository
             .findFirstByReferenceOrderByVersionDesc("Collection");
 
@@ -163,7 +163,7 @@ public class FieldTypeRepositoryTest {
     }
 
     @Test
-    public void canCreateComplexType() {
+    void canCreateComplexType() {
         final Optional<FieldTypeEntity> complexType = fieldTypeRepository
             .findFirstByReferenceOrderByVersionDesc("Complex");
 
@@ -214,12 +214,12 @@ public class FieldTypeRepositoryTest {
     }
 
     @Test
-    public void returnEmptyOptional_whenTypeDoesNotExistForReference() {
+    void returnEmptyOptional_whenTypeDoesNotExistForReference() {
         assertFalse(fieldTypeRepository.findBaseType("NonExistantFieldType").isPresent());
     }
 
     @Test
-    public void returnEmptyOptional_whenNonBaseTypeExistsForReference() {
+    void returnEmptyOptional_whenNonBaseTypeExistsForReference() {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference("NonBaseType");
         fieldTypeEntity.setBaseFieldType(textBaseType);
@@ -230,7 +230,7 @@ public class FieldTypeRepositoryTest {
     }
 
     @Test
-    public void returnListOfPreDefinedComplexTypes() {
+    void returnListOfPreDefinedComplexTypes() {
 
         FieldTypeEntity notPredefined = new FieldTypeEntity();
         notPredefined.setReference("NotPredefinedComplexType");

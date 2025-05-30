@@ -28,7 +28,7 @@ class ElasticsearchErrorHandlerTest {
     private List<ElasticsearchErrorMessageBuilder> errorMessageBuilders;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         messageBuilderA = new TestElasticsearchErrorMessageBuilder(".*PATTERN ONE.*", "ERROR MESSAGE ONE");
         messageBuilderB = new TestElasticsearchErrorMessageBuilder("PATTERN TWO .+", "ERROR MESSAGE TWO");

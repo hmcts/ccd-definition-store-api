@@ -14,17 +14,17 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-public class LiveDatesRuleTest {
+class LiveDatesRuleTest {
 
     private LiveDatesRule rule;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         rule = new LiveDatesRule();
     }
 
     @Test
-    public void validCaseTest() {
+    void validCaseTest() {
         // Given - a Case Type which abides by all Versioning rules
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
@@ -38,7 +38,7 @@ public class LiveDatesRuleTest {
     }
 
     @Test
-    public void nullLiveFromTest() {
+    void nullLiveFromTest() {
         // Given - a Case Type which has no Live From date
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
@@ -52,7 +52,7 @@ public class LiveDatesRuleTest {
     }
 
     @Test
-    public void liveFromAfterLiveUntilTest() {
+    void liveFromAfterLiveUntilTest() {
         // Given - a Case Type which has a Live From date after the Live Until date
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 

@@ -22,106 +22,106 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class MapperUtilTest {
+class MapperUtilTest {
 
     private DefinitionDataItem item;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         item = new DefinitionDataItem();
     }
 
     @Test
-    public void getBooleanTrue() {
+    void getBooleanTrue() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "tRuE");
         assertTrue(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 
     @Test
-    public void getBooleanUpperCaseT() {
+    void getBooleanUpperCaseT() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "T");
         assertTrue(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 
     @Test
-    public void getBooleanLowerCaseT() {
+    void getBooleanLowerCaseT() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "t");
         assertTrue(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 
     @Test
-    public void getBooleanYes() {
+    void getBooleanYes() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "yEs");
         assertTrue(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 
     @Test
-    public void getBooleanUpperCaseY() {
+    void getBooleanUpperCaseY() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "Y");
         assertTrue(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 
     @Test
-    public void getBooleanLowerCaseY() {
+    void getBooleanLowerCaseY() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "y");
         assertTrue(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 
     @Test
-    public void getBooleanFalse() {
+    void getBooleanFalse() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "fALse");
         assertFalse(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 
     @Test
-    public void getBooleanNative() {
+    void getBooleanNative() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), Boolean.FALSE);
         assertFalse(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 
     @Test
-    public void getBooleanUpperCaseF() {
+    void getBooleanUpperCaseF() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "F");
         assertFalse(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 
     @Test
-    public void getBooleanLowerCaseF() {
+    void getBooleanLowerCaseF() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "F");
         assertFalse(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 
     @Test
-    public void getBooleanNo() {
+    void getBooleanNo() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "nO");
         assertFalse(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 
     @Test
-    public void getBooleanUpperCaseN() {
+    void getBooleanUpperCaseN() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "N");
         assertFalse(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 
     @Test
-    public void getBooleanLowerCaseN() {
+    void getBooleanLowerCaseN() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "n");
         assertFalse(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 
     @Test
-    public void getBooleanNoValueButMandatory() {
+    void getBooleanNoValueButMandatory() {
         assertThrows(MapperException.class, () -> 
             MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.PAGE_ID));
     }
 
     @Test
-    public void getBooleanNoValueOptional() {
+    void getBooleanNoValueOptional() {
         assertNull(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.HINT_TEXT));
     }
 
     @Test
-    public void getBooleanBlankValueButMandatory() {
+    void getBooleanBlankValueButMandatory() {
         item.addAttribute(ColumnName.DISPLAY_CONTEXT.toString(), "   ");
         MapperException ex = assertThrows(MapperException.class, () -> 
             MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.PAGE_ID));
@@ -132,13 +132,13 @@ public class MapperUtilTest {
     }
 
     @Test
-    public void getBooleanBlankValueOptional() {
+    void getBooleanBlankValueOptional() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "   ");
         assertNull(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.HINT_TEXT));
     }
 
     @Test
-    public void getBooleanValueNotPredefined() {
+    void getBooleanValueNotPredefined() {
         item.addAttribute(ColumnName.DISPLAY_CONTEXT.toString(), "Dog");
         MapperException ex = assertThrows(MapperException.class, () -> 
             MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DISPLAY_CONTEXT));
@@ -149,7 +149,7 @@ public class MapperUtilTest {
     }
 
     @Test
-    public void findSheet() {
+    void findSheet() {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(SheetName.CASE_TYPE.getName());
         final List<DefinitionSheet> sheets = new ArrayList<>();
@@ -159,7 +159,7 @@ public class MapperUtilTest {
     }
 
     @Test
-    public void getString() {
+    void getString() {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(SheetName.CASE_TYPE.getName());
         item.addAttribute(ColumnName.DISPLAY_CONTEXT, "Dog");
@@ -168,14 +168,14 @@ public class MapperUtilTest {
     }
 
     @Test
-    public void missingNonMandatoryStringAttribute() {
+    void missingNonMandatoryStringAttribute() {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(SheetName.CASE_TYPE.getName());
         assertNull(MapperUtil.getString(item, SheetName.CASE_TYPE, ColumnName.CASE_TYPE_ID));
     }
 
     @Test
-    public void missingMandatoryStringAttribute() {
+    void missingMandatoryStringAttribute() {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(SheetName.CASE_TYPE.getName());
         assertThrows(MapperException.class, () -> 
@@ -183,7 +183,7 @@ public class MapperUtilTest {
     }
 
     @Test
-    public void getInteger() {
+    void getInteger() {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(SheetName.CASE_TYPE.getName());
         item.addAttribute(ColumnName.DISPLAY_CONTEXT, 0.0);
@@ -192,7 +192,7 @@ public class MapperUtilTest {
     }
 
     @Test
-    public void getBigDecimal() {
+    void getBigDecimal() {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(SheetName.CASE_TYPE.getName());
         item.addAttribute(ColumnName.DISPLAY_CONTEXT, 0.0);
@@ -202,7 +202,7 @@ public class MapperUtilTest {
     }
 
     @Test
-    public void getIntegerList() {
+    void getIntegerList() {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(SheetName.CASE_TYPE.getName());
         item.addAttribute(ColumnName.DISPLAY_CONTEXT, "3  ,5, 8,13,21");
@@ -213,7 +213,7 @@ public class MapperUtilTest {
     }
 
     @Test
-    public void expectsMapperException_whenIntegerListsHasNonNumber() {
+    void expectsMapperException_whenIntegerListsHasNonNumber() {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(SheetName.CASE_TYPE.getName());
         item.addAttribute(ColumnName.DISPLAY_CONTEXT, "3,a,8");
@@ -223,7 +223,7 @@ public class MapperUtilTest {
     }
 
     @Test
-    public void emptyIntegerList() {
+    void emptyIntegerList() {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(SheetName.CASE_TYPE.getName());
         sheet.addDataItem(item);

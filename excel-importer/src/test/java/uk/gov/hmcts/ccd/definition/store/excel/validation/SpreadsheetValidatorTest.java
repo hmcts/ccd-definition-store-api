@@ -19,19 +19,19 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class SpreadsheetValidatorTest {
+class SpreadsheetValidatorTest {
 
     private SpreadsheetValidator validator = new SpreadsheetValidator();
     private Map<String, DefinitionSheet> definitionSheets;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         definitionSheets = new LinkedHashMap<>();
         validator = new SpreadsheetValidator();
     }
 
     @Test
-    public void shouldFail_whenCaseTypeIDValueExceedsMaxLength() {
+    void shouldFail_whenCaseTypeIDValueExceedsMaxLength() {
         String columnName = "ID";
         String sheetName = "CaseType";
         int rowNumber = 6;
@@ -46,7 +46,7 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test
-    public void shouldPass_withNonExistingColumnName() {
+    void shouldPass_withNonExistingColumnName() {
         String columnName = "CRUD";
         int rowNumber = 6;
         validator.validate("sheet", columnName,
@@ -55,7 +55,7 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test
-    public void shouldPass_whenMaxLengthNotConfigured() {
+    void shouldPass_whenMaxLengthNotConfigured() {
         String columnName = "nonExistingColumnName";
         int rowNumber = 6;
         try {
@@ -70,7 +70,7 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenBlankSheetName() {
+    void shouldFail_whenBlankSheetName() {
         InvalidImportException ex = assertThrows(InvalidImportException.class, () -> {
             validator.validate("sheet", new DefinitionSheet(), Collections.emptyList());
         });
@@ -80,7 +80,7 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenEmptyHeader() {
+    void shouldFail_whenEmptyHeader() {
         final DefinitionSheet definitionSheet = new DefinitionSheet();
         definitionSheet.setName("name");
 
@@ -93,7 +93,7 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test
-    public void shouldValidate_WithHeadings() {
+    void shouldValidate_WithHeadings() {
         final DefinitionSheet definitionSheet = new DefinitionSheet();
         definitionSheet.setName("name");
 
@@ -104,7 +104,7 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenNoJurisdictioinSheet() {
+    void shouldFail_whenNoJurisdictioinSheet() {
         MapperException ex = assertThrows(MapperException.class, () -> {
             validator.validate(definitionSheets);
         });
@@ -112,7 +112,7 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenNoJurisdictioinDataItems() {
+    void shouldFail_whenNoJurisdictioinDataItems() {
 
         addDefinitionSheet(SheetName.JURISDICTION);
 
@@ -123,7 +123,7 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenNoCaseTypeSheet() {
+    void shouldFail_whenNoCaseTypeSheet() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -135,7 +135,7 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenNoCaseTypeDataItem() {
+    void shouldFail_whenNoCaseTypeDataItem() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -149,7 +149,7 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenNoCaseFieldSheet() {
+    void shouldFail_whenNoCaseFieldSheet() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -164,7 +164,7 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenNoComplexTypesSheet() {
+    void shouldFail_whenNoComplexTypesSheet() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -181,7 +181,7 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenNoFixedListSheet() {
+    void shouldFail_whenNoFixedListSheet() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -199,7 +199,7 @@ public class SpreadsheetValidatorTest {
     }
 
     @Test
-    public void shouldVaidate_WithAllWorkSheetsInPlace() {
+    void shouldVaidate_WithAllWorkSheetsInPlace() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);

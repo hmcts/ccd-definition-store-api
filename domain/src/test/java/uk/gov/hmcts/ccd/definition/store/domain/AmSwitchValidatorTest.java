@@ -1,20 +1,20 @@
 package uk.gov.hmcts.ccd.definition.store.domain;
 
-import com.google.common.collect.Lists;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.springframework.beans.InvalidPropertyException;
-
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import static org.mockito.Mockito.doReturn;
+import org.mockito.MockitoAnnotations;
+import org.springframework.beans.InvalidPropertyException;
 
-public class AmSwitchValidatorTest {
+import com.google.common.collect.Lists;
+
+class AmSwitchValidatorTest {
 
     @Mock
     private ApplicationParams goodApplicationParams;
@@ -46,7 +46,7 @@ public class AmSwitchValidatorTest {
     private List<String> repeatedCaseTypeList = Lists.newArrayList(DIVORCE_CT, FR_CT, TEST_CT);
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         doReturn(ccdOnlyWriteCaseTypes).when(goodApplicationParams).getCaseTypesWithAmWrittenOnlyToCcd();
         doReturn(amOnlyWriteCaseTypes).when(goodApplicationParams).getCaseTypesWithAmWrittenOnlyToAm();

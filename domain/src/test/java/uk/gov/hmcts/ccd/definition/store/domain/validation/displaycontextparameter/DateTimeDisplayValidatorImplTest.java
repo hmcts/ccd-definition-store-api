@@ -16,7 +16,7 @@ import static org.mockito.Mockito.doThrow;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DATE_TIME;
 
-public class DateTimeDisplayValidatorImplTest {
+class DateTimeDisplayValidatorImplTest {
 
     private DateTimeDisplayValidatorImpl validator;
 
@@ -24,7 +24,7 @@ public class DateTimeDisplayValidatorImplTest {
     private DateTimeFormatParser dateTimeFormatParser;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         validator = new DateTimeDisplayValidatorImpl(dateTimeFormatParser);
     }

@@ -22,13 +22,13 @@ import org.mockito.MockitoAnnotations;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -39,7 +39,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
 
-public class EventCaseFieldShowConditionValidatorImplTest {
+class EventCaseFieldShowConditionValidatorImplTest {
 
     @Mock
     private ShowConditionParser showConditionExtractor;
@@ -47,14 +47,14 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     private EventCaseFieldShowConditionValidatorImpl classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new EventCaseFieldShowConditionValidatorImpl(showConditionExtractor,
                 new CaseFieldEntityUtil());
     }
 
     @Test
-    public void shouldValidateShowConditionForCustomComplexField() throws InvalidShowConditionException {
+    void shouldValidateShowConditionForCustomComplexField() throws InvalidShowConditionException {
 
         String matchingCaseFieldId = "complexName";
         String matchingCaseFieldKey = matchingCaseFieldId
@@ -84,7 +84,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     }
 
     @Test
-    public void shouldValidateShowConditionForCustomComplexFieldFixedList() throws InvalidShowConditionException {
+    void shouldValidateShowConditionForCustomComplexFieldFixedList() throws InvalidShowConditionException {
 
         String matchingCaseFieldId = "complexName";
         String matchingCaseFieldKey = matchingCaseFieldId + ".NamePrefix";
@@ -108,7 +108,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     }
 
     @Test
-    public void shouldFailForInvalidShowCondition() throws InvalidShowConditionException {
+    void shouldFailForInvalidShowCondition() throws InvalidShowConditionException {
 
         String matchingCaseFieldId = "complexName";
         String matchingCaseFieldKey = matchingCaseFieldId + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode";
@@ -136,14 +136,14 @@ public class EventCaseFieldShowConditionValidatorImplTest {
 
         assertFalse(validationResult.isValid());
         assertEquals(1, validationResult.getValidationErrors().size());
-        assertTrue(validationResult.getValidationErrors().get(
-                0) instanceof EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);
+        assertTrue(validationResult.getValidationErrors().get(0) 
+                instanceof EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);
 
     }
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void anotherEventCaseFieldExistsWithSameCaseFieldIdAsEventFieldEntityWithShowConditionSet_validValidationResultReturned()
+    void anotherEventCaseFieldExistsWithSameCaseFieldIdAsEventFieldEntityWithShowConditionSet_validValidationResultReturned()
             throws InvalidShowConditionException {
 
         String matchingCaseFieldId = "MatchingCaseFieldId";
@@ -173,7 +173,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void noOtherEventCaseFieldExistsWithSameCaseFieldIdAsEventFieldEntityWithShowConditionSet_invalidValidationResultReturned()
+    void noOtherEventCaseFieldExistsWithSameCaseFieldIdAsEventFieldEntityWithShowConditionSet_invalidValidationResultReturned()
             throws InvalidShowConditionException {
 
         String matchingCaseFieldId = "MatchingCaseFieldId";
@@ -201,13 +201,13 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         assertFalse(validationResult.isValid());
 
         assertEquals(1, validationResult.getValidationErrors().size());
-        assertTrue(validationResult.getValidationErrors().get(
-                0) instanceof EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);
+        assertTrue(validationResult.getValidationErrors().get(0) 
+                instanceof EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError);
 
     }
 
     @Test
-    public void eventCaseFieldEntityWithNullShowCondition_validValidationResultReturned() {
+    void eventCaseFieldEntityWithNullShowCondition_validValidationResultReturned() {
 
         EventCaseFieldEntity eventCaseFieldEntityWithNullShowCondition = eventCaseFieldEntity(null, null);
 
@@ -222,7 +222,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     }
 
     @Test
-    public void eventCaseFieldEntityWithBlankShowCondition_validValidationResultReturned() {
+    void eventCaseFieldEntityWithBlankShowCondition_validValidationResultReturned() {
 
         EventCaseFieldEntity eventCaseFieldEntityWithBlankShowCondition = eventCaseFieldEntity(null, "     ");
 
@@ -238,7 +238,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     }
 
     @Test
-    public void invalidShowConditionExceptionThrown_validValidationResultReturned()
+    void invalidShowConditionExceptionThrown_validValidationResultReturned()
             throws InvalidShowConditionException {
 
         String showCondition = "InvalidShowCondition";
@@ -260,13 +260,13 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         assertFalse(validationResult.isValid());
 
         assertEquals(1, validationResult.getValidationErrors().size());
-        assertTrue(validationResult.getValidationErrors()
-                .get(0) instanceof EventCaseFieldEntityInvalidShowConditionError);
+        assertTrue(validationResult.getValidationErrors().get(0) 
+                instanceof EventCaseFieldEntityInvalidShowConditionError);
 
     }
 
     @Test
-    public void shouldReturnInvalidResultWhenAnyCaseFieldUsedInAndConditionsDoNotMatchEventCaseFields()
+    void shouldReturnInvalidResultWhenAnyCaseFieldUsedInAndConditionsDoNotMatchEventCaseFields()
             throws InvalidShowConditionException {
 
         String matchingCaseFieldId1 = "MatchingCaseFieldId1";
@@ -297,7 +297,7 @@ public class EventCaseFieldShowConditionValidatorImplTest {
     }
 
     @Test
-    public void shouldValidateShowConditionWithMetadataField() throws InvalidShowConditionException {
+    void shouldValidateShowConditionWithMetadataField() throws InvalidShowConditionException {
         String field = MetadataField.STATE.getReference();
         String showCondition = field + "=\"TODO\"";
 
@@ -416,9 +416,9 @@ public class EventCaseFieldShowConditionValidatorImplTest {
         return fieldTypeEntity;
     }
 
-    private static ComplexFieldEntity complexFieldEntity(String reerence, FieldTypeEntity fieldTypeEntity) {
+    private static ComplexFieldEntity complexFieldEntity(String reference, FieldTypeEntity fieldTypeEntity) {
         ComplexFieldEntity complexFieldEntity = new ComplexFieldEntity();
-        complexFieldEntity.setReference(reerence);
+        complexFieldEntity.setReference(reference);
         complexFieldEntity.setFieldType(fieldTypeEntity);
         return complexFieldEntity;
     }

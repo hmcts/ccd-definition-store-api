@@ -32,7 +32,7 @@ class MetadataCaseFieldParserTest {
     private Map<MetadataField, MetadataCaseFieldEntityFactory> registry;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         openMocks(this);
         metadataCaseFieldParser = new MetadataCaseFieldParser(parseContext, registry);
     }

@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
@@ -18,6 +11,14 @@ import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectFactory;
+
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -27,7 +28,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ElasticDefinitionImportListenerTest {
+class ElasticDefinitionImportListenerTest {
 
     @InjectMocks
     private TestDefinitionImportListener listener;
@@ -51,12 +52,12 @@ public class ElasticDefinitionImportListenerTest {
     private CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB").withReference("caseTypeB").build();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
     }
 
     @Test
-    public void createsAndClosesANewElasticClientOnEachImportToSaveResources() throws IOException {
+    void createsAndClosesANewElasticClientOnEachImportToSaveResources() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
 
@@ -67,7 +68,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void closesClientEvenInCaseOfErrors() {
+    void closesClientEvenInCaseOfErrors() {
         when(config.getCasesIndexNameFormat()).thenThrow(new RuntimeException("test"));
 
         assertThrows(RuntimeException.class, () -> {
@@ -77,7 +78,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void createsIndexIfNotExists() throws IOException {
+    void createsIndexIfNotExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
 
@@ -88,7 +89,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void skipIndexCreationIfNotExists() throws IOException {
+    void skipIndexCreationIfNotExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
 
@@ -98,7 +99,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void createsMapping() throws IOException {
+    void createsMapping() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
         when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
@@ -112,7 +113,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void throwsElasticSearchInitialisationExceptionOnErrors() {
+    void throwsElasticSearchInitialisationExceptionOnErrors() {
         assertThrows(ElasticSearchInitialisationException.class, () -> {
             when(config.getCasesIndexNameFormat()).thenThrow(new ArrayIndexOutOfBoundsException("test"));
             listener.onDefinitionImported(newEvent(caseA, caseB));

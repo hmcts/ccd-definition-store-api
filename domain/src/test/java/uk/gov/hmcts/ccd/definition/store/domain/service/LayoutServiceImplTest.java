@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 
-public class LayoutServiceImplTest {
+class LayoutServiceImplTest {
 
     @Mock
     private DisplayGroupRepository displayGroupRepository;
@@ -51,7 +51,7 @@ public class LayoutServiceImplTest {
     private LayoutServiceImpl classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new LayoutServiceImpl(
             genericRepository,
@@ -62,7 +62,7 @@ public class LayoutServiceImplTest {
     }
 
     @Test
-    public void shouldValidateAndSavePromptlyWhenSingleEntityIsValid() {
+    void shouldValidateAndSavePromptlyWhenSingleEntityIsValid() {
         GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
         entity1.setCaseField(createCaseFieldEntity("ComplexCollectionComplex"));
         entity1.setCaseType(createCaseTypeEntity("FamilyDetails"));
@@ -76,7 +76,7 @@ public class LayoutServiceImplTest {
     }
 
     @Test
-    public void shouldValidateAndSavePromptlyWhenEntityIsValid() {
+    void shouldValidateAndSavePromptlyWhenEntityIsValid() {
         GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
         entity1.setCaseField(createCaseFieldEntity("ComplexCollectionComplex"));
         entity1.setCaseType(createCaseTypeEntity("FamilyDetails"));
@@ -94,7 +94,7 @@ public class LayoutServiceImplTest {
     }
 
     @Test
-    public void shouldFailIfCaseFieldIsNotProvidedForWorkbasketInput() {
+    void shouldFailIfCaseFieldIsNotProvidedForWorkbasketInput() {
 
         GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
         entity1.setCaseType(createCaseTypeEntity("FamilyDetails"));
@@ -104,7 +104,7 @@ public class LayoutServiceImplTest {
     }
 
     @Test
-    public void shouldFailIfCaseTypeIsNotProvidedForWorkbasketInput() {
+    void shouldFailIfCaseTypeIsNotProvidedForWorkbasketInput() {
         GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
         entity1.setCaseField(createCaseFieldEntity("ComplexCollectionComplex"));
 
@@ -113,7 +113,7 @@ public class LayoutServiceImplTest {
     }
 
     @Test
-    public void pageTypeDisplayGroupMustFailIfEventIsNotProvided() {
+    void pageTypeDisplayGroupMustFailIfEventIsNotProvided() {
         DisplayGroupEntity dg1 = new DisplayGroupEntity();
         dg1.setType(DisplayGroupType.PAGE);
         dg1.setEvent(new EventEntity());
@@ -126,7 +126,7 @@ public class LayoutServiceImplTest {
     }
 
     @Test
-    public void tabTypeDisplayGroupMustNotExpectEventAndSavePromptly() {
+    void tabTypeDisplayGroupMustNotExpectEventAndSavePromptly() {
         DisplayGroupEntity dg1 = new DisplayGroupEntity();
         dg1.setType(DisplayGroupType.TAB);
         dg1.setEvent(new EventEntity());

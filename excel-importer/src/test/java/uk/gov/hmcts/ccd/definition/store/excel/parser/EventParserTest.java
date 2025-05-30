@@ -42,7 +42,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.excel.common.TestLoggerUtils.assertLogged;
 
 @ExtendWith(MockitoExtension.class)
-public class EventParserTest extends ParserTestBase {
+class EventParserTest extends ParserTestBase {
 
     private static final String EVENT_ID = "event id";
     private static final String FIELD_ID = "field id";
@@ -73,7 +73,7 @@ public class EventParserTest extends ParserTestBase {
     private ShowConditionParser showConditionParser;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         init();
         parseContext = mock(ParseContext.class);
         showConditionParser = new ShowConditionParser();
@@ -98,7 +98,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @AfterEach
-    public void teardown() {
+    void teardown() {
         TestLoggerUtils.teardownLogger();
 
         if (assertEntityAddedToRegistry) {
@@ -107,7 +107,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFail_whenDefinitionSheetNotDefined() {
+    void shouldFail_whenDefinitionSheetNotDefined() {
         assertEntityAddedToRegistry = false;
         SpreadsheetParsingException ex = assertThrows(SpreadsheetParsingException.class, () ->
             eventParser.parseAll(definitionSheets, caseType));
@@ -115,7 +115,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldEventPreState_whenParseSuccess() {
+    void shouldEventPreState_whenParseSuccess() {
         item.addAttribute(ColumnName.PRE_CONDITION_STATE.toString(), "*");
         definitionSheet.addDataItem(item);
         final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
@@ -125,7 +125,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldEventPreStateContent_whenParseSuccess() {
+    void shouldEventPreStateContent_whenParseSuccess() {
         final StateEntity state = mock(StateEntity.class);
         final String preState = "CaseEnteredIntoLegacy";
 
@@ -141,7 +141,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEventWildcardPostStateContent_whenParseSuccess() {
+    void shouldParseEventWildcardPostStateContent_whenParseSuccess() {
         final StateEntity state = mock(StateEntity.class);
         final String preState = "CaseEnteredIntoLegacy";
 
@@ -159,7 +159,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEventPostStateContent_whenParseSuccess() {
+    void shouldParseEventPostStateContent_whenParseSuccess() {
         final StateEntity state = mock(StateEntity.class);
         when(state.getReference()).thenReturn("Post state");
         given(parseContext.getStateForCaseType(any(), any())).willReturn(state);
@@ -176,7 +176,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseWebHook() {
+    void shouldParseWebHook() {
         item.addAttribute(ColumnName.CALLBACK_URL_ABOUT_TO_START_EVENT.toString(), "webhook");
         item.addAttribute(ColumnName.RETRIES_TIMEOUT_ABOUT_TO_START_EVENT.toString(), "45,57,98");
         definitionSheet.addDataItem(item);
@@ -189,7 +189,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEvent() {
+    void shouldParseEvent() {
         definitionSheet.addDataItem(item);
         DefinitionDataItem caseEventToFieldsDataItem = buildCaseEventToFieldsDataItem(EVENT_ID);
         caseEventToFieldsSheet.addDataItem(caseEventToFieldsDataItem);
@@ -211,7 +211,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEventWithoutRestrictionDataItem() {
+    void shouldParseEventWithoutRestrictionDataItem() {
         definitionSheet.addDataItem(item);
         caseEventToFieldsSheet.addDataItem(buildCaseEventToFieldsDataItem("EVENT_ID"));
         final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
@@ -227,7 +227,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEventWithCaseFieldComplexType() {
+    void shouldParseEventWithCaseFieldComplexType() {
         definitionSheet.addDataItem(item);
         caseEventToFieldsSheet.addDataItem(buildCaseEventToFieldsDataItem(EVENT_ID));
         DefinitionDataItem caseEventToComplexTypesDataItem = buildCaseEventToComplexTypesDataItem(EVENT_ID, FIELD_ID);
@@ -252,7 +252,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEventWithEventEnablingCondition() {
+    void shouldParseEventWithEventEnablingCondition() {
         final String validEventEnablingCondition = "FieldA!=\"\" AND FieldB=\"I'm innocent\"";
         item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
         definitionSheet.addDataItem(item);
@@ -263,7 +263,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEventWithChainedEventEnablingCondition() {
+    void shouldParseEventWithChainedEventEnablingCondition() {
         final String validEventEnablingCondition = "(FieldA!=\"\" AND FieldB=\"I'm innocent\") "
             + "OR (FieldC=\"I'm guilty\")";
         item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
@@ -275,7 +275,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailParseEventWithEmptyEventEnablingCondition() {
+    void shouldFailParseEventWithEmptyEventEnablingCondition() {
         final String validEventEnablingCondition = " ";
         item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
         definitionSheet.addDataItem(item);
@@ -286,7 +286,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailParseEventWithInvalidEventEnablingCondition() {
+    void shouldFailParseEventWithInvalidEventEnablingCondition() {
         assertEntityAddedToRegistry = false;
         final String validEventEnablingCondition = "aaa. x.bbb=\"some-value\"";
         item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
@@ -296,7 +296,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldAssignDefaultPublishIfColumnNotExists() {
+    void shouldAssignDefaultPublishIfColumnNotExists() {
         definitionSheet.addDataItem(item);
         final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
         assertThat(eventEntities.size(), is(1));
@@ -305,7 +305,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldAssignDefaultPublishIfColumnHasNullValue() {
+    void shouldAssignDefaultPublishIfColumnHasNullValue() {
         item.addAttribute(ColumnName.PUBLISH.toString(), null);
         definitionSheet.addDataItem(item);
         final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
@@ -315,7 +315,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldAssignPublishValueFromColumn() {
+    void shouldAssignPublishValueFromColumn() {
         item.addAttribute(ColumnName.PUBLISH.toString(), "N");
         definitionSheet.addDataItem(item);
         final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);
@@ -325,7 +325,7 @@ public class EventParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldAssignTtlIncrementValueFromColumn() {
+    void shouldAssignTtlIncrementValueFromColumn() {
         item.addAttribute(ColumnName.TTL_INCREMENT.toString(), 1);
         definitionSheet.addDataItem(item);
         final Collection<EventEntity> eventEntities = eventParser.parseAll(definitionSheets, caseType);

@@ -1,10 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.complexfield;
 
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
@@ -13,17 +9,22 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ComplexFieldEntityShowConditionValidatorImplTest {
+class ComplexFieldEntityShowConditionValidatorImplTest {
 
     @Mock
     private ShowConditionParser mockShowConditionParser;
@@ -35,14 +36,14 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
     ComplexFieldEntity complexField;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         testObj = new ComplexFieldEntityShowConditionValidatorImpl(mockShowConditionParser);
         complexField = new ComplexFieldEntity();
     }
 
     @Test
-    public void shouldNotExecuteWhenShowConditionIsEmpty() throws InvalidShowConditionException {
+    void shouldNotExecuteWhenShowConditionIsEmpty() throws InvalidShowConditionException {
 
         complexField.setShowCondition(null);
         ValidationResult result = testObj.validate(complexField, mockValidationContext);
@@ -52,7 +53,7 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
     }
 
     @Test
-    public void shouldNotExecuteWhenShowConditionIsBlank() throws InvalidShowConditionException {
+    void shouldNotExecuteWhenShowConditionIsBlank() throws InvalidShowConditionException {
 
         complexField.setShowCondition("");
 
@@ -63,7 +64,7 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
     }
 
     @Test
-    public void returnsNoValidationErrorsOnSuccess() throws InvalidShowConditionException {
+    void returnsNoValidationErrorsOnSuccess() throws InvalidShowConditionException {
 
         complexField.setShowCondition("someShowCondition");
         FieldTypeEntity complexFieldType = mock(FieldTypeEntity.class);
@@ -80,7 +81,7 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
     }
 
     @Test
-    public void returnsComplexFieldInvalidShowConditionErrorWhenUnableToParseShowCondition()
+    void returnsComplexFieldInvalidShowConditionErrorWhenUnableToParseShowCondition()
         throws InvalidShowConditionException {
 
         complexField.setShowCondition("someShowCondition");
@@ -95,7 +96,7 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
     }
 
     @Test
-    public void returnsComplexFieldInvalidShowConditionFieldWhenShowConditionReferencesInvalidField()
+    void returnsComplexFieldInvalidShowConditionFieldWhenShowConditionReferencesInvalidField()
         throws InvalidShowConditionException {
 
         complexField.setShowCondition("someShowCondition");
@@ -115,7 +116,7 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
     }
 
     @Test
-    public void returnsNoValidationErrorsWhenShowConditionIncludesMetadataField() throws InvalidShowConditionException {
+    void returnsNoValidationErrorsWhenShowConditionIncludesMetadataField() throws InvalidShowConditionException {
         String field = MetadataField.STATE.getReference();
         complexField.setShowCondition("someShowCondition");
         FieldTypeEntity complexFieldType = mock(FieldTypeEntity.class);
@@ -132,7 +133,7 @@ public class ComplexFieldEntityShowConditionValidatorImplTest {
 
 
     @Test
-    public void returnsNoValidationErrorsWhenShowConditionIncludesInjectedField() throws InvalidShowConditionException {
+    void returnsNoValidationErrorsWhenShowConditionIncludesInjectedField() throws InvalidShowConditionException {
         String field = "[INJECTED_DATA.test]";
         complexField.setShowCondition("someShowCondition");
         FieldTypeEntity complexFieldType = mock(FieldTypeEntity.class);

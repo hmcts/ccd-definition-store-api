@@ -30,7 +30,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_M
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_RADIO_FIXED_LIST;
 
 @ExtendWith(MockitoExtension.class)
-public class ListFieldTypeParserTest extends ParserTestBase {
+class ListFieldTypeParserTest extends ParserTestBase {
 
     @Mock
     private FieldTypeEntity fieldFixedList;
@@ -47,7 +47,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
     private DefinitionSheet definitionSheet;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         init();
 
@@ -56,7 +56,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFail_whenNoBaseTypeFoundForFixedList() {
+    void shouldFail_whenNoBaseTypeFoundForFixedList() {
         given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.empty());
         InvalidImportException ex = assertThrows(InvalidImportException.class, () ->
             new ListFieldTypeParser(parseContext, spreadsheetValidator));
@@ -65,7 +65,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFail_whenNoBaseTypeFoundForMultiSelectList() {
+    void shouldFail_whenNoBaseTypeFoundForMultiSelectList() {
 
         given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.of(fieldFixedList));
         given(parseContext.getBaseType(BASE_RADIO_FIXED_LIST)).willReturn(Optional.of(fieldFixedRadioList));
@@ -77,7 +77,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEmptySheet() {
+    void shouldParseEmptySheet() {
 
         given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.of(fieldFixedList));
         given(parseContext.getBaseType(BASE_RADIO_FIXED_LIST)).willReturn(Optional.of(fieldFixedRadioList));
@@ -92,7 +92,7 @@ public class ListFieldTypeParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseListType() {
+    void shouldParseListType() {
 
         given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.of(fieldFixedList));
         given(parseContext.getBaseType(BASE_RADIO_FIXED_LIST)).willReturn(Optional.of(fieldFixedRadioList));

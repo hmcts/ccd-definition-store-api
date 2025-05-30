@@ -1,20 +1,20 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
 
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-
-import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class CaseTypeEntityMissingSecurityClassificationValidationErrorTest {
+class CaseTypeEntityMissingSecurityClassificationValidationErrorTest {
 
     private static final String OVERRIDDEN_ERROR_MESSAGE = "The overridden error message";
 
@@ -24,7 +24,7 @@ public class CaseTypeEntityMissingSecurityClassificationValidationErrorTest {
     private CaseTypeEntityMissingSecurityClassificationValidationError classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         when(mockValidationErrorMessageCreator.createErrorMessage(
             any(CaseTypeEntityMissingSecurityClassificationValidationError.class)))
@@ -34,13 +34,13 @@ public class CaseTypeEntityMissingSecurityClassificationValidationErrorTest {
     }
 
     @Test
-    public void testDefaultMessage() {
+    void testDefaultMessage() {
         assertEquals("Case Type with name 'Charley says Dont talk to strangers' "
             + "must have a Security Classification defined", classUnderTest.getDefaultMessage());
     }
 
     @Test
-    public void testCreateMessage() {
+    void testCreateMessage() {
         assertEquals(OVERRIDDEN_ERROR_MESSAGE, classUnderTest.createMessage(mockValidationErrorMessageCreator));
         verify(mockValidationErrorMessageCreator).createErrorMessage(classUnderTest);
     }

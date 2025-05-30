@@ -22,7 +22,7 @@ class FileStorageServiceTest {
     private FileStorageService serviceUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 

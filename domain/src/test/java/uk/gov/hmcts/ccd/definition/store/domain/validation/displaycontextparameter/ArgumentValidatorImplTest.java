@@ -10,12 +10,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 
 
-public class ArgumentValidatorImplTest {
+class ArgumentValidatorImplTest {
 
     private ArgumentValidatorImpl validator;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         validator = new ArgumentValidatorImpl();
     }

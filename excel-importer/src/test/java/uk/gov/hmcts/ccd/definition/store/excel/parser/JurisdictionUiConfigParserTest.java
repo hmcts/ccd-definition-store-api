@@ -28,7 +28,7 @@ class JurisdictionUiConfigParserTest extends ParserTestBase {
     private static final String TRUE_STRING = "Yes";
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         init();
 
         parseContext = mock(ParseContext.class);
@@ -39,7 +39,7 @@ class JurisdictionUiConfigParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParse() {
+    void shouldParse() {
         definitionSheet.addDataItem(buildDefinitionDataItem(TRUE_STRING));
         JurisdictionUiConfigEntity result = parser.parse(definitionSheets);
         assertAll(() -> assertEquals(true, result.getShuttered()),
@@ -47,7 +47,7 @@ class JurisdictionUiConfigParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParse_WhenShutteredIsNull() {
+    void shouldParse_WhenShutteredIsNull() {
         definitionSheet.addDataItem(buildDefinitionDataItem(null));
         JurisdictionUiConfigEntity result = parser.parse(definitionSheets);
         assertAll(() -> assertEquals(false, result.getShuttered()),

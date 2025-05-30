@@ -1,9 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -11,10 +12,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CaseFieldEntitySecurityClassificationValidatorImplTest {
+class CaseFieldEntitySecurityClassificationValidatorImplTest {
 
     @Test
-    public void securityClassificationIsSet_relevantValidationResultReturned() {
+    void securityClassificationIsSet_relevantValidationResultReturned() {
 
         assertCaseFieldWithSecurityClassificationIsValidInContextOfParent(
             SecurityClassification.PUBLIC, null, true);
@@ -43,7 +44,7 @@ public class CaseFieldEntitySecurityClassificationValidatorImplTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void securityClassificationIsNull_invalidValidationResultContainingCaseFieldEntityMissingSecurityClassificationValidationErrorReturned() {
+    void securityClassificationIsNull_invalidValidationResultContainingCaseFieldEntityMissingSecurityClassificationValidationErrorReturned() {
         CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
         CaseFieldEntityValidationContext caseFieldEntityValidationContext
             = caseFieldEntityValidationContext(null, null);

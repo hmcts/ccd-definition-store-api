@@ -33,7 +33,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Generic Layout Entity Display Context Parameter Validator Implementation Tests")
-public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
+class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
 
     private GenericLayoutValidator validator;
 
@@ -44,7 +44,7 @@ public class GenericLayoutEntityDisplayContextParameterValidatorImplTest {
     private DisplayContextParameterValidator displayContextParameterValidator;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         validator = new GenericLayoutEntityDisplayContextParameterValidatorImpl(
             displayContextParameterValidatorFactory);

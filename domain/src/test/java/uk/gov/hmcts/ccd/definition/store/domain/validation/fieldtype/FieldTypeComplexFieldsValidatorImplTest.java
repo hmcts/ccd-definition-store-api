@@ -18,18 +18,18 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class FieldTypeComplexFieldsValidatorImplTest {
+class FieldTypeComplexFieldsValidatorImplTest {
 
     @Mock
     private ComplexFieldValidator complexFieldEntityValidator1;
@@ -49,7 +49,7 @@ public class FieldTypeComplexFieldsValidatorImplTest {
     private FieldTypeComplexFieldsValidatorImpl classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
 
         when(complexFieldEntityValidator1.validate(any(), any())).thenReturn(new ValidationResult());
@@ -61,7 +61,7 @@ public class FieldTypeComplexFieldsValidatorImplTest {
     }
 
     @Test
-    public void caseFieldsAllValid_allValidatorsCalledWithContextBuiltFromCaseType_EmptyValidationResultReturned() {
+    void caseFieldsAllValid_allValidatorsCalledWithContextBuiltFromCaseType_EmptyValidationResultReturned() {
 
 
         ValidationResult validationResult = classUnderTest.validate(null, fieldType(complexFieldEntities));
@@ -75,7 +75,7 @@ public class FieldTypeComplexFieldsValidatorImplTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void caseFields1And3AreInvalid_allValidatorsCalledWithContextBuiltFromCaseType_ValidationResultWithErrorsForCaseFieldEntity1And3Returned() {
+    void caseFields1And3AreInvalid_allValidatorsCalledWithContextBuiltFromCaseType_ValidationResultWithErrorsForCaseFieldEntity1And3Returned() {
 
         when(complexFieldEntityValidator1.validate(eq(complexFieldEntity1), any()))
             .thenReturn(validationResultWithError(validationErrorWithDefaultMessage(

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
+import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
@@ -13,7 +14,9 @@ public class StubTypeMappingGenerator extends TypeMappingGenerator {
     private String dataClassificationMapping;
     private String type;
 
-    public StubTypeMappingGenerator(String type, String dataMapping, String dataClassificationMapping) {
+    public StubTypeMappingGenerator(CcdElasticSearchProperties config, 
+            String type, String dataMapping, String dataClassificationMapping) {
+        super(config);
         this.type = type;
         this.dataMapping = dataMapping;
         this.dataClassificationMapping = dataClassificationMapping;

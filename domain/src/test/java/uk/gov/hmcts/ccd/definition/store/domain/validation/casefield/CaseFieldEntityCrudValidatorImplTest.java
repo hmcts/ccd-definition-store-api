@@ -1,18 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
 
-public class CaseFieldEntityCrudValidatorImplTest {
+class CaseFieldEntityCrudValidatorImplTest {
 
     private CaseFieldEntityCrudValidatorImpl validator;
 
@@ -25,7 +26,7 @@ public class CaseFieldEntityCrudValidatorImplTest {
     private CaseFieldEntityValidationContext context;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         validator = new CaseFieldEntityCrudValidatorImpl();
 
@@ -42,7 +43,7 @@ public class CaseFieldEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void goodCrud() {
+    void goodCrud() {
         caseFieldUserRole.setCrudAsString("Cr Du");
         final ValidationResult result = validator.validate(caseField, context);
 
@@ -50,7 +51,7 @@ public class CaseFieldEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void crudTooLong() {
+    void crudTooLong() {
 
         caseFieldUserRole.setCrudAsString(" CRUD   DD ");
 
@@ -63,7 +64,7 @@ public class CaseFieldEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void blankCrud() {
+    void blankCrud() {
 
         final ValidationResult result = validator.validate(caseField, context);
 
@@ -74,7 +75,7 @@ public class CaseFieldEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void invalidCrud() {
+    void invalidCrud() {
 
         caseFieldUserRole.setCrudAsString("X");
 

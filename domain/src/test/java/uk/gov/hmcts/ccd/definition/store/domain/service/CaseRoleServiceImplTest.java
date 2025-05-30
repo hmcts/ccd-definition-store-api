@@ -40,7 +40,7 @@ class CaseRoleServiceImplTest {
     private CaseRole caseRole3 = new CaseRole();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new CaseRoleServiceImpl(caseRoleRepository, caseTypeRepository, dtoMapper);
         caseRoleEntity1.setReference("ref1");

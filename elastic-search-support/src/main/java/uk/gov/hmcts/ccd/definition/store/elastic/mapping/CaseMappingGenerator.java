@@ -1,9 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
-import com.google.gson.stream.JsonWriter;
-import lombok.extern.slf4j.Slf4j;
-import org.jooq.lambda.Unchecked;
-import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -13,11 +10,20 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Function;
 
+import com.google.gson.stream.JsonWriter;
+import lombok.extern.slf4j.Slf4j;
+import org.jooq.lambda.Unchecked;
+import org.springframework.stereotype.Component;
+
 import static java.util.stream.Collectors.toList;
 
 @Component
 @Slf4j
 public class CaseMappingGenerator extends MappingGenerator {
+
+    public CaseMappingGenerator(CcdElasticSearchProperties config) {
+        super(config);
+    }
 
     private static final String ALIAS_TEXT_SORT_SUFFIX = "_keyword";
     static final String ALIAS_CASE_FIELD_PATH_PLACE_HOLDER = "<caseFieldPathPlaceHolder>";

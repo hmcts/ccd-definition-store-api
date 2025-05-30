@@ -1,27 +1,27 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
 
-import org.junit.jupiter.api.Test;
-import org.mockito.MockitoAnnotations;
-
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
+
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.jupiter.api.BeforeEach;
 
-public class DisplayGroupColumnNumberValidatorTest {
+class DisplayGroupColumnNumberValidatorTest {
 
     DisplayGroupColumnNumberValidator testObj;
     DisplayGroupCaseFieldEntity entity;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         testObj = new DisplayGroupColumnNumberValidator();
         entity = new DisplayGroupCaseFieldEntity();
@@ -29,7 +29,7 @@ public class DisplayGroupColumnNumberValidatorTest {
 
 
     @Test
-    public void shouldPassValidationWhenColumnNrIs1() {
+    void shouldPassValidationWhenColumnNrIs1() {
         entity.setColumnNumber(1);
 
         ValidationResult result = testObj.validate(entity);
@@ -38,7 +38,7 @@ public class DisplayGroupColumnNumberValidatorTest {
     }
 
     @Test
-    public void shouldPassValidationWhenColumnNrIs2() {
+    void shouldPassValidationWhenColumnNrIs2() {
         entity.setColumnNumber(2);
 
         ValidationResult result = testObj.validate(entity);
@@ -47,7 +47,7 @@ public class DisplayGroupColumnNumberValidatorTest {
     }
 
     @Test
-    public void shouldPassValidationWhenColumnNrNull() {
+    void shouldPassValidationWhenColumnNrNull() {
         entity.setColumnNumber(null);
 
         ValidationResult result = testObj.validate(entity);
@@ -56,7 +56,7 @@ public class DisplayGroupColumnNumberValidatorTest {
     }
 
     @Test
-    public void shouldFailValidationWhenWhenColumnNrIsNotValid() {
+    void shouldFailValidationWhenWhenColumnNrIsNotValid() {
         entity.setColumnNumber(3);
         CaseFieldEntity cf = new CaseFieldEntity();
         cf.setReference("cf");

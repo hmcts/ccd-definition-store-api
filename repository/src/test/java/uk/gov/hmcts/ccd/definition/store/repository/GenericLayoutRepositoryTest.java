@@ -36,7 +36,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class GenericLayoutRepositoryTest {
+class GenericLayoutRepositoryTest {
 
     private static final String CASE_ID = "CaseId";
 
@@ -56,7 +56,7 @@ public class GenericLayoutRepositoryTest {
     private VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
         caseTypeV1 = versionedCaseTypeRepository.save(caseTypeEntity());
         caseTypeV2 = versionedCaseTypeRepository.save(caseTypeEntity());
@@ -64,7 +64,7 @@ public class GenericLayoutRepositoryTest {
     }
 
     @Test
-    public void shouldReturnWorkbasketLayoutsForLatestCaseType_whenWorkbasketLayoutsExistForThreeCaseVersions() {
+    void shouldReturnWorkbasketLayoutsForLatestCaseType_whenWorkbasketLayoutsExistForThreeCaseVersions() {
 
         genericLayoutRepository.save(createWorkBasketCaseField(
             caseTypeV1, getCaseField(caseTypeV1, "cf1"), "label dg", 4));
@@ -103,7 +103,7 @@ public class GenericLayoutRepositoryTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void shouldReturnSearchCasesResultLayoutsForLatestCaseType_whenSearchCasesResultLayoutsExistForThreeCaseVersions() {
+    void shouldReturnSearchCasesResultLayoutsForLatestCaseType_whenSearchCasesResultLayoutsExistForThreeCaseVersions() {
 
         genericLayoutRepository.save(createSearchCasesResultField(
             caseTypeV1, getCaseField(caseTypeV1, "cf1"), "label dg", 4));
@@ -150,7 +150,7 @@ public class GenericLayoutRepositoryTest {
     }
 
     @Test
-    public void shouldSearchInputLayoutsForLatestCaseType_whenSearchInputLayoutsExistForThreeCaseVersions() {
+    void shouldSearchInputLayoutsForLatestCaseType_whenSearchInputLayoutsExistForThreeCaseVersions() {
 
         genericLayoutRepository.save(createSearchInputCaseField(
             caseTypeV1, getCaseField(caseTypeV1, "cf2"), "qwerty", 6));
@@ -188,7 +188,7 @@ public class GenericLayoutRepositoryTest {
     }
 
     @Test
-    public void shouldSearchResultLayoutsForLatestCaseType_whenSearchResultLayoutsExistForThreeCaseVersions() {
+    void shouldSearchResultLayoutsForLatestCaseType_whenSearchResultLayoutsExistForThreeCaseVersions() {
 
         genericLayoutRepository.save(createSearchResultCaseField(
             caseTypeV1, getCaseField(caseTypeV1, "cf3"), "v vhjf vh", 12));

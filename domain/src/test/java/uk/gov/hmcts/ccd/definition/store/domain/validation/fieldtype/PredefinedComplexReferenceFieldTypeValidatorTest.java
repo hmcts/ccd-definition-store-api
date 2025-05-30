@@ -36,14 +36,14 @@ class PredefinedComplexReferenceFieldTypeValidatorTest {
     private PredefinedComplexReferenceFieldTypeValidator validator;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         validator = new PredefinedComplexReferenceFieldTypeValidator();
         globalComplexType.setReference(PREDEFINED_COMPLEX_TYPE_REFERENCE);
     }
 
     @DisplayName("Should accept global type overriding base complex type reference")
     @Test
-    public void shouldAcceptGlobalTypeOverridingBaseComplexTypeReference() {
+    void shouldAcceptGlobalTypeOverridingBaseComplexTypeReference() {
         final FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setReference(PREDEFINED_COMPLEX_TYPE_REFERENCE);
         fieldType.setJurisdiction(null); // No jurisdiction --> Global complex field type
@@ -60,7 +60,7 @@ class PredefinedComplexReferenceFieldTypeValidatorTest {
 
     @DisplayName("Should reject jurisdiction type overriding base type reference")
     @Test
-    public void shouldRejectJurisdictionTypeOverridingBaseTypeReference() {
+    void shouldRejectJurisdictionTypeOverridingBaseTypeReference() {
         final FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setReference(PREDEFINED_COMPLEX_TYPE_REFERENCE);
         fieldType.setJurisdiction(JURISDICTION);

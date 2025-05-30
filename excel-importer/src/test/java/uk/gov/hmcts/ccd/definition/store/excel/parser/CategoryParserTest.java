@@ -27,7 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
 
-public class CategoryParserTest extends BaseChallengeQuestionTest {
+class CategoryParserTest extends BaseChallengeQuestionTest {
 
     private static final Date LIVE_FROM = new Date();
     private static final Date LIVE_TO = new Date();
@@ -45,14 +45,14 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
     private ParseContext parseContext;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
         parseContext = buildParseContext();
         this.categoryParser = new CategoryParser(categoryValidator);
     }
 
     @Test
-    public void testParse() {
+    void testParse() {
         val categoryEntities =
             categoryParser.parse(createDefinitionSheets(), parseContext);
 
@@ -64,7 +64,7 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testParseRegisteredCategory() {
+    void testParseRegisteredCategory() {
         val categoryEntities =
             categoryParser.parse(createDefinitionSheets(), parseContext);
 
@@ -72,7 +72,7 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void failDueToDuplicatedIDs() {
+    void failDueToDuplicatedIDs() {
         doThrow(new ValidationException(new ValidationResult()))
             .when(categoryValidator)
             .validate(any(), any());

@@ -17,7 +17,7 @@ class SearchAliasFieldNameValidatorTest {
     private final SearchAliasFieldEntity searchAliasField = new SearchAliasFieldEntity();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         searchAliasField.setCaseType(new CaseTypeEntity());
     }
 

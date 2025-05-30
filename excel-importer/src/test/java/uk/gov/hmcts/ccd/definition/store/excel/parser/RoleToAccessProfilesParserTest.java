@@ -32,7 +32,7 @@ class RoleToAccessProfilesParserTest extends ParserTestBase {
     private RoleToAccessProfilesParser underTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         init();
         parseContext = mock(ParseContext.class);
         underTest = new RoleToAccessProfilesParser();
@@ -56,7 +56,7 @@ class RoleToAccessProfilesParserTest extends ParserTestBase {
             "Test Role 2", "solicitor", "Y", "N"));
         final List<RoleToAccessProfilesEntity> entityList = underTest.parse(definitionSheets, parseContext);
 
-        assertEquals(entityList.size(), 2);
+        assertEquals(2, entityList.size());
         entityList.forEach(entity -> {
             assertNotNull(entity.getRoleName());
             assertNotNull(entity.getAuthorisation());

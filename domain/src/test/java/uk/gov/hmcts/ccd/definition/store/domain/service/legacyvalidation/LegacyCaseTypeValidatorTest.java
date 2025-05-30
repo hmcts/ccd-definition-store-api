@@ -16,17 +16,17 @@ import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class LegacyCaseTypeValidatorTest {
+class LegacyCaseTypeValidatorTest {
 
     private LegacyCaseTypeValidator validator;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         validator = new LegacyCaseTypeValidator(new ArrayList<>());
     }
 
     @Test
-    public void validateCaseTypeTest() {
+    void validateCaseTypeTest() {
         // Given - A Case Type which abides by all ValidationRule's
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
@@ -43,7 +43,7 @@ public class LegacyCaseTypeValidatorTest {
     }
 
     @Test
-    public void validateInvalidCaseTypeEntityTest() {
+    void validateInvalidCaseTypeEntityTest() {
         // Given - a Case Type entity with an empty Case Type
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 

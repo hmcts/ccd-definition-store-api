@@ -1,9 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
 
-import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
-
 import uk.gov.hmcts.ccd.definition.store.domain.validation.TestValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
@@ -19,16 +16,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-public class FieldTypeServiceImplTest {
+class FieldTypeServiceImplTest {
 
     public static final JurisdictionEntity JURISDICTION = new JurisdictionEntity();
     private FieldTypeRepository repository;
@@ -38,7 +38,7 @@ public class FieldTypeServiceImplTest {
     private FieldTypeValidationContextFactory validationContextFactory;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         repository = mock(FieldTypeRepository.class);
         doReturn(Optional.of(0)).when(repository).findLastVersion(Mockito.anyString());
 
@@ -54,7 +54,7 @@ public class FieldTypeServiceImplTest {
     }
 
     @Test
-    public void saveTypes_shouldValidateWithAllValidators() throws Exception {
+    void saveTypes_shouldValidateWithAllValidators() throws Exception {
 
         final FieldTypeValidationContext context = mock(FieldTypeValidationContext.class);
         doReturn(context).when(validationContextFactory).create();
@@ -73,7 +73,7 @@ public class FieldTypeServiceImplTest {
     }
 
     @Test
-    public void saveTypes_shouldThrowExceptionOnValidationError() throws Exception {
+    void saveTypes_shouldThrowExceptionOnValidationError() throws Exception {
 
         final FieldTypeValidationContext context = mock(FieldTypeValidationContext.class);
         doReturn(context).when(validationContextFactory).create();
@@ -101,7 +101,7 @@ public class FieldTypeServiceImplTest {
     }
 
     @Test
-    public void save_shouldValidateWithAllValidators() throws Exception {
+    void save_shouldValidateWithAllValidators() throws Exception {
 
         final FieldTypeValidationContext context = mock(FieldTypeValidationContext.class);
         doReturn(context).when(validationContextFactory).create();
@@ -117,7 +117,7 @@ public class FieldTypeServiceImplTest {
     }
 
     @Test
-    public void save_shouldThrowExceptionOnValidationError() throws Exception {
+    void save_shouldThrowExceptionOnValidationError() throws Exception {
 
         final FieldTypeValidationContext context = mock(FieldTypeValidationContext.class);
         doReturn(context).when(validationContextFactory).create();

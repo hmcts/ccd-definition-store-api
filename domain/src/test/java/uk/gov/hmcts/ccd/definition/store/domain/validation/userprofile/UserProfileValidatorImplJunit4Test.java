@@ -26,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *      Needs investigation on why test coverage is picking up JUnit5 cases selectively.
  */
 @Deprecated
-public class UserProfileValidatorImplJunit4Test {
+class UserProfileValidatorImplJunit4Test {
 
     public static final String JURISDICTION_REFERENCE = "Heman TH";
     public static final String CASE_TYPE_REFERENCE = "HOLIDAY";
@@ -36,7 +36,7 @@ public class UserProfileValidatorImplJunit4Test {
     private CaseTypeEntity caseTypeEntity;
 
     @BeforeEach
-    public void init() {
+    void init() {
         validator = new UserProfileValidatorImpl();
         jurisdiction = new JurisdictionEntity();
         jurisdiction.setReference(JURISDICTION_REFERENCE);
@@ -48,14 +48,14 @@ public class UserProfileValidatorImplJunit4Test {
     }
 
     @Test
-    public void emptyDataToValidate() {
+    void emptyDataToValidate() {
         final ValidationResult result = validator.validate(
             Collections.emptyList(), null, Collections.emptyList());
         assertTrue(result.isValid());
     }
 
     @Test
-    public void validWorkbasketDefaults() {
+    void validWorkbasketDefaults() {
         WorkBasketUserDefault userDefault = buildWorkBasketUserDefault("Nayab.The.Royal.Highness.ssssh@hmcts.net",
             "QA",
             CASE_TYPE_REFERENCE,
@@ -73,7 +73,7 @@ public class UserProfileValidatorImplJunit4Test {
     }
 
     @Test
-    public void invalidWorkbasketDefaultsUndefinedJurisdiction() {
+    void invalidWorkbasketDefaultsUndefinedJurisdiction() {
         WorkBasketUserDefault userDefault = buildWorkBasketUserDefault("Nayab.The.Royal.Highness.ssssh@hmcts.net",
             JURISDICTION_REFERENCE,
             CASE_TYPE_REFERENCE,
@@ -98,7 +98,7 @@ public class UserProfileValidatorImplJunit4Test {
     }
 
     @Test
-    public void invalidEmailAddress() {
+    void invalidEmailAddress() {
         final WorkBasketUserDefault userDefault = buildWorkBasketUserDefault("BAYAN-The-Royal-Highnes",
             JURISDICTION_REFERENCE,
             CASE_TYPE_REFERENCE,

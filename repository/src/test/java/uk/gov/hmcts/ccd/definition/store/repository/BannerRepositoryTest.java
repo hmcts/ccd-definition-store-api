@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class BannerRepositoryTest {
+class BannerRepositoryTest {
 
     @Autowired
     private BannerRepository bannerRepository;
@@ -43,7 +43,7 @@ public class BannerRepositoryTest {
     private static final String JURISDICTION_REFERENCE_2 = "DIVORCE";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         JurisdictionEntity testJurisdiction1 = testHelper.createJurisdiction(JURISDICTION_REFERENCE_1, "", "");
         JurisdictionEntity testJurisdiction2 = testHelper.createJurisdiction(JURISDICTION_REFERENCE_2, "", "");
         BannerEntity bannerEntity1 = createBanner(testJurisdiction1);
@@ -53,7 +53,7 @@ public class BannerRepositoryTest {
     }
 
     @Test
-    public void shouldDeleteBannersForProvidedReference() {
+    void shouldDeleteBannersForProvidedReference() {
         int deletedCount = bannerRepository.deleteByJurisdictionReference(JURISDICTION_REFERENCE_1);
 
         List<BannerEntity> banners = bannerRepository.findAll();
@@ -65,7 +65,7 @@ public class BannerRepositoryTest {
     }
 
     @Test
-    public void shouldNotDeleteAnyBannersWhenReferenceDoesNotExist() {
+    void shouldNotDeleteAnyBannersWhenReferenceDoesNotExist() {
         int deletedCount = bannerRepository.deleteByJurisdictionReference("UNKNOWN_REFERENCE");
 
         List<BannerEntity> banners = bannerRepository.findAll();

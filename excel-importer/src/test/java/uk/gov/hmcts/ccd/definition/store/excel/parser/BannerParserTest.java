@@ -28,7 +28,7 @@ class BannerParserTest extends ParserTestBase {
     private BannerParser bannerParser;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         init();
         parseContext = mock(ParseContext.class);
@@ -38,14 +38,14 @@ class BannerParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFail_whenMoreThanOneBannerDefinedForJurisdiction() {
+    void shouldFail_whenMoreThanOneBannerDefinedForJurisdiction() {
         definitionSheet.addDataItem(buildDefinitionDataItem(BANNER_DESCRIPTION, BANNER_URL_TEXT, BANNER_URL));
         definitionSheet.addDataItem(buildDefinitionDataItem("Test Desc2", BANNER_URL_TEXT, BANNER_URL));
         Assertions.assertThrows(SpreadsheetParsingException.class, () -> bannerParser.parse(definitionSheets));
     }
 
     @Test
-    public void shouldParse() {
+    void shouldParse() {
         definitionSheet.addDataItem(buildDefinitionDataItem(BANNER_DESCRIPTION, BANNER_URL_TEXT, BANNER_URL));
 
         Optional<BannerEntity> bannerEntity = bannerParser.parse(definitionSheets);
@@ -60,7 +60,7 @@ class BannerParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldReturnEmptyOptionalWhenBannerSheetHasNoItems() {
+    void shouldReturnEmptyOptionalWhenBannerSheetHasNoItems() {
         Optional<BannerEntity> bannerEntity = bannerParser.parse(definitionSheets);
 
         assertAll(

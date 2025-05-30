@@ -47,7 +47,7 @@ class JurisdictionUiConfigServiceImplTest {
     private JurisdictionUiConfig jurisdictionUiConfig3 = new JurisdictionUiConfig();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new JurisdictionUiConfigServiceImpl(jurisdictionUiConfigRepository, dtoMapper);
         jurisdictionUiConfig1.setId(reference);

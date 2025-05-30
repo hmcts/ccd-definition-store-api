@@ -25,7 +25,7 @@ class ServiceAuthHeadersInterceptorTest {
     private RequestTemplate template;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         template = new RequestTemplate();
     }

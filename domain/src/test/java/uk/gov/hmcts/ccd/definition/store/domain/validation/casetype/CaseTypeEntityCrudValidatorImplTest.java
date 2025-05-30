@@ -1,18 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
 
-import org.junit.jupiter.api.Test;
-
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.jupiter.api.BeforeEach;
 
-public class CaseTypeEntityCrudValidatorImplTest {
+class CaseTypeEntityCrudValidatorImplTest {
 
     private CaseTypeEntityCrudValidatorImpl validator;
 
@@ -21,7 +21,7 @@ public class CaseTypeEntityCrudValidatorImplTest {
     private CaseTypeACLEntity caseTypeUserRole;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         validator = new CaseTypeEntityCrudValidatorImpl();
 
@@ -33,7 +33,7 @@ public class CaseTypeEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void goodCrud() {
+    void goodCrud() {
         caseTypeUserRole.setCrudAsString("Cr Du");
         final ValidationResult result = validator.validate(caseType);
 
@@ -41,7 +41,7 @@ public class CaseTypeEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void crudTooLong() {
+    void crudTooLong() {
 
         caseTypeUserRole.setCrudAsString(" CRUD   DD ");
 
@@ -54,7 +54,7 @@ public class CaseTypeEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void blankCrud() {
+    void blankCrud() {
 
         final ValidationResult result = validator.validate(caseType);
 
@@ -65,7 +65,7 @@ public class CaseTypeEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void invalidCrud() {
+    void invalidCrud() {
 
         caseTypeUserRole.setCrudAsString("X");
 

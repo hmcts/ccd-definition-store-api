@@ -21,7 +21,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
-public class SpreadsheetParserTest {
+class SpreadsheetParserTest {
 
     private SpreadsheetParser spreadsheetParser;
 
@@ -29,12 +29,12 @@ public class SpreadsheetParserTest {
     private SpreadsheetValidator spreadsheetValidator;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
     }
 
     @Test
-    public void shouldParse() throws Exception {
+    void shouldParse() throws Exception {
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(ImportServiceImplTest.BAD_FILE);
 
         final Map<String, DefinitionSheet> map = spreadsheetParser.parse(inputStream);
@@ -63,7 +63,7 @@ public class SpreadsheetParserTest {
      * Helps test coverage.
      */
     @Test
-    public void shouldFail_whenInvalidInputStream() throws Exception {
+    void shouldFail_whenInvalidInputStream() throws Exception {
         assertThrows(NullPointerException.class, () -> {
             final InputStream inputStream = null;
             spreadsheetParser.parse(inputStream);

@@ -15,7 +15,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class FieldsTypeParserTest extends ParserTestBase {
+class FieldsTypeParserTest extends ParserTestBase {
 
     private FieldsTypeParser fieldsTypeParser;
 
@@ -29,7 +29,7 @@ public class FieldsTypeParserTest extends ParserTestBase {
     private CaseFieldTypeParser fieldParser;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         init();
 
@@ -38,7 +38,7 @@ public class FieldsTypeParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEmpty() {
+    void shouldParseEmpty() {
 
         final ParseResult<FieldTypeEntity> parseResult = new ParseResult();
 

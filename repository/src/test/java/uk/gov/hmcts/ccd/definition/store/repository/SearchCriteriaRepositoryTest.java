@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class SearchCriteriaRepositoryTest {
+class SearchCriteriaRepositoryTest {
 
     private static final String CASE_TYPE_REFERENCE = "CaseTypeA";
 
@@ -44,14 +44,14 @@ public class SearchCriteriaRepositoryTest {
     private CaseTypeEntity latestCaseType;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         latestCaseType = testHelper.createCaseType(CASE_TYPE_REFERENCE, CASE_TYPE_REFERENCE);
 
         createSearchCriteriaEntity(latestCaseType);
     }
 
     @Test
-    public void shouldGetSearchCriteriaEntity() {
+    void shouldGetSearchCriteriaEntity() {
         List<SearchCriteriaEntity> result = searchCriteriaRepository
             .findSearchCriteriaEntityByCaseType(CASE_TYPE_REFERENCE);
 
@@ -63,7 +63,7 @@ public class SearchCriteriaRepositoryTest {
     }
 
     @Test
-    public void shouldReturnNoSearchCriteriaResultForUnknownParameters() {
+    void shouldReturnNoSearchCriteriaResultForUnknownParameters() {
         List<SearchCriteriaEntity> result = searchCriteriaRepository
             .findSearchCriteriaEntityByCaseType("IncorrectCaseType");
 

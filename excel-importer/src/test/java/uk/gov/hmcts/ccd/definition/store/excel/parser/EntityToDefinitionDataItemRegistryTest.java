@@ -11,17 +11,17 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class EntityToDefinitionDataItemRegistryTest {
+class EntityToDefinitionDataItemRegistryTest {
 
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
     }
 
     @Test
-    public void addEntityToRegistry_definitionDataItemCanBeRetreived() {
+    void addEntityToRegistry_definitionDataItemCanBeRetreived() {
 
         DefinitionDataItem definitionDataItem = new DefinitionDataItem("");
         Object entity = new Object();
@@ -32,7 +32,7 @@ public class EntityToDefinitionDataItemRegistryTest {
     }
 
     @Test
-    public void entityNotInRegistry_nullDefinitionDataItemRetreived() {
+    void entityNotInRegistry_nullDefinitionDataItemRetreived() {
 
         assertEquals(Optional.empty(), entityToDefinitionDataItemRegistry.getForEntity(new Object()));
 

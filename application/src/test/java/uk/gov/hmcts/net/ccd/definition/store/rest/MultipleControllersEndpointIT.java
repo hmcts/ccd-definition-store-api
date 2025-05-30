@@ -39,7 +39,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassificatio
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.RESTRICTED;
 
 @Transactional
-public class MultipleControllersEndpointIT extends BaseTest {
+class MultipleControllersEndpointIT extends BaseTest {
     private static final String WIZARD_PAGE_STRUCTURE_URL_1 =
         "/api/display/wizard-page-structure/case-types/%s/event-triggers/%s";
     private static final String TABS_STRUCTURE_URL =
@@ -50,7 +50,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
     private static final String CASE_TYPE_URL = "/api/data/case-type/%s";
 
     @Test
-    public void shouldReturnCaseType() throws Exception {
+    void shouldReturnCaseType() throws Exception {
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
@@ -94,7 +94,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
 
     // To be @Nested - DisplayAPI Controller
     @Test
-    public void shouldReturnThreeWorkbasketInputFieldsForTestAddressBookCase() throws Exception {
+    void shouldReturnThreeWorkbasketInputFieldsForTestAddressBookCase() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
@@ -124,7 +124,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
     }
 
     @Test
-    public void shouldReturnTabsForTestAddressBookCase() throws Exception {
+    void shouldReturnTabsForTestAddressBookCase() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
@@ -160,7 +160,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
     }
 
     @Test
-    public void shouldReturnThreeWizardPagesForTestAddressBookCase() throws Exception {
+    void shouldReturnThreeWizardPagesForTestAddressBookCase() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
@@ -192,7 +192,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
     }
 
     @Test
-    public void shouldReturnSingleWizardPageForTestComplexAddressBookCase() throws Exception {
+    void shouldReturnSingleWizardPageForTestComplexAddressBookCase() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream();
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
         MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
@@ -224,7 +224,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
 
     // To be @Nested - UserRoleController
     @Test
-    public void shouldReturnUserRolesForDefinedRoles() throws Exception {
+    void shouldReturnUserRolesForDefinedRoles() throws Exception {
         final String URL = String.format(ROLES_URL, "CaseWorker1,CaseWorker2,CaseWorker3,Nayab,Fatih,Andrzej,Mario");
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
             .andExpect(MockMvcResultMatchers.status().isOk())
@@ -241,7 +241,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
     }
 
     @Test
-    public void shouldSaveUserRole() throws Exception {
+    void shouldSaveUserRole() throws Exception {
         final String URL = ROLES_URL.substring(0, ROLES_URL.length() - 4);
         MvcResult result = mockMvc
             .perform(MockMvcRequestBuilders
@@ -262,7 +262,7 @@ public class MultipleControllersEndpointIT extends BaseTest {
     }
 
     @Test
-    public void shouldReturnNoUserRolesWhenUndefinedRolesQueried() throws Exception {
+    void shouldReturnNoUserRolesWhenUndefinedRolesQueried() throws Exception {
         final String URL = String.format(ROLES_URL, "Nayab,Fatih,Andrzej,Mario");
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(URL))
             .andExpect(MockMvcResultMatchers.status().isOk())
@@ -277,12 +277,12 @@ public class MultipleControllersEndpointIT extends BaseTest {
 
     // To be @Nested - CaseDefinition Controller
     @Test
-    public void shouldReturnJurisdictionsUpperCase() throws Exception {
+    void shouldReturnJurisdictionsUpperCase() throws Exception {
         shouldReturnJurisdictions("TEST");
     }
 
     @Test
-    public void shouldReturnJurisdictionsLowerCase() throws Exception {
+    void shouldReturnJurisdictionsLowerCase() throws Exception {
         shouldReturnJurisdictions("test");
     }
 

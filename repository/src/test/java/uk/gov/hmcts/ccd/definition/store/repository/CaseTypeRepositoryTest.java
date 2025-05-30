@@ -41,7 +41,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassificatio
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class CaseTypeRepositoryTest {
+class CaseTypeRepositoryTest {
 
     @Autowired
     private CaseTypeRepository classUnderTest;
@@ -62,7 +62,7 @@ public class CaseTypeRepositoryTest {
     private JurisdictionEntity testJurisdictionWithCaseTypeACL;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
         this.testJurisdictionWithCaseTypeACL = testHelper.createJurisdiction(
             "jurisdictionWithCaseTypeACL", "nameWithCaseTypeACL", "descWithCaseTypeACL");
@@ -175,7 +175,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void severalVersionsOfCaseTypeExistForReference_findCurrentCaseTypeReturnsCurrentVersionOfCaseType() {
+    void severalVersionsOfCaseTypeExistForReference_findCurrentCaseTypeReturnsCurrentVersionOfCaseType() {
         List<CaseTypeEntity> caseTypeEntities = classUnderTest.findAll().stream()
             .filter(c -> c.getReference().equals(CASE_TYPE_REFERENCE)).collect(Collectors.toList());
         assertEquals(3, caseTypeEntities.size());
@@ -186,7 +186,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void caseTypeDoesNotExistForReference_emptyOptionalReturned() {
+    void caseTypeDoesNotExistForReference_emptyOptionalReturned() {
         Optional<CaseTypeEntity> caseTypeEntityOptional
             = classUnderTest.findCurrentVersionForReference("Non Existing Reference");
         assertFalse(caseTypeEntityOptional.isPresent());
@@ -194,7 +194,7 @@ public class CaseTypeRepositoryTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void severalVersionsOfCaseTypeExistForJurisdiction_findByJurisdictionIdReturnsCurrentVersionOfCaseTypeForJurisdiction() {
+    void severalVersionsOfCaseTypeExistForJurisdiction_findByJurisdictionIdReturnsCurrentVersionOfCaseTypeForJurisdiction() {
         List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
         assertEquals(7, caseTypeEntities.size());
@@ -202,28 +202,28 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void caseTypeDoesNotExistForJurisdiction_emptyListReturned() {
+    void caseTypeDoesNotExistForJurisdiction_emptyListReturned() {
         List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId("Non Existing Jurisdiction");
         assertTrue(caseTypeEntities.isEmpty());
     }
 
     @Test
-    public void shouldReturnZeroCountIfCaseTypeIsOfExcludedJurisdiction() {
+    void shouldReturnZeroCountIfCaseTypeIsOfExcludedJurisdiction() {
         Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(
             CASE_TYPE_REFERENCE, testJurisdiction.getReference());
         assertEquals(0, result.intValue());
     }
 
     @Test
-    public void shouldReturnAPositiveCountIfCaseTypeIsNotOfExcludedJurisdiction() {
+    void shouldReturnAPositiveCountIfCaseTypeIsNotOfExcludedJurisdiction() {
         Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(
             CASE_TYPE_REFERENCE, "OtherJurisdiction");
         assertEquals(3, result.intValue());
     }
 
     @Test
-    public void caseTypeReferenceHasSeveralSpellings_findDefinitiveReferenceReturnsLatestCreated() {
+    void caseTypeReferenceHasSeveralSpellings_findDefinitiveReferenceReturnsLatestCreated() {
         Optional<CaseTypeEntity> definitiveCaseTypeOptional =
             classUnderTest.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(TEST_CASE_TYPE_REFERENCE);
         assertTrue(definitiveCaseTypeOptional.isPresent());
@@ -231,7 +231,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void caseTypeReferenceHasSeveralSpellingsAndSameTimestamp_findDefinitiveReferenceReturnsLatestCreated() {
+    void caseTypeReferenceHasSeveralSpellingsAndSameTimestamp_findDefinitiveReferenceReturnsLatestCreated() {
         Optional<CaseTypeEntity> definitiveCaseTypeOptional =
             classUnderTest.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(ANOTHER_CASE_TYPE_REFERENCE);
         assertTrue(definitiveCaseTypeOptional.isPresent());
@@ -239,7 +239,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void definitiveCaseTypeReferenceDoesNotExistForReference_emptyOptionalReturned() {
+    void definitiveCaseTypeReferenceDoesNotExistForReference_emptyOptionalReturned() {
         Optional<CaseTypeEntity> definitiveCaseTypeOptional =
             classUnderTest.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc("Dummy");
         assertFalse(definitiveCaseTypeOptional.isPresent());
@@ -252,7 +252,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void saveAndValidateCaseTypeWithACLAndAccessProfileDataTest() {
+    void saveAndValidateCaseTypeWithACLAndAccessProfileDataTest() {
         CaseTypeEntity caseTypeEntityVersionOneWithMultiACL = createCaseTypeEntityWithCaseTypeACL(
             "CaseTypeWithACL", "CaseTypeWithACL", 1,
             testJurisdictionWithCaseTypeACL, createCaseTypeACL());
@@ -317,7 +317,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void getAllCaseTypeDefinitions() {
+    void getAllCaseTypeDefinitions() {
         createCaseTypeEntity("ref1", "name1.1", 1, testJurisdiction);
         createCaseTypeEntity("ref2", "name2.1", 1, testJurisdiction);
         createCaseTypeEntity("ref2", "name2.2", 2, testJurisdiction);
@@ -342,7 +342,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void shouldFindAllUniqueCaseTypeIds() {
+    void shouldFindAllUniqueCaseTypeIds() {
         List<String> result = classUnderTest.findAllCaseTypeIds();
 
         assertAll(
@@ -358,7 +358,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void getAllCaseTypeDefinitionsByReferences() {
+    void getAllCaseTypeDefinitionsByReferences() {
         createCaseTypeEntity("ref1", "name1.1", 1, testJurisdiction);
         createCaseTypeEntity("ref2", "name2.1", 1, testJurisdiction);
         createCaseTypeEntity("ref2", "name2.2", 2, testJurisdiction);

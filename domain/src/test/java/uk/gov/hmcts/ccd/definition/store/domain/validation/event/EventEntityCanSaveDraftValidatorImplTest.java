@@ -18,7 +18,7 @@ class EventEntityCanSaveDraftValidatorImplTest {
     private EventEntityValidationContext context;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         CaseTypeEntity caseTypeEntity;
         classUnderTest = new EventEntityCanSaveDraftValidatorImpl();
         caseTypeEntity = new CaseTypeEntity();

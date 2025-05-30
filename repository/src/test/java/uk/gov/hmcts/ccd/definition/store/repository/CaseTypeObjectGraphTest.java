@@ -55,7 +55,7 @@ import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWi
 /**
  * Tests that the object graph on Case Type entity is correctly saved and fetched.
  */
-public class CaseTypeObjectGraphTest {
+class CaseTypeObjectGraphTest {
 
     public static final String CASE_FIELD_REFERENCE = "ref cf";
     public static final String CASE_FIELD_LABEL = "lab";
@@ -80,7 +80,7 @@ public class CaseTypeObjectGraphTest {
     private AccessProfileEntity accessProfile3;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
 
         jurisdiction = helper.createJurisdiction();
@@ -94,7 +94,7 @@ public class CaseTypeObjectGraphTest {
     }
 
     @Test
-    public void saveCaseType() {
+    void saveCaseType() {
         final WebhookEntity printWebhook = createWebHook("http://print");
 
         final CaseTypeEntity caseType = new CaseTypeEntity();

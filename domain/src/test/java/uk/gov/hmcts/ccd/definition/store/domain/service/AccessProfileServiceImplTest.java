@@ -42,7 +42,7 @@ class AccessProfileServiceImplTest {
     private UserRole mockUserRole = mock(UserRole.class);
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         repository = mock(AccessProfileRepository.class);
         service = new AccessProfileServiceImpl(repository);
     }

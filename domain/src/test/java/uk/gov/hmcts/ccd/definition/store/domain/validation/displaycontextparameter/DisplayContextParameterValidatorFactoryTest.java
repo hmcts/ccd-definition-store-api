@@ -16,7 +16,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class DisplayContextParameterValidatorFactoryTest {
+class DisplayContextParameterValidatorFactoryTest {
 
     private DisplayContextParameterValidatorFactory factory;
 
@@ -24,7 +24,7 @@ public class DisplayContextParameterValidatorFactoryTest {
     private DateTimeFormatParser dateTimeFormatParser;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 

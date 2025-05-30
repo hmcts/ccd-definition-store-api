@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class JurisdictionUiConfigRepositoryTest {
+class JurisdictionUiConfigRepositoryTest {
 
     @Autowired
     private JurisdictionUiConfigRepository jurisdictionUiConfigRepository;
@@ -42,7 +42,7 @@ public class JurisdictionUiConfigRepositoryTest {
     List<JurisdictionEntity> jurisdictions;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         jurisdictions = new ArrayList<>();
         jurisdictions.add(testHelper.createJurisdiction("ref1", "name1", "desc1"));
         jurisdictions.add(testHelper.createJurisdiction("ref2", "name2", "desc2"));
@@ -53,7 +53,7 @@ public class JurisdictionUiConfigRepositoryTest {
     }
 
     @Test
-    public void getSpecificJurisdictionUiConfig() {
+    void getSpecificJurisdictionUiConfig() {
 
         JurisdictionUiConfigEntity result = jurisdictionUiConfigRepository.findByJurisdictionId("ref1");
 
@@ -64,7 +64,7 @@ public class JurisdictionUiConfigRepositoryTest {
     }
 
     @Test
-    public void getJurisdictionUiConfigsByReferences() {
+    void getJurisdictionUiConfigsByReferences() {
         List<String> references = new ArrayList<>();
         references.add("ref1");
         references.add("ref3");

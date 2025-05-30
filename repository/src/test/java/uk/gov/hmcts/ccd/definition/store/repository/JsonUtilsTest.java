@@ -12,10 +12,10 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class JsonUtilsTest {
+class JsonUtilsTest {
 
     @Test
-    public void shouldGetObject_whenFromAndToString() {
+    void shouldGetObject_whenFromAndToString() {
 
         final String s = JsonUtils.toString("NGITB");
 
@@ -23,7 +23,7 @@ public class JsonUtilsTest {
     }
 
     @Test
-    public void shouldGetObject_whenFromStringToLocalDate() {
+    void shouldGetObject_whenFromStringToLocalDate() {
 
         final LocalDate date = LocalDate.of(2020, 02, 20);
         final String s = JsonUtils.toString(date);
@@ -31,7 +31,7 @@ public class JsonUtilsTest {
     }
 
     @Test
-    public void shouldFail_whenObjectCannotBeMappedAsString() {
+    void shouldFail_whenObjectCannotBeMappedAsString() {
         final LocalDate date = LocalDate.of(2020, 02, 20);
         final String s = JsonUtils.toString(date);
 
@@ -42,7 +42,7 @@ public class JsonUtilsTest {
     }
 
     @Test
-    public void shouldGetObject_whenFromAndToJsonNode() {
+    void shouldGetObject_whenFromAndToJsonNode() {
 
         final JsonNode node = JsonUtils.toJsonNodeTree("NGITB");
 
@@ -50,7 +50,7 @@ public class JsonUtilsTest {
     }
 
     @Test
-    public void shouldGetObject_whenFromJsonNodeToLocalDate() {
+    void shouldGetObject_whenFromJsonNodeToLocalDate() {
 
         final LocalDate date = LocalDate.of(2020, 02, 20);
         final JsonNode s = JsonUtils.toJsonNodeTree(date);
@@ -59,7 +59,7 @@ public class JsonUtilsTest {
     }
 
     @Test
-    public void shouldFail_whenObjectCannotBeMappedAsJsonNode() throws Throwable {
+    void shouldFail_whenObjectCannotBeMappedAsJsonNode() throws Throwable {
         final LocalDate date = LocalDate.of(2020, 02, 20);
         final JsonNode s = JsonUtils.toJsonNodeTree(date);
 

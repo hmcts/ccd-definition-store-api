@@ -1,24 +1,25 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 
-import com.google.common.collect.Lists;
-import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventPostStateEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import com.google.common.collect.Lists;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class EventEntityCreateEventValidatorTest {
+class EventEntityCreateEventValidatorTest {
 
     private EventEntityCreateEventValidator classUnderTest = new EventEntityCreateEventValidator();
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void eventHasCanCreateTrueAndPostStateIsNull_validationResultContainingCreateEventDoesNotHavePostconditionValidationErrorReturned() {
+    void eventHasCanCreateTrueAndPostStateIsNull_validationResultContainingCreateEventDoesNotHavePostconditionValidationErrorReturned() {
 
         assertValidationForCanCreateWithPostState(true, null, false);
         assertValidationForCanCreateWithPostState(true, new StateEntity(), true);

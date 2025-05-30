@@ -40,7 +40,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class AzureImportAuditsClientTest {
+class AzureImportAuditsClientTest {
 
     public static final int IMPORT_AUDITS_GET_LIMIT = 5;
 
@@ -77,7 +77,7 @@ public class AzureImportAuditsClientTest {
     private SSLSocketFactory socketFactory;
 
     @BeforeEach
-    public void setUp() throws StorageException, NoSuchAlgorithmException {
+    void setUp() throws StorageException, NoSuchAlgorithmException {
         final ApplicationParams applicationParams = mock(ApplicationParams.class);
 
         b11 = mock(CloudBlockBlob.class);
@@ -159,12 +159,12 @@ public class AzureImportAuditsClientTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         sslContextMockedStatic.close();
     }
 
     @Test
-    public void shouldFetchAllImportAuditsInCorrectDescOrder() throws Exception {
+    void shouldFetchAllImportAuditsInCorrectDescOrder() throws Exception {
         final List<ImportAudit> audits = subject.fetchLatestImportAudits();
         assertThat(audits.size(), is(5));
         assertThat(audits.get(0).getFilename(), is("b32"));
@@ -182,7 +182,7 @@ public class AzureImportAuditsClientTest {
     }
 
     @Test
-    public void shouldFetchNoImportAuditsWhenNoPrefixFound() throws Exception {
+    void shouldFetchNoImportAuditsWhenNoPrefixFound() throws Exception {
 
         int maxDaysToCheck = 10 + IMPORT_AUDITS_GET_LIMIT * 5;
         //maxDaysToCheck starts at 0

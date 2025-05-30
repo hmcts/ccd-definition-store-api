@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
 
-public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
+class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
 
     @Mock
     private ChallengeQuestionValidator challengeQuestionValidator;
@@ -34,14 +34,14 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     private ParseContext parseContext;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
         parseContext = buildParseContext();
         this.challengeQuestionParser = new ChallengeQuestionParser(challengeQuestionValidator);
     }
 
     @Test
-    public void testParse() {
+    void testParse() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
                 challengeQuestionParser.parse(createDefinitionSheets(false), parseContext);
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -49,7 +49,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_True() {
+    void testIgnoreNullFields_True() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities("true");
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -58,7 +58,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_Yes() {
+    void testIgnoreNullFields_Yes() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities("Yes");
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -67,7 +67,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_Y() {
+    void testIgnoreNullFields_Y() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities("Y");
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -76,7 +76,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_False() {
+    void testIgnoreNullFields_False() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities("false");
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -85,7 +85,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_No() {
+    void testIgnoreNullFields_No() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities("No");
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -94,7 +94,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_N() {
+    void testIgnoreNullFields_N() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities("N");
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -103,7 +103,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_Default() {
+    void testIgnoreNullFields_Default() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities(null);
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -122,7 +122,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void failDueToDuplicatedIDs() {
+    void failDueToDuplicatedIDs() {
         doThrow(new ValidationException(new ValidationResult()))
             .when(challengeQuestionValidator)
             .validate(any(), any());

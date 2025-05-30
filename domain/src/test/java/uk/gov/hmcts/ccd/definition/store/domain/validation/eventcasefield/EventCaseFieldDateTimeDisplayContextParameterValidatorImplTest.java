@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
+class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
 
     private EventCaseFieldEntityValidator validator;
 
@@ -35,7 +35,7 @@ public class EventCaseFieldDateTimeDisplayContextParameterValidatorImplTest {
     private EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         validator = new EventCaseFieldDateTimeDisplayContextParameterValidatorImpl(
             displayContextParameterValidatorFactory);

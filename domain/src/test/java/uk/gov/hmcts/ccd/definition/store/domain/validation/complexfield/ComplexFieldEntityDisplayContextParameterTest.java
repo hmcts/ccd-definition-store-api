@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-public class ComplexFieldEntityDisplayContextParameterTest {
+class ComplexFieldEntityDisplayContextParameterTest {
 
     private ComplexFieldEntityDisplayContextParameterValidatorImpl validator;
 
@@ -33,7 +33,7 @@ public class ComplexFieldEntityDisplayContextParameterTest {
     private ComplexFieldValidator.ValidationContext caseFieldComplexFieldEntityValidator;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         validator = new ComplexFieldEntityDisplayContextParameterValidatorImpl(displayContextParameterValidatorFactory);
         when(displayContextParameterValidatorFactory.getValidator(Mockito.any()))

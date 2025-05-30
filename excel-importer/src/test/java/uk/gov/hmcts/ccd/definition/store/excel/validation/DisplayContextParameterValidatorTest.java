@@ -16,18 +16,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class DisplayContextParameterValidatorTest {
+class DisplayContextParameterValidatorTest {
 
     private DisplayContextParameterValidator validator = new DisplayContextParameterValidator();
     private Map<String, DefinitionSheet> definitionSheets;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         definitionSheets = new LinkedHashMap<>();
     }
 
     @Test
-    public void shouldFail_whenDisplayContextParameterHasTableInCaseEventToFields() {
+    void shouldFail_whenDisplayContextParameterHasTableInCaseEventToFields() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -53,7 +53,7 @@ public class DisplayContextParameterValidatorTest {
     }
 
     @Test
-    public void shouldVaidate_WithAllWorkSheetsInPlace() {
+    void shouldVaidate_WithAllWorkSheetsInPlace() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -76,7 +76,7 @@ public class DisplayContextParameterValidatorTest {
     }
 
     @Test
-    public void shouldFail_whenDisplayContextParameterHasListInCaseEventToFields() {
+    void shouldFail_whenDisplayContextParameterHasListInCaseEventToFields() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);

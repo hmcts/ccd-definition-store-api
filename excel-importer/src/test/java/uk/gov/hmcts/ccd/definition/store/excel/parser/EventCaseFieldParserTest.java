@@ -30,7 +30,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class EventCaseFieldParserTest {
+class EventCaseFieldParserTest {
 
     @Mock
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
@@ -52,7 +52,7 @@ public class EventCaseFieldParserTest {
     private static final CaseFieldEntity CASE_FIELD = new CaseFieldEntity();
 
     @BeforeEach
-    public void setUp() throws InvalidShowConditionException {
+    void setUp() throws InvalidShowConditionException {
         MockitoAnnotations.openMocks(this);
         when(parseContext.getCaseFieldForCaseType(any(), any())).thenReturn(CASE_FIELD);
         when(showConditionParser.parseShowCondition(any())).thenReturn(
@@ -62,7 +62,7 @@ public class EventCaseFieldParserTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void defDataItemHasValidShowConditionParseEveCaseFldCalledParsedEventEntityWithShowCondtionSetToRsltOfShowConditionParsngAddToRegstryReturned() {
+    void defDataItemHasValidShowConditionParseEveCaseFldCalledParsedEventEntityWithShowCondtionSetToRsltOfShowConditionParsngAddToRegstryReturned() {
 
         String caseFieldId = "Case Field Id";
         String caseTypeId = "Case Type Id";
@@ -99,7 +99,7 @@ public class EventCaseFieldParserTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void defDataItemHasInValidShowConditionParseEventCaseFldCalledParsedEventEntityWithShowConditionSetToOrgShowConditionAddedToRegistryAndReturned()
+    void defDataItemHasInValidShowConditionParseEventCaseFldCalledParsedEventEntityWithShowConditionSetToOrgShowConditionAddedToRegistryAndReturned()
         throws InvalidShowConditionException {
 
         String caseFieldId = "Case Field Id";
@@ -134,7 +134,7 @@ public class EventCaseFieldParserTest {
     }
 
     @Test
-    public void shouldErrorWhenDisplayContextIsComplexAndPublishIsSpecified() {
+    void shouldErrorWhenDisplayContextIsComplexAndPublishIsSpecified() {
         String expectedError = "Publish column must not be set for case field 'FieldId', "
             + "event 'EventId' in CaseEventToFields when DisplayContext is COMPLEX. "
             + "Please only use the Publish overrides in EventToComplexTypes.";
@@ -154,7 +154,7 @@ public class EventCaseFieldParserTest {
     }
 
     @Test
-    public void shouldErrorWhenDefaultValuePresentAndNullifyByDefaultIsTrue() {
+    void shouldErrorWhenDefaultValuePresentAndNullifyByDefaultIsTrue() {
         String caseFieldId = "Case Field Id";
         String caseTypeId = "Case Type Id";
         String originalShowCondition = "Original Show Condition";
@@ -178,7 +178,7 @@ public class EventCaseFieldParserTest {
     }
 
     @Test
-    public void shouldReadValuesWhenDefaultValueNotPresentAndNullifyByDefaultIsTrue() {
+    void shouldReadValuesWhenDefaultValueNotPresentAndNullifyByDefaultIsTrue() {
         String caseFieldId = "Case Field Id";
         String caseTypeId = "Case Type Id";
         String originalShowCondition = "Original Show Condition";

@@ -26,7 +26,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 
-public class CaseFieldEntityComplexFieldACLValidatorImplTest {
+class CaseFieldEntityComplexFieldACLValidatorImplTest {
 
     private static final String ACCESS_PROFILE_1 = "AccessProfile1";
     private static final String CLASS = "Class";
@@ -56,7 +56,7 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
 
         accessProfile = new AccessProfileEntity();

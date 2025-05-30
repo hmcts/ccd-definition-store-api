@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
+class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
 
     private ParseContext parseContext;
 
@@ -29,7 +29,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     ChallengeQuestionDisplayContextParameterValidator challengeQuestionDisplayContextParameterValidator;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
         parseContext = new ParseContext();
         ChallengeQuestionTabEntity entity = new ChallengeQuestionTabEntity();
@@ -44,7 +44,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testAnswerFormatForLongExpression() {
+    void testAnswerFormatForLongExpression() {
         String answer = "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[CLAIMANT],"
                 + "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT]";
         challengeQuestionValidator.validate(parseContext,
@@ -53,7 +53,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testAnswerFormatForSortExpression() {
+    void testAnswerFormatForSortExpression() {
         String answer = "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[CLAIMANT]";
         challengeQuestionValidator.validate(parseContext,
                 Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
@@ -61,7 +61,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testAnswerFormatForMinimumExpression() {
+    void testAnswerFormatForMinimumExpression() {
         String answer = "${OrganisationField}:[CLAIMANT]";
         challengeQuestionValidator.validate(parseContext,
                 Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
@@ -69,7 +69,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testAnswerFormatForSmallestExpression() {
+    void testAnswerFormatForSmallestExpression() {
         String answer = "${OrganisationField.OrganisationID}:[CLAIMANT]";
         challengeQuestionValidator.validate(parseContext,
                 Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
@@ -77,7 +77,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void failAnswerFormatForSmallestExpression() {
+    void failAnswerFormatForSmallestExpression() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             String answer = "${OrganisationField.OrganisationName}:[CCCCCC]";
             challengeQuestionValidator.validate(parseContext,
@@ -90,7 +90,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void failAnswerFormatForSmallestForRoleExpression() {
+    void failAnswerFormatForSmallestForRoleExpression() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             String answer = "${XXXX}:[CLAIMANT]";
             challengeQuestionValidator.validate(parseContext,
@@ -103,7 +103,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void failForCaseTypeValidation() {
+    void failForCaseTypeValidation() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             challengeQuestionValidator.validate(parseContext,
                     Lists.newArrayList(buildDefinitionDataItem("incorrectCaseType", FIELD_TYPE, "2",
@@ -114,7 +114,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void failForFieldTypeValidation() {
+    void failForFieldTypeValidation() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             challengeQuestionValidator.validate(parseContext,
                     Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, "fiedType-CCC", "2",
@@ -125,7 +125,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void failForDisplayOrderValidation() {
+    void failForDisplayOrderValidation() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             challengeQuestionValidator.validate(parseContext,
                     Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "TTTT",
@@ -136,7 +136,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void failForQuestionTextValidation() {
+    void failForQuestionTextValidation() {
 
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             challengeQuestionValidator.validate(parseContext,
@@ -148,7 +148,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void failForIDValidation() {
+    void failForIDValidation() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             challengeQuestionValidator.validate(parseContext,
                     Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
@@ -159,7 +159,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void failAnswerFormatDueToInvalidRole() {
+    void failAnswerFormatDueToInvalidRole() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             String answer = "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[NO],"
                     + "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT]";
@@ -173,7 +173,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void failAnswerFormatDueToInvalidPathInExpressionAttribute() {
+    void failAnswerFormatDueToInvalidPathInExpressionAttribute() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             String answer = "${OrganisationField.XXXX}|${OrganisationField.OrganisationID}:[DEFENDANT],"
                     + "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT]";
@@ -188,7 +188,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void failAnswerFormatDueToInvalidPathInExpression() {
+    void failAnswerFormatDueToInvalidPathInExpression() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             String answer = "${XXXXX.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT],"
                     + "${OrganisationField.OrganisationName}|${OrganisationField.OrganisationID}:[DEFENDANT]";
@@ -202,7 +202,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void failAnswerFormatDueToInvalidFormat() {
+    void failAnswerFormatDueToInvalidFormat() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             String answer = "CXFSEKEOE";
             challengeQuestionValidator.validate(parseContext,
@@ -215,7 +215,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void shouldFailWhenQuestionIdIsNotUniqueWithInCaseType() {
+    void shouldFailWhenQuestionIdIsNotUniqueWithInCaseType() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             String answer = "${OrganisationField.OrganisationID}:[CLAIMANT]";
             challengeQuestionValidator.validate(parseContext,
@@ -230,7 +230,7 @@ public class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void shouldFailWhenDisplayOrderIsNotUniqueWithInCaseType() {
+    void shouldFailWhenDisplayOrderIsNotUniqueWithInCaseType() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             String answer = "${OrganisationField.OrganisationID}:[CLAIMANT]";
             challengeQuestionValidator.validate(parseContext,

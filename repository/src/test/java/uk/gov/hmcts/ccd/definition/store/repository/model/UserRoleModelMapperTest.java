@@ -13,10 +13,10 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 
-public class UserRoleModelMapperTest {
+class UserRoleModelMapperTest {
 
     @Test
-    public void shouldGetEntity_whenToEntity() {
+    void shouldGetEntity_whenToEntity() {
         final UserRole model = givenModel();
         final AccessProfileEntity accessProfileEntity = UserRoleModelMapper.toEntity(model);
 
@@ -26,7 +26,7 @@ public class UserRoleModelMapperTest {
     }
 
     @Test
-    public void shouldGetModel_whenToModel() {
+    void shouldGetModel_whenToModel() {
         final AccessProfileEntity entity = givenEntity();
         final UserRole model = UserRoleModelMapper.toModel(entity);
 

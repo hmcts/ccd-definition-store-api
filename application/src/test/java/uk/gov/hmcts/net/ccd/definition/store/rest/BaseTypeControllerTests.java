@@ -16,7 +16,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class BaseTypeControllerTests extends BaseTest {
+class BaseTypeControllerTests extends BaseTest {
 
     private static final String GET_BASE_TYPES = "/api/base-types";
 
@@ -28,12 +28,12 @@ public class BaseTypeControllerTests extends BaseTest {
         + "|((\\+44\\s?\\d{2}|\\(?0\\d{2}\\)?)\\s?\\d{4}\\s?\\d{4}))(\\s?\\#(\\d{4}|\\d{3}))?$";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
     }
 
     @Test
-    public void getBaseTypesTest() throws Exception {
+    void getBaseTypesTest() throws Exception {
 
         final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(GET_BASE_TYPES))
             .andExpect(MockMvcResultMatchers.status().isOk())

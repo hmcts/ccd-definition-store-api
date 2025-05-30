@@ -48,7 +48,7 @@ class TestingSupportControllerTest {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         mockMvc = standaloneSetup(controller)
             .setControllerAdvice(new ControllerExceptionHandler())
             .build();

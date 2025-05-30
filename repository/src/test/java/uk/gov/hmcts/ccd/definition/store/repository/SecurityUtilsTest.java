@@ -54,7 +54,7 @@ class SecurityUtilsTest {
     private SecurityUtils securityUtils;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
 
         final GrantedAuthority[] authorities = new GrantedAuthority[]{newAuthority("role1"), newAuthority("role2")};

@@ -40,7 +40,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CaseDefinitionControllerTest {
+class CaseDefinitionControllerTest {
 
     private CaseTypeService caseTypeService = mock(CaseTypeService.class);
     private JurisdictionService jurisdictionService = mock(JurisdictionService.class);
@@ -50,7 +50,7 @@ public class CaseDefinitionControllerTest {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void createSubject() {
+    void createSubject() {
         subject = new CaseDefinitionController(caseTypeService, jurisdictionService, caseRoleService,
             roleToAccessProfilesService);
         mockMvc = MockMvcBuilders.standaloneSetup(subject)
@@ -194,7 +194,7 @@ public class CaseDefinitionControllerTest {
     class JurisdictionTests {
 
         @Test
-        public void shouldCallJurisdictionGetAllWithListOfIds() {
+        void shouldCallJurisdictionGetAllWithListOfIds() {
             subject.findJurisdictions(Optional.of(newArrayList("J1", "J2")));
             ArgumentCaptor<List> argument = ArgumentCaptor.forClass(List.class);
             verify(jurisdictionService, times(1)).getAll((List<String>) argument.capture());
@@ -203,7 +203,7 @@ public class CaseDefinitionControllerTest {
         }
 
         @Test
-        public void shouldCallJurisdictionGetAllWhenNoIds() {
+        void shouldCallJurisdictionGetAllWhenNoIds() {
             subject.findJurisdictions(Optional.empty());
             verify(jurisdictionService, never()).getAll(anyList());
             verify(jurisdictionService, times(1)).getAll();

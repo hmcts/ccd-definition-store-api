@@ -47,7 +47,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.COMPLEX_TYPES;
 
-public class AuthorisationComplexTypeParserTest {
+class AuthorisationComplexTypeParserTest {
 
     protected static final String CASE_FIELD_2 = "Some Case Field 2";
     protected static final String COMPLEX_FIELD_2 = "Some Complex Field 2";
@@ -78,7 +78,7 @@ public class AuthorisationComplexTypeParserTest {
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
         final ParseContext context = new ParseContext();
         given(mockAccessProfileEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);

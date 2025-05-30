@@ -14,10 +14,10 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 // Boost test coverage for GeneralImmutableJsonType and ClassUserType
-public class UserTypeTest {
+class UserTypeTest {
 
     @Test
-    public void testClassUserType() throws SQLException {
+    void testClassUserType() throws SQLException {
         
         ClassUserType classUserType = new ClassUserType();
         assertEquals(Types.JAVA_OBJECT, classUserType.getSqlType());
@@ -29,7 +29,7 @@ public class UserTypeTest {
     }
 
     @Test
-    public void testGeneralImmutableJsonType() throws HibernateException, SQLException {
+    void testGeneralImmutableJsonType() throws HibernateException, SQLException {
         GIJT<Banner> gijt = new GIJT<Banner>(Banner.class);
         assertEquals(Types.JAVA_OBJECT, gijt.getSqlType());
         assertEquals(Banner.class, gijt.returnedClass());

@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.JsonGenerator;
@@ -12,6 +10,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 import java.util.Map;
 import java.util.Optional;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 public abstract class MappingGenerator implements JsonGenerator, Injectable {
@@ -28,10 +29,14 @@ public abstract class MappingGenerator implements JsonGenerator, Injectable {
     protected static final String COLLECTION = "Collection";
     protected static final String COMPLEX = "Complex";
 
-    @Autowired
     protected CcdElasticSearchProperties config;
 
     protected Map<String, TypeMappingGenerator> typeMappers;
+
+    @Autowired
+    protected MappingGenerator(CcdElasticSearchProperties config) {
+        this.config = config;
+    }
 
     @Override
     public void inject(TypeMappersManager typeMappersManager) {

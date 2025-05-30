@@ -1,22 +1,21 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
 
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationErrorMessageCreator;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeUserRoleEntityBuilder.buildCaseTypeUserRoleEntity;
 
-public class CaseTypeEntityInvalidAccessProfileValidationErrorTest {
+class CaseTypeEntityInvalidAccessProfileValidationErrorTest {
 
     private static final String OVERRIDDEN_ERROR_MESSAGE = "The overridden error message";
 
@@ -26,7 +25,7 @@ public class CaseTypeEntityInvalidAccessProfileValidationErrorTest {
     private CaseTypeEntityInvalidAccessProfileValidationError classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         final CaseTypeACLEntity entity = buildCaseTypeUserRoleEntity("1yLLoMwpA7");
         classUnderTest = new CaseTypeEntityInvalidAccessProfileValidationError(entity,
@@ -36,7 +35,7 @@ public class CaseTypeEntityInvalidAccessProfileValidationErrorTest {
     }
 
     @Test
-    public void testDefaultMessage() {
+    void testDefaultMessage() {
         assertEquals(
             "Invalid AccessProfile is not defined for case type 'case_type'",
             classUnderTest.getDefaultMessage()
@@ -44,7 +43,7 @@ public class CaseTypeEntityInvalidAccessProfileValidationErrorTest {
     }
 
     @Test
-    public void testCreateMessage() {
+    void testCreateMessage() {
         assertEquals(OVERRIDDEN_ERROR_MESSAGE, classUnderTest.createMessage(mockValidationErrorMessageCreator));
         verify(mockValidationErrorMessageCreator).createErrorMessage(classUnderTest);
     }

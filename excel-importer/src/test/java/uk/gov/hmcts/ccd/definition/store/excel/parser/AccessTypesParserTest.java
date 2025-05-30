@@ -39,7 +39,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CAS
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.ACCESS_TYPE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.ACCESS_TYPE_ROLE;
 
-public class AccessTypesParserTest extends ParserTestBase {
+class AccessTypesParserTest extends ParserTestBase {
 
     private static final String CASE_TYPE_ID_1 = "TestCaseTypeID_1";
     private static final String CASE_TYPE_ID_2 = "TestCaseTypeID_2";
@@ -61,7 +61,7 @@ public class AccessTypesParserTest extends ParserTestBase {
     private RoleToAccessProfilesEntity roleToAccessProfilesEntity;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         parseContext = new ParseContext();
         MockitoAnnotations.openMocks(this);
 
@@ -89,7 +89,7 @@ public class AccessTypesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParse() {
+    void shouldParse() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.LIVE_FROM.toString(), Date.from(LocalDate.of(2023,
             Month.FEBRUARY, 12).atStartOfDay(ZoneId.systemDefault()).toInstant()));
@@ -169,7 +169,7 @@ public class AccessTypesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailWhenCaseTypeIDIsInvalid() {
+    void shouldFailWhenCaseTypeIDIsInvalid() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.toString());
         item.addAttribute(ColumnName.DESCRIPTION.toString(), "Test Desc1");
 
@@ -188,7 +188,7 @@ public class AccessTypesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailWhenDateIsInvalid() {
+    void shouldFailWhenDateIsInvalid() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
@@ -207,7 +207,7 @@ public class AccessTypesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailIfDisplayIsSetToTrueAndRequiredFieldsAreNotSet() {
+    void shouldFailIfDisplayIsSetToTrueAndRequiredFieldsAreNotSet() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
@@ -244,7 +244,7 @@ public class AccessTypesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailIfDisplayOrderIsInvalid() {
+    void shouldFailIfDisplayOrderIsInvalid() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
@@ -278,7 +278,7 @@ public class AccessTypesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailIfDisplayOrderIsNotUnique() {
+    void shouldFailIfDisplayOrderIsNotUnique() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
@@ -330,7 +330,7 @@ public class AccessTypesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldReturnEmptyWhenAccessTypeRolesSheetHasNoItems() {
+    void shouldReturnEmptyWhenAccessTypeRolesSheetHasNoItems() {
         List<AccessTypeEntity> accessTypeEntities =
             accessTypesParser
                 .parse(definitionSheets, parseContext);
@@ -387,7 +387,7 @@ public class AccessTypesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailWhenJurisdictionIsNotUnique() {
+    void shouldFailWhenJurisdictionIsNotUnique() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
@@ -426,7 +426,7 @@ public class AccessTypesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldPassWhenCaseTypeIsUnique() {
+    void shouldPassWhenCaseTypeIsUnique() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");

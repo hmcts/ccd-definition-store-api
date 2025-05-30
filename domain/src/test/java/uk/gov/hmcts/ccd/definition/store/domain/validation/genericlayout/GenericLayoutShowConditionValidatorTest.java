@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.genericlayout;
 
-import com.google.common.collect.Lists;
-
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -21,19 +15,23 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldE
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import org.junit.jupiter.api.BeforeEach;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class GenericLayoutShowConditionValidatorTest {
+class GenericLayoutShowConditionValidatorTest {
 
     private static final String SOME_SHOW_CONDITION = "someShowCondition";
     private static final String CASE_FIELD = "Case Field I";
@@ -50,7 +48,7 @@ public class GenericLayoutShowConditionValidatorTest {
     private CaseTypeEntity caseType;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         underTest = new GenericLayoutShowConditionValidatorImpl(
             showConditionExtractor,
@@ -76,7 +74,7 @@ public class GenericLayoutShowConditionValidatorTest {
     }
 
     @Test
-    public void shouldNotExecuteWhenShowConditionIsEmpty() throws Exception {
+    void shouldNotExecuteWhenShowConditionIsEmpty() throws Exception {
 
         entity.setShowCondition(null);
 
@@ -86,7 +84,7 @@ public class GenericLayoutShowConditionValidatorTest {
     }
 
     @Test
-    public void invalidShowConditionExceptionThrown_validValidationResultReturned() throws Exception {
+    void invalidShowConditionExceptionThrown_validValidationResultReturned() throws Exception {
 
         entity.setShowCondition(SOME_SHOW_CONDITION);
 
@@ -104,7 +102,7 @@ public class GenericLayoutShowConditionValidatorTest {
     }
 
     @Test
-    public void shouldReturnNoValidationErrorsOnSuccess() throws Exception {
+    void shouldReturnNoValidationErrorsOnSuccess() throws Exception {
 
         entity.setShowCondition(SOME_SHOW_CONDITION);
 
@@ -119,7 +117,7 @@ public class GenericLayoutShowConditionValidatorTest {
     }
 
     @Test
-    public void shouldThrowErrorWhenFieldIdDoesNotExistsInTheCaseType() throws Exception {
+    void shouldThrowErrorWhenFieldIdDoesNotExistsInTheCaseType() throws Exception {
 
         entity.setShowCondition(SOME_SHOW_CONDITION);
 
@@ -139,7 +137,7 @@ public class GenericLayoutShowConditionValidatorTest {
     }
 
     @Test
-    public void shouldNotThrowErrorForMetaDataField() throws Exception {
+    void shouldNotThrowErrorForMetaDataField() throws Exception {
 
         entity.setShowCondition(SOME_SHOW_CONDITION);
 
@@ -154,7 +152,7 @@ public class GenericLayoutShowConditionValidatorTest {
     }
 
     @Test
-    public void shouldNotThrowErrorForInjectedField() throws Exception {
+    void shouldNotThrowErrorForInjectedField() throws Exception {
 
         entity.setShowCondition(SOME_SHOW_CONDITION);
 
@@ -169,7 +167,7 @@ public class GenericLayoutShowConditionValidatorTest {
     }
 
     @Test
-    public void shouldValidateShowConditionForCustomComplexField() throws Exception {
+    void shouldValidateShowConditionForCustomComplexField() throws Exception {
 
         String matchingCaseFieldId = "complexName";
 
@@ -199,7 +197,7 @@ public class GenericLayoutShowConditionValidatorTest {
     }
 
     @Test
-    public void shouldThrowErrorWhenShowConditionNotMatchingForCustomComplexField() throws Exception {
+    void shouldThrowErrorWhenShowConditionNotMatchingForCustomComplexField() throws Exception {
 
         String matchingCaseFieldId = "complexName";
 
@@ -245,9 +243,9 @@ public class GenericLayoutShowConditionValidatorTest {
             ));
     }
 
-    private static ComplexFieldEntity complexFieldEntity(String reerence, FieldTypeEntity fieldTypeEntity) {
+    private static ComplexFieldEntity complexFieldEntity(String reference, FieldTypeEntity fieldTypeEntity) {
         ComplexFieldEntity complexFieldEntity = new ComplexFieldEntity();
-        complexFieldEntity.setReference(reerence);
+        complexFieldEntity.setReference(reference);
         complexFieldEntity.setFieldType(fieldTypeEntity);
         return complexFieldEntity;
     }

@@ -24,9 +24,9 @@ import org.mockito.MockitoAnnotations;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static junit.framework.TestCase.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
@@ -36,7 +36,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORDER_SUMMARY;
 
-public class EventComplexTypeShowConditionValidatorImplTest {
+class EventComplexTypeShowConditionValidatorImplTest {
 
     @Mock
     private ShowConditionParser showConditionExtractor;
@@ -44,14 +44,14 @@ public class EventComplexTypeShowConditionValidatorImplTest {
     private EventComplexTypeShowConditionValidatorImpl classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new EventComplexTypeShowConditionValidatorImpl(showConditionExtractor,
                 new CaseFieldEntityUtil());
     }
 
     @Test
-    public void shouldValidateShowConditionForCustomComplexFieldWhereShowConditionReferencesEventComplexTypeItself()
+    void shouldValidateShowConditionForCustomComplexFieldWhereShowConditionReferencesEventComplexTypeItself()
             throws InvalidShowConditionException {
 
         String matchingCaseFieldId = "complexName";
@@ -85,7 +85,7 @@ public class EventComplexTypeShowConditionValidatorImplTest {
     }
 
     @Test
-    public void shouldValidateShowConditionForCustomComplexField() throws InvalidShowConditionException {
+    void shouldValidateShowConditionForCustomComplexField() throws InvalidShowConditionException {
 
         String matchingCaseFieldKey = "MatchingCaseFieldId1";
         String showCondition = matchingCaseFieldKey + "=\"UK\"";
@@ -114,7 +114,7 @@ public class EventComplexTypeShowConditionValidatorImplTest {
     }
 
     @Test
-    public void shouldValidateShowConditionForMetadataField() throws InvalidShowConditionException {
+    void shouldValidateShowConditionForMetadataField() throws InvalidShowConditionException {
         String field = MetadataField.STATE.getReference();
         String showCondition = field + "=\"TODO\"";
 
@@ -141,7 +141,7 @@ public class EventComplexTypeShowConditionValidatorImplTest {
     }
 
     @Test
-    public void shouldFailForBlankShowCondition() throws InvalidShowConditionException {
+    void shouldFailForBlankShowCondition() throws InvalidShowConditionException {
         EventComplexTypeEntity eventComplexTypeEntity = eventComplexTypeEntity("reference1", "");
 
         ValidationResult validationResult = classUnderTest.validate(eventComplexTypeEntity, null);
@@ -150,7 +150,7 @@ public class EventComplexTypeShowConditionValidatorImplTest {
     }
 
     @Test
-    public void failsWithEventComplexTypeEntityInvalidShowConditionErrorForInvalidShowCondition()
+    void failsWithEventComplexTypeEntityInvalidShowConditionErrorForInvalidShowCondition()
             throws InvalidShowConditionException {
 
         String showCondition = "InvalidShowCondition";
@@ -178,7 +178,7 @@ public class EventComplexTypeShowConditionValidatorImplTest {
     }
 
     @Test
-    public void failsWithEventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldErrorForInvalidShowCondition()
+    void failsWithEventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldErrorForInvalidShowCondition()
             throws InvalidShowConditionException {
 
         String matchingCaseFieldId = "complexName";
@@ -317,9 +317,9 @@ public class EventComplexTypeShowConditionValidatorImplTest {
                                 fieldTypeEntity("TextMax50", emptyList()))));
     }
 
-    private static ComplexFieldEntity complexFieldEntity(String reerence, FieldTypeEntity fieldTypeEntity) {
+    private static ComplexFieldEntity complexFieldEntity(String reference, FieldTypeEntity fieldTypeEntity) {
         ComplexFieldEntity complexFieldEntity = new ComplexFieldEntity();
-        complexFieldEntity.setReference(reerence);
+        complexFieldEntity.setReference(reference);
         complexFieldEntity.setFieldType(fieldTypeEntity);
         return complexFieldEntity;
     }

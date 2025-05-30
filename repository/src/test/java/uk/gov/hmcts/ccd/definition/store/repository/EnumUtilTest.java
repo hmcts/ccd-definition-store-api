@@ -5,17 +5,17 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class EnumUtilTest {
+class EnumUtilTest {
 
     @Test
-    public void testEnumValueExists() {
+    void testEnumValueExists() {
         assertEquals(SecurityClassification.PRIVATE,
                 EnumUtil.getEnumFromString(SecurityClassification.class, "Private"));
 
     }
 
     @Test
-    public void testEnumValueDoesNotExistThrowsIllegalArgumentException() {
+    void testEnumValueDoesNotExistThrowsIllegalArgumentException() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
             EnumUtil.getEnumFromString(SecurityClassification.class, "XXXX");
         });
@@ -25,7 +25,7 @@ public class EnumUtilTest {
     }
 
     @Test
-    public void testEnumConstantBlankThrowsIllegalArgumentException() {
+    void testEnumConstantBlankThrowsIllegalArgumentException() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
             EnumUtil.getEnumFromString(SecurityClassification.class, "   ");
         });
@@ -35,7 +35,7 @@ public class EnumUtilTest {
     }
 
     @Test
-    public void testEnumConstantNullThrowsIllegalArgumentException() {
+    void testEnumConstantNullThrowsIllegalArgumentException() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
             EnumUtil.getEnumFromString(SecurityClassification.class, null);
         });
@@ -45,7 +45,7 @@ public class EnumUtilTest {
     }
 
     @Test
-    public void testClassArgumentNullThrowsIllegalArgumentException() {
+    void testClassArgumentNullThrowsIllegalArgumentException() {
         IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
             EnumUtil.getEnumFromString(null, "AValue");
         });

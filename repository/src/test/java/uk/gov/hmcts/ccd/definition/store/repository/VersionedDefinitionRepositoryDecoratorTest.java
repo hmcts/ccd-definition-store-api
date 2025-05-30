@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class VersionedDefinitionRepositoryDecoratorTest {
+class VersionedDefinitionRepositoryDecoratorTest {
 
     @Autowired
     private CaseTypeRepository exampleRepository;
@@ -49,7 +49,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     private JurisdictionEntity jurisdiction;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         versionedJurisdictionRepository = new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository);
 
         final JurisdictionEntity j = new JurisdictionEntity();
@@ -59,7 +59,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void saveNewCaseTypeAssignsAVersion() {
+    void saveNewCaseTypeAssignsAVersion() {
         final CaseTypeEntity caseType = new CaseTypeEntity();
         caseType.setReference("id");
         caseType.setName("name");
@@ -86,7 +86,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
 
 
     @Test
-    public void saveNewCaseTypes() {
+    void saveNewCaseTypes() {
         final CaseTypeEntity caseType = new CaseTypeEntity();
         caseType.setReference("id1");
         caseType.setName("name");
@@ -115,7 +115,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
 
     //test for required coverage of new lines in sonar
     @Test
-    public void saveAllAndFlushTest() {
+    void saveAllAndFlushTest() {
         List<JurisdictionEntity> result = versionedJurisdictionRepository.saveAllAndFlush(
             new Iterable<JurisdictionEntity>() {
                 @NotNull
@@ -144,7 +144,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void deleteAllByIdTest() {
+    void deleteAllByIdTest() {
         versionedJurisdictionRepository.deleteAllById(new Iterable<Integer>() {
             @NotNull
             @Override
@@ -158,7 +158,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void deleteAllByIdInBatchTest() {
+    void deleteAllByIdInBatchTest() {
         versionedJurisdictionRepository.deleteAllByIdInBatch(new Iterable<Integer>() {
             @NotNull
             @Override
@@ -172,7 +172,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void getByIdTest() {
+    void getByIdTest() {
         JurisdictionEntity result = versionedJurisdictionRepository.getById(Integer.MAX_VALUE);
 
         //method being tested is stubbed as it isn't used
@@ -181,7 +181,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void getReferenceByIdTest() {
+    void getReferenceByIdTest() {
         JurisdictionEntity result = versionedJurisdictionRepository.getReferenceById(Integer.MAX_VALUE);
 
         //method being tested is stubbed as it isn't used
@@ -190,7 +190,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void findByTest() {
+    void findByTest() {
         Object result = versionedJurisdictionRepository.findBy(new Example<JurisdictionEntity>() {
             @Override
             public JurisdictionEntity getProbe() {

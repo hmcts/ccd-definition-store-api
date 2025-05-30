@@ -36,7 +36,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassificatio
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class AccessProfileRepositoryTest {
+class AccessProfileRepositoryTest {
 
     @Autowired
     private CaseRoleRepository caseRoleRepository;
@@ -69,7 +69,7 @@ public class AccessProfileRepositoryTest {
     private final CaseTypeEntity caseType = new CaseTypeEntity();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
 
         CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
@@ -100,7 +100,7 @@ public class AccessProfileRepositoryTest {
     }
 
     @Test
-    public void shouldFindCaseRolesByCaseType() {
+    void shouldFindCaseRolesByCaseType() {
         List<CaseRoleEntity> caseRoleEntities = caseRoleRepository.findCaseRoleEntitiesByCaseType(CASE_TYPE_REFERENCE);
         assertThat(caseRoleEntities.size(), is(2));
         assertThat(caseRoleEntities.get(0).getReference(), is(CASE_ROLE_REFERENCE.toUpperCase()));
@@ -114,13 +114,13 @@ public class AccessProfileRepositoryTest {
     }
 
     @Test
-    public void shouldFindNoCaseRolesForInvalidCaseType() {
+    void shouldFindNoCaseRolesForInvalidCaseType() {
         List<CaseRoleEntity> caseRoleEntities = caseRoleRepository.findCaseRoleEntitiesByCaseType("InvalidCaseType");
         assertThat(caseRoleEntities.size(), is(0));
     }
 
     @Test
-    public void shouldFailWhenCreateDuplicateCaseRoles() {
+    void shouldFailWhenCreateDuplicateCaseRoles() {
         final CaseRoleEntity entity = new CaseRoleEntity();
         entity.setReference(CASE_ROLE_REFERENCE);
         entity.setSecurityClassification(RESTRICTED);
@@ -129,21 +129,21 @@ public class AccessProfileRepositoryTest {
     }
 
     @Test
-    public void shouldFindCaseRoles() {
+    void shouldFindCaseRoles() {
         List<CaseRoleEntity> caseRoleEntities = caseRoleRepository.findAll();
         assertThat(caseRoleEntities.size(), is(2));
         assertThat(caseRoleEntities.get(0).getReference(), is(CASE_ROLE_REFERENCE.toUpperCase()));
     }
 
     @Test
-    public void shouldFindSingleAccessProfile() {
+    void shouldFindSingleAccessProfile() {
         List<AccessProfileEntity> accessProfileEntities = accessProfileRepository.findAll();
         assertThat(accessProfileEntities.size(), is(1));
         assertThat(accessProfileEntities.get(0).getReference(), is(ACCESS_PROFILE_REFERENCE));
     }
 
     @Test
-    public void shouldFindAccessProfile() {
+    void shouldFindAccessProfile() {
         final AccessProfileEntity entity = accessProfileRepository.findTopByReference(ACCESS_PROFILE_REFERENCE).get();
         assertThat(entity.getId(), is(notNullValue()));
         assertThat(entity.getCreatedAt(), is(notNullValue()));
@@ -152,14 +152,14 @@ public class AccessProfileRepositoryTest {
     }
 
     @Test
-    public void shouldFindNoAccessProfileEntity() {
+    void shouldFindNoAccessProfileEntity() {
         final Optional<AccessProfileEntity> entity =
             accessProfileRepository.findTopByReference("unknown access profile reference");
         assertThat(entity, isEmpty());
     }
 
     @Test
-    public void shouldCreateAccessProfile() {
+    void shouldCreateAccessProfile() {
         final String accessProfile = "a new access profile reference";
         final AccessProfileEntity entity = new AccessProfileEntity();
         entity.setReference(accessProfile);
@@ -176,7 +176,7 @@ public class AccessProfileRepositoryTest {
     }
 
     @Test
-    public void shouldFailWhenCreateDuplicateAccessProfiles() {
+    void shouldFailWhenCreateDuplicateAccessProfiles() {
         final AccessProfileEntity entity = new AccessProfileEntity();
         entity.setReference("xyz = '3'");
         entity.setSecurityClassification(RESTRICTED);

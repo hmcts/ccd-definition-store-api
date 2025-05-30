@@ -1,15 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldACLEntity;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class CaseFieldEntityComplexFieldCrudValidatorImplTest {
@@ -21,7 +22,7 @@ class CaseFieldEntityComplexFieldCrudValidatorImplTest {
     private CaseFieldEntityValidationContext context;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         classUnderTest = new CaseFieldEntityComplexFieldCrudValidatorImpl();
         complexFieldACLEntity = new ComplexFieldACLEntity();
         complexFieldACLEntity.setListElementCode(LIST_ELEMENT_CODE);
@@ -37,7 +38,7 @@ class CaseFieldEntityComplexFieldCrudValidatorImplTest {
     }
 
     @Test
-    public void goodCrud() {
+    void goodCrud() {
         complexFieldACLEntity.setCrudAsString("Cr Du");
         final ValidationResult result = classUnderTest.validate(caseField, context);
 
@@ -45,7 +46,7 @@ class CaseFieldEntityComplexFieldCrudValidatorImplTest {
     }
 
     @Test
-    public void crudTooLong() {
+    void crudTooLong() {
         complexFieldACLEntity.setCrudAsString(" CRUD   DD ");
 
         final ValidationResult result = classUnderTest.validate(caseField, context);
@@ -67,7 +68,7 @@ class CaseFieldEntityComplexFieldCrudValidatorImplTest {
     }
 
     @Test
-    public void blankCrud() {
+    void blankCrud() {
         final ValidationResult result = classUnderTest.validate(caseField, context);
 
         assertAll(
@@ -81,7 +82,7 @@ class CaseFieldEntityComplexFieldCrudValidatorImplTest {
     }
 
     @Test
-    public void invalidCrud() {
+    void invalidCrud() {
         complexFieldACLEntity.setCrudAsString("X");
 
         final ValidationResult result = classUnderTest.validate(caseField, context);

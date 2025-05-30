@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("SearchInputLayoutParser Tests")
-public class SearchInputLayoutParserTest {
+class SearchInputLayoutParserTest {
     private static final String CASE_TYPE_ID = "Valid Case Type";
     private static final String CASE_FIELD_ID = "Some Field";
 
@@ -34,7 +34,7 @@ public class SearchInputLayoutParserTest {
     private ShowConditionParser showConditionParser;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
 
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();

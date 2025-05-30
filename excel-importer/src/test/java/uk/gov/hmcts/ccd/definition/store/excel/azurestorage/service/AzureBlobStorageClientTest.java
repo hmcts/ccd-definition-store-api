@@ -31,7 +31,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(SpringExtension.class)
-public class AzureBlobStorageClientTest {
+class AzureBlobStorageClientTest {
 
     private static final String DATE_TIME_PREFIX = "20181004120000";
     private static final String FILENAME = "Definition";
@@ -45,7 +45,7 @@ public class AzureBlobStorageClientTest {
     private AzureBlobStorageClient clientUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         cloudBlobContainer = mock(CloudBlobContainer.class);
         cloudBlockBlob = mock(CloudBlockBlob.class);
         MockitoAnnotations.openMocks(this);
@@ -53,7 +53,7 @@ public class AzureBlobStorageClientTest {
     }
 
     @Test
-    public void testFileUpload() throws Exception {
+    void testFileUpload() throws Exception {
         when(cloudBlobContainer.getBlockBlobReference(DATE_TIME_PREFIX + "_" + FILENAME)).thenReturn(cloudBlockBlob);
         when(dateTimeStringGenerator.generateCurrentDateTime()).thenReturn(DATE_TIME_PREFIX);
         clientUnderTest.uploadFile(new MockMultipartFile("x", FILENAME, MediaType.APPLICATION_OCTET_STREAM_VALUE,
@@ -63,7 +63,7 @@ public class AzureBlobStorageClientTest {
     }
 
     @Test
-    public void testFileUploadURISyntaxException() throws Exception {
+    void testFileUploadURISyntaxException() throws Exception {
         when(cloudBlobContainer.getBlockBlobReference(any(String.class)))
                 .thenThrow(new URISyntaxException("Test", "Invalid"));
         assertThrows(FileStorageException.class, ()
@@ -73,7 +73,7 @@ public class AzureBlobStorageClientTest {
     }
 
     @Test
-    public void testFileUploadStorageException() throws Exception {
+    void testFileUploadStorageException() throws Exception {
         when(cloudBlobContainer.getBlockBlobReference(any(String.class)))
                 .thenThrow(new StorageException("1", "Storage error", null));
         assertThrows(FileStorageException.class, ()
@@ -83,7 +83,7 @@ public class AzureBlobStorageClientTest {
     }
 
     @Test
-    public void testFileUploadIOException() throws Exception {
+    void testFileUploadIOException() throws Exception {
         when(cloudBlobContainer.getBlockBlobReference(any(String.class))).thenReturn(cloudBlockBlob);
         MultipartFile file = mock(MultipartFile.class);
         when(file.getInputStream()).thenThrow(new IOException());
@@ -92,13 +92,13 @@ public class AzureBlobStorageClientTest {
     }
 
     @Test
-    public void testInitStorageException() throws Exception {
+    void testInitStorageException() throws Exception {
         when(cloudBlobContainer.createIfNotExists()).thenThrow(new StorageException("1", "Storage error", null));
         assertThrows(StorageException.class, () -> clientUnderTest.init());
     }
 
     @Test
-    public void testInit() throws Exception {
+    void testInit() throws Exception {
         when(cloudBlobContainer.createIfNotExists()).thenReturn(true);
         clientUnderTest.init();
     }

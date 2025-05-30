@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class ChallengeQuestionTabRepositoryTest {
+class ChallengeQuestionTabRepositoryTest {
 
     private static final String CASE_TYPE_REFERENCE = "CaseTypeA";
     private static final String CHALLENGE_QUESTION_ID = "ChallengeQuestionId1";
@@ -47,7 +47,7 @@ public class ChallengeQuestionTabRepositoryTest {
     private FieldTypeEntity fieldType;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         oldCaseType = testHelper.createCaseTypeLiteEntity(CASE_TYPE_REFERENCE, CASE_TYPE_REFERENCE);
         latestCaseType = testHelper.createCaseTypeLiteEntity(CASE_TYPE_REFERENCE, CASE_TYPE_REFERENCE);
         otherCaseType = testHelper.createCaseTypeLiteEntity("OtherCaseType", "Other");
@@ -61,7 +61,7 @@ public class ChallengeQuestionTabRepositoryTest {
     }
 
     @Test
-    public void shouldGetChallengeQuestions() {
+    void shouldGetChallengeQuestions() {
         List<ChallengeQuestionTabEntity> result = challengeQuestionTabRepository
             .getChallengeQuestions(CASE_TYPE_REFERENCE, CHALLENGE_QUESTION_ID);
 
@@ -81,7 +81,7 @@ public class ChallengeQuestionTabRepositoryTest {
     }
 
     @Test
-    public void shouldReturnNoChallengeQuestionsForUnknownParameters() {
+    void shouldReturnNoChallengeQuestionsForUnknownParameters() {
         List<ChallengeQuestionTabEntity> result = challengeQuestionTabRepository
             .getChallengeQuestions("Unknown", "Unknown");
 
@@ -91,7 +91,7 @@ public class ChallengeQuestionTabRepositoryTest {
     }
 
     @Test
-    public void checkSQLStatementCounts() {
+    void checkSQLStatementCounts() {
 
         SQLStatementCountValidator.reset();
 

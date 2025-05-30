@@ -41,7 +41,7 @@ class SearchPartyParserTest extends ParserTestBase {
     private SearchPartyParser parser;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         init();
         parseContext = mock(ParseContext.class);
         parser = new SearchPartyParser();

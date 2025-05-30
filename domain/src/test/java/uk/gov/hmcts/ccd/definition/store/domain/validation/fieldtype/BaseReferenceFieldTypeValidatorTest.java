@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 
 @ExtendWith(MockitoExtension.class)
-public class BaseReferenceFieldTypeValidatorTest {
+class BaseReferenceFieldTypeValidatorTest {
 
     private static final JurisdictionEntity JURISDICTION = new JurisdictionEntity();
 
@@ -37,14 +37,14 @@ public class BaseReferenceFieldTypeValidatorTest {
     private BaseReferenceFieldTypeValidator validator;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         validator = new BaseReferenceFieldTypeValidator();
         globalType.setReference(GLOBAL_TYPE_REFERENCE);
     }
 
     @DisplayName("Should accept global type overriding base type reference")
     @Test
-    public void shouldAcceptGlobalTypeOverridingBaseTypeReference() {
+    void shouldAcceptGlobalTypeOverridingBaseTypeReference() {
         final FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setReference(GLOBAL_TYPE_REFERENCE);
         fieldType.setJurisdiction(null); // No jurisdiction --> Global field type
@@ -61,7 +61,7 @@ public class BaseReferenceFieldTypeValidatorTest {
 
     @DisplayName("Should reject jurisdiction type overriding base type reference")
     @Test
-    public void shouldRejectJurisdictionTypeOverridingBaseTypeReference() {
+    void shouldRejectJurisdictionTypeOverridingBaseTypeReference() {
         final FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setReference(GLOBAL_TYPE_REFERENCE);
         fieldType.setJurisdiction(JURISDICTION);

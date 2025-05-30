@@ -23,9 +23,10 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
-public class ExceptionHandlingFilterTest {
+class ExceptionHandlingFilterTest {
 
     private MockHttpServletRequest request;
 
@@ -44,7 +45,7 @@ public class ExceptionHandlingFilterTest {
         "uk.gov.hmcts.ccd.definition.store.security.filters.ExceptionHandlingFilter";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         filter = new ExceptionHandlingFilter();
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
@@ -59,16 +60,16 @@ public class ExceptionHandlingFilterTest {
     }
 
     @AfterEach
-    public void tearDown() {
+    void tearDown() {
         listAppender.stop();
         logger.detachAppender(listAppender);
     }
 
     @Test
-    public void shouldReturn502ResponseWhenClientAbortExceptionThrown() throws ServletException, IOException {
+    void shouldReturn502ResponseWhenClientAbortExceptionThrown() throws ServletException, IOException {
         Mockito.doThrow(ClientAbortException.class)
             .when(filterChain)
-            .doFilter(Mockito.eq(request), Mockito.eq(response));
+            .doFilter(eq(request), eq(response));
         filter.doFilterInternal(request, response, filterChain);
 
         assertEquals(502, response.getStatus());
@@ -76,11 +77,11 @@ public class ExceptionHandlingFilterTest {
     }
 
     @Test
-    public void shouldReturn500ResponseWhenAnyExceptionExceptClientAbortExceptionThrown()
+    void shouldReturn500ResponseWhenAnyExceptionExceptClientAbortExceptionThrown()
         throws ServletException, IOException {
         Mockito.doThrow(NullPointerException.class)
             .when(filterChain)
-            .doFilter(Mockito.eq(request), Mockito.eq(response));
+            .doFilter(eq(request), eq(response));
         filter.doFilterInternal(request, response, filterChain);
 
         assertEquals(500, response.getStatus());

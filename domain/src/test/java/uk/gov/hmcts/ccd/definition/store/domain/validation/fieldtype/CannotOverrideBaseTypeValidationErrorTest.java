@@ -8,12 +8,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
-public class CannotOverrideBaseTypeValidationErrorTest {
+class CannotOverrideBaseTypeValidationErrorTest {
 
     private CannotOverrideBaseTypeValidationError classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         classUnderTest = new CannotOverrideBaseTypeValidationError(
             fieldTypeEntityWithReference("TeXt"),
             fieldTypeEntityWithReference("Text")
@@ -21,7 +21,7 @@ public class CannotOverrideBaseTypeValidationErrorTest {
     }
 
     @Test
-    public void testDefaultMessage() {
+    void testDefaultMessage() {
         assertEquals(
             "Cannot override base type: Text",
             classUnderTest.getDefaultMessage()

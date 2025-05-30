@@ -24,7 +24,7 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class CaseTypeParserTest extends ParserTestBase {
+class CaseTypeParserTest extends ParserTestBase {
 
     private CaseTypeParser caseTypeParser;
 
@@ -65,7 +65,7 @@ public class CaseTypeParserTest extends ParserTestBase {
     private SearchAliasFieldParser searchAliasFieldParser;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         init();
 
@@ -87,7 +87,7 @@ public class CaseTypeParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseCaseTypeEntity_whenDataIsGood() {
+    void shouldParseCaseTypeEntity_whenDataIsGood() {
         final DefinitionDataItem caseTypeItem = new DefinitionDataItem(SheetName.CASE_TYPE.getName());
         caseTypeItem.addAttribute(ColumnName.ID.toString(), CASE_TYPE_UNDER_TEST);
         caseTypeItem.addAttribute(ColumnName.NAME.toString(), "Test Address Book Case");
@@ -122,7 +122,7 @@ public class CaseTypeParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseCaseTypeEntityAndWebhook_whenDataIsGood() {
+    void shouldParseCaseTypeEntityAndWebhook_whenDataIsGood() {
         final DefinitionDataItem caseTypeItem = new DefinitionDataItem(SheetName.CASE_TYPE.getName());
         caseTypeItem.addAttribute(ColumnName.ID.toString(), CASE_TYPE_UNDER_TEST);
         caseTypeItem.addAttribute(ColumnName.NAME.toString(), "Test Address Book Case");
@@ -147,7 +147,7 @@ public class CaseTypeParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseGetCaseWebhook_whenDataIsGood() {
+    void shouldParseGetCaseWebhook_whenDataIsGood() {
         final DefinitionDataItem caseTypeItem = new DefinitionDataItem(SheetName.CASE_TYPE.getName());
         caseTypeItem.addAttribute(ColumnName.ID.toString(), CASE_TYPE_UNDER_TEST);
         caseTypeItem.addAttribute(ColumnName.NAME.toString(), "Test Address Book Case");
@@ -173,7 +173,7 @@ public class CaseTypeParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFail_whenDuplicateCaseTypeId() {
+    void shouldFail_whenDuplicateCaseTypeId() {
         final DefinitionDataItem caseTypeItem = new DefinitionDataItem(SheetName.CASE_TYPE.getName());
         caseTypeItem.addAttribute(ColumnName.ID.toString(), CASE_TYPE_UNDER_TEST);
         caseTypeItem.addAttribute(ColumnName.NAME.toString(), "Test Address Book Case");

@@ -43,7 +43,7 @@ class StateMetadataCaseFieldEntityFactoryTest {
     private ParseContext parseContext;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         openMocks(this);
         factory = new StateMetadataCaseFieldEntityFactory(mock(FieldTypeRepository.class));
         ReflectionTestUtils.setField(factory, "versionedRepository", repository);

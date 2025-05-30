@@ -1,9 +1,35 @@
 package uk.gov.hmcts.net.ccd.definition.store;
 
+import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
+import uk.gov.hmcts.ccd.definition.store.JacksonUtils;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClient;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
+import uk.gov.hmcts.net.ccd.definition.store.domain.model.DisplayItemsData;
+import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
+import uk.gov.hmcts.net.ccd.definition.store.wiremock.config.WireMockTestConfiguration;
+
+import javax.sql.DataSource;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
-
+import jakarta.inject.Inject;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,37 +52,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
-import uk.gov.hmcts.ccd.definition.store.JacksonUtils;
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
-import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
-import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
-import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClient;
-import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
-import uk.gov.hmcts.net.ccd.definition.store.domain.model.DisplayItemsData;
-import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
-import uk.gov.hmcts.net.ccd.definition.store.wiremock.config.WireMockTestConfiguration;
-
-import jakarta.inject.Inject;
-
-import javax.sql.DataSource;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -122,7 +119,7 @@ public abstract class BaseTest {
     protected SecurityContext securityContext;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         // reset wiremock counters
         WireMock.resetAllRequests();
 
@@ -164,7 +161,7 @@ public abstract class BaseTest {
         MockHttpServletResponse response = mvcResult.getResponse();
         assertEquals(
             httpResponseCode,
-            mvcResult.getResponse().getStatus(),
+            response.getStatus(),
             "Expected [" + httpResponseCode + "] but was [" + response.getStatus() + "]"
                 + " Body was [\n" + response.getContentAsString() + "\n]"
         );

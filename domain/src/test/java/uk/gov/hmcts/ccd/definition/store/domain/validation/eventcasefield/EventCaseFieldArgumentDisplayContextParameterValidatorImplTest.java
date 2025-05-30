@@ -19,7 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
-public class EventCaseFieldArgumentDisplayContextParameterValidatorImplTest {
+class EventCaseFieldArgumentDisplayContextParameterValidatorImplTest {
 
     private EventCaseFieldEntityValidator validator;
 
@@ -33,7 +33,7 @@ public class EventCaseFieldArgumentDisplayContextParameterValidatorImplTest {
     private EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         validator = new EventCaseFieldArgumentDisplayContextParameterValidatorImpl(
             displayContextParameterValidatorFactory);

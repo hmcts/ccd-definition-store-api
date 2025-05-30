@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
@@ -16,13 +9,21 @@ import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectFactory;
+
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class AsynchronousElasticDefinitionImportListenerTest {
+class AsynchronousElasticDefinitionImportListenerTest {
 
     @InjectMocks
     private AsynchronousElasticDefinitionImportListener listener;
@@ -43,13 +44,13 @@ public class AsynchronousElasticDefinitionImportListenerTest {
     private CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB").withReference("caseTypeB").build();
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
     }
 
     //the listener is tested in ElasticDefinitionImportListenerTest, this is just a simple test to please Jacoco
     @Test
-    public void createsIndexIfNotExists() throws IOException {
+    void createsIndexIfNotExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
 

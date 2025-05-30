@@ -36,7 +36,7 @@ class IdamProfileControllerTest {
     private IdamProperties idamProperties;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         idamProperties = buildIdamProperties();
         given(idamProfileClient.getLoggedInUserDetails()).willReturn(idamProperties);
         final IdamProfileController controller = new IdamProfileController(idamProfileClient);
@@ -47,7 +47,7 @@ class IdamProfileControllerTest {
 
     @DisplayName("Should get idam profile")
     @Test
-    public void shouldGetIdamProfile() throws Exception {
+    void shouldGetIdamProfile() throws Exception {
         final MvcResult mvcResult = mockMvc.perform(get("/api/idam/profile")).andExpect(status().isOk()).andReturn();
         assertThat(mvcResult.getResponse().getContentType(), is("application/json"));
         final IdamProperties

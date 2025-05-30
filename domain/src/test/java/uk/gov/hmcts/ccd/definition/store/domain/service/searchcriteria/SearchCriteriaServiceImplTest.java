@@ -33,7 +33,7 @@ class SearchCriteriaServiceImplTest {
     private CaseTypeRepository caseTypeRepository;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         sut = new SearchCriteriaServiceImpl(repository, dtoMapper, caseTypeRepository);
     }

@@ -27,7 +27,7 @@ class CaseTypeEntitySearchAliasFieldsValidatorImplTest {
     private CaseTypeEntitySearchAliasFieldsValidatorImpl caseTypeEntitySearchAliasFieldsValidator;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         caseTypeEntitySearchAliasFieldsValidator = new CaseTypeEntitySearchAliasFieldsValidatorImpl(
             Collections.singletonList(searchAliasFieldValidator));

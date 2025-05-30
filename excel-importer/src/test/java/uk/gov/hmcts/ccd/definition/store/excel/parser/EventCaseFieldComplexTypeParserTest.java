@@ -32,7 +32,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class EventCaseFieldComplexTypeParserTest {
+class EventCaseFieldComplexTypeParserTest {
     private static final String PARSED_SHOW_CONDITION = "Parsed Show Condition";
     private static final String REFERENCE_ID = "test.test";
     private static final LocalDate LIVE_FROM = LocalDate.of(2019, 1, 1);
@@ -49,14 +49,14 @@ public class EventCaseFieldComplexTypeParserTest {
     private EventCaseFieldComplexTypeParser eventCaseFieldComplexTypeParser;
 
     @BeforeEach
-    public void setUp() throws InvalidShowConditionException {
+    void setUp() throws InvalidShowConditionException {
         MockitoAnnotations.openMocks(this);
         when(showConditionParser.parseShowCondition(any())).thenReturn(
             new ShowCondition.Builder().showConditionExpression(PARSED_SHOW_CONDITION).build());
     }
 
     @Test
-    public void shouldParseEventCaseFieldComplexTypes() {
+    void shouldParseEventCaseFieldComplexTypes() {
         String caseFieldId = "Case Field Id";
         String originalShowCondition = "Original Show Condition";
         String label = "label";

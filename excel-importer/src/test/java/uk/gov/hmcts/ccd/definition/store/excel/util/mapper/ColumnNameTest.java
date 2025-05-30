@@ -12,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ColumnNameTest {
+class ColumnNameTest {
 
     private static final ColumnName COLUMN_WITH_ALIAS = ColumnName.ACCESS_PROFILE;
     private static final ColumnName COLUMN_WITHOUT_ALIAS = ColumnName.FIELD_TYPE;
 
     @Test
-    public void testRequiredColumnsForJurisdiction() {
+    void testRequiredColumnsForJurisdiction() {
 
         assertRequired(
                 SheetName.JURISDICTION,
@@ -27,7 +27,7 @@ public class ColumnNameTest {
     }
 
     @Test
-    public void testRequiredColumnsForCaseEventToFields() {
+    void testRequiredColumnsForCaseEventToFields() {
 
         assertRequired(
                 SheetName.CASE_EVENT_TO_FIELDS,
@@ -49,7 +49,7 @@ public class ColumnNameTest {
     }
 
     @Test
-    public void verifyTestColumnAliasConfig() {
+    void verifyTestColumnAliasConfig() {
         assertAll(
                 () -> assertTrue(
                         COLUMN_WITH_ALIAS.getAliases().length > 0,
@@ -63,17 +63,17 @@ public class ColumnNameTest {
     }
 
     @Test
-    public void equalsColumnNameOrAlias_columnWithAlias_trueIfNameMatch() {
+    void equalsColumnNameOrAlias_columnWithAlias_trueIfNameMatch() {
         assertNameOrAliasMatch(COLUMN_WITH_ALIAS, false);
     }
 
     @Test
-    public void equalsColumnNameOrAlias_columnWithAlias_trueIfAliasMatch() {
+    void equalsColumnNameOrAlias_columnWithAlias_trueIfAliasMatch() {
         assertNameOrAliasMatch(COLUMN_WITH_ALIAS, true);
     }
 
     @Test
-    public void equalsColumnNameOrAlias_columnWithAlias_falseIfNoMatch() {
+    void equalsColumnNameOrAlias_columnWithAlias_falseIfNoMatch() {
 
         // ARRANGE
         ColumnName testColumn = COLUMN_WITH_ALIAS;
@@ -89,12 +89,12 @@ public class ColumnNameTest {
     }
 
     @Test
-    public void equalsColumnNameOrAlias_columnWithoutAlias_trueIfNameMatch() {
+    void equalsColumnNameOrAlias_columnWithoutAlias_trueIfNameMatch() {
         assertNameOrAliasMatch(COLUMN_WITHOUT_ALIAS, false);
     }
 
     @Test
-    public void equalsColumnNameOrAlias_columnWithoutAlias_falseIfNoMatch() {
+    void equalsColumnNameOrAlias_columnWithoutAlias_falseIfNoMatch() {
 
         // ARRANGE
         ColumnName testColumn = COLUMN_WITHOUT_ALIAS;

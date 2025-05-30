@@ -22,14 +22,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-public class CaseFieldParserTest extends ParserTestBase {
+class CaseFieldParserTest extends ParserTestBase {
 
     private CaseFieldParser caseFieldParser;
 
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         init();
 
@@ -43,7 +43,7 @@ public class CaseFieldParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFail_whenNoFieldsAreDefinedForCaseType() {
+    void shouldFail_whenNoFieldsAreDefinedForCaseType() {
         SpreadsheetParsingException ex = assertThrows(SpreadsheetParsingException.class, () ->
             caseFieldParser.parseAll(definitionSheets, caseType));
         assertThat(ex.getMessage(), containsString(
@@ -51,7 +51,7 @@ public class CaseFieldParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParse() {
+    void shouldParse() {
         final FieldTypeEntity field = new FieldTypeEntity();
         given(parseContext.getCaseFieldType(CASE_TYPE_UNDER_TEST, "Case_Field")).willReturn(field);
 

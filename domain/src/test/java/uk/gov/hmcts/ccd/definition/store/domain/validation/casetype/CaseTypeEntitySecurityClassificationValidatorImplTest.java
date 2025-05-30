@@ -1,18 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
-import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class CaseTypeEntitySecurityClassificationValidatorImplTest {
+class CaseTypeEntitySecurityClassificationValidatorImplTest {
 
     @Test
-    public void securityClassificationIsSet_validValidationResultReturned() {
+    void securityClassificationIsSet_validValidationResultReturned() {
 
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setName("WithSecurityClassification");
@@ -27,7 +28,7 @@ public class CaseTypeEntitySecurityClassificationValidatorImplTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void securityClassificationIsNull_invalidValidationResultContainingCaseTypeEntityMissingSecurityClassificationValidationErrorReturned() {
+    void securityClassificationIsNull_invalidValidationResultContainingCaseTypeEntityMissingSecurityClassificationValidationErrorReturned() {
 
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setName("WithoutSecurityClassificationOrSecurityClassificationString");

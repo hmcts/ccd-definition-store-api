@@ -57,7 +57,7 @@ class DisplayGroupAdapterServiceTest {
     private DisplayGroupAdapterService classUnderTest;
 
     @BeforeEach
-    public void setUpMocks() {
+    void setUpMocks() {
         MockitoAnnotations.openMocks(this);
         classUnderTest = new DisplayGroupAdapterService(displayGroupRepository,
             caseTypeLiteRepository,
@@ -72,7 +72,7 @@ class DisplayGroupAdapterServiceTest {
         private final Integer caseTypeEntityId = 1000;
 
         @Test
-        public void findWizardPagesByCaseTypeId() {
+        void findWizardPagesByCaseTypeId() {
             EventEntity eventEntityMock = mock(EventEntity.class);
             given(eventEntityMock.getEventCaseFields())
                 .willReturn(singletonList(eventCaseFieldEntity(
@@ -120,7 +120,7 @@ class DisplayGroupAdapterServiceTest {
         }
 
         @Test
-        public void findWizardPagesByCaseTypeIdForComplexTypes() {
+        void findWizardPagesByCaseTypeIdForComplexTypes() {
             EventComplexTypeEntity bailiffName = new EventComplexTypeEntity();
             bailiffName.setReference("bailiffName");
             bailiffName.setDisplayContext(DisplayContext.READONLY);
@@ -257,7 +257,7 @@ class DisplayGroupAdapterServiceTest {
         }
 
         @Test
-        public void findWizardPagesByCaseTypeIdReturnsNullWhenNoCaseTypeFound() {
+        void findWizardPagesByCaseTypeIdReturnsNullWhenNoCaseTypeFound() {
             given(caseTypeLiteRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE))
                 .willReturn(Optional.empty());
 
@@ -269,7 +269,7 @@ class DisplayGroupAdapterServiceTest {
         }
 
         @Test
-        public void findWizardPagesByCaseTypeIdReturnsNullWhenNoEventFound() {
+        void findWizardPagesByCaseTypeIdReturnsNullWhenNoEventFound() {
             given(caseTypeLiteRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE))
                 .willReturn(Optional.of(caseTypeEntity));
             given(eventRepository.findByReferenceAndCaseTypeId(anyString(), anyInt())).willReturn(emptyList());

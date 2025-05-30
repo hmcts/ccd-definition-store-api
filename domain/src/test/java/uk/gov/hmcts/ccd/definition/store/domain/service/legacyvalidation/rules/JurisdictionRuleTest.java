@@ -12,17 +12,17 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import org.junit.jupiter.api.BeforeEach;
 
-public class JurisdictionRuleTest {
+class JurisdictionRuleTest {
 
     private JurisdictionRule rule;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         rule = new JurisdictionRule();
     }
 
     @Test
-    public void validCaseTest() {
+    void validCaseTest() {
         // Given - a Case Type which abides by all Jurisdiction rules
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
@@ -40,7 +40,7 @@ public class JurisdictionRuleTest {
     }
 
     @Test
-    public void nullJurisdictionTest() {
+    void nullJurisdictionTest() {
         // Given - a Case Type with no Jurisdiction Id
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
@@ -52,7 +52,7 @@ public class JurisdictionRuleTest {
     }
 
     @Test
-    public void nullJurisdictionNameTest() {
+    void nullJurisdictionNameTest() {
         // Given - a Case Type with a Jurisdiction which has no name
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
@@ -68,7 +68,7 @@ public class JurisdictionRuleTest {
     }
 
     @Test
-    public void nullJurisdictionLiveFromTest() {
+    void nullJurisdictionLiveFromTest() {
         // Given - a Case Type with a Jurisdiction with no Live From date
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
@@ -85,7 +85,7 @@ public class JurisdictionRuleTest {
     }
 
     @Test
-    public void liveFromAfterLiveUntilTest() {
+    void liveFromAfterLiveUntilTest() {
 
         JurisdictionEntity jurisdiction = new JurisdictionEntity();
         jurisdiction.setName("JURISDICTION_NAME");

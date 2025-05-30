@@ -18,7 +18,7 @@ class ProxyServiceTest {
     private ProxyService proxyService;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 

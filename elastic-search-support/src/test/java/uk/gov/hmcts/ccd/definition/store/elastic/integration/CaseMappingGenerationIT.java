@@ -54,7 +54,7 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     private ObjectFactory<HighLevelCCDElasticClient> clientObjectFactory;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         when(clientObjectFactory.getObject()).thenReturn(client);
     }
 

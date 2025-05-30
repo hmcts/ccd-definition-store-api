@@ -29,7 +29,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEn
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class AccessTypeRolesRepositoryTest {
+class AccessTypeRolesRepositoryTest {
 
     @Autowired
     private AccessTypeRolesRepository accessTypeRolesRespository;
@@ -44,7 +44,7 @@ public class AccessTypeRolesRepositoryTest {
     private TestHelper testHelper;
 
     @Test
-    public void saveAndRetrieveAccessTypeRoles() {
+    void saveAndRetrieveAccessTypeRoles() {
 
         final CaseTypeEntity caseType = createCaseTypeEntity();
         saveCaseType(caseType);

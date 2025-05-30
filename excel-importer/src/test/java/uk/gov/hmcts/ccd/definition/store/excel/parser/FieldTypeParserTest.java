@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-public class FieldTypeParserTest {
+class FieldTypeParserTest {
 
     @Mock
     private ParseContext parseContext;
@@ -31,13 +31,13 @@ public class FieldTypeParserTest {
     private FieldTypeParser classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void shouldReturnFieldTypeEntityWithUniqueReferenceAndCollectionBaseType_whenFieldTypeAttributeIsCollection() {
+    void shouldReturnFieldTypeEntityWithUniqueReferenceAndCollectionBaseType_whenFieldTypeAttributeIsCollection() {
 
         FieldTypeEntity collectionBaseType = new FieldTypeEntity();
         String collectionFieldType = "Collection";

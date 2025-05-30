@@ -36,7 +36,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStat
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class DraftDefinitionRepositoryDecoratorTest {
+class DraftDefinitionRepositoryDecoratorTest {
 
     @Autowired
     private DraftDefinitionRepository repository;
@@ -54,7 +54,7 @@ public class DraftDefinitionRepositoryDecoratorTest {
     private static final String JURISDICTION_ID = "G4TqDskxuR";
 
     @BeforeEach
-    public void setUp() throws IOException {
+    void setUp() throws IOException {
         testJurisdiction = testHelper.createJurisdiction();
         final JurisdictionEntity
             jurisdictionForFindTests =
@@ -67,7 +67,7 @@ public class DraftDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void shouldSetVersionOnCreatingDefinition() throws IOException {
+    void shouldSetVersionOnCreatingDefinition() throws IOException {
         final DefinitionEntity definitionEntity1 = testHelper.buildDefinition(testJurisdiction, "Test definition");
 
         final DefinitionEntity savedDefinitionEntity = classUnderTest.save(definitionEntity1);
@@ -83,7 +83,7 @@ public class DraftDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void shouldFindAListOfDefinitions() {
+    void shouldFindAListOfDefinitions() {
         final List<DefinitionEntity> entities = classUnderTest.findByJurisdictionId(JURISDICTION_ID);
         assertThat(entities.size(), is(3));
         // assert that entities are retrived in reverse order they are created
@@ -93,35 +93,35 @@ public class DraftDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void shouldFindASpecificVersion() {
+    void shouldFindASpecificVersion() {
         final DefinitionEntity definitionEntity = classUnderTest.findByJurisdictionIdAndVersion(JURISDICTION_ID, 2);
         assertDefinitionEntity(definitionEntity, "T2", DRAFT);
     }
 
     @Test
-    public void shouldFindLatestVersionIfVersionNotSpecified() {
+    void shouldFindLatestVersionIfVersionNotSpecified() {
         final DefinitionEntity definitionEntity = classUnderTest.findByJurisdictionIdAndVersion(JURISDICTION_ID, null);
         assertDefinitionEntity(definitionEntity, "T3", DRAFT);
     }
 
     @Test
-    public void shouldReturnNullWhenNoMatchOnJurisdiction() {
+    void shouldReturnNullWhenNoMatchOnJurisdiction() {
         assertNull(classUnderTest.findByJurisdictionIdAndVersion("n", null));
     }
 
     @Test
-    public void shouldReturnNullWhenNoMatchOnVersion() {
+    void shouldReturnNullWhenNoMatchOnVersion() {
         assertNull(classUnderTest.findByJurisdictionIdAndVersion(JURISDICTION_ID, 667));
     }
 
     @Test
-    public void shouldFindAnEmptyListWhenNoMatchOnJurisdiction() {
+    void shouldFindAnEmptyListWhenNoMatchOnJurisdiction() {
         final List<DefinitionEntity> entities = classUnderTest.findByJurisdictionId("y");
         assertTrue(entities.isEmpty());
     }
 
     @Test
-    public void shouldSimplySave() {
+    void shouldSimplySave() {
         final DefinitionEntity definitionEntity = classUnderTest.findByJurisdictionIdAndVersion(JURISDICTION_ID, 2);
         final Long l1 = definitionEntity.getOptimisticLock();
         final LocalDateTime lastModified = definitionEntity.getLastModified();

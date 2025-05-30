@@ -1,5 +1,27 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
+import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
+import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapperImpl;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeJurisdictionResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeJurisdictionResults;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRoleField;
+import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRoleResult;
+import uk.gov.hmcts.ccd.definition.store.repository.model.OrganisationProfileIds;
+import uk.gov.hmcts.ccd.definition.store.rest.service.AccessTypesService;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
@@ -18,36 +40,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
-import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapperImpl;
-import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.OrganisationProfileIds;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRoleResult;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeJurisdictionResults;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeJurisdictionResult;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeResult;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeField;
-import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeRoleField;
-import uk.gov.hmcts.ccd.definition.store.rest.service.AccessTypesService;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
-import static junit.framework.TestCase.assertFalse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.TEXT_PLAIN;
@@ -58,7 +59,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEn
 
 @SpringBootTest(classes = {EntityToResponseDTOMapperImpl.class})
 @ExtendWith(SpringExtension.class)
-public class AccessTypesControllerTest {
+class AccessTypesControllerTest {
 
     private AccessTypesController controller;
     @Spy
@@ -121,7 +122,7 @@ public class AccessTypesControllerTest {
 
     @DisplayName("Should set up the results that can be retrieved")
     @Test
-    public void getAccessTypeRolesJurisdictionResults() {
+    void getAccessTypeRolesJurisdictionResults() {
 
         OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
         organisationProfileIds.setOrganisationProfileIds(orgProfileIds);
@@ -190,7 +191,7 @@ public class AccessTypesControllerTest {
 
     @DisplayName("Should post retrieve-access-types fail")
     @Test
-    public void shouldFailPostretrieve_access_types_Request() throws Exception {
+    void shouldFailPostretrieve_access_types_Request() throws Exception {
         mockMvc.perform(post(retrieveAccessTypesURL)
                 .contentType(TEXT_PLAIN)
                 .content(""))
@@ -199,7 +200,7 @@ public class AccessTypesControllerTest {
 
     @DisplayName("Should post retrieve-access-types invalid request fail")
     @Test
-    public void shouldFailRetrieve_access_types_Invalid_Request() throws Exception {
+    void shouldFailRetrieve_access_types_Invalid_Request() throws Exception {
 
         ObjectMapper objmapper = new ObjectMapper();
         String request = objmapper.writeValueAsString("{\"organisation_profile_ids\": [\"sdsads\",]}");
@@ -234,9 +235,10 @@ public class AccessTypesControllerTest {
             objmapper.readValue(mvcResult.getResponse().getContentAsString(),
             AccessTypeJurisdictionResults.class);
 
-        assertFalse("accessTypeRolesJurisdictionResults is null or empty",
+        assertFalse(
             accessTypeJurisdictionResults == null
-            || accessTypeJurisdictionResults.getJurisdictions().isEmpty());
+            || accessTypeJurisdictionResults.getJurisdictions().isEmpty(),
+            "accessTypeRolesJurisdictionResults is null or empty");
 
         AccessTypeJurisdictionResults finalAccessTypeJurisdictionResults = accessTypeJurisdictionResults;
         assertAll(
@@ -279,9 +281,10 @@ public class AccessTypesControllerTest {
             objmapper.readValue(mvcResult.getResponse().getContentAsString(),
                 AccessTypeJurisdictionResults.class);
 
-        assertFalse("accessTypeRolesJurisdictionResults is null or empty",
+        assertFalse(
             accessTypeJurisdictionResults == null
-                || accessTypeJurisdictionResults.getJurisdictions().isEmpty());
+                || accessTypeJurisdictionResults.getJurisdictions().isEmpty(),
+                "accessTypeRolesJurisdictionResults is null or empty");
 
         AccessTypeJurisdictionResults finalAccessTypeJurisdictionResults = accessTypeJurisdictionResults;
         assertAll(
@@ -325,9 +328,10 @@ public class AccessTypesControllerTest {
             objmapper.readValue(mvcResult.getResponse().getContentAsString(),
                 AccessTypeJurisdictionResults.class);
 
-        assertFalse("accessTypeRolesJurisdictionResults is null or empty",
+        assertFalse(
             accessTypeJurisdictionResults == null
-                || accessTypeJurisdictionResults.getJurisdictions().isEmpty());
+                || accessTypeJurisdictionResults.getJurisdictions().isEmpty(),
+                "accessTypeRolesJurisdictionResults is null or empty");
 
         AccessTypeJurisdictionResults finalAccessTypeJurisdictionResults = accessTypeJurisdictionResults;
         assertAll(
@@ -368,9 +372,10 @@ public class AccessTypesControllerTest {
             objmapper.readValue(mvcResult.getResponse().getContentAsString(),
                 AccessTypeJurisdictionResults.class);
 
-        assertFalse("accessTypeRolesJurisdictionResults is null or empty",
+        assertFalse(
             accessTypeJurisdictionResults == null
-                || accessTypeJurisdictionResults.getJurisdictions().isEmpty());
+                || accessTypeJurisdictionResults.getJurisdictions().isEmpty(),
+                "accessTypeRolesJurisdictionResults is null or empty");
 
         AccessTypeJurisdictionResults finalAccessTypeJurisdictionResults = accessTypeJurisdictionResults;
         assertAll(

@@ -12,14 +12,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
-public class StateEntityCrudValidatorImplTest {
+class StateEntityCrudValidatorImplTest {
     private StateEntity stateEntity;
     private StateACLEntity userRoleEntity;
     private StateEntityValidationContext context;
     private StateEntityCrudValidatorImpl validator;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
 
         validator = new StateEntityCrudValidatorImpl();
 
@@ -35,7 +35,7 @@ public class StateEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void goodCrud() {
+    void goodCrud() {
         userRoleEntity.setCrudAsString("Cr Du");
         final ValidationResult result = validator.validate(stateEntity, context);
 
@@ -43,7 +43,7 @@ public class StateEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void crudTooLong() {
+    void crudTooLong() {
 
         userRoleEntity.setCrudAsString(" CRUD   DD ");
 
@@ -56,7 +56,7 @@ public class StateEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void blankCrud() {
+    void blankCrud() {
 
         final ValidationResult result = validator.validate(stateEntity, context);
 
@@ -67,7 +67,7 @@ public class StateEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void invalidCrud() {
+    void invalidCrud() {
 
         userRoleEntity.setCrudAsString("X");
 

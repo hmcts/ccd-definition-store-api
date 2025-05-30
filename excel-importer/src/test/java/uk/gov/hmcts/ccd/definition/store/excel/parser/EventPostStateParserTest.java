@@ -22,7 +22,7 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
-public class EventPostStateParserTest extends ParserTestBase {
+class EventPostStateParserTest extends ParserTestBase {
 
     private static final String STATE_DEFAULT = "DefaultPostState";
 
@@ -44,7 +44,7 @@ public class EventPostStateParserTest extends ParserTestBase {
     private DefinitionSheet caseEventToFieldsSheet;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         init();
         parseContext = mock(ParseContext.class);
         postStateParser = new EventPostStateParser(parseContext, CASE_TYPE_UNDER_TEST);
@@ -59,7 +59,7 @@ public class EventPostStateParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEventPostStateConditionWithWildCard() {
+    void shouldParseEventPostStateConditionWithWildCard() {
         final List<EventPostStateEntity> eventEntities = postStateParser.parse("*");
         assertThat(eventEntities.size(), is(1));
         assertThat(eventEntities.get(0).getPostStateReference(), is("*"));
@@ -68,13 +68,13 @@ public class EventPostStateParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEventPostStateConditionWithEmptyValue() {
+    void shouldParseEventPostStateConditionWithEmptyValue() {
         final List<EventPostStateEntity> eventEntities = postStateParser.parse("");
         assertThat(eventEntities.size(), is(0));
     }
 
     @Test
-    public void shouldParseEventPostStateConditionWithDefaultState() {
+    void shouldParseEventPostStateConditionWithDefaultState() {
         final List<EventPostStateEntity> eventEntities = postStateParser.parse(STATE_DEFAULT);
         assertThat(eventEntities.size(), is(1));
         assertThat(eventEntities.get(0).getPostStateReference(), is(STATE_DEFAULT));
@@ -83,7 +83,7 @@ public class EventPostStateParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEventPostStateConditionWithValidConditions() {
+    void shouldParseEventPostStateConditionWithValidConditions() {
         final List<EventPostStateEntity> eventEntities = postStateParser.parse(VALID_ENABLING_CONDITION);
         assertThat(eventEntities.size(), is(1));
         assertThat(eventEntities.get(0).getPostStateReference(), is("ApprovalRequired"));
@@ -92,13 +92,13 @@ public class EventPostStateParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEventPostStateConditionWithMultipleStates() {
+    void shouldParseEventPostStateConditionWithMultipleStates() {
         final List<EventPostStateEntity> eventEntities = postStateParser.parse(VALID_MULTI_STATE_ENABLING_CONDITION);
         assertThat(eventEntities.size(), is(2));
     }
 
     @Test
-    public void shouldParseEventPostStateConditionWithNoPriority() {
+    void shouldParseEventPostStateConditionWithNoPriority() {
         SpreadsheetParsingException thrown = assertThrows(SpreadsheetParsingException.class,
             () -> postStateParser.parse(NO_PRIORITY_ENABLING_CONDITION));
 
@@ -107,7 +107,7 @@ public class EventPostStateParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEventPostStateConditionWithInvalidShowCondition() {
+    void shouldParseEventPostStateConditionWithInvalidShowCondition() {
         SpreadsheetParsingException thrown = assertThrows(SpreadsheetParsingException.class,
             () -> postStateParser.parse(IN_VALID_POST_STATE_CONDITION));
 

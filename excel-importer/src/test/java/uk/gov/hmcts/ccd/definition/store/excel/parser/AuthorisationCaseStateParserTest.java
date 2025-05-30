@@ -30,7 +30,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTH
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.STATE;
 
-public class AuthorisationCaseStateParserTest {
+class AuthorisationCaseStateParserTest {
     private static final String CASE_TYPE_UNDER_TEST = "Some Case Type";
     private static final String CASE_STATE_UNDER_TEST = "Some Case State";
     private AuthorisationCaseStateParser subject;
@@ -51,7 +51,7 @@ public class AuthorisationCaseStateParserTest {
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         MockitoAnnotations.openMocks(this);
         final ParseContext context = new ParseContext();
         given(mockAccessProfileEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
@@ -74,7 +74,7 @@ public class AuthorisationCaseStateParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithAccessProfileFound() {
+    void shouldParseEntityWithAccessProfileFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_STATE.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.STATE_ID.toString(), CASE_STATE_UNDER_TEST);
@@ -97,7 +97,7 @@ public class AuthorisationCaseStateParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithCaseRoleFound() {
+    void shouldParseEntityWithCaseRoleFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_TYPE.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.STATE_ID.toString(), CASE_STATE_UNDER_TEST);
@@ -120,7 +120,7 @@ public class AuthorisationCaseStateParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithAccessProfileNotFound() {
+    void shouldParseEntityWithAccessProfileNotFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_STATE.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.STATE_ID.toString(), CASE_STATE_UNDER_TEST);
@@ -140,7 +140,7 @@ public class AuthorisationCaseStateParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithInvalidCrud() {
+    void shouldParseEntityWithInvalidCrud() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_STATE.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.STATE_ID.toString(), CASE_STATE_UNDER_TEST);
@@ -159,7 +159,7 @@ public class AuthorisationCaseStateParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithInvalidCrudAndAccessProfileNotFound() {
+    void shouldParseEntityWithInvalidCrudAndAccessProfileNotFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_STATE.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.STATE_ID.toString(), CASE_STATE_UNDER_TEST);

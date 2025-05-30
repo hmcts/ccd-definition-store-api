@@ -16,14 +16,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-public class CategoryTabServiceImplTest {
+class CategoryTabServiceImplTest {
 
     @Mock
     private CategoryTabRepository categoryTabRepository;
     private CategoryTabServiceImpl categoryTabServiceImpl;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
         this.categoryTabServiceImpl = new CategoryTabServiceImpl(categoryTabRepository);
     }

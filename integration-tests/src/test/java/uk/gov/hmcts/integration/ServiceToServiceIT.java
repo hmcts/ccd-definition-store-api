@@ -24,14 +24,14 @@ import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController.
 
 @Disabled
 // FIXME : RDM-7635 - has to mock opendId jwks responses with proper Key set (RS256 public / private key).
-public class ServiceToServiceIT extends IntegrationTest {
+class ServiceToServiceIT extends IntegrationTest {
 
     private static final String SERVICE_TOKEN = "ServiceToken";
     private static final String INVALID_SERVICE_TOKEN = "InvalidServiceToken";
     private static final String URL_S2S_DETAILS = "/s2s/details";
 
     @Test
-    public void shouldPassServiceAuthorizationWhenValidServiceToken() {
+    void shouldPassServiceAuthorizationWhenValidServiceToken() {
 
         final ResponseEntity<String>
             response =
@@ -42,7 +42,7 @@ public class ServiceToServiceIT extends IntegrationTest {
     }
 
     @Test
-    public void shouldFailServiceAuthorizationWhenInvalidServiceToken() {
+    void shouldFailServiceAuthorizationWhenInvalidServiceToken() {
 
         stubFor(get(urlEqualTo(URL_S2S_DETAILS)).withHeader(AUTHORIZATION, equalTo(BEARER + INVALID_SERVICE_TOKEN))
             .willReturn(aResponse().withStatus(SC_UNAUTHORIZED)));
