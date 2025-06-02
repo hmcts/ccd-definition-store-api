@@ -5,6 +5,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -12,6 +13,7 @@ import static com.google.common.collect.Lists.newArrayList;
 @Component
 public class BaseTypeMappingGenerator extends TypeMappingGenerator {
 
+    @Autowired
     public BaseTypeMappingGenerator(CcdElasticSearchProperties config) {
         super(config);
     }

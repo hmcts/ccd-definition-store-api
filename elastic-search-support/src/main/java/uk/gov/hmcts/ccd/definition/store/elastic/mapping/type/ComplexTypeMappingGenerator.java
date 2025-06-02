@@ -10,6 +10,7 @@ import java.util.Set;
 import com.google.gson.stream.JsonWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.lambda.Unchecked;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -19,6 +20,7 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class ComplexTypeMappingGenerator extends TypeMappingGenerator {
 
+    @Autowired
     public ComplexTypeMappingGenerator(CcdElasticSearchProperties config) {
         super(config);
     }

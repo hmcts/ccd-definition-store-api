@@ -17,6 +17,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -86,6 +87,8 @@ class TypeMappingGeneratorTest extends AbstractMapperTest {
     }
 
     private static class TestMappingGenerator extends TypeMappingGenerator {
+
+        @Autowired
         public TestMappingGenerator(CcdElasticSearchProperties config) {
             super(config);
         }

@@ -13,6 +13,7 @@ import java.util.function.Function;
 import com.google.gson.stream.JsonWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.jooq.lambda.Unchecked;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static java.util.stream.Collectors.toList;
@@ -21,6 +22,7 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 public class CaseMappingGenerator extends MappingGenerator {
 
+    @Autowired
     public CaseMappingGenerator(CcdElasticSearchProperties config) {
         super(config);
     }

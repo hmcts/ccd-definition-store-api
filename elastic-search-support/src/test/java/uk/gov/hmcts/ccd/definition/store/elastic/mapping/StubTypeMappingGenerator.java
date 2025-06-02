@@ -6,6 +6,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import static com.google.common.collect.Lists.newArrayList;
 
 public class StubTypeMappingGenerator extends TypeMappingGenerator {
@@ -14,6 +16,7 @@ public class StubTypeMappingGenerator extends TypeMappingGenerator {
     private String dataClassificationMapping;
     private String type;
 
+    @Autowired
     public StubTypeMappingGenerator(CcdElasticSearchProperties config, 
             String type, String dataMapping, String dataClassificationMapping) {
         super(config);
