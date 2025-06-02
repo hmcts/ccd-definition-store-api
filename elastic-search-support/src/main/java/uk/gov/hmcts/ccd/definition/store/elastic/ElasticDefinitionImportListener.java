@@ -86,6 +86,7 @@ public abstract class ElasticDefinitionImportListener {
                         deleteOldIndex);
                     //dummy value for phase 1
                     event.setTaskId("taskID");
+                    log.info("reindexing successful for case type: {}", caseType.getReference());
                 } else {
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
