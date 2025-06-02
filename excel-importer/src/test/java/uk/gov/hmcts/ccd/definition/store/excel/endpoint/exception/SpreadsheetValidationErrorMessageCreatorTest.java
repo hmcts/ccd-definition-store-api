@@ -1,26 +1,18 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
-import java.util.Optional;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationEventValidationContext;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationValidationContext;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCORValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexACLValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidComplexCrudValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidMetadataFieldValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidIdValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityComplexACLValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidCrudValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityCORValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidIdValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityInvalidMetadataFieldValidationError;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityMissingSecurityClassificationValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityValidationContext;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.casefield.CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityFieldValueValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityMandatoryFieldsValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.caserole.CaseRoleEntityUniquenessValidatorImpl;
@@ -41,8 +33,8 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayG
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabFieldShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup.DisplayGroupInvalidTabShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.CreateEventDoesNotHavePostStateValidationError;
-import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCanSaveDraftValidatorImpl;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityCaseTypeAccessProfileValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityEnableConditionReferencesInvalidCaseFieldError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.event.EventEntityInvalidAccessProfileValidationError;
@@ -89,14 +81,24 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchInputCaseFieldE
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Optional;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyObject;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class SpreadsheetValidationErrorMessageCreatorTest {
+class SpreadsheetValidationErrorMessageCreatorTest {
 
     @Mock
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
@@ -104,15 +106,15 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     @InjectMocks
     private SpreadsheetValidationErrorMessageCreator classUnderTest;
 
-    @Before
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        when(entityToDefinitionDataItemRegistry.getForEntity(anyObject())).thenReturn(Optional.empty());
+    @BeforeEach
+    void setUp() throws Exception {
+        MockitoAnnotations.openMocks(this);
+        when(entityToDefinitionDataItemRegistry.getForEntity(any())).thenReturn(Optional.empty());
     }
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityExistsInRegistry_testCaseTypeEntityMissingSecurityClassificationValidationError_customMessageReturned() {
+    void entityExistsInRegistry_testCaseTypeEntityMissingSecurityClassificationValidationError_customMessageReturned() {
 
         CaseTypeEntity caseTypeEntity = caseTypeEntity("Case Type Reference");
 
@@ -139,7 +141,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityDoesNotExistInRegistry_testCaseTypeEntityMissingSecurityClassificationValidationError_defaultMessageReturned() {
+    void entityDoesNotExistInRegistry_testCaseTypeEntityMissingSecurityClassificationValidationError_defaultMessageReturned() {
 
         CaseTypeEntity caseTypeEntity = caseTypeEntity("Case Name");
         CaseTypeEntityMissingSecurityClassificationValidationError caseTypeEntityMissingSecurityClassificationValidationError
@@ -154,7 +156,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCaseTypeEntityNonUniqueReferenceValidationError_defaultMessageReturned() {
+    void testCaseTypeEntityNonUniqueReferenceValidationError_defaultMessageReturned() {
 
         CaseTypeEntity caseTypeEntity = caseTypeEntity("Case Type Name");
         CaseTypeEntityNonUniqueReferenceValidationError caseTypeEntityNonUniqueReferenceValidationError
@@ -168,7 +170,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCaseTypeEntityNonUniqueReferenceValidationError_customMessageReturned() {
+    void testCaseTypeEntityNonUniqueReferenceValidationError_customMessageReturned() {
 
         CaseTypeEntity caseTypeEntity = caseTypeEntity("Case Type Name");
         assertCaseTypeEntityNonUniqueReferenceValidationErrorForEntityFromDataDefinitionItem(
@@ -181,7 +183,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityExistsInRegistry_testCaseFieldEntityMissingSecurityClassificationValidationError_customMessageReturned() {
+    void entityExistsInRegistry_testCaseFieldEntityMissingSecurityClassificationValidationError_customMessageReturned() {
 
         CaseFieldEntity caseFieldEntity = caseFieldEntity("Case Field Reference", null);
 
@@ -208,7 +210,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityDoesNotExistInRegistry_testCaseFieldEntityMissingSecurityClassificationValidationError_defaultMessageReturned() {
+    void entityDoesNotExistInRegistry_testCaseFieldEntityMissingSecurityClassificationValidationError_defaultMessageReturned() {
 
         CaseFieldEntity caseFieldEntity = caseFieldEntity("Case Field Reference", null);
         CaseFieldEntityMissingSecurityClassificationValidationError caseFieldEntityMissingSecurityClassificationValidationError
@@ -225,7 +227,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void testCreateErrorMessage_CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError() {
+    void testCreateErrorMessage_CaseFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError() {
 
         assertEquals("CaseField values cannot have lower security classification than case type; "
                 + "CaseField entry with id 'Case Field Reference' has a security classification of 'Public' "
@@ -242,7 +244,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityExistsInRegistry_testComplexFieldEntityMissingSecurityClassificationValidationError_customMessageReturned() {
+    void entityExistsInRegistry_testComplexFieldEntityMissingSecurityClassificationValidationError_customMessageReturned() {
 
         ComplexFieldEntity complexFieldEntity = complexFieldEntity(
             "Complex Field Reference", null);
@@ -272,7 +274,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityDoesNotExistInRegistry_testComplexFieldEntityMissingSecurityClassificationValidationError_defaultMessageReturned() {
+    void entityDoesNotExistInRegistry_testComplexFieldEntityMissingSecurityClassificationValidationError_defaultMessageReturned() {
 
         ComplexFieldEntity complexFieldEntity = complexFieldEntity(
             "Complex Field Reference", null);
@@ -289,7 +291,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void testCreateErrorMessage_ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError() {
+    void testCreateErrorMessage_ComplexFieldEntityHasLessRestrictiveSecurityClassificationThanParentValidationError() {
 
         assertEquals("ComplexTypes values cannot have lower security classification than case field; "
                 + "ComplexTypes entry with id 'Complex Field Reference' has a security classification of 'Public' "
@@ -307,7 +309,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityExistsInRegistry_testCreateErrorMessageForEventEntityMissingSecurityClassificationValidationError_customMessageReturned() {
+    void entityExistsInRegistry_testCreateErrorMessageForEventEntityMissingSecurityClassificationValidationError_customMessageReturned() {
 
         EventEntity eventEntity = eventEntity("Event Reference", null);
 
@@ -334,7 +336,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityDoesNotExistInRegistry_testCreateErrorMessageForEventEntityMissingSecurityClassificationValidationError_defaultMessageReturned() {
+    void entityDoesNotExistInRegistry_testCreateErrorMessageForEventEntityMissingSecurityClassificationValidationError_defaultMessageReturned() {
 
         EventEntity eventEntity = eventEntity("Event Reference", null);
         EventEntityMissingSecurityClassificationValidationError eventEntityMissingSecurityClassificationValidationError
@@ -349,7 +351,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError() {
+    void testCreateErrorMessage_EventEntityHasLessRestrictiveSecurityClassificationThanParentValidationError() {
 
         assertEquals("CaseEvent values cannot have lower security classification than case type; "
                 + "CaseEvent entry with id 'Event Reference' has a security classification of 'Public' "
@@ -366,7 +368,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityExistsInRegistry_createErrorMessageCalledForCreateEventDoesNotHavePostStateValidationError_customMessageReturned() {
+    void entityExistsInRegistry_createErrorMessageCalledForCreateEventDoesNotHavePostStateValidationError_customMessageReturned() {
 
         EventEntity eventEntity = eventEntity("Event ID", null);
 
@@ -391,7 +393,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityDoesNotExistInRegistry_createErrorMessageCalled_defaultMessageReturned() {
+    void entityDoesNotExistInRegistry_createErrorMessageCalled_defaultMessageReturned() {
 
         EventEntity eventEntity = eventEntity("Event ID", null);
 
@@ -408,7 +410,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseTypeEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
+    void caseTypeEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("crud");
 
@@ -430,7 +432,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void caseTypeEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
+    void caseTypeEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("crud");
 
@@ -452,7 +454,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseTypeEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
+    void caseTypeEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("Xcrud");
 
@@ -474,7 +476,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseTypeEntityInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
+    void caseTypeEntityInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseTypeACLEntity caseTypeACLEntity = caseTypeACLEntity("Xcrud");
 
@@ -487,7 +489,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseFieldEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
+    void caseFieldEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -515,7 +517,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void caseFieldEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
+    void caseFieldEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -542,7 +544,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseFieldEntityInvalidAccessProfile_createErrorMessageCalled_defaultMessageReturned() {
+    void caseFieldEntityInvalidAccessProfile_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -560,7 +562,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseFieldEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
+    void caseFieldEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -587,7 +589,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseFieldEntityInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
+    void caseFieldEntityInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -604,7 +606,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseFieldEntityInvalidComplexCrud_createErrorMessageCalled_customMessageReturned() {
+    void caseFieldEntityInvalidComplexCrud_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -633,7 +635,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void caseFieldEntityInvalidComplexCrud_createErrorMessageCalled_defaultMessageReturned() {
+    void caseFieldEntityInvalidComplexCrud_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -652,7 +654,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void complexACLHasMoreAccessThanParentValidationError_createErrorMessageCalled_customMessageReturned() {
+    void complexACLHasMoreAccessThanParentValidationError_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -682,7 +684,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void complexACLHasMoreAccessThanParentValidationError_createErrorMessageCalled_defaultMessageReturned() {
+    void complexACLHasMoreAccessThanParentValidationError_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = caseFieldEntity(
             "case field", SecurityClassification.RESTRICTED);
@@ -700,7 +702,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidationMessageForCaseFieldEntityInvalidMetadataFieldValidationError() {
+    void shouldHaveValidationMessageForCaseFieldEntityInvalidMetadataFieldValidationError() {
         CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         CaseFieldEntity caseFieldEntity = caseFieldEntity("case field", SecurityClassification.RESTRICTED);
 
@@ -715,7 +717,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidationMessageForCaseFieldEntityCORValidationError() {
+    void shouldHaveValidationMessageForCaseFieldEntityCORValidationError() {
 
         FieldTypeEntity fieldType = new FieldTypeEntity();
         fieldType.setReference("ChangeOrganisationRequest");
@@ -735,7 +737,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidationMessageForEventEntityCaseTypeAccessProfileValidationError() {
+    void shouldHaveValidationMessageForEventEntityCaseTypeAccessProfileValidationError() {
 
         CaseTypeEntity caseType = new CaseTypeEntity();
         caseType.setReference("CaseType");
@@ -762,7 +764,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void eventEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
+    void eventEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenIdamAPMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventACLEntity(null, "crud");
@@ -787,7 +789,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void eventEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
+    void eventEntityInvalidAccessProfile_createErrorMessageCalled_customMessageReturned_whenCaseRoleMissing() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventACLEntity(null, "crud");
@@ -812,7 +814,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void eventEntityInvalidAccessProfile_createErrorMessageCalled_defaultMessageReturned() {
+    void eventEntityInvalidAccessProfile_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventACLEntity(null, "crud");
@@ -828,7 +830,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void eventEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
+    void eventEntityInvalidCrud_createErrorMessageCalled_customMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventACLEntity("access profile", "Xcrud");
@@ -853,7 +855,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void eventEntityInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
+    void eventEntityInvalidCrud_createErrorMessageCalled_defaultMessageReturned() {
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final EventEntity eventEntity = eventEntity("event", SecurityClassification.RESTRICTED);
         final EventACLEntity entity = eventACLEntity("access profile", "Xcrud");
@@ -870,7 +872,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityExistsInRegistry_testCreateErrorMessageEventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError_customMessageReturned() {
+    void entityExistsInRegistry_testCreateErrorMessageEventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError_customMessageReturned() {
 
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
 
@@ -896,7 +898,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityDoesNotExistInRegistry_testCreateErrorMessageEventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError_defaultMsgReturned() {
+    void entityDoesNotExistInRegistry_testCreateErrorMessageEventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError_defaultMsgReturned() {
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
 
         EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError eventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError
@@ -915,7 +917,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityExistsInRegistry_EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError() {
+    void entityExistsInRegistry_EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError() {
         EventCaseFieldEntityValidationContext context = mock(EventCaseFieldEntityValidationContext.class);
         given(context.getEventId()).willReturn("EVENT ID");
         EventComplexTypeEntity eventComplexTypeEntity = mock(EventComplexTypeEntity.class);
@@ -941,7 +943,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityDoesNotExistInRegistry_EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError_defaultMessage() {
+    void entityDoesNotExistInRegistry_EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError_defaultMessage() {
         EventCaseFieldEntityValidationContext context = mock(EventCaseFieldEntityValidationContext.class);
         EventComplexTypeEntity eventComplexTypeEntity = new EventComplexTypeEntity();
 
@@ -953,7 +955,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityExistsInRegistry_EventComplexTypeEntityInvalidShowConditionError() {
+    void entityExistsInRegistry_EventComplexTypeEntityInvalidShowConditionError() {
         EventComplexTypeEntity eventComplexTypeEntity = mock(EventComplexTypeEntity.class);
         EventCaseFieldEntityValidationContext context = mock(EventCaseFieldEntityValidationContext.class);
         given(context.getEventId()).willReturn("EVENT ID");
@@ -972,7 +974,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityDoesNotExistInRegistry_EventComplexTypeEntityInvalidShowConditionError() {
+    void entityDoesNotExistInRegistry_EventComplexTypeEntityInvalidShowConditionError() {
         EventComplexTypeEntity eventComplexTypeEntity = mock(EventComplexTypeEntity.class);
         EventCaseFieldEntityValidationContext context = mock(EventCaseFieldEntityValidationContext.class);
 
@@ -984,7 +986,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityExistsInRegistry_testCreateErrorMessageEventCaseFieldEntityShowConditionInvalidError_customMessageReturned() {
+    void entityExistsInRegistry_testCreateErrorMessageEventCaseFieldEntityShowConditionInvalidError_customMessageReturned() {
 
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
         eventCaseFieldEntity.setShowCondition("SHOW CONDITION ON ENTITY");
@@ -1008,7 +1010,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void entityDoesNotExistInRegistry_testCreateErrorMessageEventCaseFieldEntityShowConditionInvalidError_defaultMessageReturned() {
+    void entityDoesNotExistInRegistry_testCreateErrorMessageEventCaseFieldEntityShowConditionInvalidError_defaultMessageReturned() {
         EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
 
         EventCaseFieldEntityInvalidShowConditionError eventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError
@@ -1026,7 +1028,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityExistsInRegistry_DisplayGroupInvalidShowConditionError_customMessageReturned() {
+    void entityExistsInRegistry_DisplayGroupInvalidShowConditionError_customMessageReturned() {
 
         DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
         displayGroupEntity.setReference("dg");
@@ -1045,7 +1047,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityNotInRegistry_DisplayGroupInvalidShowConditionError_defaultMessageReturned() {
+    void entityNotInRegistry_DisplayGroupInvalidShowConditionError_defaultMessageReturned() {
 
         DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
         displayGroupEntity.setReference("dg");
@@ -1061,7 +1063,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityExistsInRegistry_DisplayGroupInvalidEventShowConditionField_customMessageReturned() {
+    void entityExistsInRegistry_DisplayGroupInvalidEventShowConditionField_customMessageReturned() {
 
         DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
         displayGroupEntity.setReference("dg");
@@ -1084,7 +1086,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityNotInRegistry_DisplayGroupInvalidEventShowConditionField_defaultMessageReturned() {
+    void entityNotInRegistry_DisplayGroupInvalidEventShowConditionField_defaultMessageReturned() {
 
         DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
         displayGroupEntity.setReference("dg");
@@ -1103,7 +1105,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityExistsInRegistry_DisplayGroupInvalidTabShowConditionField_customMessageReturned() {
+    void entityExistsInRegistry_DisplayGroupInvalidTabShowConditionField_customMessageReturned() {
 
         DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity = new DisplayGroupCaseFieldEntity();
         displayGroupCaseFieldEntity.setCaseField(caseFieldEntity("dg", SecurityClassification.PUBLIC));
@@ -1123,7 +1125,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityNotInRegistry_DisplayGroupInvalidTabShowConditionField_defaultMessageReturned() {
+    void entityNotInRegistry_DisplayGroupInvalidTabShowConditionField_defaultMessageReturned() {
 
         DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity = new DisplayGroupCaseFieldEntity();
         displayGroupCaseFieldEntity.setCaseField(caseFieldEntity("dg", SecurityClassification.PUBLIC));
@@ -1139,7 +1141,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityNotInRegistry_DisplayGroupInvalidTabShowConditionField_defaultMessageWhenNoShowCondition() {
+    void entityNotInRegistry_DisplayGroupInvalidTabShowConditionField_defaultMessageWhenNoShowCondition() {
 
         DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity = new DisplayGroupCaseFieldEntity();
         displayGroupCaseFieldEntity.setCaseField(caseFieldEntity("dg", SecurityClassification.PUBLIC));
@@ -1152,7 +1154,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityExistsInRegistry_DisplayGroupInvalidTabShowCondition_customMessageReturned() {
+    void entityExistsInRegistry_DisplayGroupInvalidTabShowCondition_customMessageReturned() {
 
         DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
         displayGroupEntity.setShowCondition("sc");
@@ -1171,7 +1173,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityNotInRegistry_DisplayGroupInvalidTabShowCondition_defaultMessageReturned() {
+    void entityNotInRegistry_DisplayGroupInvalidTabShowCondition_defaultMessageReturned() {
 
         DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
         displayGroupEntity.setShowCondition("sc");
@@ -1187,7 +1189,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityNotInRegistry_DisplayGroupInvalidTabShowCondition_defaultMessageWhenNoShowCondition() {
+    void entityNotInRegistry_DisplayGroupInvalidTabShowCondition_defaultMessageWhenNoShowCondition() {
 
         DisplayGroupEntity displayGroupEntity = new DisplayGroupEntity();
         displayGroupEntity.setReference("dg");
@@ -1200,7 +1202,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityExistsInRegistry_ComplexFieldInvalidShowConditionError_customMessageReturned() {
+    void entityExistsInRegistry_ComplexFieldInvalidShowConditionError_customMessageReturned() {
 
         ComplexFieldEntity field = new ComplexFieldEntity();
         field.setReference("f");
@@ -1218,7 +1220,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityNotInRegistry_ComplexFieldInvalidShowConditionError_defaultMessageReturned() {
+    void entityNotInRegistry_ComplexFieldInvalidShowConditionError_defaultMessageReturned() {
 
         ComplexFieldEntity field = new ComplexFieldEntity();
         field.setReference("f");
@@ -1232,7 +1234,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityExistsInRegistry_ComplexFieldShowConditionField_customMessageReturned() {
+    void entityExistsInRegistry_ComplexFieldShowConditionField_customMessageReturned() {
 
         ComplexFieldEntity field = new ComplexFieldEntity();
         field.setReference("f");
@@ -1254,7 +1256,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityNotInRegistry_ComplexFieldShowConditionField_defaultMessageReturned() {
+    void entityNotInRegistry_ComplexFieldShowConditionField_defaultMessageReturned() {
 
         ComplexFieldEntity field = new ComplexFieldEntity();
         field.setReference("f");
@@ -1273,7 +1275,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityExistsInRegistry_DisplayGroupColumnNrValidatorError_customMessageReturned() {
+    void entityExistsInRegistry_DisplayGroupColumnNrValidatorError_customMessageReturned() {
 
         DisplayGroupCaseFieldEntity entity = new DisplayGroupCaseFieldEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
@@ -1288,7 +1290,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void entityNotInRegistry_DisplayGroupColumnNrValidatorError_defaultMessageReturned() {
+    void entityNotInRegistry_DisplayGroupColumnNrValidatorError_defaultMessageReturned() {
         assertEquals(
             "default message",
             classUnderTest.createErrorMessage(
@@ -1298,7 +1300,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldReturnCustomErrorMessageForGenericLayoutEntityValidatorValidationErrorWhenMessageOverridden() {
+    void shouldReturnCustomErrorMessageForGenericLayoutEntityValidatorValidationErrorWhenMessageOverridden() {
         SearchInputCaseFieldEntity entity = new SearchInputCaseFieldEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.SEARCH_INPUT_FIELD.toString());
@@ -1313,7 +1315,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void shouldReturnCustomErrorMessageForGenericLayoutEntityValidatorValidationErrorWhenMessageIsNotOverridden() {
+    void shouldReturnCustomErrorMessageForGenericLayoutEntityValidatorValidationErrorWhenMessageIsNotOverridden() {
         assertEquals(
             "default message",
             classUnderTest.createErrorMessage(
@@ -1323,7 +1325,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_StateEntityACLValidationError_customMessageReturned() {
+    void testCreateErrorMessage_StateEntityACLValidationError_customMessageReturned() {
 
         StateACLEntity entity = new StateACLEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
@@ -1337,7 +1339,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_StateEntityACLValidationError_defaultMessageReturned() {
+    void testCreateErrorMessage_StateEntityACLValidationError_defaultMessageReturned() {
         assertEquals(
             "default message",
             classUnderTest.createErrorMessage(
@@ -1346,7 +1348,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_StateEntityCrudValidatorImplValidationError_customMessageReturned() {
+    void testCreateErrorMessage_StateEntityCrudValidatorImplValidationError_customMessageReturned() {
 
         StateACLEntity entity = new StateACLEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
@@ -1360,7 +1362,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_StateEntityCrudValidatorImplValidationError_defaultMessageReturned() {
+    void testCreateErrorMessage_StateEntityCrudValidatorImplValidationError_defaultMessageReturned() {
         assertEquals(
             "default message",
             classUnderTest.createErrorMessage(
@@ -1370,7 +1372,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
 
     @Test
-    public void testCreateErrorMessage_CaseFieldEntityDisplayContextMustHaveValidValueValidationError() {
+    void testCreateErrorMessage_CaseFieldEntityDisplayContextMustHaveValidValueValidationError() {
 
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
@@ -1384,7 +1386,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidValidationMessageForOrderSummaryValidationError() {
+    void shouldHaveValidValidationMessageForOrderSummaryValidationError() {
 
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
@@ -1399,7 +1401,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidValidationMessageForLabelValidationError() {
+    void shouldHaveValidValidationMessageForLabelValidationError() {
 
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
@@ -1413,7 +1415,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidValidationMessageForCasePaymentHistoryViewerValidationError() {
+    void shouldHaveValidValidationMessageForCasePaymentHistoryViewerValidationError() {
 
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
@@ -1429,7 +1431,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidValidationMessageForCaseHistoryViewerValidationError() {
+    void shouldHaveValidValidationMessageForCaseHistoryViewerValidationError() {
 
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
@@ -1444,7 +1446,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidationMessageForEventCaseFieldMetadataValidationError() {
+    void shouldHaveValidationMessageForEventCaseFieldMetadataValidationError() {
         EventCaseFieldEntity entity = new EventCaseFieldEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
         when(definitionDataItem.getSheetName()).thenReturn(SheetName.CASE_EVENT_TO_FIELDS.toString());
@@ -1457,7 +1459,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidationMessageForAccessProfileValidationError() {
+    void shouldHaveValidationMessageForAccessProfileValidationError() {
         assertEquals("Invalid CaseType in workbasket user default; user: 'null', jurisdiction: 'null', "
                 + "case type: 'null', state: 'null'",
             classUnderTest.createErrorMessage(
@@ -1466,7 +1468,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidationMessageForPlaceholderLeafNotASimpleTypeValidationError() {
+    void shouldHaveValidationMessageForPlaceholderLeafNotASimpleTypeValidationError() {
         assertEquals("Label of caseField 'FieldId' has placeholder 'OtherFieldId.CollectionId.ComplexId' "
                 + "that points to case field 'ComplexId' of non simple type",
             classUnderTest.createErrorMessage(
@@ -1479,7 +1481,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void shouldHaveValidationMessageForPlaceholderCannotBeResolvedValidationError() {
+    void shouldHaveValidationMessageForPlaceholderCannotBeResolvedValidationError() {
         assertEquals("Label of caseField 'FieldId' has placeholder 'OtherFieldId.CollectionId.ComplexId' "
                 + "that points to unknown case field",
             classUnderTest.createErrorMessage(
@@ -1491,7 +1493,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_EventEntityCanSaveDraftValidatorImplValidationError_customMessageReturned() {
+    void testCreateErrorMessage_EventEntityCanSaveDraftValidatorImplValidationError_customMessageReturned() {
 
         EventEntity eventEntity = new EventEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
@@ -1506,7 +1508,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_EventEntityCanSaveDraftValidatorImplValidationError_defaultMessageReturned() {
+    void testCreateErrorMessage_EventEntityCanSaveDraftValidatorImplValidationError_defaultMessageReturned() {
         EventEntity eventEntity = new EventEntity();
         assertEquals(
             "default message",
@@ -1517,7 +1519,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void testCreateErrorMessage_CaseRoleEntityMandatoryFieldsValidatorImplValidationError_customMessageReturned() {
+    void testCreateErrorMessage_CaseRoleEntityMandatoryFieldsValidatorImplValidationError_customMessageReturned() {
 
         CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
@@ -1534,7 +1536,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void testCreateErrorMessage_CaseRoleEntityMandatoryFieldsValidatorImplValidationError_defaultMessageReturned() {
+    void testCreateErrorMessage_CaseRoleEntityMandatoryFieldsValidatorImplValidationError_defaultMessageReturned() {
         CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
         assertEquals(
             "default message",
@@ -1545,7 +1547,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_CaseRoleEntityFieldValueValidatorImplValidationError_customMessageReturned() {
+    void testCreateErrorMessage_CaseRoleEntityFieldValueValidatorImplValidationError_customMessageReturned() {
 
         CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
@@ -1561,7 +1563,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_CaseRoleEntityFieldValueValidatorImplValidationError_defaultMessageReturned() {
+    void testCreateErrorMessage_CaseRoleEntityFieldValueValidatorImplValidationError_defaultMessageReturned() {
         CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
         assertEquals(
             "default message",
@@ -1572,7 +1574,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_CaseRoleEntityUniquenessValidatorImplValidationError_customMessageReturned() {
+    void testCreateErrorMessage_CaseRoleEntityUniquenessValidatorImplValidationError_customMessageReturned() {
 
         CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
         DefinitionDataItem definitionDataItem = mock(DefinitionDataItem.class);
@@ -1588,7 +1590,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_CaseFieldEntityIdValidatorImplValidationError_customMessageReturned() {
+    void testCreateErrorMessage_CaseFieldEntityIdValidatorImplValidationError_customMessageReturned() {
 
         final CaseTypeEntity caseTypeEntity = caseTypeEntity("case type");
         final CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
@@ -1614,7 +1616,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCreateErrorMessage_CaseRoleEntityUniquenessValidatorImplValidationError_defaultMessageReturned() {
+    void testCreateErrorMessage_CaseRoleEntityUniquenessValidatorImplValidationError_defaultMessageReturned() {
         CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
         assertEquals(
             "default message",
@@ -1625,7 +1627,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCaseTypeEntityReferenceSpellingValidationError_defaultMessageReturned() {
+    void testCaseTypeEntityReferenceSpellingValidationError_defaultMessageReturned() {
 
         CaseTypeEntity caseTypeEntity = caseTypeEntity("Case Type Name");
         CaseTypeEntityReferenceSpellingValidationError caseTypeEntityReferenceSpellingValidationError
@@ -1640,7 +1642,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testCaseTypeEntityReferenceSpellingValidationError_customMessageReturned() {
+    void testCaseTypeEntityReferenceSpellingValidationError_customMessageReturned() {
 
         CaseTypeEntity caseTypeEntity = caseTypeEntity("Case Type Reference");
         assertCaseTypeEntityReferenceSpellingValidationErrorForEntityFromDataDefinitionItem(
@@ -1653,7 +1655,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testEventShowCondition_customMessageReturned() {
+    void testEventShowCondition_customMessageReturned() {
 
         EventEntityShowConditionReferencesInvalidCaseFieldError error =
             mock(EventEntityShowConditionReferencesInvalidCaseFieldError.class);
@@ -1671,7 +1673,7 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
     }
 
     @Test
-    public void testEventEnablingCondition_customMessageReturned() {
+    void testEventEnablingCondition_customMessageReturned() {
 
         EventEntityEnableConditionReferencesInvalidCaseFieldError error =
             mock(EventEntityEnableConditionReferencesInvalidCaseFieldError.class);
@@ -1744,15 +1746,6 @@ public class SpreadsheetValidationErrorMessageCreatorTest {
         eventEntity.setReference(reference);
         eventEntity.setSecurityClassification(securityClassification);
         return eventEntity;
-
-    }
-
-    private EventCaseFieldEntity eventCaseFieldEntity(EventEntity eventEntity, CaseFieldEntity caseFieldEntity) {
-
-        EventCaseFieldEntity eventCaseFieldEntity = new EventCaseFieldEntity();
-        eventCaseFieldEntity.setEvent(eventEntity);
-        eventCaseFieldEntity.setCaseField(caseFieldEntity);
-        return eventCaseFieldEntity;
 
     }
 

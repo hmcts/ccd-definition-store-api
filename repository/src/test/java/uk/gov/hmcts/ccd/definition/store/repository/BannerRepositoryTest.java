@@ -1,32 +1,34 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class BannerRepositoryTest {
+class BannerRepositoryTest {
 
     @Autowired
     private BannerRepository bannerRepository;
@@ -40,8 +42,8 @@ public class BannerRepositoryTest {
     private static final String JURISDICTION_REFERENCE_1 = "PROBATE";
     private static final String JURISDICTION_REFERENCE_2 = "DIVORCE";
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         JurisdictionEntity testJurisdiction1 = testHelper.createJurisdiction(JURISDICTION_REFERENCE_1, "", "");
         JurisdictionEntity testJurisdiction2 = testHelper.createJurisdiction(JURISDICTION_REFERENCE_2, "", "");
         BannerEntity bannerEntity1 = createBanner(testJurisdiction1);
@@ -51,7 +53,7 @@ public class BannerRepositoryTest {
     }
 
     @Test
-    public void shouldDeleteBannersForProvidedReference() {
+    void shouldDeleteBannersForProvidedReference() {
         int deletedCount = bannerRepository.deleteByJurisdictionReference(JURISDICTION_REFERENCE_1);
 
         List<BannerEntity> banners = bannerRepository.findAll();
@@ -63,7 +65,7 @@ public class BannerRepositoryTest {
     }
 
     @Test
-    public void shouldNotDeleteAnyBannersWhenReferenceDoesNotExist() {
+    void shouldNotDeleteAnyBannersWhenReferenceDoesNotExist() {
         int deletedCount = bannerRepository.deleteByJurisdictionReference("UNKNOWN_REFERENCE");
 
         List<BannerEntity> banners = bannerRepository.findAll();

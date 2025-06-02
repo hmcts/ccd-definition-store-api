@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
-import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -12,14 +11,16 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
 
-public class EventCaseFieldDisplayContextParameterValidatorImplTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class EventCaseFieldDisplayContextParameterValidatorImplTest {
 
     @Test
-    public void shouldNotFireValidationErrorWhenNoDisplayContextParameterExists() {
+    void shouldNotFireValidationErrorWhenNoDisplayContextParameterExists() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntity();
         ValidationResult validationResult
             = new EventCaseFieldDisplayContextParameterValidatorImpl().validate(eventCaseFieldEntity, null);
@@ -28,7 +29,7 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
     }
 
     @Test
-    public void shouldNotFireValidationErrorWhenDateTimeDisplayContextParameter() {
+    void shouldNotFireValidationErrorWhenDateTimeDisplayContextParameter() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntityFailureCase("#DATETIMEENTRY(HHmmss)");
         ValidationResult validationResult
             = new EventCaseFieldDisplayContextParameterValidatorImpl().validate(eventCaseFieldEntity, null);
@@ -37,7 +38,7 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
     }
 
     @Test
-    public void shouldNotFireValidationErrorWhenArgumentDisplayContextParameter() {
+    void shouldNotFireValidationErrorWhenArgumentDisplayContextParameter() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntityFailureCase("#ARGUMENT(testArgument)");
         ValidationResult validationResult
             = new EventCaseFieldDisplayContextParameterValidatorImpl().validate(eventCaseFieldEntity, null);
@@ -46,7 +47,7 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
     }
 
     @Test
-    public void shouldFireValidationErrorDisplayContextParamHasValueNotPresentInCollection() {
+    void shouldFireValidationErrorDisplayContextParamHasValueNotPresentInCollection() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntityFailureCase("#TABLE(firstname)");
         eventCaseFieldEntity.setDisplayContext(DisplayContext.OPTIONAL);
         ValidationResult validationResult
@@ -73,7 +74,7 @@ public class EventCaseFieldDisplayContextParameterValidatorImplTest {
     }
 
     @Test
-    public void shouldFireValidationErrorWhenDisplayContextParamFormatIncorrect() {
+    void shouldFireValidationErrorWhenDisplayContextParamFormatIncorrect() {
         EventCaseFieldEntity eventCaseFieldEntity = eventCaseFieldEntityFailureCase("#sss(firstname)");
         eventCaseFieldEntity.setDisplayContext(DisplayContext.OPTIONAL);
         ValidationResult validationResult

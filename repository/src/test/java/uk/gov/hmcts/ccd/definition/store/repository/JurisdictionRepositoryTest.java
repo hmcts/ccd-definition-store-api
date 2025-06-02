@@ -1,33 +1,35 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
 import static com.google.common.collect.Lists.newArrayList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class JurisdictionRepositoryTest {
+class JurisdictionRepositoryTest {
 
     @Autowired
     private JurisdictionRepository jurisdictionRepository;
@@ -35,8 +37,8 @@ public class JurisdictionRepositoryTest {
     @Autowired
     private TestHelper testHelper;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         testHelper.createJurisdiction("ref1", "name1", "desc1");
         testHelper.createJurisdiction("ref1", "name1.2", "desc1.2");
         testHelper.createJurisdiction("ref2", "name2", "desc2");
@@ -47,7 +49,7 @@ public class JurisdictionRepositoryTest {
     }
 
     @Test
-    public void getSpecificJurisdictionDefinitions() {
+    void getSpecificJurisdictionDefinitions() {
 
         List<JurisdictionEntity> result = jurisdictionRepository.findAllLatestVersionByReference(
             newArrayList("ref1", "ref2", "ref4"));
@@ -61,7 +63,7 @@ public class JurisdictionRepositoryTest {
     }
 
     @Test
-    public void getAllJurisdictionDefinitinon() {
+    void getAllJurisdictionDefinitinon() {
 
         List<JurisdictionEntity> result = jurisdictionRepository.findAllLatestVersion();
 

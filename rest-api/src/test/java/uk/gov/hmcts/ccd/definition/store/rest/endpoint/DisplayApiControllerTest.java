@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import org.junit.Before;
-import org.junit.Test;
+
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.banner.BannerService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.display.DisplayService;
@@ -24,15 +23,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class DisplayApiControllerTest {
+class DisplayApiControllerTest {
 
     private DisplayApiController subject;
 
@@ -44,8 +46,8 @@ public class DisplayApiControllerTest {
 
     private ChallengeQuestionTabService challengeQuestionTabService;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         displayService = mock(DisplayService.class);
         bannerService = mock(BannerService.class);
         jurisdictionUiConfigService = mock(JurisdictionUiConfigService.class);
@@ -55,7 +57,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void getSearchInputDefinitionDisplay() {
+    void getSearchInputDefinitionDisplay() {
         SearchInputDefinition searchInputDefinition = new SearchInputDefinition();
         when(displayService.findSearchInputDefinitionForCaseType("XXX")).thenReturn(searchInputDefinition);
         subject.displaySearchInputDefinitionIdGet("XXX");
@@ -63,7 +65,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void getSearchResultDefinitionDisplay() {
+    void getSearchResultDefinitionDisplay() {
         SearchResultDefinition searchResultDefinition = new SearchResultDefinition();
         when(displayService.findSearchResultDefinitionForCaseType("XXX")).thenReturn(searchResultDefinition);
         subject.displaySearchResultDefinitionIdGet("XXX");
@@ -71,7 +73,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void shouldReturnWorkbasketInputDefinition() {
+    void shouldReturnWorkbasketInputDefinition() {
         WorkbasketInputDefinition workbasketInputDefinition = new WorkbasketInputDefinition();
         when(displayService.findWorkBasketInputDefinitionForCaseType("XXX")).thenReturn(workbasketInputDefinition);
         subject.displayWorkBasketInputDefinitionIdGet("XXX");
@@ -79,7 +81,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void shouldReturnTabStructure() {
+    void shouldReturnTabStructure() {
         CaseTabCollection caseTabCollection = new CaseTabCollection();
         when(displayService.findTabStructureForCaseType("XXX")).thenReturn(caseTabCollection);
         subject.displayTabStructureIdGet("XXX");
@@ -87,7 +89,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void getWorkBasketItemResultDisplay() {
+    void getWorkBasketItemResultDisplay() {
         WorkBasketResult workBasketResult = new WorkBasketResult();
         when(displayService.findWorkBasketDefinitionForCaseType("XXX")).thenReturn(workBasketResult);
         subject.displayWorkBasketDefinitionIdGet("XXX");
@@ -95,7 +97,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void getSearchCasesResultDisplay() {
+    void getSearchCasesResultDisplay() {
         SearchCasesResult searchCasesResult = new SearchCasesResult();
         when(displayService.findSearchCasesResultDefinitionForCaseType("XXX", "useCase")).thenReturn(searchCasesResult);
         subject.displaySearchCasesResultIdGet("XXX", "useCase");
@@ -103,7 +105,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void getWizardPageDisplay() {
+    void getWizardPageDisplay() {
         WizardPageCollection wizardPageCollection = new WizardPageCollection("TestAddressBookCase", "createCase");
         when(displayService.findWizardPageForCaseType(any(), any())).thenReturn(wizardPageCollection);
         subject.displayWizardPageStructureIdGet("TestAddressBookCase", "createCase");
@@ -111,7 +113,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void getBannerResults() {
+    void getBannerResults() {
         List<String> references = Collections.singletonList("AUTOTEST1");
         Banner banner = new Banner();
         List<Banner> banners = Collections.singletonList(banner);
@@ -122,7 +124,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void getJurisdictionUiConfigs() {
+    void getJurisdictionUiConfigs() {
         List<String> references = Collections.singletonList("AUTOTEST1");
         JurisdictionUiConfig jurisdictionUiConfig = new JurisdictionUiConfig();
         when(jurisdictionUiConfigService.getAll(any())).thenReturn(Collections.singletonList(jurisdictionUiConfig));
@@ -133,7 +135,7 @@ public class DisplayApiControllerTest {
     }
 
     @Test
-    public void getChallengeQuestions() {
+    void getChallengeQuestions() {
         List<String> references = Collections.singletonList("AUTOTEST1");
         ChallengeQuestion challengeQuestion = new ChallengeQuestion();
         when(challengeQuestionTabService.getChallengeQuestions(any(), any()))

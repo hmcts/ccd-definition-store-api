@@ -1,15 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.NullAndEmptySource;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -21,15 +11,27 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -617,9 +619,9 @@ class SearchPartyValidatorTest {
             List<SearchPartyEntity> searchPartyEntities = List.of(collectionSearchPartyEntity1);
 
             // WHEN/THEN
-            assertThatExceptionOfType(InvalidImportException.class)
-                .isThrownBy(() -> searchPartyValidator.validate(searchPartyEntities, parseContext))
-                .withMessage(getExpectedCollectionTypeErrorMessage());
+            InvalidImportException e = assertThrows(InvalidImportException.class, () -> 
+                searchPartyValidator.validate(searchPartyEntities, parseContext));
+            assertThat(e.getMessage(), containsString(getExpectedCollectionTypeErrorMessage()));
         }
 
         @DisplayName("throws exception if SearchPartyCollectionFieldName is not a collection of type complex")
@@ -633,9 +635,9 @@ class SearchPartyValidatorTest {
             List<SearchPartyEntity> searchPartyEntities = List.of(collectionSearchPartyEntity1);
 
             // WHEN/THEN
-            assertThatExceptionOfType(InvalidImportException.class)
-                .isThrownBy(() -> searchPartyValidator.validate(searchPartyEntities, parseContext))
-                .withMessage(getExpectedCollectionTypeErrorMessage());
+            InvalidImportException e = assertThrows(InvalidImportException.class, () -> 
+                searchPartyValidator.validate(searchPartyEntities, parseContext));
+            assertThat(e.getMessage(), containsString(getExpectedCollectionTypeErrorMessage()));
         }
 
         private String getExpectedCollectionTypeErrorMessage() {

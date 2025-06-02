@@ -1,9 +1,9 @@
 package uk.gov.hmcts.net.ccd.definition.store.domain.model;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import java.util.Date;
 import java.util.Map;
+
+import com.fasterxml.jackson.databind.JsonNode;
 
 /**
  * POJO representation of the display_items database table.

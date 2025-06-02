@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.config;
 
+import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
+
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
@@ -12,7 +14,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 
 @Configuration
 @ComponentScan("uk.gov.hmcts.ccd.definition.store.elastic")
@@ -21,10 +22,14 @@ import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClien
 @SuppressWarnings("java:S1874")
 public class ElasticSearchConfiguration {
 
-    @Autowired
     private CcdElasticSearchProperties config;
 
     private RestHighLevelClient restHighLevelClient;
+
+    @Autowired
+    public ElasticSearchConfiguration(CcdElasticSearchProperties config) {
+        this.config = config;
+    }
 
     /**
      * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new

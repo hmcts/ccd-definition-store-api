@@ -11,7 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorag
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.util.DateTimeStringGenerator;
 
-import javax.annotation.PostConstruct;
+import jakarta.annotation.PostConstruct;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URISyntaxException;

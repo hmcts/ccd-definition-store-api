@@ -1,75 +1,56 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class EnumUtilTest {
-
+class EnumUtilTest {
 
     @Test
-    public void testEnumValueExists() {
-
+    void testEnumValueExists() {
         assertEquals(SecurityClassification.PRIVATE,
-            EnumUtil.getEnumFromString(SecurityClassification.class, "Private")
-        );
+                EnumUtil.getEnumFromString(SecurityClassification.class, "Private"));
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testEnumValueDoesNotExistThrowsIllegalArgumentException() {
-
-        try {
+    @Test
+    void testEnumValueDoesNotExistThrowsIllegalArgumentException() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
             EnumUtil.getEnumFromString(SecurityClassification.class, "XXXX");
-        } catch (IllegalArgumentException e) {
-            assertEquals("No enum constant uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.XXXX",
-                e.getMessage()
-            );
-            throw e;
-        }
+        });
+        assertEquals("No enum constant uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.XXXX",
+                e.getMessage());
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testEnumConstantBlankThrowsIllegalArgumentException() {
-
-        try {
+    @Test
+    void testEnumConstantBlankThrowsIllegalArgumentException() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
             EnumUtil.getEnumFromString(SecurityClassification.class, "   ");
-        } catch (IllegalArgumentException e) {
-            assertEquals("No enum constant uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.   ",
-                e.getMessage()
-            );
-            throw e;
-        }
+        });
+        assertEquals("No enum constant uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.   ",
+                e.getMessage());
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testEnumConstantNullThrowsIllegalArgumentException() {
-
-        try {
+    @Test
+    void testEnumConstantNullThrowsIllegalArgumentException() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
             EnumUtil.getEnumFromString(SecurityClassification.class, null);
-        } catch (IllegalArgumentException e) {
-            assertEquals("Enum constant argument cannot be null",
-                e.getMessage()
-            );
-            throw e;
-        }
+        });
+        assertEquals("Enum constant argument cannot be null",
+                e.getMessage());
 
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testClassArgumentNullThrowsIllegalArgumentException() {
-
-        try {
+    @Test
+    void testClassArgumentNullThrowsIllegalArgumentException() {
+        IllegalArgumentException e = assertThrows(IllegalArgumentException.class, () -> {
             EnumUtil.getEnumFromString(null, "AValue");
-        } catch (IllegalArgumentException e) {
-            assertEquals("Class argument cannot be null",
-                e.getMessage()
-            );
-            throw e;
-        }
-
+        });
+        assertEquals("Class argument cannot be null",
+                e.getMessage());
     }
 
 }

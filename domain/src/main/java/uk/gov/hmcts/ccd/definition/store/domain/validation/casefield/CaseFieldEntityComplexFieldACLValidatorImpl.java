@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.authorization.AuthorisationCaseFieldValidationContext;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
@@ -14,6 +11,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 @Component
 public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEntityValidator {
@@ -75,24 +76,23 @@ public class CaseFieldEntityComplexFieldACLValidatorImpl implements CaseFieldEnt
                                            ComplexFieldACLEntity parentComplexFieldACLEntity) {
         String parentAccessProfile = parentComplexFieldACLEntity.getAccessProfile() != null
             ? parentComplexFieldACLEntity.getAccessProfile().getReference() : "";
-        caseField.getComplexFieldACLEntities()
-            .stream()
-            .anyMatch(child -> {
-                boolean match = (child.getAccessProfile() != null
-                    && child.getAccessProfile().getReference().equalsIgnoreCase(parentAccessProfile))
-                    && isAChild(parentComplexFieldACLEntity.getListElementCode(), child.getListElementCode())
-                    && parentComplexFieldACLEntity.hasLowerAccessThan(child);
-                if (match) {
-                    validationResult.addError(new CaseFieldEntityComplexACLValidationError(
-                        String.format("List element code '%s' has higher access than its parent '%s'",
-                            child.getListElementCode(), parentComplexFieldACLEntity.getListElementCode()),
-                        child, new AuthorisationCaseFieldValidationContext(
-                            caseField, caseFieldEntityValidationContext)));
-                    LOG.info("List element code '{}' has higher access than its parent '{}'",
-                        child.getListElementCode(), parentComplexFieldACLEntity.getListElementCode());
-                }
-                return match;
-            });
+        
+        for (ComplexFieldACLEntity child : caseField.getComplexFieldACLEntities()) {
+            boolean match = (child.getAccessProfile() != null
+                && child.getAccessProfile().getReference().equalsIgnoreCase(parentAccessProfile))
+                && isAChild(parentComplexFieldACLEntity.getListElementCode(), child.getListElementCode())
+                && parentComplexFieldACLEntity.hasLowerAccessThan(child);
+            if (match) {
+                validationResult.addError(new CaseFieldEntityComplexACLValidationError(
+                    String.format("List element code '%s' has higher access than its parent '%s'",
+                        child.getListElementCode(), parentComplexFieldACLEntity.getListElementCode()),
+                    child, new AuthorisationCaseFieldValidationContext(
+                        caseField, caseFieldEntityValidationContext)));
+                LOG.info("List element code '{}' has higher access than its parent '{}'",
+                    child.getListElementCode(), parentComplexFieldACLEntity.getListElementCode());
+                return;
+            }
+        }
         List<String> parentCodes = CaseFieldEntityUtil.parseParentCodes(
             parentComplexFieldACLEntity.getListElementCode());
         final List<String> missingCodes = parentCodes

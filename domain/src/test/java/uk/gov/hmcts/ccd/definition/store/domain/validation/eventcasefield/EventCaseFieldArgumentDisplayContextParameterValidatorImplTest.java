@@ -15,11 +15,11 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
-public class EventCaseFieldArgumentDisplayContextParameterValidatorImplTest {
+class EventCaseFieldArgumentDisplayContextParameterValidatorImplTest {
 
     private EventCaseFieldEntityValidator validator;
 
@@ -34,7 +34,7 @@ public class EventCaseFieldArgumentDisplayContextParameterValidatorImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         validator = new EventCaseFieldArgumentDisplayContextParameterValidatorImpl(
             displayContextParameterValidatorFactory);
         when(displayContextParameterValidatorFactory.getValidator(Mockito.any()))

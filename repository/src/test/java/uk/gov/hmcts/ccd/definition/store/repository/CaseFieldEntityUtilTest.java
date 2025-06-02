@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.hamcrest.core.Is;
-import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
@@ -12,21 +10,24 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.hamcrest.core.Is;
+import org.junit.jupiter.api.Test;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil.parseParentCodes;
 
-public class CaseFieldEntityUtilTest {
+class CaseFieldEntityUtilTest {
 
     private CaseFieldEntityUtil caseFieldEntityUtil = new CaseFieldEntityUtil();
 
     @Test
-    public void createsValidPossibilities() {
+    void createsValidPossibilities() {
 
         Set<CaseFieldEntity> fieldTypeEntity =
             Stream.of(caseFieldEntity("field1"),
@@ -45,7 +46,7 @@ public class CaseFieldEntityUtilTest {
     }
 
     @Test
-    public void createsValidPossibilitiesForComplexFieldInACollection() {
+    void createsValidPossibilitiesForComplexFieldInACollection() {
 
         Set<CaseFieldEntity> fieldTypeEntity = Stream.of(caseFieldEntity("field1"),
             caseFieldEntity("field2", exampleCollectionFieldTypeEntityWithComplexFields()),
@@ -63,7 +64,7 @@ public class CaseFieldEntityUtilTest {
     }
 
     @Test
-    public void testparseParentCodes() {
+    void testparseParentCodes() {
         String listElementCodes0 = ".awesome";
         final List<String> parentCodes0 = parseParentCodes(listElementCodes0);
         assertThat(parentCodes0, empty());
@@ -149,9 +150,9 @@ public class CaseFieldEntityUtilTest {
         return fieldTypeEntity;
     }
 
-    private static ComplexFieldEntity complexFieldEntity(String reerence, FieldTypeEntity fieldTypeEntity) {
+    private static ComplexFieldEntity complexFieldEntity(String reference, FieldTypeEntity fieldTypeEntity) {
         ComplexFieldEntity complexFieldEntity = new ComplexFieldEntity();
-        complexFieldEntity.setReference(reerence);
+        complexFieldEntity.setReference(reference);
         complexFieldEntity.setFieldType(fieldTypeEntity);
         return complexFieldEntity;
     }

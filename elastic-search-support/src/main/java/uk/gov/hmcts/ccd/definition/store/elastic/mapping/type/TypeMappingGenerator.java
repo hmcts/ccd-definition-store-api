@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
+import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.MappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
@@ -9,6 +10,10 @@ import java.util.Map;
 import java.util.Optional;
 
 public abstract class TypeMappingGenerator extends MappingGenerator {
+
+    protected TypeMappingGenerator(CcdElasticSearchProperties config) {
+        super(config);
+    }
 
     public String doDataMapping(FieldEntity field) {
         return field.isSearchable() ? dataMapping(field) : disabled();

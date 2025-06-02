@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 
-public class ChallengeQuestionTabServiceImplTest {
+class ChallengeQuestionTabServiceImplTest {
 
     @Mock
     private ChallengeQuestionTabRepository challengeQuestionTabRepository;
@@ -34,7 +34,7 @@ public class ChallengeQuestionTabServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         this.challengeQuestionTabServiceImpl = new ChallengeQuestionTabServiceImpl(
             challengeQuestionTabRepository, dtoMapper);
     }
