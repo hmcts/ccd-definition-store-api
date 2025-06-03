@@ -63,7 +63,7 @@ ext {
     appInsightsVersion = '2.4.1'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.19!!'
-    tomcatVersion = '9.0.91'
+    tomcatVersion = '9.0.104'
     feignJackson = '11.6'
     limits = [
             'instruction': 99,
