@@ -49,8 +49,13 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
         this.spreadsheetValidationErrorMessageCreator = spreadsheetValidationErrorMessageCreator;
     }
 
+    private void jclog(final String message) {
+        log.info("JCDEBUG: info: RestResponseEntityExceptionHandler: {}", message);
+    }
+
     @ExceptionHandler(value = {InvalidImportException.class, MapperException.class})
     ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
+        jclog("handleBadRequest()");
         log.error("Exception thrown '{}'", ex.getMessage(), ex);
         return handleExceptionInternal(
             ex, flattenExceptionMessages(ex), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
@@ -58,6 +63,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(value = MissingAccessProfilesException.class)
     ResponseEntity<Object> handleAccessProfilesMissing(MissingAccessProfilesException ex, WebRequest request) {
+        jclog("handleAccessProfilesMissing()");
         String missingAccessProfiles = new StringBuilder("Missing AccessProfiles.\n\n")
             .append(ex.getMissingAccessProfiles()
                 .stream()
@@ -80,7 +86,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler(value = {ValidationException.class})
     public ResponseEntity<Object> handleValidationException(ValidationException validationException,
                                                             WebRequest request) {
-
+        jclog("handleValidationException()");
         String errorMessage = getValidationErrorMessage(
             "Validation errors occurred importing the spreadsheet.\n\n",
             validationException.getValidationResult().getValidationErrors());
@@ -93,6 +99,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
     String caseTypeValidation(CaseTypeValidationException e) {
+        jclog("caseTypeValidation()");
         log.error("Exception thrown {}", e.getMessage(), e);
         return getMessagesAsString(e.getErrors());
     }
@@ -100,6 +107,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ExceptionHandler(FileStorageException.class)
     public void handleFileStorageException(HttpServletResponse response,
                                            FileStorageException fileStorageException) throws IOException {
+        jclog("handleFileStorageException()");
         log.error("Exception thrown: {}", fileStorageException.getMessage(), fileStorageException);
         response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
@@ -108,6 +116,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public ResponseEntity<Object> handleFeignClientException(FeignException.FeignClientException exception,
                                                              WebRequest request) {
+        jclog("handleFeignClientException()");
         log.error(exception.getMessage(), exception);
 
         int status = exception.status();
@@ -123,6 +132,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public void handleFeignServerException(FeignException.FeignServerException exception, HttpServletResponse response)
         throws IOException {
+        jclog("handleFeignClientException()");
         log.error(exception.getMessage(), exception);
 
         int status = exception.status();
@@ -137,6 +147,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public void handleHttpServerErrorException(HttpServerErrorException exception, HttpServletResponse response)
         throws IOException {
+        jclog("handleHttpServerErrorException()");
         log.error(exception.getMessage(), exception);
 
         int status = exception.getRawStatusCode();
@@ -151,6 +162,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public ResponseEntity<Object> handleHttpClientErrorException(HttpClientErrorException exception,
                                                                  WebRequest request) {
+        jclog("handleHttpServerErrorException()");
         log.error(exception.getMessage(), exception);
 
         int status = exception.getRawStatusCode();
