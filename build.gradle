@@ -8,7 +8,6 @@ buildscript {
 }
 
 plugins {
-    id 'maven-publish'
     id 'application'
     id "org.springframework.boot" version '2.7.18'
     id 'io.spring.dependency-management' version '1.1.5'
@@ -49,7 +48,6 @@ ext['log4j2.version'] = '2.17.1'
 //overriding for easy access to the version for FT testing
 ext['beftaFwVersion'] = '9.2.3'
 ext['ccdTestDefinitionVersion'] = '7.25.2'
-
 // end
 
 ext {
@@ -90,7 +88,7 @@ allprojects {
         mavenCentral()
         google()
         maven {
-            url 'https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1'
+            url  "https://jitpack.io"
         }
     }
 
@@ -355,19 +353,6 @@ subprojects { subproject ->
         implementation 'com.vladmihalcea:hibernate-types-52:2.16.3'
         implementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2'
 
-    }
-
-    publishing {
-        repositories {
-            maven {
-                name = "AzureArtifacts"
-                url = uri("https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1")
-                credentials {
-                    username = System.getenv("AZURE_DEVOPS_ARTIFACT_USERNAME")
-                    password = System.getenv("AZURE_DEVOPS_ARTIFACT_TOKEN")
-                }
-            }
-        }
     }
 
     // from https://github.com/junit-team/junit5/issues/1024'
