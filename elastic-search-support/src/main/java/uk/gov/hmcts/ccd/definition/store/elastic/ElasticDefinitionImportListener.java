@@ -1,7 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.ElasticsearchStatusException;
+import org.elasticsearch.action.ActionListener;
+import org.elasticsearch.client.GetAliasesResponse;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -14,6 +18,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.CompletionException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Slf4j
 public abstract class ElasticDefinitionImportListener {
@@ -41,28 +48,51 @@ public abstract class ElasticDefinitionImportListener {
 
     /**
      * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new
-     * HighLevelCCDElasticClient on each import and we close it once the import is completed.
+     * HighLevelCCDElasticClient on each import, we close it once the import is completed.
      * The HighLevelCCDElasticClient is injected every time with a new ES client which opens new connections
      */
     @Transactional
-    public void initialiseElasticSearch(List<CaseTypeEntity> caseTypes) {
-        HighLevelCCDElasticClient elasticClient = null;
+    public void initialiseElasticSearch(DefinitionImportedEvent event) {
+        List<CaseTypeEntity> caseTypes = event.getContent();
+        boolean reindex = event.isReindex();
+        boolean deleteOldIndex = event.isDeleteOldIndex();
+
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
-        try {
-            elasticClient = clientFactory.getObject();
+
+        try (HighLevelCCDElasticClient elasticClient = clientFactory.getObject()) {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
+                //if alias doesn't exist create index and alias
                 if (!elasticClient.aliasExists(baseIndexName)) {
                     String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
-                    String alias = baseIndexName;
-                    elasticClient.createIndex(actualIndexName, alias);
+                    elasticClient.createIndex(actualIndexName, baseIndexName);
                 }
+                if (reindex) {
+                    //get current alias index
+                    GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
+                    String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
 
-                caseMapping = mappingGenerator.generateMapping(caseType);
-                log.debug("case mapping: {}", caseMapping);
-                elasticClient.upsertMapping(baseIndexName, caseMapping);
+                    //create new index with generated mapping and incremented case type name (no alias update yet)
+                    caseMapping = mappingGenerator.generateMapping(caseType);
+                    log.debug("case mapping: {}", caseMapping);
+                    String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
+                    elasticClient.setIndexReadOnly(baseIndexName, true);
+                    elasticClient.createIndexAndMapping(incrementedCaseTypeName, caseMapping);
+
+                    //initiate reindexing
+                    handleReindexing(baseIndexName, caseTypeName, incrementedCaseTypeName,
+                        deleteOldIndex);
+                    //dummy value for phase 1
+                    event.setTaskId("taskID");
+                    log.info("reindexing successful for case type: {}", caseType.getReference());
+                    log.info("task id returned from the import: {}", event.getTaskId());
+                } else {
+                    caseMapping = mappingGenerator.generateMapping(caseType);
+                    log.debug("case mapping: {}", caseMapping);
+                    elasticClient.upsertMapping(baseIndexName, caseMapping);
+                }
             }
         } catch (ElasticsearchStatusException exc) {
             logMapping(caseMapping);
@@ -70,11 +100,66 @@ public abstract class ElasticDefinitionImportListener {
         } catch (Exception exc) {
             logMapping(caseMapping);
             throw new ElasticSearchInitialisationException(exc);
-        } finally {
-            if (elasticClient != null) {
-                elasticClient.close();
-            }
         }
+    }
+
+    private void handleReindexing(String baseIndexName,
+                                  String oldIndex, String newIndex,
+                                  boolean deleteOldIndex) {
+        HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
+        elasticClient.reindexData(oldIndex, newIndex, new ActionListener<>() {
+            @Override
+            public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
+                try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
+                    //if success set writable and update alias to new index
+                    log.info("updating alias from {} to {}", oldIndex, newIndex);
+                    asyncElasticClient.setIndexReadOnly(baseIndexName, false);
+                    asyncElasticClient.updateAlias(baseIndexName, oldIndex, newIndex);
+                    if (deleteOldIndex) {
+                        log.info("deleting old index {}", oldIndex);
+                        asyncElasticClient.removeIndex(oldIndex);
+                    }
+                } catch (IOException e) {
+                    log.error("failed to clean up after reindexing success", e);
+                    throw new CompletionException(e);
+                }
+            }
+
+            @Override
+            public void onFailure(Exception ex) {
+                try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
+                    //if failed delete new index, set old index writable
+                    log.error("reindexing failed", ex);
+                    asyncElasticClient.removeIndex(newIndex);
+                    log.info("{} deleted", newIndex);
+                    asyncElasticClient.setIndexReadOnly(oldIndex, false);
+                    log.info("{} set to writable", oldIndex);
+                } catch (IOException e) {
+                    log.error("failed to clean up after reindexing failure", e);
+                    throw new CompletionException(e);
+                }
+                throw new CompletionException(ex);
+            }
+        });
+    }
+
+    String incrementIndexNumber(String indexName) {
+        Pattern pattern = Pattern.compile("(.+_cases-)(\\d+)$");
+        Matcher matcher = pattern.matcher(indexName);
+
+        if (!matcher.matches() || matcher.groupCount() < 2) {
+            throw new IllegalArgumentException("invalid index name format: " + indexName);
+        }
+
+        String prefix = matcher.group(1);
+        String numberStr = matcher.group(2);
+
+        int incremented = Integer.parseInt(numberStr) + 1;
+        String formattedNumber = StringUtils.leftPad(String.valueOf(incremented), numberStr.length(), '0');
+
+        String incrementedIndexName = prefix + formattedNumber;
+        log.info("incremented index name: {}", incrementedIndexName);
+        return incrementedIndexName;
     }
 
     private String baseIndexName(CaseTypeEntity caseType) {

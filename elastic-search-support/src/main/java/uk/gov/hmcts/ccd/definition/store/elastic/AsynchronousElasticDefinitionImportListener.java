@@ -18,9 +18,9 @@ import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 public class AsynchronousElasticDefinitionImportListener extends ElasticDefinitionImportListener {
 
     public AsynchronousElasticDefinitionImportListener(CcdElasticSearchProperties config,
-        CaseMappingGenerator mappingGenerator,
-        ObjectFactory<HighLevelCCDElasticClient> clientFactory,
-        ElasticsearchErrorHandler elasticsearchErrorHandler) {
+                                                       CaseMappingGenerator mappingGenerator,
+                                                       ObjectFactory<HighLevelCCDElasticClient> clientFactory,
+                                                       ElasticsearchErrorHandler elasticsearchErrorHandler) {
         super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler);
     }
 
@@ -28,6 +28,6 @@ public class AsynchronousElasticDefinitionImportListener extends ElasticDefiniti
     @TransactionalEventListener
     public void onDefinitionImported(DefinitionImportedEvent event) {
         log.warn("Errors initialising ElasticSearch will not fail the definition import");
-        super.initialiseElasticSearch(event.getContent());
+        super.initialiseElasticSearch(event);
     }
 }
