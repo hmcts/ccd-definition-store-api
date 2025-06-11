@@ -175,7 +175,8 @@ public class ImportServiceImpl implements ImportService {
      *                                of attribute headers
      */
     @Override
-    public DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream) throws IOException {
+    public DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream, Boolean reindex,
+                                                              Boolean deleteOldIndex) throws IOException {
         logger.debug("Importing spreadsheet...");
 
         final Map<String, DefinitionSheet> definitionSheets = spreadsheetParser.parse(inputStream);
@@ -296,7 +297,8 @@ public class ImportServiceImpl implements ImportService {
             userDetails.getEmail());
         logger.info("Importing spreadsheet: User profiles: OK");
 
-        applicationEventPublisher.publishEvent(new DefinitionImportedEvent(caseTypes));
+        DefinitionImportedEvent event = new DefinitionImportedEvent(caseTypes, reindex, deleteOldIndex);
+        applicationEventPublisher.publishEvent(event);
 
         logger.info("Importing spreadsheet: OK: For jurisdiction {}", jurisdiction.getReference());
 
@@ -337,6 +339,8 @@ public class ImportServiceImpl implements ImportService {
         if (applicationParams.isWelshTranslationEnabled()) {
             translationService.processDefinitionSheets(definitionSheets);
         }
+
+        metadata.setTaskId(event.getTaskId());
 
         return metadata;
     }
