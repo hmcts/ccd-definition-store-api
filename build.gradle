@@ -49,8 +49,8 @@ ext {
     gsonVersion = '2.11.0'
     elasticSearchVersion = '7.17.1'
     testcontainersVersion = '1.21.0'
-    ccdTestDefinitionVersion = '7.25.1'
-    beftaFwVersion = '9.2.0'
+    ccdTestDefinitionVersion = '7.25.4'
+    beftaFwVersion = '9.2.3'
     limits = [
             'instruction': 99,
             'branch'     : 99,
