@@ -4,7 +4,7 @@ Feature: F-110: Retrieve Access Types
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-110.1 @Ignore # Response mismatch, has unexpected number of elements. Expected: 1, but actual: 2 due to aat db containing bad data, CCD-6078
+  @S-110.1
   Scenario: Successfully retrieve access types for provided organisationProfileIds
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -15,7 +15,7 @@ Feature: F-110: Retrieve Access Types
     And the response has all other details as expected
     And the response [contains all accessTypes for organisationProfileId in the response]
 
-  @S-110.1a @Ignore # Response mismatch, has unexpected number of elements. Expected: 1, but actual: 2 due to aat db containing bad data, CCD-6078, #AC-1a of CCD-5322)
+  @S-110.1a
   Scenario: Successfully return 200 success with content for request access type of the organisation and only latest version of the AccessTypes
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -49,7 +49,7 @@ Feature: F-110: Retrieve Access Types
     And the response has all other details as expected
     And the response [does not contain any accessTypes]
 
-  @S-110.3 @Ignore # Response mismatch, actualResponse.body contains a bad value, due to aat db containing bad data, CCD-6078
+  @S-110.3
   Scenario: Successfully return 200 success with content for request without organisationProfileId
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
