@@ -135,6 +135,8 @@ allprojects {
             }
         }
 
+        implementation 'commons-beanutils:commons-beanutils:1.11.0'
+
         implementation group: 'org.postgresql', name: 'postgresql', version: '42.5.5'
         implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
         implementation "org.apache.tomcat.embed:tomcat-embed-el:${tomcatVersion}"
@@ -161,6 +163,7 @@ allprojects {
     }
 
     configurations.all {
+        exclude group: "org.apache.commons", module:"commons-beanutils"
         collect { configuration ->
             configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
         }
