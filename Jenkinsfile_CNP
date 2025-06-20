@@ -83,7 +83,7 @@ withPipeline(type, product, app) {
     if (env.BRANCH_NAME.startsWith("PR-")) {
 
         environmentOfDependencies = env.BRANCH_NAME.toLowerCase()
-        env.DEFINITION_STORE_URL_BASE = "http://ccd-definition-store-api-${environmentOfDependencies}.preview.platform.hmcts.net"
+        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-${environmentOfDependencies}.preview.platform.hmcts.net"
     }
 
     syncBranchesWithMaster(branchesToSync)
@@ -93,7 +93,7 @@ withPipeline(type, product, app) {
     disableLegacyDeploymentOnAAT()
     disableLegacyDeployment()
     enableHighLevelDataSetup()
-    env.DEFINITION_STORE_URL_BASE = "https://ccd-int-definition-store-api-demo.service.core-compute-demo.internal"
+    env.DEFINITION_STORE_URL_BASE = "http://ccd-int-definition-store-api-demo.service.core-compute-demo.internal"
 
     afterAlways('test') {
         // hmcts/cnp-jenkins-library may fail to copy artifacts after checkstyle error so repeat command (see /src/uk/gov/hmcts/contino/GradleBuilder.groovy)
