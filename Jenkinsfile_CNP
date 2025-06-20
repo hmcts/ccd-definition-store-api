@@ -93,7 +93,6 @@ withPipeline(type, product, app) {
     disableLegacyDeploymentOnAAT()
     disableLegacyDeployment()
     enableHighLevelDataSetup()
-    env.DEFINITION_STORE_URL_BASE = "http://ccd-int-definition-store-api-demo.service.core-compute-demo.internal"
 
     afterAlways('test') {
         // hmcts/cnp-jenkins-library may fail to copy artifacts after checkstyle error so repeat command (see /src/uk/gov/hmcts/contino/GradleBuilder.groovy)
