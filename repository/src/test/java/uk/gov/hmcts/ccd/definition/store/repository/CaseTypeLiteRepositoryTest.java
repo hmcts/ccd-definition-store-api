@@ -1,33 +1,34 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import com.vladmihalcea.sql.SQLStatementCountValidator;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
-import javax.persistence.EntityManager;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import com.vladmihalcea.sql.SQLStatementCountValidator;
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
-@RunWith(SpringRunner.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class CaseTypeLiteRepositoryTest {
+class CaseTypeLiteRepositoryTest {
 
     @Autowired
     private CaseTypeLiteRepository classUnderTest;
@@ -43,8 +44,8 @@ public class CaseTypeLiteRepositoryTest {
 
     private JurisdictionEntity testJurisdiction;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
 
         createCaseType("id", 1, "Test case",
@@ -72,7 +73,7 @@ public class CaseTypeLiteRepositoryTest {
 
 
     @Test
-    public void findByJurisdictionIdReturnsCurrentVersionOfCaseTypesWhenSeveralVersionsExist() {
+    void findByJurisdictionIdReturnsCurrentVersionOfCaseTypesWhenSeveralVersionsExist() {
         List<CaseTypeLiteEntity> caseTypeEntityOptional
             = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
         assertEquals(2, caseTypeEntityOptional.size());
@@ -95,14 +96,14 @@ public class CaseTypeLiteRepositoryTest {
     }
 
     @Test
-    public void emptyListReturnedWhenNoCaseTypesForJurisdiction() {
+    void emptyListReturnedWhenNoCaseTypesForJurisdiction() {
         List<CaseTypeLiteEntity> caseTypeEntityOptional
             = classUnderTest.findByJurisdictionId("Non Existing Jurisdiction");
         assertTrue(caseTypeEntityOptional.isEmpty());
     }
 
     @Test
-    public void checkSQLStatementCounts() {
+    void checkSQLStatementCounts() {
 
         SQLStatementCountValidator.reset();
 

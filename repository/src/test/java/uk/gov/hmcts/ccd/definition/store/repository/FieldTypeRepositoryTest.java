@@ -1,16 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
@@ -20,20 +9,37 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
+import org.hamcrest.Matcher;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASELINK;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUP;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_MESSAGE;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CHANGE_ORGANISATION_REQUEST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_FLAGS;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_JUDICIAL_USER;
@@ -42,23 +48,18 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ORGANISATION_POLICY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_LOCATION;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_TTL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_CRITERIA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_PARTY;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_MESSAGE;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUP;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_TTL;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class FieldTypeRepositoryTest {
+class FieldTypeRepositoryTest {
 
     @Autowired
     private FieldTypeRepository fieldTypeRepository;
@@ -66,14 +67,14 @@ public class FieldTypeRepositoryTest {
     private VersionedDefinitionRepositoryDecorator<FieldTypeEntity, Integer> versionedFieldTypeRepository;
     private static FieldTypeEntity textBaseType;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         versionedFieldTypeRepository = new VersionedDefinitionRepositoryDecorator<>(fieldTypeRepository);
         textBaseType = canRetrieveBaseType();
     }
 
     @Test
-    public void canExtendBaseType() {
+    void canExtendBaseType() {
 
         final FieldTypeEntity newType = new FieldTypeEntity();
         newType.setBaseFieldType(textBaseType);
@@ -96,7 +97,7 @@ public class FieldTypeRepositoryTest {
     }
 
     @Test
-    public void canCreateFixedListType() {
+    void canCreateFixedListType() {
         final Optional<FieldTypeEntity> fixedListType = fieldTypeRepository
             .findFirstByReferenceOrderByVersionDesc("FixedList");
 
@@ -136,7 +137,7 @@ public class FieldTypeRepositoryTest {
     }
 
     @Test
-    public void canCreateCollectionType() {
+    void canCreateCollectionType() {
         final Optional<FieldTypeEntity> collectionType = fieldTypeRepository
             .findFirstByReferenceOrderByVersionDesc("Collection");
 
@@ -162,7 +163,7 @@ public class FieldTypeRepositoryTest {
     }
 
     @Test
-    public void canCreateComplexType() {
+    void canCreateComplexType() {
         final Optional<FieldTypeEntity> complexType = fieldTypeRepository
             .findFirstByReferenceOrderByVersionDesc("Complex");
 
@@ -213,12 +214,12 @@ public class FieldTypeRepositoryTest {
     }
 
     @Test
-    public void returnEmptyOptional_whenTypeDoesNotExistForReference() {
+    void returnEmptyOptional_whenTypeDoesNotExistForReference() {
         assertFalse(fieldTypeRepository.findBaseType("NonExistantFieldType").isPresent());
     }
 
     @Test
-    public void returnEmptyOptional_whenNonBaseTypeExistsForReference() {
+    void returnEmptyOptional_whenNonBaseTypeExistsForReference() {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference("NonBaseType");
         fieldTypeEntity.setBaseFieldType(textBaseType);
@@ -229,7 +230,7 @@ public class FieldTypeRepositoryTest {
     }
 
     @Test
-    public void returnListOfPreDefinedComplexTypes() {
+    void returnListOfPreDefinedComplexTypes() {
 
         FieldTypeEntity notPredefined = new FieldTypeEntity();
         notPredefined.setReference("NotPredefinedComplexType");

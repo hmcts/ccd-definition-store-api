@@ -37,7 +37,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_RESULT_FIELDS;
 
 @DisplayName("Generic Layout Parser Test")
-public class GenericLayoutParserTest {
+class GenericLayoutParserTest {
     private static final String INVALID_CASE_TYPE_ID = "Invalid Case Type";
     private static final String ACCESS_PROFILE_1 = "AccessProfile1";
     private static final String INVALID_ACCESS_PROFILE = "Invalid Access Profile";
@@ -57,8 +57,8 @@ public class GenericLayoutParserTest {
     private ShowConditionParser showConditionParser;
 
     @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
+    void setup() {
+        MockitoAnnotations.openMocks(this);
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference(CASE_TYPE_ID);
         CaseTypeEntity caseTypeEntity2 = new CaseTypeEntity();
@@ -517,7 +517,7 @@ public class GenericLayoutParserTest {
 
     @DisplayName("Should fail when show condition appears in search results")
     @Test
-    public void shouldThrowExceptionIfShowConditionExistsInSearchResults() throws InvalidShowConditionException {
+    void shouldThrowExceptionIfShowConditionExistsInSearchResults() throws InvalidShowConditionException {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(SEARCH_RESULT_FIELD.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
@@ -544,7 +544,7 @@ public class GenericLayoutParserTest {
 
     @DisplayName("Should fail when show condition appears in workbasket results")
     @Test
-    public void shouldThrowExceptionIfShowConditionExistsInWorkbasketResults() throws InvalidShowConditionException {
+    void shouldThrowExceptionIfShowConditionExistsInWorkbasketResults() throws InvalidShowConditionException {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(WORK_BASKET_RESULT_FIELDS.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);

@@ -1,29 +1,32 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class LegacyCaseTypeValidatorTest {
+class LegacyCaseTypeValidatorTest {
 
     private LegacyCaseTypeValidator validator;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         validator = new LegacyCaseTypeValidator(new ArrayList<>());
     }
 
     @Test
-    public void validateCaseTypeTest() {
+    void validateCaseTypeTest() {
         // Given - A Case Type which abides by all ValidationRule's
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
@@ -39,8 +42,8 @@ public class LegacyCaseTypeValidatorTest {
         }
     }
 
-    @Test(expected = CaseTypeValidationException.class)
-    public void validateInvalidCaseTypeEntityTest() {
+    @Test
+    void validateInvalidCaseTypeEntityTest() {
         // Given - a Case Type entity with an empty Case Type
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
@@ -53,16 +56,12 @@ public class LegacyCaseTypeValidatorTest {
 
         // When - Validating the Case Type
         // Then - assert that validation fails
-        try {
+        CaseTypeValidationException  e = assertThrows(CaseTypeValidationException.class, () -> {
             validator.validateCaseType(caseTypeEntity);
-        } catch (CaseTypeValidationException e) {
-            assertEquals("One error expected", 1, e.getErrors().size());
-            assertTrue("Unexpected error message", e.getErrors().contains("Test Error Message"));
-            throw e;
-        }
-
-        // Fail if expected exception is not thrown
-        fail("Expected exception not thrown");
+        });
+        
+        assertEquals(1, e.getErrors().size(), "One error expected");
+        assertTrue(e.getErrors().contains("Test Error Message"), "Unexpected error message");
     }
 
 }

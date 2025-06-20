@@ -13,7 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DOCUMENT;
 
 class ComplexFieldEntityDocumentTypeRegularExpressionValidatorTest {
@@ -29,7 +29,7 @@ class ComplexFieldEntityDocumentTypeRegularExpressionValidatorTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         fieldType.setReference(BASE_DOCUMENT);
         complexField.setFieldType(fieldType);

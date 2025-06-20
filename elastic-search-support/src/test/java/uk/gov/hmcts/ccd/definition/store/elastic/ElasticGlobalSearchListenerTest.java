@@ -12,7 +12,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.Elasticsearch
 
 import java.io.IOException;
 
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,7 +30,7 @@ class ElasticGlobalSearchListenerTest {
     private ObjectFactory<HighLevelCCDElasticClient> clientObjectFactory;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
     }
 

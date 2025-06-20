@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.challengequestion.BaseChallengeQuestionTest;
@@ -17,28 +10,38 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.ChallengeQuestionValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
 
-public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
+class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
 
     @Mock
     private ChallengeQuestionValidator challengeQuestionValidator;
     private ChallengeQuestionParser challengeQuestionParser;
     private ParseContext parseContext;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
         parseContext = buildParseContext();
         this.challengeQuestionParser = new ChallengeQuestionParser(challengeQuestionValidator);
     }
 
     @Test
-    public void testParse() {
+    void testParse() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
                 challengeQuestionParser.parse(createDefinitionSheets(false), parseContext);
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -46,7 +49,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_True() {
+    void testIgnoreNullFields_True() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities("true");
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -55,7 +58,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_Yes() {
+    void testIgnoreNullFields_Yes() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities("Yes");
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -64,7 +67,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_Y() {
+    void testIgnoreNullFields_Y() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities("Y");
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -73,7 +76,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_False() {
+    void testIgnoreNullFields_False() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities("false");
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -82,7 +85,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_No() {
+    void testIgnoreNullFields_No() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities("No");
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -91,7 +94,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_N() {
+    void testIgnoreNullFields_N() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities("N");
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -100,7 +103,7 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testIgnoreNullFields_Default() {
+    void testIgnoreNullFields_Default() {
         final List<ChallengeQuestionTabEntity> challengeQuestionTabEntities =
             getChallengeQuestionTabEntities(null);
         assertThat(challengeQuestionTabEntities.size(), is(1));
@@ -118,12 +121,13 @@ public class ChallengeQuestionParserTest extends BaseChallengeQuestionTest {
         return challengeQuestionParser.parse(map, parseContext);
     }
 
-    @Test(expected = ValidationException.class)
-    public void failDueToDuplicatedIDs() {
+    @Test
+    void failDueToDuplicatedIDs() {
         doThrow(new ValidationException(new ValidationResult()))
             .when(challengeQuestionValidator)
             .validate(any(), any());
-        challengeQuestionParser.parse(createDefinitionSheets(true), parseContext);
+        assertThrows(ValidationException.class, () ->
+            challengeQuestionParser.parse(createDefinitionSheets(true), parseContext));
     }
 
     private Map<String, DefinitionSheet> createDefinitionSheets(boolean failTest) {

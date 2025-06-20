@@ -1,27 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.verify;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_EVENT_TO_FIELDS;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE_TAB;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_INPUT_FIELD;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_RESULT_FIELD;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
-import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_RESULT_FIELDS;
-
-import org.apache.commons.lang3.StringUtils;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -32,7 +10,28 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.mockito.Mockito.verify;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_EVENT_TO_FIELDS;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE_TAB;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_INPUT_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_RESULT_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_RESULT_FIELDS;
 
 @DisplayName("Layout Parser Test")
 class LayoutParserTest {
@@ -58,7 +57,7 @@ class LayoutParserTest {
 
     @BeforeEach
     void init() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         caseTypeEntity = buildCaseTypeEntity();
         caseFieldEntity = buildCaseFieldEntity();
@@ -145,15 +144,6 @@ class LayoutParserTest {
                 "office is that waypage ngi",
                 DisplayGroupType.PAGE,
                 DisplayGroupPurpose.EDIT));
-    }
-
-    private void assertGenericLayoutEntityIsPresent(final List<GenericLayoutEntity> results, Class<?> clazz) {
-        final GenericLayoutEntity entity = results.stream()
-            .filter(o -> o.getClass() == clazz)
-            .findFirst()
-            .orElseThrow(() -> new RuntimeException("object of class " + clazz + " is not found"));
-        assertThat(entity.getCaseType(), is(caseTypeEntity));
-        assertThat(entity.getCaseField(), is(caseFieldEntity));
     }
 
     private void assertDisplayGroupEntity(final List<DisplayGroupEntity> results,

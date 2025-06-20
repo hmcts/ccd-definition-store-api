@@ -57,8 +57,8 @@ class TranslationServiceTest {
     private ListAppender<ILoggingEvent> filterLoggerCapture;
 
     @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
+    void setup() {
+        MockitoAnnotations.openMocks(this);
 
         Logger filterLogger = (Logger) LoggerFactory.getLogger(TranslationServiceImpl.class);
         filterLogger.setLevel(Level.DEBUG);

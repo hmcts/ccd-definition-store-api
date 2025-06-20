@@ -6,17 +6,17 @@ import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
-public class FieldEntityTest {
+class FieldEntityTest {
 
     @Test
-    public void testBaseTypeString() {
+    void testBaseTypeString() {
         CaseFieldEntity baseTypeField = newTextField("forename").build();
         CaseFieldEntity complexField = newComplexField();
         CaseFieldEntity collection = newCollectionFieldOfBaseType();
@@ -27,7 +27,7 @@ public class FieldEntityTest {
     }
 
     @Test
-    public void testIsCollectionOfComplex() {
+    void testIsCollectionOfComplex() {
         CaseFieldEntity baseTypeField = newTextField("forename").build();
         assertThat(baseTypeField.isCollectionOfComplex(), equalTo(false));
 
@@ -42,14 +42,14 @@ public class FieldEntityTest {
     }
 
     @Test
-    public void shouldReturnTrueForPredefinedComplexType() {
+    void shouldReturnTrueForPredefinedComplexType() {
         CaseFieldEntity caseField = new CaseFieldEntity();
         caseField.setFieldType(newType(PREDEFINED_COMPLEX_ADDRESS_GLOBAL).buildComplex());
         assertThat(caseField.isPredefinedComplexType(), is(true));
     }
 
     @Test
-    public void shouldReturnFalseForCustomComplexTypes() {
+    void shouldReturnFalseForCustomComplexTypes() {
         CaseFieldEntity caseField = new CaseFieldEntity();
         caseField.setFieldType(newType("MyAddressType").buildComplex());
         assertThat(caseField.isPredefinedComplexType(), is(false));

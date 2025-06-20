@@ -1,32 +1,34 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
-import javax.persistence.EntityManager;
 import java.io.IOException;
+
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class DraftDefinitionRepositoryTest {
+class DraftDefinitionRepositoryTest {
 
     @Autowired
     private DraftDefinitionRepository classUnderTest;
@@ -40,8 +42,8 @@ public class DraftDefinitionRepositoryTest {
     private JurisdictionEntity testJurisdiction;
     private DefinitionEntity definitionEntity;
 
-    @Before
-    public void setUp() throws IOException {
+    @BeforeEach
+    void setUp() throws IOException {
         testJurisdiction = testHelper.createJurisdiction();
 
         definitionEntity = testHelper.buildDefinition(testJurisdiction, "Test definition");
@@ -51,7 +53,7 @@ public class DraftDefinitionRepositoryTest {
     }
 
     @Test
-    public void shouldCreateNewDefinition() {
+    void shouldCreateNewDefinition() {
         classUnderTest.save(definitionEntity);
 
         entityManager.flush();
