@@ -1,10 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import org.json.JSONException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
+import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -18,8 +14,20 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
+import org.json.JSONException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThrows;
+import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
@@ -42,7 +50,11 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
     @BeforeEach
     void setUp() throws IOException {
-        deleteElasticsearchIndices(WILDCARD);
+        try {
+            deleteElasticsearchIndices(WILDCARD);
+        } catch (Exception e) {
+            // Ignore any exceptions during index deletion, as it may not exist
+        }
     }
 
     @Test
@@ -132,10 +144,60 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
             ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A, CASE_TYPE_B))));
     }
 
+    @Test
+    void shouldReindexSuccessfully() throws JSONException {
+        CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
+
+        CaseTypeEntity caseTypeEntity1 = caseTypeBuilder
+            .withJurisdiction("JUR")
+            .withReference(CASE_TYPE_A)
+            .addField(baseTypeField1)
+            .build();
+
+        //create index and mapping for casetypea_cases-000001
+        definitionImportListener.onDefinitionImported(
+            new DefinitionImportedEvent(List.of(caseTypeEntity1))
+        );
+
+        //reindex to casetypea_cases-000002
+        DefinitionImportedEvent event = new DefinitionImportedEvent(
+            List.of(caseTypeEntity1), true, true
+        );
+        definitionImportListener.onDefinitionImported(event);
+
+
+        await().atMost(5, SECONDS).untilAsserted(() -> {
+            String response = getElasticsearchIndices(CASE_TYPE_A);
+            assertThat(response, containsString("casetypea_cases-000002"));
+            assertThat(response, not(containsString("casetypea_cases-000001")));
+        });
+    }
+
+    @Test
+    void shouldThrowElasticSearchInitialisationException() throws JSONException {
+        CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
+
+        CaseTypeEntity caseTypeEntity1 = caseTypeBuilder
+            .withJurisdiction("JUR")
+            .withReference(CASE_TYPE_A)
+            .addField(baseTypeField1)
+            .build();
+
+        //will fail to generate mapping
+        baseTypeField1.getFieldType().setReference("InvalidElasticType");
+
+        DefinitionImportedEvent event = new DefinitionImportedEvent(Collections.singletonList(caseTypeEntity1),
+            true, true);
+
+        assertThrows(ElasticSearchInitialisationException.class, () -> {
+            definitionImportListener.onDefinitionImported(event);
+        });
+    }
+
     private String[] getDynamicIndexResponseFields(String... indexNames) {
         return Arrays.stream(indexNames)
             .map(String::toLowerCase)
-            .map(index -> new String[] {
+            .map(index -> new String[]{
                 // Paths of fields which may have a different value each time an index is created
                 index + "_cases-000001.settings.index.creation_date",
                 index + "_cases-000001.settings.index.uuid",
