@@ -339,7 +339,9 @@ public class ImportServiceImplTest {
             .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        assertThrows(MissingAccessProfilesException.class, () -> service.importFormDefinitions(inputStream, false, false));
+        assertThrows(MissingAccessProfilesException.class, 
+            () -> service.importFormDefinitions(inputStream, false, false)
+        );
     }
 
     @Test
