@@ -33,7 +33,7 @@ jobs:
           git remote add upstream "https://jenkins-reform-hmcts:${{ secrets.SWAGGER_PUBLISHER_API_TOKEN }}@github.com/hmcts/cnp-api-docs.git"
           git pull upstream master
           repo=`echo "$GITHUB_REPOSITORY" | cut -f2- -d/`
-          echo "$(cat /tmp/ccd-definition-store-api.json)" > "docs/specs/ccd-definition-store-api.json"
-          git add "docs/specs/ccd-definition-store-api.json"
+          echo "$(cat /tmp/swagger-specs.json)" > "docs/specs/$repo.json"
+          git add "docs/specs/$repo.json"
           # Only commit and push if we have changes.
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update spec for $repo#${GITHUB_SHA:7}"; git push --set-upstream upstream master)
