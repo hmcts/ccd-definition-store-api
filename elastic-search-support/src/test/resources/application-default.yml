@@ -1,7 +1,7 @@
 elasticsearch:
-  host: localhost
-  port: 9200
-  scheme: http
+  host: ${ELASTIC_SEARCH_HOST:localhost}
+  port: ${ELASTIC_SEARCH_PORT:9200}
+  scheme: ${ELASTIC_SEARCH_SCHEME:http}
   enabled: true
   indexShards: 8
   indexShardsReplicas: 3
