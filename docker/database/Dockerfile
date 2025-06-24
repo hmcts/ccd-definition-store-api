@@ -1,7 +1,7 @@
 # Change to non-root privilege
 USER hmcts
 
-FROM postgres:9.6
+FROM postgres:15
 
 COPY init-db.sh /docker-entrypoint-initdb.d
 

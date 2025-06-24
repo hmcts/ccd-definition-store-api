@@ -1,14 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupCaseFieldEntity;
@@ -20,6 +12,17 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
@@ -27,20 +30,19 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose.EDIT;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose.VIEW;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType.PAGE;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType.TAB;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class DisplayGroupRepositoryTest {
+class DisplayGroupRepositoryTest {
 
     private static final String CASE_TYPE_REFERENCE = "CaseTypeRef";
     private static final String SHOW_CONDITION = "showCondition";
@@ -60,8 +62,8 @@ public class DisplayGroupRepositoryTest {
 
     private VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
 
         caseTypeV1 = versionedCaseTypeRepository.save(caseTypeEntity());
@@ -71,7 +73,7 @@ public class DisplayGroupRepositoryTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void shouldReturnDisplayGroupEntityForLatestCaseTypeVersion_whenDisplayGroupEntitesExistAcrossMultipleVersionsOfCaseType() {
+    void shouldReturnDisplayGroupEntityForLatestCaseTypeVersion_whenDisplayGroupEntitesExistAcrossMultipleVersionsOfCaseType() {
 
         createDisplayGroupsForCase(caseTypeV1);
         createDisplayGroupsForCase(caseTypeV2);
@@ -149,9 +151,19 @@ public class DisplayGroupRepositoryTest {
         dg.setType(type);
         dg.setPurpose(purpose);
         dg.setShowCondition(showCondition);
+        dg.setAccessProfile(createAccessProfile());
         addDisplayGroupField(getCaseField(caseType, "cf1"), dg, 1, null);
         addDisplayGroupField(getCaseField(caseType, "cf2"), dg, 2, 2);
         return dg;
+    }
+
+    private AccessProfileEntity createAccessProfile() {
+        final AccessProfileEntity accessProfile = new AccessProfileEntity();
+        accessProfile.setReference("access profile ref");
+        accessProfile.setName("access profile name");
+        accessProfile.setDescription("access profile description");
+        accessProfile.setSecurityClassification(SecurityClassification.PUBLIC);
+        return accessProfile;
     }
 
     private CaseFieldEntity getCaseField(final CaseTypeEntity caseType, final String reference) {

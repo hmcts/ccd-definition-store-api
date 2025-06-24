@@ -1,21 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-import javax.persistence.EntityManager;
-import org.apache.commons.lang3.StringUtils;
-import org.assertj.core.util.Lists;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Authorisation;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
@@ -32,6 +16,24 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
@@ -39,12 +41,11 @@ import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWithProperty;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
@@ -54,7 +55,7 @@ import static uk.gov.hmcts.ccd.definition.store.CustomHamcrestMatchers.hasItemWi
 /**
  * Tests that the object graph on Case Type entity is correctly saved and fetched.
  */
-public class CaseTypeObjectGraphTest {
+class CaseTypeObjectGraphTest {
 
     public static final String CASE_FIELD_REFERENCE = "ref cf";
     public static final String CASE_FIELD_LABEL = "lab";
@@ -78,8 +79,8 @@ public class CaseTypeObjectGraphTest {
     private AccessProfileEntity accessProfile2;
     private AccessProfileEntity accessProfile3;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
 
         jurisdiction = helper.createJurisdiction();
@@ -93,7 +94,7 @@ public class CaseTypeObjectGraphTest {
     }
 
     @Test
-    public void saveCaseType() {
+    void saveCaseType() {
         final WebhookEntity printWebhook = createWebHook("http://print");
 
         final CaseTypeEntity caseType = new CaseTypeEntity();
@@ -137,6 +138,7 @@ public class CaseTypeObjectGraphTest {
 
         EventPostStateEntity eventPostStateEntity = new EventPostStateEntity();
         eventPostStateEntity.setPostStateReference(s1.getReference());
+        eventPostStateEntity.setEnablingCondition("");
         e1.addEventPostState(eventPostStateEntity);
 
         WebhookEntity h1 = createWebHook("url1", 3, 5, 6, 7, 8);
@@ -176,16 +178,19 @@ public class CaseTypeObjectGraphTest {
         )));
 
         final List<EventEntity> fetchedEvents = fetched.getEvents();
+        assertThat(fetchedEvents.size(), equalTo(2));
         assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookStart() != null
-            && x.getWebhookStart().getTimeouts().equals(Lists.newArrayList(3, 5, 6, 7, 8))));
+            && x.getWebhookStart().getTimeouts().equals(List.of(3, 5, 6, 7, 8))));
         assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPreSubmit() != null
-            && x.getWebhookPreSubmit().getTimeouts().equals(Lists.newArrayList(3, 50, 6, 20))));
+            && x.getWebhookPreSubmit().getTimeouts().equals(List.of(3, 50, 6, 20))));
         assertTrue(fetchedEvents.stream().anyMatch(x -> x.getWebhookPostSubmit() != null
-            && x.getWebhookPostSubmit().getTimeouts().equals(Lists.newArrayList(23, 5, 6))));
+            && x.getWebhookPostSubmit().getTimeouts().equals(List.of(23, 5, 6))));
         assertThat(fetchedEvents, hasItem(hasProperty(
             "securityClassification", equalTo(SecurityClassification.PRIVATE))));
-        assertThat(fetchedEvents.get(1).getEventCaseFields(), hasSize(1));
-        EventCaseFieldEntity eventCaseFieldEntity = fetchedEvents.get(1).getEventCaseFields().get(0);
+        Optional<EventEntity> ee = fetchedEvents.stream()
+            .filter(fes -> !fes.getEventCaseFields().isEmpty()).findFirst();
+        assertTrue(ee.isPresent());
+        EventCaseFieldEntity eventCaseFieldEntity = ee.get().getEventCaseFields().get(0);
         assertThat(eventCaseFieldEntity.getCaseField().getReference(), equalTo(cf.getReference()));
         assertThat(eventCaseFieldEntity.getEvent().getReference(), equalTo(e1.getReference()));
         assertThat(eventCaseFieldEntity.getDisplayContext(), equalTo(DisplayContext.READONLY));
@@ -387,7 +392,7 @@ public class CaseTypeObjectGraphTest {
     private WebhookEntity createWebHook(final String url, final Integer... timeouts) {
         final WebhookEntity webhook = new WebhookEntity();
         webhook.setUrl(url);
-        webhook.setTimeouts(Lists.newArrayList(timeouts));
+        webhook.setTimeouts(List.of(timeouts));
         return webhook;
     }
 

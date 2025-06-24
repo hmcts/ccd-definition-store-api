@@ -25,27 +25,13 @@ ext {
 
 dependencies {
     implementation project(':commons')
-    implementation("org.springframework.boot:spring-boot-starter-data-jpa") {
-        exclude group: 'org.apache.tomcat', module: 'tomcat-jdbc'
-    }
-    implementation (group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '4.0.3') {
-        exclude group: 'com.google.guava', module: 'guava'
-    }
-    implementation "commons-beanutils:commons-beanutils:1.9.4"
-    implementation "org.apache.commons:commons-lang3:3.11"
-    implementation ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
-        exclude group: 'com.google.guava', module: 'guava'
-    }
-    implementation "com.google.guava:guava:32.1.3-jre"
-    implementation "javax.validation:validation-api:2.0.1.Final"
-    implementation "org.hibernate.validator:hibernate-validator:6.0.20.Final"
-    implementation "org.glassfish:javax.el:3.0.0"
-    implementation "org.flywaydb:flyway-core:6.5.7"
-    testImplementation "org.assertj:assertj-core"
-    testImplementation project(":commons").sourceSets.main.output
-    implementation group: 'com.vladmihalcea', name: 'hibernate-types-52', version: '2.9.13'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
+    implementation group: 'jakarta.el', name: 'jakarta.el-api', version: '6.0.1'
 
-    testImplementation group: 'com.vladmihalcea', name: 'db-util', version: '1.0.5'
+
+    testImplementation group: 'org.assertj', name: 'assertj-core'
+    testImplementation project(":commons").sourceSets.main.output
+    testImplementation group: 'com.vladmihalcea', name: 'db-util', version: '1.0.7'
 }
 
 pitest {

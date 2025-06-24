@@ -1,7 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
@@ -28,11 +29,12 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.hasItem;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 
-public class LayoutServiceImplTest {
+class LayoutServiceImplTest {
 
     @Mock
     private DisplayGroupRepository displayGroupRepository;
@@ -48,9 +50,9 @@ public class LayoutServiceImplTest {
 
     private LayoutServiceImpl classUnderTest;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new LayoutServiceImpl(
             genericRepository,
             asList(new GenericLayoutEntityValidatorImpl()),
@@ -60,7 +62,7 @@ public class LayoutServiceImplTest {
     }
 
     @Test
-    public void shouldValidateAndSavePromptlyWhenSingleEntityIsValid() {
+    void shouldValidateAndSavePromptlyWhenSingleEntityIsValid() {
         GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
         entity1.setCaseField(createCaseFieldEntity("ComplexCollectionComplex"));
         entity1.setCaseType(createCaseTypeEntity("FamilyDetails"));
@@ -74,7 +76,7 @@ public class LayoutServiceImplTest {
     }
 
     @Test
-    public void shouldValidateAndSavePromptlyWhenEntityIsValid() {
+    void shouldValidateAndSavePromptlyWhenEntityIsValid() {
         GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
         entity1.setCaseField(createCaseFieldEntity("ComplexCollectionComplex"));
         entity1.setCaseType(createCaseTypeEntity("FamilyDetails"));
@@ -91,24 +93,27 @@ public class LayoutServiceImplTest {
         assertThat(savedDisplayGroupEntities, allOf(hasItem(entity1), hasItem(entity2)));
     }
 
-    @Test(expected = ValidationException.class)
-    public void shouldFailIfCaseFieldIsNotProvidedForWorkbasketInput() {
+    @Test
+    void shouldFailIfCaseFieldIsNotProvidedForWorkbasketInput() {
+
         GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
         entity1.setCaseType(createCaseTypeEntity("FamilyDetails"));
 
-        classUnderTest.createGenerics(singletonList(entity1));
+        assertThrows(ValidationException.class, 
+            () -> classUnderTest.createGenerics(singletonList(entity1)));
     }
 
-    @Test(expected = ValidationException.class)
-    public void shouldFailIfCaseTypeIsNotProvidedForWorkbasketInput() {
+    @Test
+    void shouldFailIfCaseTypeIsNotProvidedForWorkbasketInput() {
         GenericLayoutEntity entity1 = new WorkBasketInputCaseFieldEntity();
         entity1.setCaseField(createCaseFieldEntity("ComplexCollectionComplex"));
 
-        classUnderTest.createGenerics(singletonList(entity1));
+        assertThrows(ValidationException.class, 
+            () -> classUnderTest.createGenerics(singletonList(entity1)));
     }
 
-    @Test(expected = ValidationException.class)
-    public void pageTypeDisplayGroupMustFailIfEventIsNotProvided() {
+    @Test
+    void pageTypeDisplayGroupMustFailIfEventIsNotProvided() {
         DisplayGroupEntity dg1 = new DisplayGroupEntity();
         dg1.setType(DisplayGroupType.PAGE);
         dg1.setEvent(new EventEntity());
@@ -116,11 +121,12 @@ public class LayoutServiceImplTest {
         dg2.setType(DisplayGroupType.PAGE);
         final List<DisplayGroupEntity> displayGroupEntities = asList(dg1, dg2);
 
-        classUnderTest.createDisplayGroups(displayGroupEntities);
+        assertThrows(ValidationException.class, 
+            () -> classUnderTest.createDisplayGroups(displayGroupEntities));
     }
 
     @Test
-    public void tabTypeDisplayGroupMustNotExpectEventAndSavePromptly() {
+    void tabTypeDisplayGroupMustNotExpectEventAndSavePromptly() {
         DisplayGroupEntity dg1 = new DisplayGroupEntity();
         dg1.setType(DisplayGroupType.TAB);
         dg1.setEvent(new EventEntity());

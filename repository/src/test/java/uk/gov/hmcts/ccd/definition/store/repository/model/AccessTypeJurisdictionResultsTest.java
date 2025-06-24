@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.mockito.Mockito.verify;
 
-public class AccessTypeJurisdictionResultsTest {
+class AccessTypeJurisdictionResultsTest {
     private final List<String> orgProfileIds = List.of(new String[]{"SOLICITOR_ORG", "SOLICITOR_ORG"});
 
     private AccessTypeJurisdictionResults jurisdictionResults;
@@ -26,7 +26,7 @@ public class AccessTypeJurisdictionResultsTest {
     private AccessTypeRoleResult accessTypeRoleResult = new AccessTypeRoleResult();
 
     @Test
-    public void shouldGetAccessTypeRolesJurisdictionResults() {
+    void shouldGetAccessTypeRolesJurisdictionResults() {
 
         OrganisationProfileIds organisationProfileIds = new OrganisationProfileIds();
 

@@ -1,32 +1,34 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.DisplayName;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceValidator.CASE_TYPE_ERROR_MESSAGE;
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityReferenceValidator.NULL_REFERENCE;
 
 @DisplayName("CaseType Entity Reference Validator Tests")
-public class CaseTypeEntityReferenceValidatorTest {
+class CaseTypeEntityReferenceValidatorTest {
 
     private CaseTypeEntity caseType;
     private final CaseTypeEntityReferenceValidator classUnderTest = new CaseTypeEntityReferenceValidator();
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         caseType = new CaseTypeEntity();
     }
 
     @DisplayName("Should return empty validation result in case of no validation failures")
     @Test
-    public void shouldReturnEmptyValidationResultWhenNoErrors() {
+    void shouldReturnEmptyValidationResultWhenNoErrors() {
         assertAll(
             () -> assertValidReference("FT_MasterCaseType"),
             () -> assertValidReference("BEFTA_CASETYPE_1_1"),
@@ -48,7 +50,7 @@ public class CaseTypeEntityReferenceValidatorTest {
 
     @DisplayName("Should return Validation Error when reference is invalid")
     @Test
-    public void shouldReturnValidationResultWithValidationErrorWhenReferenceIsInvalid() {
+    void shouldReturnValidationResultWithValidationErrorWhenReferenceIsInvalid() {
         assertAll(
             () -> assertInvalidReference("With a space"),
             () -> assertInvalidReference("---"),
@@ -61,7 +63,7 @@ public class CaseTypeEntityReferenceValidatorTest {
 
     @DisplayName("Should return Validation Error when reference is null")
     @Test
-    public void shouldReturnValidationResultWithValidationErrorWhenReferenceIsNull() {
+    void shouldReturnValidationResultWithValidationErrorWhenReferenceIsNull() {
         caseType.setReference(null);
 
         final ValidationResult result = classUnderTest.validate(caseType);
@@ -79,7 +81,7 @@ public class CaseTypeEntityReferenceValidatorTest {
         final ValidationResult result = classUnderTest.validate(caseType);
 
         assertAll(
-            () -> assertEquals(caseTypeReference, 0, result.getValidationErrors().size()),
+            () -> assertEquals(0, result.getValidationErrors().size(), caseTypeReference),
             () -> assertTrue(result.isValid())
         );
     }
@@ -90,7 +92,7 @@ public class CaseTypeEntityReferenceValidatorTest {
         final ValidationResult result = classUnderTest.validate(caseType);
 
         assertAll(
-            () -> assertEquals(caseTypeReference, 1, result.getValidationErrors().size()),
+            () -> assertEquals(1, result.getValidationErrors().size(), caseTypeReference),
             () -> assertFalse(result.isValid()),
             () -> assertEquals(String.format(CASE_TYPE_ERROR_MESSAGE, caseTypeReference),
                                result.getValidationErrors().get(0).getDefaultMessage())

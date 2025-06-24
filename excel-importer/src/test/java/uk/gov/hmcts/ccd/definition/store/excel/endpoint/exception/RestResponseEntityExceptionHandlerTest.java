@@ -1,15 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
-import feign.FeignException;
-import feign.Request;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
-import org.springframework.web.context.request.WebRequest;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
@@ -23,24 +13,35 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import feign.FeignException;
+import feign.Request;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.context.request.WebRequest;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class RestResponseEntityExceptionHandlerTest {
+class RestResponseEntityExceptionHandlerTest {
 
     private RestResponseEntityExceptionHandler exceptionHandler;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         exceptionHandler = new RestResponseEntityExceptionHandler(null);
     }
 
     @Test
-    public void handleBadRequest_shouldAggregateInnerMessages() throws Exception {
+    void handleBadRequest_shouldAggregateInnerMessages() throws Exception {
         final RuntimeException exception = new RuntimeException("Outer message", new Exception("Inner message"));
 
         final ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
@@ -50,7 +51,7 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleMissingAccessProfilesException() {
+    void handleMissingAccessProfilesException() {
         Set<String> accessProfiles = new HashSet<>();
         accessProfiles.add("access_profile_1");
         List<ValidationError> validationErrors = new ArrayList<>();
@@ -65,7 +66,7 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleBadRequest_validationException() throws Exception {
+    void handleBadRequest_validationException() throws Exception {
         ValidationException validationException = mock(ValidationException.class);
         ValidationResult validationResult = mock(ValidationResult.class);
         List<ValidationError> validationErrors = new ArrayList<>();
@@ -80,7 +81,7 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleBadRequest_shouldStopMessageAggregationAtDepth5() throws Exception {
+    void handleBadRequest_shouldStopMessageAggregationAtDepth5() throws Exception {
         final RuntimeException exception = new RuntimeException("Depth 1",
             new Exception("Depth 2",
                 new Exception("Depth 3",
@@ -95,7 +96,7 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleHttpServerErrorException_shouldSwitch500_502() throws IOException {
+    void handleHttpServerErrorException_shouldSwitch500_502() throws IOException {
         HttpServerErrorException ex = new HttpServerErrorException(
             HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error");
 
@@ -106,7 +107,7 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleHttpServerErrorException_shouldReturn5xx() throws IOException {
+    void handleHttpServerErrorException_shouldReturn5xx() throws IOException {
         HttpServerErrorException ex = new HttpServerErrorException(
             HttpStatus.GATEWAY_TIMEOUT, "Gateway Timeout");
 
@@ -117,7 +118,7 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleHttpClientErrorException_shouldReturn401() {
+    void handleHttpClientErrorException_shouldReturn401() {
         HttpClientErrorException ex = new HttpClientErrorException(
             HttpStatus.UNAUTHORIZED, "Unauthorized");
 
@@ -128,7 +129,7 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleHttpClientErrorException_shouldReturn500IfReceived400() {
+    void handleHttpClientErrorException_shouldReturn500IfReceived400() {
         HttpClientErrorException ex = new HttpClientErrorException(
             HttpStatus.BAD_REQUEST, "Bad Request");
 
@@ -139,7 +140,7 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleFeignServerException_shouldSwitch500_502() throws IOException {
+    void handleFeignServerException_shouldSwitch500_502() throws IOException {
         FeignException.FeignServerException ex = new FeignException.FeignServerException(
             HttpStatus.INTERNAL_SERVER_ERROR.value(), "Internal Server Error",
             Request.create(Request.HttpMethod.GET, "Internal Server Error", Map.of(), new byte[0],
@@ -152,7 +153,7 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleFeignServerException_shouldReturn5xx() throws IOException {
+    void handleFeignServerException_shouldReturn5xx() throws IOException {
         FeignException.FeignServerException ex = new FeignException.FeignServerException(
             HttpStatus.GATEWAY_TIMEOUT.value(), "Gateway Timeout", Request.create(Request.HttpMethod.GET,
             "Gateway Timeout", Map.of(), new byte[0], Charset.defaultCharset(), null), new byte[0],
@@ -165,7 +166,7 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleFeignClientException_shouldReturn401() {
+    void handleFeignClientException_shouldReturn401() {
         FeignException.FeignClientException ex = new FeignException.FeignClientException(
             HttpStatus.UNAUTHORIZED.value(), "UNAUTHORIZED",
             Request.create(Request.HttpMethod.GET, "UNAUTHORIZED", Map.of(), new byte[0],
@@ -178,7 +179,7 @@ public class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    public void handleFeignClientException_shouldReturn500IfReceived400() {
+    void handleFeignClientException_shouldReturn500IfReceived400() {
         FeignException.FeignClientException ex = new FeignException.FeignClientException(
             HttpStatus.BAD_REQUEST.value(), "Bad Request",
             Request.create(Request.HttpMethod.GET, "Bad Request", Map.of(), new byte[0],

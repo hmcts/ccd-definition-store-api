@@ -25,13 +25,8 @@ dependencies {
     implementation project(':elastic-search-support')
     implementation project(':repository')
     implementation project(':domain')
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
-        exclude group: 'com.google.guava', module: 'guava'
-    }
-    implementation "org.flywaydb:flyway-core:6.5.7"
-    runtimeOnly group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
 
     testImplementation project(":app-insights").sourceSets.main.output
     testImplementation project(":commons").sourceSets.main.output

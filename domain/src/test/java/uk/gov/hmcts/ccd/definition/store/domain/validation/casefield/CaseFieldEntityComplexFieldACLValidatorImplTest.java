@@ -19,14 +19,14 @@ import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.BDDMockito.given;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 
-public class CaseFieldEntityComplexFieldACLValidatorImplTest {
+class CaseFieldEntityComplexFieldACLValidatorImplTest {
 
     private static final String ACCESS_PROFILE_1 = "AccessProfile1";
     private static final String CLASS = "Class";
@@ -56,8 +56,8 @@ public class CaseFieldEntityComplexFieldACLValidatorImplTest {
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext;
 
     @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
+    void setup() {
+        MockitoAnnotations.openMocks(this);
 
         accessProfile = new AccessProfileEntity();
         accessProfile.setReference(ACCESS_PROFILE_1);

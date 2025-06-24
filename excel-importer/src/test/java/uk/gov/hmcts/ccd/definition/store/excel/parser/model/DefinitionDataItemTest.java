@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser.model;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
@@ -14,90 +11,96 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class DefinitionDataItemTest {
+class DefinitionDataItemTest {
 
     private DefinitionDataItem item;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         item = new DefinitionDataItem(SheetName.CASE_EVENT.toString());
     }
 
-    @Test(expected = MapperException.class)
-    public void shouldFail_whenRequiredAttributeDoesNotExist() {
-        try {
+    @Test
+    void shouldFail_whenRequiredAttributeDoesNotExist() {
+        MapperException ex = assertThrows(MapperException.class, () -> {
             item.findAttribute(ColumnName.ID);
-        } catch (MapperException ex) {
-            Assertions.assertThat(ex).hasMessageContaining(
-                "Couldn't find the column ID in the sheet CaseEvent");
-            throw ex;
-        }
+        });
+        assertThat(ex.getMessage(), containsString(
+            "Couldn't find the column ID in the sheet CaseEvent"));
     }
 
-    @Test(expected = MapperException.class)
-    public void shouldFail_whenRequiredAttributeIsBlank() {
+    @Test
+    void shouldFail_whenRequiredAttributeIsBlank() {
         item.addAttribute(ColumnName.ID.toString(), "");
 
-        try {
+        MapperException ex = assertThrows(MapperException.class, () -> {
             item.findAttribute(ColumnName.ID);
-        } catch (MapperException ex) {
-            Assertions.assertThat(ex).hasMessageContaining(
-                "There's a missing value in the column 'ID' or invalid value in the sheet 'CaseEvent'");
-            throw ex;
-        }
+        });
+        
+        assertThat(ex.getMessage(), containsString(
+            "There's a missing value in the column 'ID' or invalid value in the sheet 'CaseEvent'"));
     }
 
     @Test
-    public void shouldSucceed_whenRequiredAttributeKeyIsUsingAnAlias() {
+    void shouldSucceed_whenRequiredAttributeKeyIsUsingAnAlias() {
         item.addAttribute(ColumnName.ACCESS_PROFILE.getAliases()[0], "Access Profile Value");
 
-        Assertions.assertThat(item.findAttribute(ColumnName.ACCESS_PROFILE)).isEqualTo("Access Profile Value");
+        assertEquals("Access Profile Value", item.findAttribute(ColumnName.ACCESS_PROFILE));
     }
 
     @Test
-    public void shouldGetNull_whenBigDecimalAttributeDoesNotExist() {
+    void shouldGetNull_whenBigDecimalAttributeDoesNotExist() {
         final BigDecimal result = item.getBigDecimal(ColumnName.DISPLAY_ORDER);
         assertThat(result, is(nullValue()));
     }
 
     @Test
-    public void shouldGetBigDecimal() {
+    void shouldGetBigDecimal() {
         item.addAttribute(ColumnName.DISPLAY_ORDER, 1.0);
 
         final BigDecimal result = item.getBigDecimal(ColumnName.DISPLAY_ORDER);
         assertThat(result, is(BigDecimal.valueOf(1.0)));
     }
 
-    @Test(expected = MapperException.class)
-    public void shouldFail_whenInvalidBigDecimal() {
+    @Test
+    void shouldFail_whenInvalidBigDecimal() {
         item.addAttribute(ColumnName.DISPLAY_ORDER, "Wonderful train journey");
-        item.getBigDecimal(ColumnName.DISPLAY_ORDER);
+        MapperException ex = assertThrows(MapperException.class, () -> {
+            item.getBigDecimal(ColumnName.DISPLAY_ORDER);
+        });
     }
 
     @Test
-    public void shouldGetInteger() {
+    void shouldGetInteger() {
         item.addAttribute(ColumnName.DISPLAY_ORDER, "1.0");
 
         final Integer result = item.getInteger(ColumnName.DISPLAY_ORDER);
         assertThat(result, is(1));
     }
 
-    @Test(expected = MapperException.class)
-    public void shouldFail_whenInvalidInteger() {
+    @Test
+    void shouldFail_whenInvalidInteger() {
         item.addAttribute(ColumnName.DISPLAY_ORDER, "Wonderful train journey");
-        item.getBigDecimal(ColumnName.DISPLAY_ORDER);
+        MapperException ex = assertThrows(MapperException.class, () -> {
+            item.getBigDecimal(ColumnName.DISPLAY_ORDER);
+        });
     }
 
     @Test
-    public void shouldGetLocalDate() {
+    void shouldGetLocalDate() {
         Date date = new Date();
 
         item.addAttribute(ColumnName.LIVE_TO, date);
@@ -106,15 +109,17 @@ public class DefinitionDataItemTest {
         assertThat(result, is(date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate()));
     }
 
-    @Test(expected = MapperException.class)
-    public void shouldFail_whenInvalidLocalDate() {
+    @Test
+    void shouldFail_whenInvalidLocalDate() {
         item.addAttribute(ColumnName.LIVE_TO, "Wonderful train journey");
-        item.getLocalDate(ColumnName.LIVE_TO);
+        MapperException ex = assertThrows(MapperException.class, () -> {
+            item.getLocalDate(ColumnName.LIVE_TO);
+        });
     }
 
 
     @Test
-    public void shouldGetBoolean() {
+    void shouldGetBoolean() {
         assertBooleanValue("yes", TRUE);
         assertBooleanValue("y", TRUE);
         assertBooleanValue("t", TRUE);
@@ -126,26 +131,25 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void shouldGetBooleanOrDefault() {
+    void shouldGetBooleanOrDefault() {
         assertBooleanValueWithDefault("yes", false, TRUE);
         assertBooleanValueWithDefault("no", true, FALSE);
         assertBooleanValueWithDefault(null, true, TRUE);
     }
 
-    @Test(expected = MapperException.class)
-    public void shouldFail_whenInvalidBoolean() {
+    @Test
+    void shouldFail_whenInvalidBoolean() {
         item.addAttribute(ColumnName.DEFAULT_HIDDEN, "k");
-        try {
+        MapperException ex = assertThrows(MapperException.class, () -> {
             item.getBoolean(ColumnName.DEFAULT_HIDDEN);
-        } catch (MapperException ex) {
-            Assertions.assertThat(ex).hasMessageContaining(
-                "Invalid value 'k' is found in column 'DefaultHidden' in the sheet 'CaseEvent'");
-            throw ex;
-        }
+        });
+        
+        assertThat(ex.getMessage(), containsString(
+                "Invalid value 'k' is found in column 'DefaultHidden' in the sheet 'CaseEvent'"));
     }
 
     @Test
-    public void securityClassificationColumnIsPublicLowerCase_called_publicSecurityClassificationEnumValueReturned() {
+    void securityClassificationColumnIsPublicLowerCase_called_publicSecurityClassificationEnumValueReturned() {
         SecurityClassificationColumn securityClassificationColumn
             = definitionDataItemWithSecurityClassificationColumnValue("public").getSecurityClassification();
 
@@ -154,7 +158,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void securityClassificationColumnIsPublicUpperCase_called_publicSecurityClassificationEnumValueReturned() {
+    void securityClassificationColumnIsPublicUpperCase_called_publicSecurityClassificationEnumValueReturned() {
         SecurityClassificationColumn securityClassificationColumn
             = definitionDataItemWithSecurityClassificationColumnValue("PUBLIC").getSecurityClassification();
 
@@ -163,7 +167,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void securityClassificationColumnIsPublicMixedCase_called_publicSecurityClassificationEnumValueReturned() {
+    void securityClassificationColumnIsPublicMixedCase_called_publicSecurityClassificationEnumValueReturned() {
         SecurityClassificationColumn securityClassificationColumn
             = definitionDataItemWithSecurityClassificationColumnValue("pUbLiC").getSecurityClassification();
 
@@ -173,7 +177,7 @@ public class DefinitionDataItemTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void securityClassificationColumnIsNotAValidEnumConstant_SecurityClassificationColumnReturnedWithNullSecurityClassification() {
+    void securityClassificationColumnIsNotAValidEnumConstant_SecurityClassificationColumnReturnedWithNullSecurityClassification() {
         SecurityClassificationColumn securityClassificationColumn
             = definitionDataItemWithSecurityClassificationColumnValue("NotValid").getSecurityClassification();
 
@@ -182,7 +186,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void displayContextColumnIsOptionalLowerCase_called_OptionalDisplayContextEnumValueReturned() {
+    void displayContextColumnIsOptionalLowerCase_called_OptionalDisplayContextEnumValueReturned() {
         DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("optional")
             .getDisplayContext();
 
@@ -191,7 +195,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void displayContextColumnIsOptionalUpperCase_called_OptionalDisplayContextEnumValueReturned() {
+    void displayContextColumnIsOptionalUpperCase_called_OptionalDisplayContextEnumValueReturned() {
         DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("OPTIONAL")
             .getDisplayContext();
 
@@ -200,7 +204,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void displayContextColumnIsOptionalMixedCase_called_OptionalDisplayContextEnumValueReturned() {
+    void displayContextColumnIsOptionalMixedCase_called_OptionalDisplayContextEnumValueReturned() {
         DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("oPtiONal")
             .getDisplayContext();
 
@@ -209,7 +213,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void displayContextColumnIsNotAValidEnumConstant_displayContextColumnReturnedWithNulldisplayContext() {
+    void displayContextColumnIsNotAValidEnumConstant_displayContextColumnReturnedWithNulldisplayContext() {
         DisplayContextColumn displayContextColumn = definitionDataItemWithDisplayContextColumnValue("NotValid")
             .getDisplayContext();
 
@@ -218,7 +222,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void shouldGetCaseFiledId() {
+    void shouldGetCaseFiledId() {
         String caseFieldId = "a_field_id";
         item.addAttribute(ColumnName.CASE_FIELD_ID, caseFieldId);
 
@@ -226,7 +230,7 @@ public class DefinitionDataItemTest {
     }
 
     @Test
-    public void shouldGetCaseFiledIdFromID() {
+    void shouldGetCaseFiledIdFromID() {
         String id = "ID";
         String listElementCode = "listECode";
         item.addAttribute(ColumnName.ID, id);

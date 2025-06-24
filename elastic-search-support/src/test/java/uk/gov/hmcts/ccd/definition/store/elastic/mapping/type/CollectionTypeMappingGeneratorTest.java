@@ -1,12 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.labelFieldType;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
+import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubComplexTypeMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,13 +15,14 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubComplexTypeMappingGenerator;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerator;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.labelFieldType;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -39,10 +40,10 @@ class CollectionTypeMappingGeneratorTest extends AbstractMapperTest implements T
         typeMappings.put("Text", "textMapping");
         elasticMappings.put("disabled", "disabledMapping");
 
-        StubTypeMappingGenerator stubTypeMappingGenerator = new StubTypeMappingGenerator("Text", "dataMapping",
-            "dataClassificationMapping");
+        StubTypeMappingGenerator stubTypeMappingGenerator = new StubTypeMappingGenerator(null, 
+            "Text", "dataMapping", "dataClassificationMapping");
         StubComplexTypeMappingGenerator stubComplexTypeMappingGenerator =
-            new StubComplexTypeMappingGenerator("Complex",
+            new StubComplexTypeMappingGenerator(null, "Complex",
                 "complexDataMapping", "complexDataClassificationMapping");
         addMappingGenerator(stubTypeMappingGenerator);
         addMappingGenerator(stubComplexTypeMappingGenerator);

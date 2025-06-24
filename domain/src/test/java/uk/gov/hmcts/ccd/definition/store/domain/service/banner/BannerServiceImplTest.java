@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.banner;
 
-import com.google.common.collect.Lists;
-import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.BannerRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
@@ -15,6 +8,14 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.Banner;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
@@ -36,13 +37,12 @@ class BannerServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new BannerServiceImpl(bannerRepository, dtoMapper);
     }
 
     @Test
-    @DisplayName(
-        "Should get Banners for the passed jurisdictions")
+    @DisplayName("Should get Banners for the passed jurisdictions")
     void shouldGetBannersForValidJurisdictions() {
         List<BannerEntity> banners = Lists.newArrayList();
         banners.add(createBanner("Test Desc1", true));
@@ -50,22 +50,20 @@ class BannerServiceImplTest {
         doReturn(banners).when(bannerRepository).findAllByReference(anyList());
         List<String> references = Lists.newArrayList("Test", "Divorce");
         List<Banner> bannersReturned = classUnderTest.getAll(references);
-        Assert.assertEquals(2, bannersReturned.size());
+        assertEquals(2, bannersReturned.size());
     }
 
     @Test
-    @DisplayName(
-        "Should get empty Banners list for the passed empty jurisdictions")
+    @DisplayName("Should get empty Banners list for the passed empty jurisdictions")
     void shouldGetEmptyBannersListForEmptyJurisdictions() {
         List<Banner> banners = Lists.newArrayList();
         doReturn(banners).when(bannerRepository).findAllByReference(anyList());
         List<Banner> bannersReturned = classUnderTest.getAll(Lists.newArrayList());
-        Assert.assertEquals(0, bannersReturned.size());
+        assertEquals(0, bannersReturned.size());
     }
 
     @Test
-    @DisplayName(
-        "Should get empty Banners list for the passed empty jurisdictions")
+    @DisplayName("Should get empty Banners list for the passed empty jurisdictions")
     void shouldSaveBannerEntity() {
         BannerEntity bannerEntity = mock(BannerEntity.class);
         JurisdictionEntity jurisdiction = mock(JurisdictionEntity.class);
@@ -77,8 +75,7 @@ class BannerServiceImplTest {
     }
 
     @Test
-    @DisplayName(
-        "Should get empty Banners list for the passed empty jurisdictions")
+    @DisplayName("Should get empty Banners list for the passed empty jurisdictions")
     void shouldSaveCopyBannerEntity() {
         BannerEntity bannerEntity = mock(BannerEntity.class);
         JurisdictionEntity jurisdiction = mock(JurisdictionEntity.class);
@@ -116,6 +113,5 @@ class BannerServiceImplTest {
         banner.setBannerUrlText("Click here to see it.>>>");
         return banner;
     }
-
 
 }

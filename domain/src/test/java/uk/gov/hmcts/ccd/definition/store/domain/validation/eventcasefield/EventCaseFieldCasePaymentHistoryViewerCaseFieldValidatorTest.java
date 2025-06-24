@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
-import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -8,25 +7,27 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
+import org.junit.jupiter.api.Test;
+
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
+class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
 
     public static final String CASE_PAYMENT_HISTORY_VIEWER = "CasePaymentHistoryViewer";
     private EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator classUnderTest =
         new EventCaseFieldCasePaymentHistoryViewerCaseFieldValidator();
 
     @Test
-    public void shouldPassValidationIfFieldIsNotCasePaymentHistoryViewer() {
+    void shouldPassValidationIfFieldIsNotCasePaymentHistoryViewer() {
 
         assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField("NotCasePaymentHistoryViewer"),
             null, DisplayContext.READONLY), null).isValid());
@@ -36,7 +37,7 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
     }
 
     @Test
-    public void shouldPassValidationIfFieldTypeReadonly() throws Exception {
+    void shouldPassValidationIfFieldTypeReadonly() throws Exception {
 
         assertTrue(classUnderTest.validate(eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER), null,
             DisplayContext.READONLY), null).isValid());
@@ -44,7 +45,7 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
     }
 
     @Test
-    public void shouldPassValidationIfDisplayContextIsNull() throws Exception {
+    void shouldPassValidationIfDisplayContextIsNull() throws Exception {
 
         ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(
             caseField(CASE_PAYMENT_HISTORY_VIEWER), null, null), null);
@@ -55,7 +56,7 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
     }
 
     @Test
-    public void shouldReturnValidationErrorIfFieldTypeOptional() throws Exception {
+    void shouldReturnValidationErrorIfFieldTypeOptional() throws Exception {
 
         ValidationResult validationResult = classUnderTest.validate(
             eventCaseFieldEntity(caseField(CASE_PAYMENT_HISTORY_VIEWER), event("Event Reference"),
@@ -74,7 +75,7 @@ public class EventCaseFieldCasePaymentHistoryViewerCaseFieldValidatorTest {
     }
 
     @Test
-    public void shouldReturnValidationErrorIfFieldTypeMandatory() throws Exception {
+    void shouldReturnValidationErrorIfFieldTypeMandatory() throws Exception {
 
         ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(
             caseField(CASE_PAYMENT_HISTORY_VIEWER),
