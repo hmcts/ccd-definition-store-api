@@ -36,6 +36,7 @@ public class ImportController {
     }
 
     @RequestMapping(value = URI_IMPORT, method = RequestMethod.POST)
+
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = ProcessUploadService.SUCCESSFULLY_CREATED),
         @ApiResponse(code = 401, message = "Unauthorized"),
@@ -54,7 +55,13 @@ public class ImportController {
         @ApiResponse(code = 500, message = "Internal Server Error")
     })
 
-    public ResponseEntity processUpload(@RequestParam("file") MultipartFile file) throws IOException {
-        return processUploadServiceImpl.processUpload(file);
+
+    public ResponseEntity<String> processUpload(
+        @RequestParam("file") MultipartFile file,
+        @RequestParam(value = "reindex", required = false, defaultValue = "false") Boolean reindex,
+        @RequestParam(value = "deleteOldIndex", required = false, defaultValue = "false") Boolean deleteOldIndex
+    ) throws IOException {
+        return processUploadServiceImpl.processUpload(file, reindex, deleteOldIndex);
+
     }
 }

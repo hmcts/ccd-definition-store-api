@@ -47,7 +47,7 @@ ext['postgresql.version'] = '42.7.3'
 ext['log4j2.version'] = '2.17.1'
 //overriding for easy access to the version for FT testing
 ext['beftaFwVersion'] = '9.2.3'
-ext['ccdTestDefinitionVersion'] = '7.25.1'
+ext['ccdTestDefinitionVersion'] = '7.25.4'
 // end
 
 ext {
@@ -61,7 +61,7 @@ ext {
     appInsightsVersion = '2.4.1'
     restAssuredVersion = '4.3.0!!'
     groovyVersion = '3.0.19!!'
-    tomcatVersion = '9.0.91'
+    tomcatVersion = '9.0.104'
     feignJackson = '11.6'
     limits = [
             'instruction': 99,
@@ -88,7 +88,8 @@ allprojects {
         mavenCentral()
         google()
         maven {
-            url  "https://jitpack.io"
+            name = "AzureArtifacts"
+            url = uri("https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1")
         }
     }
 
@@ -157,7 +158,7 @@ allprojects {
         testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
         testImplementation "org.codehaus.groovy:groovy-xml:${groovyVersion}"
         testImplementation "org.codehaus.groovy:groovy-json:${groovyVersion}"
-        testImplementation 'com.github.hmcts:fortify-client:1.4.3:all'
+        testImplementation 'com.github.hmcts:fortify-client:1.4.9:all'
     }
 
     configurations.all {
