@@ -70,7 +70,7 @@ public class SwaggerConfiguration {
             .description("Keyword `Bearer` followed by a valid IDAM user token")
             .in("header")
             .accepts(Collections.singleton(MediaType.APPLICATION_JSON))
-            .required(false)
+            .required(true)
             .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
             .build();
     }
@@ -81,7 +81,7 @@ public class SwaggerConfiguration {
             .description("Valid Service-to-Service JWT token for a whitelisted micro-service")
             .in("header")
             .accepts(Collections.singleton(MediaType.APPLICATION_JSON))
-            .required(false)
+            .required(true)
             .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
             .build();
     }
