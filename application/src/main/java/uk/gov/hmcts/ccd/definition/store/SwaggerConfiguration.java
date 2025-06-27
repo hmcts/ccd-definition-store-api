@@ -28,7 +28,6 @@ import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.service.RequestParameter;
-import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
