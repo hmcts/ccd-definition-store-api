@@ -23,6 +23,7 @@ import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestParameterBuilder;
 
+import springfox.documentation.schema.ScalarType;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.service.RequestParameter;
@@ -69,7 +70,8 @@ public class SwaggerConfiguration {
             .description("Keyword `Bearer` followed by a valid IDAM user token")
             .in("header")
             .accepts(Collections.singleton(MediaType.APPLICATION_JSON))
-            .required(true)
+            .required(false)
+            .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
             .build();
     }
 
@@ -79,7 +81,8 @@ public class SwaggerConfiguration {
             .description("Valid Service-to-Service JWT token for a whitelisted micro-service")
             .in("header")
             .accepts(Collections.singleton(MediaType.APPLICATION_JSON))
-            .required(true)
+            .required(false)
+            .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
             .build();
     }
 
