@@ -97,6 +97,21 @@ withPipeline(type, product, app) {
     afterAlways('test') {
         // hmcts/cnp-jenkins-library may fail to copy artifacts after checkstyle error so repeat command (see /src/uk/gov/hmcts/contino/GradleBuilder.groovy)
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/checkstyle/*.html'
+
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/pmd/*.html'
+        //copyIgnore('./build/reports/tests/test', './Unit Tests/')
+        //steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Unit Tests/**/*'
+
+
+        publishHTML target: [
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : 'build/reports/tests/test',
+            reportFiles          : "index.html",
+            reportName           : "Unit Test Report"
+        ]
+
     }
 
     afterAlways('smoketest:preview') {
