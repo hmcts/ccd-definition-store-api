@@ -17,7 +17,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
-import springfox.documentation.builders.*;
+
+import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.ParameterBuilder;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.RequestParameterBuilder;
+
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
