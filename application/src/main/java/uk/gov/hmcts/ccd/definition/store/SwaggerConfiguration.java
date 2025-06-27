@@ -17,13 +17,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestParameterBuilder;
 import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.RequestParameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
+import uk.gov.hmcts.ccd.definition.store.rest.endpoint.BaseTypeController;
+import uk.gov.hmcts.ccd.definition.store.rest.endpoint.CaseDefinitionController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,6 +46,33 @@ public class SwaggerConfiguration {
             .apis(RequestHandlerSelectors.basePackage(CaseDataAPIApplication.class.getPackage().getName()))
             .build();
     }
+
+    private ApiInfo apiV1Info() {
+        return new ApiInfoBuilder()
+            .title("Core Case Data - Definition store API")
+            .description("Create, modify, retrieve and search definitions")
+            .license("")
+            .licenseUrl("")
+            .version("1.0.1")
+            .contact(new Contact("CCD",
+                "https://tools.hmcts.net/confluence/display/RCCD/Reform%3A+Core+Case+Data+Home",
+                "corecasedatateam@hmcts.net"))
+            .termsOfServiceUrl("")
+            .build();
+    }
+
+    @Bean
+    public Docket apiV1External() {
+        return getNewDocketForPackageOf(ImportController.class, "v1_external", apiV1Info());
+    }
+
+
+    @Bean
+    public Docket apiV1Internal() {
+
+        return getNewDocketForPackageOf(BaseTypeController.class, "v1_internal", apiV1Info());
+    }
+
 
     private Docket getNewDocketForPackageOf(Class<?> klazz, String groupName, ApiInfo apiInfo) {
         return new Docket(DocumentationType.SWAGGER_2)
