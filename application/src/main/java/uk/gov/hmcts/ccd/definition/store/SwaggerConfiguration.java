@@ -45,31 +45,28 @@ public class SwaggerConfiguration {
 
     @Bean
     public Docket api() {
-
-        List<Parameter> globalHeaders = Arrays.asList(
-            new ParameterBuilder()
-                .name("Authorization")
-                .description("JWT Bearer token")
-                .modelRef(new ModelRef("string"))
-                .parameterType("header")
-                .required(false)
-                .build(),
-            new ParameterBuilder()
-                .name("ServiceAuthorization")
-                .description("Service-to-service token")
-                .modelRef(new ModelRef("string"))
-                .parameterType("header")
-                .required(false)
-                .build()
-        );
-
-        return new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.SWAGGER_2) // or OPENAPI_3
             .select()
             .apis(RequestHandlerSelectors.basePackage(CaseDataAPIApplication.class.getPackage().getName()))
+            //.apis(RequestHandlerSelectors.basePackage("uk.gov.hmcts"))
             .paths(PathSelectors.any())
             .build()
-            .globalOperationParameters(globalHeaders);
-
+            .globalOperationParameters(Arrays.asList(
+                new ParameterBuilder()
+                    .name("Authorization")
+                    .description("JWT Bearer token")
+                    .modelRef(new ModelRef("string"))
+                    .parameterType("header")
+                    .required(true)
+                    .build(),
+                new ParameterBuilder()
+                    .name("ServiceAuthorization")
+                    .description("S2S token")
+                    .modelRef(new ModelRef("string"))
+                    .parameterType("header")
+                    .required(true)
+                    .build()
+            ));
     }
 
     private ApiInfo apiV1Info() {
