@@ -20,18 +20,14 @@ import org.springframework.util.StringUtils;
 
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.ParameterBuilder;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.RequestParameterBuilder;
 
-import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
 import springfox.documentation.service.RequestParameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
-import uk.gov.hmcts.ccd.definition.store.rest.endpoint.CaseDefinitionController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -47,28 +43,13 @@ public class SwaggerConfiguration {
         return new Docket(DocumentationType.SWAGGER_2) // or OPENAPI_3
             .select()
             .apis(RequestHandlerSelectors.basePackage(CaseDataAPIApplication.class.getPackage().getName()))
-            //.apis(RequestHandlerSelectors.basePackage("uk.gov.hmcts"))
             .paths(PathSelectors.any())
-            .build()
-            .globalOperationParameters(Arrays.asList(
-                new ParameterBuilder()
-                    .name("Authorization")
-                    .description("JWT Bearer token")
-                    .modelRef(new ModelRef("string"))
-                    .parameterType("header")
-                    .required(true)
-                    .build(),
-                new ParameterBuilder()
-                    .name("ServiceAuthorization")
-                    .description("S2S token")
-                    .modelRef(new ModelRef("string"))
-                    .parameterType("header")
-                    .required(true)
-                    .build()
-            ));
+            .build().useDefaultResponseMessages(false)
+            .apiInfo(apiInfo())
+            .globalRequestParameters(Arrays.asList(headerAuthorization(), headerServiceAuthorization()));
     }
 
-    private ApiInfo apiV1Info() {
+    private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
             .title("Core Case Data - Definition store API")
             .description("Create, modify, retrieve and search definitions")
@@ -80,27 +61,6 @@ public class SwaggerConfiguration {
                 "corecasedatateam@hmcts.net"))
             .termsOfServiceUrl("")
             .build();
-    }
-
-    @Bean
-    public Docket apiV1External() {
-        return getNewDocketForPackageOf(ImportController.class, "v1_external", apiV1Info());
-    }
-
-    @Bean
-    public Docket apiV1Internal() {
-        return getNewDocketForPackageOf(CaseDefinitionController.class, "v1_internal", apiV1Info());
-    }
-
-    private Docket getNewDocketForPackageOf(Class<?> klazz, String groupName, ApiInfo apiInfo) {
-        return new Docket(DocumentationType.SWAGGER_2)
-            .groupName(groupName)
-            .select()
-            .apis(RequestHandlerSelectors.basePackage(klazz.getPackage().getName()))
-            .paths(PathSelectors.any())
-            .build().useDefaultResponseMessages(false)
-            .apiInfo(apiInfo)
-            .globalRequestParameters(Arrays.asList(headerAuthorization(), headerServiceAuthorization()));
     }
 
     private RequestParameter headerAuthorization() {
