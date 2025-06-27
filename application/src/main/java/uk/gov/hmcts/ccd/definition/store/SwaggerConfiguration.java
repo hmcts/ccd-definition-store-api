@@ -17,13 +17,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
-import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestParameterBuilder;
+import springfox.documentation.builders.*;
+import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
-import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.RequestParameter;
+import springfox.documentation.service.Parameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
@@ -40,10 +39,31 @@ public class SwaggerConfiguration {
 
     @Bean
     public Docket api() {
+
+        List<Parameter> globalHeaders = Arrays.asList(
+            new ParameterBuilder()
+                .name("Authorization")
+                .description("JWT Bearer token")
+                .modelRef(new ModelRef("string"))
+                .parameterType("header")
+                .required(false)
+                .build(),
+            new ParameterBuilder()
+                .name("ServiceAuthorization")
+                .description("Service-to-service token")
+                .modelRef(new ModelRef("string"))
+                .parameterType("header")
+                .required(false)
+                .build()
+        );
+
         return new Docket(DocumentationType.SWAGGER_2)
             .select()
             .apis(RequestHandlerSelectors.basePackage(CaseDataAPIApplication.class.getPackage().getName()))
-            .build();
+            .paths(PathSelectors.any())
+            .build()
+            .globalOperationParameters(globalHeaders);
+
     }
 
     private ApiInfo apiV1Info() {
