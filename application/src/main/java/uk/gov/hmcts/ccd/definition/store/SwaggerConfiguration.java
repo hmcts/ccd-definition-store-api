@@ -66,13 +66,10 @@ public class SwaggerConfiguration {
         return getNewDocketForPackageOf(ImportController.class, "v1_external", apiV1Info());
     }
 
-
     @Bean
     public Docket apiV1Internal() {
-
-        return getNewDocketForPackageOf(BaseTypeController.class, "v1_internal", apiV1Info());
+        return getNewDocketForPackageOf(CaseDefinitionController.class, "v1_internal", apiV1Info());
     }
-
 
     private Docket getNewDocketForPackageOf(Class<?> klazz, String groupName, ApiInfo apiInfo) {
         return new Docket(DocumentationType.SWAGGER_2)
