@@ -25,7 +25,11 @@ import springfox.documentation.service.RequestParameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Collection;
+import java.util.List;
 
 @Configuration
 public class SwaggerConfiguration {
