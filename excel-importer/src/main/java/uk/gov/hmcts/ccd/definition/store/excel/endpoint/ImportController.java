@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,7 +36,7 @@ public class ImportController {
         this.processUploadServiceImpl = processUploadServiceImpl;
     }
 
-    @RequestMapping(value = URI_IMPORT, method = RequestMethod.POST)
+    @RequestMapping(value = URI_IMPORT, method = RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = ProcessUploadService.SUCCESSFULLY_CREATED),
