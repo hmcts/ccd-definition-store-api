@@ -15,14 +15,17 @@ import org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandl
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestParameterBuilder;
+import springfox.documentation.service.ApiInfo;
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.service.RequestParameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 @Configuration
 public class SwaggerConfiguration {
@@ -32,6 +35,37 @@ public class SwaggerConfiguration {
         return new Docket(DocumentationType.SWAGGER_2)
             .select()
             .apis(RequestHandlerSelectors.basePackage(CaseDataAPIApplication.class.getPackage().getName()))
+            .build();
+    }
+
+    private Docket getNewDocketForPackageOf(Class<?> klazz, String groupName, ApiInfo apiInfo) {
+        return new Docket(DocumentationType.SWAGGER_2)
+            .groupName(groupName)
+            .select()
+            .apis(RequestHandlerSelectors.basePackage(klazz.getPackage().getName()))
+            .paths(PathSelectors.any())
+            .build().useDefaultResponseMessages(false)
+            .apiInfo(apiInfo)
+            .globalRequestParameters(Arrays.asList(headerAuthorization(), headerServiceAuthorization()));
+    }
+
+    private RequestParameter headerAuthorization() {
+        return new RequestParameterBuilder()
+            .name("Authorization")
+            .description("Keyword `Bearer` followed by a valid IDAM user token")
+            .in("header")
+            .accepts(Collections.singleton(MediaType.APPLICATION_JSON))
+            .required(true)
+            .build();
+    }
+
+    private RequestParameter headerServiceAuthorization() {
+        return new RequestParameterBuilder()
+            .name("ServiceAuthorization")
+            .description("Valid Service-to-Service JWT token for a whitelisted micro-service")
+            .in("header")
+            .accepts(Collections.singleton(MediaType.APPLICATION_JSON))
+            .required(true)
             .build();
     }
 
