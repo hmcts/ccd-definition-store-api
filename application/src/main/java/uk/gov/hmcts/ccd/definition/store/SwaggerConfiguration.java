@@ -27,7 +27,6 @@ import springfox.documentation.service.RequestParameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
-import uk.gov.hmcts.ccd.definition.store.rest.endpoint.BaseTypeController;
 import uk.gov.hmcts.ccd.definition.store.rest.endpoint.CaseDefinitionController;
 
 import java.util.ArrayList;
