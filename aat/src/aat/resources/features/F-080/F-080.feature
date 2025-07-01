@@ -7,7 +7,7 @@ Background:
     Given an appropriate test context as detailed in the test data source
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-080.1 @Ignore # Response mismatch, nullify_by_default: expected 'true' but got 'false' 200 CCD-6078
+@S-080.1
 Scenario: must return case type details for the request
 
     Given a user with [an active profile in CCD]

@@ -2,19 +2,19 @@
   <suppress>
     <notes>Temporary Suppression
         CVE-2024-38820 refer [https://tools.hmcts.net/jira/browse/CFTS-6913]
-        CVE-2025-24813 refer [Ticket]
-        CVE-2024-45772 refer [Ticket]
-        CVE-2023-6378 refer [Ticket]
-        CVE-2025-31650 refer [https://tools.hmcts.net/jira/browse/CCD-6353]
-        CVE-2025-31651 refer [https://tools.hmcts.net/jira/browse/CCD-6353]
-        CVE-2024-52316 refer [https://tools.hmcts.net/jira/browse/CCD-6362]
+        CVE-2025-48734 refer [https://tools.hmcts.net/jira/browse/CCD-6458]
+        CVE-2024-22259 refer [https://tools.hmcts.net/jira/browse/CCD-6489]
+        CVE-2024-38808 refer [https://tools.hmcts.net/jira/browse/CCD-6507]
+        CVE-2025-46701 refer [https://tools.hmcts.net/jira/browse/CCD-6534]
+        CVE-2025-48988 refer [https://tools.hmcts.net/jira/browse/CCD-6534]
+        CVE-2023-1932 refer [https://tools.hmcts.net/jira/browse/CCD-6534]
     </notes>
     <cve>CVE-2024-38820</cve>
-    <cve>CVE-2025-24813</cve>
-    <cve>CVE-2024-45772</cve>
-    <cve>CVE-2023-6378</cve>
-    <cve>CVE-2025-31650</cve>
-    <cve>CVE-2025-31651</cve>
-    <cve>CVE-2024-52316</cve>
+    <cve>CVE-2025-48734</cve>
+    <cve>CVE-2024-22259</cve>
+    <cve>CVE-2024-38808</cve>
+    <cve>CVE-2025-46701</cve>
+    <cve>CVE-2025-48988</cve>
+    <cve>CVE-2023-1932</cve>
   </suppress>
 </suppressions>
