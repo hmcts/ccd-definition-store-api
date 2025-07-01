@@ -1,6 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint;
 
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,11 +60,11 @@ public class ImportController {
 
     @ApiImplicitParams({
         @ApiImplicitParam(
-            name = "file",
-            value = "File to upload",
-            required = true,
-            dataType = "file",
-            paramType = "form"
+                name = "file",
+                value = "File to upload",
+                required = true,
+                dataType = "file",
+                paramType = "form"
         )
     })
     public ResponseEntity<String> processUpload(
