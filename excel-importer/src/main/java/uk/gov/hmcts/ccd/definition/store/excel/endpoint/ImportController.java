@@ -1,8 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +54,15 @@ public class ImportController {
         @ApiResponse(code = 500, message = "Internal Server Error")
     })
 
-
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+            name = "file",
+            value = "File to upload",
+            required = true,
+            dataType = "file",
+            paramType = "form"
+        )
+    })
     public ResponseEntity<String> processUpload(
         @RequestParam("file") MultipartFile file,
         @RequestParam(value = "reindex", required = false, defaultValue = "false") Boolean reindex,
