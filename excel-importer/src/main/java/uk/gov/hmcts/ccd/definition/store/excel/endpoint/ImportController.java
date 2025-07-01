@@ -65,7 +65,7 @@ public class ImportController {
                 required = true,
                 dataType = "file",
                 paramType = "form"
-        )
+                ),
     })
     public ResponseEntity<String> processUpload(
         @RequestParam("file") MultipartFile file,
