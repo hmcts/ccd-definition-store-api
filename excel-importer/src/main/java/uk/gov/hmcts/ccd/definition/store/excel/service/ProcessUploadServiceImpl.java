@@ -22,9 +22,9 @@ import java.io.InputStream;
 public class ProcessUploadServiceImpl implements ProcessUploadService {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProcessUploadServiceImpl.class);
-    private ImportServiceImpl importService;
-    private FileStorageService fileStorageService;
-    private AzureStorageConfiguration azureStorageConfiguration;
+    private final ImportServiceImpl importService;
+    private final FileStorageService fileStorageService;
+    private final AzureStorageConfiguration azureStorageConfiguration;
 
     @Autowired
     public ProcessUploadServiceImpl(ImportServiceImpl importService,
@@ -35,10 +35,10 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
         this.azureStorageConfiguration = azureStorageConfiguration;
     }
 
-
     @Transactional
     @Override
-    public ResponseEntity processUpload(MultipartFile file) throws IOException {
+    public ResponseEntity<String> processUpload(MultipartFile file, boolean reindex, boolean deleteOldIndex)
+        throws IOException {
 
         if (file == null || file.getSize() == 0) {
             throw new IOException(IMPORT_FILE_ERROR);
@@ -50,7 +50,7 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
             byte[] bytes = baos.toByteArray();
             LOG.info("Importing Definition file...");
             final DefinitionFileUploadMetadata metadata =
-                importService.importFormDefinitions(new ByteArrayInputStream(bytes));
+                importService.importFormDefinitions(new ByteArrayInputStream(bytes), reindex, deleteOldIndex);
 
             if (azureStorageConfiguration != null
                 && azureStorageConfiguration.isAzureUploadEnabled()
@@ -59,15 +59,21 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
                 fileStorageService.uploadFile(file, metadata);
             }
 
+            ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.status(HttpStatus.CREATED);
+
             if (!importService.getImportWarnings().isEmpty()) {
                 for (String warning : importService.getImportWarnings()) {
                     LOG.warn(warning);
                 }
-                return ResponseEntity.status(HttpStatus.CREATED)
-                    .header(IMPORT_WARNINGS_HEADER, importService.getImportWarnings().toArray(new String[0]))
-                    .body(SUCCESSFULLY_CREATED);
+                responseBuilder.header(IMPORT_WARNINGS_HEADER,
+                    importService.getImportWarnings().toArray(new String[0]));
             }
-            return ResponseEntity.status(HttpStatus.CREATED).body(SUCCESSFULLY_CREATED);
+
+            if (reindex) {
+                responseBuilder.header("Elasticsearch-Reindex-Task", metadata.getTaskId());
+            }
+
+            return responseBuilder.body(SUCCESSFULLY_CREATED);
         }
     }
 }
