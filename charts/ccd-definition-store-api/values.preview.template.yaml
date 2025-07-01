@@ -55,8 +55,8 @@ ts-translation-service:
     environment:
       TS_TRANSLATION_SERVICE_DB_HOST: ${SERVICE_NAME}-postgresql
       TS_TRANSLATION_SERVICE_DB_NAME: ts_translation_service
-      TS_TRANSLATION_SERVICE_DB_USERNAME: hmcts
-      TS_TRANSLATION_SERVICE_DB_PASSWORD: hmcts
+      TS_TRANSLATION_SERVICE_DB_USERNAME: "{{ .Values.postgresql.auth.username}}"
+      TS_TRANSLATION_SERVICE_DB_PASSWORD: "{{ .Values.postgresql.auth.password}}"
       TS_TRANSLATION_SERVICE_DB_PORT: 5432
       TS_TRANSLATION_SERVICE_DB_OPTIONS: ?stringtype=unspecified
 
