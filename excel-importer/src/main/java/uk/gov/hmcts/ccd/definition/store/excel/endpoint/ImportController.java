@@ -55,7 +55,7 @@ public class ImportController {
     })
 
     public ResponseEntity<String> processUpload(
-        @ApiParam(value="File to be uploaded", required = true)
+        @ApiParam(value = "File to be uploaded", required = true)
         @RequestPart("file") MultipartFile file,
         @RequestParam(value = "reindex", required = false, defaultValue = "false") Boolean reindex,
         @RequestParam(value = "deleteOldIndex", required = false, defaultValue = "false") Boolean deleteOldIndex
