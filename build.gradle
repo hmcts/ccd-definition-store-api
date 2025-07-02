@@ -89,7 +89,8 @@ allprojects {
         mavenCentral()
         google()
         maven {
-            url  "https://jitpack.io"
+            name = "AzureArtifacts"
+            url = uri("https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1")
         }
     }
 
@@ -158,7 +159,7 @@ allprojects {
         testImplementation "org.codehaus.groovy:groovy:${groovyVersion}"
         testImplementation "org.codehaus.groovy:groovy-xml:${groovyVersion}"
         testImplementation "org.codehaus.groovy:groovy-json:${groovyVersion}"
-        testImplementation 'com.github.hmcts:fortify-client:1.4.3:all'
+        testImplementation 'com.github.hmcts:fortify-client:1.4.9:all'
     }
 
     configurations.all {
