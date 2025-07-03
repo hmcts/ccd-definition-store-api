@@ -27,10 +27,11 @@ BEGIN
        	('public.role',  'unique_role_case_type_id_role_reference'),
        	('public.role',  'fk_role_case_type_id_case_type_id'),
 		('public.case_field_acl',  'fk_case_field_acl_role_id_role_id'),
+		('public.case_type_acl',  'fk_case_type_acl_role_id_role_id'),
 		('public.complex_field_acl',  'fk_complex_field_acl_role_id_role_id'),
 		('public.display_group',  'fk_display_group_role_id'),
 		('public.search_input_case_field',  'fk_display_group_role_id'),
-		('public.search_input_case_field',  'fk_display_group_role_id'),
+		('public.search_result_case_field',  'fk_display_group_role_id'),
 		('public.workbasket_case_field',  'fk_display_group_role_id'),
 		('public.workbasket_input_case_field',  'fk_display_group_role_id'),
 		('public.search_cases_result_fields',  'fk_search_cases_result_fields_role_id_role_id'),
@@ -490,13 +491,37 @@ BEGIN
         <<batch_delete_loop_event_pre_state>>
         LOOP
             WITH to_delete AS (
-                SELECT id FROM event_pre_state
+                SELECT event_id FROM event_pre_state
                 WHERE event_id IN (SELECT id FROM removable_events)
                 LIMIT batch_size
             ),
             del AS (
                 DELETE FROM event_pre_state
-                WHERE id IN (SELECT id FROM to_delete)
+                WHERE event_id IN (SELECT event_id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_event_pre_state WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from event_pre_state', rows_deleted;
+        END LOOP batch_delete_loop_event_pre_state;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from event_pre_state due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_event_pre_state>>
+        LOOP
+            WITH to_delete AS (
+                SELECT state_id FROM event_pre_state
+                WHERE state_id IN (SELECT id FROM removable_states)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM event_pre_state
+                WHERE state_id IN (SELECT state_id FROM to_delete)
                 RETURNING *
             )
             SELECT COUNT(*) INTO rows_deleted FROM del;
@@ -1232,6 +1257,30 @@ BEGIN
     EXCEPTION
         WHEN OTHERS THEN
             RAISE NOTICE 'Skipping deletion from access_type due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_role>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM role
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM role
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_role WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from search_party', rows_deleted;
+        END LOOP batch_delete_loop_role;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from search_party due to error: %', SQLERRM;
     END;
 
     BEGIN
