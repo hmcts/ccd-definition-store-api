@@ -1,26 +1,56 @@
 -- - Execute the following DROP statements before starting the cleanup
 
 -- - May require these missing index's (safe to execute as part of execution)
--CREATE INDEX IF NOT EXISTS idx_role_case_type_id ON "role" (case_type_id);
--CREATE INDEX IF NOT EXISTS idx_case_type_id ON case_type (id);
--CREATE INDEX IF NOT EXISTS idx_role_id ON "role" (id);
--CREATE INDEX IF NOT EXISTS idx_user_role_id ON "role" (user_role_id);
+CREATE INDEX IF NOT EXISTS idx_role_case_type_id ON "role" (case_type_id);
+CREATE INDEX IF NOT EXISTS idx_case_type_id ON case_type (id);
+CREATE INDEX IF NOT EXISTS idx_role_id ON "role" (id);
+CREATE INDEX IF NOT EXISTS idx_user_role_id ON "role" (user_role_id);
 
 -- - The following DROP statements should be executed as otherwise the deletions from the role table will take a very long time
-ALTER TABLE public."role" DROP CONSTRAINT case_type_id_check;
-ALTER TABLE public."role" DROP CONSTRAINT unique_role_case_type_id_role_reference;
-ALTER TABLE public."role" DROP CONSTRAINT "fk_role_case_type_id_case_type_id";
-ALTER TABLE public."case_field_acl" DROP CONSTRAINT "fk_case_field_acl_role_id_role_id";
-ALTER TABLE public."case_type_acl" DROP CONSTRAINT "fk_case_type_acl_role_id_role_id";
-ALTER TABLE public."complex_field_acl" DROP CONSTRAINT "fk_complex_field_acl_role_id_role_id";
-ALTER TABLE public."display_group" DROP CONSTRAINT "fk_display_group_role_id";
-ALTER TABLE public."search_input_case_field" DROP CONSTRAINT "fk_display_group_role_id";
-ALTER TABLE public."search_result_case_field" DROP CONSTRAINT "fk_display_group_role_id";
-ALTER TABLE public."workbasket_case_field" DROP CONSTRAINT "fk_display_group_role_id";
-ALTER TABLE public."workbasket_input_case_field" DROP CONSTRAINT "fk_display_group_role_id";
-ALTER TABLE public."search_cases_result_fields" DROP CONSTRAINT "fk_search_cases_result_fields_role_id_role_id";
-ALTER TABLE public."state_acl" DROP CONSTRAINT "fk_state_acl_role_id_role_id";
-ALTER TABLE public."event_acl" DROP CONSTRAINT "fk_event_acl_role_id_role_id";
+
+DO $$
+DECLARE
+    drop_rec RECORD;
+BEGIN
+    -- Step 1: Create a temporary table to hold table/constraint pairs
+    CREATE TEMP TABLE tmp_constraints_to_drop (
+        table_name TEXT,
+        constraint_name TEXT
+    ) ON COMMIT DROP;
+
+    -- Step 2: Insert table/constraint combinations
+    INSERT INTO tmp_constraints_to_drop (table_name, constraint_name) VALUES
+        ('public.role', 'case_type_id_check'),
+        ('public.case_type', 'some_constraint_on_case_type'),
+        ('public.field_type', 'field_type_jurisdiction_id_fkey'),
+       	('public.role',  'case_type_id_check'),
+       	('public.role',  'unique_role_case_type_id_role_reference'),
+       	('public.role',  'fk_role_case_type_id_case_type_id'),
+		('public.case_field_acl',  'fk_case_field_acl_role_id_role_id'),
+		('public.complex_field_acl',  'fk_complex_field_acl_role_id_role_id'),
+		('public.display_group',  'fk_display_group_role_id'),
+		('public.search_input_case_field',  'fk_display_group_role_id'),
+		('public.search_input_case_field',  'fk_display_group_role_id'),
+		('public.workbasket_case_field',  'fk_display_group_role_id'),
+		('public.workbasket_input_case_field',  'fk_display_group_role_id'),
+		('public.search_cases_result_fields',  'fk_search_cases_result_fields_role_id_role_id'),
+		('public.state_acl',  'fk_state_acl_role_id_role_id'),
+		('public.event_acl',  'fk_event_acl_role_id_role_id');
+
+    -- Step 3: Loop through and drop each constraint safely
+    FOR drop_rec IN SELECT * FROM tmp_constraints_to_drop LOOP
+        BEGIN
+            EXECUTE format('ALTER TABLE %s DROP CONSTRAINT %I', drop_rec.table_name, drop_rec.constraint_name);
+            RAISE NOTICE 'Dropped constraint % from table %', drop_rec.constraint_name, drop_rec.table_name;
+        EXCEPTION
+            WHEN undefined_object THEN
+                RAISE NOTICE 'Constraint % on table % does not exist, skipping.', drop_rec.constraint_name, drop_rec.table_name;
+            WHEN others THEN
+                RAISE NOTICE 'Error dropping constraint % on table %: %', drop_rec.constraint_name, drop_rec.table_name, SQLERRM;
+        END;
+    END LOOP;
+END
+$$ LANGUAGE plpgsql;
 
 --- - ** Actual Data Clean UP START **
 
@@ -91,7 +121,7 @@ BEGIN
     ) grouped_ct
     ON ct.reference = grouped_ct.reference
     WHERE ct.version != grouped_ct.max_version
-      AND ct.created_at <= NOW() - INTERVAL '3 months';
+      AND ct.created_at <= NOW() - INTERVAL 'X months';
 
     CREATE TEMP TABLE valid_field_type_ids AS
     SELECT id FROM field_type WHERE jurisdiction_id IS NULL;
@@ -109,716 +139,1125 @@ BEGIN
 
     PERFORM pg_sleep(1);
 
-    LOOP
-        WITH del AS (
-            DELETE FROM case_field_acl
-			WHERE case_field_id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from case_field_acl', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM display_group_case_field
-			WHERE case_field_id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from display_group_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM event_case_field_complex_type
-			WHERE event_case_field_id IN (
-    			SELECT ecf.id
-    			FROM event_case_field ecf
-    			JOIN removable_case_fields rcf ON ecf.case_field_id = rcf.id
-    			WHERE ecf.event_id IN (SELECT id FROM removable_events)
-			)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from event_case_field_complex_type', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM event_case_field
-			WHERE case_field_id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from event_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM complex_field_acl
-			WHERE case_field_id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from complex_field_acl', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM search_result_case_field
-			WHERE case_field_id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from search_result_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM workbasket_case_field
-			WHERE case_field_id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from workbasket_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM search_input_case_field
-			WHERE case_field_id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from search_input_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM workbasket_input_case_field
-			WHERE case_field_id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from workbasket_input_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM search_cases_result_fields
-			scrf
-			USING removable_case_fields rcf
-			WHERE scrf.case_field_id = rcf.id
-  			AND scrf.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from search_cases_result_fields', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM case_field
-			WHERE id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM case_type_acl
-			WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from case_type_acl', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM display_group_case_field
-			WHERE case_field_id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from display_group_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM event_post_state
-			WHERE case_event_id IN (SELECT id FROM removable_events)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from event_post_state', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM event_acl
-			WHERE event_id IN (SELECT id FROM removable_events)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from event_acl', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM event_pre_state
-			WHERE event_id IN (SELECT id FROM removable_events)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from event_pre_state', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM event_webhook
-			WHERE event_id IN (SELECT id FROM removable_events)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from event_webhook', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM state_acl
-			WHERE state_id IN (SELECT id FROM removable_states)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from state_acl', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM state
-			WHERE id IN (SELECT id FROM removable_states)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from state', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM search_cases_result_fields
-			WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-  			AND case_field_id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from search_cases_result_fields', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM search_input_case_field
-			WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-  			AND case_field_id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from search_input_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM search_result_case_field
-			WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-  			AND case_field_id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from search_result_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM workbasket_case_field
-			WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-  			AND case_field_id IN (SELECT id FROM removable_case_fields)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from workbasket_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM field_type
-			WHERE id IN (
-    			SELECT DISTINCT field_type_id
-    			FROM case_field
-    			WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-			)
-			AND id NOT IN (SELECT id FROM valid_field_type_ids)
-			AND jurisdiction_id IS NOT NULL
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from field_type', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM case_field_acl
-			WHERE case_field_id IN
-    		(SELECT id FROM case_field WHERE case_type_id IN
-        		(SELECT id FROM case_type_ids_to_remove)
-    		)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from case_field_acl', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM display_group_case_field
-			WHERE display_group_id IN
-    		(SELECT id FROM display_group WHERE case_type_id IN
-        		(SELECT id FROM case_type_ids_to_remove)
-    		)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from display_group_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM event_case_field_complex_type
-			WHERE event_case_field_id IN
-		    (SELECT id FROM event_case_field WHERE event_id IN
-		        (SELECT id FROM event WHERE case_type_id IN
-		            (SELECT id FROM case_type_ids_to_remove)
-		        )
-		    )
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from event_case_field_complex_type', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM complex_field_acl
-			WHERE case_field_id IN
-		    (SELECT id FROM case_field WHERE case_type_id IN
-		        (SELECT id FROM case_type_ids_to_remove)
-		    )
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from complex_field_acl', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM search_cases_result_fields
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from search_cases_result_fields', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM search_input_case_field
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from search_input_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM search_result_case_field
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from search_result_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM workbasket_case_field
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from workbasket_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM workbasket_input_case_field
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from workbasket_input_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM event_case_field
-			WHERE event_id IN
-    		(SELECT id FROM event WHERE case_type_id IN
-        		(SELECT id FROM case_type_ids_to_remove)
-    		)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from event_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM case_field
-			cf WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM role_to_access_profiles
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from role_to_access_profiles', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM display_group_case_field
-			WHERE display_group_id IN
-		    (SELECT id FROM display_group WHERE case_type_id IN
-		        (SELECT id FROM case_type_ids_to_remove)
-		    )
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from display_group_case_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM display_group
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from display_group', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM event
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from event', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM search_criteria
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from search_criteria', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM search_party
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from search_party', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM search_alias_field
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from search_alias_field', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM category
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from category', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM challenge_question
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from challenge_question', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM access_type_role
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from access_type_role', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM access_type
-			WHERE case_type_id IN
-    		(SELECT id FROM case_type_ids_to_remove)
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from access_type', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
-
-
-    LOOP
-        WITH del AS (
-            DELETE FROM case_type
-			WHERE id IN (SELECT id FROM case_type_ids_to_remove)
-	  		AND jurisdiction_id IS NOT NULL
-            LIMIT batch_size
-            RETURNING 1
-        )
-        SELECT COUNT(*) INTO rows_deleted FROM del;
-        EXIT WHEN rows_deleted = 0;
-        RAISE NOTICE 'Deleted % rows from case_type', rows_deleted;
-    END LOOP;
-    PERFORM pg_sleep(1);
+   	PERFORM pg_sleep(1);
+
+    BEGIN
+        <<batch_delete_loop_case_field_acl>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM case_field_acl
+                WHERE case_field_id IN (SELECT id FROM removable_case_fields)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM case_field_acl
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_case_field_acl WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from case_field_acl', rows_deleted;
+        END LOOP batch_delete_loop_case_field_acl;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from case_field_acl due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_display_group_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM display_group_case_field
+                WHERE case_field_id IN (SELECT id FROM removable_case_fields)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM display_group_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_display_group_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from display_group_case_field', rows_deleted;
+        END LOOP batch_delete_loop_display_group_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from display_group_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_event_case_field_complex_type>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM event_case_field_complex_type
+	                WHERE event_case_field_id IN (
+				    SELECT ecf.id
+				    FROM event_case_field ecf
+				    JOIN removable_case_fields rcf ON ecf.case_field_id = rcf.id
+				    WHERE ecf.event_id IN (SELECT id FROM removable_events)
+				)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM event_case_field_complex_type
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_event_case_field_complex_type WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from event_case_field_complex_type', rows_deleted;
+        END LOOP batch_delete_loop_event_case_field_complex_type;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from event_case_field_complex_type due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_event_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM event_case_field
+                WHERE case_field_id IN (SELECT id FROM removable_case_fields)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM event_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_event_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from event_case_field', rows_deleted;
+        END LOOP batch_delete_loop_event_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from event_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_complex_field_acl>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM complex_field_acl
+                WHERE case_field_id IN (SELECT id FROM removable_case_fields)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM complex_field_acl
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_complex_field_acl WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from complex_field_acl', rows_deleted;
+        END LOOP batch_delete_loop_complex_field_acl;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from complex_field_acl due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_search_result_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM search_result_case_field
+                WHERE case_field_id IN (SELECT id FROM removable_case_fields)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM search_result_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_search_result_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from search_result_case_field', rows_deleted;
+        END LOOP batch_delete_loop_search_result_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from search_result_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_workbasket_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM workbasket_case_field
+                WHERE case_field_id IN (SELECT id FROM removable_case_fields)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM workbasket_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_workbasket_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from workbasket_case_field', rows_deleted;
+        END LOOP batch_delete_loop_workbasket_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from workbasket_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_search_input_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM search_input_case_field
+                WHERE case_field_id IN (SELECT id FROM removable_case_fields)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM search_input_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_search_input_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from search_input_case_field', rows_deleted;
+        END LOOP batch_delete_loop_search_input_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from search_input_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_workbasket_input_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM workbasket_input_case_field
+                WHERE case_field_id IN (SELECT id FROM removable_case_fields)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM workbasket_input_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_workbasket_input_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from workbasket_input_case_field', rows_deleted;
+        END LOOP batch_delete_loop_workbasket_input_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from workbasket_input_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_search_cases_result_fields>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM search_cases_result_fields
+                WHERE EXISTS (
+				    SELECT 1 FROM removable_case_fields rcf
+				    WHERE search_cases_result_fields.case_field_id = rcf.id
+				    AND search_cases_result_fields.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+				)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM search_cases_result_fields
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_search_cases_result_fields WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from search_cases_result_fields', rows_deleted;
+        END LOOP batch_delete_loop_search_cases_result_fields;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from search_cases_result_fields due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM case_field
+                WHERE id IN (SELECT id FROM removable_case_fields)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from case_field', rows_deleted;
+        END LOOP batch_delete_loop_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_case_type_acl>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM case_type_acl
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM case_type_acl
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_case_type_acl WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from case_type_acl', rows_deleted;
+        END LOOP batch_delete_loop_case_type_acl;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from case_type_acl due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_event_post_state>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM event_post_state
+                WHERE case_event_id IN (SELECT id FROM removable_events)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM event_post_state
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_event_post_state WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from event_post_state', rows_deleted;
+        END LOOP batch_delete_loop_event_post_state;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from event_post_state due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_event_acl>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM event_acl
+                WHERE event_id IN (SELECT id FROM removable_events)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM event_acl
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_event_acl WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from event_acl', rows_deleted;
+        END LOOP batch_delete_loop_event_acl;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from event_acl due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_event_pre_state>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM event_pre_state
+                WHERE event_id IN (SELECT id FROM removable_events)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM event_pre_state
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_event_pre_state WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from event_pre_state', rows_deleted;
+        END LOOP batch_delete_loop_event_pre_state;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from event_pre_state due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_event_webhook>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM event_webhook
+                WHERE event_id IN (SELECT id FROM removable_events)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM event_webhook
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_event_webhook WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from event_webhook', rows_deleted;
+        END LOOP batch_delete_loop_event_webhook;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from event_webhook due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_state_acl>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM state_acl
+                WHERE state_id IN (SELECT id FROM removable_states)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM state_acl
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_state_acl WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from state_acl', rows_deleted;
+        END LOOP batch_delete_loop_state_acl;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from state_acl due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_state>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM state
+                WHERE id IN (SELECT id FROM removable_states)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM state
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_state WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from state', rows_deleted;
+        END LOOP batch_delete_loop_state;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from state due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_search_cases_result_fields>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM search_cases_result_fields
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+				AND case_field_id IN (SELECT id FROM removable_case_fields)
+				                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM search_cases_result_fields
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_search_cases_result_fields WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from search_cases_result_fields', rows_deleted;
+        END LOOP batch_delete_loop_search_cases_result_fields;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from search_cases_result_fields due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_search_input_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM search_input_case_field
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+				AND case_field_id IN (SELECT id FROM removable_case_fields)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM search_input_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_search_input_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from search_input_case_field', rows_deleted;
+        END LOOP batch_delete_loop_search_input_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from search_input_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_search_result_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM search_result_case_field
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+				AND case_field_id IN (SELECT id FROM removable_case_fields)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM search_result_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_search_result_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from search_result_case_field', rows_deleted;
+        END LOOP batch_delete_loop_search_result_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from search_result_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_workbasket_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM workbasket_case_field
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+				AND case_field_id IN (SELECT id FROM removable_case_fields)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM workbasket_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_workbasket_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from workbasket_case_field', rows_deleted;
+        END LOOP batch_delete_loop_workbasket_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from workbasket_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_field_type>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM field_type
+                WHERE id IN (
+				    SELECT DISTINCT field_type_id
+				    FROM case_field
+				    WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+				)
+				AND id NOT IN (SELECT id FROM valid_field_type_ids)
+				AND jurisdiction_id IS NOT NULL
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM field_type
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_field_type WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from field_type', rows_deleted;
+        END LOOP batch_delete_loop_field_type;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from field_type due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_case_field_acl>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM case_field_acl
+                WHERE case_field_id IN (
+				    SELECT id FROM case_field
+				    WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+				)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM case_field_acl
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_case_field_acl WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from case_field_acl', rows_deleted;
+        END LOOP batch_delete_loop_case_field_acl;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from case_field_acl due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_display_group_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM display_group_case_field
+                WHERE display_group_id IN (
+				    SELECT id FROM display_group
+				    WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+				)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM display_group_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_display_group_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from display_group_case_field', rows_deleted;
+        END LOOP batch_delete_loop_display_group_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from display_group_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_event_case_field_complex_type>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM event_case_field_complex_type
+                WHERE event_case_field_id IN (
+				    SELECT id FROM event_case_field
+				    WHERE event_id IN (
+				        SELECT id FROM event
+				        WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+				    )
+				)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM event_case_field_complex_type
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_event_case_field_complex_type WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from event_case_field_complex_type', rows_deleted;
+        END LOOP batch_delete_loop_event_case_field_complex_type;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from event_case_field_complex_type due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_complex_field_acl>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM complex_field_acl
+                WHERE case_field_id IN (
+				    SELECT id FROM case_field
+				    WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+				)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM complex_field_acl
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_complex_field_acl WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from complex_field_acl', rows_deleted;
+        END LOOP batch_delete_loop_complex_field_acl;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from complex_field_acl due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_search_cases_result_fields>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM search_cases_result_fields
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM search_cases_result_fields
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_search_cases_result_fields WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from search_cases_result_fields', rows_deleted;
+        END LOOP batch_delete_loop_search_cases_result_fields;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from search_cases_result_fields due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_search_input_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM search_input_case_field
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM search_input_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_search_input_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from search_input_case_field', rows_deleted;
+        END LOOP batch_delete_loop_search_input_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from search_input_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_search_result_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM search_result_case_field
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM search_result_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_search_result_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from search_result_case_field', rows_deleted;
+        END LOOP batch_delete_loop_search_result_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from search_result_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_workbasket_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM workbasket_case_field
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM workbasket_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_workbasket_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from workbasket_case_field', rows_deleted;
+        END LOOP batch_delete_loop_workbasket_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from workbasket_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_workbasket_input_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM workbasket_input_case_field
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM workbasket_input_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_workbasket_input_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from workbasket_input_case_field', rows_deleted;
+        END LOOP batch_delete_loop_workbasket_input_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from workbasket_input_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_event_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM event_case_field
+                WHERE event_id IN (
+				    SELECT id FROM event
+				    WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+				)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM event_case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_event_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from event_case_field', rows_deleted;
+        END LOOP batch_delete_loop_event_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from event_case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_case_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM case_field
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM case_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_case_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from case_field', rows_deleted;
+        END LOOP batch_delete_loop_case_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from case_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_role_to_access_profiles>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM role_to_access_profiles
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM role_to_access_profiles
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_role_to_access_profiles WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from role_to_access_profiles', rows_deleted;
+        END LOOP batch_delete_loop_role_to_access_profiles;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from role_to_access_profiles due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_display_group>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM display_group
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM display_group
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_display_group WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from display_group', rows_deleted;
+        END LOOP batch_delete_loop_display_group;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from display_group due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_event>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM event
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM event
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_event WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from event', rows_deleted;
+        END LOOP batch_delete_loop_event;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from event due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_search_criteria>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM search_criteria
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM search_criteria
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_search_criteria WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from search_criteria', rows_deleted;
+        END LOOP batch_delete_loop_search_criteria;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from search_criteria due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_search_party>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM search_party
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM search_party
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_search_party WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from search_party', rows_deleted;
+        END LOOP batch_delete_loop_search_party;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from search_party due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_search_alias_field>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM search_alias_field
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM search_alias_field
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_search_alias_field WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from search_alias_field', rows_deleted;
+        END LOOP batch_delete_loop_search_alias_field;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from search_alias_field due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_category>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM category
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM category
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_category WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from category', rows_deleted;
+        END LOOP batch_delete_loop_category;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from category due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_challenge_question>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM challenge_question
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM challenge_question
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_challenge_question WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from challenge_question', rows_deleted;
+        END LOOP batch_delete_loop_challenge_question;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from challenge_question due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_access_type_role>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM access_type_role
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM access_type_role
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_access_type_role WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from access_type_role', rows_deleted;
+        END LOOP batch_delete_loop_access_type_role;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from access_type_role due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_access_type>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM access_type
+                WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM access_type
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_access_type WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from access_type', rows_deleted;
+        END LOOP batch_delete_loop_access_type;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from access_type due to error: %', SQLERRM;
+    END;
+
+    BEGIN
+        <<batch_delete_loop_case_type>>
+        LOOP
+            WITH to_delete AS (
+                SELECT id FROM case_type
+                WHERE id IN (SELECT id FROM case_type_ids_to_remove)
+				AND jurisdiction_id IS NOT NULL
+                LIMIT batch_size
+            ),
+            del AS (
+                DELETE FROM case_type
+                WHERE id IN (SELECT id FROM to_delete)
+                RETURNING *
+            )
+            SELECT COUNT(*) INTO rows_deleted FROM del;
+
+            EXIT batch_delete_loop_case_type WHEN rows_deleted = 0;
+            RAISE NOTICE 'Deleted % rows from case_type', rows_deleted;
+        END LOOP batch_delete_loop_case_type;
+        PERFORM pg_sleep(1);
+    EXCEPTION
+        WHEN OTHERS THEN
+            RAISE NOTICE 'Skipping deletion from case_type due to error: %', SQLERRM;
+    END;
 
 END
 $$;
