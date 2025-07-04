@@ -111,6 +111,14 @@ DECLARE
     batch_size CONSTANT INTEGER := 1000;
     rows_deleted INTEGER;
 BEGIN
+	-- Create log output table if not exists
+	CREATE TABLE IF NOT EXISTS ddl_log (
+	    log_time TIMESTAMP DEFAULT now(),
+	    action TEXT,
+	    table_name TEXT,
+	    message TEXT
+	);
+
     -- Prepare temporary tables
     CREATE TEMP TABLE case_type_ids_to_remove AS
     SELECT id
@@ -159,11 +167,13 @@ BEGIN
 
             EXIT batch_delete_loop_case_field_acl WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from case_field_acl', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'case_field_acl', 'Deleted ' || rows_deleted || ' rows from case_field_acl');
         END LOOP batch_delete_loop_case_field_acl;
         PERFORM pg_sleep(1);
     EXCEPTION
         WHEN OTHERS THEN
-            RAISE NOTICE 'Skipping deletion from case_field_acl due to error: %', SQLERRM;
+        	RAISE NOTICE 'Skipping deletion from case_field_acl due to error: %', SQLERRM;
     END;
 
     BEGIN
@@ -183,6 +193,8 @@ BEGIN
 
             EXIT batch_delete_loop_display_group_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from display_group_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'display_group_case_field', 'Deleted ' || rows_deleted || ' rows from display_group_case_field');
         END LOOP batch_delete_loop_display_group_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -212,6 +224,8 @@ BEGIN
 
             EXIT batch_delete_loop_event_case_field_complex_type WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from event_case_field_complex_type', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'event_case_field_complex_type', 'Deleted ' || rows_deleted || ' rows from event_case_field_complex_type');
         END LOOP batch_delete_loop_event_case_field_complex_type;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -236,6 +250,8 @@ BEGIN
 
             EXIT batch_delete_loop_event_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from event_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'event_case_field', 'Deleted ' || rows_deleted || ' rows from event_case_field');
         END LOOP batch_delete_loop_event_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -260,6 +276,8 @@ BEGIN
 
             EXIT batch_delete_loop_complex_field_acl WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from complex_field_acl', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'complex_field_acl', 'Deleted ' || rows_deleted || ' rows from complex_field_acl');
         END LOOP batch_delete_loop_complex_field_acl;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -284,6 +302,8 @@ BEGIN
 
             EXIT batch_delete_loop_search_result_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from search_result_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'search_result_case_field', 'Deleted ' || rows_deleted || ' rows from search_result_case_field');
         END LOOP batch_delete_loop_search_result_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -308,6 +328,8 @@ BEGIN
 
             EXIT batch_delete_loop_workbasket_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from workbasket_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'workbasket_case_field', 'Deleted ' || rows_deleted || ' rows from workbasket_case_field');
         END LOOP batch_delete_loop_workbasket_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -332,6 +354,8 @@ BEGIN
 
             EXIT batch_delete_loop_search_input_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from search_input_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'search_input_case_field', 'Deleted ' || rows_deleted || ' rows from search_input_case_field');
         END LOOP batch_delete_loop_search_input_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -356,6 +380,8 @@ BEGIN
 
             EXIT batch_delete_loop_workbasket_input_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from workbasket_input_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'workbasket_input_case_field', 'Deleted ' || rows_deleted || ' rows from workbasket_input_case_field');
         END LOOP batch_delete_loop_workbasket_input_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -384,6 +410,8 @@ BEGIN
 
             EXIT batch_delete_loop_search_cases_result_fields WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from search_cases_result_fields', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'search_cases_result_fields', 'Deleted ' || rows_deleted || ' rows from search_cases_result_fields');
         END LOOP batch_delete_loop_search_cases_result_fields;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -408,6 +436,8 @@ BEGIN
 
             EXIT batch_delete_loop_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'case_field', 'Deleted ' || rows_deleted || ' rows from case_field');
         END LOOP batch_delete_loop_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -432,6 +462,8 @@ BEGIN
 
             EXIT batch_delete_loop_case_type_acl WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from case_type_acl', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'case_type_acl', 'Deleted ' || rows_deleted || ' rows from case_type_acl');
         END LOOP batch_delete_loop_case_type_acl;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -456,6 +488,8 @@ BEGIN
 
             EXIT batch_delete_loop_event_post_state WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from event_post_state', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'event_post_state', 'Deleted ' || rows_deleted || ' rows from event_post_state');
         END LOOP batch_delete_loop_event_post_state;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -480,6 +514,8 @@ BEGIN
 
             EXIT batch_delete_loop_event_acl WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from event_acl', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'event_acl', 'Deleted ' || rows_deleted || ' rows from event_acl');
         END LOOP batch_delete_loop_event_acl;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -504,6 +540,8 @@ BEGIN
 
             EXIT batch_delete_loop_event_pre_state WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from event_pre_state', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'event_pre_state', 'Deleted ' || rows_deleted || ' rows from event_pre_state');
         END LOOP batch_delete_loop_event_pre_state;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -528,6 +566,8 @@ BEGIN
 
             EXIT batch_delete_loop_event_pre_state WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from event_pre_state', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'event_pre_state', 'Deleted ' || rows_deleted || ' rows from event_pre_state');
         END LOOP batch_delete_loop_event_pre_state;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -552,6 +592,8 @@ BEGIN
 
             EXIT batch_delete_loop_event_webhook WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from event_webhook', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'event_webhook', 'Deleted ' || rows_deleted || ' rows from event_webhook');
         END LOOP batch_delete_loop_event_webhook;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -576,6 +618,8 @@ BEGIN
 
             EXIT batch_delete_loop_state_acl WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from state_acl', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'state_acl', 'Deleted ' || rows_deleted || ' rows from state_acl');
         END LOOP batch_delete_loop_state_acl;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -600,6 +644,8 @@ BEGIN
 
             EXIT batch_delete_loop_state WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from state', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'state', 'Deleted ' || rows_deleted || ' rows from state');
         END LOOP batch_delete_loop_state;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -625,6 +671,8 @@ BEGIN
 
             EXIT batch_delete_loop_search_cases_result_fields WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from search_cases_result_fields', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'search_cases_result_fields', 'Deleted ' || rows_deleted || ' rows from search_cases_result_fields');
         END LOOP batch_delete_loop_search_cases_result_fields;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -650,6 +698,8 @@ BEGIN
 
             EXIT batch_delete_loop_search_input_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from search_input_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'search_input_case_field', 'Deleted ' || rows_deleted || ' rows from search_input_case_field');
         END LOOP batch_delete_loop_search_input_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -675,6 +725,8 @@ BEGIN
 
             EXIT batch_delete_loop_search_result_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from search_result_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'search_result_case_field', 'Deleted ' || rows_deleted || ' rows from search_result_case_field');
         END LOOP batch_delete_loop_search_result_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -700,6 +752,8 @@ BEGIN
 
             EXIT batch_delete_loop_workbasket_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from workbasket_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'workbasket_case_field', 'Deleted ' || rows_deleted || ' rows from workbasket_case_field');
         END LOOP batch_delete_loop_workbasket_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -730,6 +784,8 @@ BEGIN
 
             EXIT batch_delete_loop_field_type WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from field_type', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'field_type', 'Deleted ' || rows_deleted || ' rows from field_type');
         END LOOP batch_delete_loop_field_type;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -757,6 +813,8 @@ BEGIN
 
             EXIT batch_delete_loop_case_field_acl WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from case_field_acl', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'case_field_acl', 'Deleted ' || rows_deleted || ' rows from case_field_acl');
         END LOOP batch_delete_loop_case_field_acl;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -784,6 +842,8 @@ BEGIN
 
             EXIT batch_delete_loop_display_group_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from display_group_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'display_group_case_field', 'Deleted ' || rows_deleted || ' rows from display_group_case_field');
         END LOOP batch_delete_loop_display_group_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -814,6 +874,8 @@ BEGIN
 
             EXIT batch_delete_loop_event_case_field_complex_type WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from event_case_field_complex_type', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'event_case_field_complex_type', 'Deleted ' || rows_deleted || ' rows from event_case_field_complex_type');
         END LOOP batch_delete_loop_event_case_field_complex_type;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -841,6 +903,8 @@ BEGIN
 
             EXIT batch_delete_loop_complex_field_acl WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from complex_field_acl', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'complex_field_acl', 'Deleted ' || rows_deleted || ' rows from complex_field_acl');
         END LOOP batch_delete_loop_complex_field_acl;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -865,6 +929,8 @@ BEGIN
 
             EXIT batch_delete_loop_search_cases_result_fields WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from search_cases_result_fields', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'search_cases_result_fields', 'Deleted ' || rows_deleted || ' rows from search_cases_result_fields');
         END LOOP batch_delete_loop_search_cases_result_fields;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -889,6 +955,8 @@ BEGIN
 
             EXIT batch_delete_loop_search_input_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from search_input_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'search_input_case_field', 'Deleted ' || rows_deleted || ' rows from search_input_case_field');
         END LOOP batch_delete_loop_search_input_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -913,6 +981,8 @@ BEGIN
 
             EXIT batch_delete_loop_search_result_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from search_result_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'search_result_case_field', 'Deleted ' || rows_deleted || ' rows from search_result_case_field');
         END LOOP batch_delete_loop_search_result_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -937,6 +1007,8 @@ BEGIN
 
             EXIT batch_delete_loop_workbasket_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from workbasket_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'workbasket_case_field', 'Deleted ' || rows_deleted || ' rows from workbasket_case_field');
         END LOOP batch_delete_loop_workbasket_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -961,6 +1033,8 @@ BEGIN
 
             EXIT batch_delete_loop_workbasket_input_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from workbasket_input_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'workbasket_input_case_field', 'Deleted ' || rows_deleted || ' rows from workbasket_input_case_field');
         END LOOP batch_delete_loop_workbasket_input_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -988,6 +1062,8 @@ BEGIN
 
             EXIT batch_delete_loop_event_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from event_case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'event_case_field', 'Deleted ' || rows_deleted || ' rows from event_case_field');
         END LOOP batch_delete_loop_event_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -1012,6 +1088,8 @@ BEGIN
 
             EXIT batch_delete_loop_case_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from case_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'case_field', 'Deleted ' || rows_deleted || ' rows from case_field');
         END LOOP batch_delete_loop_case_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -1036,6 +1114,8 @@ BEGIN
 
             EXIT batch_delete_loop_role_to_access_profiles WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from role_to_access_profiles', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'role_to_access_profiles', 'Deleted ' || rows_deleted || ' rows from role_to_access_profiles');
         END LOOP batch_delete_loop_role_to_access_profiles;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -1060,6 +1140,8 @@ BEGIN
 
             EXIT batch_delete_loop_display_group WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from display_group', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'display_group', 'Deleted ' || rows_deleted || ' rows from display_group');
         END LOOP batch_delete_loop_display_group;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -1084,6 +1166,8 @@ BEGIN
 
             EXIT batch_delete_loop_event WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from event', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'event', 'Deleted ' || rows_deleted || ' rows from event');
         END LOOP batch_delete_loop_event;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -1108,6 +1192,8 @@ BEGIN
 
             EXIT batch_delete_loop_search_criteria WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from search_criteria', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'search_criteria', 'Deleted ' || rows_deleted || ' rows from search_criteria');
         END LOOP batch_delete_loop_search_criteria;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -1132,6 +1218,8 @@ BEGIN
 
             EXIT batch_delete_loop_search_party WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from search_party', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'search_party', 'Deleted ' || rows_deleted || ' rows from search_party');
         END LOOP batch_delete_loop_search_party;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -1156,6 +1244,8 @@ BEGIN
 
             EXIT batch_delete_loop_search_alias_field WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from search_alias_field', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'search_alias_field', 'Deleted ' || rows_deleted || ' rows from search_alias_field');
         END LOOP batch_delete_loop_search_alias_field;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -1180,6 +1270,8 @@ BEGIN
 
             EXIT batch_delete_loop_category WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from category', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'category', 'Deleted ' || rows_deleted || ' rows from category');
         END LOOP batch_delete_loop_category;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -1204,6 +1296,8 @@ BEGIN
 
             EXIT batch_delete_loop_challenge_question WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from challenge_question', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'challenge_question', 'Deleted ' || rows_deleted || ' rows from challenge_question');
         END LOOP batch_delete_loop_challenge_question;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -1228,6 +1322,8 @@ BEGIN
 
             EXIT batch_delete_loop_access_type_role WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from access_type_role', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'access_type_role', 'Deleted ' || rows_deleted || ' rows from access_type_role');
         END LOOP batch_delete_loop_access_type_role;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -1252,6 +1348,8 @@ BEGIN
 
             EXIT batch_delete_loop_access_type WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from access_type', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'access_type', 'Deleted ' || rows_deleted || ' rows from access_type');
         END LOOP batch_delete_loop_access_type;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -1276,6 +1374,8 @@ BEGIN
 
             EXIT batch_delete_loop_role WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from search_party', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'search_party', 'Deleted ' || rows_deleted || ' rows from search_party');
         END LOOP batch_delete_loop_role;
         PERFORM pg_sleep(1);
     EXCEPTION
@@ -1301,6 +1401,8 @@ BEGIN
 
             EXIT batch_delete_loop_case_type WHEN rows_deleted = 0;
             RAISE NOTICE 'Deleted % rows from case_type', rows_deleted;
+            INSERT INTO ddl_log(action, table_name, message)
+    		VALUES ('DELETE', 'case_type', 'Deleted ' || rows_deleted || ' rows from case_typea');
         END LOOP batch_delete_loop_case_type;
         PERFORM pg_sleep(1);
     EXCEPTION
