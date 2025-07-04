@@ -1353,32 +1353,120 @@ BEGIN
 END $$;
 
 --Execute the below ALTER statements to re-add the FK constraints on Table 'role' which was removed as part of the clean up process
-ALTER TABLE public."role" ADD CONSTRAINT "fk_role_case_type_id_case_type_id" FOREIGN KEY (case_type_id) REFERENCES case_type(id);
-ALTER TABLE public."role"
-ADD CONSTRAINT unique_role_case_type_id_role_reference
-UNIQUE (case_type_id, reference);
-ALTER TABLE public."role"
-ADD CONSTRAINT case_type_id_check CHECK (
-  (
-    CASE
-      WHEN dtype = 'CASEROLE' THEN
+
+DO $$
+DECLARE
+BEGIN
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.role ADD CONSTRAINT "fk_role_case_type_id_case_type_id" FOREIGN KEY (case_type_id) REFERENCES case_type(id)';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.role';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.role', SQLERRM;
+    END;
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.role ADD CONSTRAINT unique_role_case_type_id_role_reference UNIQUE (case_type_id, reference)';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.role';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.role', SQLERRM;
+    END;
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.role ADD CONSTRAINT case_type_id_check CHECK (
+      (
         CASE
-          WHEN case_type_id IS NOT NULL THEN 1
-          ELSE 0
-        END
-      ELSE 1
-    END = 1
-  )
-);
-ALTER TABLE public."case_field_acl" ADD CONSTRAINT "fk_case_field_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
-ALTER TABLE public."case_type_acl" ADD CONSTRAINT "fk_case_type_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
-ALTER TABLE public."complex_field_acl" ADD CONSTRAINT "fk_complex_field_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
-ALTER TABLE public."workbasket_input_case_field" ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
-ALTER TABLE public."workbasket_case_field" ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
-ALTER TABLE public."search_result_case_field" ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
-ALTER TABLE public."search_input_case_field" ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
-ALTER TABLE public."display_group" ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
-ALTER TABLE public."event_acl" ADD CONSTRAINT "fk_event_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
-ALTER TABLE public."search_cases_result_fields" ADD CONSTRAINT "fk_search_cases_result_fields_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
-ALTER TABLE public."state_acl" ADD CONSTRAINT "fk_state_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id);
+          WHEN dtype = ''CASEROLE'' THEN
+            CASE
+              WHEN case_type_id IS NOT NULL THEN 1
+              ELSE 0
+            END
+          ELSE 1
+        END = 1
+      )
+    )';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.role';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.role', SQLERRM;
+    END;
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.case_field_acl ADD CONSTRAINT "fk_case_field_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id)';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.case_field_acl';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.case_field_acl', SQLERRM;
+    END;
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.case_type_acl ADD CONSTRAINT "fk_case_type_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id)';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.case_type_acl';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.case_type_acl', SQLERRM;
+    END;
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.complex_field_acl ADD CONSTRAINT "fk_complex_field_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id)';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.complex_field_acl';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.complex_field_acl', SQLERRM;
+    END;
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.workbasket_input_case_field ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id)';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.workbasket_input_case_field';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.workbasket_input_case_field', SQLERRM;
+    END;
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.workbasket_case_field ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id)';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.workbasket_case_field';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.workbasket_case_field', SQLERRM;
+    END;
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.search_result_case_field ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id)';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.search_result_case_field';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.search_result_case_field', SQLERRM;
+    END;
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.search_input_case_field ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id)';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.search_input_case_field';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.search_input_case_field', SQLERRM;
+    END;
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.display_group ADD CONSTRAINT "fk_display_group_role_id" FOREIGN KEY (role_id) REFERENCES role(id)';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.display_group';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.display_group', SQLERRM;
+    END;
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.event_acl ADD CONSTRAINT "fk_event_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id)';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.event_acl';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.event_acl', SQLERRM;
+    END;
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.search_cases_result_fields ADD CONSTRAINT "fk_search_cases_result_fields_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id)';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.search_cases_result_fields';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.search_cases_result_fields', SQLERRM;
+    END;
+
+    BEGIN
+        EXECUTE 'ALTER TABLE public.state_acl ADD CONSTRAINT "fk_state_acl_role_id_role_id" FOREIGN KEY (role_id) REFERENCES role(id)';
+        RAISE NOTICE 'Successfully added constraint on %', 'public.state_acl';
+    EXCEPTION WHEN OTHERS THEN
+        RAISE NOTICE 'Skipping constraint on % due to error: %', 'public.state_acl', SQLERRM;
+    END;
+
+END
+$$ LANGUAGE plpgsql;
 
