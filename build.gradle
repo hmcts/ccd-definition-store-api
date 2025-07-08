@@ -290,6 +290,9 @@ subprojects { subproject ->
         implementation group: 'co.elastic.clients', name: 'elasticsearch-java', version: elasticSearchVersion
         implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: elasticSearchVersion
         implementation group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.16.0'
+        implementation 'jakarta.json:jakarta.json-api:2.1.3'
+        runtimeOnly 'org.glassfish:jakarta.json:2.0.1'
+
         implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
         implementation('org.springframework.boot:spring-boot-starter-cache')
 
