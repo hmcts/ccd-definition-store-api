@@ -1,31 +1,26 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
+import co.elastic.clients.elasticsearch.indices.Alias;
+import co.elastic.clients.elasticsearch.indices.update_aliases.Action;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
+import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.action.admin.indices.alias.Alias;
-import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
-import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
-import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.indices.CreateIndexRequest;
-import org.elasticsearch.client.indices.CreateIndexResponse;
-import org.elasticsearch.client.indices.PutMappingRequest;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.index.reindex.ReindexRequest;
-import org.elasticsearch.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener.GLOBAL_SEARCH;
 
@@ -37,10 +32,10 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     private static final String GLOBAL_SEARCH_CASES_INDEX_SETTINGS_JSON = "/globalSearchCasesIndexSettings.json";
     protected CcdElasticSearchProperties config;
 
-    protected RestHighLevelClient elasticClient;
+    protected ElasticsearchClient elasticClient;
 
     @Autowired
-    public HighLevelCCDElasticClient(CcdElasticSearchProperties config, RestHighLevelClient elasticClient) {
+    public HighLevelCCDElasticClient(CcdElasticSearchProperties config, ElasticsearchClient elasticClient) {
         this.config = config;
         this.elasticClient = elasticClient;
     }
@@ -48,35 +43,64 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     @Override
     public boolean createIndex(String indexName, String alias) throws IOException {
         log.info("creating index {} with alias {}", indexName, alias);
-        CreateIndexRequest request = new CreateIndexRequest(indexName);
-        request.alias(new Alias(alias));
-        String file = (alias.equalsIgnoreCase(GLOBAL_SEARCH))
+        final String file = (alias.equalsIgnoreCase(GLOBAL_SEARCH))
             ? GLOBAL_SEARCH_CASES_INDEX_SETTINGS_JSON : CASES_INDEX_SETTINGS_JSON;
-        request.settings(casesIndexSettings(file));
-        CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
-        log.info("index created: {}", createIndexResponse.isAcknowledged());
-        return createIndexResponse.isAcknowledged();
+        log.info("file: {}", file);
+
+        // Load settings from JSON file as a Map
+        Map<String, Object> settings = casesIndexSettings(file);
+        log.info("settings: {}", settings);
+
+        CreateIndexResponse createIndexResponse = elasticClient.indices().create(b -> {
+            return b
+                .index(indexName)
+                .settings(s -> {
+                    try {
+                        return s.withJson(new StringReader(
+                            new ObjectMapper().writeValueAsString(settings)
+                        ));
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .aliases(Map.of(alias, new Alias.Builder().isWriteIndex(true).build()));
+        });
+
+        log.info("index created: {}, aliasExists: {}",
+            null == createIndexResponse ? null : createIndexResponse.acknowledged(),
+            aliasExists(alias));
+        return null != createIndexResponse && createIndexResponse.acknowledged();
     }
 
     @Override
     public boolean upsertMapping(String aliasName, String caseTypeMapping) throws IOException {
         log.info("upsert mapping of most recent index for alias {}", aliasName);
-        GetAliasesResponse aliasesResponse = getAlias(aliasName);
+        var aliasesResponse = elasticClient.indices().getAlias(b -> b.name(aliasName));
         String currentIndex = getCurrentAliasIndex(aliasName, aliasesResponse);
         log.info("upsert mapping of index {}", currentIndex);
-        PutMappingRequest request = new PutMappingRequest(currentIndex);
-        request.source(caseTypeMapping, XContentType.JSON);
-        AcknowledgedResponse acknowledgedResponse = elasticClient.indices().putMapping(request, RequestOptions.DEFAULT);
-        log.info("mapping upserted: {}", acknowledgedResponse.isAcknowledged());
-        return acknowledgedResponse.isAcknowledged();
+
+        var putMappingResponse = elasticClient.indices().putMapping(b -> b
+            .index(currentIndex)
+            .withJson(new StringReader(caseTypeMapping))
+        );
+        log.info("mapping upserted: {}", putMappingResponse.acknowledged());
+        return null != putMappingResponse && putMappingResponse.acknowledged();
     }
 
     @Override
     public boolean aliasExists(String alias) throws IOException {
-        GetAliasesRequest request = new GetAliasesRequest(alias);
-        boolean exists = elasticClient.indices().existsAlias(request, RequestOptions.DEFAULT);
-        log.info("alias {} exists: {}", alias, exists);
-        return exists;
+        try {
+            var response = elasticClient.indices().getAlias(b -> b.name(alias));
+            boolean exists = null != response && response.aliases() != null && !response.aliases().isEmpty();
+            log.info("alias {} exists: {}", alias, exists);
+            return exists;
+        } catch (ElasticsearchException e) {
+            if (e.status() == 404) {
+                log.info("alias {} does not exist (404)", alias);
+                return false;
+            }
+            throw e;
+        }
     }
 
     @Override
@@ -89,94 +113,112 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         }
     }
 
-    public GetAliasesResponse getAlias(String alias) throws IOException {
-        GetAliasesRequest request = new GetAliasesRequest(alias);
-        return elasticClient.indices().getAlias(request, RequestOptions.DEFAULT);
+    public GetAliasResponse getAlias(String alias) throws IOException {
+        return elasticClient.indices().getAlias(b -> b.name(alias));
     }
 
-    private Settings.Builder casesIndexSettings(String file) throws IOException {
+    private Map<String, Object> casesIndexSettings(String file) throws IOException {
+        Map<String, Object> settings;
         try (InputStream inputStream = getClass().getResourceAsStream(file)) {
-            Settings.Builder settings = Settings.builder().loadFromStream(file,
-                inputStream, false);
-            settings.put("index.number_of_shards", config.getIndexShards());
-            settings.put("index.number_of_replicas", config.getIndexShardsReplicas());
-            settings.put("index.mapping.total_fields.limit", config.getCasesIndexMappingFieldsLimit());
-            return settings;
+            if (inputStream == null) {
+                throw new IOException("Settings file not found: " + file);
+            }
+            settings = new ObjectMapper().readValue(inputStream, Map.class);
         }
+        settings.put("index.number_of_shards", config.getIndexShards());
+        settings.put("index.number_of_replicas", config.getIndexShardsReplicas());
+        settings.put("index.mapping.total_fields.limit", config.getCasesIndexMappingFieldsLimit());
+        return settings;
     }
 
-    private String getCurrentAliasIndex(String indexName, GetAliasesResponse aliasesResponse) {
-        ArrayList<String> indices = new ArrayList<>(aliasesResponse.getAliases().keySet());
+    private String getCurrentAliasIndex(String indexName, GetAliasResponse aliasesResponse) {
+        ArrayList<String> indices = new ArrayList<>(aliasesResponse.aliases().keySet());
         Collections.sort(indices);
         log.info("found following indexes for alias {}: {}", indexName, indices);
         return Iterables.getLast(indices);
     }
 
     public void setIndexReadOnly(String indexName, boolean readOnly) throws IOException {
-        UpdateSettingsRequest updateSettingsRequest = new UpdateSettingsRequest(indexName);
-        Settings settings = Settings.builder()
-            .put("index.blocks.read_only", readOnly)
-            .build();
-        updateSettingsRequest.settings(settings);
-        elasticClient.indices().putSettings(updateSettingsRequest, RequestOptions.DEFAULT);
+        elasticClient.indices().putSettings(b -> b
+            .index(indexName)
+            .settings(s -> s
+                .withJson(new java.io.StringReader(
+                    "{\"index.blocks.read_only\": " + readOnly + "}"
+                ))
+            )
+        );
+        log.info("Set index '{}' read_only to {}", indexName, readOnly);
     }
 
     public boolean createIndexAndMapping(String indexName, String caseTypeMapping) throws IOException {
-        //create new index
-        CreateIndexRequest request = new CreateIndexRequest(indexName);
-        request.settings(casesIndexSettings(CASES_INDEX_SETTINGS_JSON));
-        CreateIndexResponse createIndexResponse = elasticClient.indices().create(request, RequestOptions.DEFAULT);
-        log.info("index created: {}", createIndexResponse.isAcknowledged());
+        // Load settings from JSON file as a Map
+        Map<String, Object> settings;
+        try (InputStream inputStream = getClass().getResourceAsStream(CASES_INDEX_SETTINGS_JSON)) {
+            settings = new ObjectMapper().readValue(inputStream, Map.class);
+        }
 
-        //upsert mapping to new index
-        PutMappingRequest putRequest = new PutMappingRequest(indexName);
-        putRequest.source(caseTypeMapping, XContentType.JSON);
+        var createIndexResponse = elasticClient.indices().create(b -> b
+            .index(indexName)
+            .settings(s -> {
+                try {
+                    return s.withJson(new java.io.StringReader(
+                        new ObjectMapper().writeValueAsString(settings)
+                    ));
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException(e);
+                }
+            })
+        );
+        log.info("index created: {}", createIndexResponse.acknowledged());
 
-        AcknowledgedResponse acknowledgedResponse = elasticClient.indices()
-            .putMapping(putRequest, RequestOptions.DEFAULT);
-        log.info("mapping upserted: {}", acknowledgedResponse.isAcknowledged());
+        // Upsert mapping to new index
+        var putMappingResponse = elasticClient.indices().putMapping(b -> b
+            .index(indexName)
+            .withJson(new java.io.StringReader(caseTypeMapping))
+        );
+        log.info("mapping upserted: {}", putMappingResponse.acknowledged());
 
-        return createIndexResponse.isAcknowledged();
+        return createIndexResponse.acknowledged();
     }
 
     public boolean updateAlias(String aliasName, String oldIndex, String newIndex) throws IOException {
-        IndicesAliasesRequest aliasRequest = new IndicesAliasesRequest();
-        aliasRequest.addAliasAction(IndicesAliasesRequest.AliasActions.remove().index(oldIndex).alias(aliasName));
-        aliasRequest.addAliasAction(IndicesAliasesRequest.AliasActions.add().index(newIndex).alias(aliasName));
-
-        AcknowledgedResponse aliasResponse = elasticClient.indices()
-            .updateAliases(aliasRequest, RequestOptions.DEFAULT);
-        if (aliasResponse.isAcknowledged()) {
+        var aliasResponse = elasticClient.indices().updateAliases(b -> b
+            .actions(
+                Action.of(a -> a.remove(r -> r.index(oldIndex).alias(aliasName))),
+                Action.of(a -> a.add(ad -> ad.index(newIndex).alias(aliasName)))
+            )
+        );
+        if (aliasResponse.acknowledged()) {
             log.info("alias successfully updated: {} now points to {}", oldIndex, newIndex);
         } else {
             log.info("alias update failed: {} still points to {}", oldIndex, oldIndex);
         }
-        return aliasResponse.isAcknowledged();
+        return null != aliasResponse && aliasResponse.acknowledged();
     }
 
     public boolean removeIndex(String indexName) throws IOException {
-        DeleteIndexRequest deleteIndexRequest = new DeleteIndexRequest(indexName);
-        AcknowledgedResponse deleteResponse = elasticClient.indices()
-            .delete(deleteIndexRequest, RequestOptions.DEFAULT);
-        if (deleteResponse.isAcknowledged()) {
+        var deleteResponse = elasticClient.indices().delete(b -> b.index(indexName));
+        if (deleteResponse.acknowledged()) {
             log.info("successfully deleted index: {}", indexName);
         } else {
             log.info("failed to delete index: {}", indexName);
         }
-        return deleteResponse.isAcknowledged();
+        return null != deleteResponse && deleteResponse.acknowledged();
     }
 
-    public void reindexData(String oldIndex, String newIndex, ActionListener<BulkByScrollResponse> listener) {
-        ReindexRequest reindexRequest = new ReindexRequest();
-        reindexRequest.setSourceIndices(oldIndex);
-        reindexRequest.setDestIndex(newIndex);
-        reindexRequest.setRefresh(true);
-
-        //doesn't return taskID
-        elasticClient.reindexAsync(
-            reindexRequest,
-            RequestOptions.DEFAULT,
-            listener
-        );
+    public void reindexData(String oldIndex, String newIndex,
+                            ActionListener<co.elastic.clients.elasticsearch.core.ReindexResponse> listener) {
+        CompletableFuture.runAsync(() -> {
+            try {
+                var response = elasticClient.reindex(b -> b
+                    .source(s -> s.index(oldIndex))
+                    .dest(d -> d.index(newIndex))
+                    .refresh(true)
+                );
+                listener.onResponse(response);
+            } catch (Exception e) {
+                listener.onFailure(e);
+            }
+        });
     }
 }
