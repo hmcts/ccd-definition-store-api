@@ -162,6 +162,7 @@ allprojects {
     }
 
     configurations.all {
+        exclude group: 'org.eclipse.parsson'
         collect { configuration ->
             configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
         }
