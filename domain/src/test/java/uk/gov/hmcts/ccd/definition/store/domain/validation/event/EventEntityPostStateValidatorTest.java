@@ -1,18 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 
-import com.google.common.collect.Sets;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -23,6 +10,19 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventPostStateEntity;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import com.google.common.collect.Sets;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -30,7 +30,7 @@ import static org.mockito.Mockito.mock;
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.showcondition.BaseShowConditionTest.caseFieldEntity;
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.showcondition.BaseShowConditionTest.exampleFieldTypeEntityWithComplexFields;
 
-public class EventEntityPostStateValidatorTest {
+class EventEntityPostStateValidatorTest {
 
     private static final String STATE_APPROVAL_REQUIRED = "ApprovalRequired";
 
@@ -51,9 +51,9 @@ public class EventEntityPostStateValidatorTest {
 
     private EventEntityValidationContext eventEntityValidationContext;
 
-    @Before
-    public void setUp() throws InvalidShowConditionException {
-        MockitoAnnotations.initMocks(this);
+    @BeforeEach
+    void setUp() throws InvalidShowConditionException {
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new EventEntityPostStateValidator(showConditionExtractor, caseTypeEntityUtil);
         caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference("TestCaseType");
@@ -62,7 +62,7 @@ public class EventEntityPostStateValidatorTest {
     }
 
     @Test
-    public void shouldReturnEmptyErrorListWhenNoPostStatesPresent() {
+    void shouldReturnEmptyErrorListWhenNoPostStatesPresent() {
         EventEntity eventEntity = new EventEntity();
         eventEntity.setCaseType(createCaseTypeEntity());
         eventEntity.setReference("createCase");
@@ -73,7 +73,7 @@ public class EventEntityPostStateValidatorTest {
     }
 
     @Test
-    public void shouldFailWhenNoDefaultPostStatePresent() {
+    void shouldFailWhenNoDefaultPostStatePresent() {
         EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED, ENABLING_CONDITION, 1);
         ValidationResult validationResult = classUnderTest.validate(eventEntity, eventEntityValidationContext);
 
@@ -84,7 +84,7 @@ public class EventEntityPostStateValidatorTest {
     }
 
     @Test
-    public void shouldNotFailWhenDefaultPostStatePresent() {
+    void shouldNotFailWhenDefaultPostStatePresent() {
         EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED, ENABLING_CONDITION, 1);
         EventPostStateEntity defaultPostStateEntity = createEventPostStateEntity(STATE_READY_FOR_DIRECTIONS,
             null, eventEntity, 99);
@@ -96,7 +96,7 @@ public class EventEntityPostStateValidatorTest {
     }
 
     @Test
-    public void shouldFailWhenMultiplePostStatesHasSamePriority() {
+    void shouldFailWhenMultiplePostStatesHasSamePriority() {
         EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED, ENABLING_CONDITION, 1);
         EventPostStateEntity postStateEntity = createEventPostStateEntity(STATE_READY_FOR_DIRECTIONS,
             ENABLING_CONDITION, eventEntity, 1);
@@ -115,7 +115,7 @@ public class EventEntityPostStateValidatorTest {
     }
 
     @Test
-    public void shouldNotFailWhenMultiplePostStatesHasDifferentPriority() {
+    void shouldNotFailWhenMultiplePostStatesHasDifferentPriority() {
         EventEntity eventEntity = createEventWithPostStates(STATE_APPROVAL_REQUIRED, ENABLING_CONDITION, 2);
         EventPostStateEntity defaultPostStateEntity = createEventPostStateEntity(STATE_READY_FOR_DIRECTIONS,
             null, eventEntity, 1);
@@ -127,7 +127,7 @@ public class EventEntityPostStateValidatorTest {
     }
 
     @Test
-    public void shouldFailWhenCaseFieldIsNotDefinedDefaultPostStatePresent() throws InvalidShowConditionException {
+    void shouldFailWhenCaseFieldIsNotDefinedDefaultPostStatePresent() throws InvalidShowConditionException {
         mockShowCondition(Sets.newHashSet("FieldA", "FieldC"), new ArrayList<>());
         String matchingConditionFieldNotDefined = "FieldA!=\"\" AND FieldC=\"I'm innocent\"";
 
@@ -143,7 +143,7 @@ public class EventEntityPostStateValidatorTest {
     }
 
     @Test
-    public void successfullyValidatesPostStateConditionForCustomComplexField() throws InvalidShowConditionException {
+    void successfullyValidatesPostStateConditionForCustomComplexField() throws InvalidShowConditionException {
         String matchingCaseFieldId = "complexName";
         String matchingCaseFieldKey = matchingCaseFieldId
             + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode.AddressUKCode.Country";
@@ -176,7 +176,7 @@ public class EventEntityPostStateValidatorTest {
 
         assertNotNull(validationResult, "validation result should not be null");
         assertThat(validationResult.getValidationErrors().size(), is(0));
-        Assert.assertThat(validationResult.isValid(), CoreMatchers.is(true));
+        assertThat(validationResult.isValid(), is(true));
     }
 
     private ShowCondition mockShowCondition() throws InvalidShowConditionException {

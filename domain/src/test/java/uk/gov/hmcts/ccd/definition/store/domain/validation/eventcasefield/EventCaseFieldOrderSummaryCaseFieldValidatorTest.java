@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
-import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -8,24 +7,26 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
+import org.junit.jupiter.api.Test;
+
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
+class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
 
     public static final String ORDER_SUMMARY = "OrderSummary";
     private final EventCaseFieldOrderSummaryCaseFieldValidator classUnderTest =
         new EventCaseFieldOrderSummaryCaseFieldValidator();
 
     @Test
-    public void shouldPassValidationIfFieldIsNotLabelType() {
+    void shouldPassValidationIfFieldIsNotLabelType() {
 
         assertTrue(classUnderTest.validate(eventCaseFieldEntity(
             caseField("NotOrderSummary"), null, DisplayContext.MANDATORY),
@@ -37,7 +38,7 @@ public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
     }
 
     @Test
-    public void shouldPassValidationIfFieldTypeMandatory() throws Exception {
+    void shouldPassValidationIfFieldTypeMandatory() throws Exception {
 
         assertTrue(classUnderTest.validate(eventCaseFieldEntity(
             caseField(ORDER_SUMMARY), null, DisplayContext.MANDATORY), null)
@@ -46,7 +47,7 @@ public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
     }
 
     @Test
-    public void shouldPassValidationIfDisplayContextIsNull() throws Exception {
+    void shouldPassValidationIfDisplayContextIsNull() throws Exception {
 
         ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(
             caseField(ORDER_SUMMARY), null, null), null);
@@ -57,7 +58,7 @@ public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
     }
 
     @Test
-    public void shouldReturnValidationErrorIfFieldTypeOptional() throws Exception {
+    void shouldReturnValidationErrorIfFieldTypeOptional() throws Exception {
 
         ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(ORDER_SUMMARY),
             event("Event Reference"), DisplayContext.OPTIONAL), null);
@@ -75,7 +76,7 @@ public class EventCaseFieldOrderSummaryCaseFieldValidatorTest {
     }
 
     @Test
-    public void shouldReturnValidationErrorIfFieldTypeReadOnly() throws Exception {
+    void shouldReturnValidationErrorIfFieldTypeReadOnly() throws Exception {
 
         ValidationResult validationResult = classUnderTest.validate(eventCaseFieldEntity(caseField(ORDER_SUMMARY),
             event("Event Reference"), DisplayContext.READONLY), null);

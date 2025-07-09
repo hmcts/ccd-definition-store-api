@@ -1,10 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -17,18 +13,24 @@ import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertThrows;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class EventCaseFieldParserTest {
+class EventCaseFieldParserTest {
 
     @Mock
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
@@ -49,9 +51,9 @@ public class EventCaseFieldParserTest {
 
     private static final CaseFieldEntity CASE_FIELD = new CaseFieldEntity();
 
-    @Before
-    public void setUp() throws InvalidShowConditionException {
-        MockitoAnnotations.initMocks(this);
+    @BeforeEach
+    void setUp() throws InvalidShowConditionException {
+        MockitoAnnotations.openMocks(this);
         when(parseContext.getCaseFieldForCaseType(any(), any())).thenReturn(CASE_FIELD);
         when(showConditionParser.parseShowCondition(any())).thenReturn(
             new ShowCondition.Builder().showConditionExpression(PARSED_SHOW_CONDITION).build()
@@ -60,7 +62,7 @@ public class EventCaseFieldParserTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void defDataItemHasValidShowConditionParseEveCaseFldCalledParsedEventEntityWithShowCondtionSetToRsltOfShowConditionParsngAddToRegstryReturned() {
+    void defDataItemHasValidShowConditionParseEveCaseFldCalledParsedEventEntityWithShowCondtionSetToRsltOfShowConditionParsngAddToRegstryReturned() {
 
         String caseFieldId = "Case Field Id";
         String caseTypeId = "Case Type Id";
@@ -97,7 +99,7 @@ public class EventCaseFieldParserTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void defDataItemHasInValidShowConditionParseEventCaseFldCalledParsedEventEntityWithShowConditionSetToOrgShowConditionAddedToRegistryAndReturned()
+    void defDataItemHasInValidShowConditionParseEventCaseFldCalledParsedEventEntityWithShowConditionSetToOrgShowConditionAddedToRegistryAndReturned()
         throws InvalidShowConditionException {
 
         String caseFieldId = "Case Field Id";
@@ -132,7 +134,7 @@ public class EventCaseFieldParserTest {
     }
 
     @Test
-    public void shouldErrorWhenDisplayContextIsComplexAndPublishIsSpecified() {
+    void shouldErrorWhenDisplayContextIsComplexAndPublishIsSpecified() {
         String expectedError = "Publish column must not be set for case field 'FieldId', "
             + "event 'EventId' in CaseEventToFields when DisplayContext is COMPLEX. "
             + "Please only use the Publish overrides in EventToComplexTypes.";
@@ -152,7 +154,7 @@ public class EventCaseFieldParserTest {
     }
 
     @Test
-    public void shouldErrorWhenDefaultValuePresentAndNullifyByDefaultIsTrue() {
+    void shouldErrorWhenDefaultValuePresentAndNullifyByDefaultIsTrue() {
         String caseFieldId = "Case Field Id";
         String caseTypeId = "Case Type Id";
         String originalShowCondition = "Original Show Condition";
@@ -176,7 +178,7 @@ public class EventCaseFieldParserTest {
     }
 
     @Test
-    public void shouldReadValuesWhenDefaultValueNotPresentAndNullifyByDefaultIsTrue() {
+    void shouldReadValuesWhenDefaultValueNotPresentAndNullifyByDefaultIsTrue() {
         String caseFieldId = "Case Field Id";
         String caseTypeId = "Case Type Id";
         String originalShowCondition = "Original Show Condition";

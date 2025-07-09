@@ -16,7 +16,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
-public class CategoryTabServiceImplTest {
+class CategoryTabServiceImplTest {
 
     @Mock
     private CategoryTabRepository categoryTabRepository;
@@ -24,7 +24,7 @@ public class CategoryTabServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         this.categoryTabServiceImpl = new CategoryTabServiceImpl(categoryTabRepository);
     }
 

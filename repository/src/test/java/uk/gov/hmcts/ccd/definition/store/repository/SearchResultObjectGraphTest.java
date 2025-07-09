@@ -1,14 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
@@ -17,21 +9,31 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchResultCaseField
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class SearchResultObjectGraphTest {
+class SearchResultObjectGraphTest {
 
     @Autowired
     private CaseTypeRepository caseTypeRepository;
@@ -46,8 +48,8 @@ public class SearchResultObjectGraphTest {
 
     private VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
 
         final JurisdictionEntity jurisdiction = helper.createJurisdiction();
@@ -66,7 +68,7 @@ public class SearchResultObjectGraphTest {
     }
 
     @Test
-    public void saveDisplayGroup() {
+    void saveDisplayGroup() {
 
         final SearchResultCaseFieldEntity f = createSearchResultCaseField(
             caseType, getCaseField(caseType, "cf1"), "label dg", 4);
@@ -97,7 +99,17 @@ public class SearchResultObjectGraphTest {
         f.setCaseField(caseFieldEntity);
         f.setLabel(label);
         f.setOrder(order);
+        f.setAccessProfile(createAccessProfile());
         return f;
+    }
+
+    private AccessProfileEntity createAccessProfile() {
+        final AccessProfileEntity accessProfile = new AccessProfileEntity();
+        accessProfile.setReference("access profile ref");
+        accessProfile.setName("access profile name");
+        accessProfile.setDescription("access profile description");
+        accessProfile.setSecurityClassification(SecurityClassification.PUBLIC);
+        return accessProfile;
     }
 
     private CaseFieldEntity getCaseField(final CaseTypeEntity caseType, final String reference) {

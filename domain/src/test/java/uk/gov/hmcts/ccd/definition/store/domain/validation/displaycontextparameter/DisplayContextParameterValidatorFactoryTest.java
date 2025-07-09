@@ -12,11 +12,11 @@ import java.util.Collections;
 import java.util.NoSuchElementException;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class DisplayContextParameterValidatorFactoryTest {
+class DisplayContextParameterValidatorFactoryTest {
 
     private DisplayContextParameterValidatorFactory factory;
 
@@ -25,7 +25,7 @@ public class DisplayContextParameterValidatorFactoryTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
     }
 
     @Test

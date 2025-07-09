@@ -17,7 +17,7 @@ import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;

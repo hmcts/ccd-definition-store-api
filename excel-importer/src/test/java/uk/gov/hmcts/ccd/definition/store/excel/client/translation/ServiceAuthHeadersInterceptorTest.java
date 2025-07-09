@@ -1,15 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.excel.client.translation;
 
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
+
+import feign.RequestTemplate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import feign.RequestTemplate;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.mockito.BDDMockito.given;
 
 class ServiceAuthHeadersInterceptorTest {
@@ -24,7 +26,7 @@ class ServiceAuthHeadersInterceptorTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         template = new RequestTemplate();
     }
 
@@ -35,6 +37,6 @@ class ServiceAuthHeadersInterceptorTest {
 
         interceptor.apply(template);
 
-        assertThat(template.headers().get("ServiceAuthorization")).containsOnly(S2S_TOKEN);
+        assertThat(template.headers().get("ServiceAuthorization"), contains(S2S_TOKEN));
     }
 }

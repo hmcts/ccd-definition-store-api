@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -18,6 +15,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.SEARCH_PARTY_ADDRESS_LINE_1;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.SEARCH_PARTY_COLLECTION_FIELD_NAME;
@@ -39,9 +40,9 @@ public class SearchPartyValidator {
     private static final Function<String, String[]> COMMA_SEPARATOR_SPLIT_FUNCTION =
         expression -> SPLIT_FUNCTION.apply(expression, COMMA_SEPARATOR);
 
-    @Autowired
     private final DotNotationValidator dotNotationValidator;
 
+    @Autowired
     public SearchPartyValidator(DotNotationValidator dotNotationValidator) {
         this.dotNotationValidator = dotNotationValidator;
     }

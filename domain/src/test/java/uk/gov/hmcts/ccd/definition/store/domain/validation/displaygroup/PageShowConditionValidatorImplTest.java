@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
-import com.google.common.collect.Lists;
-import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
@@ -17,11 +11,19 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
+import java.util.List;
+
+import com.google.common.collect.Lists;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -29,7 +31,7 @@ import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.showcondition.BaseShowConditionTest.caseFieldEntity;
 import static uk.gov.hmcts.ccd.definition.store.domain.validation.showcondition.BaseShowConditionTest.exampleFieldTypeEntityWithComplexFields;
 
-public class PageShowConditionValidatorImplTest {
+class PageShowConditionValidatorImplTest {
     private static final List<DisplayGroupEntity> UNUSED_DISPLAY_GROUPS = Lists.newArrayList();
 
     @Mock
@@ -38,15 +40,15 @@ public class PageShowConditionValidatorImplTest {
     private PageShowConditionValidatorImpl testObj;
     private DisplayGroupEntity displayGroup;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
         testObj = new PageShowConditionValidatorImpl(mockShowConditionParser, new CaseFieldEntityUtil());
         displayGroup = new DisplayGroupEntity();
     }
 
     @Test
-    public void shouldNotExecuteWhenShowConditionIsEmpty() throws InvalidShowConditionException {
+    void shouldNotExecuteWhenShowConditionIsEmpty() throws InvalidShowConditionException {
 
         displayGroup.setShowCondition(null);
         displayGroup.setType(DisplayGroupType.PAGE);
@@ -57,7 +59,7 @@ public class PageShowConditionValidatorImplTest {
     }
 
     @Test
-    public void shouldNotExecuteWhenShowConditionIsBlank() throws InvalidShowConditionException {
+    void shouldNotExecuteWhenShowConditionIsBlank() throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("");
         displayGroup.setType(DisplayGroupType.PAGE);
@@ -68,7 +70,7 @@ public class PageShowConditionValidatorImplTest {
     }
 
     @Test
-    public void shouldNotExecuteWhenShowTypeIsNotPage() throws InvalidShowConditionException {
+    void shouldNotExecuteWhenShowTypeIsNotPage() throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
         displayGroup.setType(DisplayGroupType.TAB);
@@ -79,7 +81,7 @@ public class PageShowConditionValidatorImplTest {
     }
 
     @Test
-    public void returnsNoValidationErrorsOnSuccess() throws InvalidShowConditionException {
+    void returnsNoValidationErrorsOnSuccess() throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
         displayGroup.setType(DisplayGroupType.PAGE);
@@ -101,7 +103,7 @@ public class PageShowConditionValidatorImplTest {
     }
 
     @Test
-    public void successfullyValidatesShowConditionForCustomComplexField() throws InvalidShowConditionException {
+    void successfullyValidatesShowConditionForCustomComplexField() throws InvalidShowConditionException {
         String matchingCaseFieldId = "complexName";
         String matchingCaseFieldKey = matchingCaseFieldId
             + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode.AddressUKCode.Country";
@@ -130,7 +132,7 @@ public class PageShowConditionValidatorImplTest {
     }
 
     @Test
-    public void shouldAddErrorForInvalidShowConditionForCustomComplexField() throws InvalidShowConditionException {
+    void shouldAddErrorForInvalidShowConditionForCustomComplexField() throws InvalidShowConditionException {
         String matchingCaseFieldId = "complexName";
         String matchingCaseFieldKey = matchingCaseFieldId + ".LastNameWithSomeCplxFields.SomeComplexFieldsCode";
         String invalidShowCondition = matchingCaseFieldKey + "=\"UK\"";
@@ -160,7 +162,7 @@ public class PageShowConditionValidatorImplTest {
     }
 
     @Test
-    public void returnsDisplayGroupInvalidShowConditionErrorWhenUnableToParseShowCondition()
+    void returnsDisplayGroupInvalidShowConditionErrorWhenUnableToParseShowCondition()
         throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");
@@ -176,7 +178,7 @@ public class PageShowConditionValidatorImplTest {
     }
 
     @Test
-    public void successfullyValidatesShowConditionWithMetadataField() throws InvalidShowConditionException {
+    void successfullyValidatesShowConditionWithMetadataField() throws InvalidShowConditionException {
         displayGroup.setShowCondition("someShowCondition");
         displayGroup.setType(DisplayGroupType.PAGE);
         String field = MetadataField.STATE.getReference();
@@ -199,7 +201,7 @@ public class PageShowConditionValidatorImplTest {
 
 
     @Test
-    public void successfullyValidatesShowConditionWithInjected() throws InvalidShowConditionException {
+    void successfullyValidatesShowConditionWithInjected() throws InvalidShowConditionException {
         displayGroup.setShowCondition("someShowCondition");
         displayGroup.setType(DisplayGroupType.PAGE);
         String field = "[INJECTED_DATA.test]";
@@ -221,7 +223,7 @@ public class PageShowConditionValidatorImplTest {
     }
 
     @Test
-    public void returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidField()
+    void returnsDisplayGroupInvalidShowConditionFieldWhenShowConditionReferencesInvalidField()
         throws InvalidShowConditionException {
 
         displayGroup.setShowCondition("someShowCondition");

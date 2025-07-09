@@ -1,14 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.apache.commons.lang3.StringUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
@@ -20,21 +12,31 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.WorkBasketCaseFieldEn
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class GenericLayoutRepositoryTest {
+class GenericLayoutRepositoryTest {
 
     private static final String CASE_ID = "CaseId";
 
@@ -53,8 +55,8 @@ public class GenericLayoutRepositoryTest {
 
     private VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
         caseTypeV1 = versionedCaseTypeRepository.save(caseTypeEntity());
         caseTypeV2 = versionedCaseTypeRepository.save(caseTypeEntity());
@@ -62,7 +64,7 @@ public class GenericLayoutRepositoryTest {
     }
 
     @Test
-    public void shouldReturnWorkbasketLayoutsForLatestCaseType_whenWorkbasketLayoutsExistForThreeCaseVersions() {
+    void shouldReturnWorkbasketLayoutsForLatestCaseType_whenWorkbasketLayoutsExistForThreeCaseVersions() {
 
         genericLayoutRepository.save(createWorkBasketCaseField(
             caseTypeV1, getCaseField(caseTypeV1, "cf1"), "label dg", 4));
@@ -95,12 +97,13 @@ public class GenericLayoutRepositoryTest {
         f.setCaseField(caseFieldEntity);
         f.setLabel(label);
         f.setOrder(order);
+        f.setAccessProfile(createAccessProfile());
         return f;
     }
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void shouldReturnSearchCasesResultLayoutsForLatestCaseType_whenSearchCasesResultLayoutsExistForThreeCaseVersions() {
+    void shouldReturnSearchCasesResultLayoutsForLatestCaseType_whenSearchCasesResultLayoutsExistForThreeCaseVersions() {
 
         genericLayoutRepository.save(createSearchCasesResultField(
             caseTypeV1, getCaseField(caseTypeV1, "cf1"), "label dg", 4));
@@ -133,11 +136,21 @@ public class GenericLayoutRepositoryTest {
         f.setCaseField(caseFieldEntity);
         f.setLabel(label);
         f.setOrder(order);
+        f.setAccessProfile(createAccessProfile());
         return f;
     }
 
+    private AccessProfileEntity createAccessProfile() {
+        final AccessProfileEntity accessProfile = new AccessProfileEntity();
+        accessProfile.setReference("access_profile");
+        accessProfile.setName("access_profile");
+        accessProfile.setDescription("access_profile");
+        accessProfile.setSecurityClassification(SecurityClassification.PUBLIC);
+        return accessProfile;
+    }
+
     @Test
-    public void shouldSearchInputLayoutsForLatestCaseType_whenSearchInputLayoutsExistForThreeCaseVersions() {
+    void shouldSearchInputLayoutsForLatestCaseType_whenSearchInputLayoutsExistForThreeCaseVersions() {
 
         genericLayoutRepository.save(createSearchInputCaseField(
             caseTypeV1, getCaseField(caseTypeV1, "cf2"), "qwerty", 6));
@@ -170,11 +183,12 @@ public class GenericLayoutRepositoryTest {
         f.setCaseField(caseFieldEntity);
         f.setLabel(label);
         f.setOrder(order);
+        f.setAccessProfile(createAccessProfile());
         return f;
     }
 
     @Test
-    public void shouldSearchResultLayoutsForLatestCaseType_whenSearchResultLayoutsExistForThreeCaseVersions() {
+    void shouldSearchResultLayoutsForLatestCaseType_whenSearchResultLayoutsExistForThreeCaseVersions() {
 
         genericLayoutRepository.save(createSearchResultCaseField(
             caseTypeV1, getCaseField(caseTypeV1, "cf3"), "v vhjf vh", 12));
@@ -207,6 +221,7 @@ public class GenericLayoutRepositoryTest {
         f.setCaseField(caseFieldEntity);
         f.setLabel(label);
         f.setOrder(order);
+        f.setAccessProfile(createAccessProfile());
         return f;
     }
 

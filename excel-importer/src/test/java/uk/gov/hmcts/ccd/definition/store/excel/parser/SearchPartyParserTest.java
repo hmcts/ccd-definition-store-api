@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import com.google.common.collect.Sets;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
-import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -17,12 +11,18 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
 import java.util.List;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import com.google.common.collect.Sets;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-@RunWith(MockitoJUnitRunner.class)
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
+
+@ExtendWith(MockitoExtension.class)
 class SearchPartyParserTest extends ParserTestBase {
 
     private static final String CASE_TYPE_ID_1 = "TestCaseTypeID_1";
@@ -48,11 +48,11 @@ class SearchPartyParserTest extends ParserTestBase {
 
         definitionSheets.put(SheetName.SEARCH_PARTY.getName(), definitionSheet);
         CaseTypeEntity caseTypeEntity1 = mock(CaseTypeEntity.class);
-        when(caseTypeEntity1.getReference()).thenReturn(CASE_TYPE_ID_1);
+        lenient().when(caseTypeEntity1.getReference()).thenReturn(CASE_TYPE_ID_1);
         CaseTypeEntity caseTypeEntity2 = mock(CaseTypeEntity.class);
-        when(caseTypeEntity2.getReference()).thenReturn(CASE_TYPE_ID_2);
+        lenient().when(caseTypeEntity2.getReference()).thenReturn(CASE_TYPE_ID_2);
         Set<CaseTypeEntity> caseTypes = Sets.newHashSet(caseTypeEntity1, caseTypeEntity2);
-        given(parseContext.getCaseTypes()).willReturn(caseTypes);
+        lenient().when(parseContext.getCaseTypes()).thenReturn(caseTypes);
     }
 
     @Test
