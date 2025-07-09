@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import org.elasticsearch.client.ResponseException;
 import org.json.JSONException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -48,8 +49,17 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         .withJurisdiction("JUR").withReference(CASE_TYPE_A);
 
     @BeforeEach
-    void setUp() throws IOException {
-        deleteElasticsearchIndices(WILDCARD);
+    void setUp() throws ResponseException {
+        try {
+            deleteElasticsearchIndices(WILDCARD);
+        } catch (org.elasticsearch.client.ResponseException e) {
+            if (e.getResponse().getStatusLine().getStatusCode() != 404) {
+                throw e;
+            }
+            // Ignore 404 (index not found)
+        } catch (Exception e) {
+            throw new RuntimeException("Unexpected error during Elasticsearch cleanup", e);
+        }
     }
 
     @Test
