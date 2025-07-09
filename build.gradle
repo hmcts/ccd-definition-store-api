@@ -50,7 +50,7 @@ ext {
     elasticSearchVersion = '7.17.1'
     testcontainersVersion = '1.21.0'
     ccdTestDefinitionVersion = '7.25.4'
-    beftaFwVersion = '9.2.3'
+    beftaFwVersion = '9.2.4'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -215,7 +215,7 @@ subprojects { subproject ->
         implementation group: 'org.springframework.security', name: 'spring-security-config'
 
         // HMCTS
-        implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.2.0'
+        implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.3.3'
         implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.3'
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
 
