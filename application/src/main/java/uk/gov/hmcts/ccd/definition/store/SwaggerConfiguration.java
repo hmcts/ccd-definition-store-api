@@ -15,12 +15,24 @@ import org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandl
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.http.MediaType;
 import org.springframework.util.StringUtils;
+
 import springfox.documentation.builders.RequestHandlerSelectors;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.RequestParameterBuilder;
+
+import springfox.documentation.schema.ScalarType;
+import springfox.documentation.service.ApiInfo;
+import springfox.documentation.service.Contact;
+import springfox.documentation.service.RequestParameter;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Collection;
 import java.util.List;
 
@@ -29,9 +41,48 @@ public class SwaggerConfiguration {
 
     @Bean
     public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
+        return new Docket(DocumentationType.SWAGGER_2) // or OPENAPI_3
             .select()
             .apis(RequestHandlerSelectors.basePackage(CaseDataAPIApplication.class.getPackage().getName()))
+            .paths(PathSelectors.any())
+            .build().useDefaultResponseMessages(false)
+            .apiInfo(apiInfo())
+            .globalRequestParameters(Arrays.asList(headerAuthorization(), headerServiceAuthorization()));
+    }
+
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+            .title("Core Case Data - Definition store API")
+            .description("Create, modify, retrieve and search definitions")
+            .license("")
+            .licenseUrl("")
+            .version("1.0.1")
+            .contact(new Contact("CCD",
+                "https://tools.hmcts.net/confluence/display/RCCD/Reform%3A+Core+Case+Data+Home",
+                "corecasedatateam@hmcts.net"))
+            .termsOfServiceUrl("")
+            .build();
+    }
+
+    private RequestParameter headerAuthorization() {
+        return new RequestParameterBuilder()
+            .name("Authorization")
+            .description("Keyword `Bearer` followed by a valid IDAM user token")
+            .in("header")
+            .accepts(Collections.singleton(MediaType.APPLICATION_JSON))
+            .required(true)
+            .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
+            .build();
+    }
+
+    private RequestParameter headerServiceAuthorization() {
+        return new RequestParameterBuilder()
+            .name("ServiceAuthorization")
+            .description("Valid Service-to-Service JWT token for a whitelisted micro-service")
+            .in("header")
+            .accepts(Collections.singleton(MediaType.APPLICATION_JSON))
+            .required(true)
+            .query(q -> q.model(m -> m.scalarModel(ScalarType.STRING)))
             .build();
     }
 
