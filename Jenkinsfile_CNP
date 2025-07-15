@@ -11,7 +11,7 @@ def app = "definition-store-api"
 def branchesToSync = ['demo', 'ithc', 'perftest', 'develop']
 
 // Variables to switch pipeline logic and wiring per type of build
-def definitionStoreDevelopPr = "PR-575" // This doesn't change frequently, but when it does, only change this value.
+def definitionStoreDevelopPr = "PR-1571" // This doesn't change frequently, but when it does, only change this value.
 
 def secrets = [
     'ccd-${env}': [
