@@ -33,6 +33,12 @@ dependencyCheck {
     suppressionFile = 'dependency-check-suppressions.xml'
 }
 
+tasks.register("printSuppressionFile") {
+    doLast {
+        println "SUPPRESSION_FILE=${dependencyCheck.suppressionFile}"
+    }
+}
+
 //spring boot dependency override
 //overriding some default spring boot deps because too old. Not generally recommended but needed to prevent runtime errors with version 6.4.2 of Elastic
 ext['elasticsearch.version'] = '7.17.1'
