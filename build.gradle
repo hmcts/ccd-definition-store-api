@@ -30,7 +30,13 @@ application {
 
 apply from: './gradle/suppress.gradle'
 dependencyCheck {
-    suppressionFile = 'dependency-check-suppressions.xml'
+    suppressionFile = 'config/owasp/suppressions.xml'
+}
+
+tasks.register("printSuppressionFile") {
+    doLast {
+        println "SUPPRESSION_FILE=${dependencyCheck.suppressionFile}"
+    }
 }
 
 //spring boot dependency override
