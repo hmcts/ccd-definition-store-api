@@ -11,7 +11,7 @@ CREATE TABLE public.reindex (
     start_time     TIMESTAMP NOT NULL,
     end_time       TIMESTAMP NOT NULL,
     status         VARCHAR(50) NOT NULL,
-    case_type_id   INTEGER NOT NULL,
+    case_type      VARCHAR(100) NOT NULL,
     jurisdiction   VARCHAR(70) NOT NULL,
     message        TEXT,
     CONSTRAINT fk_reindex_case_type_id FOREIGN KEY (case_type_id) REFERENCES public.case_type(id) ON DELETE CASCADE
