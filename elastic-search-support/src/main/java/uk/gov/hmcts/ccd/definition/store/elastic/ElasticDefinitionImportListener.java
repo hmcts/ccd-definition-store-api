@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import co.elastic.clients.elasticsearch.core.ReindexResponse;
+import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -60,7 +60,8 @@ public abstract class ElasticDefinitionImportListener {
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
 
-        try (HighLevelCCDElasticClient elasticClient = clientFactory.getObject()) {
+        HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
+        try {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
@@ -71,8 +72,8 @@ public abstract class ElasticDefinitionImportListener {
                 }
                 if (reindex) {
                     //get current alias index
-                    GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
-                    String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
+                    GetAliasResponse aliasResponse = elasticClient.getAlias(baseIndexName);
+                    String caseTypeName = aliasResponse.aliases().keySet().iterator().next();
 
                     //create new index with generated mapping and incremented case type name (no alias update yet)
                     caseMapping = mappingGenerator.generateMapping(caseType);
@@ -106,17 +107,14 @@ public abstract class ElasticDefinitionImportListener {
     private void handleReindexing(String baseIndexName,
                                   String oldIndex, String newIndex,
                                   boolean deleteOldIndex) {
-        HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
-        elasticClient.reindexData(oldIndex, newIndex, new ActionListener<>() {
+        HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject(); // Use a new instance
+        asyncElasticClient.reindexData(oldIndex, newIndex, new ActionListener<>() {
             @Override
-            public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
-                try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
-                    //if success set writable and update alias to new index
-                    log.info("updating alias from {} to {}", oldIndex, newIndex);
+            public void onResponse(ReindexResponse reindexResponse) {
+                try (asyncElasticClient) {
                     asyncElasticClient.setIndexReadOnly(baseIndexName, false);
                     asyncElasticClient.updateAlias(baseIndexName, oldIndex, newIndex);
                     if (deleteOldIndex) {
-                        log.info("deleting old index {}", oldIndex);
                         asyncElasticClient.removeIndex(oldIndex);
                     }
                 } catch (IOException e) {
@@ -127,13 +125,10 @@ public abstract class ElasticDefinitionImportListener {
 
             @Override
             public void onFailure(Exception ex) {
-                try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
-                    //if failed delete new index, set old index writable
+                try (asyncElasticClient) {
                     log.error("reindexing failed", ex);
                     asyncElasticClient.removeIndex(newIndex);
-                    log.info("{} deleted", newIndex);
                     asyncElasticClient.setIndexReadOnly(oldIndex, false);
-                    log.info("{} set to writable", oldIndex);
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing failure", e);
                     throw new CompletionException(e);
@@ -142,6 +137,7 @@ public abstract class ElasticDefinitionImportListener {
             }
         });
     }
+
 
     String incrementIndexNumber(String indexName) {
         Pattern pattern = Pattern.compile("(.+_cases-)(\\d+)$");

@@ -49,7 +49,6 @@ public class CaseMappingGenerator extends MappingGenerator {
         return mapping;
     }
 
-
     private void propertiesMapping(JsonWriter jw) {
         log.info("generating case properties mapping");
         config.getCasePredefinedMappings().forEach(Unchecked.biConsumer((property, mapping) -> {
@@ -79,7 +78,7 @@ public class CaseMappingGenerator extends MappingGenerator {
         jw.name(PROPERTIES);
         jw.beginObject();
         List<CaseFieldEntity> fields = caseType.getCaseFields().stream()
-            .filter(field -> !shouldIgnore(field)).collect(toList());
+            .filter(field -> !shouldIgnore(field)).toList();
         for (CaseFieldEntity field : fields) {
             String property = field.getReference();
             TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());

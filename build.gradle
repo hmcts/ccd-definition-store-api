@@ -25,7 +25,7 @@ dependencyCheck {
 }
 
 ext {
-    set('elasticsearch.version', '8.16.2')
+    set('elasticsearch.version', '9.0.3')
     set('spring-framework.version', '6.2.1')
     set('spring-security.version', '6.4.2')
     set('springCloudVersion', '2024.0.0')
@@ -47,7 +47,7 @@ ext {
     jjwtVersion = '0.12.6'
     feignJackson = '13.5'
     gsonVersion = '2.11.0'
-    elasticSearchVersion = '7.17.1'
+    elasticSearchVersion = '9.0.3'
     testcontainersVersion = '1.21.0'
     ccdTestDefinitionVersion = '7.25.4'
     beftaFwVersion = '9.2.4'
@@ -85,13 +85,16 @@ allprojects {
         mockitoAgent
         codacy
     }
+    configurations.configureEach {
+        exclude group: 'com.vaadin.external.google', module: 'android-json'
+    }
 
     apply plugin: 'java'
 
     // Global constraints
     dependencies {
 
-        // start::CVE Vulnerability dependency overrides 
+        // start::CVE Vulnerability dependency overrides
 
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5' // spring-cloud-starter-openfeign
         implementation group: 'commons-io', name: 'commons-io', version: '2.16.1' // spring-cloud-starter-openfeign
@@ -189,7 +192,7 @@ subprojects { subproject ->
 
     dependencies {
 
-        // start::CVE Vulnerability dependency overrides 
+        // start::CVE Vulnerability dependency overrides
 
         implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.0.1' // spring-boot-starter-oauth2-client
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0' // azure-storage
@@ -238,7 +241,8 @@ subprojects { subproject ->
         implementation group: 'org.apache.poi', name: 'poi-ooxml', version: apachePoiVersion
         implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: apachePoiVersion
         implementation group: 'org.elasticsearch', name: 'elasticsearch', version: elasticSearchVersion
-        implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: elasticSearchVersion
+        implementation group: 'co.elastic.clients', name: 'elasticsearch-java', version: elasticSearchVersion
+        implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: elasticSearchVersion
         implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
         implementation group: 'org.flywaydb', name: 'flyway-database-postgresql', version: flywayVersion
         implementation group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
@@ -342,7 +346,7 @@ subprojects { subproject ->
     }
 
     test {
-       environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
+        environment("AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY", "some-key")
         generateCucumberReports.enabled = false
         useJUnitPlatform()
 
