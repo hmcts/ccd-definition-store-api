@@ -11,7 +11,6 @@ CREATE TABLE public.reindex (
     start_time               TIMESTAMP NOT NULL,
     end_time                 TIMESTAMP NOT NULL,
     status                   VARCHAR(50) NOT NULL,
-    case_type_reference      VARCHAR(70),
     jurisdiction             VARCHAR(70) NOT NULL,
     message                  TEXT
 );
