@@ -127,6 +127,7 @@ allprojects {
         testImplementation group: 'org.apache.groovy', name: 'groovy-xml', version: groovyVersion
         testImplementation group: 'org.apache.groovy', name: 'groovy-json', version: groovyVersion
         testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.9', classifier: 'all'
+        testImplementation 'org.json:json:20240303'
 
     }
 
