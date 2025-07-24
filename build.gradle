@@ -164,7 +164,7 @@ allprojects {
     }
 
     configurations.all {
-        exclude group: 'commons-beanutils', module: 'commons-beanutils'
+        // Do not exclude beanutils—it leads to confusion with the force directive
         
         collect { configuration ->
             configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
@@ -185,10 +185,9 @@ allprojects {
                 if (details.requested.group == 'com.google.guava' && details.requested.name == 'guava') {
                     details.useVersion '32.1.3-jre'
                 }
-
-                force 'commons-beanutils:commons-beanutils:1.11.0'
             }
         }
+        force 'commons-beanutils:commons-beanutils:1.11.0'
     }
 
 }
