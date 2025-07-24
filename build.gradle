@@ -172,6 +172,11 @@ allprojects {
         resolutionStrategy {
             force 'commons-beanutils:commons-beanutils:1.11.0'
             eachDependency { details ->
+                if (details.requested.group == 'commons-beanutils' &&
+                        details.requested.name == 'commons-beanutils') {
+                    details.useVersion '1.11.0'
+                    details.because 'CVE-2025-48734 requires BeanUtils>=1.11.0'
+                }
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.8.5'
                 }
