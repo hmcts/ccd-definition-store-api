@@ -170,6 +170,7 @@ allprojects {
             configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
         }
         resolutionStrategy {
+            force 'commons-beanutils:commons-beanutils:1.11.0'
             eachDependency { details ->
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.8.5'
@@ -186,8 +187,8 @@ allprojects {
                     details.useVersion '32.1.3-jre'
                 }
             }
+            
         }
-        force 'commons-beanutils:commons-beanutils:1.11.0'
     }
 
 }
