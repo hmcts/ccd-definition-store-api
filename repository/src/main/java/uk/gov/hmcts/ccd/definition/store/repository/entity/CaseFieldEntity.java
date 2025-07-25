@@ -1,23 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,26 +10,27 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
-import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.SEQUENCE;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.EAGER;
+import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.GenerationType.SEQUENCE;
 
 @Table(name = "case_field")
 @Entity
-@TypeDefs({
-    @TypeDef(
-        name = "pgsql_securityclassification_enum",
-        typeClass = PostgreSQLEnumType.class,
-        parameters = @Parameter(name = "type",
-            value = "uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification")
-            ),
-    @TypeDef(
-        name = "pgsql_datafieldtype_enum",
-        typeClass = PostgreSQLEnumType.class,
-        parameters = @Parameter(name = "type",
-            value = "uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType")
-            )})
 public class CaseFieldEntity implements FieldEntity, Serializable {
 
     @Id
@@ -75,7 +60,7 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     private boolean searchable = true;
 
     @Column(name = "security_classification")
-    @Type(type = "pgsql_securityclassification_enum")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private SecurityClassification securityClassification;
 
     @ManyToOne(fetch = EAGER)
@@ -96,7 +81,7 @@ public class CaseFieldEntity implements FieldEntity, Serializable {
     private final List<ComplexFieldACLEntity> complexFieldACLEntities = new ArrayList<>();
 
     @Column(name = "data_field_type")
-    @Type(type = "pgsql_datafieldtype_enum")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private DataFieldType dataFieldType;
 
     @Column(name = "category_id")

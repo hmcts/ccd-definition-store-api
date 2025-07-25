@@ -1,15 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 
-public class RoleAssignmentTest {
+class RoleAssignmentTest {
 
 
     @Test
-    public void shouldGetEntity_whenToEntity() {
+    void shouldGetEntity_whenToEntity() {
 
         var roleAssignment = new RoleAssignment();
         var name = "name";

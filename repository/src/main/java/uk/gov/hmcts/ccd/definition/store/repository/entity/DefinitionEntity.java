@@ -1,43 +1,29 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
-import org.hibernate.annotations.UpdateTimestamp;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Version;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-import static javax.persistence.FetchType.LAZY;
-import static javax.persistence.GenerationType.IDENTITY;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.persistence.Version;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.type.SqlTypes;
+
+import static jakarta.persistence.FetchType.LAZY;
+import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Table(name = "definition_designer")
 @Entity
-@TypeDefs({
-    @TypeDef(
-        name = "jsonb-node",
-        typeClass = JsonNodeBinaryType.class
-            ),
-    @TypeDef(
-        name = "pgsql_definitionstatus_enum",
-        typeClass = PostgreSQLEnumType.class,
-        parameters = @Parameter(name = "type",
-            value = "uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionStatus")
-            )
-})
 public class DefinitionEntity implements Serializable, Versionable {
 
     @Id
@@ -59,11 +45,11 @@ public class DefinitionEntity implements Serializable, Versionable {
     private Integer version;
 
     @Column(name = "status", nullable = false)
-    @Type(type = "pgsql_definitionstatus_enum")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private DefinitionStatus status;
 
     @Column(name = "data", nullable = false, columnDefinition = "jsonb")
-    @Type(type = "jsonb-node")
+    @Type(JsonNodeBinaryType.class)
     private JsonNode data;
 
     @Column(name = "author", nullable = false)

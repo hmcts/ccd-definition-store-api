@@ -54,7 +54,7 @@ class IdamProfileServiceTest {
 
     @DisplayName("Should get logged in user details")
     @Test
-    public void shouldGetLoggedInUserDetails() {
+    void shouldGetLoggedInUserDetails() {
         final IdamProperties expectedIdamProperties = client.getLoggedInUserDetails();
         assertEquals(USER_ID, expectedIdamProperties.getId());
         assertEquals("emailId@a.com", expectedIdamProperties.getEmail());

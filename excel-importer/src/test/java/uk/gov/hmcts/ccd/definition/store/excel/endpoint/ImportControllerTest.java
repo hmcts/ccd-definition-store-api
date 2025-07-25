@@ -40,7 +40,7 @@ class ImportControllerTest {
 
     @BeforeEach
     void setup() throws IOException {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
         file =
             new MockMultipartFile("file",

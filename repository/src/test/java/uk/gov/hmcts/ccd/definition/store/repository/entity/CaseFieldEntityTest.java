@@ -1,20 +1,20 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
+
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-
 import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -249,13 +249,6 @@ class CaseFieldEntityTest {
                     .buildComplex())
                 .build()
             ));
-        }
-
-        private GenericLayoutEntity layoutEntity(CaseFieldEntity caseFieldEntity, String fieldElementPath) {
-            GenericLayoutEntity entity = new SearchInputCaseFieldEntity();
-            entity.setCaseField(caseFieldEntity);
-            entity.setCaseFieldElementPath(fieldElementPath);
-            return entity;
         }
     }
 }

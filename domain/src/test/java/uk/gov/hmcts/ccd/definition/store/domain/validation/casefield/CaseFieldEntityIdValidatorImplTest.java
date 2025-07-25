@@ -1,24 +1,21 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.MockitoAnnotations.openMocks;
 
-public class CaseFieldEntityIdValidatorImplTest {
-
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
+class CaseFieldEntityIdValidatorImplTest {
 
     private CaseFieldEntityIdValidatorImpl validator;
 
@@ -27,9 +24,9 @@ public class CaseFieldEntityIdValidatorImplTest {
     @Mock
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext;
 
-    @Before
-    public void setup() {
-
+    @BeforeEach
+    void setup() {
+        openMocks(this);
         given(caseFieldEntityValidationContext.getCaseReference()).willReturn("case_type");
 
         caseField = new CaseFieldEntity();
@@ -39,7 +36,7 @@ public class CaseFieldEntityIdValidatorImplTest {
     }
 
     @Test
-    public void shouldHaveValidationErrorForInvalidCaseFieldId() {
+    void shouldHaveValidationErrorForInvalidCaseFieldId() {
         caseField.setReference("select * from tab1");
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
 
@@ -52,7 +49,7 @@ public class CaseFieldEntityIdValidatorImplTest {
     }
 
     @Test
-    public void shouldHaveNoValidationErrorForValidCaseFieldId() {
+    void shouldHaveNoValidationErrorForValidCaseFieldId() {
 
         final ValidationResult result = validator.validate(caseField, caseFieldEntityValidationContext);
 

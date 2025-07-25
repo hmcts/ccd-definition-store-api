@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.assertj.core.api.Assertions;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InOrder;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
@@ -14,16 +7,24 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InOrder;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.BDDMockito.given;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CaseTypeParserTest extends ParserTestBase {
+@ExtendWith(MockitoExtension.class)
+class CaseTypeParserTest extends ParserTestBase {
 
     private CaseTypeParser caseTypeParser;
 
@@ -63,30 +64,30 @@ public class CaseTypeParserTest extends ParserTestBase {
     @Mock
     private SearchAliasFieldParser searchAliasFieldParser;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
 
         init();
 
         parseContext = mock(ParseContext.class);
         caseTypeParser = new CaseTypeParser(
-            parseContext,
-            caseFieldParser,
-            stateParser,
-            eventParser,
-            authorisationCaseTypeParser,
-            authorisationCaseFieldParser,
-            authorisationComplexTypeParser,
-            authorisationCaseEventParser,
-            authorisationCaseStateParser,
-            metadataCaseFieldParser,
-            caseRoleParser,
-            searchAliasFieldParser);
-        given(parseContext.getJurisdiction()).willReturn(jurisdiction);
+                parseContext,
+                caseFieldParser,
+                stateParser,
+                eventParser,
+                authorisationCaseTypeParser,
+                authorisationCaseFieldParser,
+                authorisationComplexTypeParser,
+                authorisationCaseEventParser,
+                authorisationCaseStateParser,
+                metadataCaseFieldParser,
+                caseRoleParser,
+                searchAliasFieldParser);
+        lenient().doReturn(jurisdiction).when(parseContext).getJurisdiction();
     }
 
     @Test
-    public void shouldParseCaseTypeEntity_whenDataIsGood() {
+    void shouldParseCaseTypeEntity_whenDataIsGood() {
         final DefinitionDataItem caseTypeItem = new DefinitionDataItem(SheetName.CASE_TYPE.getName());
         caseTypeItem.addAttribute(ColumnName.ID.toString(), CASE_TYPE_UNDER_TEST);
         caseTypeItem.addAttribute(ColumnName.NAME.toString(), "Test Address Book Case");
@@ -100,28 +101,28 @@ public class CaseTypeParserTest extends ParserTestBase {
         final CaseTypeEntity caseTypeEntity = parseResult.getAllResults().get(0);
 
         InOrder inOrder = inOrder(caseFieldParser,
-            stateParser,
-            metadataCaseFieldParser,
-            eventParser,
-            searchAliasFieldParser,
-            authorisationCaseTypeParser);
+                stateParser,
+                metadataCaseFieldParser,
+                eventParser,
+                searchAliasFieldParser,
+                authorisationCaseTypeParser);
 
         assertAll(
-            () -> assertThat(caseTypeEntity.getId(), is(nullValue())),
-            () -> assertThat(caseTypeEntity.getJurisdiction(), is(jurisdiction)),
-            () -> assertThat(caseTypeEntity.getName(), is("Test Address Book Case")),
-            () -> assertThat(caseTypeEntity.getReference(), is(CASE_TYPE_UNDER_TEST)),
-            () -> inOrder.verify(caseFieldParser).parseAll(definitionSheets, caseTypeEntity),
-            () -> inOrder.verify(stateParser).parseAll(definitionSheets, caseTypeEntity),
-            () -> inOrder.verify(metadataCaseFieldParser).parseAll(caseTypeEntity),
-            () -> inOrder.verify(eventParser).parseAll(definitionSheets, caseTypeEntity),
-            () -> inOrder.verify(searchAliasFieldParser).parseAll(definitionSheets, caseTypeEntity),
-            () -> inOrder.verify(authorisationCaseTypeParser).parseAll(definitionSheets, caseTypeEntity)
+                () -> assertThat(caseTypeEntity.getId(), is(nullValue())),
+                () -> assertThat(caseTypeEntity.getJurisdiction(), is(jurisdiction)),
+                () -> assertThat(caseTypeEntity.getName(), is("Test Address Book Case")),
+                () -> assertThat(caseTypeEntity.getReference(), is(CASE_TYPE_UNDER_TEST)),
+                () -> inOrder.verify(caseFieldParser).parseAll(definitionSheets, caseTypeEntity),
+                () -> inOrder.verify(stateParser).parseAll(definitionSheets, caseTypeEntity),
+                () -> inOrder.verify(metadataCaseFieldParser).parseAll(caseTypeEntity),
+                () -> inOrder.verify(eventParser).parseAll(definitionSheets, caseTypeEntity),
+                () -> inOrder.verify(searchAliasFieldParser).parseAll(definitionSheets, caseTypeEntity),
+                () -> inOrder.verify(authorisationCaseTypeParser).parseAll(definitionSheets, caseTypeEntity)
         );
     }
 
     @Test
-    public void shouldParseCaseTypeEntityAndWebhook_whenDataIsGood() {
+    void shouldParseCaseTypeEntityAndWebhook_whenDataIsGood() {
         final DefinitionDataItem caseTypeItem = new DefinitionDataItem(SheetName.CASE_TYPE.getName());
         caseTypeItem.addAttribute(ColumnName.ID.toString(), CASE_TYPE_UNDER_TEST);
         caseTypeItem.addAttribute(ColumnName.NAME.toString(), "Test Address Book Case");
@@ -146,7 +147,7 @@ public class CaseTypeParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseGetCaseWebhook_whenDataIsGood() {
+    void shouldParseGetCaseWebhook_whenDataIsGood() {
         final DefinitionDataItem caseTypeItem = new DefinitionDataItem(SheetName.CASE_TYPE.getName());
         caseTypeItem.addAttribute(ColumnName.ID.toString(), CASE_TYPE_UNDER_TEST);
         caseTypeItem.addAttribute(ColumnName.NAME.toString(), "Test Address Book Case");
@@ -171,8 +172,8 @@ public class CaseTypeParserTest extends ParserTestBase {
         assertThat(getCaseWebhook.getTimeouts().size(), is(4));
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
-    public void shouldFail_whenDuplicateCaseTypeId() {
+    @Test
+    void shouldFail_whenDuplicateCaseTypeId() {
         final DefinitionDataItem caseTypeItem = new DefinitionDataItem(SheetName.CASE_TYPE.getName());
         caseTypeItem.addAttribute(ColumnName.ID.toString(), CASE_TYPE_UNDER_TEST);
         caseTypeItem.addAttribute(ColumnName.NAME.toString(), "Test Address Book Case");
@@ -185,16 +186,12 @@ public class CaseTypeParserTest extends ParserTestBase {
         definitionSheet.addDataItem(duplicate);
 
         definitionSheets.put(SheetName.CASE_TYPE.getName(), definitionSheet);
-
-        final ParseResult<CaseTypeEntity> parseResult = caseTypeParser.parseAll(definitionSheets);
-        assertThat(parseResult.getAllResults().size(), is(1));
-
-        try {
+        SpreadsheetParsingException ex = assertThrows(SpreadsheetParsingException.class, () -> {
+            final ParseResult<CaseTypeEntity> parseResult = caseTypeParser.parseAll(definitionSheets);
+            assertThat(parseResult.getAllResults().size(), is(1));
             parseResult.getAllResults().get(0);
-        } catch (SpreadsheetParsingException ex) {
-            Assertions.assertThat(ex).hasMessage("Multiple case type definitions for ID: Some Case Type");
-            throw ex;
-        }
-
+        });
+        
+        assertThat(ex.getMessage(), is("Multiple case type definitions for ID: Some Case Type"));
     }
 }

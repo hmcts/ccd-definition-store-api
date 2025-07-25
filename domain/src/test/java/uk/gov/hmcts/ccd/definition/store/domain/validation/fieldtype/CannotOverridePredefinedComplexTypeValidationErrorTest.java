@@ -11,7 +11,7 @@ class CannotOverridePredefinedComplexTypeValidationErrorTest {
     private CannotOverridePredefinedComplexTypeValidationError classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         classUnderTest = new CannotOverridePredefinedComplexTypeValidationError(
             fieldTypeEntityWithReference("OrderSuMMary"),
             fieldTypeEntityWithReference("OrderSummary")
