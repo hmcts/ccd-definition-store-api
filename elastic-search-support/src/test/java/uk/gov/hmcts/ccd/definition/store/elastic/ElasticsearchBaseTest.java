@@ -2,7 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Request;
-import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.RestClient;
 import org.skyscreamer.jsonassert.Customization;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.comparator.CustomComparator;
@@ -43,7 +43,7 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
     protected static final String WILDCARD = "*";
 
     @Autowired
-    private RestHighLevelClient elasticClient;
+    private RestClient lowLevelClient;
 
     protected CustomComparator ignoreFieldsComparator(String... paths) {
         return new CustomComparator(JSONCompareMode.LENIENT, Arrays.stream(paths)
@@ -62,10 +62,8 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
     }
 
     private String elasticResponseAsString(String method, String endpoint) throws IOException {
-        return EntityUtils.toString(elasticClient
-            .getLowLevelClient()
-            .performRequest(new Request(method, endpoint))
-            .getEntity());
+        Request request = new Request(method, endpoint);
+        return EntityUtils.toString(lowLevelClient.performRequest(request).getEntity());
     }
 
     private String getIndicesFromCaseTypes(String... caseTypes) {
@@ -74,13 +72,12 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
             .collect(Collectors.joining(","));
     }
 
-    //CCD-3509 CVE-2021-22044 required to fix null pointers in integration tests,
-    //conflict in Springfox after Springboot 2.6.10
+    // CCD-3509 CVE workaround
     @Bean
     public WebMvcEndpointHandlerMapping webEndpointServletHandlerMapping(WebEndpointsSupplier webEndpointsSupplier,
-        ServletEndpointsSupplier servletEndpointsSupplier, ControllerEndpointsSupplier controllerEndpointsSupplier,
-        EndpointMediaTypes endpointMediaTypes, CorsEndpointProperties corsProperties,
-        WebEndpointProperties webEndpointProperties, Environment environment) {
+           ServletEndpointsSupplier servletEndpointsSupplier, ControllerEndpointsSupplier controllerEndpointsSupplier,
+                EndpointMediaTypes endpointMediaTypes, CorsEndpointProperties corsProperties,
+                WebEndpointProperties webEndpointProperties, Environment environment) {
 
         List<ExposableEndpoint<?>> allEndpoints = new ArrayList<>();
         Collection<ExposableWebEndpoint> webEndpoints = webEndpointsSupplier.getEndpoints();
@@ -89,8 +86,9 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
         allEndpoints.addAll(controllerEndpointsSupplier.getEndpoints());
         String basePath = webEndpointProperties.getBasePath();
         EndpointMapping endpointMapping = new EndpointMapping(basePath);
-        boolean shouldRegisterLinksMapping = this.shouldRegisterLinksMapping(webEndpointProperties, environment,
-            basePath);
+        boolean shouldRegisterLinksMapping = this.shouldRegisterLinksMapping(webEndpointProperties,
+            environment, basePath);
+
         return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes,
             corsProperties.toCorsConfiguration(),
             new EndpointLinksResolver(allEndpoints, basePath),
