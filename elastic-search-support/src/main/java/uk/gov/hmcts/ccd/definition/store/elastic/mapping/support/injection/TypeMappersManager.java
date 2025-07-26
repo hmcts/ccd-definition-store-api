@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection;
 
+import lombok.Getter;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
 
 import java.util.List;
@@ -20,18 +21,15 @@ import static com.google.common.collect.Maps.newHashMap;
 @Component
 public class TypeMappersManager {
 
+    @Getter
     protected Map<String, TypeMappingGenerator> typeMappers = newHashMap();
 
     //This line will guarantee the TypeMappersManager will be injected last
     private Set<Injectable> injectables;
-    
+
     @Autowired
     public TypeMappersManager(Set<Injectable> injectables) {
         this.injectables = injectables;
-    }
-
-    public Map<String, TypeMappingGenerator> getTypeMappers() {
-        return typeMappers;
     }
 
     @Autowired

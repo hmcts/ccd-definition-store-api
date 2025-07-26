@@ -49,7 +49,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         .withJurisdiction("JUR").withReference(CASE_TYPE_A);
 
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() {
         try {
             deleteElasticsearchIndices(WILDCARD);
         } catch (Exception e) {
@@ -59,7 +59,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
     @Test
     @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
-    void shouldCreateCompleteElasticsearchIndexForSingleCaseType() throws IOException, JSONException {
+    void shouldCreateCompleteElasticsearchIndexForSingleCaseType() throws IOException {
         CaseFieldEntity baseTypeField = newTextField("TextField").build();
         CaseFieldEntity complexField = newComplexField("ComplexField");
         CaseFieldEntity collectionField = newCollectionFieldOfBaseType(
@@ -145,7 +145,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     }
 
     @Test
-    void shouldReindexSuccessfully() throws JSONException {
+    void shouldReindexSuccessfully() {
         CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
 
         CaseTypeEntity caseTypeEntity1 = caseTypeBuilder
@@ -174,7 +174,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     }
 
     @Test
-    void shouldThrowElasticSearchInitialisationException() throws JSONException {
+    void shouldThrowElasticSearchInitialisationException() {
         CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
 
         CaseTypeEntity caseTypeEntity1 = caseTypeBuilder
