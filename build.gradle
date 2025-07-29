@@ -110,6 +110,8 @@ allprojects {
     // Global constraints
     dependencies {
 
+        implementation 'org.apache.commons:commons-lang3:3.18.0' //Fix CVE-2025-48924
+
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
         constraints {
             implementation('org.springframework.cloud:spring-cloud-starter-openfeign') {
@@ -147,8 +149,7 @@ allprojects {
         implementation('org.apache.commons:commons-compress:1.26.0') {
             exclude group: 'org.apache.commons', module: 'commons-lang3' //CVE-2025-48924
         }
-        implementation 'org.apache.commons:commons-lang3:3.18.0' //Fix CVE-2025-48924
-        
+
         // CVE-2021-28170
         implementation "org.glassfish:jakarta.el:4.0.1"
 
