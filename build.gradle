@@ -143,7 +143,7 @@ allprojects {
         implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5'
         // Overriding transitive dependency commons-compress due to CVE failures
-        implementation "org.apache.commons:commons-compress:3.18.0"
+        implementation "org.apache.commons:commons-compress:1.26.0"
         // CVE-2021-28170
         implementation "org.glassfish:jakarta.el:4.0.1"
 
@@ -166,6 +166,7 @@ allprojects {
             configuration.exclude group: 'org.apache.logging.log4j', module: 'log4j-to-slf4j'
         }
         resolutionStrategy {
+            force 'org.apache.commons:commons-lang3:3.18.0'
             eachDependency { details ->
                 if (details.requested.group == 'com.github.ben-manes.caffeine' && details.requested.name == 'caffeine') {
                     details.useVersion '2.8.5'
