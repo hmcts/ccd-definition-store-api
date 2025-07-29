@@ -1,12 +1,12 @@
 package uk.gov.hmcts.net.ccd.definition.store;
 
 import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
-import uk.gov.hmcts.ccd.definition.store.JacksonUtils;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClient;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
+import uk.gov.hmcts.ccd.definition.store.repository.JacksonUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.net.ccd.definition.store.domain.model.DisplayItemsData;
 import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
@@ -103,7 +103,7 @@ public abstract class BaseTest {
     protected JdbcTemplate jdbcTemplate;
     protected Map<String, Integer> userRoleIds;
 
-    protected static final ObjectMapper mapper = new ObjectMapper();
+    protected static final ObjectMapper mapper = JacksonUtils.getObjectMapper();
 
     @BeforeAll
     public static void init() {

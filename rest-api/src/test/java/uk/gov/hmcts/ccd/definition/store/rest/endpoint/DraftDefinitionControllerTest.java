@@ -48,7 +48,9 @@ class DraftDefinitionControllerTest {
         MediaType.APPLICATION_JSON.getSubtype(),
         Charset.forName(StandardCharsets.UTF_8.name())
     );
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private static final ObjectMapper MAPPER = JacksonUtils.getObjectMapper();
+
+    ObjectMapper();
     private static final String URL_API_JURISDICTIONS = "/api/drafts";
     private static final UriTemplate URI_TEMPLATE_GET_DRAFTS =
         new UriTemplate(URL_API_JURISDICTIONS + "?jurisdiction={jurisdiction}");

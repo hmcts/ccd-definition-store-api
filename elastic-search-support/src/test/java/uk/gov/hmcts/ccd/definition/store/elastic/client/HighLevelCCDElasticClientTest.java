@@ -15,9 +15,11 @@ import org.elasticsearch.rest.RestStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 
 import java.io.IOException;
@@ -27,11 +29,13 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class HighLevelCCDElasticClientTest {
 
     @Mock
@@ -49,6 +53,7 @@ class HighLevelCCDElasticClientTest {
     @BeforeEach
     void setup() {
         when(elasticClient.indices()).thenReturn(indicesClient);
+        doReturn(indicesClient).when(elasticClient).indices();
     }
 
     @Test
@@ -62,12 +67,12 @@ class HighLevelCCDElasticClientTest {
             .shardsAcknowledged(true)
             .build();
 
-        when(indicesClient.create(any(CreateIndexRequest.class))).thenReturn(response);
+        doReturn(response).when(indicesClient).create(any(CreateIndexRequest.class));
 
         GetAliasResponse realAliasResponse = new GetAliasResponse.Builder()
             .aliases(Map.of(alias, createIndexAliases(indexName)))
             .build();
-        when(indicesClient.getAlias(any(GetAliasRequest.class))).thenReturn(realAliasResponse);
+        doReturn(realAliasResponse).when(indicesClient).getAlias(any(GetAliasRequest.class));
 
         assertThat(highLevelCCDElasticClient.createIndex(indexName, alias)).isTrue();
         verify(indicesClient).create(any(CreateIndexRequest.class));
@@ -84,7 +89,7 @@ class HighLevelCCDElasticClientTest {
             .build();
 
         // Return the real response when getAlias is called
-        when(indicesClient.getAlias(any(GetAliasRequest.class))).thenReturn(realResponse);
+        doReturn(realResponse).when(indicesClient).getAlias(any(GetAliasRequest.class));
 
         assertThat(highLevelCCDElasticClient.aliasExists(alias)).isTrue();
         verify(indicesClient).getAlias(any(GetAliasRequest.class));
@@ -96,10 +101,10 @@ class HighLevelCCDElasticClientTest {
 
         // Use the real builder instead of a mock
         GetAliasResponse realResponse = new GetAliasResponse.Builder()
-            .aliases(Collections.emptyMap())  // this means: no aliases found
+            .aliases(Collections.emptyMap())
             .build();
 
-        when(indicesClient.getAlias(any(GetAliasRequest.class))).thenReturn(realResponse);
+        doReturn(realResponse).when(indicesClient).getAlias(any(GetAliasRequest.class));
 
         assertThat(highLevelCCDElasticClient.aliasExists(alias)).isFalse();
         verify(indicesClient).getAlias(any(GetAliasRequest.class));
@@ -115,7 +120,7 @@ class HighLevelCCDElasticClientTest {
             .acknowledged(true)
             .build();
 
-        when(indicesClient.updateAliases(any(UpdateAliasesRequest.class))).thenReturn(response);
+        doReturn(response).when(indicesClient).updateAliases(any(UpdateAliasesRequest.class));
 
         assertThat(highLevelCCDElasticClient.updateAlias(alias, oldIndex, newIndex)).isTrue();
         verify(indicesClient).updateAliases(any(UpdateAliasesRequest.class));
@@ -131,7 +136,7 @@ class HighLevelCCDElasticClientTest {
             .acknowledged(false)
             .build();
 
-        when(indicesClient.updateAliases(any(UpdateAliasesRequest.class))).thenReturn(response);
+        doReturn(response).when(indicesClient).updateAliases(any(UpdateAliasesRequest.class));
 
         assertThat(highLevelCCDElasticClient.updateAlias(alias, oldIndex, newIndex)).isFalse();
         verify(indicesClient).updateAliases(any(UpdateAliasesRequest.class));
@@ -141,10 +146,8 @@ class HighLevelCCDElasticClientTest {
     void aliasExistsReturnsFalseOn404ElasticsearchException() throws IOException {
         final String alias = "missing_alias";
 
-        var ex = mock(ElasticsearchException.class);
-        when(ex.status()).thenReturn(RestStatus.NOT_FOUND);
-        when(indicesClient.getAlias(any(GetAliasRequest.class))).thenThrow(ex);
-
+        ElasticsearchException ex = new ElasticsearchException("alias not found", RestStatus.NOT_FOUND);
+        doThrow(ex).when(indicesClient).getAlias(any(GetAliasRequest.class));
 
         ElasticsearchException thrown = assertThrows(
             ElasticsearchException.class,

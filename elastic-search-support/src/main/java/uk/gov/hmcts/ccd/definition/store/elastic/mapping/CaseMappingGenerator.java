@@ -16,8 +16,6 @@ import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static java.util.stream.Collectors.toList;
-
 @Component
 @Slf4j
 public class CaseMappingGenerator extends MappingGenerator {

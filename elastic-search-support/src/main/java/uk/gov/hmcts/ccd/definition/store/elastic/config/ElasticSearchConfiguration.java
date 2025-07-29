@@ -3,7 +3,10 @@ package uk.gov.hmcts.ccd.definition.store.elastic.config;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.HttpHost;
@@ -15,7 +18,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
+import uk.gov.hmcts.ccd.definition.store.repository.model.UserInfoMixin;
+import uk.gov.hmcts.reform.idam.client.models.UserInfo;
 
 @Configuration
 @ComponentScan("uk.gov.hmcts.ccd.definition.store.elastic")
@@ -38,7 +44,13 @@ public class ElasticSearchConfiguration {
 
     @Bean
     public ObjectMapper objectMapper() {
-        return new ObjectMapper(); // customize if needed
+        return new Jackson2ObjectMapperBuilder()
+            .featuresToEnable(MapperFeature.DEFAULT_VIEW_INCLUSION)
+            .featuresToEnable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
+            .featuresToEnable(JsonParser.Feature.ALLOW_SINGLE_QUOTES)
+            .mixIn(UserInfo.class, UserInfoMixin.class)
+            .modulesToInstall(JavaTimeModule.class)
+            .build();
     }
 
     @Bean
