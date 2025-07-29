@@ -26,7 +26,7 @@ dependencies {
 
     implementation "org.springframework.boot:spring-boot-starter-web"
     implementation "org.apache.commons:commons-collections4:4.1"
-    implementation "org.apache.commons:commons-lang3:3.11"
+    implementation "org.apache.commons:commons-lang3:3.18.0" //Fix CVE-2025-48924
     implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.5'
 }
 

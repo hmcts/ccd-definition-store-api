@@ -32,7 +32,7 @@ dependencies {
         exclude group: 'com.google.guava', module: 'guava'
     }
     implementation "commons-beanutils:commons-beanutils:1.9.4"
-    implementation "org.apache.commons:commons-lang3:3.11"
+    implementation 'org.apache.commons:commons-lang3:3.18.0' //Fix CVE-2025-48924
     implementation ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
         exclude group: 'com.google.guava', module: 'guava'
     }
