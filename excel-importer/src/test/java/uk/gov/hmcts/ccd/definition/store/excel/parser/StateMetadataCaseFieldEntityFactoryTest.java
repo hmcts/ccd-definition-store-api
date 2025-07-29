@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
@@ -21,12 +22,13 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
-import static org.mockito.internal.util.reflection.Whitebox.setInternalState;
+import static org.mockito.MockitoAnnotations.openMocks;
+import org.springframework.test.util.ReflectionTestUtils;
+
 import static uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField.STATE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
 
@@ -42,9 +44,9 @@ class StateMetadataCaseFieldEntityFactoryTest {
 
     @BeforeEach
     void setUp() {
-        initMocks(this);
+        openMocks(this);
         factory = new StateMetadataCaseFieldEntityFactory(mock(FieldTypeRepository.class));
-        setInternalState(factory, "versionedRepository", repository);
+        ReflectionTestUtils.setField(factory, "versionedRepository", repository);
     }
 
     @Test

@@ -1,17 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 
-import org.junit.Before;
-import org.junit.Test;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertThat;
 
-public class EventEntityCrudValidatorImplTest {
+class EventEntityCrudValidatorImplTest {
 
     private EventEntityCrudValidatorImpl validator;
 
@@ -23,8 +25,8 @@ public class EventEntityCrudValidatorImplTest {
 
     private EventEntityValidationContext context;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
 
         validator = new EventEntityCrudValidatorImpl();
 
@@ -41,7 +43,7 @@ public class EventEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void goodCrud() {
+    void goodCrud() {
         eventUserRole.setCrudAsString("Cr Du");
         final ValidationResult result = validator.validate(event, context);
 
@@ -49,7 +51,7 @@ public class EventEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void crudTooLong() {
+    void crudTooLong() {
 
         eventUserRole.setCrudAsString(" CRUD   DD ");
 
@@ -62,7 +64,7 @@ public class EventEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void blankCrud() {
+    void blankCrud() {
 
         final ValidationResult result = validator.validate(event, context);
 
@@ -73,7 +75,7 @@ public class EventEntityCrudValidatorImplTest {
     }
 
     @Test
-    public void invalidCrud() {
+    void invalidCrud() {
 
         eventUserRole.setCrudAsString("X");
 

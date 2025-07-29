@@ -16,7 +16,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-public class AccessTypeRolesServiceImplTest {
+class AccessTypeRolesServiceImplTest {
 
     private AccessTypeRolesServiceImpl classUnderTest;
 
@@ -25,7 +25,7 @@ public class AccessTypeRolesServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new AccessTypeRolesServiceImpl(repository);
     }
 

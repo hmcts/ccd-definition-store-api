@@ -14,7 +14,7 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class CaseFieldEntityCORValidatorImplTest {
+class CaseFieldEntityCORValidatorImplTest {
 
     private final CaseFieldEntityCORValidatorImpl validator = new CaseFieldEntityCORValidatorImpl();
 

@@ -10,7 +10,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Description;
 import org.hamcrest.DiagnosingMatcher;
-import org.hamcrest.Factory;
 import org.skyscreamer.jsonassert.JSONCompare;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.JSONCompareResult;
@@ -115,12 +114,10 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
      * @param expectedJSON the expected JSON string
      * @return the JSON matcher
      */
-    @Factory
     public static IsEqualJSON equalToJSON(final String expectedJSON) {
         return new IsEqualJSON(expectedJSON);
     }
 
-    @Factory
     public static IsEqualJSON equalToJSON(final String expectedJSON, JSONComparator comparator) {
         return new IsEqualJSON(expectedJSON, comparator);
     }
@@ -138,13 +135,11 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
      * @return the JSON matcher
      */
     @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
-    @Factory
     public static IsEqualJSON equalToJSONInFile(final Path expectedPath) {
         return equalToJSON(getFileContents(expectedPath));
     }
 
     @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
-    @Factory
     public static IsEqualJSON equalToJSONInFile(final Path expectedPath, JSONComparator comparator) {
         return equalToJSON(getFileContents(expectedPath), comparator);
     }
@@ -162,7 +157,6 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
      * @return the JSON matcher
      */
     @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
-    @Factory
     public static IsEqualJSON equalToJSONInFile(final String expectedFileName) {
         return equalToJSONInFile(Paths.get(expectedFileName));
     }

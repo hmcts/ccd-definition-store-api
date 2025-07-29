@@ -1,5 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
+import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
+import uk.gov.hmcts.ccd.definition.store.utils.SearchAliasFieldBuilder;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -7,11 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
-import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
-import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
-import uk.gov.hmcts.ccd.definition.store.utils.SearchAliasFieldBuilder;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
@@ -25,7 +26,7 @@ import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextFi
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class CaseMappingGeneratorTest extends AbstractMapperTest implements TestUtils {
+class CaseMappingGeneratorTest extends AbstractMapperTest implements TestUtils {
 
     @InjectMocks
     private CaseMappingGenerator mappingGenerator;
@@ -33,15 +34,15 @@ public class CaseMappingGeneratorTest extends AbstractMapperTest implements Test
     private final CaseTypeBuilder caseType = new CaseTypeBuilder().withJurisdiction("jur").withReference("caseTypeA");
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         super.setup();
         when(config.getDynamic()).thenReturn("dynamicConfig");
-        addMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping", "dataClassificationMapping"));
+        addMappingGenerator(new StubTypeMappingGenerator(null, "Text", "dataMapping", "dataClassificationMapping"));
         mappingGenerator.inject(stubTypeMappersManager);
     }
 
     @Test
-    public void shouldCrateMappingForPredefinedProperties() {
+    void shouldCrateMappingForPredefinedProperties() {
         predefinedMappings.put("testPropA", "valuePropA");
         predefinedMappings.put("testPropB", "valuePropB");
 
@@ -52,7 +53,7 @@ public class CaseMappingGeneratorTest extends AbstractMapperTest implements Test
     }
 
     @Test
-    public void shouldCreateMappingForDataAndDataClassification() {
+    void shouldCreateMappingForDataAndDataClassification() {
         CaseFieldEntity fieldA = newTextField("fieldA").build();
         CaseFieldEntity fieldB = newTextField("fieldB").build();
         CaseFieldEntity fieldC = newField("fieldC", "Label").build();
