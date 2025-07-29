@@ -54,6 +54,7 @@ public class ElasticSearchConfiguration {
     }
 
     @Bean
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     protected RestClientBuilder elasticsearchRestClientBuilder() {
         return RestClient.builder(new HttpHost(config.getHost(), config.getPort()))
             .setRequestConfigCallback(requestConfigBuilder -> requestConfigBuilder
