@@ -259,6 +259,8 @@ subprojects { subproject ->
 
     dependencies {
 
+        implementation 'org.apache.commons:commons-lang3:3.18.0' //Fix CVE-2025-48924
+        
         implementation('org.apache.poi:poi-ooxml:5.2.5') {
             exclude group: 'org.apache.commons', module: 'commons-lang3' // CVE-2025-48924
         }
