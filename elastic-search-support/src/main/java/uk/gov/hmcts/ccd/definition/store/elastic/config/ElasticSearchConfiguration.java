@@ -10,6 +10,8 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.HttpHost;
+import org.elasticsearch.client.Node;
+import org.elasticsearch.client.NodeSelector;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -19,6 +21,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import uk.gov.hmcts.ccd.definition.store.elastic.client.ElasticsearchClientFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserInfoMixin;
 import uk.gov.hmcts.reform.idam.client.models.UserInfo;
@@ -57,17 +60,28 @@ public class ElasticSearchConfiguration {
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     protected RestClientBuilder elasticsearchRestClientBuilder() {
         return RestClient.builder(new HttpHost(config.getHost(), config.getPort()))
-            .setRequestConfigCallback(requestConfigBuilder -> requestConfigBuilder
-                .setConnectTimeout(5000)
-                .setSocketTimeout(60000))
-            .setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder
-                .setDefaultIOReactorConfig(IOReactorConfig.custom()
-                    .setSoKeepAlive(true)
-                    .build()));
+            .setFailureListener(new RestClient.FailureListener() {
+                @Override
+                public void onFailure(Node node) {
+                    log.warn("Node marked as dead: {}", node);
+                }
+            })
+            .setNodeSelector(NodeSelector.SKIP_DEDICATED_MASTERS)
+            .setRequestConfigCallback(requestConfigBuilder ->
+                requestConfigBuilder
+                    .setConnectTimeout(5000)
+                    .setSocketTimeout(60000)
+            )
+            .setHttpClientConfigCallback(httpClientBuilder ->
+                httpClientBuilder.setDefaultIOReactorConfig(
+                    IOReactorConfig.custom()
+                        .setSoKeepAlive(true)
+                        .build()
+                )
+            );
     }
 
     @Bean
-    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public RestClient restClient(RestClientBuilder builder) {
         return builder.build();
     }
@@ -78,21 +92,25 @@ public class ElasticSearchConfiguration {
      * The ElasticsearchClient is injected every time with a new restClientTransport which opens new connections
      */
     @Bean
-    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public ElasticsearchClient elasticsearchClient(RestClientTransport transport) {
         return new ElasticsearchClient(transport);
     }
 
     @Bean
-    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public RestClientTransport restClientTransport(RestClient restClient, JacksonJsonpMapper mapper) {
         return new RestClientTransport(restClient, mapper);
     }
 
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-    public HighLevelCCDElasticClient ccdElasticClient(ElasticsearchClient elasticsearchClient) {
-        return new HighLevelCCDElasticClient(config, elasticsearchClient) {
+    public ElasticsearchClientFactory elasticsearchClientFactory(ElasticsearchClient elasticsearchClient) {
+        return new ElasticsearchClientFactory(elasticsearchClient);
+    }
+
+    @Bean
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    public HighLevelCCDElasticClient ccdElasticClient(ElasticsearchClientFactory elasticsearchClientFactory) {
+        return new HighLevelCCDElasticClient(config, elasticsearchClientFactory) {
         };
     }
 }

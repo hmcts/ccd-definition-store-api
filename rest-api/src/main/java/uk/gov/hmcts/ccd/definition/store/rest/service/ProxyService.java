@@ -53,13 +53,15 @@ public class ProxyService {
         Map<String, String> hostToIp = new HashMap<>();
         hostToIp.put("ccd-user-profile-api-nonprod.service.core-compute-nonprod.internal", "51.140.33.54");
 
-        return new PoolingHttpClientConnectionManager(
+        PoolingHttpClientConnectionManager connectionManager =
+            new PoolingHttpClientConnectionManager(
             RegistryBuilder.<ConnectionSocketFactory>create()
                 .register("http", PlainConnectionSocketFactory.INSTANCE)
                 .register("https", new SSLConnectionSocketFactory(SSLContexts.createSystemDefault()))
                 .build(),
             new ManagedHttpClientConnectionFactory(
-                new DefaultHttpRequestWriterFactory(), new DefaultHttpResponseParserFactory()),
+                new DefaultHttpRequestWriterFactory(),
+                new DefaultHttpResponseParserFactory()),
             new SystemDefaultDnsResolver() {
                 @Override
                 public InetAddress[] resolve(String host) throws UnknownHostException {
@@ -78,5 +80,12 @@ public class ProxyService {
                 }
             }
         );
+
+        // Configure connection pool
+        connectionManager.setMaxTotal(200);
+        connectionManager.setDefaultMaxPerRoute(20);
+        connectionManager.setValidateAfterInactivity(1000);
+
+        return connectionManager;
     }
 }

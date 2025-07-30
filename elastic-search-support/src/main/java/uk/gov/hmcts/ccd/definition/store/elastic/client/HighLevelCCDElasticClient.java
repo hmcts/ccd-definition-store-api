@@ -10,6 +10,7 @@ import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.hc.core5.http.ConnectionClosedException;
 import org.elasticsearch.action.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
@@ -30,15 +31,84 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     private static final String CASES_INDEX_SETTINGS_JSON = "/casesIndexSettings.json";
     private static final String GLOBAL_SEARCH_CASES_INDEX_SETTINGS_JSON = "/globalSearchCasesIndexSettings.json";
-    protected CcdElasticSearchProperties config;
+    private static final int MAX_RETRIES = 3;
+    private static final long RETRY_DELAY_MS = 1000;
+    private static final Object LOCK = new Object();
 
-    protected ElasticsearchClient elasticClient;
+    protected final CcdElasticSearchProperties config;
+    protected volatile ElasticsearchClient elasticClient;
+    private final ElasticsearchClientFactory clientFactory;
 
     @Autowired
-    public HighLevelCCDElasticClient(CcdElasticSearchProperties config, ElasticsearchClient elasticClient) {
+    public HighLevelCCDElasticClient(CcdElasticSearchProperties config, ElasticsearchClientFactory clientFactory) {
         this.config = config;
-        this.elasticClient = elasticClient;
+        this.clientFactory = clientFactory;
+        this.elasticClient = clientFactory.createClient();
     }
+
+    private <T> T executeWithRetry(ElasticOperation<T> operation, String operationName) throws IOException {
+        int attempts = 0;
+        Exception lastException = null;
+
+        while (attempts < MAX_RETRIES) {
+            try {
+                synchronized (LOCK) {
+                    if (elasticClient == null) {
+                        elasticClient = clientFactory.createClient();
+                    }
+                    return operation.execute(elasticClient);
+                }
+            } catch (Exception e) {
+                lastException = e;
+                attempts++;
+
+                if (isDeadHostException(e)) {
+                    log.warn("ElasticsearchClient encountered dead node: {} — resetting...", e.getMessage());
+                    resetClient();
+                } else if (isConnectionError(e)) {
+                    log.warn("Connection error during {}, attempt {}/{}",
+                        operationName, attempts, MAX_RETRIES);
+                    resetClient();
+                }
+
+                if (attempts < MAX_RETRIES) {
+                    try {
+                        Thread.sleep(RETRY_DELAY_MS * attempts); // Exponential backoff
+                    } catch (InterruptedException ie) {
+                        Thread.currentThread().interrupt();
+                        throw new IOException("Operation interrupted", ie);
+                    }
+                }
+            }
+        }
+
+        throw new IOException("Failed to execute " + operationName +
+            " after " + MAX_RETRIES + " attempts", lastException);
+    }
+
+    private boolean isDeadHostException(Exception e) {
+        return e.getMessage() != null && e.getMessage().contains("DeadHostState");
+    }
+
+    private boolean isConnectionError(Exception e) {
+        return e instanceof ConnectionClosedException ||
+            e instanceof ElasticsearchException &&
+                e.getCause() instanceof ConnectionClosedException;
+    }
+
+    private void resetClient() {
+        synchronized (LOCK) {
+            if (elasticClient != null) {
+                try {
+                    elasticClient.close();
+                } catch (IOException e) {
+                    log.error("Error closing elasticsearch client", e);
+                }
+                elasticClient = null;
+            }
+        }
+    }
+
 
     @Override
     public boolean createIndex(String indexName, String alias) throws IOException {
@@ -51,8 +121,8 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         Map<String, Object> settings = casesIndexSettings(file);
         log.info("settings: {}", settings);
 
-        CreateIndexResponse createIndexResponse = elasticClient.indices().create(b -> {
-            return b
+        CreateIndexResponse createIndexResponse = executeWithRetry(
+            client -> client.indices().create(b -> b
                 .index(indexName)
                 .settings(s -> {
                     try {
@@ -63,8 +133,10 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
                         throw new RuntimeException(e);
                     }
                 })
-                .aliases(Map.of(alias, new Alias.Builder().isWriteIndex(true).build()));
-        });
+                .aliases(Map.of(alias, new Alias.Builder().isWriteIndex(true).build()))
+            ),
+            "create index"
+        );
 
         log.info("index created: {}, aliasExists: {}",
             null == createIndexResponse ? null : createIndexResponse.acknowledged(),
@@ -75,13 +147,21 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     @Override
     public boolean upsertMapping(String aliasName, String caseTypeMapping) throws IOException {
         log.info("upsert mapping of most recent index for alias {}", aliasName);
-        var aliasesResponse = elasticClient.indices().getAlias(b -> b.name(aliasName));
+        // Get aliases with retry
+        var aliasesResponse = executeWithRetry(
+            client -> client.indices().getAlias(b -> b.name(aliasName)),
+            "get alias for upsert mapping"
+        );
         String currentIndex = getCurrentAliasIndex(aliasName, aliasesResponse);
         log.info("upsert mapping of index {}", currentIndex);
 
-        var putMappingResponse = elasticClient.indices().putMapping(b -> b
-            .index(currentIndex)
-            .withJson(new StringReader(caseTypeMapping))
+        // Put mapping with retry
+        var putMappingResponse = executeWithRetry(
+            client -> client.indices().putMapping(b -> b
+                .index(currentIndex)
+                .withJson(new StringReader(caseTypeMapping))
+            ),
+            "put mapping"
         );
         log.info("mapping upserted: {}", putMappingResponse.acknowledged());
         return null != putMappingResponse && putMappingResponse.acknowledged();
@@ -89,28 +169,31 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     @Override
     public boolean aliasExists(String alias) throws IOException {
-        try {
-            var response = elasticClient.indices().getAlias(b -> b.name(alias));
-            boolean exists = null != response && response.aliases() != null && !response.aliases().isEmpty();
-            log.info("alias {} exists: {}", alias, exists);
-            return exists;
-        } catch (ElasticsearchException e) {
-            if (e.status() == 404) {
-                log.info("alias {} does not exist (404)", alias);
-                return false;
+        return executeWithRetry((client) -> {
+            try {
+                var response = client.indices().getAlias(b -> b.name(alias));
+                boolean exists = response != null &&
+                    response.aliases() != null &&
+                    !response.aliases().isEmpty();
+                log.debug("alias {} exists: {}", alias, exists);
+                return exists;
+            } catch (ElasticsearchException e) {
+                if (e.status() == 404) {
+                    return false;
+                }
+                throw e;
             }
-            throw e;
-        }
+        }, "check alias existence");
+    }
+
+    @FunctionalInterface
+    private interface ElasticOperation<T> {
+        T execute(ElasticsearchClient client) throws IOException;
     }
 
     @Override
     public void close() {
-        try {
-            log.info("Closing the ES REST client");
-            this.elasticClient.close();
-        } catch (IOException ioe) {
-            log.error("Problem occurred when closing the ES REST client", ioe);
-        }
+        resetClient();
     }
 
     public GetAliasResponse getAlias(String alias) throws IOException {
@@ -157,17 +240,20 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
             settings = new ObjectMapper().readValue(inputStream, Map.class);
         }
 
-        var createIndexResponse = elasticClient.indices().create(b -> b
-            .index(indexName)
-            .settings(s -> {
-                try {
-                    return s.withJson(new java.io.StringReader(
-                        new ObjectMapper().writeValueAsString(settings)
-                    ));
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            })
+        var createIndexResponse = executeWithRetry(
+            client -> client.indices().create(b -> b
+                .index(indexName)
+                .settings(s -> {
+                    try {
+                        return s.withJson(new java.io.StringReader(
+                            new ObjectMapper().writeValueAsString(settings)
+                        ));
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+            ),
+            "create index with mapping"
         );
         log.info("index created: {}", createIndexResponse.acknowledged());
 

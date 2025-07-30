@@ -255,4 +255,5 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
         return collectionField;
     }
+
 }

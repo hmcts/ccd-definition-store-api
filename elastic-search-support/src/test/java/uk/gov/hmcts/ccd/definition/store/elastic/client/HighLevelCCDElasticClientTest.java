@@ -1,7 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch.indices.*;
+import co.elastic.clients.elasticsearch.indices.AliasDefinition;
+import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
+import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
+import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
+import co.elastic.clients.elasticsearch.indices.GetAliasRequest;
+import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
+import co.elastic.clients.elasticsearch.indices.UpdateAliasesRequest;
+import co.elastic.clients.elasticsearch.indices.UpdateAliasesResponse;
 import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
 import co.elastic.clients.util.ObjectBuilder;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +39,9 @@ class HighLevelCCDElasticClientTest {
     private ElasticsearchClient elasticClient;
 
     @Mock
+    private ElasticsearchClientFactory elasticClientFactory;
+
+    @Mock
     private CcdElasticSearchProperties config;
 
     private HighLevelCCDElasticClient highLevelCCDElasticClient;
@@ -46,7 +56,7 @@ class HighLevelCCDElasticClientTest {
     void setup() {
         MockitoAnnotations.openMocks(this);
         doReturn(indicesClient).when(elasticClient).indices();
-        highLevelCCDElasticClient = Mockito.spy(new HighLevelCCDElasticClient(config, elasticClient));
+        highLevelCCDElasticClient = Mockito.spy(new HighLevelCCDElasticClient(config, elasticClientFactory));
     }
 
     @Test
