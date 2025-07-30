@@ -1,20 +1,26 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import co.elastic.clients.json.jackson.JacksonJsonpMapper;
+import co.elastic.clients.transport.rest_client.RestClientTransport;
+import org.elasticsearch.client.RestClient;
+import org.elasticsearch.client.RestClientBuilder;
 
-@Component
+import java.util.function.Supplier;
+
 public class ElasticsearchClientFactory {
 
-    private final ElasticsearchClient elasticsearchClient;
+    private final Supplier<RestClient> restClientSupplier;
+    private final JacksonJsonpMapper mapper;
 
-    @Autowired
-    public ElasticsearchClientFactory(ElasticsearchClient elasticsearchClient) {
-        this.elasticsearchClient = elasticsearchClient;
+    public ElasticsearchClientFactory(Supplier<RestClient> restClientSupplier, JacksonJsonpMapper mapper) {
+        this.restClientSupplier = restClientSupplier;
+        this.mapper = mapper;
     }
 
     public ElasticsearchClient createClient() {
-        return elasticsearchClient;
+        RestClient restClient = restClientSupplier.get();
+        RestClientTransport transport = new RestClientTransport(restClient, mapper);
+        return new ElasticsearchClient(transport);
     }
 }

@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -114,9 +116,13 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
         String response = getElasticsearchIndices(CASE_TYPE_A);
 
-        assertThat(response, equalToJSONInFile(
-            readFileFromClasspath("integration/single_casetype_index.json"),
-            ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A))));
+        assertThat(
+            response.trim().startsWith("{") ? new JSONObject(response) : new JSONArray(response),
+            equalToJSONInFile(
+                readFileFromClasspath("integration/single_casetype_index.json"),
+                ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A))
+            )
+        );
     }
 
     @Test
@@ -138,10 +144,15 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         definitionImportListener.onDefinitionImported(event);
 
         String response = getElasticsearchIndices(CASE_TYPE_A, CASE_TYPE_B);
+        String cleanedResponse = response.replaceFirst("^GetIndexResponse:\\s*", "").trim();
 
-        assertThat(response, equalToJSONInFile(
-            readFileFromClasspath("integration/multi_casetypes_indices.json"),
-            ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A, CASE_TYPE_B))));
+        assertThat(
+            cleanedResponse,
+            equalToJSONInFile(
+                readFileFromClasspath("integration/multi_casetypes_indices.json"),
+                ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A, CASE_TYPE_B))
+            )
+        );
     }
 
     @Test
@@ -164,7 +175,6 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
             List.of(caseTypeEntity1), true, true
         );
         definitionImportListener.onDefinitionImported(event);
-
 
         await().atMost(5, SECONDS).untilAsserted(() -> {
             String response = getElasticsearchIndices(CASE_TYPE_A);

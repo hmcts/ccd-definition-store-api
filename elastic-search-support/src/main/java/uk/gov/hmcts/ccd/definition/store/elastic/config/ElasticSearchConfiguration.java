@@ -46,6 +46,7 @@ public class ElasticSearchConfiguration {
     }
 
     @Bean
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public ObjectMapper objectMapper() {
         return new Jackson2ObjectMapperBuilder()
             .featuresToEnable(MapperFeature.DEFAULT_VIEW_INCLUSION)
@@ -59,7 +60,7 @@ public class ElasticSearchConfiguration {
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     protected RestClientBuilder elasticsearchRestClientBuilder() {
-        return RestClient.builder(new HttpHost(config.getHost(), config.getPort()))
+        return RestClient.builder(new HttpHost(config.getHost(), config.getPort(), HttpHost.DEFAULT_SCHEME_NAME))
             .setFailureListener(new RestClient.FailureListener() {
                 @Override
                 public void onFailure(Node node) {
@@ -82,29 +83,27 @@ public class ElasticSearchConfiguration {
     }
 
     @Bean
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public RestClient restClient(RestClientBuilder builder) {
         return builder.build();
     }
 
-    /**
-     * NOTE: imports seldom happen. To prevent unused connections to the ES cluster hanging around, we create a new
-     * ElasticsearchClient on each import and we close it once the import is completed.
-     * The ElasticsearchClient is injected every time with a new restClientTransport which opens new connections
-     */
     @Bean
-    public ElasticsearchClient elasticsearchClient(RestClientTransport transport) {
-        return new ElasticsearchClient(transport);
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    public ElasticsearchClient elasticsearchClient(ElasticsearchClientFactory elasticsearchClientFactory) {
+        return elasticsearchClientFactory.createClient();
     }
 
     @Bean
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public RestClientTransport restClientTransport(RestClient restClient, JacksonJsonpMapper mapper) {
         return new RestClientTransport(restClient, mapper);
     }
 
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-    public ElasticsearchClientFactory elasticsearchClientFactory(ElasticsearchClient elasticsearchClient) {
-        return new ElasticsearchClientFactory(elasticsearchClient);
+    public ElasticsearchClientFactory elasticsearchClientFactory(JacksonJsonpMapper mapper) {
+        return new ElasticsearchClientFactory(() -> elasticsearchRestClientBuilder().build(), mapper);
     }
 
     @Bean

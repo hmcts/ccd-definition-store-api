@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.StringUtils;
+import uk.gov.hmcts.ccd.definition.store.elastic.client.ElasticsearchClientFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,7 +44,7 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
     protected static final String WILDCARD = "*";
 
     @Autowired
-    protected ElasticsearchClient elasticsearchClient;
+    protected ElasticsearchClientFactory elasticsearchClientFactory;
 
     @Autowired
     protected ObjectMapper objectMapper;
@@ -56,14 +57,14 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
 
     protected String getElasticsearchIndices(String... caseTypes) throws IOException {
         String indexPattern = getIndicesFromCaseTypes(caseTypes);
-        GetIndexResponse response = elasticsearchClient.indices()
+        GetIndexResponse response = elasticsearchClientFactory.createClient().indices()
             .get(g -> g.index(indexPattern));
         return objectMapper.writeValueAsString(response.toString());
     }
 
     protected String deleteElasticsearchIndices(String... caseTypes) throws IOException {
         String indexPattern = caseTypes[0].equals(WILDCARD) ? WILDCARD : getIndicesFromCaseTypes(caseTypes);
-        DeleteIndexResponse response = elasticsearchClient.indices()
+        DeleteIndexResponse response = elasticsearchClientFactory.createClient().indices()
             .delete(d -> d.index(indexPattern));
         return "acknowledged: " + response.acknowledged();
     }
