@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - RDM-10747
+      - fix-swagger-ft
 
 jobs:
   build:
