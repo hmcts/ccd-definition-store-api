@@ -24,12 +24,11 @@
       "definitions": "[[ANYTHING_PRESENT]]",
       "swagger": "2.0",
       "info": {
-        "description": "Api Documentation",
-        "title": "Api Documentation",
+        "description": "Create, modify, retrieve and search definitions",
+        "title": "Core Case Data - Definition store API",
         "contact":"[[ANYTHING_PRESENT]]",
         "license": "[[ANYTHING_PRESENT]]",
-        "version": "[[ANYTHING_PRESENT]]",
-        "termsOfService": "[[ANYTHING_PRESENT]]"
+        "version": "[[ANYTHING_PRESENT]]"
       }
     }
   }

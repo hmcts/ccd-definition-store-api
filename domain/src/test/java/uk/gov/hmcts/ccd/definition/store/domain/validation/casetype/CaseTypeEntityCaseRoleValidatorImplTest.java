@@ -15,9 +15,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @DisplayName("Case Role Validator Tests")
@@ -36,7 +36,7 @@ class CaseTypeEntityCaseRoleValidatorImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new CaseTypeEntityCaseRoleValidatorImpl(Arrays.asList(mandatoryValidator,
             fieldValueValidator, uniquenessValidator));
         caseType = new CaseTypeEntity();

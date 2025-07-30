@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.assertj.core.api.Assertions;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
@@ -16,19 +11,25 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.hamcrest.Matchers;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-public class CaseFieldParserTest extends ParserTestBase {
+class CaseFieldParserTest extends ParserTestBase {
 
     private CaseFieldParser caseFieldParser;
 
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
 
         init();
 
@@ -41,19 +42,16 @@ public class CaseFieldParserTest extends ParserTestBase {
         definitionSheets.put(SheetName.CASE_FIELD.getName(), definitionSheet);
     }
 
-    @Test(expected = SpreadsheetParsingException.class)
-    public void shouldFail_whenNoFieldsAreDefinedForCaseType() {
-        try {
-            caseFieldParser.parseAll(definitionSheets, caseType);
-        } catch (SpreadsheetParsingException ex) {
-            Assertions.assertThat(ex).hasMessageContaining(
-                "At least one case field must be defined for case type: Some Case Type");
-            throw ex;
-        }
+    @Test
+    void shouldFail_whenNoFieldsAreDefinedForCaseType() {
+        SpreadsheetParsingException ex = assertThrows(SpreadsheetParsingException.class, () ->
+            caseFieldParser.parseAll(definitionSheets, caseType));
+        assertThat(ex.getMessage(), containsString(
+                "At least one case field must be defined for case type: Some Case Type"));
     }
 
     @Test
-    public void shouldParse() {
+    void shouldParse() {
         final FieldTypeEntity field = new FieldTypeEntity();
         given(parseContext.getCaseFieldType(CASE_TYPE_UNDER_TEST, "Case_Field")).willReturn(field);
 
@@ -68,7 +66,7 @@ public class CaseFieldParserTest extends ParserTestBase {
         assertThat(entity.getFieldType(), is(field));
         assertThat(entity.isSearchable(), is(true));
         assertThat(entity.getCategoryId(), is("Category Id"));
-        MatcherAssert.assertThat(
+        assertThat(
             entityToDefinitionDataItemRegistry.getForEntity(entity), Matchers.is(Optional.of(dataItem)));
     }
 

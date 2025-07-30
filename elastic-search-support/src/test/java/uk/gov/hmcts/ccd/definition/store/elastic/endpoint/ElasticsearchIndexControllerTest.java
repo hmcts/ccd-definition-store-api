@@ -53,8 +53,8 @@ class ElasticsearchIndexControllerTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
-        List<CaseTypeEntity> caseTypes = new ArrayList<>();
+        MockitoAnnotations.openMocks(this);
+        ArrayList<CaseTypeEntity> caseTypes = new ArrayList<>();
         caseTypes.add(createCaseType(CASE_TYPE_1, JURISDICTION_1));
         caseTypes.add(createCaseType(CASE_TYPE_2, JURISDICTION_1));
         caseTypes.add(createCaseType(CASE_TYPE_3, JURISDICTION_2));

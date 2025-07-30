@@ -1,26 +1,23 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casefield;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.MockitoAnnotations.openMocks;
 
-public class CaseFieldEntityACLValidatorImplTest {
-
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
+class CaseFieldEntityACLValidatorImplTest {
 
     private CaseFieldEntityACLValidatorImpl validator;
 
@@ -34,9 +31,9 @@ public class CaseFieldEntityACLValidatorImplTest {
     @Mock
     private CaseFieldEntityValidationContext caseFieldEntityValidationContext;
 
-    @Before
-    public void setup() {
-
+    @BeforeEach
+    void setup() {
+        openMocks(this);
         caseFieldAccessProfile = new CaseFieldACLEntity();
 
         given(caseFieldEntityValidationContext.getCaseReference()).willReturn("case_type");
@@ -49,7 +46,7 @@ public class CaseFieldEntityACLValidatorImplTest {
     }
 
     @Test
-    public void shouldHaveValidationErrorWhenUserNotFound() {
+    void shouldHaveValidationErrorWhenUserNotFound() {
 
         caseFieldAccessProfile.setAccessProfile(null);
         caseFieldAccessProfile.setAccessProfileId("nf_access_profile_id");
@@ -63,7 +60,7 @@ public class CaseFieldEntityACLValidatorImplTest {
     }
 
     @Test
-    public void shouldHaveNoValidationErrorWhenAccessProfileFound() {
+    void shouldHaveNoValidationErrorWhenAccessProfileFound() {
 
         caseFieldAccessProfile.setAccessProfile(accessProfileEntity);
 

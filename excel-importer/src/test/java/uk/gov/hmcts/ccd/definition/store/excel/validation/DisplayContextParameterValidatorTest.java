@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import org.junit.Before;
-import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -11,21 +9,25 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class DisplayContextParameterValidatorTest {
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+class DisplayContextParameterValidatorTest {
 
     private DisplayContextParameterValidator validator = new DisplayContextParameterValidator();
     private Map<String, DefinitionSheet> definitionSheets;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         definitionSheets = new LinkedHashMap<>();
     }
 
-    @Test(expected = InvalidImportException.class)
-    public void shouldFail_whenDisplayContextParameterHasTableInCaseEventToFields() {
+    @Test
+    void shouldFail_whenDisplayContextParameterHasTableInCaseEventToFields() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -42,18 +44,16 @@ public class DisplayContextParameterValidatorTest {
         addDefinitionSheet(SheetName.CASE_FIELD);
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
-        try {
+        InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             validator.validate(definitionSheets);
-        } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is(
+        });
+        assertThat(exception.getMessage(), is(
                 "Display context parameter #TABLE() has been incorrectly configured or "
-                    + "is invalid for field fieldId on tab ComplexTypes"));
-            throw ex;
-        }
+                        + "is invalid for field fieldId on tab ComplexTypes"));
     }
 
-    @Test(expected = Test.None.class)
-    public void shouldVaidate_WithAllWorkSheetsInPlace() {
+    @Test
+    void shouldVaidate_WithAllWorkSheetsInPlace() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -75,9 +75,8 @@ public class DisplayContextParameterValidatorTest {
 
     }
 
-
-    @Test(expected = InvalidImportException.class)
-    public void shouldFail_whenDisplayContextParameterHasListInCaseEventToFields() {
+    @Test
+    void shouldFail_whenDisplayContextParameterHasListInCaseEventToFields() {
 
         final DefinitionSheet sheetJ = addDefinitionSheet(SheetName.JURISDICTION);
         addDataItem(sheetJ);
@@ -94,14 +93,12 @@ public class DisplayContextParameterValidatorTest {
         addDefinitionSheet(SheetName.CASE_FIELD);
         addDefinitionSheet(SheetName.FIXED_LISTS);
 
-        try {
+        InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             validator.validate(definitionSheets);
-        } catch (InvalidImportException ex) {
-            assertThat(ex.getMessage(), is(
+        });
+        assertThat(exception.getMessage(), is(
                 "Display context parameter #LIST() has been incorrectly configured "
-                    + "or is invalid for field fieldId on tab ComplexTypes"));
-            throw ex;
-        }
+                        + "or is invalid for field fieldId on tab ComplexTypes"));
     }
 
     private DefinitionSheet addDefinitionSheet(SheetName sheetName) {
