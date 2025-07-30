@@ -11,15 +11,18 @@ public class SwaggerConfiguration {
     @Bean
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()
-                .info(new Info().title("CaseDataAPI Application")
-                .description("CaseDataAPIApplication"))
-                .license("")
-                .licenseUrl("")
+            .info(new Info()
+                .title("Core Case Data - Definition store API")
                 .version("1.0.1")
-                .contact(new Contact("CCD",
-                    "https://tools.hmcts.net/confluence/display/RCCD/Reform%3A+Core+Case+Data+Home",
-                    "corecasedatateam@hmcts.net"))
-                .termsOfServiceUrl("");
+                .description("Create, modify, retrieve and search definitions")
+                .termsOfService("https://tools.hmcts.net/confluence/display/RCCD/Reform%3A+Core+Case+Data+Home")
+                .contact(new Contact()
+                        .name("CCD")
+                        .url("https://tools.hmcts.net/confluence/display/RCCD/Reform%3A+Core+Case+Data+Home")
+                        .email("corecasedatateam@hmcts.net"))
+                .license(new License()
+                        .name("HMCTS License")
+                        .url("https://www.apache.org/licenses/LICENSE-2.0.txt"))
+            );
     }
-
 }
