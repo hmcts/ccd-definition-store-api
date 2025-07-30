@@ -24,7 +24,7 @@ class GenericLayoutSearchableValidatorImplTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         validator = new GenericLayoutSearchableValidatorImpl();
     }
 

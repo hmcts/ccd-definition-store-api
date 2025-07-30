@@ -1,8 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
-import com.google.gson.stream.JsonWriter;
-import org.jooq.lambda.Unchecked;
-import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
@@ -10,11 +8,21 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import java.util.List;
 import java.util.Set;
 
+import com.google.gson.stream.JsonWriter;
+import org.jooq.lambda.Unchecked;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import static com.google.common.collect.Lists.newArrayList;
 import static java.util.stream.Collectors.toList;
 
 @Component
 public class CollectionTypeMappingGenerator extends TypeMappingGenerator {
+
+    @Autowired
+    public CollectionTypeMappingGenerator(CcdElasticSearchProperties config) {
+        super(config);
+    }
 
     @Override
     public String dataMapping(FieldEntity collectionField) {

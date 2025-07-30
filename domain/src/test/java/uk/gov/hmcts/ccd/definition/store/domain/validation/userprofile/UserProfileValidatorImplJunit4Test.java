@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.userprofile;
 
-import org.junit.Before;
-import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -11,10 +9,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import java.util.Arrays;
 import java.util.Collections;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -25,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *      Needs investigation on why test coverage is picking up JUnit5 cases selectively.
  */
 @Deprecated
-public class UserProfileValidatorImplJunit4Test {
+class UserProfileValidatorImplJunit4Test {
 
     public static final String JURISDICTION_REFERENCE = "Heman TH";
     public static final String CASE_TYPE_REFERENCE = "HOLIDAY";
@@ -34,8 +35,8 @@ public class UserProfileValidatorImplJunit4Test {
     private JurisdictionEntity jurisdiction;
     private CaseTypeEntity caseTypeEntity;
 
-    @Before
-    public void init() {
+    @BeforeEach
+    void init() {
         validator = new UserProfileValidatorImpl();
         jurisdiction = new JurisdictionEntity();
         jurisdiction.setReference(JURISDICTION_REFERENCE);
@@ -47,14 +48,14 @@ public class UserProfileValidatorImplJunit4Test {
     }
 
     @Test
-    public void emptyDataToValidate() {
+    void emptyDataToValidate() {
         final ValidationResult result = validator.validate(
             Collections.emptyList(), null, Collections.emptyList());
         assertTrue(result.isValid());
     }
 
     @Test
-    public void validWorkbasketDefaults() {
+    void validWorkbasketDefaults() {
         WorkBasketUserDefault userDefault = buildWorkBasketUserDefault("Nayab.The.Royal.Highness.ssssh@hmcts.net",
             "QA",
             CASE_TYPE_REFERENCE,
@@ -72,7 +73,7 @@ public class UserProfileValidatorImplJunit4Test {
     }
 
     @Test
-    public void invalidWorkbasketDefaultsUndefinedJurisdiction() {
+    void invalidWorkbasketDefaultsUndefinedJurisdiction() {
         WorkBasketUserDefault userDefault = buildWorkBasketUserDefault("Nayab.The.Royal.Highness.ssssh@hmcts.net",
             JURISDICTION_REFERENCE,
             CASE_TYPE_REFERENCE,
@@ -97,7 +98,7 @@ public class UserProfileValidatorImplJunit4Test {
     }
 
     @Test
-    public void invalidEmailAddress() {
+    void invalidEmailAddress() {
         final WorkBasketUserDefault userDefault = buildWorkBasketUserDefault("BAYAN-The-Royal-Highnes",
             JURISDICTION_REFERENCE,
             CASE_TYPE_REFERENCE,

@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("WorkbasketLayoutParser Tests")
-public class WorkbasketLayoutParserTest {
+class WorkbasketLayoutParserTest {
 
     @Mock
     private ParseContext parseContext;
@@ -34,8 +34,8 @@ public class WorkbasketLayoutParserTest {
     private Map<String, DefinitionSheet> definitionSheets;
 
     @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
+    void setup() {
+        MockitoAnnotations.openMocks(this);
 
         definitionSheets = new HashMap<>();
         classUnderTest = new WorkbasketLayoutParser(

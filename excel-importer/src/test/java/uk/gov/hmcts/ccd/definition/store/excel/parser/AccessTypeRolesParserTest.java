@@ -65,9 +65,9 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     private AccessTypeEntity accessTypeEntity;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         parseContext = new ParseContext();
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         //setup case type
         when(caseTypeEntity.getReference()).thenReturn(CASE_TYPE_ID_1);
@@ -99,7 +99,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParse() {
+    void shouldParse() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
 
         item.addAttribute(ColumnName.LIVE_FROM.toString(), Date.from(LocalDate.of(2023,
@@ -142,7 +142,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailWhenCaseTypeIDIsInvalid() {
+    void shouldFailWhenCaseTypeIDIsInvalid() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.toString());
         item.addAttribute(ColumnName.DESCRIPTION.toString(), "Test Desc1");
 
@@ -160,7 +160,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailWhenDateIsInvalid() {
+    void shouldFailWhenDateIsInvalid() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
@@ -178,7 +178,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldReturnEmptyWhenAccessTypeRolesSheetHasNoItems() {
+    void shouldReturnEmptyWhenAccessTypeRolesSheetHasNoItems() {
 
         List<AccessTypeRoleEntity> accessTypeRolesEntities =
             accessTypeRolesParser
@@ -236,7 +236,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailWhenAccessTypeIsInvalid() {
+    void shouldFailWhenAccessTypeIsInvalid() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id invalid");
@@ -262,7 +262,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailIfCaseAccessGroupIDTemplateIsInvalid() {
+    void shouldFailIfCaseAccessGroupIDTemplateIsInvalid() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
@@ -294,7 +294,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailIfRequiredGroupRoleFieldsAreMissing() {
+    void shouldFailIfRequiredGroupRoleFieldsAreMissing() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
@@ -327,7 +327,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailIfARoleNameIsNotProvided() {
+    void shouldFailIfARoleNameIsNotProvided() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");
@@ -350,7 +350,7 @@ class AccessTypeRolesParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldFailIfRoleIsInvalid() {
+    void shouldFailIfRoleIsInvalid() {
         final DefinitionDataItem item = new DefinitionDataItem(ACCESS_TYPE_ROLE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_ID_1);
         item.addAttribute(ColumnName.ACCESS_TYPE_ID.toString(), "access id");

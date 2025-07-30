@@ -1,14 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -22,23 +13,34 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.Version;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
 import static com.google.common.collect.Lists.newArrayList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsCollectionContaining.hasItems;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.core.IsIterableContaining.hasItems;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class CaseDefinitionControllerTest {
+class CaseDefinitionControllerTest {
 
     private CaseTypeService caseTypeService = mock(CaseTypeService.class);
     private JurisdictionService jurisdictionService = mock(JurisdictionService.class);
@@ -48,7 +50,7 @@ public class CaseDefinitionControllerTest {
     private MockMvc mockMvc;
 
     @BeforeEach
-    public void createSubject() {
+    void createSubject() {
         subject = new CaseDefinitionController(caseTypeService, jurisdictionService, caseRoleService,
             roleToAccessProfilesService);
         mockMvc = MockMvcBuilders.standaloneSetup(subject)
@@ -192,7 +194,7 @@ public class CaseDefinitionControllerTest {
     class JurisdictionTests {
 
         @Test
-        public void shouldCallJurisdictionGetAllWithListOfIds() {
+        void shouldCallJurisdictionGetAllWithListOfIds() {
             subject.findJurisdictions(Optional.of(newArrayList("J1", "J2")));
             ArgumentCaptor<List> argument = ArgumentCaptor.forClass(List.class);
             verify(jurisdictionService, times(1)).getAll((List<String>) argument.capture());
@@ -201,9 +203,9 @@ public class CaseDefinitionControllerTest {
         }
 
         @Test
-        public void shouldCallJurisdictionGetAllWhenNoIds() {
+        void shouldCallJurisdictionGetAllWhenNoIds() {
             subject.findJurisdictions(Optional.empty());
-            verify(jurisdictionService, times(0)).getAll(anyList());
+            verify(jurisdictionService, never()).getAll(anyList());
             verify(jurisdictionService, times(1)).getAll();
         }
     }

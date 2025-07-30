@@ -1,37 +1,31 @@
 package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
-import uk.gov.hmcts.ccd.definition.store.repository.PostgreSQLEnumType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.LAZY;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.FetchType.LAZY;
 
 @Table(name = "event_case_field")
 @Entity
-@TypeDef(
-    name = "pgsql_displaycontext_enum",
-    typeClass = PostgreSQLEnumType.class,
-    parameters = @org.hibernate.annotations.Parameter(name = "type",
-        value = "uk.gov.hmcts.ccd.definition.store.repository.DisplayContext")
-)
 public class EventCaseFieldEntity implements Serializable {
     @Id
     @Column(name = "id")
@@ -52,7 +46,7 @@ public class EventCaseFieldEntity implements Serializable {
     private final List<EventComplexTypeEntity> eventComplexTypes = new ArrayList<>();
 
     @Column(name = "display_context", nullable = false)
-    @Type(type = "pgsql_displaycontext_enum")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     private DisplayContext displayContext;
 
     @Column(name = "display_context_parameter")
