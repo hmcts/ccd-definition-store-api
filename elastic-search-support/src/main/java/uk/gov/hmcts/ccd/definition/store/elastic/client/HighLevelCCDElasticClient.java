@@ -82,8 +82,8 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
             }
         }
 
-        throw new IOException("Failed to execute " + operationName +
-            " after " + MAX_RETRIES + " attempts", lastException);
+        throw new IOException("Failed to execute " + operationName
+            + " after " + MAX_RETRIES + " attempts", lastException);
     }
 
     private boolean isDeadHostException(Exception e) {
@@ -91,15 +91,16 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     }
 
     private boolean isConnectionError(Exception e) {
-        return e instanceof ConnectionClosedException ||
-            e instanceof ElasticsearchException &&
-                e.getCause() instanceof ConnectionClosedException;
+        return e instanceof ConnectionClosedException
+            || e instanceof ElasticsearchException
+            && e.getCause() instanceof ConnectionClosedException;
     }
 
     private void resetClient() {
         synchronized (LOCK) {
             if (elasticClient != null) {
                 try {
+                    log.debug("Close the elasticsearch client to reset the connection");
                     elasticClient.close();
                 } catch (IOException e) {
                     log.error("Error closing elasticsearch client", e);
@@ -172,9 +173,9 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         return executeWithRetry((client) -> {
             try {
                 var response = client.indices().getAlias(b -> b.name(alias));
-                boolean exists = response != null &&
-                    response.aliases() != null &&
-                    !response.aliases().isEmpty();
+                boolean exists = response != null
+                    && response.aliases() != null
+                    && !response.aliases().isEmpty();
                 log.debug("alias {} exists: {}", alias, exists);
                 return exists;
             } catch (ElasticsearchException e) {
