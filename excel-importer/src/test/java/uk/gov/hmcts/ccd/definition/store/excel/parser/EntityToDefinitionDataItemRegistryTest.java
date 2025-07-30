@@ -1,24 +1,27 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.junit.Before;
-import org.junit.Test;
+
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class EntityToDefinitionDataItemRegistryTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+
+class EntityToDefinitionDataItemRegistryTest {
 
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         entityToDefinitionDataItemRegistry = new EntityToDefinitionDataItemRegistry();
     }
 
     @Test
-    public void addEntityToRegistry_definitionDataItemCanBeRetreived() {
+    void addEntityToRegistry_definitionDataItemCanBeRetreived() {
 
         DefinitionDataItem definitionDataItem = new DefinitionDataItem("");
         Object entity = new Object();
@@ -29,7 +32,7 @@ public class EntityToDefinitionDataItemRegistryTest {
     }
 
     @Test
-    public void entityNotInRegistry_nullDefinitionDataItemRetreived() {
+    void entityNotInRegistry_nullDefinitionDataItemRetreived() {
 
         assertEquals(Optional.empty(), entityToDefinitionDataItemRegistry.getForEntity(new Object()));
 

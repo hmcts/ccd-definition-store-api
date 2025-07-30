@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.junit.Assert;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -47,7 +47,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.COMPLEX_TYPES;
 
-public class AuthorisationComplexTypeParserTest {
+class AuthorisationComplexTypeParserTest {
 
     protected static final String CASE_FIELD_2 = "Some Case Field 2";
     protected static final String COMPLEX_FIELD_2 = "Some Complex Field 2";
@@ -78,8 +78,8 @@ public class AuthorisationComplexTypeParserTest {
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
+    void setup() {
+        MockitoAnnotations.openMocks(this);
         final ParseContext context = new ParseContext();
         given(mockAccessProfileEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
         context.registerAccessProfiles(Arrays.asList(mockAccessProfileEntity));
@@ -135,7 +135,7 @@ public class AuthorisationComplexTypeParserTest {
         definitionSheets.remove(AUTHORISATION_COMPLEX_TYPE.getName());
         MapperException thrown = assertThrows(MapperException.class,
             () -> classUnderTest.parseAll(definitionSheets, caseType));
-        Assert.assertThat(thrown.getMessage(), is("No AuthorisationComplexType tab found in configuration"));
+        assertThat(thrown.getMessage(), is("No AuthorisationComplexType tab found in configuration"));
     }
 
     @Test
@@ -162,7 +162,7 @@ public class AuthorisationComplexTypeParserTest {
 
         MapperException thrown = assertThrows(MapperException.class,
             () -> classUnderTest.parseAll(definitionSheets, caseType));
-        Assert.assertThat(thrown.getMessage(), is("Unknown CaseField 'Some Case Field' for CaseType "
+        assertThat(thrown.getMessage(), is("Unknown CaseField 'Some Case Field' for CaseType "
             + "'Some Case Type' in worksheet 'AuthorisationComplexType'"));
     }
 

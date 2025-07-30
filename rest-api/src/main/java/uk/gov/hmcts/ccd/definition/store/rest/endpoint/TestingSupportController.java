@@ -8,8 +8,6 @@ import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,8 +35,6 @@ public class TestingSupportController {
     public TestingSupportController(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
-
-    private static final Logger LOG = LoggerFactory.getLogger(TestingSupportController.class);
 
     @DeleteMapping(value = "/cleanup-case-type/{changeId}")
     @ApiOperation(value = "Delete a list of Case Type Schemas", notes = "Blank body response.\n")
@@ -75,7 +71,9 @@ public class TestingSupportController {
     }
 
     private List<Integer> getCaseTypeIdsByReferences(Session session, List<String> caseTypesWithChangeIds) {
-        var ids = session.createNativeQuery("SELECT id FROM case_type WHERE reference IN ( :caseTypesWithChangeIds );")
+        var ids = session.createNativeQuery(
+                "SELECT id FROM case_type WHERE reference IN ( :caseTypesWithChangeIds );", 
+                Integer.class)
             .setParameterList("caseTypesWithChangeIds", caseTypesWithChangeIds)
             .list();
         session.getTransaction().commit();
@@ -231,8 +229,8 @@ public class TestingSupportController {
 
     private void executeSql(Session session, String sql, List<Integer> ids) {
         session.beginTransaction();
-        session.createNativeQuery(sql)
-            .setParameterList("caseTypeIds", ids, org.hibernate.type.IntegerType.INSTANCE)
+        session.createNativeMutationQuery(sql)
+            .setParameterList("caseTypeIds", ids)
             .executeUpdate();
         session.getTransaction().commit();
     }

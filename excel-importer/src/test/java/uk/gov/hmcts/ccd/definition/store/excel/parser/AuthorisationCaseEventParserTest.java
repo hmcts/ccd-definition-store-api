@@ -63,8 +63,8 @@ class AuthorisationCaseEventParserTest {
     private EventEntity caseEvent;
 
     @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
+    void setup() {
+        MockitoAnnotations.openMocks(this);
         final ParseContext context = new ParseContext();
 
         given(mockAccessProfileEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
@@ -115,7 +115,7 @@ class AuthorisationCaseEventParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithCaseRoleFound() {
+    void shouldParseEntityWithCaseRoleFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_EVENT.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.CASE_EVENT_ID.toString(), CASE_EVENT_UNDER_TEST);
@@ -140,7 +140,7 @@ class AuthorisationCaseEventParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithAccessProfileNotFound() {
+    void shouldParseEntityWithAccessProfileNotFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_EVENT.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.CASE_EVENT_ID.toString(), CASE_EVENT_UNDER_TEST);
@@ -161,7 +161,7 @@ class AuthorisationCaseEventParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithInvalidCrud() {
+    void shouldParseEntityWithInvalidCrud() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_EVENT.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.CASE_EVENT_ID.toString(), CASE_EVENT_UNDER_TEST);
@@ -182,7 +182,7 @@ class AuthorisationCaseEventParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithInvalidCrudAndAccessProfileNotFound() {
+    void shouldParseEntityWithInvalidCrudAndAccessProfileNotFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_EVENT.getName());
         item1.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ColumnName.CASE_EVENT_ID.toString(), CASE_EVENT_UNDER_TEST);

@@ -2,7 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 public class UserRoleModelMapper {
 

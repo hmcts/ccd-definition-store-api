@@ -19,7 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.DefinitionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Definition;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 
 import static org.springframework.http.HttpStatus.CREATED;

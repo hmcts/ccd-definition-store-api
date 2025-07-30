@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.WORK_BASKET_INPUT_FIELD;
 
 @DisplayName("WorkbasketInputLayoutParser Tests")
-public class WorkbasketInputLayoutParserTest {
+class WorkbasketInputLayoutParserTest {
 
     @Mock
     private ParseContext parseContext;
@@ -35,8 +35,8 @@ public class WorkbasketInputLayoutParserTest {
     private Map<String, DefinitionSheet> definitionSheets;
 
     @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
+    void setup() {
+        MockitoAnnotations.openMocks(this);
 
         definitionSheets = new HashMap<>();
         classUnderTest = new WorkbasketInputLayoutParser(

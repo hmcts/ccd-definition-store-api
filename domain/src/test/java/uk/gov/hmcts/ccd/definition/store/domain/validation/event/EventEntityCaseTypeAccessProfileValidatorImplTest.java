@@ -14,7 +14,7 @@ import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class EventEntityCaseTypeAccessProfileValidatorImplTest {
+class EventEntityCaseTypeAccessProfileValidatorImplTest {
 
     private final EventEntityCaseTypeAccessProfileValidatorImpl validator
             = new EventEntityCaseTypeAccessProfileValidatorImpl();

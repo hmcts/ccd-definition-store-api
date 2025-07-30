@@ -3,8 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.domain;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.inject.Named;
-import javax.inject.Singleton;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 import java.util.List;
 import java.util.Map;
 
