@@ -1,14 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch.indices.AliasDefinition;
-import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
-import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
-import co.elastic.clients.elasticsearch.indices.GetAliasRequest;
-import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
-import co.elastic.clients.elasticsearch.indices.UpdateAliasesRequest;
-import co.elastic.clients.elasticsearch.indices.UpdateAliasesResponse;
+import co.elastic.clients.elasticsearch.indices.*;
 import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
+import co.elastic.clients.util.ObjectBuilder;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -23,6 +18,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperti
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.doReturn;
@@ -63,12 +59,9 @@ class HighLevelCCDElasticClientTest {
             .acknowledged(true)
             .shardsAcknowledged(true)
             .build();
-        // TODO: Unwieldy!!
         doReturn(response)
             .when(indicesClient)
-            .create(Mockito
-                .<java.util.function.Function<co.elastic.clients.elasticsearch.indices.CreateIndexRequest.Builder,
-                    co.elastic.clients.util.ObjectBuilder<co.elastic.clients.elasticsearch.indices.CreateIndexRequest>>>any());
+            .create(Mockito.<Function<CreateIndexRequest.Builder, ObjectBuilder<CreateIndexRequest>>>any());
 
 
         GetAliasResponse realAliasResponse = new GetAliasResponse.Builder()
@@ -154,25 +147,16 @@ class HighLevelCCDElasticClientTest {
     }
 
     private void realGetAliasResponseStub(GetAliasResponse realAliasResponse) throws IOException {
-
-        // TODO: Unwieldy!!
-        doReturn(realAliasResponse)
+       doReturn(realAliasResponse)
             .when(indicesClient)
-            .getAlias(Mockito
-                .<java.util.function.Function<co.elastic.clients.elasticsearch.indices.GetAliasRequest.Builder,
-                co.elastic.clients.util.ObjectBuilder<co.elastic.clients.elasticsearch.indices.GetAliasRequest>>>any());
+            .getAlias(Mockito.<Function<GetAliasRequest.Builder, ObjectBuilder<GetAliasRequest>>>any());
 
     }
 
     private void realUpdateAliasesResponseStub(UpdateAliasesResponse realAliasesResponse) throws IOException {
-
-        // TODO: Unwieldy!!
         doReturn(realAliasesResponse)
             .when(indicesClient)
-            .updateAliases(Mockito
-                .<java.util.function.Function<co.elastic.clients.elasticsearch.indices.UpdateAliasesRequest.Builder,
-           co.elastic.clients.util.ObjectBuilder<co.elastic.clients.elasticsearch.indices.UpdateAliasesRequest>>>any());
-
+            .updateAliases(Mockito.<Function<UpdateAliasesRequest.Builder, ObjectBuilder<UpdateAliasesRequest>>>any());
     }
 
     private IndexAliases createIndexAliases(String index) {
