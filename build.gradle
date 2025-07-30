@@ -24,6 +24,12 @@ dependencyCheck {
     suppressionFile = 'dependency-check-suppressions.xml'
 }
 
+tasks.register("printSuppressionFile") {
+    doLast {
+        println "SUPPRESSION_FILE=${dependencyCheck.suppressionFile}"
+    }
+}
+
 ext {
     set('elasticsearch.version', '8.16.2')
     set('spring-framework.version', '6.2.1')
