@@ -12,7 +12,14 @@ public class SwaggerConfiguration {
     public OpenAPI springShopOpenAPI() {
         return new OpenAPI()
                 .info(new Info().title("CaseDataAPI Application")
-                .description("CaseDataAPIApplication"));
+                .description("CaseDataAPIApplication"))
+                .license("")
+                .licenseUrl("")
+                .version("1.0.1")
+                .contact(new Contact("CCD",
+                    "https://tools.hmcts.net/confluence/display/RCCD/Reform%3A+Core+Case+Data+Home",
+                    "corecasedatateam@hmcts.net"))
+                .termsOfServiceUrl("");
     }
 
 }
