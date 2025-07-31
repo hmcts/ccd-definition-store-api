@@ -1,8 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
+import uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -114,15 +113,17 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
         definitionImportListener.onDefinitionImported(event);
 
-        String response = getElasticsearchIndices(CASE_TYPE_A);
+        //String response = getElasticsearchIndices(CASE_TYPE_A);
+        String response = objectMapper.writeValueAsString(getElasticsearchIndices(CASE_TYPE_A));
+        String strippedResponse = stripGetIndexResponsePrefix(response);
+        String unescapedResponse = org.apache.commons.text.StringEscapeUtils.unescapeJson(strippedResponse);
 
-        assertThat(
-            response.trim().startsWith("{") ? new JSONObject(response) : new JSONArray(response),
-            equalToJSONInFile(
-                readFileFromClasspath("integration/single_casetype_index.json"),
-                ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A))
-            )
+        IsEqualJSON isEqualJSON = equalToJSONInFile(
+            readFileFromClasspath("integration/single_casetype_index.json"),
+            ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A))
         );
+
+        assertThat(unescapedResponse, isEqualJSON.leniently());
     }
 
     @Test
@@ -144,15 +145,28 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         definitionImportListener.onDefinitionImported(event);
 
         String response = getElasticsearchIndices(CASE_TYPE_A, CASE_TYPE_B);
-        String cleanedResponse = response.replaceFirst("^GetIndexResponse:\\s*", "").trim();
+        String strippedResponse = stripGetIndexResponsePrefix(response);
+        String unescapedResponse = org.apache.commons.text.StringEscapeUtils.unescapeJson(strippedResponse);
 
-        assertThat(
-            cleanedResponse,
-            equalToJSONInFile(
-                readFileFromClasspath("integration/multi_casetypes_indices.json"),
-                ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A, CASE_TYPE_B))
-            )
+        IsEqualJSON isEqualJSON = equalToJSONInFile(
+            readFileFromClasspath("integration/multi_casetypes_indices.json"),
+            ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A, CASE_TYPE_B))
         );
+
+        assertThat(unescapedResponse, isEqualJSON.leniently());
+    }
+
+    private String stripGetIndexResponsePrefix(String response) {
+        if (response == null) {
+            return null;
+        }
+
+        String marker = "GetIndexResponse:";
+        int index = response.indexOf(marker);
+        if (index != -1) {
+            return response.substring(index + marker.length()).trim();
+        }
+        return response.trim();
     }
 
     @Test

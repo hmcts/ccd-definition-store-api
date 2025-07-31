@@ -57,6 +57,7 @@ class HighLevelCCDElasticClientTest {
         MockitoAnnotations.openMocks(this);
         doReturn(indicesClient).when(elasticClient).indices();
         highLevelCCDElasticClient = Mockito.spy(new HighLevelCCDElasticClient(config, elasticClientFactory));
+        doReturn(elasticClient).when(elasticClientFactory).createClient();
     }
 
     @Test
@@ -72,7 +73,6 @@ class HighLevelCCDElasticClientTest {
         doReturn(response)
             .when(indicesClient)
             .create(Mockito.<Function<CreateIndexRequest.Builder, ObjectBuilder<CreateIndexRequest>>>any());
-
 
         GetAliasResponse realAliasResponse = new GetAliasResponse.Builder()
             .aliases(Map.of(alias, createIndexAliases(indexName)))
@@ -95,8 +95,7 @@ class HighLevelCCDElasticClientTest {
         boolean exists = highLevelCCDElasticClient.aliasExists(alias);
 
         assertThat(exists).isTrue();
-        verify(indicesClient)
-            .getAlias(Mockito.<java.util.function.Function<GetAliasRequest.Builder,
+        verify(indicesClient).getAlias(Mockito.<java.util.function.Function<GetAliasRequest.Builder,
                 co.elastic.clients.util.ObjectBuilder<GetAliasRequest>>>any());
     }
 
@@ -144,8 +143,7 @@ class HighLevelCCDElasticClientTest {
         realUpdateAliasesResponseStub(realAliasesResponse);
 
         assertThat(highLevelCCDElasticClient.updateAlias(alias, oldIndex, newIndex)).isFalse();
-        verify(indicesClient)
-            .updateAliases(Mockito.<java.util.function.Function<UpdateAliasesRequest.Builder,
+        verify(indicesClient).updateAliases(Mockito.<java.util.function.Function<UpdateAliasesRequest.Builder,
                 co.elastic.clients.util.ObjectBuilder<UpdateAliasesRequest>>>any());
     }
 
@@ -157,7 +155,7 @@ class HighLevelCCDElasticClientTest {
     }
 
     private void realGetAliasResponseStub(GetAliasResponse realAliasResponse) throws IOException {
-       doReturn(realAliasResponse)
+        doReturn(realAliasResponse)
             .when(indicesClient)
             .getAlias(Mockito.<Function<GetAliasRequest.Builder, ObjectBuilder<GetAliasRequest>>>any());
 

@@ -43,7 +43,14 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     public HighLevelCCDElasticClient(CcdElasticSearchProperties config, ElasticsearchClientFactory clientFactory) {
         this.config = config;
         this.clientFactory = clientFactory;
-        this.elasticClient = clientFactory.createClient();
+        this.elasticClient = getElasticClient();
+    }
+
+    protected ElasticsearchClient getElasticClient() {
+        if (elasticClient == null) {
+            elasticClient = clientFactory.createClient();
+        }
+        return elasticClient;
     }
 
     private <T> T executeWithRetry(ElasticOperation<T> operation, String operationName) throws IOException {
@@ -223,7 +230,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     }
 
     public void setIndexReadOnly(String indexName, boolean readOnly) throws IOException {
-        elasticClient.indices().putSettings(b -> b
+        getElasticClient().indices().putSettings(b -> b
             .index(indexName)
             .settings(s -> s
                 .withJson(new java.io.StringReader(
@@ -259,7 +266,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         log.info("index created: {}", createIndexResponse.acknowledged());
 
         // Upsert mapping to new index
-        var putMappingResponse = elasticClient.indices().putMapping(b -> b
+        var putMappingResponse = getElasticClient().indices().putMapping(b -> b
             .index(indexName)
             .withJson(new java.io.StringReader(caseTypeMapping))
         );
@@ -269,7 +276,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     }
 
     public boolean updateAlias(String aliasName, String oldIndex, String newIndex) throws IOException {
-        var aliasResponse = elasticClient.indices().updateAliases(b -> b
+        var aliasResponse = getElasticClient().indices().updateAliases(b -> b
             .actions(
                 Action.of(a -> a.remove(r -> r.index(oldIndex).alias(aliasName))),
                 Action.of(a -> a.add(ad -> ad.index(newIndex).alias(aliasName)))
@@ -284,7 +291,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     }
 
     public boolean removeIndex(String indexName) throws IOException {
-        var deleteResponse = elasticClient.indices().delete(b -> b.index(indexName));
+        var deleteResponse = getElasticClient().indices().delete(b -> b.index(indexName));
         if (deleteResponse.acknowledged()) {
             log.info("successfully deleted index: {}", indexName);
         } else {
@@ -297,7 +304,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
                             ActionListener<co.elastic.clients.elasticsearch.core.ReindexResponse> listener) {
         CompletableFuture.runAsync(() -> {
             try {
-                var response = elasticClient.reindex(b -> b
+                var response = getElasticClient().reindex(b -> b
                     .source(s -> s.index(oldIndex))
                     .dest(d -> d.index(newIndex))
                     .refresh(true)

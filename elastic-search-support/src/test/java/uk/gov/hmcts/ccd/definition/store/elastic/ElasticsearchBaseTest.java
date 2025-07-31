@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.indices.GetIndexResponse;
 import co.elastic.clients.elasticsearch.indices.DeleteIndexResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;

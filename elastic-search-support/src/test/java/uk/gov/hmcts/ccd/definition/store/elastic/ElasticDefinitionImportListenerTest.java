@@ -40,6 +40,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -86,7 +87,7 @@ class ElasticDefinitionImportListenerTest {
         listener.onDefinitionImported(newEvent(caseA, caseB));
 
         verify(clientObjectFactory).getObject();
-        verify(ccdElasticClient).close();
+        verify(ccdElasticClient, times(2)).close();
     }
 
     @Test
