@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
-import org.mockito.Mock;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.TypeMappersManager;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
@@ -8,6 +7,9 @@ import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerat
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.elasticsearch.core.Set;
+import org.mockito.Mock;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
@@ -18,7 +20,7 @@ public abstract class AbstractMapperTest {
     @Mock
     protected CcdElasticSearchProperties config;
 
-    protected TypeMappersManager stubTypeMappersManager = new TypeMappersManager();
+    protected TypeMappersManager stubTypeMappersManager = new TypeMappersManager(Set.of());
     protected Map<String, String> typeMappings = newHashMap();
     protected Map<String, String> elasticMappings = newHashMap();
     protected Map<String, String> predefinedMappings = new HashMap<>();

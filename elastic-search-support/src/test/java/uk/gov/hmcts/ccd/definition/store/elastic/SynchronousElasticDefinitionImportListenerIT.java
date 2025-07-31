@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import org.json.JSONException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -20,6 +15,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import org.json.JSONException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -49,7 +50,11 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
     @BeforeEach
     void setUp() throws IOException {
-        deleteElasticsearchIndices(WILDCARD);
+        try {
+            deleteElasticsearchIndices(WILDCARD);
+        } catch (Exception e) {
+            // Ignore any exceptions during index deletion, as it may not exist
+        }
     }
 
     @Test

@@ -1,46 +1,47 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
-import javax.persistence.EntityManager;
-
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Collection;
 import java.util.stream.Collectors;
 
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class CaseTypeRepositoryTest {
+class CaseTypeRepositoryTest {
 
     @Autowired
     private CaseTypeRepository classUnderTest;
@@ -60,8 +61,8 @@ public class CaseTypeRepositoryTest {
     private JurisdictionEntity testJurisdiction;
     private JurisdictionEntity testJurisdictionWithCaseTypeACL;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
         this.testJurisdictionWithCaseTypeACL = testHelper.createJurisdiction(
             "jurisdictionWithCaseTypeACL", "nameWithCaseTypeACL", "descWithCaseTypeACL");
@@ -174,7 +175,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void severalVersionsOfCaseTypeExistForReference_findCurrentCaseTypeReturnsCurrentVersionOfCaseType() {
+    void severalVersionsOfCaseTypeExistForReference_findCurrentCaseTypeReturnsCurrentVersionOfCaseType() {
         List<CaseTypeEntity> caseTypeEntities = classUnderTest.findAll().stream()
             .filter(c -> c.getReference().equals(CASE_TYPE_REFERENCE)).collect(Collectors.toList());
         assertEquals(3, caseTypeEntities.size());
@@ -185,7 +186,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void caseTypeDoesNotExistForReference_emptyOptionalReturned() {
+    void caseTypeDoesNotExistForReference_emptyOptionalReturned() {
         Optional<CaseTypeEntity> caseTypeEntityOptional
             = classUnderTest.findCurrentVersionForReference("Non Existing Reference");
         assertFalse(caseTypeEntityOptional.isPresent());
@@ -193,7 +194,7 @@ public class CaseTypeRepositoryTest {
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void severalVersionsOfCaseTypeExistForJurisdiction_findByJurisdictionIdReturnsCurrentVersionOfCaseTypeForJurisdiction() {
+    void severalVersionsOfCaseTypeExistForJurisdiction_findByJurisdictionIdReturnsCurrentVersionOfCaseTypeForJurisdiction() {
         List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
         assertEquals(7, caseTypeEntities.size());
@@ -201,28 +202,28 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void caseTypeDoesNotExistForJurisdiction_emptyListReturned() {
+    void caseTypeDoesNotExistForJurisdiction_emptyListReturned() {
         List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId("Non Existing Jurisdiction");
         assertTrue(caseTypeEntities.isEmpty());
     }
 
     @Test
-    public void shouldReturnZeroCountIfCaseTypeIsOfExcludedJurisdiction() {
+    void shouldReturnZeroCountIfCaseTypeIsOfExcludedJurisdiction() {
         Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(
             CASE_TYPE_REFERENCE, testJurisdiction.getReference());
         assertEquals(0, result.intValue());
     }
 
     @Test
-    public void shouldReturnAPositiveCountIfCaseTypeIsNotOfExcludedJurisdiction() {
+    void shouldReturnAPositiveCountIfCaseTypeIsNotOfExcludedJurisdiction() {
         Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(
             CASE_TYPE_REFERENCE, "OtherJurisdiction");
         assertEquals(3, result.intValue());
     }
 
     @Test
-    public void caseTypeReferenceHasSeveralSpellings_findDefinitiveReferenceReturnsLatestCreated() {
+    void caseTypeReferenceHasSeveralSpellings_findDefinitiveReferenceReturnsLatestCreated() {
         Optional<CaseTypeEntity> definitiveCaseTypeOptional =
             classUnderTest.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(TEST_CASE_TYPE_REFERENCE);
         assertTrue(definitiveCaseTypeOptional.isPresent());
@@ -230,7 +231,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void caseTypeReferenceHasSeveralSpellingsAndSameTimestamp_findDefinitiveReferenceReturnsLatestCreated() {
+    void caseTypeReferenceHasSeveralSpellingsAndSameTimestamp_findDefinitiveReferenceReturnsLatestCreated() {
         Optional<CaseTypeEntity> definitiveCaseTypeOptional =
             classUnderTest.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(ANOTHER_CASE_TYPE_REFERENCE);
         assertTrue(definitiveCaseTypeOptional.isPresent());
@@ -238,7 +239,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void definitiveCaseTypeReferenceDoesNotExistForReference_emptyOptionalReturned() {
+    void definitiveCaseTypeReferenceDoesNotExistForReference_emptyOptionalReturned() {
         Optional<CaseTypeEntity> definitiveCaseTypeOptional =
             classUnderTest.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc("Dummy");
         assertFalse(definitiveCaseTypeOptional.isPresent());
@@ -251,7 +252,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void saveAndValidateCaseTypeWithACLAndAccessProfileDataTest() {
+    void saveAndValidateCaseTypeWithACLAndAccessProfileDataTest() {
         CaseTypeEntity caseTypeEntityVersionOneWithMultiACL = createCaseTypeEntityWithCaseTypeACL(
             "CaseTypeWithACL", "CaseTypeWithACL", 1,
             testJurisdictionWithCaseTypeACL, createCaseTypeACL());
@@ -316,7 +317,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void getAllCaseTypeDefinitions() {
+    void getAllCaseTypeDefinitions() {
         createCaseTypeEntity("ref1", "name1.1", 1, testJurisdiction);
         createCaseTypeEntity("ref2", "name2.1", 1, testJurisdiction);
         createCaseTypeEntity("ref2", "name2.2", 2, testJurisdiction);
@@ -341,7 +342,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void shouldFindAllUniqueCaseTypeIds() {
+    void shouldFindAllUniqueCaseTypeIds() {
         List<String> result = classUnderTest.findAllCaseTypeIds();
 
         assertAll(
@@ -357,7 +358,7 @@ public class CaseTypeRepositoryTest {
     }
 
     @Test
-    public void getAllCaseTypeDefinitionsByReferences() {
+    void getAllCaseTypeDefinitionsByReferences() {
         createCaseTypeEntity("ref1", "name1.1", 1, testJurisdiction);
         createCaseTypeEntity("ref2", "name2.1", 1, testJurisdiction);
         createCaseTypeEntity("ref2", "name2.2", 2, testJurisdiction);

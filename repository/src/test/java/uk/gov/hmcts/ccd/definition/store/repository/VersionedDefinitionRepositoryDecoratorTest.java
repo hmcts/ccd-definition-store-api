@@ -1,17 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.jetbrains.annotations.NotNull;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.repository.query.FluentQuery;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
@@ -20,22 +8,35 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import static java.util.Arrays.asList;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
+import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.repository.query.FluentQuery;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
 
-@RunWith(SpringRunner.class)
+import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class VersionedDefinitionRepositoryDecoratorTest {
+class VersionedDefinitionRepositoryDecoratorTest {
 
     @Autowired
     private CaseTypeRepository exampleRepository;
@@ -47,8 +48,8 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     private VersionedDefinitionRepositoryDecorator<JurisdictionEntity, Integer> versionedJurisdictionRepository;
     private JurisdictionEntity jurisdiction;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
         versionedJurisdictionRepository = new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository);
 
         final JurisdictionEntity j = new JurisdictionEntity();
@@ -58,7 +59,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void saveNewCaseTypeAssignsAVersion() {
+    void saveNewCaseTypeAssignsAVersion() {
         final CaseTypeEntity caseType = new CaseTypeEntity();
         caseType.setReference("id");
         caseType.setName("name");
@@ -85,7 +86,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
 
 
     @Test
-    public void saveNewCaseTypes() {
+    void saveNewCaseTypes() {
         final CaseTypeEntity caseType = new CaseTypeEntity();
         caseType.setReference("id1");
         caseType.setName("name");
@@ -114,7 +115,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
 
     //test for required coverage of new lines in sonar
     @Test
-    public void saveAllAndFlushTest() {
+    void saveAllAndFlushTest() {
         List<JurisdictionEntity> result = versionedJurisdictionRepository.saveAllAndFlush(
             new Iterable<JurisdictionEntity>() {
                 @NotNull
@@ -143,7 +144,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void deleteAllByIdTest() {
+    void deleteAllByIdTest() {
         versionedJurisdictionRepository.deleteAllById(new Iterable<Integer>() {
             @NotNull
             @Override
@@ -157,7 +158,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void deleteAllByIdInBatchTest() {
+    void deleteAllByIdInBatchTest() {
         versionedJurisdictionRepository.deleteAllByIdInBatch(new Iterable<Integer>() {
             @NotNull
             @Override
@@ -171,7 +172,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void getByIdTest() {
+    void getByIdTest() {
         JurisdictionEntity result = versionedJurisdictionRepository.getById(Integer.MAX_VALUE);
 
         //method being tested is stubbed as it isn't used
@@ -180,7 +181,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void getReferenceByIdTest() {
+    void getReferenceByIdTest() {
         JurisdictionEntity result = versionedJurisdictionRepository.getReferenceById(Integer.MAX_VALUE);
 
         //method being tested is stubbed as it isn't used
@@ -189,7 +190,7 @@ public class VersionedDefinitionRepositoryDecoratorTest {
     }
 
     @Test
-    public void findByTest() {
+    void findByTest() {
         Object result = versionedJurisdictionRepository.findBy(new Example<JurisdictionEntity>() {
             @Override
             public JurisdictionEntity getProbe() {

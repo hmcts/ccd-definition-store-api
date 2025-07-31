@@ -1,11 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.display;
 
-import org.assertj.core.util.Lists;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
@@ -30,16 +24,22 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WizardPageField;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.anyInt;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
 
@@ -57,8 +57,8 @@ class DisplayGroupAdapterServiceTest {
     private DisplayGroupAdapterService classUnderTest;
 
     @BeforeEach
-    public void setUpMocks() {
-        MockitoAnnotations.initMocks(this);
+    void setUpMocks() {
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new DisplayGroupAdapterService(displayGroupRepository,
             caseTypeLiteRepository,
             eventRepository,
@@ -72,7 +72,7 @@ class DisplayGroupAdapterServiceTest {
         private final Integer caseTypeEntityId = 1000;
 
         @Test
-        public void findWizardPagesByCaseTypeId() {
+        void findWizardPagesByCaseTypeId() {
             EventEntity eventEntityMock = mock(EventEntity.class);
             given(eventEntityMock.getEventCaseFields())
                 .willReturn(singletonList(eventCaseFieldEntity(
@@ -120,7 +120,7 @@ class DisplayGroupAdapterServiceTest {
         }
 
         @Test
-        public void findWizardPagesByCaseTypeIdForComplexTypes() {
+        void findWizardPagesByCaseTypeIdForComplexTypes() {
             EventComplexTypeEntity bailiffName = new EventComplexTypeEntity();
             bailiffName.setReference("bailiffName");
             bailiffName.setDisplayContext(DisplayContext.READONLY);
@@ -257,7 +257,7 @@ class DisplayGroupAdapterServiceTest {
         }
 
         @Test
-        public void findWizardPagesByCaseTypeIdReturnsNullWhenNoCaseTypeFound() {
+        void findWizardPagesByCaseTypeIdReturnsNullWhenNoCaseTypeFound() {
             given(caseTypeLiteRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE))
                 .willReturn(Optional.empty());
 
@@ -269,7 +269,7 @@ class DisplayGroupAdapterServiceTest {
         }
 
         @Test
-        public void findWizardPagesByCaseTypeIdReturnsNullWhenNoEventFound() {
+        void findWizardPagesByCaseTypeIdReturnsNullWhenNoEventFound() {
             given(caseTypeLiteRepository.findCurrentVersionForReference(CASE_TYPE_REFERENCE))
                 .willReturn(Optional.of(caseTypeEntity));
             given(eventRepository.findByReferenceAndCaseTypeId(anyString(), anyInt())).willReturn(emptyList());
@@ -309,7 +309,7 @@ class DisplayGroupAdapterServiceTest {
     private static WebhookEntity webhookEntity() {
         WebhookEntity webhookEntity = new WebhookEntity();
         webhookEntity.setUrl("http://test1.com");
-        webhookEntity.setTimeouts(Lists.newArrayList(120));
+        webhookEntity.setTimeouts(List.of(120));
         return webhookEntity;
     }
 

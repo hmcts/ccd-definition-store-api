@@ -1,19 +1,21 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
-@RunWith(MockitoJUnitRunner.class)
-public class FieldsTypeParserTest extends ParserTestBase {
+@ExtendWith(MockitoExtension.class)
+class FieldsTypeParserTest extends ParserTestBase {
 
     private FieldsTypeParser fieldsTypeParser;
 
@@ -26,8 +28,8 @@ public class FieldsTypeParserTest extends ParserTestBase {
     @Mock
     private CaseFieldTypeParser fieldParser;
 
-    @Before
-    public void setup() {
+    @BeforeEach
+    void setup() {
 
         init();
 
@@ -36,7 +38,7 @@ public class FieldsTypeParserTest extends ParserTestBase {
     }
 
     @Test
-    public void shouldParseEmpty() {
+    void shouldParseEmpty() {
 
         final ParseResult<FieldTypeEntity> parseResult = new ParseResult();
 

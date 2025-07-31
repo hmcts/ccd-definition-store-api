@@ -1,11 +1,27 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
+import uk.gov.hmcts.ccd.definition.store.excel.client.translation.Translation;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
+import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URISyntaxException;
+import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matcher;
 import org.json.JSONException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.core.io.ClassPathResource;
@@ -16,21 +32,6 @@ import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.transaction.annotation.Transactional;
-import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
-import uk.gov.hmcts.ccd.definition.store.excel.client.translation.Translation;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
-import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
@@ -43,10 +44,10 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsMapContaining.hasEntry;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubForPutDictionaryReturns200;
 import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubForPutDictionaryReturns4XX;
@@ -57,7 +58,7 @@ import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubFo
  * @author Daniel Lam (A533913)
  */
 @TestPropertySource(properties = {"ccd.authorised.services=ccd_data"})
-public class SpreadSheetImportTest extends BaseTest {
+class SpreadSheetImportTest extends BaseTest {
     private static final String TEST_CASE_TYPE = "TestAddressBookCase";
     private static final String CASE_TYPE_DEF_URL = "/api/data/caseworkers/cid/jurisdictions/jid/case-types/"
         + TEST_CASE_TYPE;
@@ -98,9 +99,9 @@ public class SpreadSheetImportTest extends BaseTest {
 
             stubForPutDictionaryReturns200(getDictionaryRequest());
 
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
                 .file(file)
-                .header(AUTHORIZATION, "Bearer testUser")) //
+                .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
 
             assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
@@ -129,7 +130,8 @@ public class SpreadSheetImportTest extends BaseTest {
 
             stubForPutDictionaryReturns4XX(getDictionaryRequest());
 
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
+            
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
@@ -162,7 +164,7 @@ public class SpreadSheetImportTest extends BaseTest {
                  new ClassPathResource(EXCEL_FILE_WITH_ACCESS_PROFILE_ALIAS, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
             stubForPutDictionaryReturns200(getDictionaryRequest());
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser")) //
                 .andReturn();
@@ -203,7 +205,7 @@ public class SpreadSheetImportTest extends BaseTest {
                 .willReturn(WireMock.aResponse().withStatus(403)));
 
             // when I import a definition file
-            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser")).andReturn();
 
@@ -235,9 +237,9 @@ public class SpreadSheetImportTest extends BaseTest {
             containsString("Invalid Case Definition sheet - no Definition data attribute headers found"));
 
         // Check that no Definition data has been persisted.
-        assertEquals("Unexpected number of rows returned from case_type_items table",
-            0,
-            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
+        assertEquals(0,
+            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class),
+            "Unexpected number of rows returned from case_type_items table");
     }
 
     /**
@@ -247,7 +249,7 @@ public class SpreadSheetImportTest extends BaseTest {
      * @throws Exception On error running test
      */
     @Test
-    public void rollbackFailedDefinitionFileImport() throws Exception {
+    void rollbackFailedDefinitionFileImport() throws Exception {
         InputStream inputStream = new ClassPathResource("/ccd_testdefinition-missing-WorkBasketResultFields.xlsx",
             getClass()).getInputStream();
         final MvcResult result = performAndGetMvcResult(inputStream);
@@ -258,13 +260,14 @@ public class SpreadSheetImportTest extends BaseTest {
             containsString("A definition must contain a WorkBasketResultFields sheet"));
 
         // Check that no Definition data has been persisted.
-        assertEquals("Unexpected number of rows returned from case_type_items table",
+        assertEquals(
             0,
-            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
+            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class),
+            "Unexpected number of rows returned from case_type_items table");
     }
 
     @Test
-    public void userProfileIsNotStoredWhenImportFails() throws Exception {
+    void userProfileIsNotStoredWhenImportFails() throws Exception {
 
         WireMock.reset();
 
@@ -275,12 +278,12 @@ public class SpreadSheetImportTest extends BaseTest {
         WireMock.verify(0, putRequestedFor(urlEqualTo("/user-profile/users")));
 
         // Check that no Definition data has been persisted.
-        assertEquals("Unexpected number of rows returned from case_type_items table",
-            0,
-            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
-        assertEquals("data stored during a failed import",
-            0,
-            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class).intValue());
+        assertEquals(0,
+            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class),
+            "Unexpected number of rows returned from case_type_items table");
+        assertEquals(0,
+            jdbcTemplate.queryForObject(GET_CASE_TYPES_COUNT_QUERY, Integer.class),
+            "data stored during a failed import");
     }
 
     @Test
@@ -317,7 +320,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
     private MvcResult performAndGetMvcResult(InputStream inputStream) throws Exception {
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        return mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+        return mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
             .file(file)
             .header(AUTHORIZATION, "Bearer testUser"))
             .andExpect(MockMvcResultMatchers.status().isBadRequest())
@@ -326,7 +329,7 @@ public class SpreadSheetImportTest extends BaseTest {
 
     private MvcResult performAndGetMvcResult(InputStream inputStream, ResultMatcher resultMatcher) throws Exception {
         MockMultipartFile file = new MockMultipartFile("file", inputStream);
-        return mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+        return mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
             .file(file)
             .header(AUTHORIZATION, "Bearer testUser"))
             .andExpect(resultMatcher)
@@ -354,17 +357,11 @@ public class SpreadSheetImportTest extends BaseTest {
 
         String expected = readFileToString(new File(getClass().getClassLoader()
             .getResource(fileName)
-            .toURI()));
+            .toURI()), Charset.defaultCharset());
         expected = expected.replaceAll("#date",
             LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
 
         JSONAssert.assertEquals(removeGuids(expected), removeGuids(contentAsString), JSONCompareMode.LENIENT);
-    }
-
-    private String formatJsonString(String string) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writerWithDefaultPrettyPrinter()
-            .writeValueAsString(objectMapper.readValue(string, Object.class));
     }
 
     private String removeGuids(String response) throws IOException {

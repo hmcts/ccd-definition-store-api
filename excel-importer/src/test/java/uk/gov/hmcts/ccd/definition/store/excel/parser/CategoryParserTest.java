@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import lombok.val;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.challengequestion.BaseChallengeQuestionTest;
@@ -19,13 +14,20 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.hamcrest.Matchers.is;
+import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 
 
-public class CategoryParserTest extends BaseChallengeQuestionTest {
+class CategoryParserTest extends BaseChallengeQuestionTest {
 
     private static final Date LIVE_FROM = new Date();
     private static final Date LIVE_TO = new Date();
@@ -42,15 +44,15 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
     private CategoryParser categoryParser;
     private ParseContext parseContext;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
         parseContext = buildParseContext();
         this.categoryParser = new CategoryParser(categoryValidator);
     }
 
     @Test
-    public void testParse() {
+    void testParse() {
         val categoryEntities =
             categoryParser.parse(createDefinitionSheets(), parseContext);
 
@@ -62,19 +64,20 @@ public class CategoryParserTest extends BaseChallengeQuestionTest {
     }
 
     @Test
-    public void testParseRegisteredCategory() {
+    void testParseRegisteredCategory() {
         val categoryEntities =
             categoryParser.parse(createDefinitionSheets(), parseContext);
 
         assertThat(parseContext.getCategory(CASE_TYPE, CATEGORY_ID), is(categoryEntities.get(0)));
     }
 
-    @Test(expected = ValidationException.class)
-    public void failDueToDuplicatedIDs() {
+    @Test
+    void failDueToDuplicatedIDs() {
         doThrow(new ValidationException(new ValidationResult()))
             .when(categoryValidator)
             .validate(any(), any());
-        categoryParser.parse(createDefinitionSheets(), parseContext);
+        assertThrows(ValidationException.class, () ->
+            categoryParser.parse(createDefinitionSheets(), parseContext));
     }
 
 
