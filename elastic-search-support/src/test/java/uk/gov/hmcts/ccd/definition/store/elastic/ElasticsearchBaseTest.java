@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch.indices.GetIndexResponse;
 import co.elastic.clients.elasticsearch.indices.DeleteIndexResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,16 +55,20 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
             .toArray(Customization[]::new));
     }
 
+    protected ElasticsearchClient getElasticsearchClientFactory() {
+        return elasticsearchClientFactory.createClient();
+    }
+
     protected String getElasticsearchIndices(String... caseTypes) throws IOException {
         String indexPattern = getIndicesFromCaseTypes(caseTypes);
-        GetIndexResponse response = elasticsearchClientFactory.createClient().indices()
+        GetIndexResponse response = getElasticsearchClientFactory().indices()
             .get(g -> g.index(indexPattern));
         return objectMapper.writeValueAsString(response.toString());
     }
 
     protected String deleteElasticsearchIndices(String... caseTypes) throws IOException {
         String indexPattern = caseTypes[0].equals(WILDCARD) ? WILDCARD : getIndicesFromCaseTypes(caseTypes);
-        DeleteIndexResponse response = elasticsearchClientFactory.createClient().indices()
+        DeleteIndexResponse response = getElasticsearchClientFactory().indices()
             .delete(d -> d.index(indexPattern));
         return "acknowledged: " + response.acknowledged();
     }
