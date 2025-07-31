@@ -2,18 +2,18 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 
 import org.hamcrest.core.Is;
 import org.jetbrains.annotations.NotNull;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
-import javax.persistence.EntityManager;
+import jakarta.persistence.EntityManager;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
@@ -22,14 +22,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity.toCaseTypeLiteEntity;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class AccessTypesRepositoryTest {
+class AccessTypesRepositoryTest {
 
     @Autowired
     private AccessTypesRepository accessTypesRepository;
@@ -44,7 +44,7 @@ public class AccessTypesRepositoryTest {
     private TestHelper testHelper;
 
     @Test
-    public void saveAndRetrieveAccessTypeRoles() {
+    void saveAndRetrieveAccessTypeRoles() {
 
         final CaseTypeEntity caseType = createCaseTypeEntity();
         saveCaseType(caseType);

@@ -1,21 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping.type;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.when;
-import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
-import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.labelFieldType;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
-import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.AbstractMapperTest;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.StubTypeMappingGenerator;
@@ -26,26 +10,43 @@ import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
 import java.util.Iterator;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
+import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.labelFieldType;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
+import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
+
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implements TestUtils {
+class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implements TestUtils {
 
     @InjectMocks
     private ComplexTypeMappingGenerator complexTypeMapper;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         super.setup();
 
         when(config.getSecurityClassificationMapping()).thenReturn("securityClassificationMapping");
-        addMappingGenerator(new StubTypeMappingGenerator("Text", "dataMapping", "dataClassificationMapping"));
-        addMappingGenerator(new StubTypeMappingGenerator("Complex", "dataMappingForComplexType",
+        addMappingGenerator(new StubTypeMappingGenerator(null, "Text", "dataMapping", "dataClassificationMapping"));
+        addMappingGenerator(new StubTypeMappingGenerator(null, "Complex", "dataMappingForComplexType",
             "dataClassificationMappingForComplexType"));
         complexTypeMapper.inject(stubTypeMappersManager);
     }
 
     @Test
-    public void shouldGenerateMappingForAllComplexTypeFields() {
+    void shouldGenerateMappingForAllComplexTypeFields() {
         CaseFieldEntity complexField = newComplexField();
 
         String result = complexTypeMapper.doDataMapping(complexField);
@@ -55,7 +56,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
     }
 
     @Test
-    public void shouldGenerateClassificationMappingForAllComplexTypeFields() {
+    void shouldGenerateClassificationMappingForAllComplexTypeFields() {
         CaseFieldEntity complexField = newComplexField();
 
         String result = complexTypeMapper.doDataClassificationMapping(complexField);
@@ -65,7 +66,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
     }
 
     @Test
-    public void shouldGenerateDataMappingForNonSearchableComplexType() {
+    void shouldGenerateDataMappingForNonSearchableComplexType() {
         CaseFieldEntity complexField = newComplexField();
         complexField.setSearchable(false);
 
@@ -75,7 +76,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
     }
 
     @Test
-    public void shouldGenerateDataMappingForComplexTypeWithNonSearchableNestedField() {
+    void shouldGenerateDataMappingForComplexTypeWithNonSearchableNestedField() {
         CaseFieldEntity complexField = newComplexField();
         Iterator<ComplexFieldEntity> iterator = complexField.getFieldType().getComplexFields().iterator();
         for (int i = 0; iterator.hasNext(); i++) {
@@ -93,7 +94,7 @@ public class ComplexTypeMappingGeneratorTest extends AbstractMapperTest implemen
 
 
     @Test
-    public void shouldGenerateDataClassificationMappingForNonSearchableComplexType() {
+    void shouldGenerateDataClassificationMappingForNonSearchableComplexType() {
         CaseFieldEntity complexField = newComplexField();
         complexField.setSearchable(false);
 

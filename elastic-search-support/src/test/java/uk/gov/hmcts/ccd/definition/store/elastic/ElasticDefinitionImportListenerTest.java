@@ -1,19 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.cluster.metadata.AliasMetadata;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.rest.RestStatus;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
@@ -29,24 +15,39 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.elasticsearch.ElasticsearchStatusException;
+import org.elasticsearch.action.ActionListener;
+import org.elasticsearch.client.GetAliasesResponse;
+import org.elasticsearch.cluster.metadata.AliasMetadata;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.rest.RestStatus;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectFactory;
+
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.doAnswer;
 
 @ExtendWith(MockitoExtension.class)
-public class ElasticDefinitionImportListenerTest {
+class ElasticDefinitionImportListenerTest {
 
     @InjectMocks
     private TestDefinitionImportListener listener;
@@ -75,12 +76,12 @@ public class ElasticDefinitionImportListenerTest {
     private final String incrementedCaseTypeName = "casetypea_cases-000002";
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         lenient().when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
     }
 
     @Test
-    public void createsAndClosesANewElasticClientOnEachImportToSaveResources() throws IOException {
+    void createsAndClosesANewElasticClientOnEachImportToSaveResources() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
 
@@ -91,7 +92,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void closesClientEvenInCaseOfErrors() {
+    void closesClientEvenInCaseOfErrors() {
         when(config.getCasesIndexNameFormat()).thenThrow(new RuntimeException("test"));
 
         assertThrows(RuntimeException.class, () -> {
@@ -101,7 +102,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void createsIndexIfNotExists() throws IOException {
+    void createsIndexIfNotExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
 
@@ -112,7 +113,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void skipIndexCreationIfNotExists() throws IOException {
+    void skipIndexCreationIfNotExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
 
@@ -122,7 +123,7 @@ public class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void createsMapping() throws IOException {
+    void createsMapping() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
         when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");

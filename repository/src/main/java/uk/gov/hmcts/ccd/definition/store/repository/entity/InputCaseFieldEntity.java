@@ -2,8 +2,8 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import uk.gov.hmcts.ccd.definition.store.repository.LayoutSheetType;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 import java.util.Optional;
 
 @MappedSuperclass
