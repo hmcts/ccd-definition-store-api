@@ -239,6 +239,7 @@
       "searchAliasFields": [],
       "roleToAccessProfiles": [
         {
+          "__operator__": "equivalent",
           "__ordering__": "UNORDERED",
           "__elementId__": "case_type_id"
         },
