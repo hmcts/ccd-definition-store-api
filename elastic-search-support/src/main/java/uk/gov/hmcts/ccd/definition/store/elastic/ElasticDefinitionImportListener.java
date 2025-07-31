@@ -84,11 +84,14 @@ public abstract class ElasticDefinitionImportListener {
                 ReindexEntity metadata = new ReindexEntity();
                 metadata.setReindex(reindex);
                 metadata.setDeleteOldIndex(deleteOldIndex);
-                metadata.setStartTime(LocalDateTime.now());
-                metadata.setJurisdiction(caseType.getJurisdiction().getReference());
-                metadata.setStatus("STARTED");
                 metadata.setIndexName(caseTypeName);
+                metadata.setStartTime(LocalDateTime.now());
+                metadata.setStatus("STARTED");
+                metadata.setJurisdiction(caseType.getJurisdiction().getReference());
                 metadata = reindexRepository.save(metadata);
+                if (metadata == null) {
+                    throw new ElasticSearchInitialisationException(new IllegalStateException("Failed to persist reindex metadata"));
+                }
 
                 if (reindex) {
                     //create new index with generated mapping and incremented case type name (no alias update yet)
