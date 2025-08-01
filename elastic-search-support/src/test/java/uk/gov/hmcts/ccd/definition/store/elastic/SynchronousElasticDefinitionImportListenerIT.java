@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
+import uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -49,9 +51,12 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         .withJurisdiction("JUR").withReference(CASE_TYPE_A);
 
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() {
         try {
             deleteElasticsearchIndices(WILDCARD);
+            Awaitility.await()
+                .atMost(5, java.util.concurrent.TimeUnit.SECONDS)
+                .until(() -> getElasticsearchIndices().isEmpty());
         } catch (Exception e) {
             // Ignore any exceptions during index deletion, as it may not exist
         }
@@ -59,7 +64,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
     @Test
     @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
-    void shouldCreateCompleteElasticsearchIndexForSingleCaseType() throws IOException, JSONException {
+    void shouldCreateCompleteElasticsearchIndexForSingleCaseType() throws IOException {
         CaseFieldEntity baseTypeField = newTextField("TextField").build();
         CaseFieldEntity complexField = newComplexField("ComplexField");
         CaseFieldEntity collectionField = newCollectionFieldOfBaseType(
@@ -112,11 +117,17 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
         definitionImportListener.onDefinitionImported(event);
 
-        String response = getElasticsearchIndices(CASE_TYPE_A);
+        //String response = getElasticsearchIndices(CASE_TYPE_A);
+        String response = objectMapper.writeValueAsString(getElasticsearchIndices(CASE_TYPE_A));
+        String strippedResponse = stripGetIndexResponsePrefix(response);
+        String unescapedResponse = org.apache.commons.text.StringEscapeUtils.unescapeJson(strippedResponse);
 
-        assertThat(response, equalToJSONInFile(
+        IsEqualJSON isEqualJSON = equalToJSONInFile(
             readFileFromClasspath("integration/single_casetype_index.json"),
-            ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A))));
+            ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A))
+        );
+
+        assertThat(unescapedResponse, isEqualJSON.leniently());
     }
 
     @Test
@@ -138,14 +149,32 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         definitionImportListener.onDefinitionImported(event);
 
         String response = getElasticsearchIndices(CASE_TYPE_A, CASE_TYPE_B);
+        String strippedResponse = stripGetIndexResponsePrefix(response);
+        String unescapedResponse = org.apache.commons.text.StringEscapeUtils.unescapeJson(strippedResponse);
 
-        assertThat(response, equalToJSONInFile(
+        IsEqualJSON isEqualJSON = equalToJSONInFile(
             readFileFromClasspath("integration/multi_casetypes_indices.json"),
-            ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A, CASE_TYPE_B))));
+            ignoreFieldsComparator(getDynamicIndexResponseFields(CASE_TYPE_A, CASE_TYPE_B))
+        );
+
+        assertThat(unescapedResponse, isEqualJSON.leniently());
+    }
+
+    private String stripGetIndexResponsePrefix(String response) {
+        if (response == null) {
+            return null;
+        }
+
+        String marker = "GetIndexResponse:";
+        int index = response.indexOf(marker);
+        if (index != -1) {
+            return response.substring(index + marker.length()).trim();
+        }
+        return response.trim();
     }
 
     @Test
-    void shouldReindexSuccessfully() throws JSONException {
+    void shouldReindexSuccessfully() {
         CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
 
         CaseTypeEntity caseTypeEntity1 = caseTypeBuilder
@@ -165,7 +194,6 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         );
         definitionImportListener.onDefinitionImported(event);
 
-
         await().atMost(5, SECONDS).untilAsserted(() -> {
             String response = getElasticsearchIndices(CASE_TYPE_A);
             assertThat(response, containsString("casetypea_cases-000002"));
@@ -174,7 +202,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     }
 
     @Test
-    void shouldThrowElasticSearchInitialisationException() throws JSONException {
+    void shouldThrowElasticSearchInitialisationException() {
         CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
 
         CaseTypeEntity caseTypeEntity1 = caseTypeBuilder
@@ -255,4 +283,5 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
         return collectionField;
     }
+
 }

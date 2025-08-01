@@ -16,8 +16,6 @@ import org.jooq.lambda.Unchecked;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static java.util.stream.Collectors.toList;
-
 @Component
 @Slf4j
 public class CaseMappingGenerator extends MappingGenerator {
@@ -49,7 +47,6 @@ public class CaseMappingGenerator extends MappingGenerator {
         return mapping;
     }
 
-
     private void propertiesMapping(JsonWriter jw) {
         log.info("generating case properties mapping");
         config.getCasePredefinedMappings().forEach(Unchecked.biConsumer((property, mapping) -> {
@@ -79,7 +76,7 @@ public class CaseMappingGenerator extends MappingGenerator {
         jw.name(PROPERTIES);
         jw.beginObject();
         List<CaseFieldEntity> fields = caseType.getCaseFields().stream()
-            .filter(field -> !shouldIgnore(field)).collect(toList());
+            .filter(field -> !shouldIgnore(field)).toList();
         for (CaseFieldEntity field : fields) {
             String property = field.getReference();
             TypeMappingGenerator typeMapper = getTypeMapper(field.getBaseTypeString());
