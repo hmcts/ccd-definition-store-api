@@ -239,7 +239,6 @@
       "searchAliasFields": [],
       "roleToAccessProfiles": [
         {
-          "__operator__": "equivalent",
           "__ordering__": "ORDERED",
           "__elementId__": "case_type_id"
         }, {
