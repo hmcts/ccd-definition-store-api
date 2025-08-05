@@ -113,6 +113,8 @@ allprojects {
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.18'
         implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.5.18'
 
+        implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+        
         testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
         }
