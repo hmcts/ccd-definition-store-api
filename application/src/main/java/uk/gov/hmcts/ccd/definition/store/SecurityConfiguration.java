@@ -85,12 +85,10 @@ public class SecurityConfiguration {
                 "/v3/api-docs/**",
                 "/swagger-resources/**"
             ).permitAll()
-
             .requestMatchers(
                 ImportController.URI_IMPORT,
                 ElasticsearchIndexController.ELASTIC_INDEX_URI
             ).hasAuthority("ccd-import")
-
             .anyRequest().authenticated()
         )
         .oauth2ResourceServer(oauth2 -> oauth2.jwt(
