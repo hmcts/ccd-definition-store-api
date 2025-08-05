@@ -56,7 +56,7 @@ public class SecurityConfiguration {
         return web -> web.ignoring().requestMatchers("/swagger-resources/**",
             "/swagger-ui.html",
             "/v3/api-docs/**",
-            "/swagger-resources/**",                                   
+            "/swagger-resources/**",
             "/swagger-ui/**",
             "/webjars/**",
             "/v3/api-docs",
@@ -71,32 +71,32 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-    http
-        .addFilterBefore(exceptionHandlingFilter, BearerTokenAuthenticationFilter.class)
-        .addFilterBefore(serviceAuthFilter, BearerTokenAuthenticationFilter.class)
-        .sessionManagement(s -> s.sessionCreationPolicy(STATELESS))
-        .csrf(csrf -> csrf.disable()) // NOSONAR - CSRF is disabled as per security requirements
-        .formLogin(fl -> fl.disable())
-        .logout(lg -> lg.disable())
-        .authorizeHttpRequests(ar -> ar
-            .requestMatchers(
-                "/swagger-ui/**",
-                "/swagger-ui.html",
-                "/v3/api-docs/**",
-                "/swagger-resources/**"
-            ).permitAll()
-            .requestMatchers(
+        http
+            .addFilterBefore(exceptionHandlingFilter, BearerTokenAuthenticationFilter.class)
+            .addFilterBefore(serviceAuthFilter, BearerTokenAuthenticationFilter.class)
+            .sessionManagement(s -> s.sessionCreationPolicy(STATELESS))
+            .csrf(csrf -> csrf.disable()) // NOSONAR - CSRF is disabled as per security requirements
+            .formLogin(fl -> fl.disable())
+            .logout(lg -> lg.disable())
+            .authorizeHttpRequests(ar -> ar
+                .requestMatchers(
+                    "/swagger-ui/**",
+                    "/swagger-ui.html",
+                    "/v3/api-docs/**",
+                    "/swagger-resources/**"
+                ).permitAll()
+                .requestMatchers(
                 ImportController.URI_IMPORT,
                 ElasticsearchIndexController.ELASTIC_INDEX_URI
             ).hasAuthority("ccd-import")
             .anyRequest().authenticated()
-        )
-        .oauth2ResourceServer(oauth2 -> oauth2.jwt(
-            jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)
-        ))
-        .oauth2Client(Customizer.withDefaults());
+            )
+            .oauth2ResourceServer(oauth2 -> oauth2.jwt(
+                jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)
+            ))
+            .oauth2Client(Customizer.withDefaults());
 
-        return http.build();    
+        return http.build();
     }
 
     @Bean
