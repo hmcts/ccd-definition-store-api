@@ -25,6 +25,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 
 import jakarta.persistence.OptimisticLockException;
 import jakarta.persistence.PersistenceException;
+
 import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Base64;
@@ -59,7 +60,8 @@ class UserRoleControllerTest {
         MediaType.APPLICATION_JSON.getType(),
         MediaType.APPLICATION_JSON.getSubtype(),
         Charset.forName("utf8"));
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+
+    private static final ObjectMapper MAPPER = JacksonUtils.getObjectMapper();
 
     private MockMvc mockMvc;
     private Map<String, Object> uriVariables;

@@ -2,7 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Component;
-import uk.gov.hmcts.ccd.definition.store.JacksonUtils;
+import uk.gov.hmcts.ccd.definition.store.repository.JacksonUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DefinitionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 

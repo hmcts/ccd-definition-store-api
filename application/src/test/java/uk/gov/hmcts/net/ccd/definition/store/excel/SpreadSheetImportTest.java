@@ -90,7 +90,7 @@ class SpreadSheetImportTest extends BaseTest {
      * @throws Exception On error running test
      */
     @Test
-    @Transactional
+    @Transactional(timeout = 180)
     public void importValidDefinitionFile() throws Exception {
 
         try (final InputStream inputStream =
@@ -131,7 +131,7 @@ class SpreadSheetImportTest extends BaseTest {
             stubForPutDictionaryReturns4XX(getDictionaryRequest());
 
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
-            
+
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
