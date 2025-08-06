@@ -18,7 +18,7 @@ dependencies:
     version: 0.1.7
     repository: 'oci://hmctspublic.azurecr.io/helm'
     condition: ts.enabled
- -  name: elasticsearch
+  - name: elasticsearch
     version: 7.17.3
     repository: 'https://helm.elastic.co'
     condition: elastic.enabled
