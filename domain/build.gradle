@@ -34,7 +34,7 @@ bootJar {
 
 ext {
     mapstructGenSourceDir = 'build/classes/java/main'
-    orgMapstructVersion='1.3.0.Final'
+    mapstructVersion='1.6.3'
 }
 
 dependencies {
@@ -43,13 +43,13 @@ dependencies {
         exclude group: 'org.mapstruct', module: 'mapstruct'
     }
     
-    implementation group: 'commons-validator', name: 'commons-validator', version: '1.9.0'
-    implementation "org.mapstruct:mapstruct-jdk8:${orgMapstructVersion}"
-    implementation "org.mapstruct:mapstruct-processor:${orgMapstructVersion}"
+    implementation group: 'commons-validator', name: 'commons-validator', version: '1.10.0'
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    implementation "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     testImplementation project(":app-insights").sourceSets.main.output
     testImplementation project(":repository").sourceSets.test.output
 
-    annotationProcessor "org.mapstruct:mapstruct-processor:${orgMapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 }
 
 idea {
