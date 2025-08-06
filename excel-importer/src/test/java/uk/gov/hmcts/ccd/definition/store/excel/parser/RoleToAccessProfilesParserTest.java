@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -16,7 +13,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -54,18 +56,16 @@ class RoleToAccessProfilesParserTest extends ParserTestBase {
             "Test Role 2", "solicitor", "Y", "N"));
         final List<RoleToAccessProfilesEntity> entityList = underTest.parse(definitionSheets, parseContext);
 
-        assertThat(entityList)
-            .isNotEmpty()
-            .hasSize(2)
-            .satisfies(entities -> entities.forEach(entity -> {
-                assertThat(entity.getRoleName()).isNotNull();
-                assertThat(entity.getAuthorisation()).isNotNull();
-                assertThat(entity.getCaseType()).isNotNull();
-                assertThat(entity.getAccessProfiles()).isNotNull();
-                assertThat(entity.getReadOnly()).isNotNull();
-                assertThat(entity.getDisabled()).isNotNull();
-                assertThat(entity.getCaseAccessCategories()).isNotNull();
-            }));
+        assertEquals(2, entityList.size());
+        entityList.forEach(entity -> {
+            assertNotNull(entity.getRoleName());
+            assertNotNull(entity.getAuthorisation());
+            assertNotNull(entity.getCaseType());
+            assertNotNull(entity.getAccessProfiles());
+            assertNotNull(entity.getReadOnly());
+            assertNotNull(entity.getDisabled());
+            assertNotNull(entity.getCaseAccessCategories());
+        });
     }
 
     @Test
@@ -74,7 +74,7 @@ class RoleToAccessProfilesParserTest extends ParserTestBase {
             "Test Role 1", "judge", "Y", "N"));
         definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_2,
             "Test Role 2", "solicitor", "TT", "N"));
-        Assertions.assertThrows(MapperException.class, () -> underTest.parse(definitionSheets, parseContext));
+        assertThrows(MapperException.class, () -> underTest.parse(definitionSheets, parseContext));
     }
 
     @Test
@@ -83,7 +83,7 @@ class RoleToAccessProfilesParserTest extends ParserTestBase {
             "Test Role 1", "judge", "Y", "N"));
         definitionSheet.addDataItem(buildDefinitionDataItem(CASE_TYPE_ID_2,
             "Test Role 2", "solicitor", "Y", "TT"));
-        Assertions.assertThrows(MapperException.class, () -> underTest.parse(definitionSheets, parseContext));
+        assertThrows(MapperException.class, () -> underTest.parse(definitionSheets, parseContext));
     }
 
     @Test
@@ -92,7 +92,7 @@ class RoleToAccessProfilesParserTest extends ParserTestBase {
             "Test Role 1", "judge", "Y", "N"));
         definitionSheet.addDataItem(buildDefinitionDataItem("InvalidCaseTypeId3",
             "Test Role 2", "solicitor", "Y", "TT"));
-        Assertions.assertThrows(ValidationException.class, () -> underTest.parse(definitionSheets, parseContext));
+        assertThrows(ValidationException.class, () -> underTest.parse(definitionSheets, parseContext));
     }
 
     private DefinitionDataItem buildDefinitionDataItem(final String caseTypeId,

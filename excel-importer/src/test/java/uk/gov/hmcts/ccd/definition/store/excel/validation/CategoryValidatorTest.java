@@ -1,10 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import com.google.common.collect.Lists;
-import lombok.val;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -12,11 +7,17 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
+import com.google.common.collect.Lists;
+import lombok.val;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.MockitoAnnotations;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class CategoryValidatorTest {
+class CategoryValidatorTest {
 
     private ParseContext parseContext;
     private static final String LIVE_FROM = "DD/01/YYYY";
@@ -36,9 +37,9 @@ public class CategoryValidatorTest {
     private CategoryValidator categoryValidator;
     private DefinitionDataItem definitionDataItem;
 
-    @Before
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
+    @BeforeEach
+    void setup() {
+        MockitoAnnotations.openMocks(this);
         parseContext = buildParseContext();
         categoryValidator = new CategoryValidator();
         definitionDataItem = buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE, CATEGORY_ID,
@@ -73,13 +74,13 @@ public class CategoryValidatorTest {
 
     // Example 1- validly defined Categories tab is as below
     @Test
-    public void testValidateCategoryTab() {
+    void testValidateCategoryTab() {
         categoryValidator.validate(parseContext, Lists.newArrayList(definitionDataItem));
     }
 
     // Example 1.1- valid defined Categories with many cases types with the same categories IDs
     @Test
-    public void testValidateCategoryTabWithSameCategoriesIdsForDifferentCasesTypes() {
+    void testValidateCategoryTabWithSameCategoriesIdsForDifferentCasesTypes() {
         categoryValidator.validate(parseContext, Lists.newArrayList(
 
             buildDefinitionDataItem(LIVE_FROM, LIVE_TO, CASE_TYPE2,
@@ -91,7 +92,7 @@ public class CategoryValidatorTest {
 
     // Example 6 - Invalid definition - Same categoryID defined in the sub-categories
     @Test
-    public void failSameCategoryIDDefinedForSubCategories() {
+    void failSameCategoryIDDefinedForSubCategories() {
         val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
 
             categoryValidator.validate(parseContext, Lists.newArrayList(
@@ -110,7 +111,7 @@ public class CategoryValidatorTest {
 
     // Example 5 - Invalid definition - Same categoryID defined in the main categories
     @Test
-    public void failSameCategoryIdDefinedForCategories() {
+    void failSameCategoryIdDefinedForCategories() {
         val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
@@ -130,7 +131,7 @@ public class CategoryValidatorTest {
 
     // Example 4 - Invalid definition - Non Unique Display Order in the sub-categories
     @Test
-    public void failNonUniqueDisplayOrderForSubCategories() {
+    void failNonUniqueDisplayOrderForSubCategories() {
         val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
@@ -148,7 +149,7 @@ public class CategoryValidatorTest {
 
     // Example 3 - Invalid definition - Non Unique Display Order on the main categories
     @Test
-    public void failNonUniqueDisplayOrderMainCategories() {
+    void failNonUniqueDisplayOrderMainCategories() {
         val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
@@ -165,7 +166,7 @@ public class CategoryValidatorTest {
 
     // Example 2 - Invalid definition - reference to parent category id of another case type
     @Test
-    public void failForReferenceToParentCategoryIdOfCaseType() {
+    void failForReferenceToParentCategoryIdOfCaseType() {
         val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
@@ -182,7 +183,7 @@ public class CategoryValidatorTest {
 
     // Invalid definition - Case type
     @Test
-    public void failForReferenceInvalidCaseType() {
+    void failForReferenceInvalidCaseType() {
         val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
@@ -201,7 +202,7 @@ public class CategoryValidatorTest {
 
     // Invalid definition - CategoryID
     @Test
-    public void failForReferenceInvalidCategoryID() {
+    void failForReferenceInvalidCategoryID() {
         val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
@@ -214,7 +215,7 @@ public class CategoryValidatorTest {
 
     // Invalid definition - Category label
     @Test
-    public void failForReferenceInvalidCategoryLabel() {
+    void failForReferenceInvalidCategoryLabel() {
         val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
@@ -228,7 +229,7 @@ public class CategoryValidatorTest {
 
     // Invalid definition - Display order
     @Test
-    public void failForInvalidDisplayOrder() {
+    void failForInvalidDisplayOrder() {
         val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
@@ -242,7 +243,7 @@ public class CategoryValidatorTest {
 
     // Invalid definition - Display order
     @Test
-    public void failForNegativeDisplayOrder() {
+    void failForNegativeDisplayOrder() {
         val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,

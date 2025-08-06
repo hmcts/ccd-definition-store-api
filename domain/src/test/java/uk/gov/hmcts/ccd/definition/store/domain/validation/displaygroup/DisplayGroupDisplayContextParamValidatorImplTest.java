@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
-import org.junit.Test;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
@@ -11,14 +10,16 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
 
-public class DisplayGroupDisplayContextParamValidatorImplTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class DisplayGroupDisplayContextParamValidatorImplTest {
 
     @Test
-    public void shouldNotFireValidationErrorWhenNoDisplayContextParameterExists() {
+    void shouldNotFireValidationErrorWhenNoDisplayContextParameterExists() {
         DisplayGroupCaseFieldEntity entity = dpEntity();
         ValidationResult validationResult
             = new DisplayGroupDisplayContextParamValidator().validate(entity);
@@ -27,7 +28,7 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
     }
 
     @Test
-    public void shouldNotFireValidationErrorWhenDateTimeDisplayContextParameter() {
+    void shouldNotFireValidationErrorWhenDateTimeDisplayContextParameter() {
         DisplayGroupCaseFieldEntity entity = dpEntityFailureCase("#DATETIMEENTRY(HHmmss)");
         ValidationResult validationResult
             = new DisplayGroupDisplayContextParamValidator().validate(entity);
@@ -36,7 +37,7 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
     }
 
     @Test
-    public void shouldNotFireValidationErrorWhenArgumentDisplayContextParameter() {
+    void shouldNotFireValidationErrorWhenArgumentDisplayContextParameter() {
         DisplayGroupCaseFieldEntity entity = dpEntityFailureCase("#ARGUMENT(TEST ARGUMENT)");
         ValidationResult validationResult
             = new DisplayGroupDisplayContextParamValidator().validate(entity);
@@ -45,7 +46,7 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
     }
 
     @Test
-    public void shouldFireValidationErrorDisplayContextParamHasValueNotPresentInCollection() {
+    void shouldFireValidationErrorDisplayContextParamHasValueNotPresentInCollection() {
         DisplayGroupCaseFieldEntity entity = dpEntityFailureCase("#TABLE(firstname)");
         ValidationResult validationResult
             = new DisplayGroupDisplayContextParamValidator().validate(entity);
@@ -70,7 +71,7 @@ public class DisplayGroupDisplayContextParamValidatorImplTest {
     }
 
     @Test
-    public void shouldFireValidationErrorWhenDisplayContextParamFormatIncorrect() {
+    void shouldFireValidationErrorWhenDisplayContextParamFormatIncorrect() {
         DisplayGroupCaseFieldEntity entity = dpEntityFailureCase("#sss(firstname)");
         ValidationResult validationResult
             = new DisplayGroupDisplayContextParamValidator().validate(entity);

@@ -1,17 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
-import static org.junit.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class CannotOverrideBaseTypeValidationErrorTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+
+class CannotOverrideBaseTypeValidationErrorTest {
 
     private CannotOverrideBaseTypeValidationError classUnderTest;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         classUnderTest = new CannotOverrideBaseTypeValidationError(
             fieldTypeEntityWithReference("TeXt"),
             fieldTypeEntityWithReference("Text")
@@ -19,7 +21,7 @@ public class CannotOverrideBaseTypeValidationErrorTest {
     }
 
     @Test
-    public void testDefaultMessage() {
+    void testDefaultMessage() {
         assertEquals(
             "Cannot override base type: Text",
             classUnderTest.getDefaultMessage()

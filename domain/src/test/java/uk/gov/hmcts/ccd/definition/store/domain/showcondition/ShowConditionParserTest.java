@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ShowConditionParserTest {
@@ -270,7 +270,7 @@ class ShowConditionParserTest {
 
     private void assertShowCondition(ShowCondition showCondition) {
         assertEquals("SomeField=\"Some String\"", showCondition.getShowConditionExpression());
-        assertTrue("SomeField", showCondition.getFields().contains("SomeField"));
+        assertTrue(showCondition.getFields().contains("SomeField"), "SomeField");
     }
 
     private void assertInvalidShowCondition(String invalidShowCondition) {

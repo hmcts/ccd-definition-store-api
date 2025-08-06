@@ -1,31 +1,32 @@
 package uk.gov.hmcts.ccd.definition.store.security.filters;
 
+import java.io.IOException;
+import java.util.List;
+
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.read.ListAppender;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.catalina.connector.ClientAbortException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.eq;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-
-@RunWith(MockitoJUnitRunner.class)
-public class ExceptionHandlingFilterTest {
+@ExtendWith(MockitoExtension.class)
+class ExceptionHandlingFilterTest {
 
     private MockHttpServletRequest request;
 
@@ -43,8 +44,8 @@ public class ExceptionHandlingFilterTest {
     private static final String EXCEPTION_LOGGER_TYPE =
         "uk.gov.hmcts.ccd.definition.store.security.filters.ExceptionHandlingFilter";
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         filter = new ExceptionHandlingFilter();
         request = new MockHttpServletRequest();
         response = new MockHttpServletResponse();
@@ -58,32 +59,32 @@ public class ExceptionHandlingFilterTest {
         logger.addAppender(listAppender);
     }
 
-    @After
-    public void tearDown() {
+    @AfterEach
+    void tearDown() {
         listAppender.stop();
         logger.detachAppender(listAppender);
     }
 
     @Test
-    public void shouldReturn502ResponseWhenClientAbortExceptionThrown() throws ServletException, IOException {
+    void shouldReturn502ResponseWhenClientAbortExceptionThrown() throws ServletException, IOException {
         Mockito.doThrow(ClientAbortException.class)
             .when(filterChain)
-            .doFilter(Mockito.eq(request), Mockito.eq(response));
+            .doFilter(eq(request), eq(response));
         filter.doFilterInternal(request, response, filterChain);
 
-        assertThat(response.getStatus()).isEqualTo(502);
+        assertEquals(502, response.getStatus());
         assertLogging();
     }
 
     @Test
-    public void shouldReturn500ResponseWhenAnyExceptionExceptClientAbortExceptionThrown()
+    void shouldReturn500ResponseWhenAnyExceptionExceptClientAbortExceptionThrown()
         throws ServletException, IOException {
         Mockito.doThrow(NullPointerException.class)
             .when(filterChain)
-            .doFilter(Mockito.eq(request), Mockito.eq(response));
+            .doFilter(eq(request), eq(response));
         filter.doFilterInternal(request, response, filterChain);
 
-        assertThat(response.getStatus()).isEqualTo(500);
+        assertEquals(500, response.getStatus());
         assertLogging();
     }
 
@@ -91,8 +92,8 @@ public class ExceptionHandlingFilterTest {
         List<ILoggingEvent> logsList = listAppender.list;
         ILoggingEvent lastLogEntry = logsList.get(logsList.size() - 1);
 
-        assertThat(lastLogEntry.getLevel()).isEqualTo(Level.ERROR);
-        assertThat(lastLogEntry.getLoggerName()).isEqualTo(EXCEPTION_LOGGER_TYPE);
-        assertThat(lastLogEntry.getMessage()).contains(EXCEPTION_MESSAGE);
+        assertEquals(Level.ERROR, lastLogEntry.getLevel());
+        assertEquals(EXCEPTION_LOGGER_TYPE, lastLogEntry.getLoggerName());
+        assertEquals(EXCEPTION_MESSAGE, lastLogEntry.getMessage());
     }
 }

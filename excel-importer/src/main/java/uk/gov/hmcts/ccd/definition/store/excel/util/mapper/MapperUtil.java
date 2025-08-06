@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.util.mapper;
 
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
@@ -18,10 +15,14 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
-import java.util.Locale;
 import java.util.stream.Collectors;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -186,18 +187,13 @@ public class MapperUtil {
         // Case Insensitive T = true
         // Case Insensitive F = false
         switch (attribute.toLowerCase(Locale.ENGLISH)) {
-            case "yes":
-            case "y":
-            case "t":
-            case "true":
+            case "yes", "y", "t", "true" -> {
                 return true;
-            case "no":
-            case "n":
-            case "false":
-            case "f":
+            }
+            case "no", "n", "false", "f" -> {
                 return false;
-            default:
-                throw new MapperException(String.format(INVALID_VALUE_COLUMN, attribute, columnName, sheetName));
+            }
+            default -> throw new MapperException(String.format(INVALID_VALUE_COLUMN, attribute, columnName, sheetName));
         }
     }
 

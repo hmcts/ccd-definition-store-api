@@ -15,7 +15,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeJurisdiction
 import uk.gov.hmcts.ccd.definition.store.repository.model.AccessTypeJurisdictionResults;
 import uk.gov.hmcts.ccd.definition.store.rest.service.AccessTypesService;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 @RestController
 public class AccessTypesController {

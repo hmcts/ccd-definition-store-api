@@ -2,10 +2,6 @@ plugins {
     id 'info.solidsoft.pitest'
 }
 
-dependencies {
-    // compile "org.springframework:spring-context:5.0.7.RELEASE"
-}
-
 dependencyCheck {
     suppressionFile = "${rootDir}/dependency-check-suppressions.xml"
 }
