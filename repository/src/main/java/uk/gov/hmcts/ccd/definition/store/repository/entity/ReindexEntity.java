@@ -45,6 +45,9 @@ public class ReindexEntity {
     @Column(name = "jurisdiction")
     private String jurisdiction;
 
+    @Column(name = "case_type")
+    private String caseType;
+
     @Column(name = "message")
     private String message;
 }

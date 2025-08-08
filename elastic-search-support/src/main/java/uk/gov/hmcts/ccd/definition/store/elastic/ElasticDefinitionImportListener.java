@@ -88,6 +88,7 @@ public abstract class ElasticDefinitionImportListener {
                 metadata.setStartTime(LocalDateTime.now());
                 metadata.setStatus("STARTED");
                 metadata.setJurisdiction(caseType.getJurisdiction().getReference());
+                metadata.setCaseType(currentCaseType.getName());
                 metadata = reindexRepository.save(metadata);
                 if (metadata == null) {
                     throw new ElasticSearchInitialisationException(new IllegalStateException("Failed to persist reindex metadata"));
