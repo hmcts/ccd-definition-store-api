@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,6 +29,12 @@ public class ReindexEntity {
     @Column(name = "delete_old_index")
     private Boolean deleteOldIndex;
 
+    @Column(name = "case_type")
+    private String caseType;
+
+    @Column(name = "jurisdiction")
+    private String jurisdiction;
+
     @Column(name = "index_name")
     private String indexName;
 
@@ -41,12 +46,6 @@ public class ReindexEntity {
 
     @Column(name = "status")
     private String status;
-
-    @Column(name = "jurisdiction")
-    private String jurisdiction;
-
-    @Column(name = "case_type")
-    private String caseType;
 
     @Column(name = "message")
     private String message;
