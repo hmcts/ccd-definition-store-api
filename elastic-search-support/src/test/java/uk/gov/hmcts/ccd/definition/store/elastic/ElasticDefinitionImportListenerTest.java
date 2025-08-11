@@ -259,7 +259,6 @@ public class ElasticDefinitionImportListenerTest {
     void savesMetadataOnSuccessfulReindex() throws IOException {
         mockAliasResponse();
 
-        //capture ReindexEntity
         ArgumentCaptor<ReindexEntity> captor = ArgumentCaptor.forClass(ReindexEntity.class);
         when(reindexRepository.save(any(ReindexEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
         mockSuccessfulReindex();
@@ -284,7 +283,6 @@ public class ElasticDefinitionImportListenerTest {
     void savesMetadataOnFailedReindex() throws IOException {
         mockAliasResponse();
 
-        //capture ReindexEntity
         ArgumentCaptor<ReindexEntity> captor = ArgumentCaptor.forClass(ReindexEntity.class);
         when(reindexRepository.save(any(ReindexEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
         mockFailedReindex();

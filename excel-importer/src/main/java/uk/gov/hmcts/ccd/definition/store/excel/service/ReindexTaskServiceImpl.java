@@ -27,6 +27,6 @@ public class ReindexTaskServiceImpl implements ReindexTaskService {
         if (caseType == null || caseType.isBlank()) {
             return getAllReindexTasks();
         }
-        return reindexRepository.findByCaseType(caseType.toLowerCase());
+        return reindexRepository.findByCaseType(caseType);
     }
 }
