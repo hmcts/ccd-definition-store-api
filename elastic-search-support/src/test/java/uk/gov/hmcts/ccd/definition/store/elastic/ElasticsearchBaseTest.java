@@ -35,7 +35,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = { ServletWebServerFactoryAutoConfiguration.class, ElasticsearchConfigurationIT.class, CaseDataAPIApplication.class })
+    classes = {ServletWebServerFactoryAutoConfiguration.class, ElasticsearchConfigurationIT.class,
+        CaseDataAPIApplication.class})
 @ContextConfiguration(initializers = ElasticsearchContainerInitializer.class)
 public abstract class ElasticsearchBaseTest implements TestUtils {
 

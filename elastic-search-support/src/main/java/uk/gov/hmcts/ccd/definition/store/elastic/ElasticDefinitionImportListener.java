@@ -83,16 +83,17 @@ public abstract class ElasticDefinitionImportListener {
 
                 //prepare for db
                 metadata = new ReindexEntity();
+                metadata.setIndexName(caseTypeName);
                 metadata.setReindex(reindex);
                 metadata.setDeleteOldIndex(deleteOldIndex);
                 metadata.setCaseType(currentCaseType.getReference());
                 metadata.setJurisdiction(caseType.getJurisdiction().getReference());
-                metadata.setIndexName(caseTypeName);
                 metadata.setStartTime(LocalDateTime.now());
                 metadata.setStatus("STARTED");
                 metadata = reindexRepository.save(metadata);
                 if (metadata == null) {
-                    throw new ElasticSearchInitialisationException(new IllegalStateException("Failed to persist reindex metadata"));
+                    throw new ElasticSearchInitialisationException(
+                        new IllegalStateException("Failed to persist reindex metadata"));
                 }
 
                 if (reindex) {
@@ -150,7 +151,7 @@ public abstract class ElasticDefinitionImportListener {
                         asyncElasticClient.removeIndex(oldIndex);
                     }
 
-                    //for db
+                    //set success status and end time for db
                     metadata.setStatus("SUCCESS");
                     metadata.setEndTime(LocalDateTime.now());
                     reindexRepository.save(metadata);
@@ -165,7 +166,7 @@ public abstract class ElasticDefinitionImportListener {
             @Override
             public void onFailure(Exception ex) {
                 try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
-                    //for db
+                    //set failure status and end time for db
                     reindexFailedPersist(metadata, ex);
 
                     //if failed delete new index, set old index writable

@@ -14,6 +14,8 @@ import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
+import org.elasticsearch.client.indices.GetMappingsRequest;
+import org.elasticsearch.client.indices.GetMappingsResponse;
 import org.elasticsearch.client.indices.PutMappingRequest;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
@@ -92,6 +94,11 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     public GetAliasesResponse getAlias(String alias) throws IOException {
         GetAliasesRequest request = new GetAliasesRequest(alias);
         return elasticClient.indices().getAlias(request, RequestOptions.DEFAULT);
+    }
+
+    public GetMappingsResponse getMapping(String indexName) throws IOException {
+        GetMappingsRequest request = new GetMappingsRequest().indices(indexName);
+        return elasticClient.indices().getMapping(request, RequestOptions.DEFAULT);
     }
 
     private Settings.Builder casesIndexSettings(String file) throws IOException {

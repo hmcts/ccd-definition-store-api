@@ -1,5 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import org.elasticsearch.ElasticsearchStatusException;
+import org.elasticsearch.action.ActionListener;
+import org.elasticsearch.client.GetAliasesResponse;
+import org.elasticsearch.cluster.metadata.AliasMetadata;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
+import org.elasticsearch.rest.RestStatus;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
@@ -17,21 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.cluster.metadata.AliasMetadata;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.rest.RestStatus;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.ObjectFactory;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.Assert.assertNotNull;
@@ -260,11 +259,12 @@ class ElasticDefinitionImportListenerTest {
     void savesMetadataOnSuccessfulReindex() throws IOException {
         mockAliasResponse();
 
-        ArgumentCaptor<ReindexEntity> captor = ArgumentCaptor.forClass(ReindexEntity.class);
         when(reindexRepository.save(any(ReindexEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
         mockSuccessfulReindex();
 
         listener.onDefinitionImported(newEvent(true, true, caseA));
+
+        ArgumentCaptor<ReindexEntity> captor = ArgumentCaptor.forClass(ReindexEntity.class);
 
         //verify that the reindex metadata was saved twice, once before reindexing and once after
         verify(reindexRepository, atLeast(2)).save(captor.capture());
@@ -284,7 +284,6 @@ class ElasticDefinitionImportListenerTest {
     void savesMetadataOnFailedReindex() throws IOException {
         mockAliasResponse();
 
-        ArgumentCaptor<ReindexEntity> captor = ArgumentCaptor.forClass(ReindexEntity.class);
         when(reindexRepository.save(any(ReindexEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
         mockFailedReindex();
 
@@ -293,6 +292,8 @@ class ElasticDefinitionImportListenerTest {
         assertThrows(ElasticSearchInitialisationException.class, () ->
             listener.onDefinitionImported(event)
         );
+
+        ArgumentCaptor<ReindexEntity> captor = ArgumentCaptor.forClass(ReindexEntity.class);
 
         //verify that the reindex metadata was saved twice, once before reindexing and once after
         verify(reindexRepository, atLeast(2)).save(captor.capture());
