@@ -23,6 +23,7 @@ import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactor
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
@@ -38,6 +39,7 @@ import java.util.stream.Collectors;
     classes = {ServletWebServerFactoryAutoConfiguration.class, ElasticsearchConfigurationIT.class,
         CaseDataAPIApplication.class})
 @ContextConfiguration(initializers = ElasticsearchContainerInitializer.class)
+@ActiveProfiles("test")
 public abstract class ElasticsearchBaseTest implements TestUtils {
 
     private static final String GET = "GET";
