@@ -6,7 +6,6 @@ import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.rest.RestStatus;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,7 +33,6 @@ import java.util.Map;
 import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,10 +41,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.atMostOnce;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -276,10 +272,11 @@ public class ElasticDefinitionImportListenerTest {
         ReindexEntity finalSave = metadata.get(metadata.size() - 1);
 
         assertEquals("casetypea_cases-000002", finalSave.getIndexName());
+        assertEquals("jurA", finalSave.getJurisdiction());
+        assertEquals("caseTypeA", finalSave.getCaseType());
         assertNotNull(finalSave.getStartTime());
         assertNotNull(finalSave.getEndTime());
         assertEquals("SUCCESS", finalSave.getStatus());
-        assertEquals("jurA", finalSave.getJurisdiction());
         assertNull(finalSave.getMessage());
     }
 
@@ -304,11 +301,12 @@ public class ElasticDefinitionImportListenerTest {
         ReindexEntity failedSave = metadata.get(metadata.size() - 1);
 
         //will still include the incremented index name
+        assertEquals("caseTypeA", failedSave.getCaseType());
+        assertEquals("jurA", failedSave.getJurisdiction());
         assertEquals("casetypea_cases-000002", failedSave.getIndexName());
         assertNotNull(failedSave.getStartTime());
         assertNotNull(failedSave.getEndTime());
         assertEquals("FAILED", failedSave.getStatus());
-        assertEquals("jurA", failedSave.getJurisdiction());
         assertTrue(failedSave.getMessage().contains("reindexing failed"));
     }
 
@@ -326,14 +324,14 @@ public class ElasticDefinitionImportListenerTest {
         ReindexEntity metadata = captor.getValue();
 
         //will be the original index name without increment
-        assertEquals("casetypea_cases-000001", metadata.getIndexName());
         assertTrue(metadata.getReindex() == false);
         assertTrue(metadata.getDeleteOldIndex() == false);
+        assertEquals("jurA", metadata.getJurisdiction());
+        assertEquals("casetypea_cases-000001", metadata.getIndexName());
         assertNotNull(metadata.getStartTime());
         //end time is null as reindexing did not occur
         assertNull(metadata.getEndTime());
         assertEquals("STARTED", metadata.getStatus());
-        assertEquals("jurA", metadata.getJurisdiction());
         //message is null as no error occurred
         assertNull(metadata.getMessage());
     }

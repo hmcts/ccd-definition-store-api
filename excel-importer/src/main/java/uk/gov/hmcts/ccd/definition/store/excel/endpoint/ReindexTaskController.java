@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
 import uk.gov.hmcts.ccd.definition.store.excel.service.ReindexTaskServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
 
@@ -32,8 +31,8 @@ public class ReindexTaskController {
 
     @GetMapping
     @ApiOperation(value = "Get all reindex tasks, optionally by case type",
-                  response = ReindexEntity.class,
-                  responseContainer = "List")
+        response = ReindexEntity.class,
+        responseContainer = "List")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Successfully retrieved reindex tasks"),
         @ApiResponse(code = 500, message = "Internal Server Error")

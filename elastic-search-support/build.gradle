@@ -28,6 +28,8 @@ dependencies {
     testImplementation group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.0'
     testImplementation "org.testcontainers:elasticsearch:1.19.3"
     testImplementation "org.testcontainers:junit-jupiter:1.19.3"
+    testImplementation 'net.ttddyy:datasource-proxy:1.8'
+    testImplementation(project(":application"))
 }
 
 pitest {

@@ -63,6 +63,7 @@ public abstract class ElasticDefinitionImportListener {
         List<CaseTypeEntity> caseTypes = event.getContent();
         boolean reindex = true;
         boolean deleteOldIndex = true;
+        ReindexEntity metadata = null;
 
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
@@ -81,10 +82,10 @@ public abstract class ElasticDefinitionImportListener {
                 String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
 
                 //prepare for db
-                ReindexEntity metadata = new ReindexEntity();
+                metadata = new ReindexEntity();
                 metadata.setReindex(reindex);
                 metadata.setDeleteOldIndex(deleteOldIndex);
-                metadata.setCaseType(currentCaseType.getName());
+                metadata.setCaseType(currentCaseType.getReference());
                 metadata.setJurisdiction(caseType.getJurisdiction().getReference());
                 metadata.setIndexName(caseTypeName);
                 metadata.setStartTime(LocalDateTime.now());
@@ -121,9 +122,15 @@ public abstract class ElasticDefinitionImportListener {
             }
         } catch (ElasticsearchStatusException exc) {
             logMapping(caseMapping);
+            if (metadata != null) {
+                reindexFailedPersist(metadata, exc);
+            }
             throw elasticsearchErrorHandler.createException(exc, currentCaseType);
         } catch (Exception exc) {
             logMapping(caseMapping);
+            if (metadata != null) {
+                reindexFailedPersist(metadata, exc);
+            }
             throw new ElasticSearchInitialisationException(exc);
         }
     }
@@ -161,10 +168,7 @@ public abstract class ElasticDefinitionImportListener {
             public void onFailure(Exception ex) {
                 try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
                     //for db
-                    metadata.setStatus("FAILED");
-                    metadata.setMessage(ex.getMessage());
-                    metadata.setEndTime(LocalDateTime.now());
-                    reindexRepository.save(metadata);
+                    reindexFailedPersist(metadata, ex);
 
                     //if failed delete new index, set old index writable
                     log.error("reindexing failed", ex);
@@ -209,5 +213,14 @@ public abstract class ElasticDefinitionImportListener {
         if (caseMapping != null) {
             log.error("elastic search initialisation error on import. Case mapping: {}", caseMapping);
         }
+    }
+
+    private void reindexFailedPersist(ReindexEntity metadata, Exception exc) {
+        metadata.setStatus("FAILED");
+        metadata.setEndTime(LocalDateTime.now());
+        metadata.setMessage(exc.getMessage());
+        reindexRepository.save(metadata);
+        log.warn("Persisted failed reindex metadata for caseType={}, index={}, reason={}",
+            metadata.getCaseType(), metadata.getIndexName(), exc.getMessage());
     }
 }

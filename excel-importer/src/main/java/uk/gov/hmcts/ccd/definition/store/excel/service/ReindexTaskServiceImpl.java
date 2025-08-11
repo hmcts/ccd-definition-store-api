@@ -6,6 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
 
 import java.util.List;
+
 @Service
 public class ReindexTaskServiceImpl implements ReindexTaskService {
 
@@ -24,7 +25,7 @@ public class ReindexTaskServiceImpl implements ReindexTaskService {
     @Override
     public List<ReindexEntity> getTasksByCaseType(String caseType) {
         if (caseType == null || caseType.isBlank()) {
-            return reindexRepository.findAll();
+            return getAllReindexTasks();
         }
         return reindexRepository.findByCaseType(caseType.toLowerCase());
     }

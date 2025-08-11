@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface ReindexTaskService {
     List<ReindexEntity> getAllReindexTasks();
+
     List<ReindexEntity> getTasksByCaseType(String caseType);
 }
