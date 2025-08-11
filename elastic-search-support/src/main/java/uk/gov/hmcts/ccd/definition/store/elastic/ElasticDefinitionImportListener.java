@@ -61,8 +61,8 @@ public abstract class ElasticDefinitionImportListener {
     @Transactional
     public void initialiseElasticSearch(DefinitionImportedEvent event) {
         List<CaseTypeEntity> caseTypes = event.getContent();
-        boolean reindex = true;
-        boolean deleteOldIndex = true;
+        boolean reindex = event.isReindex();
+        boolean deleteOldIndex = event.isDeleteOldIndex();
         ReindexEntity metadata = null;
 
         String caseMapping = null;
