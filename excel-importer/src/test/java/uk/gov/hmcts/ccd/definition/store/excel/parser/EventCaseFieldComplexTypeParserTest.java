@@ -1,10 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -22,15 +18,21 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
 import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class EventCaseFieldComplexTypeParserTest {
+class EventCaseFieldComplexTypeParserTest {
     private static final String PARSED_SHOW_CONDITION = "Parsed Show Condition";
     private static final String REFERENCE_ID = "test.test";
     private static final LocalDate LIVE_FROM = LocalDate.of(2019, 1, 1);
@@ -46,15 +48,15 @@ public class EventCaseFieldComplexTypeParserTest {
     @InjectMocks
     private EventCaseFieldComplexTypeParser eventCaseFieldComplexTypeParser;
 
-    @Before
-    public void setUp() throws InvalidShowConditionException {
-        MockitoAnnotations.initMocks(this);
+    @BeforeEach
+    void setUp() throws InvalidShowConditionException {
+        MockitoAnnotations.openMocks(this);
         when(showConditionParser.parseShowCondition(any())).thenReturn(
             new ShowCondition.Builder().showConditionExpression(PARSED_SHOW_CONDITION).build());
     }
 
     @Test
-    public void shouldParseEventCaseFieldComplexTypes() {
+    void shouldParseEventCaseFieldComplexTypes() {
         String caseFieldId = "Case Field Id";
         String originalShowCondition = "Original Show Condition";
         String label = "label";

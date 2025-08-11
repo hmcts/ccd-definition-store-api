@@ -1,26 +1,28 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.rules;
 
-import org.junit.Before;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import org.junit.jupiter.api.BeforeEach;
 
-public class JurisdictionRuleTest {
+class JurisdictionRuleTest {
 
     private JurisdictionRule rule;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         rule = new JurisdictionRule();
     }
 
     @Test
-    public void validCaseTest() {
+    void validCaseTest() {
         // Given - a Case Type which abides by all Jurisdiction rules
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
@@ -34,11 +36,11 @@ public class JurisdictionRuleTest {
         String result = rule.validate(caseTypeEntity);
 
         // Then - assert that validation passes
-        assertNull("Expected validation to pass", result);
+        assertNull(result, "Expected validation to pass");
     }
 
     @Test
-    public void nullJurisdictionTest() {
+    void nullJurisdictionTest() {
         // Given - a Case Type with no Jurisdiction Id
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
@@ -46,11 +48,11 @@ public class JurisdictionRuleTest {
         String result = rule.validate(caseTypeEntity);
 
         // Then - assert that validation fails with the expected message
-        assertEquals("Unexpected error message", "A Case Type must have a Jurisdiction", result);
+        assertEquals("A Case Type must have a Jurisdiction", result, "Unexpected error message");
     }
 
     @Test
-    public void nullJurisdictionNameTest() {
+    void nullJurisdictionNameTest() {
         // Given - a Case Type with a Jurisdiction which has no name
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
@@ -62,11 +64,11 @@ public class JurisdictionRuleTest {
         String result = rule.validate(caseTypeEntity);
 
         // Then - assert that validation fails with the expected message
-        assertEquals("Unexpected error message", "A Jurisdiction must have a name", result);
+        assertEquals("A Jurisdiction must have a name", result, "Unexpected error message");
     }
 
     @Test
-    public void nullJurisdictionLiveFromTest() {
+    void nullJurisdictionLiveFromTest() {
         // Given - a Case Type with a Jurisdiction with no Live From date
         CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
 
@@ -79,11 +81,11 @@ public class JurisdictionRuleTest {
         String result = rule.validate(caseTypeEntity);
 
         // Then - assert that validation fails with the expected message
-        assertEquals("Unexpected error message", "A Jurisdiction must have a Live From date", result);
+        assertEquals("A Jurisdiction must have a Live From date", result, "Unexpected error message");
     }
 
     @Test
-    public void liveFromAfterLiveUntilTest() {
+    void liveFromAfterLiveUntilTest() {
 
         JurisdictionEntity jurisdiction = new JurisdictionEntity();
         jurisdiction.setName("JURISDICTION_NAME");
@@ -97,6 +99,6 @@ public class JurisdictionRuleTest {
         String result = rule.validate(caseTypeEntity);
 
         // Then - assert that validation fails with the expected message
-        assertEquals("Unexpected error message", "The Live From date must be before the Live Until date", result);
+        assertEquals("The Live From date must be before the Live Until date", result, "Unexpected error message");
     }
 }

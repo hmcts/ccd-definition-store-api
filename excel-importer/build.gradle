@@ -23,11 +23,6 @@ dependencies {
     testImplementation project(':repository')
     testImplementation project(":repository").sourceSets.main.output
     testImplementation project(":repository").sourceSets.test.output
-
-    implementation "org.springframework.boot:spring-boot-starter-web"
-    implementation "org.apache.commons:commons-collections4:4.1"
-    implementation "org.apache.commons:commons-lang3:3.11"
-    implementation group: 'org.apache.poi', name: 'poi-ooxml', version: '5.2.5'
 }
 
 bootJar {

@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.exception.handler;
 
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticsearchError;
-import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorMessageBuilder;
 
 public class TestElasticsearchErrorMessageBuilder extends ElasticsearchErrorMessageBuilder {
 

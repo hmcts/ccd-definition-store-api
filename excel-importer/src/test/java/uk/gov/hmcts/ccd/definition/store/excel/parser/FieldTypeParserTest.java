@@ -1,10 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
@@ -13,14 +9,20 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import java.util.Optional;
 import java.util.regex.Pattern;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.eq;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-public class FieldTypeParserTest {
+class FieldTypeParserTest {
 
     @Mock
     private ParseContext parseContext;
@@ -28,14 +30,14 @@ public class FieldTypeParserTest {
     @InjectMocks
     private FieldTypeParser classUnderTest;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
     }
 
     @SuppressWarnings("checkstyle:LineLength")
     @Test
-    public void shouldReturnFieldTypeEntityWithUniqueReferenceAndCollectionBaseType_whenFieldTypeAttributeIsCollection() {
+    void shouldReturnFieldTypeEntityWithUniqueReferenceAndCollectionBaseType_whenFieldTypeAttributeIsCollection() {
 
         FieldTypeEntity collectionBaseType = new FieldTypeEntity();
         String collectionFieldType = "Collection";
@@ -57,11 +59,11 @@ public class FieldTypeParserTest {
         FieldTypeEntity parsedEntity = result.getValue();
 
         assertTrue(
-            String.format(
-                "Should be a reference matching %s-<SOME_GUID> but was %s", fieldId, parsedEntity.getReference()),
             Pattern.compile(
                 String.format("(%s)-[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}", fieldId))
-                .matcher(parsedEntity.getReference()).matches()
+                .matcher(parsedEntity.getReference()).matches(),
+            String.format(
+                "Should be a reference matching %s-<SOME_GUID> but was %s", fieldId, parsedEntity.getReference())
         );
         assertEquals(parsedEntity.getBaseFieldType(), collectionBaseType);
         assertEquals(parameterFieldType, parsedEntity.getCollectionFieldType());

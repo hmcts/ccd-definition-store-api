@@ -1,12 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.exception;
 
-import lombok.Getter;
-import lombok.NonNull;
-import org.elasticsearch.ElasticsearchStatusException;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import lombok.Getter;
+import lombok.NonNull;
+import org.elasticsearch.ElasticsearchStatusException;
 
 @Getter
 public class ElasticsearchError {
@@ -19,9 +20,6 @@ public class ElasticsearchError {
     private String message;
     private String errorType;
     private String reason;
-
-    private ElasticsearchError() { 
-    }
 
     public ElasticsearchError(@NonNull ElasticsearchStatusException exception, @NonNull CaseTypeEntity caseType) {
         initValues(exception, caseType);

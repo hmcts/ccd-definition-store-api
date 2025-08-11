@@ -95,7 +95,7 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
         return new WebMvcEndpointHandlerMapping(endpointMapping, webEndpoints, endpointMediaTypes,
             corsProperties.toCorsConfiguration(),
             new EndpointLinksResolver(allEndpoints, basePath),
-            shouldRegisterLinksMapping, null);
+            shouldRegisterLinksMapping);
     }
 
     private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties, Environment environment,

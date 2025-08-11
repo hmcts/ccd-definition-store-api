@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.eventcasefield;
 
-import org.junit.Before;
-import org.junit.Test;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
@@ -11,11 +10,14 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.TestCase.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-public class EventCaseFieldPublishValidatorImplTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+class EventCaseFieldPublishValidatorImplTest {
 
     private EventCaseFieldPublishValidatorImpl classUnderTest = new EventCaseFieldPublishValidatorImpl();
     final List<String> caseRoles = new ArrayList<>();
@@ -26,8 +28,8 @@ public class EventCaseFieldPublishValidatorImplTest {
     final EventCaseFieldEntityValidationContext eventCaseFieldEntityValidationContext =
         new EventCaseFieldEntityValidationContext(eventId, allEventCaseFieldEntitiesForEventCase, caseRoles);
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         caseRoles.add("ROLE1");
         caseRoles.add("ROLE2");
     }
@@ -57,7 +59,7 @@ public class EventCaseFieldPublishValidatorImplTest {
     }
 
     @Test
-    public void should_pass_due_to_correct_publishAs() {
+    void should_pass_due_to_correct_publishAs() {
         setupEventCaseFieldEntity();
         eventCaseFieldEntity.setPublishAs("Test");
         addPublishAsInEventComplexTypeEntity("Test", null);
@@ -69,7 +71,7 @@ public class EventCaseFieldPublishValidatorImplTest {
     }
 
     @Test
-    public void should_pass_due_to_null_publishAs() {
+    void should_pass_due_to_null_publishAs() {
 
         setupEventCaseFieldEntity();
         eventCaseFieldEntity.setPublishAs(null);
@@ -81,7 +83,7 @@ public class EventCaseFieldPublishValidatorImplTest {
     }
 
     @Test
-    public void should_fail_due_to_incorrect_publishAs() {
+    void should_fail_due_to_incorrect_publishAs() {
 
         final String expectedError = "PublishAs column cannot have spaces, reference 'caseFieldReference'";
         setupEventCaseFieldEntity();
@@ -90,7 +92,7 @@ public class EventCaseFieldPublishValidatorImplTest {
     }
 
     @Test
-    public void should_fail_due_to_duplicated_publishAs_in_EventComplexTypeEntity() {
+    void should_fail_due_to_duplicated_publishAs_in_EventComplexTypeEntity() {
 
         final String expectedError = "PublishAs column has an invalid value 'Test',  reference 'caseFieldReference'. "
             + "This value must be unique across CaseEventToFields and EventToComplexTypes for the case type. ";
@@ -105,7 +107,7 @@ public class EventCaseFieldPublishValidatorImplTest {
 
 
     @Test
-    public void should_fail_due_to_duplicated_publishAs_in_EventCaseFieldEntity() {
+    void should_fail_due_to_duplicated_publishAs_in_EventCaseFieldEntity() {
 
         final String expectedError = "PublishAs column has an invalid value 'Test',  reference 'caseFieldReference'. "
             + "This value must be unique across CaseEventToFields and EventToComplexTypes for the case type. ";
@@ -119,7 +121,7 @@ public class EventCaseFieldPublishValidatorImplTest {
     }
 
     @Test
-    public void should_fail_due_to_duplicated_publishAs_in_EventCaseFieldEntity_and_EventComplexTypeEntity() {
+    void should_fail_due_to_duplicated_publishAs_in_EventCaseFieldEntity_and_EventComplexTypeEntity() {
 
         final String expectedError = "PublishAs column has an invalid value 'Test',  reference 'caseFieldReference'. "
             + "This value must be unique across CaseEventToFields and EventToComplexTypes for the case type. ";
@@ -133,7 +135,7 @@ public class EventCaseFieldPublishValidatorImplTest {
     }
 
     @Test
-    public void should_fail_due_to_EventPublishFalse_and_EventCaseFieldEntityPublishTrue() {
+    void should_fail_due_to_EventPublishFalse_and_EventCaseFieldEntityPublishTrue() {
 
         final String expectedError = "Publish column has an invalid value 'true',  reference 'caseFieldReference'. "
             + "If the Event is set to false, CaseEventToFields and EventToComplexTypes cannot have Publish columns as "

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
@@ -59,8 +60,12 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
     @BeforeEach
     void setUp() throws IOException {
-        deleteElasticsearchIndices(WILDCARD);
-        reindexRepository.deleteAll();
+        try {
+            deleteElasticsearchIndices(WILDCARD);
+            reindexRepository.deleteAll();
+        } catch (Exception e) {
+            // Ignore any exceptions during index deletion, as it may not exist
+        }
     }
 
     @Test
