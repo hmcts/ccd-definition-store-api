@@ -218,9 +218,17 @@ public abstract class ElasticDefinitionImportListener {
     private void reindexFailedPersist(ReindexEntity metadata, Exception exc) {
         metadata.setStatus("FAILED");
         metadata.setEndTime(LocalDateTime.now());
-        metadata.setMessage(exc.getMessage());
+        Throwable rootCause = unwrapCompletionException(exc);
+        metadata.setMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
         reindexRepository.save(metadata);
         log.warn("Persisted failed reindex metadata for caseType={}, index={}, reason={}",
             metadata.getCaseType(), metadata.getIndexName(), exc.getMessage());
+    }
+
+    private Throwable unwrapCompletionException(Throwable exc) {
+        if (exc instanceof CompletionException && exc.getCause() != null) {
+            return exc.getCause();
+        }
+        return exc;
     }
 }
