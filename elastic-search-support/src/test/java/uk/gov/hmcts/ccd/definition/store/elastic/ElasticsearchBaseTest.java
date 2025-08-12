@@ -19,15 +19,10 @@ import org.springframework.boot.actuate.endpoint.web.WebEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.annotation.ControllerEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.annotation.ServletEndpointsSupplier;
 import org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.oauth2.client.servlet.OAuth2ClientAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration;
 import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
 
@@ -41,10 +36,6 @@ import java.util.stream.Collectors;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     classes = {ServletWebServerFactoryAutoConfiguration.class, ElasticsearchConfigurationIT.class,
         CaseDataAPIApplication.class})
-@EnableAutoConfiguration(exclude = {
-    OAuth2ClientAutoConfiguration.class,
-    OAuth2ResourceServerAutoConfiguration.class
-})
 public abstract class ElasticsearchBaseTest implements TestUtils {
 
     private static final String GET = "GET";
