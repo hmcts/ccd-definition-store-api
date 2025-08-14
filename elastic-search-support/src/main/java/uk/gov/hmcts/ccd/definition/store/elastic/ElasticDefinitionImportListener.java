@@ -14,9 +14,12 @@ import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitiali
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CompletionException;
 import java.util.regex.Matcher;
@@ -35,13 +38,17 @@ public abstract class ElasticDefinitionImportListener {
 
     private final ElasticsearchErrorHandler elasticsearchErrorHandler;
 
+    private final ReindexRepository reindexRepository;
+
     public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory,
-                                           ElasticsearchErrorHandler elasticsearchErrorHandler) {
+                                           ElasticsearchErrorHandler elasticsearchErrorHandler,
+                                           ReindexRepository reindexRepository) {
         this.config = config;
         this.mappingGenerator = mappingGenerator;
         this.clientFactory = clientFactory;
         this.elasticsearchErrorHandler = elasticsearchErrorHandler;
+        this.reindexRepository = reindexRepository;
     }
 
     public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
@@ -56,6 +63,7 @@ public abstract class ElasticDefinitionImportListener {
         List<CaseTypeEntity> caseTypes = event.getContent();
         boolean reindex = event.isReindex();
         boolean deleteOldIndex = event.isDeleteOldIndex();
+        ReindexEntity metadata = null;
 
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
@@ -69,21 +77,38 @@ public abstract class ElasticDefinitionImportListener {
                     String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
                     elasticClient.createIndex(actualIndexName, baseIndexName);
                 }
-                if (reindex) {
-                    //get current alias index
-                    GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
-                    String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
+                //get current alias index
+                GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
+                String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
 
+                //prepare for db
+                metadata = new ReindexEntity();
+                metadata.setIndexName(caseTypeName);
+                metadata.setReindex(reindex);
+                metadata.setDeleteOldIndex(deleteOldIndex);
+                metadata.setCaseType(currentCaseType.getReference());
+                metadata.setJurisdiction(caseType.getJurisdiction().getReference());
+                metadata.setStartTime(LocalDateTime.now());
+                metadata.setStatus("STARTED");
+                metadata = reindexRepository.save(metadata);
+                if (metadata == null) {
+                    throw new ElasticSearchInitialisationException(
+                        new IllegalStateException("Failed to persist reindex metadata"));
+                }
+
+                if (reindex) {
                     //create new index with generated mapping and incremented case type name (no alias update yet)
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
                     String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
+                    //update index name for db
+                    metadata.setIndexName(incrementedCaseTypeName);
                     elasticClient.setIndexReadOnly(baseIndexName, true);
                     elasticClient.createIndexAndMapping(incrementedCaseTypeName, caseMapping);
 
                     //initiate reindexing
                     handleReindexing(baseIndexName, caseTypeName, incrementedCaseTypeName,
-                        deleteOldIndex);
+                        deleteOldIndex, metadata);
                     //dummy value for phase 1
                     event.setTaskId("taskID");
                     log.info("reindexing successful for case type: {}", caseType.getReference());
@@ -96,16 +121,22 @@ public abstract class ElasticDefinitionImportListener {
             }
         } catch (ElasticsearchStatusException exc) {
             logMapping(caseMapping);
+            if (metadata != null) {
+                reindexFailedPersist(metadata, exc);
+            }
             throw elasticsearchErrorHandler.createException(exc, currentCaseType);
         } catch (Exception exc) {
             logMapping(caseMapping);
+            if (metadata != null) {
+                reindexFailedPersist(metadata, exc);
+            }
             throw new ElasticSearchInitialisationException(exc);
         }
     }
 
     private void handleReindexing(String baseIndexName,
                                   String oldIndex, String newIndex,
-                                  boolean deleteOldIndex) {
+                                  boolean deleteOldIndex, ReindexEntity metadata) {
         HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
         elasticClient.reindexData(oldIndex, newIndex, new ActionListener<>() {
             @Override
@@ -119,6 +150,13 @@ public abstract class ElasticDefinitionImportListener {
                         log.info("deleting old index {}", oldIndex);
                         asyncElasticClient.removeIndex(oldIndex);
                     }
+
+                    //set success status and end time for db
+                    metadata.setStatus("SUCCESS");
+                    metadata.setEndTime(LocalDateTime.now());
+                    reindexRepository.save(metadata);
+
+                    log.info("Saved reindex metadata for case type {}", baseIndexName);
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing success", e);
                     throw new CompletionException(e);
@@ -128,6 +166,9 @@ public abstract class ElasticDefinitionImportListener {
             @Override
             public void onFailure(Exception ex) {
                 try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
+                    //set failure status and end time for db
+                    reindexFailedPersist(metadata, ex);
+
                     //if failed delete new index, set old index writable
                     log.error("reindexing failed", ex);
                     asyncElasticClient.removeIndex(newIndex);
@@ -171,5 +212,22 @@ public abstract class ElasticDefinitionImportListener {
         if (caseMapping != null) {
             log.error("elastic search initialisation error on import. Case mapping: {}", caseMapping);
         }
+    }
+
+    private void reindexFailedPersist(ReindexEntity metadata, Exception exc) {
+        metadata.setStatus("FAILED");
+        metadata.setEndTime(LocalDateTime.now());
+        Throwable rootCause = unwrapCompletionException(exc);
+        metadata.setMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
+        reindexRepository.save(metadata);
+        log.warn("Persisted failed reindex metadata for caseType={}, index={}, reason={}",
+            metadata.getCaseType(), metadata.getIndexName(), exc.getMessage());
+    }
+
+    private Throwable unwrapCompletionException(Throwable exc) {
+        if (exc instanceof CompletionException && exc.getCause() != null) {
+            return exc.getCause();
+        }
+        return exc;
     }
 }
