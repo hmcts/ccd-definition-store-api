@@ -44,7 +44,7 @@ ext {
     springDocVersion = '2.8.3'
     hamcrestVersion = '3.0'
     flywayVersion = '10.20.1'
-    reformLogging= '6.1.6'
+    reformLogging= '6.1.9'
     apachePoiVersion = '5.4.0'
     appInsightsVersion = '2.4.1'
     restAssuredVersion = '5.5.1'
