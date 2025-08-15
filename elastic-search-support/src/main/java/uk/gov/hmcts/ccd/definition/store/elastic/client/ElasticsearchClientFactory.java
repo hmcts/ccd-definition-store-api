@@ -1,10 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.json.JsonData;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import org.elasticsearch.client.RestClient;
 
+import java.io.IOException;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class ElasticsearchClientFactory {
@@ -20,6 +23,15 @@ public class ElasticsearchClientFactory {
     public ElasticsearchClient createClient() {
         RestClient restClient = restClientSupplier.get();
         RestClientTransport transport = new RestClientTransport(restClient, mapper);
-        return new ElasticsearchClient(transport);
+        ElasticsearchClient client = new ElasticsearchClient(transport);
+        try {
+            client.cluster().putSettings(s ->
+                s.persistent(Map.of("action.destructive_requires_name", JsonData.of(false)))
+            );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return client;
     }
 }

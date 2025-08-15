@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import org.testcontainers.shaded.org.awaitility.Awaitility;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
@@ -54,9 +53,6 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     void setUp() {
         try {
             deleteElasticsearchIndices(WILDCARD);
-            Awaitility.await()
-                .atMost(5, java.util.concurrent.TimeUnit.SECONDS)
-                .until(() -> getElasticsearchIndices().isEmpty());
         } catch (Exception e) {
             // Ignore any exceptions during index deletion, as it may not exist
         }
