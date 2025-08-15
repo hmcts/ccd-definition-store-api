@@ -24,7 +24,9 @@ java:
     # enable whenever required and provide host url to match with corresponding data-store-api
     ELASTIC_SEARCH_ENABLED: true
 
-    ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-1260-es-master
+    # Temporary override to test ccd-test-stubs-service pull request 367 in isolation
+    #ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-1260-es-master
+    ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-2635-es-master
 
     USER_PROFILE_HOST: http://ccd-user-profile-api-pr-399-java
 
