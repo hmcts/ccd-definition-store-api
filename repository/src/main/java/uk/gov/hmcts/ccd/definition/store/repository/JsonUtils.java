@@ -1,16 +1,26 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import uk.gov.hmcts.ccd.definition.store.repository.model.UserInfoMixin;
+import uk.gov.hmcts.reform.idam.client.models.UserInfo;
 
 import java.io.IOException;
 
 public class JsonUtils {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper().registerModule(new JavaTimeModule());
-
+    private static final ObjectMapper OBJECT_MAPPER = new Jackson2ObjectMapperBuilder()
+            .featuresToEnable(MapperFeature.DEFAULT_VIEW_INCLUSION)
+            .featuresToEnable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
+            .featuresToEnable(JsonParser.Feature.ALLOW_SINGLE_QUOTES)
+            .mixIn(UserInfo.class, UserInfoMixin.class)
+            .modulesToInstall(JavaTimeModule.class)
+            .build();
 
     private JsonUtils() {
     }
