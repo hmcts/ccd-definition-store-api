@@ -232,7 +232,7 @@ subprojects { subproject ->
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'azure-storage', version: '8.0.0'
         implementation group: 'com.vladmihalcea', name: 'hibernate-types-60', version: '2.21.1'
-        implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.2'
+        implementation group: 'com.zaxxer', name: 'HikariCP', version: '4.0.3'
         implementation group: 'io.github.openfeign', name: 'feign-httpclient', version: feignJackson
         implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: jjwtVersion
         implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: jjwtVersion
