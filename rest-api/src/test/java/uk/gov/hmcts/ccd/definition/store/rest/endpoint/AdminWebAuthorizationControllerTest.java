@@ -10,6 +10,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.hmcts.ccd.definition.store.repository.JacksonUtils;
 import uk.gov.hmcts.ccd.definition.store.rest.configuration.AdminWebAuthorizationProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.model.AdminWebAuthorization;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;

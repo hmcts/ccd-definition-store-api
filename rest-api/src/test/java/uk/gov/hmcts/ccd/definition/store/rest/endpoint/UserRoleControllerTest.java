@@ -20,6 +20,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.exception.DuplicateUserRoleExcep
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.AccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
+import uk.gov.hmcts.ccd.definition.store.repository.JacksonUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 

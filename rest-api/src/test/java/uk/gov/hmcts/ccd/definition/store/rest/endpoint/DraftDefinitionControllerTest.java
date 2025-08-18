@@ -15,6 +15,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.util.UriTemplate;
 import uk.gov.hmcts.ccd.definition.store.domain.service.DefinitionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
+import uk.gov.hmcts.ccd.definition.store.repository.JacksonUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Definition;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 
@@ -25,9 +26,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -50,7 +51,6 @@ class DraftDefinitionControllerTest {
     );
     private static final ObjectMapper MAPPER = JacksonUtils.getObjectMapper();
 
-    ObjectMapper();
     private static final String URL_API_JURISDICTIONS = "/api/drafts";
     private static final UriTemplate URI_TEMPLATE_GET_DRAFTS =
         new UriTemplate(URL_API_JURISDICTIONS + "?jurisdiction={jurisdiction}");
