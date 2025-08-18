@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,10 @@ public class ReindexEntity {
     @Column(name = "id")
     @GeneratedValue(strategy = IDENTITY)
     private Integer id;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 
     @Column(name = "reindex")
     private Boolean reindex;

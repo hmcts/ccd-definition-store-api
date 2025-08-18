@@ -7,6 +7,7 @@ import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.orm.ObjectOptimisticLockingFailureException;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
@@ -152,9 +153,11 @@ public abstract class ElasticDefinitionImportListener {
                     }
 
                     //set success status and end time for db
-                    metadata.setStatus("SUCCESS");
-                    metadata.setEndTime(LocalDateTime.now());
-                    reindexRepository.save(metadata);
+                    updateReindexEntityWithRetry(metadata.getId(), entity -> {
+                        entity.setStatus("SUCCESS");
+                        entity.setEndTime(LocalDateTime.now());
+                        return entity;
+                    });
 
                     log.info("Saved reindex metadata for case type {}", baseIndexName);
                 } catch (IOException e) {
@@ -167,7 +170,7 @@ public abstract class ElasticDefinitionImportListener {
             public void onFailure(Exception ex) {
                 try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
                     //set failure status and end time for db
-                    reindexFailedPersist(metadata, ex);
+                    reindexFailedPersistWithRetry(metadata.getId(), ex);
 
                     //if failed delete new index, set old index writable
                     log.error("reindexing failed", ex);
@@ -212,6 +215,49 @@ public abstract class ElasticDefinitionImportListener {
         if (caseMapping != null) {
             log.error("elastic search initialisation error on import. Case mapping: {}", caseMapping);
         }
+    }
+
+    private void updateReindexEntityWithRetry(Integer entityId, java.util.function.Function<ReindexEntity, ReindexEntity> updateFunction) {
+        int maxRetries = 3;
+        int retryCount = 0;
+        
+        while (retryCount < maxRetries) {
+            try {
+                ReindexEntity entity = reindexRepository.findById(entityId)
+                    .orElseThrow(() -> new IllegalStateException("ReindexEntity not found with id: " + entityId));
+                
+                ReindexEntity updatedEntity = updateFunction.apply(entity);
+                reindexRepository.save(updatedEntity);
+                return; // Success, exit retry loop
+                
+            } catch (ObjectOptimisticLockingFailureException e) {
+                retryCount++;
+                if (retryCount >= maxRetries) {
+                    log.error("Failed to update ReindexEntity after {} retries due to optimistic locking", maxRetries, e);
+                    throw e;
+                }
+                log.warn("Optimistic locking failure on ReindexEntity update, retry {} of {}", retryCount, maxRetries);
+                
+                // Brief pause before retry
+                try {
+                    Thread.sleep(100 * retryCount); // Exponential backoff
+                } catch (InterruptedException ie) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException("Interrupted during retry", ie);
+                }
+            }
+        }
+    }
+    
+    private void reindexFailedPersistWithRetry(Integer entityId, Exception exc) {
+        updateReindexEntityWithRetry(entityId, entity -> {
+            entity.setStatus("FAILED");
+            entity.setEndTime(LocalDateTime.now());
+            Throwable rootCause = unwrapCompletionException(exc);
+            entity.setMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
+            return entity;
+        });
+        log.warn("Persisted failed reindex metadata for entityId={}, reason={}", entityId, exc.getMessage());
     }
 
     private void reindexFailedPersist(ReindexEntity metadata, Exception exc) {
