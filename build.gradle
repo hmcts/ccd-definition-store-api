@@ -109,7 +109,7 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
         implementation 'org.springframework.cloud:spring-cloud-starter'
 
-        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.5'
+        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.7'
         implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.4.Final'
         implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.4.1'
 
