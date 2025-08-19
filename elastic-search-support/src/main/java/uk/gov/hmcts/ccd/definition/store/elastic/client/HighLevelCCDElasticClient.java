@@ -46,7 +46,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         this.elasticClient = getElasticClient();
     }
 
-    protected ElasticsearchClient getElasticClient() {
+    private ElasticsearchClient getElasticClient() {
         if (elasticClient == null) {
             elasticClient = clientFactory.createClient();
         }
@@ -116,7 +116,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
             }
         }
     }
-
 
     @Override
     public boolean createIndex(String indexName, String alias) throws IOException {
