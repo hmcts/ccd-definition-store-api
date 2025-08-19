@@ -109,8 +109,8 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
         implementation 'org.springframework.cloud:spring-cloud-starter'
 
-        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.5'
-        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.4.Final'
+        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.7'
+        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.26.Final'
         implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.4.1'
 
         implementation group: 'net.minidev', name: 'json-smart', version: '2.4.9'
@@ -129,7 +129,7 @@ allprojects {
         testImplementation group: 'org.apache.groovy', name: 'groovy', version: groovyVersion
         testImplementation group: 'org.apache.groovy', name: 'groovy-xml', version: groovyVersion
         testImplementation group: 'org.apache.groovy', name: 'groovy-json', version: groovyVersion
-        testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.9', classifier: 'all'
+        testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.10', classifier: 'all'
 
     }
 
@@ -222,7 +222,7 @@ subprojects { subproject ->
 
         // HMCTS
         implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.3.3'
-        implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.3'
+        implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.4'
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
 
         implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
@@ -239,7 +239,7 @@ subprojects { subproject ->
         implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: jjwtVersion
         implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.6.16'
         implementation group: 'jakarta.inject', name: 'jakarta.inject-api', version: '2.0.1'
-        implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.0'
+        implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.1'
         implementation group: 'org.apache.poi', name: 'poi', version: apachePoiVersion
         implementation group: 'org.apache.poi', name: 'poi-ooxml', version: apachePoiVersion
         implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: apachePoiVersion
@@ -247,7 +247,7 @@ subprojects { subproject ->
         implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: elasticSearchVersion
         implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
         implementation group: 'org.flywaydb', name: 'flyway-database-postgresql', version: flywayVersion
-        implementation group: 'org.jooq', name: 'jool-java-8', version: '0.9.14'
+        implementation group: 'org.jooq', name: 'jool-java-8', version: '0.9.15'
         compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
         annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
 
@@ -279,7 +279,7 @@ subprojects { subproject ->
         testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
         testImplementation group: 'io.github.openfeign', name: 'feign-jackson', version: feignJackson
         testImplementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
-        testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.4'
+        testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.8'
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: ccdTestDefinitionVersion
         testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
         testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.4.0'
