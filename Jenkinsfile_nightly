@@ -61,9 +61,6 @@ env.DEFAULT_COLLECTION_ASSERTION_MODE="UNORDERED"
 // Prevent Docker hub rate limit errors by ensuring that testcontainers uses images from hmctspublic ACR
 env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
 
-// Prevent Docker hub rate limit errors by ensuring that testcontainers uses images from hmctspublic ACR
-env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
-
 withNightlyPipeline(type, product, component) {
     // Vars needed for functional and smoke tests run against AKS
     env.OAUTH2_CLIENT_ID = "ccd_gateway"
