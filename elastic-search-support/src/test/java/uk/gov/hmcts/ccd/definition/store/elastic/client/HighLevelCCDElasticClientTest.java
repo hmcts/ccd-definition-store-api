@@ -364,7 +364,7 @@ class HighLevelCCDElasticClientTest {
         String oldIndex = "old_index";
         String newIndex = "new_index";
         @SuppressWarnings("unchecked")
-        ActionListener<co.elastic.clients.elasticsearch.core.ReindexResponse> listener = Mockito.mock(ActionListener.class);
+        ActionListener<ReindexResponse> listener = Mockito.mock(ActionListener.class);
 
         doThrow(new RuntimeException("Reindex failed")).when(elasticClient).reindex(any(Function.class));
 

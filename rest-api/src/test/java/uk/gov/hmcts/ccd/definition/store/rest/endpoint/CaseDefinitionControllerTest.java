@@ -1,5 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -12,16 +21,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.Version;
 
 import java.util.List;
 import java.util.Optional;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -77,6 +76,7 @@ class CaseDefinitionControllerTest {
 
         @Test
         @DisplayName("Should call the CaseTypeService with the jurisdictionId when jurisdictionId is not null")
+        @SuppressWarnings({"deprecation", "removal"})
         public void shouldCallCaseTypeService_whenJurisdictionIdIsNotNull() {
             subject.dataJurisdictionsJurisdictionIdCaseTypeGet("SAMPLE-ID");
             verify(caseTypeService, times(1)).findByJurisdictionId(eq("SAMPLE-ID"));
@@ -84,6 +84,7 @@ class CaseDefinitionControllerTest {
 
         @Test
         @DisplayName("Should call the CaseTypeService with null when jurisdictionId is null")
+        @SuppressWarnings({"deprecation", "removal"})
         public void shouldCallCaseTypeService_whenJurisdictionIdIsNull() {
             subject.dataJurisdictionsJurisdictionIdCaseTypeGet(null);
             verify(caseTypeService, times(1)).findByJurisdictionId(null);
