@@ -382,7 +382,6 @@ class HighLevelCCDElasticClientTest {
         doThrow(esEx)
             .when(indicesClient).getAlias(any(Function.class));
         Assertions.assertFalse(highLevelCCDElasticClient.aliasExists(alias));
-
     }
 
     private void realGetAliasResponseStub(GetAliasResponse realAliasResponse) throws IOException {
