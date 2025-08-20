@@ -81,34 +81,38 @@ public abstract class ElasticDefinitionImportListener {
                 GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
                 String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
 
-                //prepare for db
-                metadata = new ReindexEntity();
-                metadata.setIndexName(caseTypeName);
-                metadata.setReindex(reindex);
-                metadata.setDeleteOldIndex(deleteOldIndex);
-                metadata.setCaseType(currentCaseType.getReference());
-                metadata.setJurisdiction(caseType.getJurisdiction().getReference());
-                metadata.setStartTime(LocalDateTime.now());
-                metadata.setStatus("STARTED");
-                metadata = reindexRepository.save(metadata);
-                if (metadata == null) {
-                    throw new ElasticSearchInitialisationException(
-                        new IllegalStateException("Failed to persist reindex metadata"));
-                }
-
                 if (reindex) {
+                    //prepare for db
+                    ReindexEntity entity = reindexRepository.findByIndexName(caseTypeName).orElse(null);
+                    if (entity == null) {
+                        log.info("No existing reindex metadata found for case type: {}", caseTypeName);
+                        entity = new ReindexEntity();
+                    }
+                    entity.setIndexName(caseTypeName);
+                    entity.setReindex(reindex);
+                    entity.setDeleteOldIndex(deleteOldIndex);
+                    entity.setCaseType(currentCaseType.getReference());
+                    entity.setJurisdiction(caseType.getJurisdiction().getReference());
+                    entity.setStartTime(LocalDateTime.now());
+                    entity.setStatus("STARTED");
+                    String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
+                    entity.setIndexName(incrementedCaseTypeName);
+                    entity = reindexRepository.saveAndFlush(entity);
+                    if (entity == null) {
+                        throw new ElasticSearchInitialisationException(
+                            new IllegalStateException("Failed to persist reindex metadata"));
+                    }
                     //create new index with generated mapping and incremented case type name (no alias update yet)
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
-                    String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
                     //update index name for db
-                    metadata.setIndexName(incrementedCaseTypeName);
+                    entity.setIndexName(incrementedCaseTypeName);
                     elasticClient.setIndexReadOnly(baseIndexName, true);
                     elasticClient.createIndexAndMapping(incrementedCaseTypeName, caseMapping);
 
                     //initiate reindexing
                     handleReindexing(baseIndexName, caseTypeName, incrementedCaseTypeName,
-                        deleteOldIndex, metadata);
+                        deleteOldIndex, entity);
                     //dummy value for phase 1
                     event.setTaskId("taskID");
                     log.info("reindexing successful for case type: {}", caseType.getReference());
@@ -121,15 +125,9 @@ public abstract class ElasticDefinitionImportListener {
             }
         } catch (ElasticsearchStatusException exc) {
             logMapping(caseMapping);
-            if (metadata != null) {
-                reindexFailedPersist(metadata, exc);
-            }
             throw elasticsearchErrorHandler.createException(exc, currentCaseType);
         } catch (Exception exc) {
             logMapping(caseMapping);
-            if (metadata != null) {
-                reindexFailedPersist(metadata, exc);
-            }
             throw new ElasticSearchInitialisationException(exc);
         }
     }
@@ -152,9 +150,10 @@ public abstract class ElasticDefinitionImportListener {
                     }
 
                     //set success status and end time for db
-                    metadata.setStatus("SUCCESS");
-                    metadata.setEndTime(LocalDateTime.now());
-                    reindexRepository.save(metadata);
+                    ReindexEntity entity = reindexRepository.findByIndexName(newIndex).orElse(null);
+                    entity.setStatus("SUCCESS");
+                    entity.setEndTime(LocalDateTime.now());
+                    reindexRepository.save(entity);
 
                     log.info("Saved reindex metadata for case type {}", baseIndexName);
                 } catch (IOException e) {
@@ -167,7 +166,7 @@ public abstract class ElasticDefinitionImportListener {
             public void onFailure(Exception ex) {
                 try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
                     //set failure status and end time for db
-                    reindexFailedPersist(metadata, ex);
+                    reindexFailedPersist(ex, newIndex);
 
                     //if failed delete new index, set old index writable
                     log.error("reindexing failed", ex);
@@ -214,14 +213,15 @@ public abstract class ElasticDefinitionImportListener {
         }
     }
 
-    private void reindexFailedPersist(ReindexEntity metadata, Exception exc) {
-        metadata.setStatus("FAILED");
-        metadata.setEndTime(LocalDateTime.now());
+    private void reindexFailedPersist(Exception exc, String newIndex) {
+        ReindexEntity entity = reindexRepository.findByIndexName(newIndex).orElse(null);
+        entity.setStatus("FAILED");
+        entity.setEndTime(LocalDateTime.now());
         Throwable rootCause = unwrapCompletionException(exc);
-        metadata.setMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
-        reindexRepository.save(metadata);
+        entity.setMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
+        reindexRepository.save(entity);
         log.warn("Persisted failed reindex metadata for caseType={}, index={}, reason={}",
-            metadata.getCaseType(), metadata.getIndexName(), exc.getMessage());
+            entity.getCaseType(), entity.getIndexName(), exc.getMessage());
     }
 
     private Throwable unwrapCompletionException(Throwable exc) {
