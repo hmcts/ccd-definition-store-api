@@ -31,7 +31,7 @@ tasks.register("printSuppressionFile") {
 }
 
 ext {
-    set('elasticsearch.version', '8.16.2')
+    set('elasticsearch.version', '9.1.2')
     set('spring-framework.version', '6.2.1')
     set('spring-security.version', '6.4.2')
     set('springCloudVersion', '2024.0.0')
@@ -53,7 +53,7 @@ ext {
     jjwtVersion = '0.12.7'
     feignJackson = '13.5'
     gsonVersion = '2.11.0'
-    elasticSearchVersion = '7.17.29'
+    elasticSearchVersion = '9.1.2'
     testcontainersVersion = '1.21.0'
     ccdTestDefinitionVersion = '7.25.4'
     beftaFwVersion = '9.2.4'
@@ -91,13 +91,34 @@ allprojects {
         mockitoAgent
         codacy
     }
+    configurations.configureEach {
+        exclude group: 'com.vaadin.external.google', module: 'android-json'
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            eachDependency { DependencyResolveDetails details ->
+                if (details.requested.group == 'org.elasticsearch') {
+                    details.useVersion '9.1.2'
+                }
+
+                if (details.requested.group == 'co.elastic.clients') {
+                    details.useVersion '9.1.2'
+                }
+
+                if (details.requested.group == 'org.elasticsearch.client') {
+                    details.useVersion '9.1.2'
+                }
+            }
+        }
+    }
 
     apply plugin: 'java'
 
     // Global constraints
     dependencies {
 
-        // start::CVE Vulnerability dependency overrides 
+        // start::CVE Vulnerability dependency overrides
 
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.5' // spring-cloud-starter-openfeign
         implementation group: 'commons-io', name: 'commons-io', version: '2.16.1' // spring-cloud-starter-openfeign
@@ -130,7 +151,7 @@ allprojects {
         testImplementation group: 'org.apache.groovy', name: 'groovy-xml', version: groovyVersion
         testImplementation group: 'org.apache.groovy', name: 'groovy-json', version: groovyVersion
         testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.10', classifier: 'all'
-
+        testImplementation 'org.json:json:20240303'
     }
 
 }
@@ -195,7 +216,7 @@ subprojects { subproject ->
 
     dependencies {
 
-        // start::CVE Vulnerability dependency overrides 
+        // start::CVE Vulnerability dependency overrides
 
         implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.0.1' // spring-boot-starter-oauth2-client
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0' // azure-storage
@@ -244,7 +265,8 @@ subprojects { subproject ->
         implementation group: 'org.apache.poi', name: 'poi-ooxml', version: apachePoiVersion
         implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: apachePoiVersion
         implementation group: 'org.elasticsearch', name: 'elasticsearch', version: elasticSearchVersion
-        implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: elasticSearchVersion
+        implementation group: 'co.elastic.clients', name: 'elasticsearch-java', version: elasticSearchVersion
+        implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: elasticSearchVersion
         implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
         implementation group: 'org.flywaydb', name: 'flyway-database-postgresql', version: flywayVersion
         implementation group: 'org.jooq', name: 'jool-java-8', version: '0.9.15'
@@ -283,6 +305,7 @@ subprojects { subproject ->
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: ccdTestDefinitionVersion
         testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
         testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.4.0'
+        testImplementation 'org.skyscreamer:jsonassert:1.5.1'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024'
