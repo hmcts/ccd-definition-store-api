@@ -17,7 +17,7 @@ public class ClassUserType implements UserType {
     public static final String TYPE = "uk.gov.hmcts.ccd.definition.store.repository.ClassUserType";
 
     public ClassUserType() {
-        // default constructor
+        // default constrcutor
     }
 
     @Override

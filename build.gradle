@@ -31,6 +31,7 @@ tasks.register("printSuppressionFile") {
 }
 
 ext {
+    set('elasticsearch.version', '9.1.2')
     set('spring-framework.version', '6.2.1')
     set('spring-security.version', '6.4.2')
     set('springCloudVersion', '2024.0.0')
