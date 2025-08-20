@@ -85,7 +85,7 @@ public abstract class ElasticDefinitionImportListener {
                     GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
                     String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
                     String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
-                    ReindexEntity reindexEntity = ReindexPersistService.initiateReindex(caseTypeName, reindex,
+                    ReindexEntity reindexEntity = reindexPersistService.initiateReindex(caseTypeName, reindex,
                         deleteOldIndex, currentCaseType, incrementedCaseTypeName, reindexRepository);
                     if (reindexEntity == null) {
                         throw new ElasticSearchInitialisationException(

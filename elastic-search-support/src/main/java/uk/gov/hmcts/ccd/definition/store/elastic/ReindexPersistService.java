@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -19,8 +20,8 @@ public class ReindexPersistService {
         this.reindexRepository = reindexRepository;
     }
 
-    @Transactional
-    public static ReindexEntity initiateReindex(String caseTypeName, boolean reindex, boolean deleteOldIndex, CaseTypeEntity caseType,
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public ReindexEntity initiateReindex(String caseTypeName, boolean reindex, boolean deleteOldIndex, CaseTypeEntity caseType,
                                                 String newIndexName, ReindexRepository reindexRepository) {
         ReindexEntity entity = reindexRepository.findByIndexName(caseTypeName).orElse(null);
         if (entity == null) {
@@ -38,7 +39,6 @@ public class ReindexPersistService {
         return reindexRepository.saveAndFlush(entity);
     }
 
-    @Transactional
     public void markSuccess(String caseTypeName) {
         ReindexEntity entity = reindexRepository.findByIndexName(caseTypeName).orElse(null);
         if (entity == null) {
@@ -51,7 +51,6 @@ public class ReindexPersistService {
         reindexRepository.save(entity);
     }
 
-    @Transactional
     public void markFailure(String caseTypeName, Exception ex) {
         ReindexEntity entity = reindexRepository.findByIndexName(caseTypeName).orElse(null);
         if (entity == null) {
