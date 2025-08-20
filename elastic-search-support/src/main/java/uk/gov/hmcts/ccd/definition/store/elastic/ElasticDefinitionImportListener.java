@@ -19,7 +19,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.concurrent.CompletionException;
 import java.util.regex.Matcher;
@@ -40,15 +39,19 @@ public abstract class ElasticDefinitionImportListener {
 
     private final ReindexRepository reindexRepository;
 
+    private final ReindexPersistService reindexPersistService;
+
     public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory,
                                            ElasticsearchErrorHandler elasticsearchErrorHandler,
-                                           ReindexRepository reindexRepository) {
+                                           ReindexRepository reindexRepository,
+                                           ReindexPersistService reindexPersistService) {
         this.config = config;
         this.mappingGenerator = mappingGenerator;
         this.clientFactory = clientFactory;
         this.elasticsearchErrorHandler = elasticsearchErrorHandler;
         this.reindexRepository = reindexRepository;
+        this.reindexPersistService = reindexPersistService;
     }
 
     public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
@@ -63,7 +66,6 @@ public abstract class ElasticDefinitionImportListener {
         List<CaseTypeEntity> caseTypes = event.getContent();
         boolean reindex = true;
         boolean deleteOldIndex = true;
-        ReindexEntity metadata = null;
 
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
@@ -77,42 +79,29 @@ public abstract class ElasticDefinitionImportListener {
                     String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
                     elasticClient.createIndex(actualIndexName, baseIndexName);
                 }
-                //get current alias index
-                GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
-                String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
-
                 if (reindex) {
                     //prepare for db
-                    ReindexEntity entity = reindexRepository.findByIndexName(caseTypeName).orElse(null);
-                    if (entity == null) {
-                        log.info("No existing reindex metadata found for case type: {}", caseTypeName);
-                        entity = new ReindexEntity();
-                    }
-                    entity.setIndexName(caseTypeName);
-                    entity.setReindex(reindex);
-                    entity.setDeleteOldIndex(deleteOldIndex);
-                    entity.setCaseType(currentCaseType.getReference());
-                    entity.setJurisdiction(caseType.getJurisdiction().getReference());
-                    entity.setStartTime(LocalDateTime.now());
-                    entity.setStatus("STARTED");
+                    //get current alias index
+                    GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
+                    String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
                     String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
-                    entity.setIndexName(incrementedCaseTypeName);
-                    entity = reindexRepository.saveAndFlush(entity);
-                    if (entity == null) {
+                    ReindexEntity reindexEntity = ReindexPersistService.initiateReindex(caseTypeName, reindex,
+                        deleteOldIndex, currentCaseType, incrementedCaseTypeName, reindexRepository);
+                    if (reindexEntity == null) {
                         throw new ElasticSearchInitialisationException(
                             new IllegalStateException("Failed to persist reindex metadata"));
                     }
+
                     //create new index with generated mapping and incremented case type name (no alias update yet)
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
                     //update index name for db
-                    entity.setIndexName(incrementedCaseTypeName);
                     elasticClient.setIndexReadOnly(baseIndexName, true);
                     elasticClient.createIndexAndMapping(incrementedCaseTypeName, caseMapping);
 
                     //initiate reindexing
                     handleReindexing(baseIndexName, caseTypeName, incrementedCaseTypeName,
-                        deleteOldIndex, entity);
+                        deleteOldIndex, reindexEntity);
                     //dummy value for phase 1
                     event.setTaskId("taskID");
                     log.info("reindexing successful for case type: {}", caseType.getReference());
@@ -134,7 +123,7 @@ public abstract class ElasticDefinitionImportListener {
 
     private void handleReindexing(String baseIndexName,
                                   String oldIndex, String newIndex,
-                                  boolean deleteOldIndex, ReindexEntity metadata) {
+                                  boolean deleteOldIndex, ReindexEntity reindexEntity) {
         HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
         elasticClient.reindexData(oldIndex, newIndex, new ActionListener<>() {
             @Override
@@ -148,12 +137,7 @@ public abstract class ElasticDefinitionImportListener {
                         log.info("deleting old index {}", oldIndex);
                         asyncElasticClient.removeIndex(oldIndex);
                     }
-
-                    //set success status and end time for db
-                    ReindexEntity entity = reindexRepository.findByIndexName(newIndex).orElse(null);
-                    entity.setStatus("SUCCESS");
-                    entity.setEndTime(LocalDateTime.now());
-                    reindexRepository.save(entity);
+                    reindexPersistService.markSuccess(newIndex);
 
                     log.info("Saved reindex metadata for case type {}", baseIndexName);
                 } catch (IOException e) {
@@ -166,7 +150,7 @@ public abstract class ElasticDefinitionImportListener {
             public void onFailure(Exception ex) {
                 try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
                     //set failure status and end time for db
-                    reindexFailedPersist(ex, newIndex);
+                    reindexPersistService.markFailure(newIndex, ex);
 
                     //if failed delete new index, set old index writable
                     log.error("reindexing failed", ex);
@@ -211,23 +195,5 @@ public abstract class ElasticDefinitionImportListener {
         if (caseMapping != null) {
             log.error("elastic search initialisation error on import. Case mapping: {}", caseMapping);
         }
-    }
-
-    private void reindexFailedPersist(Exception exc, String newIndex) {
-        ReindexEntity entity = reindexRepository.findByIndexName(newIndex).orElse(null);
-        entity.setStatus("FAILED");
-        entity.setEndTime(LocalDateTime.now());
-        Throwable rootCause = unwrapCompletionException(exc);
-        entity.setMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
-        reindexRepository.save(entity);
-        log.warn("Persisted failed reindex metadata for caseType={}, index={}, reason={}",
-            entity.getCaseType(), entity.getIndexName(), exc.getMessage());
-    }
-
-    private Throwable unwrapCompletionException(Throwable exc) {
-        if (exc instanceof CompletionException && exc.getCause() != null) {
-            return exc.getCause();
-        }
-        return exc;
     }
 }
