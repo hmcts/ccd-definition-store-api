@@ -101,12 +101,6 @@ public abstract class ElasticDefinitionImportListener {
         } catch (Exception exc) {
             logMapping(caseMapping);
             throw new ElasticSearchInitialisationException(exc);
-        } finally {
-            try {
-                elasticClient.close();
-            } catch (Exception e) {
-                log.error("Failed to close Elasticsearch client", e);
-            }
         }
     }
 
