@@ -36,17 +36,15 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     private static final Object LOCK = new Object();
 
     private final CcdElasticSearchProperties config;
-    private final ElasticsearchClient elasticClient;
-    private final ElasticsearchClientFactory clientFactory;
+    private ElasticsearchClient elasticClient;
 
     @Autowired
     public HighLevelCCDElasticClient(CcdElasticSearchProperties config, ElasticsearchClientFactory clientFactory) {
         this.config = config;
-        this.clientFactory = clientFactory;
-        this.elasticClient =  clientFactory.createClient();
+        elasticClient = clientFactory.createClient();
     }
 
-    private ElasticsearchClient getElasticClient() {
+    private synchronized ElasticsearchClient getElasticClient() {
         return elasticClient;
     }
 
@@ -57,7 +55,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         while (attempts < MAX_RETRIES) {
             try {
                 synchronized (LOCK) {
-                    return operation.execute(elasticClient);
+                    return operation.execute(getElasticClient());
                 }
             } catch (Exception e) {
                 lastException = e;
@@ -65,11 +63,9 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
                 if (isDeadHostException(e)) {
                     log.warn("ElasticsearchClient encountered dead node: {} — resetting...", e.getMessage());
-                    resetClient();
                 } else if (isConnectionError(e)) {
                     log.warn("Connection error during {}, attempt {}/{}",
                         operationName, attempts, MAX_RETRIES);
-                    resetClient();
                 }
 
                 if (attempts < MAX_RETRIES) {
@@ -95,17 +91,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         return e instanceof ConnectionClosedException
             || e instanceof ElasticsearchException
             && e.getCause() instanceof ConnectionClosedException;
-    }
-
-    private void resetClient() {
-        synchronized (LOCK) {
-            try {
-                log.debug("Close the elasticsearch client to reset the connection");
-                elasticClient.close();
-            } catch (IOException e) {
-                log.error("Error closing elasticsearch client", e);
-            }
-        }
     }
 
     @Override
@@ -191,11 +176,10 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     @Override
     public void close() {
-        resetClient();
     }
 
     public GetAliasResponse getAlias(String alias) throws IOException {
-        return elasticClient.indices().getAlias(b -> b.name(alias));
+        return getElasticClient().indices().getAlias(b -> b.name(alias));
     }
 
     private Map<String, Object> casesIndexSettings(String file) throws IOException {

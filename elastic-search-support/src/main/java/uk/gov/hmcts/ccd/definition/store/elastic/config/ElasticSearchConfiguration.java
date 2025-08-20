@@ -8,8 +8,8 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.apache.http.HttpHost;
+import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.elasticsearch.client.Node;
 import org.elasticsearch.client.NodeSelector;
 import org.elasticsearch.client.RestClient;
@@ -82,7 +82,7 @@ public class ElasticSearchConfiguration {
             );
     }
 
-    @Bean
+    @Bean(destroyMethod = "close")
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public RestClient restClient(RestClientBuilder builder) {
         return builder.build();
@@ -94,7 +94,7 @@ public class ElasticSearchConfiguration {
         return elasticsearchClientFactory.createClient();
     }
 
-    @Bean
+    @Bean(destroyMethod = "close")
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public RestClientTransport restClientTransport(RestClient restClient, JacksonJsonpMapper mapper) {
         return new RestClientTransport(restClient, mapper);
