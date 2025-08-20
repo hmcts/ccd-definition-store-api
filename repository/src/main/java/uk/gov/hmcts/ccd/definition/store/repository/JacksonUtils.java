@@ -1,42 +1,42 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
+import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import uk.gov.hmcts.ccd.definition.store.repository.model.UserInfoMixin;
-import uk.gov.hmcts.reform.idam.client.models.UserInfo;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 
 import java.util.HashMap;
 
 public class JacksonUtils {
 
-    private static final ObjectMapper objectMapper = new Jackson2ObjectMapperBuilder()
-        .featuresToEnable(MapperFeature.DEFAULT_VIEW_INCLUSION)
-        .featuresToEnable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
-        .featuresToEnable(JsonParser.Feature.ALLOW_SINGLE_QUOTES)
-        .mixIn(UserInfo.class, UserInfoMixin.class)
-        .modulesToInstall(JavaTimeModule.class)
-        .build();
-
-    public static ObjectMapper getObjectMapper() {
-        return objectMapper;
+    private JacksonUtils() {
     }
 
+    private static final JsonFactory jsonFactory = JsonFactory.builder()
+        // Change per-factory setting to prevent use of `String.intern()` on symbols
+        .disable(JsonFactory.Feature.INTERN_FIELD_NAMES)
+        .build();
+
+    public static final ObjectMapper MAPPER = JsonMapper.builder(jsonFactory)
+        .configure(MapperFeature.DEFAULT_VIEW_INCLUSION, true)
+        .configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
+        .configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true)
+        .build();
+
     public static HashMap<String, JsonNode> convertValue(Object from) {
-        return objectMapper.convertValue(from, new TypeReference<HashMap<String, JsonNode>>() {
+        return MAPPER.convertValue(from, new TypeReference<>() {
         });
     }
 
     public static JsonNode convertValueJsonNode(Object from) {
-        return objectMapper.convertValue(from, JsonNode.class);
+        return MAPPER.convertValue(from, JsonNode.class);
     }
 
     public static final TypeReference<HashMap<String, JsonNode>> getHashMapTypeReference() {
-        return new TypeReference<HashMap<String, JsonNode>>() {
+        return new TypeReference<>() {
         };
     }
 

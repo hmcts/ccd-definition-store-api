@@ -1,29 +1,5 @@
 package uk.gov.hmcts.net.ccd.definition.store;
 
-import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
-import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
-import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
-import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
-import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClient;
-import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
-import uk.gov.hmcts.ccd.definition.store.repository.JacksonUtils;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
-import uk.gov.hmcts.net.ccd.definition.store.domain.model.DisplayItemsData;
-import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
-import uk.gov.hmcts.net.ccd.definition.store.wiremock.config.WireMockTestConfiguration;
-
-import javax.sql.DataSource;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.tomakehurst.wiremock.client.WireMock;
@@ -51,9 +27,25 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.AzureBlobStorageClient;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
+import uk.gov.hmcts.net.ccd.definition.store.excel.UserRoleSetup;
+import uk.gov.hmcts.net.ccd.definition.store.wiremock.config.WireMockTestConfiguration;
+
+import javax.sql.DataSource;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
@@ -136,25 +128,6 @@ public abstract class BaseTest {
 
         // Enable Definition file upload to Azure (mocked)
         when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
-    }
-
-    protected DisplayItemsData mapDisplayItemsData(ResultSet resultSet, Integer i) throws SQLException {
-        final DisplayItemsData displayItemsData = new DisplayItemsData();
-        displayItemsData.setCaseTypeId(resultSet.getString("case_type_id"));
-        displayItemsData.setVersion(resultSet.getDate("version"));
-        displayItemsData.setReference(resultSet.getInt("reference"));
-        try {
-            displayItemsData.setDisplayObject(mapper.convertValue(
-                mapper.readTree(resultSet.getString("display_object")),
-                JacksonUtils.getHashMapTypeReference()
-            ));
-        } catch (IOException e) {
-            fail("Incorrect JSON structure: " + resultSet.getString("display_object"));
-        }
-        displayItemsData.setDisplayItemVersion(resultSet.getInt("display_item_version"));
-        displayItemsData.setType(resultSet.getString("type"));
-
-        return displayItemsData;
     }
 
     protected void assertResponseCode(MvcResult mvcResult, int httpResponseCode) throws UnsupportedEncodingException {
