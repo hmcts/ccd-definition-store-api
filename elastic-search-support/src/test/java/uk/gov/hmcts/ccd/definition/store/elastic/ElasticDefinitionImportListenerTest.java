@@ -87,7 +87,7 @@ class ElasticDefinitionImportListenerTest {
         listener.onDefinitionImported(newEvent(caseA, caseB));
 
         verify(clientObjectFactory).getObject();
-        verify(ccdElasticClient, times(2)).close();
+        verify(ccdElasticClient, times(1)).close();
     }
 
     @Test
