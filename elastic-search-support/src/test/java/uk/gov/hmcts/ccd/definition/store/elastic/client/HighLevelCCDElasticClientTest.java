@@ -66,8 +66,8 @@ class HighLevelCCDElasticClientTest {
     void setup() {
         MockitoAnnotations.openMocks(this);
         doReturn(indicesClient).when(elasticClient).indices();
-        highLevelCCDElasticClient = Mockito.spy(new HighLevelCCDElasticClient(config, elasticClientFactory));
         doReturn(elasticClient).when(elasticClientFactory).createClient();
+        highLevelCCDElasticClient = Mockito.spy(new HighLevelCCDElasticClient(config, elasticClientFactory));
     }
 
     @Test

@@ -1,14 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
-import co.elastic.clients.elasticsearch.indices.Alias;
-import co.elastic.clients.elasticsearch.indices.update_aliases.Action;
-import com.google.common.collect.Iterables;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch.indices.Alias;
 import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
 import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
+import co.elastic.clients.elasticsearch.indices.update_aliases.Action;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.ConnectionClosedException;
 import org.elasticsearch.action.ActionListener;
@@ -35,21 +35,18 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     private static final long RETRY_DELAY_MS = 1000;
     private static final Object LOCK = new Object();
 
-    protected final CcdElasticSearchProperties config;
-    protected volatile ElasticsearchClient elasticClient;
+    private final CcdElasticSearchProperties config;
+    private final ElasticsearchClient elasticClient;
     private final ElasticsearchClientFactory clientFactory;
 
     @Autowired
     public HighLevelCCDElasticClient(CcdElasticSearchProperties config, ElasticsearchClientFactory clientFactory) {
         this.config = config;
         this.clientFactory = clientFactory;
-        this.elasticClient = getElasticClient();
+        this.elasticClient =  clientFactory.createClient();
     }
 
     private ElasticsearchClient getElasticClient() {
-        if (elasticClient == null) {
-            elasticClient = clientFactory.createClient();
-        }
         return elasticClient;
     }
 
@@ -60,9 +57,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         while (attempts < MAX_RETRIES) {
             try {
                 synchronized (LOCK) {
-                    if (elasticClient == null) {
-                        elasticClient = clientFactory.createClient();
-                    }
                     return operation.execute(elasticClient);
                 }
             } catch (Exception e) {
@@ -105,14 +99,11 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     private void resetClient() {
         synchronized (LOCK) {
-            if (elasticClient != null) {
-                try {
-                    log.debug("Close the elasticsearch client to reset the connection");
-                    elasticClient.close();
-                } catch (IOException e) {
-                    log.error("Error closing elasticsearch client", e);
-                }
-                elasticClient = null;
+            try {
+                log.debug("Close the elasticsearch client to reset the connection");
+                elasticClient.close();
+            } catch (IOException e) {
+                log.error("Error closing elasticsearch client", e);
             }
         }
     }
