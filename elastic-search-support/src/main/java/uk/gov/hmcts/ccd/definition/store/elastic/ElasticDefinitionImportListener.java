@@ -66,6 +66,7 @@ public abstract class ElasticDefinitionImportListener {
         List<CaseTypeEntity> caseTypes = event.getContent();
         boolean reindex = true;
         boolean deleteOldIndex = true;
+        String incrementedCaseTypeName = null;
 
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
@@ -80,18 +81,19 @@ public abstract class ElasticDefinitionImportListener {
                     elasticClient.createIndex(actualIndexName, baseIndexName);
                 }
                 if (reindex) {
-                    //prepare for db
                     //get current alias index
                     GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
                     String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
-                    String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
-                    ReindexEntity reindexEntity = reindexPersistService.initiateReindex(caseTypeName, reindex,
-                        deleteOldIndex, currentCaseType, incrementedCaseTypeName, reindexRepository);
+                    incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
+
+                    //prepare for db
+                    ReindexEntity reindexEntity = reindexPersistService.initiateReindex(reindex, deleteOldIndex,
+                        caseType, reindexRepository, caseTypeName, incrementedCaseTypeName);
                     if (reindexEntity == null) {
                         throw new ElasticSearchInitialisationException(
-                            new IllegalStateException("Failed to persist reindex metadata"));
+                            new IllegalStateException("Failed to save reindex metadata to DB for case type: "
+                                                      + caseType.getReference()));
                     }
-
                     //create new index with generated mapping and incremented case type name (no alias update yet)
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
@@ -101,7 +103,7 @@ public abstract class ElasticDefinitionImportListener {
 
                     //initiate reindexing
                     handleReindexing(baseIndexName, caseTypeName, incrementedCaseTypeName,
-                        deleteOldIndex, reindexEntity);
+                        deleteOldIndex);
                     //dummy value for phase 1
                     event.setTaskId("taskID");
                     log.info("reindexing successful for case type: {}", caseType.getReference());
@@ -114,16 +116,18 @@ public abstract class ElasticDefinitionImportListener {
             }
         } catch (ElasticsearchStatusException exc) {
             logMapping(caseMapping);
+            reindexPersistService.markFailure(incrementedCaseTypeName, exc);
             throw elasticsearchErrorHandler.createException(exc, currentCaseType);
         } catch (Exception exc) {
             logMapping(caseMapping);
+            reindexPersistService.markFailure(incrementedCaseTypeName, exc);
             throw new ElasticSearchInitialisationException(exc);
         }
     }
 
     private void handleReindexing(String baseIndexName,
                                   String oldIndex, String newIndex,
-                                  boolean deleteOldIndex, ReindexEntity reindexEntity) {
+                                  boolean deleteOldIndex) {
         HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
         elasticClient.reindexData(oldIndex, newIndex, new ActionListener<>() {
             @Override
@@ -137,9 +141,10 @@ public abstract class ElasticDefinitionImportListener {
                         log.info("deleting old index {}", oldIndex);
                         asyncElasticClient.removeIndex(oldIndex);
                     }
+                    //set success status and end time for db
                     reindexPersistService.markSuccess(newIndex);
+                    log.info("saved reindex metadata for case type {} to DB", baseIndexName);
 
-                    log.info("Saved reindex metadata for case type {}", baseIndexName);
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing success", e);
                     throw new CompletionException(e);

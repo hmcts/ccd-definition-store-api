@@ -21,14 +21,14 @@ public class ReindexPersistService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public ReindexEntity initiateReindex(String caseTypeName, boolean reindex, boolean deleteOldIndex, CaseTypeEntity caseType,
-                                                String newIndexName, ReindexRepository reindexRepository) {
-        ReindexEntity entity = reindexRepository.findByIndexName(caseTypeName).orElse(null);
+    public ReindexEntity initiateReindex(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity caseType,
+                                                ReindexRepository reindexRepository, String oldIndexName,
+                                                String newIndexName) {
+        ReindexEntity entity = reindexRepository.findByIndexName(oldIndexName).orElse(null);
         if (entity == null) {
-            log.info("No existing reindex metadata found for case type: {}, inserting to DB", caseTypeName);
+            log.info("No existing reindex metadata found for case type: {}, inserting to DB", oldIndexName);
             entity = new ReindexEntity();
         }
-        entity.setIndexName(caseTypeName);
         entity.setReindex(reindex);
         entity.setDeleteOldIndex(deleteOldIndex);
         entity.setCaseType(caseType.getReference());
@@ -39,30 +39,33 @@ public class ReindexPersistService {
         return reindexRepository.saveAndFlush(entity);
     }
 
+    @Transactional
     public void markSuccess(String caseTypeName) {
-        ReindexEntity entity = reindexRepository.findByIndexName(caseTypeName).orElse(null);
-        if (entity == null) {
+        ReindexEntity reindexEntity = reindexRepository.findByIndexName(caseTypeName).orElse(null);
+        if (reindexEntity == null) {
             log.warn("No reindex metadata found for case type: {}", caseTypeName);
             return;
         }
-        log.info("Persistence completed successfully for case type: {}", caseTypeName);
-        entity.setStatus("SUCCESS");
-        entity.setEndTime(LocalDateTime.now());
-        reindexRepository.save(entity);
+        log.info("Save to DB successful for case type: {}", caseTypeName);
+        reindexEntity.setStatus("SUCCESS");
+        reindexEntity.setEndTime(LocalDateTime.now());
+        reindexRepository.save(reindexEntity);
     }
 
+    @Transactional
     public void markFailure(String caseTypeName, Exception ex) {
-        ReindexEntity entity = reindexRepository.findByIndexName(caseTypeName).orElse(null);
-        if (entity == null) {
+        ReindexEntity reindexEntity = reindexRepository.findByIndexName(caseTypeName).orElse(null);
+        if (reindexEntity == null) {
             log.warn("No reindex metadata found for case type: {}", caseTypeName);
             return;
         }
-        entity.setStatus("FAILED");
-        entity.setEndTime(LocalDateTime.now());
+        log.info("Save to DB failed for case type: {}", caseTypeName);
+        reindexEntity.setStatus("FAILED");
+        reindexEntity.setEndTime(LocalDateTime.now());
         Throwable rootCause = unwrapCompletionException(ex);
-        entity.setMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
-        entity.setMessage(ex.getMessage());
-        reindexRepository.save(entity);
+        reindexEntity.setMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
+        reindexEntity.setMessage(ex.getMessage());
+        reindexRepository.save(reindexEntity);
     }
 
     private Throwable unwrapCompletionException(Throwable exc) {
