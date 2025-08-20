@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import uk.gov.hmcts.ccd.definition.store.repository.JacksonUtils;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
@@ -24,10 +23,11 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @ExtendWith(MockitoExtension.class)
 class IdamProfileControllerTest {
 
-    private static final ObjectMapper MAPPER = JacksonUtils.getObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     private MockMvc mockMvc;
 
     @Mock

@@ -15,7 +15,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.util.UriTemplate;
 import uk.gov.hmcts.ccd.definition.store.domain.service.DefinitionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
-import uk.gov.hmcts.ccd.definition.store.repository.JacksonUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Definition;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 
@@ -49,8 +48,7 @@ class DraftDefinitionControllerTest {
         MediaType.APPLICATION_JSON.getSubtype(),
         Charset.forName(StandardCharsets.UTF_8.name())
     );
-    private static final ObjectMapper MAPPER = JacksonUtils.getObjectMapper();
-
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     private static final String URL_API_JURISDICTIONS = "/api/drafts";
     private static final UriTemplate URI_TEMPLATE_GET_DRAFTS =
         new UriTemplate(URL_API_JURISDICTIONS + "?jurisdiction={jurisdiction}");

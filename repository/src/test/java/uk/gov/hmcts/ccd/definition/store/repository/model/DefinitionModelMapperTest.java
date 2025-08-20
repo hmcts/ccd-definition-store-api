@@ -29,7 +29,7 @@ import static org.mockito.Mockito.when;
 
 class DefinitionModelMapperTest {
 
-    private final ObjectMapper mapper = JacksonUtils.getObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Mock
     private DefinitionEntity definitionEntity;

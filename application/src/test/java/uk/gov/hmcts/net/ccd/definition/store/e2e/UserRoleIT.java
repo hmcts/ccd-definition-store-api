@@ -1,6 +1,5 @@
 package uk.gov.hmcts.net.ccd.definition.store.e2e;
 
-import uk.gov.hmcts.ccd.definition.store.repository.JacksonUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 import uk.gov.hmcts.reform.authorisation.generators.ServiceAuthTokenGenerator;
@@ -49,7 +48,7 @@ class UserRoleIT {
             "http://localhost:{port}" + URL_API_USER_ROLE + "?role={role}");
     private static final String SERVICE_AUTHORIZATION = "ServiceAuthorization";
     private static final String ROLE_DEFINED = "@<\"*#$%^\\/";
-    private static final ObjectMapper MAPPER = JacksonUtils.getObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     private JdbcTemplate template;
     private Map<String, Object> uriVariables;

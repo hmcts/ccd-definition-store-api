@@ -103,7 +103,7 @@ public abstract class BaseTest {
     protected JdbcTemplate jdbcTemplate;
     protected Map<String, Integer> userRoleIds;
 
-    protected static final ObjectMapper mapper = JacksonUtils.getObjectMapper();
+    protected static final ObjectMapper mapper = new ObjectMapper();
 
     @BeforeAll
     public static void init() {
