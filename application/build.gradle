@@ -30,7 +30,7 @@ dependencies {
 
     testImplementation project(":app-insights").sourceSets.main.output
     testImplementation project(":commons").sourceSets.main.output
-    testImplementation 'org.json:json:20240303'
+    testImplementation("org.json:json:20250517")
 }
 
 rootProject.tasks.named("distTar") {

@@ -106,7 +106,6 @@ public class ElasticSearchConfiguration {
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     public HighLevelCCDElasticClient ccdElasticClient(ElasticsearchClientFactory elasticsearchClientFactory) {
-        return new HighLevelCCDElasticClient(config, elasticsearchClientFactory) {
-        };
+        return new HighLevelCCDElasticClient(config, elasticsearchClientFactory);
     }
 }
