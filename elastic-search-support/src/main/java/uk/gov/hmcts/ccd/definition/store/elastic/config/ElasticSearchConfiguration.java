@@ -6,6 +6,7 @@ import co.elastic.clients.transport.rest_client.RestClientTransport;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
@@ -51,6 +52,7 @@ public class ElasticSearchConfiguration {
             .featuresToEnable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
             .featuresToEnable(JsonParser.Feature.ALLOW_SINGLE_QUOTES)
             .modulesToInstall(JavaTimeModule.class)
+            .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             .build();
     }
 
