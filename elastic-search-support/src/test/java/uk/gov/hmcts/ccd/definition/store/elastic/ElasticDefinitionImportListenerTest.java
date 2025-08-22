@@ -203,7 +203,7 @@ class ElasticDefinitionImportListenerTest {
         verify(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
         verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
         verify(ccdElasticClient).updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
-        verify(reindexEntityService).persistSuccess(incrementedCaseTypeName);
+        verify(reindexEntityService).persistSuccess(incrementedCaseTypeName, anyString());
 
         verify(ccdElasticClient).removeIndex(caseTypeName);
         ArgumentCaptor<String> oldIndexCaptor = ArgumentCaptor.forClass(String.class);
@@ -225,7 +225,7 @@ class ElasticDefinitionImportListenerTest {
         verify(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
         verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
         verify(ccdElasticClient).updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
-        verify(reindexEntityService).persistSuccess(incrementedCaseTypeName);
+        verify(reindexEntityService).persistSuccess(incrementedCaseTypeName, anyString());
         verify(ccdElasticClient, never()).removeIndex(caseTypeName);
     }
 

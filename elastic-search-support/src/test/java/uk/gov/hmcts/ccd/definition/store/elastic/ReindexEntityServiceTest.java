@@ -13,8 +13,10 @@ import java.util.concurrent.CompletionException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -71,11 +73,12 @@ public class ReindexEntityServiceTest {
 
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(existing));
 
-        reindexEntityService.persistSuccess(newIndexName);
+        reindexEntityService.persistSuccess(newIndexName, anyString());
 
         verify(reindexRepository).save(existing);
         assertEquals("SUCCESS", existing.getStatus());
         assertNotNull(existing.getEndTime());
+        assertNotNull(existing.getReindexResponse());
     }
 
     @Test
@@ -91,7 +94,8 @@ public class ReindexEntityServiceTest {
         verify(reindexRepository).save(existing);
         assertEquals("FAILED", existing.getStatus());
         assertNotNull(existing.getEndTime());
-        assertTrue(existing.getMessage().contains("Simulated failure"));
+        assertTrue(existing.getExceptionMessage().contains("Simulated failure"));
+        assertNull(existing.getReindexResponse());
     }
 
     @Test
@@ -105,14 +109,14 @@ public class ReindexEntityServiceTest {
         reindexEntityService.persistFailure(newIndexName, completion);
 
         verify(reindexRepository).save(entity);
-        assertTrue(entity.getMessage().contains("IllegalArgumentException"));
+        assertTrue(entity.getExceptionMessage().contains("IllegalArgumentException"));
     }
 
     @Test
     void shouldSkipMarkSuccessIfEntityNotFound() {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.empty());
 
-        reindexEntityService.persistSuccess(newIndexName);
+        reindexEntityService.persistSuccess(newIndexName, anyString());
 
         verify(reindexRepository, never()).save(any());
     }

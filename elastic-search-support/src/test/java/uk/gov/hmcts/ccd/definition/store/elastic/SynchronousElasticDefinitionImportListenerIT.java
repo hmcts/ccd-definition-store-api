@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +31,7 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
@@ -63,6 +63,8 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         try {
             deleteElasticsearchIndices(WILDCARD);
             reindexRepository.deleteAll();
+            assertEquals(0, reindexRepository.findAll().size(),
+                "Cleanup failed: reindexRepository still contains data");
         } catch (Exception e) {
             // Ignore any exceptions during index deletion, as it may not exist
         }
@@ -234,8 +236,10 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
             assertEquals("JUR", entity.getJurisdiction());
             assertEquals("casetypea_cases-000002", entity.getIndexName());
             assertNotNull(entity.getStartTime());
-            Assertions.assertNotNull(entity.getEndTime());
+            assertNotNull(entity.getEndTime());
             assertEquals("SUCCESS", entity.getStatus());
+            assertNull(entity.getExceptionMessage());
+            assertNotNull(entity.getReindexResponse());
         });
     }
 
@@ -269,7 +273,8 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         assertNotNull(entity.getStartTime());
         assertNotNull(entity.getEndTime());
         assertEquals("FAILED", entity.getStatus());
-        assertThat(entity.getMessage(), containsString("mapping json generation exception"));
+        assertThat(entity.getExceptionMessage(), containsString("mapping json generation exception"));
+        assertNull(entity.getReindexResponse());
     }
 
     @Test

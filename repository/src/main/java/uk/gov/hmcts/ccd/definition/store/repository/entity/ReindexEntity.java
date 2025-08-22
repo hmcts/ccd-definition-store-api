@@ -47,6 +47,9 @@ public class ReindexEntity {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "message")
-    private String message;
+    @Column(name = "exception_message")
+    private String ExceptionMessage;
+
+    @Column(name = "reindex_response")
+    private String reindexResponse;
 }

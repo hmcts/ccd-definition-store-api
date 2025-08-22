@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import lombok.extern.slf4j.Slf4j;
+import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +36,7 @@ public class ReindexEntityService {
     }
 
     @Transactional
-    public void persistSuccess(String newIndexName) {
+    public void persistSuccess(String newIndexName, String response) {
         ReindexEntity reindexEntity = reindexRepository.findByIndexName(newIndexName).orElse(null);
         if (reindexEntity == null) {
             log.warn("No reindex entity metadata found for case type: {}", newIndexName);
@@ -44,6 +45,7 @@ public class ReindexEntityService {
         log.info("Save to DB successful for case type: {}", newIndexName);
         reindexEntity.setStatus("SUCCESS");
         reindexEntity.setEndTime(LocalDateTime.now());
+        reindexEntity.setReindexResponse(response);
         reindexRepository.save(reindexEntity);
     }
 
@@ -58,8 +60,8 @@ public class ReindexEntityService {
         reindexEntity.setStatus("FAILED");
         reindexEntity.setEndTime(LocalDateTime.now());
         Throwable rootCause = unwrapCompletionException(ex);
-        reindexEntity.setMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
-        reindexEntity.setMessage(ex.getMessage());
+        reindexEntity.setExceptionMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
+        reindexEntity.setExceptionMessage(ex.getMessage());
         reindexRepository.save(reindexEntity);
     }
 

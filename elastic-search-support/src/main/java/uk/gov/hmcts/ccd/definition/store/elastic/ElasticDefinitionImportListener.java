@@ -143,7 +143,7 @@ public abstract class ElasticDefinitionImportListener {
                         asyncElasticClient.removeIndex(oldIndexName);
                     }
                     //set success status and end time for db
-                    reindexEntityService.persistSuccess(newIndexName);
+                    reindexEntityService.persistSuccess(newIndexName, bulkByScrollResponse.toString());
                     log.info("saved reindex entity"
                              + " metadata for case type {} to DB", baseIndexName);
 
