@@ -225,7 +225,7 @@ subprojects { subproject ->
         implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.4'
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
 
-        implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.7.0'
+        implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.9.3'
         implementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
         implementation group: 'com.google.guava', name: 'guava', version: '33.3.1-jre'
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
