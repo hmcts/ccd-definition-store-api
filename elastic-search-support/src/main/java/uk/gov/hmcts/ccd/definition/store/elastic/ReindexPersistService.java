@@ -22,13 +22,9 @@ public class ReindexPersistService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ReindexEntity initiateReindex(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity caseType,
-                                                ReindexRepository reindexRepository, String oldIndexName,
-                                                String newIndexName) {
-        ReindexEntity entity = reindexRepository.findByIndexName(oldIndexName).orElse(null);
-        if (entity == null) {
-            log.info("No existing reindex metadata found for case type: {}, inserting to DB", oldIndexName);
-            entity = new ReindexEntity();
-        }
+                                         ReindexRepository reindexRepository, String oldIndexName,
+                                         String newIndexName) {
+        ReindexEntity entity = new ReindexEntity();
         entity.setReindex(reindex);
         entity.setDeleteOldIndex(deleteOldIndex);
         entity.setCaseType(caseType.getReference());
