@@ -14,7 +14,6 @@ import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitiali
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
-import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
 
@@ -37,21 +36,17 @@ public abstract class ElasticDefinitionImportListener {
 
     private final ElasticsearchErrorHandler elasticsearchErrorHandler;
 
-    private final ReindexRepository reindexRepository;
-
-    private final ReindexPersistService reindexPersistService;
+    private final ReindexEntityService reindexEntityService;
 
     public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory,
                                            ElasticsearchErrorHandler elasticsearchErrorHandler,
-                                           ReindexRepository reindexRepository,
-                                           ReindexPersistService reindexPersistService) {
+                                           ReindexEntityService reindexEntityService) {
         this.config = config;
         this.mappingGenerator = mappingGenerator;
         this.clientFactory = clientFactory;
         this.elasticsearchErrorHandler = elasticsearchErrorHandler;
-        this.reindexRepository = reindexRepository;
-        this.reindexPersistService = reindexPersistService;
+        this.reindexEntityService = reindexEntityService;
     }
 
     public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
@@ -66,7 +61,8 @@ public abstract class ElasticDefinitionImportListener {
         List<CaseTypeEntity> caseTypes = event.getContent();
         boolean reindex = true;
         boolean deleteOldIndex = true;
-        String incrementedCaseTypeName = null;
+        boolean reindexStarted = false;
+        String newIndexName = null;
 
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
@@ -80,70 +76,76 @@ public abstract class ElasticDefinitionImportListener {
                     String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
                     elasticClient.createIndex(actualIndexName, baseIndexName);
                 }
-                if (reindex) {
-                    //get current alias index
-                    GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
-                    String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
-                    incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
-
-                    //prepare for db
-                    ReindexEntity reindexEntity = reindexPersistService.initiateReindex(reindex, deleteOldIndex,
-                        caseType, reindexRepository, caseTypeName, incrementedCaseTypeName);
-                    if (reindexEntity == null) {
-                        throw new ElasticSearchInitialisationException(
-                            new IllegalStateException("Failed to save reindex metadata to DB for case type: "
-                                                      + caseType.getReference()));
-                    }
-                    //create new index with generated mapping and incremented case type name (no alias update yet)
-                    caseMapping = mappingGenerator.generateMapping(caseType);
-                    log.debug("case mapping: {}", caseMapping);
-                    //update index name for db
-                    elasticClient.setIndexReadOnly(baseIndexName, true);
-                    elasticClient.createIndexAndMapping(incrementedCaseTypeName, caseMapping);
-
-                    //initiate reindexing
-                    handleReindexing(baseIndexName, caseTypeName, incrementedCaseTypeName,
-                        deleteOldIndex);
-                    //dummy value for phase 1
-                    event.setTaskId("taskID");
-                    log.info("reindexing successful for case type: {}", caseType.getReference());
-                    log.info("task id returned from the import: {}", event.getTaskId());
-                } else {
+                if (!reindex) {
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
                     elasticClient.upsertMapping(baseIndexName, caseMapping);
+                    continue;
                 }
+                //get current alias index
+                GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
+                String indexName = aliasResponse.getAliases().keySet().iterator().next();
+                newIndexName = incrementIndexNumber(indexName);
+
+                //prepare for db
+                ReindexEntity reindexEntity = reindexEntityService.persistInitialReindexMetadata(reindex,
+                    deleteOldIndex, caseType, newIndexName);
+                if (reindexEntity == null) {
+                    throw new ElasticSearchInitialisationException(
+                        new IllegalStateException("Failed to save reindex entity metadata to DB for case type: "
+                                                  + caseType.getReference()));
+                }
+                //create new index with generated mapping and incremented case type name (no alias update yet)
+                caseMapping = mappingGenerator.generateMapping(caseType);
+                log.debug("case mapping: {}", caseMapping);
+                //update index name for db
+                elasticClient.setIndexReadOnly(baseIndexName, true);
+                elasticClient.createIndexAndMapping(newIndexName, caseMapping);
+
+                //initiate reindexing
+                reindexStarted = true;
+                handleReindexing(baseIndexName, indexName, newIndexName,
+                    deleteOldIndex);
+                //dummy value for phase 1
+                event.setTaskId("taskID");
+                log.info("reindexing successful for case type: {}", caseType.getReference());
+                log.info("task id returned from the import: {}", event.getTaskId());
             }
         } catch (ElasticsearchStatusException exc) {
             logMapping(caseMapping);
-            reindexPersistService.markFailure(incrementedCaseTypeName, exc);
+            if (reindex && !reindexStarted) {
+                reindexEntityService.persistFailure(newIndexName, exc);
+            }
             throw elasticsearchErrorHandler.createException(exc, currentCaseType);
         } catch (Exception exc) {
             logMapping(caseMapping);
-            reindexPersistService.markFailure(incrementedCaseTypeName, exc);
+            if (reindex && !reindexStarted) {
+                reindexEntityService.persistFailure(newIndexName, exc);
+            }
             throw new ElasticSearchInitialisationException(exc);
         }
     }
 
     private void handleReindexing(String baseIndexName,
-                                  String oldIndex, String newIndex,
+                                  String oldIndexName, String newIndexName,
                                   boolean deleteOldIndex) {
         HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
-        elasticClient.reindexData(oldIndex, newIndex, new ActionListener<>() {
+        elasticClient.reindexData(oldIndexName, newIndexName, new ActionListener<>() {
             @Override
             public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
                 try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
                     //if success set writable and update alias to new index
-                    log.info("updating alias from {} to {}", oldIndex, newIndex);
+                    log.info("updating alias from {} to {}", oldIndexName, newIndexName);
                     asyncElasticClient.setIndexReadOnly(baseIndexName, false);
-                    asyncElasticClient.updateAlias(baseIndexName, oldIndex, newIndex);
+                    asyncElasticClient.updateAlias(baseIndexName, oldIndexName, newIndexName);
                     if (deleteOldIndex) {
-                        log.info("deleting old index {}", oldIndex);
-                        asyncElasticClient.removeIndex(oldIndex);
+                        log.info("deleting old index {}", oldIndexName);
+                        asyncElasticClient.removeIndex(oldIndexName);
                     }
                     //set success status and end time for db
-                    reindexPersistService.markSuccess(newIndex);
-                    log.info("saved reindex metadata for case type {} to DB", baseIndexName);
+                    reindexEntityService.persistSuccess(newIndexName);
+                    log.info("saved reindex entity"
+                             + " metadata for case type {} to DB", baseIndexName);
 
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing success", e);
@@ -154,15 +156,15 @@ public abstract class ElasticDefinitionImportListener {
             @Override
             public void onFailure(Exception ex) {
                 try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
-                    //set failure status and end time for db
-                    reindexPersistService.markFailure(newIndex, ex);
+                    //set failure status, end time and ex for db
+                    reindexEntityService.persistFailure(newIndexName, ex);
 
                     //if failed delete new index, set old index writable
                     log.error("reindexing failed", ex);
-                    asyncElasticClient.removeIndex(newIndex);
-                    log.info("{} deleted", newIndex);
-                    asyncElasticClient.setIndexReadOnly(oldIndex, false);
-                    log.info("{} set to writable", oldIndex);
+                    asyncElasticClient.removeIndex(newIndexName);
+                    log.info("{} deleted", newIndexName);
+                    asyncElasticClient.setIndexReadOnly(oldIndexName, false);
+                    log.info("{} set to writable", oldIndexName);
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing failure", e);
                     throw new CompletionException(e);
