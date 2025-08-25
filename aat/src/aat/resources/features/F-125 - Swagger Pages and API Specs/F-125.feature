@@ -16,7 +16,7 @@ Scenario: must show Swagger UI page APIs
       And the response has all the details as expected
       And a call [to observe the swagger UI content] will get the expected response as in [S-125.1].
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-125.2 @Ignore
+@S-125.2
 Scenario: must show Swagger Json APIs
 
     Given an appropriate test context as detailed in the test data source,
