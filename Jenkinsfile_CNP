@@ -66,6 +66,9 @@ env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
 // Prevent Docker hub rate limit errors by ensuring that testcontainers uses images from hmctspublic ACR
 env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
 
+// Temporary override to test ccd-test-stubs-service pull request 367
+env.TEST_STUB_SERVICE_BASE_URL = "http://ccd-test-stubs-service-pr-367-java"
+
 withPipeline(type, product, app) {
     onMaster {
         enableSlackNotifications('#ccd-master-builds')
