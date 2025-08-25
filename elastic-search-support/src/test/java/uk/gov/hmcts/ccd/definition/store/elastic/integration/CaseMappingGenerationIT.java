@@ -1,5 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.integration;
 
+import org.elasticsearch.client.indices.GetMappingsResponse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchBaseTest;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -16,18 +21,8 @@ import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
 import java.io.IOException;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationEventPublisher;
-
 import static com.google.common.collect.Lists.newArrayList;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.Assertions.assertThat;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
@@ -47,15 +42,16 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     @Autowired
     private CaseMappingGenerator mappingGenerator;
 
-    @MockBean
+    @Autowired
     private HighLevelCCDElasticClient client;
-
-    @Mock
-    private ObjectFactory<HighLevelCCDElasticClient> clientObjectFactory;
 
     @BeforeEach
     void setUp() {
-        when(clientObjectFactory.getObject()).thenReturn(client);
+        try {
+            deleteElasticsearchIndices(WILDCARD);
+        } catch (Exception e) {
+            // Ignore any exceptions during index deletion, as it may not exist
+        }
     }
 
     @Test
@@ -64,8 +60,11 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
 
         publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        verify(client).createIndex(anyString(), anyString());
-        verify(client).upsertMapping(anyString(), anyString());
+        String indexName = String.format(config.getCasesIndexNameFormat(), caseType.getReference().toLowerCase());
+        assertThat(client.aliasExists(indexName)).isTrue();
+
+        GetMappingsResponse mapping = client.getMapping(indexName);
+        assertThat(mapping).isNotNull();
     }
 
     @Test
@@ -74,8 +73,11 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
 
         publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        verify(client).createIndex(anyString(), anyString());
-        verify(client).upsertMapping(anyString(), anyString());
+        String indexName = String.format(config.getCasesIndexNameFormat(), caseType.getReference().toLowerCase());
+        assertThat(client.aliasExists(indexName)).isTrue();
+
+        GetMappingsResponse mapping = client.getMapping(indexName);
+        assertThat(mapping).isNotNull();
     }
 
     private CaseTypeEntity createCaseType() {
