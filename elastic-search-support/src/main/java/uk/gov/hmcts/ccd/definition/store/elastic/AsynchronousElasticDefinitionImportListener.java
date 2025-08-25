@@ -11,6 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperti
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 
 @Service
 @ConditionalOnExpression("'${elasticsearch.enabled}'=='true' && '${elasticsearch.failImportIfError}'=='false'")
@@ -20,8 +21,9 @@ public class AsynchronousElasticDefinitionImportListener extends ElasticDefiniti
     public AsynchronousElasticDefinitionImportListener(CcdElasticSearchProperties config,
                                                        CaseMappingGenerator mappingGenerator,
                                                        ObjectFactory<HighLevelCCDElasticClient> clientFactory,
-                                                       ElasticsearchErrorHandler elasticsearchErrorHandler) {
-        super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler);
+                                                       ElasticsearchErrorHandler elasticsearchErrorHandler,
+                                                       ReindexRepository reindexRepository) {
+        super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler, reindexRepository);
     }
 
     @Async
