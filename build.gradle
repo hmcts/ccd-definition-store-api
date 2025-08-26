@@ -204,7 +204,7 @@ subprojects { subproject ->
 
 
         testImplementation group: 'commons-collections', name: 'commons-collections', version: '3.2.2' // spring-cloud-contract-stub-runner
-        testImplementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4' // spring-cloud-contract-stub-runner
+        testImplementation group: 'commons-beanutils', name: 'commons-beanutils', version: '1.11.0' // spring-cloud-contract-stub-runner
 
         // end::CVE Vulnerability dependency overrides
 
