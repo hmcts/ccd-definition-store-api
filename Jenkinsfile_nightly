@@ -65,6 +65,14 @@ env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
 env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
 
 withNightlyPipeline(type, product, component) {
+
+    stage('Wait for ccd-user-profile-api job') {
+        script {
+            echo "Waiting for upstream ccd-user-profile-api job to complete..."
+            build job: 'HMCTS_a_to_c_Nightly/ccd-user-profile-api/master', wait: true, propagate: false
+        }
+    }
+
     // Vars needed for functional and smoke tests run against AKS
     env.OAUTH2_CLIENT_ID = "ccd_gateway"
     env.OAUTH2_REDIRECT_URI = "https://www-ccd.nonprod.platform.hmcts.net/oauth2redirect"
