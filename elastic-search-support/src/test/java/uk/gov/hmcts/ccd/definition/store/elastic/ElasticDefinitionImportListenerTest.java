@@ -20,7 +20,6 @@ import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitiali
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
-import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
@@ -68,9 +67,6 @@ class ElasticDefinitionImportListenerTest {
 
     @Mock
     private ElasticsearchErrorHandler elasticsearchErrorHandler;
-
-    @Mock
-    private ReindexRepository reindexRepository;
 
     @Mock
     private ReindexEntityService reindexEntityService;
@@ -225,7 +221,7 @@ class ElasticDefinitionImportListenerTest {
         verify(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
         verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
         verify(ccdElasticClient).updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
-        verify(reindexEntityService).persistSuccess(incrementedCaseTypeName, anyString());
+        verify(reindexEntityService).persistSuccess(eq(incrementedCaseTypeName), anyString());
         verify(ccdElasticClient, never()).removeIndex(caseTypeName);
     }
 
