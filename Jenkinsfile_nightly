@@ -69,7 +69,7 @@ withNightlyPipeline(type, product, component) {
     stage('Wait for ccd-user-profile-api job') {
         script {
             echo "Waiting for upstream ccd-user-profile-api job to complete..."
-            build job: 'HMCTS_a_to_c_Nightly/ccd-user-profile-api/master', wait: true, propagate: false
+            build job: 'HMCTS_a_to_c_Nightly/ccd-user-profile-api/nightly-dev', wait: true, propagate: false
         }
     }
 
