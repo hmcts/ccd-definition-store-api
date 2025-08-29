@@ -31,7 +31,6 @@ tasks.register("printSuppressionFile") {
 }
 
 ext {
-    set('elasticsearch.version', '9.1.2')
     set('spring-framework.version', '6.2.1')
     set('spring-security.version', '6.4.2')
     set('springCloudVersion', '2024.0.0')
@@ -39,6 +38,7 @@ ext {
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.24.3')
 
+    elasticsearchVersion = '9.1.2'
     junitJupiterVersion = '5.11.4'
     junitVintageVersion = '5.11.4'
     springDocVersion = '2.8.10'
@@ -53,7 +53,6 @@ ext {
     jjwtVersion = '0.12.7'
     feignJackson = '13.5'
     gsonVersion = '2.11.0'
-    elasticSearchVersion = '9.1.2'
     testcontainersVersion = '1.21.0'
     ccdTestDefinitionVersion = '7.25.4'
     beftaFwVersion = '9.2.4'
@@ -99,15 +98,15 @@ allprojects {
         resolutionStrategy {
             eachDependency { DependencyResolveDetails details ->
                 if (details.requested.group == 'org.elasticsearch') {
-                    details.useVersion '9.1.2'
+                    details.useVersion elasticsearchVersion
                 }
 
                 if (details.requested.group == 'co.elastic.clients') {
-                    details.useVersion '9.1.2'
+                    details.useVersion elasticsearchVersion
                 }
 
                 if (details.requested.group == 'org.elasticsearch.client') {
-                    details.useVersion '9.1.2'
+                    details.useVersion elasticsearchVersion
                 }
             }
         }
@@ -264,9 +263,9 @@ subprojects { subproject ->
         implementation group: 'org.apache.poi', name: 'poi', version: apachePoiVersion
         implementation group: 'org.apache.poi', name: 'poi-ooxml', version: apachePoiVersion
         implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: apachePoiVersion
-        implementation group: 'org.elasticsearch', name: 'elasticsearch', version: elasticSearchVersion
-        implementation group: 'co.elastic.clients', name: 'elasticsearch-java', version: elasticSearchVersion
-        implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: elasticSearchVersion
+        implementation group: 'org.elasticsearch', name: 'elasticsearch', version: elasticsearchVersion
+        implementation group: 'co.elastic.clients', name: 'elasticsearch-java', version: elasticsearchVersion
+        implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: elasticsearchVersion
         implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
         implementation group: 'org.flywaydb', name: 'flyway-database-postgresql', version: flywayVersion
         implementation group: 'org.jooq', name: 'jool-java-8', version: '0.9.15'
