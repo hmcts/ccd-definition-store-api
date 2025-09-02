@@ -100,7 +100,7 @@ allprojects {
         // start::CVE Vulnerability dependency overrides 
 
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.6.0' // spring-cloud-starter-openfeign
-        implementation group: 'commons-io', name: 'commons-io', version: '2.16.1' // spring-cloud-starter-openfeign
+        implementation group: 'commons-io', name: 'commons-io', version: '2.20.0' // spring-cloud-starter-openfeign
 
         // end::CVE Vulnerability dependency overrides
 
