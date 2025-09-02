@@ -3,29 +3,22 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.RestHighLevelClient;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.skyscreamer.jsonassert.Customization;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.comparator.CustomComparator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.cloud.contract.wiremock.AutoConfigureWireMock;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = {ServletWebServerFactoryAutoConfiguration.class, ElasticsearchConfigurationIT.class,
-        TestReindexConfig.class, ElasticsearchTestApplication.class})
-@ActiveProfiles("test")
+    classes = {ElasticsearchTestApplication.class})
+@ContextConfiguration(initializers = {ElasticsearchContainerInitializer.class})
 @TestPropertySource(locations = "classpath:application-test.properties")
-@Testcontainers
 public abstract class ElasticsearchBaseTest implements TestUtils {
 
     private static final String GET = "GET";
