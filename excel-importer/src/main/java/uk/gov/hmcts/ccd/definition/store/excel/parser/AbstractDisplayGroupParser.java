@@ -1,9 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
@@ -21,6 +17,11 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.util.stream.Collectors.groupingBy;
 import static java.util.stream.Collectors.toList;

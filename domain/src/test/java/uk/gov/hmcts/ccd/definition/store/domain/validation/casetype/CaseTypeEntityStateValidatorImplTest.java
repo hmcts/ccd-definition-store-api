@@ -1,11 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.casetype;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.jupiter.api.DisplayName;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityACLValidatorImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.state.StateEntityCrudValidatorImpl;
@@ -15,14 +10,21 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 
 import java.util.Arrays;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @DisplayName("CaseType Entity Validator Implementation Tests")
-public class CaseTypeEntityStateValidatorImplTest {
+class CaseTypeEntityStateValidatorImplTest {
     private CaseTypeEntity caseType;
 
     @Mock
@@ -34,9 +36,9 @@ public class CaseTypeEntityStateValidatorImplTest {
     @InjectMocks
     private CaseTypeEntityStateValidatorImpl classUnderTest;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new CaseTypeEntityStateValidatorImpl(Arrays.asList(crudValidatorImpl, userRoleValidatorImpl));
         caseType = new CaseTypeEntity();
         caseType.setReference("Case Type I");
@@ -44,7 +46,7 @@ public class CaseTypeEntityStateValidatorImplTest {
 
     @DisplayName("Should return empty validation result in case of no validation failures")
     @Test
-    public void shouldReturnEmptyValidationResultWhenNoErrors() {
+    void shouldReturnEmptyValidationResultWhenNoErrors() {
         when(crudValidatorImpl.validate(any(), any())).thenReturn(new ValidationResult());
         when(userRoleValidatorImpl.validate(any(), any())).thenReturn(new ValidationResult());
 
@@ -58,7 +60,7 @@ public class CaseTypeEntityStateValidatorImplTest {
 
     @DisplayName("Should return Validation Error in case of validation failures")
     @Test
-    public void shouldReturnValidationResultWithValidationErrorWhenThereAreErrors() {
+    void shouldReturnValidationResultWithValidationErrorWhenThereAreErrors() {
         ValidationResult vr1 = new ValidationResult();
         vr1.addError(new StateEntityACLValidatorImpl.ValidationError(
             "Default user role validation error message...", new StateACLEntity()));

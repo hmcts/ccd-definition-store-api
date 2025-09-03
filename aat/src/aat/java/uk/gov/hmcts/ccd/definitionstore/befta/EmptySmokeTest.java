@@ -7,7 +7,7 @@ public class EmptySmokeTest {
 
     @Tag("smoke")
     @Test
-    public void shouldRetrieveWhenExists() {
+    void shouldRetrieveWhenExists() {
 
     }
 

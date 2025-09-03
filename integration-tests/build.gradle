@@ -1,7 +1,7 @@
 jacocoTestReport {
     reports {
-        xml.required = false
-        html.required = false
+        xml.required = true
+        html.required = true
     }
 
     doLast {
@@ -18,12 +18,8 @@ dependencies {
     implementation project(':application')
     implementation project(':excel-importer')
     implementation project(':rest-api')
-    testImplementation "org.springframework.boot:spring-boot-starter-web"
-    testImplementation "org.springframework.boot:spring-boot-starter-actuator"
-    testImplementation ("io.springfox:springfox-boot-starter:${springfoxSwaggerVersion}") {
-        exclude group: 'com.google.guava', module: 'guava'
-    }
-    testImplementation  group: 'org.postgresql', name: 'postgresql', version: '42.4.1'
+    testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    testImplementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
 }
 
 // To help obscure gradle problem

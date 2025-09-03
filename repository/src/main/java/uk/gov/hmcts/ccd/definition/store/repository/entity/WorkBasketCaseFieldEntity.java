@@ -2,9 +2,9 @@ package uk.gov.hmcts.ccd.definition.store.repository.entity;
 
 import uk.gov.hmcts.ccd.definition.store.repository.LayoutSheetType;
 
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 @Table(name = "workbasket_case_field")
 @Entity

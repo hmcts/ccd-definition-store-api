@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("SearchResultLayoutParser Tests")
-public class SearchResultLayoutParserTest {
+class SearchResultLayoutParserTest {
 
     @Mock
     private ParseContext parseContext;
@@ -33,8 +33,8 @@ public class SearchResultLayoutParserTest {
     private Map<String, DefinitionSheet> definitionSheets;
 
     @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
+    void setup() {
+        MockitoAnnotations.openMocks(this);
 
         definitionSheets = new HashMap<>();
         classUnderTest = new SearchResultLayoutParser(

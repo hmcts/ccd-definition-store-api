@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class DateTimeFormatParserTest {
+class DateTimeFormatParserTest {
 
     private DateTimeFormatParser parser;
     private static final Pattern DEFAULT_PATTERN = Pattern.compile("VzOXxZ");

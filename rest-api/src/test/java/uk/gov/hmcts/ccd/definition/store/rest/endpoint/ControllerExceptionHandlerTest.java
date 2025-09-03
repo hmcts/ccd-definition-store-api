@@ -1,14 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
-import org.hamcrest.CoreMatchers;
-import org.junit.Assert;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.context.request.WebRequest;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
@@ -16,9 +7,17 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.rules.C
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.DuplicateFoundException;
 
-import javax.persistence.OptimisticLockException;
 import java.io.IOException;
 import java.util.Map;
+
+import jakarta.persistence.OptimisticLockException;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.context.request.WebRequest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
@@ -44,8 +43,8 @@ class ControllerExceptionHandlerTest {
 
         final ResponseEntity<Object> response = handler.handleException(exception, mock(WebRequest.class));
 
-        Assert.assertThat(response.getBody().toString(), CoreMatchers.equalTo("Outer message\nInner message"));
-        Assert.assertThat(response.getStatusCode(), CoreMatchers.equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(response.getBody().toString(), equalTo("Outer message\nInner message"));
+        assertThat(response.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Test
@@ -59,9 +58,8 @@ class ControllerExceptionHandlerTest {
 
         final ResponseEntity<Object> response = handler.handleException(exception, mock(WebRequest.class));
 
-        Assert.assertThat(response.getBody().toString(), CoreMatchers.equalTo("Depth 1\nDepth 2\nDepth 3\nDepth "
-            + "4\nDepth 5"));
-        Assert.assertThat(response.getStatusCode(), CoreMatchers.equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertThat(response.getBody().toString(), equalTo("Depth 1\nDepth 2\nDepth 3\nDepth 4\nDepth 5"));
+        assertThat(response.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Test
@@ -71,8 +69,8 @@ class ControllerExceptionHandlerTest {
 
         final ResponseEntity<Object> response = handler.handleConflict(exception, mock(WebRequest.class));
 
-        Assert.assertThat(response.getStatusCode(), CoreMatchers.equalTo(HttpStatus.CONFLICT));
-        Assert.assertThat(response.getBody().toString(), CoreMatchers.equalTo("Outer message\nInner message"));
+        assertThat(response.getStatusCode(), equalTo(HttpStatus.CONFLICT));
+        assertThat(response.getBody().toString(), equalTo("Outer message\nInner message"));
     }
 
     @Test
@@ -81,8 +79,8 @@ class ControllerExceptionHandlerTest {
 
         final ResponseEntity<Object> response = handler.handleBadRequest(exception, mock(WebRequest.class));
 
-        Assert.assertThat(response.getStatusCode(), CoreMatchers.equalTo(HttpStatus.BAD_REQUEST));
-        Assert.assertThat(response.getBody().toString(), CoreMatchers.equalTo("Invalid request"));
+        assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertThat(response.getBody().toString(), equalTo("Invalid request"));
     }
 
     @Nested

@@ -1,39 +1,42 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
+
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
-import javax.persistence.EntityManager;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import jakarta.persistence.EntityManager;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.transaction.annotation.Transactional;
+
 import static com.github.npathai.hamcrestopt.OptionalMatchers.isEmpty;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.RESTRICTED;
 
-@RunWith(SpringRunner.class)
+@ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
     TestConfiguration.class
 })
 @TestPropertySource(locations = "classpath:test.properties")
 @Transactional
-public class AccessProfileRepositoryTest {
+class AccessProfileRepositoryTest {
 
     @Autowired
     private CaseRoleRepository caseRoleRepository;
@@ -65,8 +68,8 @@ public class AccessProfileRepositoryTest {
 
     private final CaseTypeEntity caseType = new CaseTypeEntity();
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         this.testJurisdiction = testHelper.createJurisdiction();
 
         CaseRoleEntity caseRoleEntity = new CaseRoleEntity();
@@ -97,7 +100,7 @@ public class AccessProfileRepositoryTest {
     }
 
     @Test
-    public void shouldFindCaseRolesByCaseType() {
+    void shouldFindCaseRolesByCaseType() {
         List<CaseRoleEntity> caseRoleEntities = caseRoleRepository.findCaseRoleEntitiesByCaseType(CASE_TYPE_REFERENCE);
         assertThat(caseRoleEntities.size(), is(2));
         assertThat(caseRoleEntities.get(0).getReference(), is(CASE_ROLE_REFERENCE.toUpperCase()));
@@ -111,35 +114,36 @@ public class AccessProfileRepositoryTest {
     }
 
     @Test
-    public void shouldFindNoCaseRolesForInvalidCaseType() {
+    void shouldFindNoCaseRolesForInvalidCaseType() {
         List<CaseRoleEntity> caseRoleEntities = caseRoleRepository.findCaseRoleEntitiesByCaseType("InvalidCaseType");
         assertThat(caseRoleEntities.size(), is(0));
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
-    public void shouldFailWhenCreateDuplicateCaseRoles() {
+    @Test
+    void shouldFailWhenCreateDuplicateCaseRoles() {
         final CaseRoleEntity entity = new CaseRoleEntity();
         entity.setReference(CASE_ROLE_REFERENCE);
         entity.setSecurityClassification(RESTRICTED);
-        caseRoleRepository.saveAndFlush(entity);
+        assertThrows(DataIntegrityViolationException.class, () ->
+            caseRoleRepository.saveAndFlush(entity));
     }
 
     @Test
-    public void shouldFindCaseRoles() {
+    void shouldFindCaseRoles() {
         List<CaseRoleEntity> caseRoleEntities = caseRoleRepository.findAll();
         assertThat(caseRoleEntities.size(), is(2));
         assertThat(caseRoleEntities.get(0).getReference(), is(CASE_ROLE_REFERENCE.toUpperCase()));
     }
 
     @Test
-    public void shouldFindSingleAccessProfile() {
+    void shouldFindSingleAccessProfile() {
         List<AccessProfileEntity> accessProfileEntities = accessProfileRepository.findAll();
         assertThat(accessProfileEntities.size(), is(1));
         assertThat(accessProfileEntities.get(0).getReference(), is(ACCESS_PROFILE_REFERENCE));
     }
 
     @Test
-    public void shouldFindAccessProfile() {
+    void shouldFindAccessProfile() {
         final AccessProfileEntity entity = accessProfileRepository.findTopByReference(ACCESS_PROFILE_REFERENCE).get();
         assertThat(entity.getId(), is(notNullValue()));
         assertThat(entity.getCreatedAt(), is(notNullValue()));
@@ -148,14 +152,14 @@ public class AccessProfileRepositoryTest {
     }
 
     @Test
-    public void shouldFindNoAccessProfileEntity() {
+    void shouldFindNoAccessProfileEntity() {
         final Optional<AccessProfileEntity> entity =
             accessProfileRepository.findTopByReference("unknown access profile reference");
         assertThat(entity, isEmpty());
     }
 
     @Test
-    public void shouldCreateAccessProfile() {
+    void shouldCreateAccessProfile() {
         final String accessProfile = "a new access profile reference";
         final AccessProfileEntity entity = new AccessProfileEntity();
         entity.setReference(accessProfile);
@@ -171,12 +175,13 @@ public class AccessProfileRepositoryTest {
         assertThat(afterSave.getSecurityClassification(), is(RESTRICTED));
     }
 
-    @Test(expected = DataIntegrityViolationException.class)
-    public void shouldFailWhenCreateDuplicateAccessProfiles() {
+    @Test
+    void shouldFailWhenCreateDuplicateAccessProfiles() {
         final AccessProfileEntity entity = new AccessProfileEntity();
         entity.setReference("xyz = '3'");
         entity.setSecurityClassification(RESTRICTED);
-        accessProfileRepository.saveAndFlush(entity);
+        assertThrows(DataIntegrityViolationException.class, () ->
+            accessProfileRepository.saveAndFlush(entity));
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType, AccessProfileEntity accessProfile) {

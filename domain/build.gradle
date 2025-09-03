@@ -42,10 +42,8 @@ dependencies {
     implementation (project(':repository')) {
         exclude group: 'org.mapstruct', module: 'mapstruct'
     }
-    implementation "org.apache.commons:commons-lang3:3.11"
-    implementation (group: 'commons-validator', name: 'commons-validator', version: '1.6') {
-        exclude group: 'commons-beanutils', module: 'commons-beanutils'
-    }
+    
+    implementation group: 'commons-validator', name: 'commons-validator', version: '1.10.0'
     implementation "org.mapstruct:mapstruct-jdk8:${orgMapstructVersion}"
     implementation "org.mapstruct:mapstruct-processor:${orgMapstructVersion}"
     testImplementation project(":app-insights").sourceSets.main.output
