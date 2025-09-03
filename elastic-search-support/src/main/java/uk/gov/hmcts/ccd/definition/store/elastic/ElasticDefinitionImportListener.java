@@ -75,40 +75,42 @@ public abstract class ElasticDefinitionImportListener {
                     String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
                     elasticClient.createIndex(actualIndexName, baseIndexName);
                 }
-                if (!reindex) {
+                if (reindex) {
+                    //get current alias index
+                    GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
+                    String indexName = aliasResponse.getAliases().keySet().iterator().next();
+                    newIndexName = incrementIndexNumber(indexName);
+
+                    //prepare for db
+                    ReindexEntity reindexEntity = reindexEntityService.persistInitialReindexMetadata(reindex,
+                        deleteOldIndex, caseType, newIndexName);
+                    if (reindexEntity == null) {
+                        throw new ElasticSearchInitialisationException(
+                            new IllegalStateException("Failed to save reindex entity metadata to DB for case type: "
+                                                      + caseType.getReference()));
+                    }
+
+                    //create new index with generated mapping and incremented case type name (no alias update yet)
+                    caseMapping = mappingGenerator.generateMapping(caseType);
+                    log.debug("case mapping: {}", caseMapping);
+
+                    //update index name for db
+                    elasticClient.setIndexReadOnly(baseIndexName, true);
+                    elasticClient.createIndexAndMapping(newIndexName, caseMapping);
+
+                    //initiate reindexing
+                    reindexStarted = true;
+                    handleReindexing(baseIndexName, indexName, newIndexName,
+                        deleteOldIndex);
+                    //dummy value for phase 1
+                    event.setTaskId("taskID");
+                    log.info("reindexing successful for case type: {}", caseType.getReference());
+                    log.info("task id returned from the import: {}", event.getTaskId());
+                } else {
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
                     elasticClient.upsertMapping(baseIndexName, caseMapping);
-                    continue;
                 }
-                //get current alias index
-                GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
-                String indexName = aliasResponse.getAliases().keySet().iterator().next();
-                newIndexName = incrementIndexNumber(indexName);
-
-                //prepare for db
-                ReindexEntity reindexEntity = reindexEntityService.persistInitialReindexMetadata(reindex,
-                    deleteOldIndex, caseType, newIndexName);
-                if (reindexEntity == null) {
-                    throw new ElasticSearchInitialisationException(
-                        new IllegalStateException("Failed to save reindex entity metadata to DB for case type: "
-                                                  + caseType.getReference()));
-                }
-                //create new index with generated mapping and incremented case type name (no alias update yet)
-                caseMapping = mappingGenerator.generateMapping(caseType);
-                log.debug("case mapping: {}", caseMapping);
-                //update index name for db
-                elasticClient.setIndexReadOnly(baseIndexName, true);
-                elasticClient.createIndexAndMapping(newIndexName, caseMapping);
-
-                //initiate reindexing
-                reindexStarted = true;
-                handleReindexing(baseIndexName, indexName, newIndexName,
-                    deleteOldIndex);
-                //dummy value for phase 1
-                event.setTaskId("taskID");
-                log.info("reindexing successful for case type: {}", caseType.getReference());
-                log.info("task id returned from the import: {}", event.getTaskId());
             }
         } catch (ElasticsearchStatusException exc) {
             logMapping(caseMapping);
