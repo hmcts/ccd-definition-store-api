@@ -282,7 +282,7 @@ subprojects { subproject ->
         testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.8'
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: ccdTestDefinitionVersion
         testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
-        testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.4.0'
+        testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024'
