@@ -16,7 +16,7 @@ import java.util.Arrays;
 import java.util.stream.Collectors;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    classes = {ElasticsearchTestApplication.class})
+    classes = {ElasticsearchIntegrationTestApplication.class})
 @ContextConfiguration(initializers = {ElasticsearchContainerInitializer.class})
 @TestPropertySource(locations = "classpath:application-test.properties")
 public abstract class ElasticsearchBaseTest implements TestUtils {

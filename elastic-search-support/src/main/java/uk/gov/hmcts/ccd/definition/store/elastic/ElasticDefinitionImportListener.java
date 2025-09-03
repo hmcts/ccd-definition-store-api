@@ -63,7 +63,6 @@ public abstract class ElasticDefinitionImportListener {
         boolean deleteOldIndex = event.isDeleteOldIndex();
         boolean reindexStarted = false;
         String newIndexName = null;
-
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
 
@@ -149,6 +148,7 @@ public abstract class ElasticDefinitionImportListener {
 
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing success", e);
+                    reindexEntityService.persistFailure(newIndexName, e);
                     throw new CompletionException(e);
                 }
             }
@@ -167,6 +167,7 @@ public abstract class ElasticDefinitionImportListener {
                     log.info("{} set to writable", oldIndexName);
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing failure", e);
+                    reindexEntityService.persistFailure(newIndexName, e);
                     throw new CompletionException(e);
                 }
                 throw new CompletionException(ex);

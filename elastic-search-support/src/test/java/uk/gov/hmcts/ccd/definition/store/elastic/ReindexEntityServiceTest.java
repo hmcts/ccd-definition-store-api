@@ -11,6 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
 import java.util.Optional;
 import java.util.concurrent.CompletionException;
 
+import static org.junit.Assert.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -116,8 +117,11 @@ public class ReindexEntityServiceTest {
     void shouldSkipMarkSuccessIfEntityNotFound() {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.empty());
 
-        reindexEntityService.persistSuccess(newIndexName, anyString());
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
+            reindexEntityService.persistSuccess(newIndexName, anyString());
+        });
 
+        assertTrue(exception.getMessage().contains("No reindex entity metadata found for index name"));
         verify(reindexRepository, never()).save(any());
     }
 

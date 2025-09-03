@@ -12,6 +12,10 @@ import uk.gov.hmcts.reform.idam.client.IdamClient;
 
 import static org.mockito.Mockito.mock;
 
+/**
+ * Test configuration for reindex integration tests.
+ * Registers minimal JPA and mocks external dependencies (IDAM).
+ */
 @TestConfiguration
 @EnableJpaRepositories(basePackageClasses = ReindexRepository.class)
 @EntityScan(basePackageClasses = ReindexEntity.class)

@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexDTO;
 
 import java.util.List;
 
 public interface ReindexTaskService {
-    List<ReindexEntity> getAllReindexTasks();
+    List<ReindexDTO> getAll();
 
-    List<ReindexEntity> getTasksByCaseType(String caseType);
+    List<ReindexDTO> getTasksByCaseType(String caseType);
 }

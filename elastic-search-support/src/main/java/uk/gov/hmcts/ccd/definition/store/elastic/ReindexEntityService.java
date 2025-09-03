@@ -38,8 +38,9 @@ public class ReindexEntityService {
     public void persistSuccess(String newIndexName, String response) {
         ReindexEntity reindexEntity = reindexRepository.findByIndexName(newIndexName).orElse(null);
         if (reindexEntity == null) {
-            log.warn("No reindex entity metadata found for case type: {}", newIndexName);
-            return;
+            String message = String.format("No reindex entity metadata found for index name: %s", newIndexName);
+            log.error(message);
+            throw new IllegalStateException(message);
         }
         log.info("Save to DB successful for case type: {}", newIndexName);
         reindexEntity.setStatus("SUCCESS");
@@ -55,12 +56,11 @@ public class ReindexEntityService {
             log.warn("No reindex entity metadata found for case type: {}", newIndexName);
             return;
         }
-        log.info("Save to DB failed for case type: {}", newIndexName);
+        log.info("Persisting FAILED status for index '{}'", newIndexName);
         reindexEntity.setStatus("FAILED");
         reindexEntity.setEndTime(LocalDateTime.now());
         Throwable rootCause = unwrapCompletionException(ex);
         reindexEntity.setExceptionMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
-        reindexEntity.setExceptionMessage(ex.getMessage());
         reindexRepository.save(reindexEntity);
     }
 
