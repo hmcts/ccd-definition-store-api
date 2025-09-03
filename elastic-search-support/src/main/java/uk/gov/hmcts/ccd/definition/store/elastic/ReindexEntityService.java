@@ -13,7 +13,7 @@ import java.util.concurrent.CompletionException;
 
 @Slf4j
 @Service
-public class ReindexEntityService {
+class ReindexEntityService {
     private final ReindexRepository reindexRepository;
 
     public ReindexEntityService(ReindexRepository reindexRepository) {

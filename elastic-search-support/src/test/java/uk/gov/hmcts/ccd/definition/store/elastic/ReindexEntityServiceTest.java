@@ -133,4 +133,18 @@ public class ReindexEntityServiceTest {
 
         verify(reindexRepository, never()).save(any());
     }
+
+    @Test
+    void shouldNotUnwrapRegularException() {
+        RuntimeException regularException = new RuntimeException("Regular exception");
+
+        ReindexEntity entity = new ReindexEntity();
+        when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
+
+        reindexEntityService.persistFailure(newIndexName, regularException);
+
+        verify(reindexRepository).save(entity);
+        assertTrue(entity.getExceptionMessage().contains("RuntimeException"));
+        assertTrue(entity.getExceptionMessage().contains("Regular exception"));
+    }
 }
