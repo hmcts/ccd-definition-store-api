@@ -113,7 +113,7 @@ allprojects {
         implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.28.Final'
         implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.4.1'
 
-        implementation group: 'net.minidev', name: 'json-smart', version: '2.4.9'
+        implementation group: 'net.minidev', name: 'json-smart', version: '2.6.0'
 
         // CVE-2021-42550
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.18'
