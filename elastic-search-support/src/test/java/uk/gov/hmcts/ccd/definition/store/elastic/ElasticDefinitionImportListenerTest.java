@@ -1,5 +1,20 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import co.elastic.clients.elasticsearch.core.ReindexResponse;
+import co.elastic.clients.elasticsearch.indices.AliasDefinition;
+import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
+import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
+import org.elasticsearch.ElasticsearchStatusException;
+import org.elasticsearch.action.ActionListener;
+import org.elasticsearch.rest.RestStatus;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
@@ -10,25 +25,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.cluster.metadata.AliasMetadata;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.rest.RestStatus;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.ObjectFactory;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,6 +40,7 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -78,6 +76,7 @@ class ElasticDefinitionImportListenerTest {
     @BeforeEach
     void setUp() {
         lenient().when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
+        ccdElasticClient.close();
     }
 
     @Test
@@ -88,7 +87,7 @@ class ElasticDefinitionImportListenerTest {
         listener.onDefinitionImported(newEvent(caseA, caseB));
 
         verify(clientObjectFactory).getObject();
-        verify(ccdElasticClient).close();
+        verify(ccdElasticClient, times(1)).close();
     }
 
     @Test
@@ -137,7 +136,7 @@ class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void shouldWrapElasticsearchStatusExceptionInInitialisationException() throws IOException {
+    void shouldWrapElasticsearchStatusExceptionInInitialisationException() throws IOException {
         mockAliasResponse();
 
         // mock upsertMapping to throw ElasticsearchStatusException
@@ -159,7 +158,7 @@ class ElasticDefinitionImportListenerTest {
 
 
     @Test
-    public void throwsElasticSearchInitialisationExceptionOnErrors() {
+    void throwsElasticSearchInitialisationExceptionOnErrors() {
         assertThrows(ElasticSearchInitialisationException.class, () -> {
             when(config.getCasesIndexNameFormat()).thenThrow(new ArrayIndexOutOfBoundsException("test"));
             listener.onDefinitionImported(newEvent(caseA, caseB));
@@ -171,8 +170,8 @@ class ElasticDefinitionImportListenerTest {
         mockAliasResponse();
 
         doAnswer(invocation -> {
-            ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
-            BulkByScrollResponse mockResponse = mock(BulkByScrollResponse.class);
+            ActionListener<ReindexResponse> listener = invocation.getArgument(2);
+            ReindexResponse mockResponse = mock(ReindexResponse.class);
             listener.onResponse(mockResponse);
             return null;
         }).when(ccdElasticClient).reindexData(
@@ -201,8 +200,8 @@ class ElasticDefinitionImportListenerTest {
         mockAliasResponse();
 
         doAnswer(invocation -> {
-            ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
-            BulkByScrollResponse mockResponse = mock(BulkByScrollResponse.class);
+            ActionListener<ReindexResponse> listener = invocation.getArgument(2);
+            ReindexResponse mockResponse = mock(ReindexResponse.class);
             listener.onResponse(mockResponse);
             return null;
         }).when(ccdElasticClient).reindexData(
@@ -242,7 +241,7 @@ class ElasticDefinitionImportListenerTest {
         mockAliasResponse();
 
         doAnswer(invocation -> {
-            ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
+            ActionListener<ReindexResponse> listener = invocation.getArgument(2);
             listener.onFailure(new RuntimeException("reindexing failed"));
             return null;
         }).when(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
@@ -305,13 +304,14 @@ class ElasticDefinitionImportListenerTest {
         lenient().when(config.getCasesIndexNameFormat()).thenReturn("%s");
         lenient().when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
 
-        GetAliasesResponse aliasResponse = mock(GetAliasesResponse.class);
-        Map<String, Set<AliasMetadata>> aliasMap = new HashMap<>();
-        aliasMap.put(caseTypeName,
-            Collections.singleton(AliasMetadata.builder(baseIndexName).build()));
-        lenient().when(aliasResponse.getAliases()).thenReturn(aliasMap);
+        IndexAliases indexAliases = new IndexAliases.Builder()
+            .aliases(Map.of(
+                baseIndexName, new AliasDefinition.Builder().build())).build();
+        Map<String, IndexAliases> aliasMap = Map.of(caseTypeName, indexAliases);
+        GetAliasResponse aliasResponse = new GetAliasResponse.Builder()
+            .aliases(aliasMap)
+            .build();
         lenient().when(ccdElasticClient.getAlias(anyString())).thenReturn(aliasResponse);
-
         lenient().when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
     }
 
