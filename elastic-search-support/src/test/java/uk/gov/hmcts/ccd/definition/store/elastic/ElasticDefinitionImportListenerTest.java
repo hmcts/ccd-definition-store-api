@@ -324,22 +324,6 @@ class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenReindexEntityIsNull() {
-        when(reindexEntityService.persistInitialReindexMetadata(any(), any(), any(), any()))
-            .thenReturn(null);
-
-        ElasticSearchInitialisationException exception = assertThrows(
-            ElasticSearchInitialisationException.class,
-            () -> listener.onDefinitionImported(newEvent(true, true, caseA))
-        );
-
-        // The exception is double-wrapped due to the catch block
-        assertTrue(exception.getCause() instanceof ElasticSearchInitialisationException);
-        assertTrue(exception.getCause().getCause() instanceof IllegalStateException);
-        assertTrue(exception.getCause().getCause().getMessage().contains("Failed to save reindex entity metadata"));
-    }
-
-    @Test
     void shouldPersistFailureElasticsearchStatusExceptionBeforeReindex() throws IOException {
         when(caseMappingGenerator.generateMapping(any()))
             .thenThrow(new ElasticsearchStatusException("ES error", RestStatus.BAD_REQUEST));

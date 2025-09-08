@@ -84,11 +84,6 @@ public abstract class ElasticDefinitionImportListener {
                     //prepare for db
                     ReindexEntity reindexEntity = reindexEntityService.persistInitialReindexMetadata(reindex,
                         deleteOldIndex, caseType, newIndexName);
-                    if (reindexEntity == null) {
-                        throw new ElasticSearchInitialisationException(
-                            new IllegalStateException("Failed to save reindex entity metadata to DB for case type: "
-                                                      + caseType.getReference()));
-                    }
 
                     //create new index with generated mapping and incremented case type name (no alias update yet)
                     caseMapping = mappingGenerator.generateMapping(caseType);
