@@ -113,7 +113,7 @@ allprojects {
         implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.28.Final'
         implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.4.1'
 
-        implementation group: 'net.minidev', name: 'json-smart', version: '2.4.9'
+        implementation group: 'net.minidev', name: 'json-smart', version: '2.6.0'
 
         // CVE-2021-42550
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.18'
@@ -198,7 +198,7 @@ subprojects { subproject ->
 
         implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.4.2' // spring-boot-starter-oauth2-client
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0' // azure-storage
-        implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4' // poi-ooxml
+        implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.5.0' // poi-ooxml
 
 
 
@@ -281,7 +281,7 @@ subprojects { subproject ->
         testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.8'
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: ccdTestDefinitionVersion
         testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
-        testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.4.0'
+        testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024'
