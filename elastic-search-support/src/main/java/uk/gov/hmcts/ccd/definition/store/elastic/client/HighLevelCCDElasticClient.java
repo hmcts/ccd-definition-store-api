@@ -36,7 +36,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     private static final Object LOCK = new Object();
 
     private final CcdElasticSearchProperties config;
-    private ElasticsearchClient elasticClient;
+    private final ElasticsearchClient elasticClient;
 
     @Autowired
     public HighLevelCCDElasticClient(CcdElasticSearchProperties config, ElasticsearchClientFactory clientFactory) {
@@ -113,7 +113,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
                             new ObjectMapper().writeValueAsString(settings)
                         ));
                     } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
+                        throw new IllegalStateException("Unable to process json from index settings", e);
                     }
                 })
                 .aliases(Map.of(alias, new Alias.Builder().isWriteIndex(true).build()))
@@ -152,7 +152,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     @Override
     public boolean aliasExists(String alias) throws IOException {
-        return executeWithRetry((client) -> {
+        return executeWithRetry(client -> {
             try {
                 var response = client.indices().getAlias(b -> b.name(alias));
                 boolean exists = response != null
@@ -176,6 +176,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     @Override
     public void close() {
+        // historical - was empty
     }
 
     public GetAliasResponse getAlias(String alias) throws IOException {
@@ -231,7 +232,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
                             new ObjectMapper().writeValueAsString(settings)
                         ));
                     } catch (JsonProcessingException e) {
-                        throw new RuntimeException(e);
+                        throw new IllegalStateException("Unable to process json from index settings", e);
                     }
                 })
             ),
