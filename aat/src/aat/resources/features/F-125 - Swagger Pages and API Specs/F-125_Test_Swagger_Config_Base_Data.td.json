@@ -14,11 +14,7 @@
     "headers" : {
       "Accept-Ranges" : "bytes",
       "Content-Encoding" : "gzip",
-      "Content-Length" : "${[scenarioContext][customValues][approximately 1190]}",
-      "Content-Type" : "text/html"
-    },
-    "body" : {
-      "__plainTextValue__": "${[scenarioContext][customValues][contains configUrl]}"
+      "Content-Type" : "application/json"
     }
   }
 }

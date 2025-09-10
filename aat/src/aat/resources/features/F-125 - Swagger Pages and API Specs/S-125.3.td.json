@@ -8,5 +8,12 @@
   ],
 
   "request" :{
+  },
+
+  "expectedResponse": {
+    "body" : {
+      "configUrl" : "[[ANYTHING_PRESENT]]",
+      "url" : "[[ANYTHING_PRESENT]]"
+    }
   }
 }
