@@ -1,0 +1,30 @@
+{
+  "_guid_": "S-126.1",
+  "_extends_": "F-126_Test_Base_Data",
+  "title": "Trigger reindexing through valid import",
+  "uri": "/import?reindex=true",
+  "specs": [
+    "contains reindexing set to true"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "localFilePath": "build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_201_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Case Definition data successfully imported"
+    }
+  }
+}
