@@ -3,6 +3,9 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
+import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexTaskService;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexTaskServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -24,9 +27,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ReindexEntityServiceTest {
+public class ReindexTaskServiceTest {
     private ReindexRepository reindexRepository;
-    private ReindexEntityService reindexEntityService;
+    private ReindexTaskService reindexTaskService;
 
     private final String oldIndexName = "casetypea_cases-000001";
     private final String newIndexName = "casetypea_cases-000002";
@@ -34,7 +37,8 @@ public class ReindexEntityServiceTest {
     @BeforeEach
     void setUp() {
         reindexRepository = mock(ReindexRepository.class);
-        reindexEntityService = new ReindexEntityService(reindexRepository);
+        EntityToResponseDTOMapper mapper = mock(EntityToResponseDTOMapper.class);
+        reindexTaskService = new ReindexTaskServiceImpl(reindexRepository, mapper);
     }
 
     @Test
@@ -50,7 +54,7 @@ public class ReindexEntityServiceTest {
         ArgumentCaptor<ReindexEntity> captor = ArgumentCaptor.forClass(ReindexEntity.class);
         when(reindexRepository.saveAndFlush(any(ReindexEntity.class))).thenAnswer(i -> i.getArgument(0));
 
-        ReindexEntity result = reindexEntityService.persistInitialReindexMetadata(
+        ReindexEntity result = reindexTaskService.saveEntity(
             true, true, caseType, newIndexName
         );
 
@@ -68,13 +72,13 @@ public class ReindexEntityServiceTest {
     }
 
     @Test
-    void shouldPersistSuccess() {
+    void shouldUpdateEntitySuccess() {
         ReindexEntity existing = new ReindexEntity();
         existing.setIndexName(newIndexName);
 
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(existing));
 
-        reindexEntityService.persistSuccess(newIndexName, anyString());
+        reindexTaskService.updateEntity(newIndexName, anyString());
 
         verify(reindexRepository).save(existing);
         assertEquals("SUCCESS", existing.getStatus());
@@ -83,14 +87,14 @@ public class ReindexEntityServiceTest {
     }
 
     @Test
-    void shouldPersistFailure() {
+    void shouldUpdateEntityFailure() {
         ReindexEntity existing = new ReindexEntity();
         existing.setIndexName(newIndexName);
 
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(existing));
 
         RuntimeException ex = new RuntimeException("Simulated failure");
-        reindexEntityService.persistFailure(newIndexName, ex);
+        reindexTaskService.updateEntity(newIndexName, ex);
 
         verify(reindexRepository).save(existing);
         assertEquals("FAILED", existing.getStatus());
@@ -107,7 +111,7 @@ public class ReindexEntityServiceTest {
         ReindexEntity entity = new ReindexEntity();
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
 
-        reindexEntityService.persistFailure(newIndexName, completion);
+        reindexTaskService.updateEntity(newIndexName, completion);
 
         verify(reindexRepository).save(entity);
         assertTrue(entity.getExceptionMessage().contains("IllegalArgumentException"));
@@ -118,7 +122,7 @@ public class ReindexEntityServiceTest {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.empty());
 
         IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            reindexEntityService.persistSuccess(newIndexName, anyString());
+            reindexTaskService.updateEntity(newIndexName, anyString());
         });
 
         assertTrue(exception.getMessage().contains("No reindex entity metadata found for index name"));
@@ -129,7 +133,7 @@ public class ReindexEntityServiceTest {
     void shouldSkipMarkFailureIfEntityNotFound() {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.empty());
 
-        reindexEntityService.persistFailure(newIndexName, new RuntimeException("Fail"));
+        reindexTaskService.updateEntity(newIndexName, new RuntimeException("Fail"));
 
         verify(reindexRepository, never()).save(any());
     }
@@ -141,7 +145,7 @@ public class ReindexEntityServiceTest {
         ReindexEntity entity = new ReindexEntity();
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
 
-        reindexEntityService.persistFailure(newIndexName, regularException);
+        reindexTaskService.updateEntity(newIndexName, regularException);
 
         verify(reindexRepository).save(entity);
         assertTrue(entity.getExceptionMessage().contains("RuntimeException"));

@@ -1,28 +1,56 @@
-package uk.gov.hmcts.ccd.definition.store.elastic;
+package uk.gov.hmcts.ccd.definition.store.elastic.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexDTO;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.CompletionException;
 
-@Slf4j
 @Service
-class ReindexEntityService {
-    private final ReindexRepository reindexRepository;
+@Slf4j
+public class ReindexTaskServiceImpl implements ReindexTaskService {
 
-    public ReindexEntityService(ReindexRepository reindexRepository) {
+    private final ReindexRepository reindexRepository;
+    private final EntityToResponseDTOMapper mapper;
+
+    @Autowired
+    public ReindexTaskServiceImpl(ReindexRepository reindexRepository, EntityToResponseDTOMapper mapper) {
         this.reindexRepository = reindexRepository;
+        this.mapper = mapper;
+    }
+
+    @Override
+    public List<ReindexDTO> getAll() {
+        return reindexRepository.findAll()
+            .stream()
+            .map(mapper::map)
+            .toList();
+    }
+
+    @Override
+    public List<ReindexDTO> getTasksByCaseType(String caseType) {
+        if (StringUtils.isBlank(caseType)) {
+            return getAll();
+        }
+        return reindexRepository.findByCaseType(caseType)
+            .stream()
+            .map(mapper::map)
+            .toList();
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public ReindexEntity persistInitialReindexMetadata(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity caseType,
-                                                       String newIndexName) {
+    public ReindexEntity saveEntity(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity caseType,
+                                    String newIndexName) {
         ReindexEntity entity = new ReindexEntity();
         entity.setReindex(reindex);
         entity.setDeleteOldIndex(deleteOldIndex);
@@ -34,8 +62,8 @@ class ReindexEntityService {
         return reindexRepository.saveAndFlush(entity);
     }
 
-    @Transactional
-    public void persistSuccess(String newIndexName, String response) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateEntity(String newIndexName, String response) {
         ReindexEntity reindexEntity = reindexRepository.findByIndexName(newIndexName).orElse(null);
         if (reindexEntity == null) {
             String message = String.format("No reindex entity metadata found for index name: %s", newIndexName);
@@ -49,11 +77,12 @@ class ReindexEntityService {
         reindexRepository.save(reindexEntity);
     }
 
-    @Transactional
-    public void persistFailure(String newIndexName, Exception ex) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void updateEntity(String newIndexName, Exception ex) {
         ReindexEntity reindexEntity = reindexRepository.findByIndexName(newIndexName).orElse(null);
         if (reindexEntity == null) {
-            log.warn("No reindex entity metadata found for case type: {}", newIndexName);
+            String message = String.format("No reindex entity metadata found for index name: %s", newIndexName);
+            log.error(message);
             return;
         }
         log.info("Persisting FAILED status for index '{}'", newIndexName);

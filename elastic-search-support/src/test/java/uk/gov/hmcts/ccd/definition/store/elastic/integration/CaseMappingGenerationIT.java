@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.integration;
 
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.GetMappingsRequest;
 import org.elasticsearch.client.indices.GetMappingsResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +25,8 @@ import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 import java.io.IOException;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
@@ -45,6 +49,9 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     @Autowired
     private HighLevelCCDElasticClient client;
 
+    @Autowired
+    private RestHighLevelClient restHighLevelClient;
+
     @BeforeEach
     void setUp() {
         try {
@@ -57,27 +64,29 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     @Test
     void testListeningToDefinitionImportedEvent() throws IOException {
         CaseTypeEntity caseType = createCaseType();
+        String indexName = String.format(config.getCasesIndexNameFormat(), caseType.getReference().toLowerCase());
 
         publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        String indexName = String.format(config.getCasesIndexNameFormat(), caseType.getReference().toLowerCase());
-        assertThat(client.aliasExists(indexName)).isTrue();
+        GetMappingsRequest request = new GetMappingsRequest().indices(indexName);
+        GetMappingsResponse response = restHighLevelClient.indices().getMapping(request, RequestOptions.DEFAULT);
 
-        GetMappingsResponse mapping = client.getMapping(indexName);
-        assertThat(mapping).isNotNull();
+        assertTrue(client.aliasExists(indexName), "Expected alias to exist: " + indexName);
+        assertThat(response).isNotNull();
     }
 
     @Test
     void testListeningToDefinitionImportedEventWithDynamicLists() throws IOException {
         CaseTypeEntity caseType = createCaseTypeWithDynamicLists();
+        String indexName = String.format(config.getCasesIndexNameFormat(), caseType.getReference().toLowerCase());
 
         publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        String indexName = String.format(config.getCasesIndexNameFormat(), caseType.getReference().toLowerCase());
-        assertThat(client.aliasExists(indexName)).isTrue();
+        GetMappingsRequest request = new GetMappingsRequest().indices(indexName);
+        GetMappingsResponse response = restHighLevelClient.indices().getMapping(request, RequestOptions.DEFAULT);
 
-        GetMappingsResponse mapping = client.getMapping(indexName);
-        assertThat(mapping).isNotNull();
+        assertTrue(client.aliasExists(indexName), "Expected alias to exist: " + indexName);
+        assertThat(response).isNotNull();
     }
 
     private CaseTypeEntity createCaseType() {

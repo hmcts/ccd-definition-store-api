@@ -15,6 +15,7 @@ bootJar {
 
 dependencies {
 
+    implementation group:  'org.mapstruct', name: 'mapstruct', version: '1.5.5.Final'
     implementation project(':domain')
     implementation project(':repository')
     // need these for command line to pass in the gradle version,

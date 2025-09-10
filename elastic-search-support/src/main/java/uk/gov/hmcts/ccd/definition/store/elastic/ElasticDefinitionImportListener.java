@@ -13,6 +13,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperti
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexTaskService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
@@ -36,17 +37,17 @@ public abstract class ElasticDefinitionImportListener {
 
     private final ElasticsearchErrorHandler elasticsearchErrorHandler;
 
-    private final ReindexEntityService reindexEntityService;
+    private final ReindexTaskService reindexTaskService;
 
     public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory,
                                            ElasticsearchErrorHandler elasticsearchErrorHandler,
-                                           ReindexEntityService reindexEntityService) {
+                                           ReindexTaskService reindexTaskService) {
         this.config = config;
         this.mappingGenerator = mappingGenerator;
         this.clientFactory = clientFactory;
         this.elasticsearchErrorHandler = elasticsearchErrorHandler;
-        this.reindexEntityService = reindexEntityService;
+        this.reindexTaskService = reindexTaskService;
     }
 
     public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
@@ -82,7 +83,7 @@ public abstract class ElasticDefinitionImportListener {
                     newIndexName = incrementIndexNumber(indexName);
 
                     //prepare for db
-                    ReindexEntity reindexEntity = reindexEntityService.persistInitialReindexMetadata(reindex,
+                    ReindexEntity reindexEntity = reindexTaskService.saveEntity(reindex,
                         deleteOldIndex, caseType, newIndexName);
 
                     //create new index with generated mapping and incremented case type name (no alias update yet)
@@ -110,13 +111,13 @@ public abstract class ElasticDefinitionImportListener {
         } catch (ElasticsearchStatusException exc) {
             logMapping(caseMapping);
             if (reindex && !reindexStarted) {
-                reindexEntityService.persistFailure(newIndexName, exc);
+                reindexTaskService.updateEntity(newIndexName, exc);
             }
             throw elasticsearchErrorHandler.createException(exc, currentCaseType);
         } catch (Exception exc) {
             logMapping(caseMapping);
             if (reindex && !reindexStarted) {
-                reindexEntityService.persistFailure(newIndexName, exc);
+                reindexTaskService.updateEntity(newIndexName, exc);
             }
             throw new ElasticSearchInitialisationException(exc);
         }
@@ -139,13 +140,13 @@ public abstract class ElasticDefinitionImportListener {
                         asyncElasticClient.removeIndex(oldIndexName);
                     }
                     //set success status and end time for db
-                    reindexEntityService.persistSuccess(newIndexName, bulkByScrollResponse.toString());
+                    reindexTaskService.updateEntity(newIndexName, bulkByScrollResponse.toString());
                     log.info("saved reindex entity"
                              + " metadata for case type {} to DB", baseIndexName);
 
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing success", e);
-                    reindexEntityService.persistFailure(newIndexName, e);
+                    reindexTaskService.updateEntity(newIndexName, e);
                     throw new CompletionException(e);
                 }
             }
@@ -154,7 +155,7 @@ public abstract class ElasticDefinitionImportListener {
             public void onFailure(Exception ex) {
                 try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
                     //set failure status, end time and ex for db
-                    reindexEntityService.persistFailure(newIndexName, ex);
+                    reindexTaskService.updateEntity(newIndexName, ex);
 
                     //if failed delete new index, set old index writable
                     log.error("reindexing failed", ex);
@@ -164,7 +165,7 @@ public abstract class ElasticDefinitionImportListener {
                     log.info("{} set to writable", oldIndexName);
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing failure", e);
-                    reindexEntityService.persistFailure(newIndexName, e);
+                    reindexTaskService.updateEntity(newIndexName, e);
                     throw new CompletionException(e);
                 }
                 throw new CompletionException(ex);

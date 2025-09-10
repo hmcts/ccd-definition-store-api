@@ -336,17 +336,6 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseType.jurisdiction.name", target = "jurisdictionName")
     AccessTypeField map(AccessTypeEntity accessTypeEntity);
 
-    @Mapping(source = "id", target = "id")
-    @Mapping(source = "reindex", target = "reindex")
-    @Mapping(source = "deleteOldIndex", target = "deleteOldIndex")
-    @Mapping(source = "caseType", target = "caseType")
-    @Mapping(source = "jurisdiction", target = "jurisdiction")
-    @Mapping(source = "indexName", target = "indexName")
-    @Mapping(source = "startTime", target = "startTime")
-    @Mapping(source = "endTime", target = "endTime")
-    @Mapping(source = "status", target = "status")
-    @Mapping(source = "exceptionMessage", target = "exceptionMessage")
-    @Mapping(source = "reindexResponse", target = "reindexResponse")
     ReindexDTO map(ReindexEntity reindexEntity);
 
     @Mapping(source = "caseType.reference", target = "id")

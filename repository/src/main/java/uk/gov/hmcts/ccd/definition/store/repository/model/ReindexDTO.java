@@ -8,9 +8,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class ReindexDTO {
-    private Integer id;
-    private Boolean reindex;
-    private Boolean deleteOldIndex;
+    private boolean reindex;
+    private boolean deleteOldIndex;
     private String caseType;
     private String jurisdiction;
     private String indexName;

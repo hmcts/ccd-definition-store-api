@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.excel.endpoint;
+package uk.gov.hmcts.ccd.definition.store.elastic.endpoint;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.ccd.definition.store.excel.service.ReindexTaskServiceImpl;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexTaskService;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexDTO;
 
 import java.util.List;
@@ -22,10 +22,10 @@ public class ReindexTaskController {
 
     public static final String REINDEX_TASKS_URI = "/elastic-support/reindex/tasks";
 
-    private final ReindexTaskServiceImpl reindexTaskService;
+    private final ReindexTaskService reindexTaskService;
 
     @Autowired
-    public ReindexTaskController(ReindexTaskServiceImpl reindexTaskService) {
+    public ReindexTaskController(ReindexTaskService reindexTaskService) {
         this.reindexTaskService = reindexTaskService;
     }
 
