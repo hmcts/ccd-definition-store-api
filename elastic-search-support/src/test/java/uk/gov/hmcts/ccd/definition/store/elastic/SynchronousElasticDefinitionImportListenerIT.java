@@ -113,7 +113,6 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
         definitionImportListener.onDefinitionImported(event);
 
-        //String response = getElasticsearchIndices(CASE_TYPE_A);
         String response = objectMapper.writeValueAsString(getElasticsearchIndices(CASE_TYPE_A));
         String strippedResponse = stripGetIndexResponsePrefix(response);
         String unescapedResponse = org.apache.commons.text.StringEscapeUtils.unescapeJson(strippedResponse);

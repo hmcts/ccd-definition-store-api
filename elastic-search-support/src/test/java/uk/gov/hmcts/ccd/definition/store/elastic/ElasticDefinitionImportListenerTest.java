@@ -170,9 +170,9 @@ class ElasticDefinitionImportListenerTest {
         mockAliasResponse();
 
         doAnswer(invocation -> {
-            ActionListener<ReindexResponse> listener = invocation.getArgument(2);
+            ActionListener<ReindexResponse> listenerA = invocation.getArgument(2);
             ReindexResponse mockResponse = mock(ReindexResponse.class);
-            listener.onResponse(mockResponse);
+            listenerA.onResponse(mockResponse);
             return null;
         }).when(ccdElasticClient).reindexData(
             eq(caseTypeName),
@@ -200,9 +200,9 @@ class ElasticDefinitionImportListenerTest {
         mockAliasResponse();
 
         doAnswer(invocation -> {
-            ActionListener<ReindexResponse> listener = invocation.getArgument(2);
+            ActionListener<ReindexResponse> listenerA = invocation.getArgument(2);
             ReindexResponse mockResponse = mock(ReindexResponse.class);
-            listener.onResponse(mockResponse);
+            listenerA.onResponse(mockResponse);
             return null;
         }).when(ccdElasticClient).reindexData(
             eq(caseTypeName),
@@ -241,8 +241,8 @@ class ElasticDefinitionImportListenerTest {
         mockAliasResponse();
 
         doAnswer(invocation -> {
-            ActionListener<ReindexResponse> listener = invocation.getArgument(2);
-            listener.onFailure(new RuntimeException("reindexing failed"));
+            ActionListener<ReindexResponse> listenerA = invocation.getArgument(2);
+            listenerA.onFailure(new RuntimeException("reindexing failed"));
             return null;
         }).when(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
 

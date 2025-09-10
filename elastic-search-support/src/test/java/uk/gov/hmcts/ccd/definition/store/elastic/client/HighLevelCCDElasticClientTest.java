@@ -17,7 +17,6 @@ import co.elastic.clients.elasticsearch.indices.UpdateAliasesResponse;
 import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
 import co.elastic.clients.util.ObjectBuilder;
 import org.elasticsearch.action.ActionListener;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -39,7 +38,10 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -67,7 +69,7 @@ class HighLevelCCDElasticClientTest {
         MockitoAnnotations.openMocks(this);
         doReturn(indicesClient).when(elasticClient).indices();
         doReturn(elasticClient).when(elasticClientFactory).createClient();
-        highLevelCCDElasticClient = Mockito.spy(new HighLevelCCDElasticClient(config, elasticClientFactory));
+        highLevelCCDElasticClient = spy(new HighLevelCCDElasticClient(config, elasticClientFactory));
     }
 
     @Test
@@ -176,8 +178,8 @@ class HighLevelCCDElasticClientTest {
 
         doReturn(aliasResponse).when(indicesClient).getAlias(any(Function.class));
 
-        var putMappingResponse = Mockito.mock(co.elastic.clients.elasticsearch.indices.PutMappingResponse.class);
-        Mockito.when(putMappingResponse.acknowledged()).thenReturn(true);
+        var putMappingResponse = mock(PutMappingResponse.class);
+        when(putMappingResponse.acknowledged()).thenReturn(true);
         doReturn(putMappingResponse).when(indicesClient).putMapping(any(Function.class));
 
         boolean result = highLevelCCDElasticClient.upsertMapping(aliasName, caseTypeMapping);
@@ -214,8 +216,8 @@ class HighLevelCCDElasticClientTest {
             .build();
         doReturn(aliasResponse).when(indicesClient).getAlias(any(Function.class));
 
-        var putMappingResponse = Mockito.mock(co.elastic.clients.elasticsearch.indices.PutMappingResponse.class);
-        Mockito.when(putMappingResponse.acknowledged()).thenReturn(false);
+        var putMappingResponse = mock(PutMappingResponse.class);
+        when(putMappingResponse.acknowledged()).thenReturn(false);
         doReturn(putMappingResponse).when(indicesClient).putMapping(any(Function.class));
 
         boolean result = highLevelCCDElasticClient.upsertMapping(aliasName, caseTypeMapping);
@@ -228,7 +230,7 @@ class HighLevelCCDElasticClientTest {
         String indexName = "readonly_index";
         boolean readOnly = true;
 
-        var putSettingsResponse = Mockito.mock(PutIndicesSettingsResponse.class);
+        var putSettingsResponse = mock(PutIndicesSettingsResponse.class);
         doReturn(putSettingsResponse).when(indicesClient).putSettings(any(Function.class));
 
         highLevelCCDElasticClient.setIndexReadOnly(indexName, readOnly);
@@ -261,8 +263,8 @@ class HighLevelCCDElasticClientTest {
             .build();
         doReturn(createIndexResponse).when(indicesClient).create(any(Function.class));
 
-        var putMappingResponse = Mockito.mock(PutMappingResponse.class);
-        Mockito.when(putMappingResponse.acknowledged()).thenReturn(true);
+        var putMappingResponse = mock(PutMappingResponse.class);
+        when(putMappingResponse.acknowledged()).thenReturn(true);
         doReturn(putMappingResponse).when(indicesClient).putMapping(any(Function.class));
 
         boolean result = highLevelCCDElasticClient.createIndexAndMapping(indexName, caseTypeMapping);
@@ -310,7 +312,7 @@ class HighLevelCCDElasticClientTest {
     @Test
     void removeIndexDeletesIndexSuccessfully() throws IOException {
         String indexName = "index_to_remove";
-        var deleteResponse = Mockito.mock(DeleteIndexResponse.class);
+        var deleteResponse = mock(DeleteIndexResponse.class);
         Mockito.when(deleteResponse.acknowledged()).thenReturn(true);
         doReturn(deleteResponse).when(indicesClient).delete(any(Function.class));
 
@@ -333,8 +335,8 @@ class HighLevelCCDElasticClientTest {
     @Test
     void removeIndexReturnsFalseIfDeleteNotAcknowledged() throws IOException {
         String indexName = "index_to_remove";
-        var deleteResponse = Mockito.mock(co.elastic.clients.elasticsearch.indices.DeleteIndexResponse.class);
-        Mockito.when(deleteResponse.acknowledged()).thenReturn(false);
+        var deleteResponse = mock(DeleteIndexResponse.class);
+        when(deleteResponse.acknowledged()).thenReturn(false);
         doReturn(deleteResponse).when(indicesClient).delete(any(Function.class));
 
         boolean result = highLevelCCDElasticClient.removeIndex(indexName);
@@ -347,9 +349,9 @@ class HighLevelCCDElasticClientTest {
         String oldIndex = "old_index";
         String newIndex = "new_index";
         @SuppressWarnings("unchecked")
-        ActionListener<ReindexResponse> listener = Mockito.mock(ActionListener.class);
+        ActionListener<ReindexResponse> listener = mock(ActionListener.class);
 
-        var reindexResponse = Mockito.mock(co.elastic.clients.elasticsearch.core.ReindexResponse.class);
+        var reindexResponse = mock(ReindexResponse.class);
         doReturn(reindexResponse).when(elasticClient).reindex(any(Function.class));
 
         highLevelCCDElasticClient.reindexData(oldIndex, newIndex, listener);
@@ -377,11 +379,11 @@ class HighLevelCCDElasticClientTest {
     @Test
     void aliasExistsRethrowsExceptionIfStatusNot404() throws IOException, ElasticsearchException {
         final String alias = "some_alias";
-        ElasticsearchException esEx = Mockito.mock(ElasticsearchException.class);
+        ElasticsearchException esEx = mock(ElasticsearchException.class);
         Mockito.when(esEx.status()).thenReturn(404);
         doThrow(esEx)
             .when(indicesClient).getAlias(any(Function.class));
-        Assertions.assertFalse(highLevelCCDElasticClient.aliasExists(alias));
+        assertThat(highLevelCCDElasticClient.aliasExists(alias)).isFalse();
     }
 
     private void realGetAliasResponseStub(GetAliasResponse realAliasResponse) throws IOException {
