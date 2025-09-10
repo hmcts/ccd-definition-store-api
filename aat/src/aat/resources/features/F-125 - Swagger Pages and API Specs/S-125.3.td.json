@@ -13,7 +13,9 @@
   "expectedResponse": {
     "body" : {
       "configUrl" : "[[ANYTHING_PRESENT]]",
-      "url" : "[[ANYTHING_PRESENT]]"
+      "url" : "[[ANYTHING_PRESENT]]",
+      "oauth2RedirectUrl" : "[[ANYTHING_PRESENT]]",
+      "validatorUrl" : "[[ANYTHING_PRESENT]]"
     }
   }
 }
