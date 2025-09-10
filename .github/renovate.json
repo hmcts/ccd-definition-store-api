@@ -10,6 +10,7 @@
   "packageRules": [
     {
       "matchPackagePatterns": [".*"],
+      "ignoreUnstable": true,
       "allowedVersions": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
     }
   ]
