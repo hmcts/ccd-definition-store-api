@@ -31,11 +31,13 @@ import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperti
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -60,9 +62,6 @@ class HighLevelCCDElasticClientTest {
 
     @Mock
     private ElasticsearchIndicesClient indicesClient;
-
-    @Mock
-    private GetAliasRequest getAliasRequest;
 
     @BeforeEach
     void setup() {
@@ -354,10 +353,15 @@ class HighLevelCCDElasticClientTest {
         var reindexResponse = mock(ReindexResponse.class);
         doReturn(reindexResponse).when(elasticClient).reindex(any(Function.class));
 
+        CountDownLatch latch = new CountDownLatch(1);
+        doAnswer(invocation -> {
+            latch.countDown();
+            return null;
+        }).when(listener).onResponse(Mockito.any());
+
         highLevelCCDElasticClient.reindexData(oldIndex, newIndex, listener);
 
-        // Wait for async execution, in real code use Awaitility or similar for proper waiting
-        Thread.sleep(100);
+        latch.await(); // Wait for async execution
         verify(listener).onResponse(Mockito.any());
     }
 
@@ -366,13 +370,20 @@ class HighLevelCCDElasticClientTest {
         String oldIndex = "old_index";
         String newIndex = "new_index";
         @SuppressWarnings("unchecked")
-        ActionListener<ReindexResponse> listener = Mockito.mock(ActionListener.class);
+        ActionListener<ReindexResponse> listener = mock(ActionListener.class);
+
+        CountDownLatch latch = new CountDownLatch(1);
 
         doThrow(new RuntimeException("Reindex failed")).when(elasticClient).reindex(any(Function.class));
 
+        doAnswer(invocation -> {
+            latch.countDown();
+            return null;
+        }).when(listener).onFailure(any(RuntimeException.class));
+
         highLevelCCDElasticClient.reindexData(oldIndex, newIndex, listener);
 
-        Thread.sleep(100); // Wait for async
+        latch.await(); // Wait for async
         verify(listener).onFailure(Mockito.any(RuntimeException.class));
     }
 
