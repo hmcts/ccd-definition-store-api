@@ -10,7 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMappe
 import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexDTO;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,7 +30,7 @@ public class ReindexTaskServiceImpl implements ReindexTaskService {
     }
 
     @Override
-    public List<ReindexDTO> getAll() {
+    public List<ReindexTask> getAll() {
         return reindexRepository.findAll()
             .stream()
             .map(mapper::map)
@@ -38,7 +38,7 @@ public class ReindexTaskServiceImpl implements ReindexTaskService {
     }
 
     @Override
-    public List<ReindexDTO> getTasksByCaseType(String caseType) {
+    public List<ReindexTask> getTasksByCaseType(String caseType) {
         if (StringUtils.isBlank(caseType)) {
             return getAll();
         }

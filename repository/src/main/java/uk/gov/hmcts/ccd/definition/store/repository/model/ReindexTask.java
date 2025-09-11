@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-public class ReindexDTO {
+public class ReindexTask {
     private boolean reindex;
     private boolean deleteOldIndex;
     private String caseType;

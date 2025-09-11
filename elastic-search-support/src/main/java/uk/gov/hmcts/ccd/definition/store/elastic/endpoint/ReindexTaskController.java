@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexTaskService;
-import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexDTO;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
 
 import java.util.List;
 
@@ -31,16 +31,16 @@ public class ReindexTaskController {
 
     @GetMapping
     @ApiOperation(value = "Get all reindex tasks, optionally by case type",
-        response = ReindexDTO.class,
+        response = ReindexTask.class,
         responseContainer = "List")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Successfully retrieved reindex tasks"),
         @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<List<ReindexDTO>> getReindexTasksByCaseType(
+    public ResponseEntity<List<ReindexTask>> getReindexTasksByCaseType(
         @RequestParam(value = "caseType", required = false) String caseType
     ) {
-        List<ReindexDTO> response = reindexTaskService.getTasksByCaseType(caseType);
+        List<ReindexTask> response = reindexTaskService.getTasksByCaseType(caseType);
         return ResponseEntity.ok(response);
     }
 }
