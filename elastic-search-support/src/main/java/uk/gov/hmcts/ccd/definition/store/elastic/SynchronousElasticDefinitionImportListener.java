@@ -10,6 +10,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClien
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexTaskService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 
 @Service
@@ -21,8 +22,9 @@ public class SynchronousElasticDefinitionImportListener extends ElasticDefinitio
     public SynchronousElasticDefinitionImportListener(CcdElasticSearchProperties config,
                                                       CaseMappingGenerator mappingGenerator,
                                                       ObjectFactory<HighLevelCCDElasticClient> clientFactory,
-                                                      ElasticsearchErrorHandler elasticsearchErrorHandler) {
-        super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler);
+                                                      ElasticsearchErrorHandler elasticsearchErrorHandler,
+                                                      ReindexTaskService reindexTaskService) {
+        super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler, reindexTaskService);
     }
 
     @EventListener
