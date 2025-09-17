@@ -41,18 +41,18 @@ ext {
 
     junitJupiterVersion = '5.11.4'
     junitVintageVersion = '5.11.4'
-    springDocVersion = '2.8.11'
+    springDocVersion = '2.8.13'
     hamcrestVersion = '3.0'
-    flywayVersion = '10.20.1'
+    flywayVersion = '10.22.0'
     reformLogging= '6.1.9'
     apachePoiVersion = '5.4.1'
     appInsightsVersion = '2.6.4'
     restAssuredVersion = '5.5.6'
     groovyVersion = '4.0.28'
-    lombokVersion = '1.18.38'
+    lombokVersion = '1.18.40'
     jjwtVersion = '0.12.7'
-    feignJackson = '13.5'
-    gsonVersion = '2.13.1'
+    feignJackson = '13.6'
+    gsonVersion = '2.13.2'
     elasticSearchVersion = '7.17.29'
     testcontainersVersion = '1.21.3'
     ccdTestDefinitionVersion = '7.27.7-prerelease-CME-537'
@@ -100,7 +100,7 @@ allprojects {
         // start::CVE Vulnerability dependency overrides 
 
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.6.0' // spring-cloud-starter-openfeign
-        implementation group: 'commons-io', name: 'commons-io', version: '2.16.1' // spring-cloud-starter-openfeign
+        implementation group: 'commons-io', name: 'commons-io', version: '2.20.0' // spring-cloud-starter-openfeign
 
         // end::CVE Vulnerability dependency overrides
 
@@ -110,10 +110,10 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter'
 
         implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.7'
-        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.27.Final'
-        implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.4.1'
+        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.29.Final'
+        implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5'
 
-        implementation group: 'net.minidev', name: 'json-smart', version: '2.4.9'
+        implementation group: 'net.minidev', name: 'json-smart', version: '2.6.0'
 
         // CVE-2021-42550
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.18'
@@ -199,9 +199,9 @@ subprojects { subproject ->
 
         // start::CVE Vulnerability dependency overrides 
 
-        implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.4.2' // spring-boot-starter-oauth2-client
+        implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.5' // spring-boot-starter-oauth2-client
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.17.0' // azure-storage
-        implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4' // poi-ooxml
+        implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.5.0' // poi-ooxml
 
 
 
@@ -284,7 +284,7 @@ subprojects { subproject ->
         testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.8'
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: ccdTestDefinitionVersion
         testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
-        testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.4.0'
+        testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024'
