@@ -3,10 +3,10 @@ plugins {
     id 'jacoco'
     id 'idea'
     id 'eclipse'
-    id 'org.springframework.boot' version '3.5.4'
+    id 'org.springframework.boot' version '3.5.5'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'com.github.ben-manes.versions' version '0.51.0'
-    id 'org.sonarqube' version '6.2.0.5505'
+    id 'org.sonarqube' version '6.3.1.5724'
     id 'com.github.kt3k.coveralls' version '2.12.2'
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
     id 'info.solidsoft.pitest' version '1.15.0' apply(false)
@@ -32,8 +32,8 @@ tasks.register("printSuppressionFile") {
 
 ext {
     set('elasticsearch.version', '8.16.2')
-    set('spring-framework.version', '6.2.9')
-    set('spring-security.version', '6.5.2')
+    set('spring-framework.version', '6.2.11')
+    set('spring-security.version', '6.5.3')
     set('springCloudVersion', '2025.0.0')
     set('jackson.version', '2.16.0')
     set('snakeyaml.version', '2.3')
@@ -47,9 +47,9 @@ ext {
     reformLogging = '6.1.9'
     apachePoiVersion = '5.4.1'
     appInsightsVersion = '2.6.4'
-    restAssuredVersion = '5.5.5'
+    restAssuredVersion = '5.5.6'
     groovyVersion = '4.0.28'
-    lombokVersion = '1.18.40'
+    lombokVersion = '1.18.42'
     jjwtVersion = '0.13.0'
     feignJackson = '13.6'
     elasticSearchVersion = '7.17.29'
@@ -221,7 +221,7 @@ subprojects { subproject ->
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.1.9'
 
         implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.2'
-        implementation group: 'com.google.code.gson', name: 'gson', version: '2.13.1'
+        implementation group: 'com.google.code.gson', name: 'gson', version: '2.13.2'
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'azure-storage', version: '8.6.6'
@@ -262,7 +262,7 @@ subprojects { subproject ->
         testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
         testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
 
-        testImplementation group: 'com.google.guava', name: 'guava', version: '33.4.8-jre'
+        testImplementation group: 'com.google.guava', name: 'guava', version: '33.5.0-jre'
         testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: ccdTestDefinitionVersion
         testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
@@ -271,7 +271,7 @@ subprojects { subproject ->
         testImplementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
         testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.8'
         testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
-        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.18.0'
+        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.19.0'
     }
 
     // from https://github.com/junit-team/junit5/issues/1024'
