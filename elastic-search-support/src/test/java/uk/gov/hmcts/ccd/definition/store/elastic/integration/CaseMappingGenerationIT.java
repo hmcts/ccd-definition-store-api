@@ -1,5 +1,13 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.integration;
 
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.GetMappingsRequest;
+import org.elasticsearch.client.indices.GetMappingsResponse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchBaseTest;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -16,18 +24,9 @@ import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
 import java.io.IOException;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.ObjectFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.ApplicationEventPublisher;
-
 import static com.google.common.collect.Lists.newArrayList;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
@@ -47,35 +46,47 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     @Autowired
     private CaseMappingGenerator mappingGenerator;
 
-    @MockBean
+    @Autowired
     private HighLevelCCDElasticClient client;
 
-    @Mock
-    private ObjectFactory<HighLevelCCDElasticClient> clientObjectFactory;
+    @Autowired
+    private RestHighLevelClient restHighLevelClient;
 
     @BeforeEach
     void setUp() {
-        when(clientObjectFactory.getObject()).thenReturn(client);
+        try {
+            deleteElasticsearchIndices(WILDCARD);
+        } catch (Exception e) {
+            // Ignore any exceptions during index deletion, as it may not exist
+        }
     }
 
     @Test
     void testListeningToDefinitionImportedEvent() throws IOException {
         CaseTypeEntity caseType = createCaseType();
+        String indexName = String.format(config.getCasesIndexNameFormat(), caseType.getReference().toLowerCase());
 
         publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        verify(client).createIndex(anyString(), anyString());
-        verify(client).upsertMapping(anyString(), anyString());
+        GetMappingsRequest request = new GetMappingsRequest().indices(indexName);
+        GetMappingsResponse response = restHighLevelClient.indices().getMapping(request, RequestOptions.DEFAULT);
+
+        assertTrue(client.aliasExists(indexName), "Expected alias to exist: " + indexName);
+        assertThat(response).isNotNull();
     }
 
     @Test
     void testListeningToDefinitionImportedEventWithDynamicLists() throws IOException {
         CaseTypeEntity caseType = createCaseTypeWithDynamicLists();
+        String indexName = String.format(config.getCasesIndexNameFormat(), caseType.getReference().toLowerCase());
 
         publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        verify(client).createIndex(anyString(), anyString());
-        verify(client).upsertMapping(anyString(), anyString());
+        GetMappingsRequest request = new GetMappingsRequest().indices(indexName);
+        GetMappingsResponse response = restHighLevelClient.indices().getMapping(request, RequestOptions.DEFAULT);
+
+        assertTrue(client.aliasExists(indexName), "Expected alias to exist: " + indexName);
+        assertThat(response).isNotNull();
     }
 
     private CaseTypeEntity createCaseType() {
