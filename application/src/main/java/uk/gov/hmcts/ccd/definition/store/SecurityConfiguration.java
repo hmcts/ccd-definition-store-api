@@ -57,6 +57,7 @@ public class SecurityConfiguration {
             "/swagger-ui/**",
             "/webjars/**",
             "/v3/api-docs",
+            "/v3/api-docs/**",
             "/v2/**",
             "/health",
             "/health/liveness",
@@ -75,7 +76,7 @@ public class SecurityConfiguration {
             .csrf(csrf -> csrf.disable()) // NOSONAR - CSRF is disabled as per security requirements
             .formLogin(fl -> fl.disable())
             .logout(lg -> lg.disable())
-            .authorizeHttpRequests(ar -> 
+            .authorizeHttpRequests(ar ->
                 ar.requestMatchers(ImportController.URI_IMPORT, ElasticsearchIndexController.ELASTIC_INDEX_URI)
                 .hasAuthority("ccd-import")
                 .anyRequest()
