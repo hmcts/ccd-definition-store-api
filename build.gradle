@@ -50,7 +50,7 @@ ext {
     restAssuredVersion = '5.5.6'
     groovyVersion = '4.0.28'
     lombokVersion = '1.18.40'
-    jjwtVersion = '0.12.7'
+    jjwtVersion = '0.13.0'
     feignJackson = '13.6'
     gsonVersion = '2.13.2'
     elasticSearchVersion = '7.17.29'
