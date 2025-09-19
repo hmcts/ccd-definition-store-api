@@ -1,0 +1,40 @@
+{
+  "_guid_": "S-126.2",
+  "title": "Successfully retrieve reindexing metadata for all case types",
+  "operationName": "Get all reindexing tasks",
+  "uri": "/elastic-support/reindex/tasks",
+  "method": "GET",
+  "preStateVerifications": [
+    {
+      "description": "Ensure reindex tasks exist",
+      "sqlStatements": [
+        "INSERT INTO reindex_entity (id, reindex, delete_old_index, case_type, jurisdiction, index_name, start_time, status) VALUES (1, true, false, 'CaseTypeA', 'JURISDICTION1', 'case_type_a_index', '2025-01-19 10:00:00', 'COMPLETED')"
+      ]
+    }
+  ],
+  "request": {
+    "headers": {
+      "Accept": "application/json",
+      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]"
+    }
+  },
+  "expectedResponse": {
+    "status": 200,
+    "body": [
+      {
+        "id": "[[ANYTHING_PRESENT]]",
+        "reindex": "[[ANYTHING_PRESENT]]",
+        "deleteOldIndex": "[[ANYTHING_PRESENT]]",
+        "caseType": "[[ANYTHING_PRESENT]]",
+        "jurisdiction": "[[ANYTHING_PRESENT]]",
+        "indexName": "[[ANYTHING_PRESENT]]",
+        "startTime": "[[ANYTHING_PRESENT]]",
+        "endTime": "[[ANYTHING_PRESENT]]",
+        "status": "[[ANYTHING_PRESENT]]",
+        "exceptionMessage": "[[ANYTHING_PRESENT]]",
+        "reindexResponse": "[[ANYTHING_PRESENT]]"
+      }
+    ]
+  }
+}
