@@ -1,5 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -15,12 +19,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-
-import org.json.JSONException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -49,7 +47,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         .withJurisdiction("JUR").withReference(CASE_TYPE_A);
 
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() {
         try {
             deleteElasticsearchIndices(WILDCARD);
         } catch (Exception e) {
@@ -59,7 +57,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
     @Test
     @SuppressWarnings("checkstyle:VariableDeclarationUsageDistance")
-    void shouldCreateCompleteElasticsearchIndexForSingleCaseType() throws IOException, JSONException {
+    void shouldCreateCompleteElasticsearchIndexForSingleCaseType() throws IOException {
         CaseFieldEntity baseTypeField = newTextField("TextField").build();
         CaseFieldEntity complexField = newComplexField("ComplexField");
         CaseFieldEntity collectionField = newCollectionFieldOfBaseType(
@@ -120,7 +118,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     }
 
     @Test
-    void shouldCreateElasticsearchIndexForAllCaseTypes() throws IOException, JSONException {
+    void shouldCreateElasticsearchIndexForAllCaseTypes() throws IOException {
         CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
         CaseFieldEntity baseTypeField2 = newTextField("TextField2").build();
 
@@ -145,7 +143,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     }
 
     @Test
-    void shouldReindexSuccessfully() throws JSONException {
+    void shouldReindexSuccessfully() {
         CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
 
         CaseTypeEntity caseTypeEntity1 = caseTypeBuilder
@@ -174,7 +172,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     }
 
     @Test
-    void shouldThrowElasticSearchInitialisationException() throws JSONException {
+    void shouldThrowElasticSearchInitialisationException() {
         CaseFieldEntity baseTypeField1 = newTextField("TextField1").build();
 
         CaseTypeEntity caseTypeEntity1 = caseTypeBuilder
@@ -187,7 +185,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         baseTypeField1.getFieldType().setReference("InvalidElasticType");
 
         DefinitionImportedEvent event = new DefinitionImportedEvent(Collections.singletonList(caseTypeEntity1),
-            true, true);
+            false,false);
 
         assertThrows(ElasticSearchInitialisationException.class, () -> {
             definitionImportListener.onDefinitionImported(event);

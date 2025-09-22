@@ -6,6 +6,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.client.RestTemplate;
@@ -23,6 +24,7 @@ class ApplicationConfiguration {
     }
 
     @Bean
+    @Primary
     public Executor asyncExecutor(@Value("${async.executor.core.pool.size}") Integer corePoolSize,
                                   @Value("${async.executor.max.pool.size}") Integer maxPoolSize,
                                   @Value("${async.executor.queue.capacity}") Integer queueCapacity,
