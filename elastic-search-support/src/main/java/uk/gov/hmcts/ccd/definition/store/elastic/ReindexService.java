@@ -28,6 +28,9 @@ public abstract class ReindexService {
         this.mappingGenerator = mappingGenerator;
     }
 
+    @Lookup
+    protected abstract HighLevelCCDElasticClient getElasticClient();
+
     @Async("reindexExecutor")
     public void asyncReindex(DefinitionImportedEvent event,
                               String baseIndexName,
@@ -51,9 +54,6 @@ public abstract class ReindexService {
         log.info("reindexing successful for case type: {}", caseType.getReference());
         log.info("task id returned from the import: {}", event.getTaskId());
     }
-
-    @Lookup
-    protected abstract HighLevelCCDElasticClient getElasticClient();
 
     private void handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
                                   String oldIndex, String newIndex,
