@@ -3,7 +3,7 @@
 properties([
     // H allow predefined but random minute see https://en.wikipedia.org/wiki/Cron#Non-standard_characters
     //CCD-3539 (Stop running Nightly builds on weekends). Original schedule was 'H 05 * * *'
-    pipelineTriggers([cron('H 07 * * 1-5')])
+    //pipelineTriggers([cron('H 07 * * 1-5')])
 ])
 
 @Library("Infrastructure")
@@ -65,6 +65,14 @@ env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
 env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
 
 withNightlyPipeline(type, product, component) {
+
+    stage('Wait for ccd-user-profile-api job') {
+        script {
+            echo "Waiting for upstream ccd-user-profile-api job to complete..."
+            build job: 'HMCTS_a_to_c_Nightly/ccd-user-profile-api/master', wait: true, propagate: false
+        }
+    }
+
     // Vars needed for functional and smoke tests run against AKS
     env.OAUTH2_CLIENT_ID = "ccd_gateway"
     env.OAUTH2_REDIRECT_URI = "https://www-ccd.nonprod.platform.hmcts.net/oauth2redirect"
