@@ -26,7 +26,8 @@ public class ReindexService {
 
     private final ObjectFactory<HighLevelCCDElasticClient> clientFactory;
 
-    public ReindexService(CaseMappingGenerator mappingGenerator, ObjectFactory<HighLevelCCDElasticClient> clientFactory) {
+    public ReindexService(CaseMappingGenerator mappingGenerator,
+                          ObjectFactory<HighLevelCCDElasticClient> clientFactory) {
         this.mappingGenerator = mappingGenerator;
         this.clientFactory = clientFactory;
     }
