@@ -41,7 +41,7 @@ public abstract class ReindexService {
 
         //create new index with generated mapping and incremented case type name (no alias update yet)
         String caseMapping = mappingGenerator.generateMapping(caseType);
-        log.info("case mapping: {}", caseMapping);
+        log.debug("case mapping: {}", caseMapping);
         String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
         elasticClient.setIndexReadOnly(baseIndexName, true);
         elasticClient.createIndexAndMapping(incrementedCaseTypeName, caseMapping);
@@ -117,7 +117,6 @@ public abstract class ReindexService {
         String formattedNumber = StringUtils.leftPad(String.valueOf(incremented), numberStr.length(), '0');
 
         String incrementedIndexName = prefix + formattedNumber;
-        log.info("incremented index name: {}", incrementedIndexName);
         return incrementedIndexName;
     }
 

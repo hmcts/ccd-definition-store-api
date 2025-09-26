@@ -52,6 +52,20 @@ class ApplicationConfiguration {
         return executor;
     }
 
+    @Bean(name = "reindexExecutor")
+    public Executor reindexExecutor(@Value("${reindex.executor.core.pool.size}") Integer corePoolSize,
+                                    @Value("${reindex.executor.max.pool.size}") Integer maxPoolSize,
+                                    @Value("${reindex.executor.queue.capacity}") Integer queueCapacity,
+                                    @Value("${reindex.executor.prefix}") String prefix) {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(corePoolSize);
+        executor.setMaxPoolSize(maxPoolSize);
+        executor.setQueueCapacity(queueCapacity);
+        executor.setThreadNamePrefix(prefix);
+        executor.initialize();
+        return executor;
+    }
+
     @Bean
     public CacheManagerCustomizer<CaffeineCacheManager> cacheManagerCustomizer() {
         return cacheManager -> cacheManager.setAllowNullValues(false);
