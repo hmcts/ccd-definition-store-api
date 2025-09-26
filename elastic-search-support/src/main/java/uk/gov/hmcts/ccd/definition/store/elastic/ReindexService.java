@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.springframework.beans.factory.annotation.Lookup;
+import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -20,22 +20,22 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @Service
-public abstract class ReindexService {
+public class ReindexService {
 
     private final CaseMappingGenerator mappingGenerator;
 
-    public ReindexService(CaseMappingGenerator mappingGenerator) {
-        this.mappingGenerator = mappingGenerator;
-    }
+    private final ObjectFactory<HighLevelCCDElasticClient> clientFactory;
 
-    @Lookup
-    protected abstract HighLevelCCDElasticClient getElasticClient();
+    public ReindexService(CaseMappingGenerator mappingGenerator, ObjectFactory<HighLevelCCDElasticClient> clientFactory) {
+        this.mappingGenerator = mappingGenerator;
+        this.clientFactory = clientFactory;
+    }
 
     @Async("reindexExecutor")
     public void asyncReindex(DefinitionImportedEvent event,
                               String baseIndexName,
                               CaseTypeEntity caseType) throws IOException {
-        HighLevelCCDElasticClient elasticClient = getElasticClient();
+        HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
         GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
         String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
 
@@ -61,8 +61,7 @@ public abstract class ReindexService {
         elasticClient.reindexData(oldIndex, newIndex, new ActionListener<>() {
             @Override
             public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
-                HighLevelCCDElasticClient highLevelCCDElasticClient = getElasticClient();
-                try {
+                try (elasticClient; HighLevelCCDElasticClient highLevelCCDElasticClient = clientFactory.getObject()) {
                     //if success set writable and update alias to new index
                     log.debug("updating alias from {} to {}", oldIndex, newIndex);
                     highLevelCCDElasticClient.setIndexReadOnly(baseIndexName, false);
@@ -74,16 +73,12 @@ public abstract class ReindexService {
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing success", e);
                     throw new CompletionException(e);
-                } finally {
-                    highLevelCCDElasticClient.close();
-                    elasticClient.close();
                 }
             }
 
             @Override
             public void onFailure(Exception ex) {
-                HighLevelCCDElasticClient highLevelCCDElasticClient = getElasticClient();
-                try {
+                try (elasticClient; HighLevelCCDElasticClient highLevelCCDElasticClient = clientFactory.getObject()) {
                     //if failed delete new index, set old index writable
                     log.debug("reindexing failed", ex);
                     highLevelCCDElasticClient.removeIndex(newIndex);
@@ -93,9 +88,6 @@ public abstract class ReindexService {
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing failure", e);
                     throw new CompletionException(e);
-                } finally {
-                    highLevelCCDElasticClient.close();
-                    elasticClient.close();
                 }
                 throw new CompletionException(ex);
             }

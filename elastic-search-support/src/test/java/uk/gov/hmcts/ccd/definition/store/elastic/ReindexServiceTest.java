@@ -8,8 +8,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
@@ -31,6 +33,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -39,6 +42,9 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class ReindexServiceTest {
 
+    @InjectMocks
+    private ReindexService reindexService;
+
     @Mock
     private HighLevelCCDElasticClient ccdElasticClient;
 
@@ -46,7 +52,7 @@ public class ReindexServiceTest {
     private CaseMappingGenerator caseMappingGenerator;
 
     @Mock
-    private ReindexService reindexService;
+    private ObjectFactory<HighLevelCCDElasticClient> clientObjectFactory;
 
     private final String baseIndexName = "casetypea";
     private final String caseTypeName = "casetypea_cases-000001";
@@ -59,20 +65,7 @@ public class ReindexServiceTest {
 
     @BeforeEach
     void setUp() throws IOException {
-        // test subclass always returns our mock client
-        reindexService = new ReindexService(caseMappingGenerator) {
-            @Override
-            protected HighLevelCCDElasticClient getElasticClient() {
-                return ccdElasticClient;
-            }
-
-            @Override
-            public void asyncReindex(DefinitionImportedEvent event, String baseIndexName, CaseTypeEntity caseType)
-                throws IOException {
-                // run synchronously in tests
-                super.asyncReindex(event, baseIndexName, caseType);
-            }
-        };
+        lenient().when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
     }
 
     @Test
