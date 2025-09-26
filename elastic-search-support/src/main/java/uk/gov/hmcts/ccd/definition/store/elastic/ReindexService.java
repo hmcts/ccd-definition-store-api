@@ -51,8 +51,8 @@ public abstract class ReindexService {
             event.isDeleteOldIndex());
         //dummy value for phase 1
         event.setTaskId("taskID");
-        log.info("reindexing successful for case type: {}", caseType.getReference());
-        log.info("task id returned from the import: {}", event.getTaskId());
+        log.debug("reindexing successful for case type: {}", caseType.getReference());
+        log.debug("task id returned from the import: {}", event.getTaskId());
     }
 
     private void handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
@@ -64,11 +64,11 @@ public abstract class ReindexService {
                 HighLevelCCDElasticClient highLevelCCDElasticClient = getElasticClient();
                 try {
                     //if success set writable and update alias to new index
-                    log.info("updating alias from {} to {}", oldIndex, newIndex);
+                    log.debug("updating alias from {} to {}", oldIndex, newIndex);
                     highLevelCCDElasticClient.setIndexReadOnly(baseIndexName, false);
                     highLevelCCDElasticClient.updateAlias(baseIndexName, oldIndex, newIndex);
                     if (deleteOldIndex) {
-                        log.info("deleting old index {}", oldIndex);
+                        log.debug("deleting old index {}", oldIndex);
                         highLevelCCDElasticClient.removeIndex(oldIndex);
                     }
                 } catch (IOException e) {
@@ -85,11 +85,11 @@ public abstract class ReindexService {
                 HighLevelCCDElasticClient highLevelCCDElasticClient = getElasticClient();
                 try {
                     //if failed delete new index, set old index writable
-                    log.error("reindexing failed", ex);
+                    log.debug("reindexing failed", ex);
                     highLevelCCDElasticClient.removeIndex(newIndex);
-                    log.info("{} deleted", newIndex);
+                    log.debug("{} deleted", newIndex);
                     highLevelCCDElasticClient.setIndexReadOnly(oldIndex, false);
-                    log.info("{} set to writable", oldIndex);
+                    log.debug("{} set to writable", oldIndex);
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing failure", e);
                     throw new CompletionException(e);
