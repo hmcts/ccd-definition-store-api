@@ -1,11 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -16,13 +12,9 @@ import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexTaskService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.CompletionException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Slf4j
 public abstract class ElasticDefinitionImportListener {
@@ -37,16 +29,20 @@ public abstract class ElasticDefinitionImportListener {
 
     private final ElasticsearchErrorHandler elasticsearchErrorHandler;
 
+    private final ReindexService reindexService;
+
     private final ReindexTaskService reindexTaskService;
+
 
     public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory,
-                                           ElasticsearchErrorHandler elasticsearchErrorHandler,
+                                           ElasticsearchErrorHandler elasticsearchErrorHandler, ReindexService reindexService,
                                            ReindexTaskService reindexTaskService) {
         this.config = config;
         this.mappingGenerator = mappingGenerator;
         this.clientFactory = clientFactory;
         this.elasticsearchErrorHandler = elasticsearchErrorHandler;
+        this.reindexService = reindexService;
         this.reindexTaskService = reindexTaskService;
     }
 
@@ -61,7 +57,6 @@ public abstract class ElasticDefinitionImportListener {
     public void initialiseElasticSearch(DefinitionImportedEvent event) {
         List<CaseTypeEntity> caseTypes = event.getContent();
         boolean reindex = event.isReindex();
-        boolean deleteOldIndex = event.isDeleteOldIndex();
         boolean reindexStarted = false;
         String newIndexName = null;
         String caseMapping = null;
@@ -77,31 +72,7 @@ public abstract class ElasticDefinitionImportListener {
                     elasticClient.createIndex(actualIndexName, baseIndexName);
                 }
                 if (reindex) {
-                    //get current alias index
-                    GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
-                    String indexName = aliasResponse.getAliases().keySet().iterator().next();
-                    newIndexName = incrementIndexNumber(indexName);
-
-                    //prepare for db
-                    ReindexEntity reindexEntity = reindexTaskService.saveEntity(reindex,
-                        deleteOldIndex, caseType, newIndexName);
-
-                    //create new index with generated mapping and incremented case type name (no alias update yet)
-                    caseMapping = mappingGenerator.generateMapping(caseType);
-                    log.debug("case mapping: {}", caseMapping);
-
-                    //update index name for db
-                    elasticClient.setIndexReadOnly(baseIndexName, true);
-                    elasticClient.createIndexAndMapping(newIndexName, caseMapping);
-
-                    //initiate reindexing
-                    reindexStarted = true;
-                    handleReindexing(baseIndexName, indexName, newIndexName,
-                        deleteOldIndex);
-                    //dummy value for phase 1
-                    event.setTaskId("taskID");
-                    log.info("reindexing successful for case type: {}", caseType.getReference());
-                    log.info("task id returned from the import: {}", event.getTaskId());
+                    reindexService.asyncReindex(event, baseIndexName, caseType, reindexStarted);
                 } else {
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
@@ -121,75 +92,6 @@ public abstract class ElasticDefinitionImportListener {
             }
             throw new ElasticSearchInitialisationException(exc);
         }
-    }
-
-    private void handleReindexing(String baseIndexName,
-                                  String oldIndexName, String newIndexName,
-                                  boolean deleteOldIndex) {
-        HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
-        elasticClient.reindexData(oldIndexName, newIndexName, new ActionListener<>() {
-            @Override
-            public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
-                try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
-                    //if success set writable and update alias to new index
-                    log.info("updating alias from {} to {}", oldIndexName, newIndexName);
-                    asyncElasticClient.setIndexReadOnly(baseIndexName, false);
-                    asyncElasticClient.updateAlias(baseIndexName, oldIndexName, newIndexName);
-                    if (deleteOldIndex) {
-                        log.info("deleting old index {}", oldIndexName);
-                        asyncElasticClient.removeIndex(oldIndexName);
-                    }
-                    //set success status and end time for db
-                    reindexTaskService.updateEntity(newIndexName, bulkByScrollResponse.toString());
-                    log.info("saved reindex entity"
-                             + " metadata for case type {} to DB", baseIndexName);
-
-                } catch (IOException e) {
-                    log.error("failed to clean up after reindexing success", e);
-                    reindexTaskService.updateEntity(newIndexName, e);
-                    throw new CompletionException(e);
-                }
-            }
-
-            @Override
-            public void onFailure(Exception ex) {
-                try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
-                    //set failure status, end time and ex for db
-                    reindexTaskService.updateEntity(newIndexName, ex);
-
-                    //if failed delete new index, set old index writable
-                    log.error("reindexing failed", ex);
-                    asyncElasticClient.removeIndex(newIndexName);
-                    log.info("{} deleted", newIndexName);
-                    asyncElasticClient.setIndexReadOnly(oldIndexName, false);
-                    log.info("{} set to writable", oldIndexName);
-                } catch (IOException e) {
-                    log.error("failed to clean up after reindexing failure", e);
-                    reindexTaskService.updateEntity(newIndexName, e);
-                    throw new CompletionException(e);
-                }
-                throw new CompletionException(ex);
-            }
-        });
-    }
-
-    String incrementIndexNumber(String indexName) {
-        Pattern pattern = Pattern.compile("(.+_cases-)(\\d+)$");
-        Matcher matcher = pattern.matcher(indexName);
-
-        if (!matcher.matches() || matcher.groupCount() < 2) {
-            throw new IllegalArgumentException("invalid index name format: " + indexName);
-        }
-
-        String prefix = matcher.group(1);
-        String numberStr = matcher.group(2);
-
-        int incremented = Integer.parseInt(numberStr) + 1;
-        String formattedNumber = StringUtils.leftPad(String.valueOf(incremented), numberStr.length(), '0');
-
-        String incrementedIndexName = prefix + formattedNumber;
-        log.info("incremented index name: {}", incrementedIndexName);
-        return incrementedIndexName;
     }
 
     private String baseIndexName(CaseTypeEntity caseType) {

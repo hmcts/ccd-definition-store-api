@@ -22,8 +22,9 @@ public class AsynchronousElasticDefinitionImportListener extends ElasticDefiniti
                                                        CaseMappingGenerator mappingGenerator,
                                                        ObjectFactory<HighLevelCCDElasticClient> clientFactory,
                                                        ElasticsearchErrorHandler elasticsearchErrorHandler,
+                                                       ReindexService reindexService,
                                                        ReindexTaskService reindexTaskService) {
-        super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler, reindexTaskService);
+        super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler, reindexService, reindexTaskService);
     }
 
     @Async
