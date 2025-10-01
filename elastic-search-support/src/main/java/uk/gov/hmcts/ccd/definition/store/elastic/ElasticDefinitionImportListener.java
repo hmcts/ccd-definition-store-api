@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperti
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
-import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexTaskService;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexDBService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
@@ -29,21 +29,22 @@ public abstract class ElasticDefinitionImportListener {
 
     private final ElasticsearchErrorHandler elasticsearchErrorHandler;
 
-    private final ReindexService reindexService;
+    private final ElasticReindexService elasticReindexService;
 
-    private final ReindexTaskService reindexTaskService;
+    private final ReindexDBService reindexDBService;
 
 
     public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory,
-                                           ElasticsearchErrorHandler elasticsearchErrorHandler, ReindexService reindexService,
-                                           ReindexTaskService reindexTaskService) {
+                                           ElasticsearchErrorHandler elasticsearchErrorHandler,
+                                           ElasticReindexService elasticReindexService,
+                                           ReindexDBService reindexDBService) {
         this.config = config;
         this.mappingGenerator = mappingGenerator;
         this.clientFactory = clientFactory;
         this.elasticsearchErrorHandler = elasticsearchErrorHandler;
-        this.reindexService = reindexService;
-        this.reindexTaskService = reindexTaskService;
+        this.elasticReindexService = elasticReindexService;
+        this.reindexDBService = reindexDBService;
     }
 
     public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
@@ -56,9 +57,6 @@ public abstract class ElasticDefinitionImportListener {
     @Transactional
     public void initialiseElasticSearch(DefinitionImportedEvent event) {
         List<CaseTypeEntity> caseTypes = event.getContent();
-        boolean reindex = event.isReindex();
-        boolean reindexStarted = false;
-        String newIndexName = null;
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
 
@@ -71,8 +69,8 @@ public abstract class ElasticDefinitionImportListener {
                     String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
                     elasticClient.createIndex(actualIndexName, baseIndexName);
                 }
-                if (reindex) {
-                    reindexService.asyncReindex(event, baseIndexName, caseType, reindexStarted);
+                if (event.isReindex()) {
+                    elasticReindexService.asyncReindex(event, baseIndexName, caseType);
                 } else {
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
@@ -81,15 +79,9 @@ public abstract class ElasticDefinitionImportListener {
             }
         } catch (ElasticsearchStatusException exc) {
             logMapping(caseMapping);
-            if (reindex && !reindexStarted) {
-                reindexTaskService.updateEntity(newIndexName, exc);
-            }
             throw elasticsearchErrorHandler.createException(exc, currentCaseType);
         } catch (Exception exc) {
             logMapping(caseMapping);
-            if (reindex && !reindexStarted) {
-                reindexTaskService.updateEntity(newIndexName, exc);
-            }
             throw new ElasticSearchInitialisationException(exc);
         }
     }

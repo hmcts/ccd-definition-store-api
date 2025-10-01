@@ -18,13 +18,13 @@ import java.util.concurrent.CompletionException;
 
 @Service
 @Slf4j
-public class ReindexTaskServiceImpl implements ReindexTaskService {
+public class ReindexDBServiceImpl implements ReindexDBService {
 
     private final ReindexRepository reindexRepository;
     private final EntityToResponseDTOMapper mapper;
 
     @Autowired
-    public ReindexTaskServiceImpl(ReindexRepository reindexRepository, EntityToResponseDTOMapper mapper) {
+    public ReindexDBServiceImpl(ReindexRepository reindexRepository, EntityToResponseDTOMapper mapper) {
         this.reindexRepository = reindexRepository;
         this.mapper = mapper;
     }

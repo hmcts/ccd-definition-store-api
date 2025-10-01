@@ -6,7 +6,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
 
 import java.util.List;
 
-public interface ReindexTaskService {
+public interface ReindexDBService {
     List<ReindexTask> getAll();
 
     List<ReindexTask> getTasksByCaseType(String caseType);

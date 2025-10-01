@@ -19,6 +19,7 @@ import org.springframework.security.oauth2.server.resource.web.authentication.Be
 import org.springframework.security.web.SecurityFilterChain;
 
 import uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ElasticsearchIndexController;
+import uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ReindexTaskController;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
 import uk.gov.hmcts.ccd.definition.store.security.JwtGrantedAuthoritiesConverter;
 import uk.gov.hmcts.ccd.definition.store.security.filters.ExceptionHandlingFilter;
@@ -76,7 +77,8 @@ public class SecurityConfiguration {
             .formLogin(fl -> fl.disable())
             .logout(lg -> lg.disable())
             .authorizeHttpRequests(ar -> 
-                ar.requestMatchers(ImportController.URI_IMPORT, ElasticsearchIndexController.ELASTIC_INDEX_URI)
+                ar.requestMatchers(ImportController.URI_IMPORT, ElasticsearchIndexController.ELASTIC_INDEX_URI,
+                        ReindexTaskController.REINDEX_TASKS_URI)
                 .hasAuthority("ccd-import")
                 .anyRequest()
                 .authenticated()
