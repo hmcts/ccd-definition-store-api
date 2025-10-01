@@ -16,3 +16,9 @@ CREATE TABLE public.reindex (
     exception_message        TEXT,
     reindex_response		 TEXT
 );
+
+-- add index on case_type (used in queries like findByCaseType)
+CREATE INDEX idx_reindex_case_type ON public.reindex(case_type);
+
+-- add index on index_name (used in queries like findByIndexName)
+CREATE INDEX idx_reindex_index_name ON public.reindex(index_name);
