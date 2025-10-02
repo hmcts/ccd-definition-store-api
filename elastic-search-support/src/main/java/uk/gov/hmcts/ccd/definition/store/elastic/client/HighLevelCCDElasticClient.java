@@ -7,6 +7,7 @@ import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
 import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.GetAliasesResponse;
@@ -27,6 +28,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import static org.elasticsearch.index.reindex.AbstractBulkByScrollRequest.AUTO_SLICES;
 import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener.GLOBAL_SEARCH;
 
 @Slf4j
@@ -170,7 +172,10 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         ReindexRequest reindexRequest = new ReindexRequest();
         reindexRequest.setSourceIndices(oldIndex);
         reindexRequest.setDestIndex(newIndex);
-        reindexRequest.setRefresh(true);
+        reindexRequest.setRefresh(false);
+        reindexRequest.setSourceBatchSize(5000);
+        reindexRequest.setSlices(AUTO_SLICES); // auto parallelize based on number of shards
+        reindexRequest.setRequestsPerSecond(Float.POSITIVE_INFINITY); // no throttling
 
         //doesn't return taskID
         elasticClient.reindexAsync(
@@ -178,5 +183,9 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
             RequestOptions.DEFAULT,
             listener
         );
+    }
+
+    public void refresh(String... indexes) throws IOException {
+        elasticClient.indices().refresh(new RefreshRequest(indexes),  RequestOptions.DEFAULT);
     }
 }

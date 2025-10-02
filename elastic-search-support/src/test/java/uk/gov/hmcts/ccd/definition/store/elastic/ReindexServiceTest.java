@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
+import org.elasticsearch.core.TimeValue;
 import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -75,6 +76,8 @@ public class ReindexServiceTest {
         doAnswer(invocation -> {
             ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
             BulkByScrollResponse mockResponse = mock(BulkByScrollResponse.class);
+            TimeValue timeValue = TimeValue.timeValueNanos(10000);
+            when(mockResponse.getTook()).thenReturn(timeValue);
             listener.onResponse(mockResponse);
             return null;
         }).when(ccdElasticClient).reindexData(
@@ -106,6 +109,8 @@ public class ReindexServiceTest {
         doAnswer(invocation -> {
             ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
             BulkByScrollResponse mockResponse = mock(BulkByScrollResponse.class);
+            TimeValue timeValue = TimeValue.timeValueNanos(10000);
+            when(mockResponse.getTook()).thenReturn(timeValue);
             listener.onResponse(mockResponse);
             return null;
         }).when(ccdElasticClient).reindexData(
