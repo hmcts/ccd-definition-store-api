@@ -38,7 +38,6 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     private static final String CASE_TYPE_B = "CaseTypeB";
 
     private static final String CASE_TYPE_A_REINDEX = "CaseTypeA_RI";
-    private static final String CASE_TYPE_B_REINDEX = "CaseTypeB_RI";
 
 
     @Value("${elasticsearch.port}")
