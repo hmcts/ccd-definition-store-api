@@ -40,7 +40,7 @@ public class ReindexServiceImpl implements ReindexService {
     @Autowired
     public ReindexServiceImpl(ReindexRepository reindexRepository, EntityToResponseDTOMapper mapper,
                               CaseMappingGenerator mappingGenerator,
-                              ObjectFactory<HighLevelCCDElasticClient> clientFactory){
+                              ObjectFactory<HighLevelCCDElasticClient> clientFactory) {
         this.reindexRepository = reindexRepository;
         this.mapper = mapper;
         this.mappingGenerator = mappingGenerator;
