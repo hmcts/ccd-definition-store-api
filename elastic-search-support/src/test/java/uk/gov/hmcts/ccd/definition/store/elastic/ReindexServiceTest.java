@@ -1,10 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
-import org.elasticsearch.core.TimeValue;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,6 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
+import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -74,11 +72,8 @@ public class ReindexServiceTest {
         mockAliasResponse();
 
         doAnswer(invocation -> {
-            ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
-            BulkByScrollResponse mockResponse = mock(BulkByScrollResponse.class);
-            TimeValue timeValue = TimeValue.timeValueNanos(10000);
-            when(mockResponse.getTook()).thenReturn(timeValue);
-            listener.onResponse(mockResponse);
+            ReindexListener listener = invocation.getArgument(2);
+            listener.onSuccess();
             return null;
         }).when(ccdElasticClient).reindexData(
             eq(caseTypeName),
@@ -107,11 +102,8 @@ public class ReindexServiceTest {
         mockAliasResponse();
 
         doAnswer(invocation -> {
-            ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
-            BulkByScrollResponse mockResponse = mock(BulkByScrollResponse.class);
-            TimeValue timeValue = TimeValue.timeValueNanos(10000);
-            when(mockResponse.getTook()).thenReturn(timeValue);
-            listener.onResponse(mockResponse);
+            ReindexListener listener = invocation.getArgument(2);
+            listener.onSuccess();
             return null;
         }).when(ccdElasticClient).reindexData(
             eq(caseTypeName),
@@ -136,7 +128,7 @@ public class ReindexServiceTest {
         mockAliasResponse();
 
         doAnswer(invocation -> {
-            ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
+            ReindexListener listener = invocation.getArgument(2);
             listener.onFailure(new RuntimeException("reindexing failed"));
             return null;
         }).when(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());

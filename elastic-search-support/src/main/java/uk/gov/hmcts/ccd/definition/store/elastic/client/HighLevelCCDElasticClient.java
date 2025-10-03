@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
@@ -17,18 +16,17 @@ import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.PutMappingRequest;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.index.reindex.ReindexRequest;
 import org.elasticsearch.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
+import uk.gov.hmcts.ccd.definition.store.elastic.ReindexHelper;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
+import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import static org.elasticsearch.index.reindex.AbstractBulkByScrollRequest.AUTO_SLICES;
 import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener.GLOBAL_SEARCH;
 
 @Slf4j
@@ -168,21 +166,14 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         return deleteResponse.isAcknowledged();
     }
 
-    public void reindexData(String oldIndex, String newIndex, ActionListener<BulkByScrollResponse> listener) {
-        ReindexRequest reindexRequest = new ReindexRequest();
-        reindexRequest.setSourceIndices(oldIndex);
-        reindexRequest.setDestIndex(newIndex);
-        reindexRequest.setRefresh(false);
-        reindexRequest.setSourceBatchSize(5000);
-        reindexRequest.setSlices(AUTO_SLICES); // auto parallelize based on number of shards
-        reindexRequest.setRequestsPerSecond(Float.POSITIVE_INFINITY); // no throttling
-
-        //doesn't return taskID
-        elasticClient.reindexAsync(
-            reindexRequest,
-            RequestOptions.DEFAULT,
-            listener
-        );
+    public String reindexData(String oldIndex, String newIndex,
+                            ReindexListener listener) {
+        ReindexHelper helper = new ReindexHelper(elasticClient);
+        try {
+            return helper.reindexIndex(oldIndex, newIndex, 5000, listener);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void refresh(String... indexes) throws IOException {

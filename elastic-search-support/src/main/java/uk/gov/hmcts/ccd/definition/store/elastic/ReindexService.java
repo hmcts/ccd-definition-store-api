@@ -2,15 +2,14 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
+import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -53,20 +52,23 @@ public class ReindexService {
         elasticClient.createIndexAndMapping(incrementedCaseTypeName, caseMapping);
 
         //initiate reindexing
-        handleReindexing(elasticClient, baseIndexName, caseTypeName, incrementedCaseTypeName,
-            event.isDeleteOldIndex());
-        //dummy value for phase 1
-        event.setTaskId("taskID");
+        String taskId = handleReindexing(elasticClient,
+                baseIndexName,
+                caseTypeName,
+                incrementedCaseTypeName,
+                event.isDeleteOldIndex());
+        event.setTaskId(taskId);
         log.info("reindexing successful for case type: {}", caseType.getReference());
         log.info("task id returned from the import: {}", event.getTaskId());
     }
 
-    private void handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
+    private String handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
                                   String oldIndex, String newIndex,
                                   boolean deleteOldIndex) {
-        elasticClient.reindexData(oldIndex, newIndex, new ActionListener<>() {
+
+        return elasticClient.reindexData(oldIndex, newIndex, new ReindexListener() {
             @Override
-            public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
+            public void onSuccess() {
                 try (elasticClient; HighLevelCCDElasticClient highLevelCCDElasticClient = clientFactory.getObject()) {
                     //if success set writable and update alias to new index
                     log.info("updating alias from {} to {}", oldIndex, newIndex);
@@ -78,11 +80,7 @@ public class ReindexService {
                         log.info("deleting old index {}", oldIndex);
                         highLevelCCDElasticClient.removeIndex(oldIndex);
                     }
-                    log.info("Reindex process for case type {} Total docs {}, Took  {}, secondsFrac {}",
-                        newIndex,
-                        bulkByScrollResponse.getTotal(),
-                        bulkByScrollResponse.getTook(),
-                        bulkByScrollResponse.getTook().secondsFrac());
+                    log.info("Reindex process for case type {} completed", newIndex);
                 } catch (IOException e) {
                     log.error("failed to clean up after reindexing success", e);
                     throw new CompletionException(e);
@@ -91,7 +89,6 @@ public class ReindexService {
 
             @Override
             public void onFailure(Exception ex) {
-
                 try (elasticClient; HighLevelCCDElasticClient highLevelCCDElasticClient = clientFactory.getObject()) {
                     //if failed delete new index, set old index writable
                     log.error("Reindex process for case type {} is failed, Time {}",
@@ -123,9 +120,7 @@ public class ReindexService {
 
         int incremented = Integer.parseInt(numberStr) + 1;
         String formattedNumber = StringUtils.leftPad(String.valueOf(incremented), numberStr.length(), '0');
-
-        String incrementedIndexName = prefix + formattedNumber;
-        return incrementedIndexName;
+        return prefix + formattedNumber;
     }
 
 }
