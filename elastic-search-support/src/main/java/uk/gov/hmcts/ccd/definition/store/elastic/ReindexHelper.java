@@ -59,49 +59,24 @@ public class ReindexHelper {
         executor.execute(() -> {
             try {
                 while (!Thread.currentThread().isInterrupted()) {
-                    GetTaskRequest getTaskRequest = new GetTaskRequest(nodeId, taskNumericId);
-                    Optional<GetTaskResponse> taskResponse = client.tasks().get(getTaskRequest, RequestOptions.DEFAULT);
+                    Optional<GetTaskResponse> taskResponse = fetchTaskResponse(nodeId, taskNumericId);
 
-                    if (taskResponse.isEmpty()) {
-                        log.info("Task not found: {}. Retrying...", taskId);
-                        Thread.sleep(pollIntervalMs);
+                    if (shouldWaitForMissingTask(taskResponse, taskId, pollIntervalMs)) {
                         continue;
                     }
 
                     TaskInfo taskInfo = taskResponse.get().getTaskInfo();
-                    if (taskInfo == null) {
-                        log.info("Task info not found yet for task: {}. Retrying...", taskId);
-                        Thread.sleep(pollIntervalMs);
+                    if (shouldWaitForMissingInfo(taskInfo, taskId, pollIntervalMs)) {
                         continue;
                     }
 
                     if (taskResponse.get().isCompleted()) {
-                        Object statusObj = taskInfo.getStatus();
-                        if (statusObj == null) {
-                            listener.onFailure(new RuntimeException("Reindex process completed with unknown status"));
+                        if (handleCompletion(taskInfo, listener, destIndex)) {
                             break;
                         }
-
-                        String json = mapper.writeValueAsString(statusObj);
-                        JsonNode statusJson = mapper.readTree(json);
-
-                        if (statusJson.has("failures") && !statusJson.path("failures").isEmpty()) {
-                            listener.onFailure(new RuntimeException("Reindex process failed: "
-                                + statusJson.path("failures")));
-                            break;
-                        }
-
-                        int total = statusJson.path("total").asInt(0);
-                        int created = statusJson.path("created").asInt(0);
-                        int updated = statusJson.path("updated").asInt(0);
-                        int batches = statusJson.path("batches").asInt(0);
-                        log.info("Progress for index {}: total={}, created={}, updated={}, batches={}",
-                            destIndex, total, created, updated, batches);
-
-                        listener.onSuccess();
-                        break;
+                    } else {
+                        Thread.sleep(pollIntervalMs);
                     }
-                    Thread.sleep(pollIntervalMs);
                 }
             } catch (InterruptedException ie) {
                 Thread.currentThread().interrupt();
@@ -111,6 +86,71 @@ public class ReindexHelper {
             }
         });
         return taskId;
+    }
+
+    private Optional<GetTaskResponse> fetchTaskResponse(String nodeId, long taskNumericId) throws IOException {
+        GetTaskRequest getTaskRequest = new GetTaskRequest(nodeId, taskNumericId);
+        return client.tasks().get(getTaskRequest, RequestOptions.DEFAULT);
+    }
+
+    private boolean shouldWaitForMissingTask(Optional<GetTaskResponse> taskResponse,
+                                             String taskId,
+                                             long pollIntervalMs) throws InterruptedException {
+        if (taskResponse.isEmpty()) {
+            log.info("Task not found: {}. Retrying...", taskId);
+            Thread.sleep(pollIntervalMs);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean shouldWaitForMissingInfo(TaskInfo taskInfo,
+                                             String taskId,
+                                             long pollIntervalMs) throws InterruptedException {
+        if (taskInfo == null) {
+            log.info("Task info not found yet for task: {}. Retrying...", taskId);
+            Thread.sleep(pollIntervalMs);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean handleCompletion(TaskInfo taskInfo,
+                                     ReindexListener listener,
+                                     String destIndex) throws IOException {
+        Object statusObj = taskInfo.getStatus();
+        if (statusObj == null) {
+            listener.onFailure(new RuntimeException("Reindex process completed with unknown status"));
+            return true;
+        }
+
+        JsonNode statusJson = toStatusJson(statusObj);
+        if (hasFailures(statusJson)) {
+            listener.onFailure(new RuntimeException("Reindex process failed: " + statusJson.path("failures")));
+            return true;
+        }
+
+        logProgress(destIndex, statusJson);
+        listener.onSuccess();
+        return true;
+    }
+
+    private JsonNode toStatusJson(Object statusObj) throws IOException {
+        String json = mapper.writeValueAsString(statusObj);
+        return mapper.readTree(json);
+    }
+
+    private boolean hasFailures(JsonNode statusJson) {
+        return statusJson.has("failures") && !statusJson.path("failures").isEmpty();
+    }
+
+    private void logProgress(String destIndex, JsonNode statusJson) {
+        int total = statusJson.path("total").asInt(0);
+        int created = statusJson.path("created").asInt(0);
+        int updated = statusJson.path("updated").asInt(0);
+        int batches = statusJson.path("batches").asInt(0);
+        log.info("Progress for index {}: total={}, created={}, updated={}, batches={}",
+            destIndex, total, created, updated, batches);
     }
 
     public Executor asyncExecutor() {
