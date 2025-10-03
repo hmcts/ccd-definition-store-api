@@ -42,7 +42,7 @@ public class ElasticSearchConfiguration {
         RestClientBuilder builder = RestClient.builder(new HttpHost(config.getHost(), config.getPort()));
         RestClientBuilder.RequestConfigCallback requestConfigCallback = requestConfigBuilder ->
             requestConfigBuilder.setConnectTimeout(5000)
-                .setSocketTimeout(300 * 60000);
+                .setSocketTimeout(120 * 60000);
         builder.setRequestConfigCallback(requestConfigCallback);
         return new RestHighLevelClient(builder);
     }

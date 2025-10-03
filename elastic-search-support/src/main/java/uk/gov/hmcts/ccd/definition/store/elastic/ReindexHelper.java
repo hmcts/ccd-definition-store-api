@@ -42,7 +42,7 @@ public class ReindexHelper {
         request.addParameter("wait_for_completion", "false");
         request.addParameter("refresh", "false");
         request.addParameter("requests_per_second", "-1");
-        request.addParameter("timeout", "3h");
+        request.addParameter("timeout", "2h");
         request.addParameter("slices", "auto");
         request.setJsonEntity(jsonBody);
 
