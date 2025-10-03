@@ -60,21 +60,17 @@ public class ReindexHelper {
                 while (!Thread.currentThread().isInterrupted()) {
                     Optional<GetTaskResponse> taskResponse = fetchTaskResponse(nodeId, taskNumericId);
 
-                    if (shouldWaitForMissingTask(taskResponse, taskId, pollIntervalMs)) {
-                        continue;
-                    }
-
-                    TaskInfo taskInfo = taskResponse.get().getTaskInfo();
-                    if (shouldWaitForMissingInfo(taskInfo, taskId, pollIntervalMs)) {
-                        continue;
-                    }
-
-                    if (taskResponse.get().isCompleted()) {
-                        if (handleCompletion(taskInfo, listener, destIndex)) {
-                            break;
+                    if (!shouldWaitForMissingTask(taskResponse, taskId, pollIntervalMs)) {
+                        TaskInfo taskInfo = taskResponse.get().getTaskInfo();
+                        if (!shouldWaitForMissingInfo(taskInfo, taskId, pollIntervalMs)) {
+                            if (taskResponse.get().isCompleted()) {
+                                if (handleCompletion(taskInfo, listener, destIndex)) {
+                                    break;
+                                }
+                            } else {
+                                Thread.sleep(pollIntervalMs);
+                            }
                         }
-                    } else {
-                        Thread.sleep(pollIntervalMs);
                     }
                 }
             } catch (InterruptedException ie) {
