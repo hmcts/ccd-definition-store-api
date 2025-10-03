@@ -34,7 +34,7 @@ public class ReindexHelper {
                              long pollIntervalMs,
                              ReindexListener listener) throws IOException {
         String jsonBody = "{"
-            + " \"source\": { \"index\": \"" + sourceIndex + "\", \"size\": 2000 },"
+            + " \"source\": { \"index\": \"" + sourceIndex + "\" },"
             + " \"dest\": { \"index\": \"" + destIndex + "\" }"
             + "}";
 
@@ -44,7 +44,6 @@ public class ReindexHelper {
         request.addParameter("requests_per_second", "-1");
         request.addParameter("timeout", "3h");
         request.addParameter("slices", "auto");
-        request.addParameter("conflicts", "proceed");
         request.setJsonEntity(jsonBody);
 
         Response response = client.getLowLevelClient().performRequest(request);
