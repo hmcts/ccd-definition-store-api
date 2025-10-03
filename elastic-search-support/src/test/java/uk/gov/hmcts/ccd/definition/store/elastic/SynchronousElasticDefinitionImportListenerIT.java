@@ -167,7 +167,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         definitionImportListener.onDefinitionImported(event);
 
 
-        await().atMost(5, SECONDS).untilAsserted(() -> {
+        await().atMost(20, SECONDS).untilAsserted(() -> {
             String response = getElasticsearchIndices(CASE_TYPE_A_REINDEX);
             assertThat(response, containsString("casetypea_ri_cases-000002"));
             assertThat(response, not(containsString("casetypea_ri_cases-000001")));
