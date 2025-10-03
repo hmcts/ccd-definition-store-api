@@ -9,7 +9,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchIntegrationTestApplication;
-import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexDBService;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
 
 import java.util.List;
@@ -32,7 +32,7 @@ class ReindexTaskControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private ReindexDBService reindexDBService;
+    private ReindexService reindexService;
 
     private static final String CASE_TYPE_1 = "CT1";
     private static final String CASE_TYPE_2 = "CT2";
@@ -44,7 +44,7 @@ class ReindexTaskControllerTest {
         ReindexTask task2 = new ReindexTask();
         task2.setCaseType(CASE_TYPE_2);
 
-        when(reindexDBService.getTasksByCaseType(null)).thenReturn(List.of(task1, task2));
+        when(reindexService.getTasksByCaseType(null)).thenReturn(List.of(task1, task2));
 
         mockMvc.perform(get(ReindexTaskController.REINDEX_TASKS_URI)
                 .accept(MediaType.APPLICATION_JSON))
@@ -53,7 +53,7 @@ class ReindexTaskControllerTest {
             .andExpect(jsonPath("$[0].caseType", is(CASE_TYPE_1)))
             .andExpect(jsonPath("$[1].caseType", is(CASE_TYPE_2)));
 
-        verify(reindexDBService).getTasksByCaseType(null);
+        verify(reindexService).getTasksByCaseType(null);
     }
 
     @Test
@@ -63,7 +63,7 @@ class ReindexTaskControllerTest {
         ReindexTask task2 = new ReindexTask();
         task2.setCaseType(CASE_TYPE_2);
 
-        when(reindexDBService.getTasksByCaseType(CASE_TYPE_1)).thenReturn(List.of(task));
+        when(reindexService.getTasksByCaseType(CASE_TYPE_1)).thenReturn(List.of(task));
 
         mockMvc.perform(get(ReindexTaskController.REINDEX_TASKS_URI)
                 .param("caseType", CASE_TYPE_1)
@@ -72,6 +72,6 @@ class ReindexTaskControllerTest {
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[0].caseType", is(CASE_TYPE_1)));
 
-        verify(reindexDBService).getTasksByCaseType(CASE_TYPE_1);
+        verify(reindexService).getTasksByCaseType(CASE_TYPE_1);
     }
 }

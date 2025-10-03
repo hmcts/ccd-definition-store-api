@@ -1,15 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.rest.RestStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,10 +16,9 @@ import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperti
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
-import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexDBService;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
@@ -34,13 +30,12 @@ import java.util.Set;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -69,24 +64,18 @@ class ElasticDefinitionImportListenerTest {
     private ElasticsearchErrorHandler elasticsearchErrorHandler;
 
     @Mock
-    private ReindexDBService reindexDBService;
-
-    @InjectMocks
-    private ElasticReindexService elasticReindexService;
+    private ReindexService reindexService;
 
     private final CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA")
         .withReference("caseTypeA").build();
     private final CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB")
         .withReference("caseTypeB").build();
     private final String baseIndexName = "casetypea";
-    private final String oldIndexName = "casetypea_cases-000001";
-    private final String newIndexName = "casetypea_cases-000002";
 
     @BeforeEach
     void setUp() {
-        elasticReindexService = new ElasticReindexService(caseMappingGenerator, clientObjectFactory, reindexDBService);
         listener = new TestDefinitionImportListener(config, caseMappingGenerator,
-            clientObjectFactory, elasticsearchErrorHandler, elasticReindexService, reindexDBService);
+            clientObjectFactory, elasticsearchErrorHandler, reindexService);
 
         lenient().when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
     }
@@ -165,6 +154,9 @@ class ElasticDefinitionImportListenerTest {
 
         assertEquals(wrapped, thrown);
         verify(elasticsearchErrorHandler).createException(any(ElasticsearchStatusException.class), eq(caseA));
+        assertInstanceOf(RuntimeException.class, thrown.getCause());
+        assertEquals("wrapped", thrown.getCause().getMessage());
+
     }
 
     @Test
@@ -176,44 +168,6 @@ class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    void initialiseElasticSearchWhenReindexAndDeleteOldIndexAreTrue() throws IOException {
-        mockSuccessfulReindex();
-
-        listener.onDefinitionImported(newEvent(true, true, caseA));
-
-        verify(reindexDBService).saveEntity(true, true, caseA, newIndexName);
-        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, true);
-        verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
-        verify(ccdElasticClient).createIndexAndMapping(newIndexName, "caseMapping");
-        verify(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any());
-        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
-        verify(ccdElasticClient).updateAlias(baseIndexName, oldIndexName, newIndexName);
-        verify(reindexDBService).updateEntity(eq(newIndexName), anyString());
-
-        verify(ccdElasticClient).removeIndex(oldIndexName);
-        ArgumentCaptor<String> oldIndexCaptor = ArgumentCaptor.forClass(String.class);
-        verify(ccdElasticClient).removeIndex(oldIndexCaptor.capture());
-        assertEquals(oldIndexName, oldIndexCaptor.getValue());
-    }
-
-    @Test
-    void initialiseElasticSearchWhenReindexTrueAndDeleteOldIndexFalse() throws IOException {
-        mockSuccessfulReindex();
-
-        listener.onDefinitionImported(newEvent(true, false, caseA));
-
-        verify(reindexDBService).saveEntity(true, false, caseA, newIndexName);
-        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, true);
-        verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
-        verify(ccdElasticClient).createIndexAndMapping(newIndexName, "caseMapping");
-        verify(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any());
-        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
-        verify(ccdElasticClient).updateAlias(baseIndexName, oldIndexName, newIndexName);
-        verify(reindexDBService).updateEntity(eq(newIndexName), anyString());
-        verify(ccdElasticClient, never()).removeIndex(oldIndexName);
-    }
-
-    @Test
     void shouldNotInitialiseElasticSearchWhenReindexFalseAndDeleteOldIndexTrue() throws IOException {
         //expected behaviour should be same as default (reindex false and old index false)
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
@@ -221,87 +175,12 @@ class ElasticDefinitionImportListenerTest {
 
         listener.onDefinitionImported(newEvent(false, true, caseA));
 
-        verify(reindexDBService, never()).saveEntity(any(), any(), any(), any());
+        verify(reindexService, never()).saveEntity(any(), any(), any(), any());
         verify(ccdElasticClient, never()).reindexData(anyString(), anyString(), any());
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).upsertMapping(baseIndexName, "caseMapping");
 
         verify(ccdElasticClient, never()).removeIndex(anyString());
-    }
-
-    @Test
-    void deletesNewIndexOnFailedReindex() throws IOException {
-        mockFailedReindex();
-
-        DefinitionImportedEvent event = newEvent(true, true, caseA);
-
-        assertThrows(ElasticSearchInitialisationException.class, () ->
-            listener.onDefinitionImported(event));
-
-        verify(ccdElasticClient).removeIndex(newIndexName);
-        verify(ccdElasticClient).setIndexReadOnly(oldIndexName, false);
-        //using a single mock, so close() is called twice (in event listener and reindexing failure handler)
-        verify(ccdElasticClient, atLeast(2)).close();
-    }
-
-    @Test
-    void shouldPersistFailureElasticsearchStatusExceptionBeforeReindex() throws IOException {
-        mockAliasResponse();
-
-        when(caseMappingGenerator.generateMapping(any()))
-            .thenThrow(new ElasticsearchStatusException("ES error", RestStatus.BAD_REQUEST));
-
-        assertThrows(ElasticSearchInitialisationException.class, () ->
-            listener.onDefinitionImported(newEvent(true, true, caseA))
-        );
-
-        verify(reindexDBService).updateEntity(eq(newIndexName),
-            any(ElasticsearchStatusException.class));
-    }
-
-    @Test
-    void triggerPersistFailureOnFailedReindex() throws IOException {
-        mockFailedReindex();
-
-        DefinitionImportedEvent event = new DefinitionImportedEvent(
-            Collections.singletonList(caseA), true, true);
-
-        assertThrows(ElasticSearchInitialisationException.class, () ->
-            listener.onDefinitionImported(event)
-        );
-
-        verify(reindexDBService).updateEntity(eq(newIndexName), any(Exception.class));
-    }
-
-    @Test
-    void triggerPersistFailureWhenReindexFailsBeforeHandleReindexing() throws IOException {
-        mockAliasResponse();
-        when(caseMappingGenerator.generateMapping(any())).thenThrow(
-            new RuntimeException("mapping failure before reindex"));
-
-        assertThrows(ElasticSearchInitialisationException.class, () ->
-            listener.onDefinitionImported(newEvent(true, true, caseA))
-        );
-
-        verify(reindexDBService).updateEntity(eq(newIndexName), any(Exception.class));
-    }
-
-    @Test
-    void shouldIncrementIndexNumber() {
-        String result = elasticReindexService.incrementIndexNumber(oldIndexName);
-        assertEquals(newIndexName, result);
-    }
-
-    @Test
-    void incrementToDoubleDigitIndexNumber() {
-        String result = elasticReindexService.incrementIndexNumber("casetypea_cases-000009");
-        assertEquals("casetypea_cases-000010", result);
-    }
-
-    @Test
-    void incrementIndexNumberWithDash() {
-        String result = elasticReindexService.incrementIndexNumber("casetype-a_cases-000001");
-        assertEquals("casetype-a_cases-000002", result);
     }
 
     @Test
@@ -326,33 +205,13 @@ class ElasticDefinitionImportListenerTest {
 
         GetAliasesResponse aliasResponse = mock(GetAliasesResponse.class);
         Map<String, Set<AliasMetadata>> aliasMap = new HashMap<>();
+        String oldIndexName = "casetypea_cases-000001";
         aliasMap.put(oldIndexName,
             Collections.singleton(AliasMetadata.builder(baseIndexName).build()));
         lenient().when(aliasResponse.getAliases()).thenReturn(aliasMap);
         lenient().when(ccdElasticClient.getAlias(anyString())).thenReturn(aliasResponse);
 
         lenient().when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
-    }
-
-    private void mockSuccessfulReindex() throws IOException {
-        mockAliasResponse();
-        doAnswer(invocation -> {
-            ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
-            listener.onResponse(mock(BulkByScrollResponse.class));
-            return null;
-        }).when(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any());
-    }
-
-    private void mockFailedReindex() throws IOException {
-        mockAliasResponse();
-        doAnswer(invocation -> {
-            ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
-            listener.onFailure(new RuntimeException("reindexing failed"));
-            return null;
-        }).when(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any());
-
-        when(reindexDBService.saveEntity(true, true, caseA, newIndexName)
-        ).thenReturn(new ReindexEntity());
     }
 
     private DefinitionImportedEvent newEvent(CaseTypeEntity... caseTypes) {
@@ -368,10 +227,8 @@ class ElasticDefinitionImportListenerTest {
         public TestDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
                                             ObjectFactory<HighLevelCCDElasticClient> clientFactory,
                                             ElasticsearchErrorHandler elasticsearchErrorHandler,
-                                            ElasticReindexService elasticReindexService,
-                                            ReindexDBService reindexDBService) {
-            super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler, elasticReindexService,
-                reindexDBService);
+                                            ReindexService reindexService) {
+            super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler, reindexService);
         }
 
         @Override

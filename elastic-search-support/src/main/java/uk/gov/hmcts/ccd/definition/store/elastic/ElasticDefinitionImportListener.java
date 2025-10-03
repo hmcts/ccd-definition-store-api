@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperti
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
-import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexDBService;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
@@ -29,22 +29,18 @@ public abstract class ElasticDefinitionImportListener {
 
     private final ElasticsearchErrorHandler elasticsearchErrorHandler;
 
-    private final ElasticReindexService elasticReindexService;
-
-    private final ReindexDBService reindexDBService;
+    private final ReindexService reindexService;
 
 
     public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory,
                                            ElasticsearchErrorHandler elasticsearchErrorHandler,
-                                           ElasticReindexService elasticReindexService,
-                                           ReindexDBService reindexDBService) {
+                                           ReindexService reindexService) {
         this.config = config;
         this.mappingGenerator = mappingGenerator;
         this.clientFactory = clientFactory;
         this.elasticsearchErrorHandler = elasticsearchErrorHandler;
-        this.elasticReindexService = elasticReindexService;
-        this.reindexDBService = reindexDBService;
+        this.reindexService = reindexService;
     }
 
     public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
@@ -70,7 +66,7 @@ public abstract class ElasticDefinitionImportListener {
                     elasticClient.createIndex(actualIndexName, baseIndexName);
                 }
                 if (event.isReindex()) {
-                    elasticReindexService.asyncReindex(event, baseIndexName, caseType);
+                    reindexService.asyncReindex(event, baseIndexName, caseType);
                 } else {
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);

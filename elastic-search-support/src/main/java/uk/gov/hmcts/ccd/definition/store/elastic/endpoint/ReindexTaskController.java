@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexDBService;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
 
 import java.util.List;
@@ -22,11 +22,11 @@ public class ReindexTaskController {
 
     public static final String REINDEX_TASKS_URI = "/elastic-support/reindex/tasks";
 
-    private final ReindexDBService reindexDBService;
+    private final ReindexService reindexService;
 
     @Autowired
-    public ReindexTaskController(ReindexDBService reindexDBService) {
-        this.reindexDBService = reindexDBService;
+    public ReindexTaskController(ReindexService reindexService) {
+        this.reindexService = reindexService;
     }
 
     @GetMapping
@@ -40,7 +40,7 @@ public class ReindexTaskController {
     public ResponseEntity<List<ReindexTask>> getReindexTasksByCaseType(
         @RequestParam(value = "caseType", required = false) String caseType
     ) {
-        List<ReindexTask> response = reindexDBService.getTasksByCaseType(caseType);
+        List<ReindexTask> response = reindexService.getTasksByCaseType(caseType);
         return ResponseEntity.ok(response);
     }
 }
