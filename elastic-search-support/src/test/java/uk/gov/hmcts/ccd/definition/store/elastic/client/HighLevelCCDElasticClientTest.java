@@ -182,8 +182,6 @@ class HighLevelCCDElasticClientTest {
     @Test
     void shouldUpsertMappingSuccessfully() throws IOException {
         // Given
-        String aliasName = "test-alias";
-        String caseTypeMapping = "{\"properties\":{\"field1\":{\"type\":\"text\"}}}";
         Map<String, Set<org.elasticsearch.cluster.metadata.AliasMetadata>> aliases = new HashMap<>();
         Set<org.elasticsearch.cluster.metadata.AliasMetadata> aliasSet = new HashSet<>();
         aliasSet.add(mock(org.elasticsearch.cluster.metadata.AliasMetadata.class));
@@ -196,6 +194,8 @@ class HighLevelCCDElasticClientTest {
         when(acknowledgedResponse.isAcknowledged()).thenReturn(true);
 
         // When
+        final String aliasName = "test-alias";
+        final String caseTypeMapping = "{\"properties\":{\"field1\":{\"type\":\"text\"}}}";
         boolean result = client.upsertMapping(aliasName, caseTypeMapping);
 
         // Then
@@ -207,8 +207,6 @@ class HighLevelCCDElasticClientTest {
     @Test
     void shouldReturnFalseWhenUpsertMappingFails() throws IOException {
         // Given
-        String aliasName = "test-alias";
-        String caseTypeMapping = "{\"properties\":{\"field1\":{\"type\":\"text\"}}}";
         Map<String, Set<org.elasticsearch.cluster.metadata.AliasMetadata>> aliases = new HashMap<>();
         Set<org.elasticsearch.cluster.metadata.AliasMetadata> aliasSet = new HashSet<>();
         aliasSet.add(mock(org.elasticsearch.cluster.metadata.AliasMetadata.class));
@@ -221,6 +219,8 @@ class HighLevelCCDElasticClientTest {
         when(acknowledgedResponse.isAcknowledged()).thenReturn(false);
 
         // When
+        final String aliasName = "test-alias";
+        final String caseTypeMapping = "{\"properties\":{\"field1\":{\"type\":\"text\"}}}";
         boolean result = client.upsertMapping(aliasName, caseTypeMapping);
 
         // Then
@@ -232,8 +232,6 @@ class HighLevelCCDElasticClientTest {
     @Test
     void shouldThrowExceptionWhenUpsertMappingFailsWithIOException() throws IOException {
         // Given
-        String aliasName = "test-alias";
-        String caseTypeMapping = "{\"properties\":{\"field1\":{\"type\":\"text\"}}}";
         Map<String, Set<org.elasticsearch.cluster.metadata.AliasMetadata>> aliases = new HashMap<>();
         Set<org.elasticsearch.cluster.metadata.AliasMetadata> aliasSet = new HashSet<>();
         aliasSet.add(mock(org.elasticsearch.cluster.metadata.AliasMetadata.class));
@@ -245,6 +243,8 @@ class HighLevelCCDElasticClientTest {
             .thenThrow(new IOException("Upsert mapping failed"));
 
         // When / Then
+        final String aliasName = "test-alias";
+        final String caseTypeMapping = "{\"properties\":{\"field1\":{\"type\":\"text\"}}}";
         assertThatThrownBy(() -> client.upsertMapping(aliasName, caseTypeMapping))
             .isInstanceOf(IOException.class)
             .hasMessage("Upsert mapping failed");
