@@ -123,12 +123,10 @@ class ReindexHelperTest {
     @Test
     void shouldHandleInterruptedExceptionInReindexProcess() throws IOException {
         // Given
-        long pollIntervalMs = 100L;
         String taskId = "node:123";
-        String responseBody = "{\"task\":\"" + taskId + "\"}";
-
         when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
         when(httpResponse.getEntity()).thenReturn(httpEntity);
+        String responseBody = "{\"task\":\"" + taskId + "\"}";
         when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
 
         // Mock executor to interrupt the thread
@@ -144,6 +142,7 @@ class ReindexHelperTest {
         // When
         final String sourceIndex = "source-index";
         final String destIndex = "dest-index";
+        long pollIntervalMs = 100L;
         String result = reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener);
 
         // Then
