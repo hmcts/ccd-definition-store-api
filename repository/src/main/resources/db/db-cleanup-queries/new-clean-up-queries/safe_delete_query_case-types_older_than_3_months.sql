@@ -1,91 +1,3 @@
-CREATE OR REPLACE FUNCTION safe_delete_query(
-    delete_sql   text,         -- original DELETE, may include USING/aliases
-    tbl          regclass,     -- target table
-    pk_column    text,         -- PK column of target table
-    batch_size   int DEFAULT 1000
-)
-RETURNS void
-LANGUAGE plpgsql
-AS $$
-DECLARE
-    rows_deleted int;
-    total_deleted int := 0;
-    full_tbl_name text := tbl::text;
-    base_table text;
-    alias_name text;
-    select_pk_sql text;
-    m text[];
-BEGIN
-    /*
-      Parse "DELETE FROM <table> [alias] rest"
-      Group 1 = table name
-      Group 2 = alias (optional)
-      Group 3 = rest of statement (USING/WHERE)
-    */
-    SELECT regexp_matches(
-             delete_sql,
-             '^DELETE\s+FROM\s+("?[\w]+"?)(?:\s+([A-Za-z_][A-Za-z0-9_]*))?(.*)$',
-             'i'
-           )
-      INTO m;
-
-    IF m IS NULL THEN
-        RAISE EXCEPTION 'Unsupported DELETE form: %', delete_sql;
-    END IF;
-
-    base_table := m[1];
-    alias_name := m[2];
-    -- m[3] is " rest", including USING/WHERE
-
-    -- Build SELECT DISTINCT pk_val, ctid
-    IF alias_name IS NOT NULL THEN
-        select_pk_sql := format(
-            'SELECT DISTINCT %s.%I AS pk_val, %s.ctid
-             FROM %s %s %s',
-            alias_name, pk_column, alias_name,
-            base_table, alias_name, coalesce(m[3],'')
-        );
-    ELSE
-        select_pk_sql := format(
-            'SELECT DISTINCT %I AS pk_val, %s.ctid
-             FROM %s %s',
-            pk_column, base_table,
-            base_table, coalesce(m[3],'')
-        );
-    END IF;
-
-    <<batch_loop>>
-    LOOP
-        EXECUTE format(
-            'WITH keys AS (%s LIMIT %s)
-             DELETE FROM %s t
-             USING keys k
-             WHERE t.ctid = k.ctid',
-            select_pk_sql,
-            batch_size,
-            full_tbl_name
-        );
-
-        GET DIAGNOSTICS rows_deleted = ROW_COUNT;
-        EXIT batch_loop WHEN rows_deleted = 0;
-
-        total_deleted := total_deleted + rows_deleted;
-
-        RAISE NOTICE 'Batch deleted % rows from %', rows_deleted, full_tbl_name;
-
-        INSERT INTO ddl_log(action, table_name, message)
-        VALUES ('DELETE', full_tbl_name,
-                'Deleted batch of ' || rows_deleted || ' rows from ' || full_tbl_name);
-    END LOOP;
-
-    RAISE NOTICE 'Total deleted from %: % rows', full_tbl_name, total_deleted;
-
-    INSERT INTO ddl_log(action, table_name, message)
-    VALUES ('DELETE SUMMARY', full_tbl_name,
-            'Total deleted ' || total_deleted || ' rows from ' || full_tbl_name);
-END;
-$$;
-
 CREATE OR REPLACE FUNCTION manage_constraint(
     tbl regclass,         -- table name
     constraint_name text, -- constraint name
@@ -859,7 +771,6 @@ SELECT drop_cleanup_temp_tables();
 --finally re-create the FKs dropped earlier to restore DB integrity
 SELECT create_foreign_key_relationships();
 
-DROP FUNCTION IF EXISTS safe_delete_query(text, regclass, text, int4);
 DROP FUNCTION IF EXISTS manage_constraint(regclass, text, text, text);
 DROP FUNCTION IF EXISTS drop_foreign_key_relationships();
 DROP FUNCTION IF EXISTS create_foreign_key_relationships();
