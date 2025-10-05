@@ -18,7 +18,7 @@ This file contains **manual steps** to clean up the data.
 
 ---
 
-### 2. `new-clean-up-quaries/types_older_than_3_months.sql`
+### 2. `new-clean-up-quaries/safe_delete_query_case-types_older_than_3_months.sql`
 
 This file provides a **semi-automated cleanup** process.
 
@@ -60,7 +60,7 @@ This file defines a **stored procedure** (`cleanup_case_types`) for automated cl
 | Script | Type | Execution | Description |
 |--------|------|------------|--------------|
 | `Remove case_type older than 3 months - Optimised.sql` | Manual | Step-by-step | Cleans data older than 3 months manually |
-| `types_older_than_3_months.sql` | Semi-Automated | Single transaction | Creates and runs helper functions |
+| `safe_delete_query_case-types_older_than_3_months.sql` | Semi-Automated | Single transaction | Creates and runs helper functions |
 | `stored-procedure-safe_delete_query_case-types_older_than_3_months.sql` | Fully Automated | Stored Procedure | Installs SP for reusable automated clean-ups |
 
 ---
