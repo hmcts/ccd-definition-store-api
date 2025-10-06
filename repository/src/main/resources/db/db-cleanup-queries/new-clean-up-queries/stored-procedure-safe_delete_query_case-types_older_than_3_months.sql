@@ -1041,10 +1041,10 @@ BEGIN
 
     RAISE NOTICE 'cleanup_case_types procedure finished successfully for data older than % months (batch_size=%)',
     older_than_months, batch_size;
-    
+
     INSERT INTO ddl_log(action, table_name, message)
     VALUES ('SUMMARY','cleanup_case_types',
-            format('Procedure completed with batch_size = %s at %s',
+            format('Procedure completed with batch_size = %s,  at %s',
                    batch_size, now()));
 
 END;
