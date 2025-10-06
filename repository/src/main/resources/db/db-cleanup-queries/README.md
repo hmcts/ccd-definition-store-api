@@ -43,9 +43,9 @@ This file defines a **stored procedure** (`cleanup_case_types`) for automated cl
 
 > 💻 **Run command:**
 > ```sql
-> CALL cleanup_case_types(2000);
+> CALL cleanup_case_types(2000, 3);
 > ```
-> This executes the stored procedure with a **batch size of 2000**.  
+> This executes the stored procedure with a **batch size of 2000**, and **data deletion of 3 months** and older 
 > Each iteration deletes records in batches of 2000 rows.  
 > If any record in a batch fails to delete, the process automatically falls back to **record-by-record deletion** for reliability.
 

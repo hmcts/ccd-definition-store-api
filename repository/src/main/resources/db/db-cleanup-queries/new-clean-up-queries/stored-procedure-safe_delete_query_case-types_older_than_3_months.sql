@@ -1,4 +1,5 @@
-CREATE OR REPLACE PROCEDURE cleanup_case_types(batch_size int DEFAULT 1000)
+CREATE OR REPLACE PROCEDURE cleanup_case_types(batch_size int DEFAULT 1000,
+    older_than_months int DEFAULT 3)
 LANGUAGE plpgsql
 AS $$
 BEGIN
@@ -230,10 +231,12 @@ BEGIN
 
     -- prepare_cleanup_temp_tables
     EXECUTE $fn$
-    CREATE OR REPLACE FUNCTION prepare_cleanup_temp_tables()
+    CREATE OR REPLACE FUNCTION prepare_cleanup_temp_tables(older_than_months int)
     RETURNS void
     LANGUAGE plpgsql
     AS $body$
+        DECLARE
+    	row_count int;
     BEGIN
         RAISE NOTICE 'prepare_cleanup_temp_tables STARTED';
        
@@ -251,8 +254,8 @@ BEGIN
     	    message TEXT
     	);
 
-        BEGIN
-            CREATE TEMP TABLE case_type_ids_to_remove AS
+        EXECUTE format(
+	        'CREATE TEMP TABLE case_type_ids_to_remove AS
             SELECT id
             FROM case_type ct
             INNER JOIN (
@@ -262,13 +265,15 @@ BEGIN
             ) grouped_ct
             ON ct.reference = grouped_ct.reference
             WHERE ct.version != grouped_ct.max_version
-              AND ct.created_at <= NOW() - INTERVAL '5 months'
-            ORDER BY id ASC;
-            RAISE NOTICE 'Created temp table case_type_ids_to_remove with % rows',
-                (SELECT COUNT(*) FROM case_type_ids_to_remove);
-        EXCEPTION WHEN OTHERS THEN
-            RAISE NOTICE 'Could not create case_type_ids_to_remove: %', SQLERRM;
-        END;
+            AND ct.created_at <= NOW() - INTERVAL ''%s MONTH''
+	        ORDER BY id ASC;',
+	        older_than_months
+	    );
+
+    	EXECUTE 'SELECT COUNT(*) FROM case_type_ids_to_remove' INTO row_count;
+
+    	RAISE NOTICE 'Created temp table case_type_ids_to_remove for records older than % months with % rows',
+        	older_than_months, row_count;
 
         BEGIN
             CREATE TEMP TABLE valid_field_type_ids AS
@@ -994,7 +999,7 @@ BEGIN
     
    
     BEGIN
-        PERFORM prepare_cleanup_temp_tables();
+        PERFORM prepare_cleanup_temp_tables(older_than_months::int);
     EXCEPTION WHEN OTHERS THEN
         RAISE NOTICE 'prepare_cleanup_temp_tables failed: %', SQLERRM;
     END;
@@ -1005,8 +1010,6 @@ BEGIN
         RAISE NOTICE 'run_safe_deletes failed: %', SQLERRM;
     END;
    
-
-    
     BEGIN
         PERFORM drop_cleanup_temp_tables();
     EXCEPTION WHEN OTHERS THEN
@@ -1028,7 +1031,7 @@ BEGIN
     EXECUTE 'DROP FUNCTION IF EXISTS drop_foreign_key_relationships()';
     EXECUTE 'DROP FUNCTION IF EXISTS create_foreign_key_relationships()';
     EXECUTE 'DROP FUNCTION IF EXISTS safe_delete_where(regclass, text, text, int4)';
-    EXECUTE 'DROP FUNCTION IF EXISTS prepare_cleanup_temp_tables()';
+    EXECUTE 'DROP FUNCTION IF EXISTS prepare_cleanup_temp_tables(int4)';
     EXECUTE 'DROP FUNCTION IF EXISTS drop_cleanup_temp_tables()';
     EXECUTE 'DROP FUNCTION IF EXISTS run_safe_deletes(int4)';
 
@@ -1036,8 +1039,9 @@ BEGIN
     -- 3. FINAL SUMMARY STEP
     ----------------------------------------------------------------------
 
-    RAISE NOTICE 'cleanup_case_types finished successfully (batch_size = %)', batch_size;
-
+    RAISE NOTICE 'cleanup_case_types procedure finished successfully for data older than % months (batch_size=%)',
+    older_than_months, batch_size;
+    
     INSERT INTO ddl_log(action, table_name, message)
     VALUES ('SUMMARY','cleanup_case_types',
             format('Procedure completed with batch_size = %s at %s',

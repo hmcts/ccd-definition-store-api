@@ -217,7 +217,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION prepare_cleanup_temp_tables()
+CREATE OR REPLACE FUNCTION prepare_cleanup_temp_tables(older_than_months int DEFAULT 3)
 RETURNS void AS
 $$
 BEGIN
@@ -260,21 +260,26 @@ BEGIN
         -- ignore error
     END;
 
-    -- Create temp table of case_type IDs to remove
-    CREATE TEMP TABLE case_type_ids_to_remove AS
-    SELECT id
-    FROM case_type ct
-    INNER JOIN (
-        SELECT reference, MAX(version) AS max_version
-        FROM case_type
-        GROUP BY reference
-    ) grouped_ct
-    ON ct.reference = grouped_ct.reference
-    WHERE ct.version != grouped_ct.max_version
-    AND ct.created_at <= NOW() - INTERVAL '5 months' ORDER BY id ASC;
+    EXECUTE format(
+	        'CREATE TEMP TABLE case_type_ids_to_remove AS
+            SELECT id
+            FROM case_type ct
+            INNER JOIN (
+                SELECT reference, MAX(version) AS max_version
+                FROM case_type
+                GROUP BY reference
+            ) grouped_ct
+            ON ct.reference = grouped_ct.reference
+            WHERE ct.version != grouped_ct.max_version
+            AND ct.created_at <= NOW() - INTERVAL ''%s MONTH''
+	        ORDER BY id ASC;',
+	        older_than_months
+	    );
 
-    RAISE NOTICE 'Created temp table case_type_ids_to_remove with % rows',
-        (SELECT COUNT(*) FROM case_type_ids_to_remove);
+    EXECUTE 'SELECT COUNT(*) FROM case_type_ids_to_remove' INTO row_count;
+
+    RAISE NOTICE 'Created temp table case_type_ids_to_remove for records older than % months with % rows',
+        older_than_months, row_count;
 
     -- Create temp table of valid (static/base) field types
     CREATE TEMP TABLE valid_field_type_ids AS
@@ -771,7 +776,7 @@ $$ LANGUAGE plpgsql;
 --Certain FKs need to be dropped as the deletions will take too long otherwise
 SELECT drop_foreign_key_relationships();
 --create the various temp tables which form the bulk of the data to clean but ensuring base types are not included
-SELECT prepare_cleanup_temp_tables();
+SELECT prepare_cleanup_temp_tables(3);
 --deletions based on the temp tables created, in batches of 1000
 SELECT run_safe_deletes(1000);
 --destroy temp tables created as part of this script
@@ -783,6 +788,6 @@ DROP FUNCTION IF EXISTS manage_constraint(regclass, text, text, text);
 DROP FUNCTION IF EXISTS drop_foreign_key_relationships();
 DROP FUNCTION IF EXISTS create_foreign_key_relationships();
 DROP FUNCTION IF EXISTS safe_delete_where(regclass, text, text, int4);
-DROP FUNCTION IF EXISTS prepare_cleanup_temp_tables();
+DROP FUNCTION IF EXISTS prepare_cleanup_temp_tables(int4);
 DROP FUNCTION IF EXISTS drop_cleanup_temp_tables();
 DROP FUNCTION IF EXISTS run_safe_deletes(int4);
