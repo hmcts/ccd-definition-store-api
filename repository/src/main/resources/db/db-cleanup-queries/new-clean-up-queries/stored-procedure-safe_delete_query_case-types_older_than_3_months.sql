@@ -243,6 +243,14 @@ BEGIN
         DROP TABLE IF EXISTS removable_events;
         DROP TABLE IF EXISTS removable_states;
 
+        -- Create log output table if not exists
+    	CREATE TABLE IF NOT EXISTS ddl_log (
+    	    log_time TIMESTAMP DEFAULT now(),
+    	    action TEXT,
+    	    table_name TEXT,
+    	    message TEXT
+    	);
+
         BEGIN
             CREATE TEMP TABLE case_type_ids_to_remove AS
             SELECT id
