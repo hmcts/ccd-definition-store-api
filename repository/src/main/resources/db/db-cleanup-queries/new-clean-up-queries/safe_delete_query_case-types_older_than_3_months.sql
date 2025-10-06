@@ -221,6 +221,14 @@ CREATE OR REPLACE FUNCTION prepare_cleanup_temp_tables()
 RETURNS void AS
 $$
 BEGIN
+    -- Create log output table if not exists
+	CREATE TABLE IF NOT EXISTS ddl_log (
+	    log_time TIMESTAMP DEFAULT now(),
+	    action TEXT,
+	    table_name TEXT,
+	    message TEXT
+	);
+
     -- Drop temp tables if they already exist
     BEGIN
     DROP TABLE IF EXISTS case_type_ids_to_remove;
