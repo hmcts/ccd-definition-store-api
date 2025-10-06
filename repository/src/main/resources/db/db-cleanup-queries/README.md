@@ -26,10 +26,13 @@ This file provides a **semi-automated cleanup** process.
 - Execute it **as a single transaction**.  
 - It will automatically create various **functions** and **call them sequentially**.  
 - Like (1), it deletes data **older than 3 months** while keeping required base data.
+- Modifiable parameters are:
+-   SELECT prepare_cleanup_temp_tables(3); -- the 3 here signifies delete data older than 3 months
+-   SELECT run_safe_deletes(1000); -- the 1000 here signifies perform the deletions in batches of 1000 records
 
 > ⚙️ **Notes:**
 > - The script uses transactions for safety.  
-> - You can adjust the 3-month threshold by editing the script logic.
+> - You can adjust the 3-month threshold and number of batched deletions by editing the script logic.
 
 ---
 
