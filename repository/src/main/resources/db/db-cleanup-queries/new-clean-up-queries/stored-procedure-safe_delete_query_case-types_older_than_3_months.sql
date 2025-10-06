@@ -981,7 +981,6 @@ BEGIN
        
         RAISE NOTICE 'run_safe_deletes FINISHED';
 
-        
     END;
     $body$;
     $fn$;
@@ -990,13 +989,11 @@ BEGIN
     -- 1. RUN THE CLEANUP PIPELINE
     ----------------------------------------------------------------------
 
-    
     BEGIN
         PERFORM drop_foreign_key_relationships();
     EXCEPTION WHEN OTHERS THEN
         RAISE NOTICE 'drop_foreign_key_relationships failed: %', SQLERRM;
     END;
-    
    
     BEGIN
         PERFORM prepare_cleanup_temp_tables(older_than_months::int);
@@ -1016,14 +1013,12 @@ BEGIN
         RAISE NOTICE 'drop_cleanup_temp_tables failed: %', SQLERRM;
     END;
 
-    
     BEGIN
         PERFORM create_foreign_key_relationships();
     EXCEPTION WHEN OTHERS THEN
         RAISE NOTICE 'create_foreign_key_relationships failed: %', SQLERRM;
     END;
     
-
     ----------------------------------------------------------------------
     -- 2. CLEAN UP FUNCTIONS
     ----------------------------------------------------------------------
@@ -1042,10 +1037,17 @@ BEGIN
     RAISE NOTICE 'cleanup_case_types procedure finished successfully for data older than % months (batch_size=%)',
     older_than_months, batch_size;
 
-    INSERT INTO ddl_log(action, table_name, message)
-    VALUES ('SUMMARY','cleanup_case_types',
-            format('Procedure completed with batch_size = %s,  at %s',
-                   batch_size, now()));
+	INSERT INTO ddl_log(action, table_name, message)
+	VALUES (
+	    'SUMMARY',
+	    'cleanup_case_types',
+	    format(
+	        'Procedure completed with batch_size = %s, data_older_than = %s, at %s',
+	        batch_size,
+	        older_than_months,
+	        now()
+	    )
+	);
 
 END;
 $$;
