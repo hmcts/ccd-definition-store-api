@@ -145,8 +145,7 @@ public class ReindexServiceImpl implements ReindexService {
         int incremented = Integer.parseInt(numberStr) + 1;
         String formattedNumber = StringUtils.leftPad(String.valueOf(incremented), numberStr.length(), '0');
 
-        String incrementedIndexName = prefix + formattedNumber;
-        return incrementedIndexName;
+        return prefix + formattedNumber;
     }
 
     @Override
@@ -168,7 +167,6 @@ public class ReindexServiceImpl implements ReindexService {
             .toList();
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public ReindexEntity saveEntity(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity caseType,
                                     String newIndexName) {
         ReindexEntity entity = new ReindexEntity();
@@ -182,7 +180,6 @@ public class ReindexServiceImpl implements ReindexService {
         return reindexRepository.saveAndFlush(entity);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateEntity(String newIndexName, String response) {
         ReindexEntity reindexEntity = reindexRepository.findByIndexName(newIndexName).orElse(null);
         if (reindexEntity == null) {
@@ -197,7 +194,6 @@ public class ReindexServiceImpl implements ReindexService {
         reindexRepository.save(reindexEntity);
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void updateEntity(String newIndexName, Exception ex) {
         ReindexEntity reindexEntity = reindexRepository.findByIndexName(newIndexName).orElse(null);
         if (reindexEntity == null) {
