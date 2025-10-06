@@ -261,25 +261,23 @@ BEGIN
     END;
 
     EXECUTE format(
-	        'CREATE TEMP TABLE case_type_ids_to_remove AS
-            SELECT id
-            FROM case_type ct
-            INNER JOIN (
-                SELECT reference, MAX(version) AS max_version
-                FROM case_type
-                GROUP BY reference
-            ) grouped_ct
-            ON ct.reference = grouped_ct.reference
-            WHERE ct.version != grouped_ct.max_version
-            AND ct.created_at <= NOW() - INTERVAL ''%s MONTH''
-	        ORDER BY id ASC;',
-	        older_than_months
-	    );
-
-    EXECUTE 'SELECT COUNT(*) FROM case_type_ids_to_remove' INTO row_count;
-
+      'CREATE TEMP TABLE case_type_ids_to_remove AS
+        SELECT id
+        FROM case_type ct
+        INNER JOIN (
+            SELECT reference, MAX(version) AS max_version
+            FROM case_type
+            GROUP BY reference
+        ) grouped_ct
+        ON ct.reference = grouped_ct.reference
+        WHERE ct.version != grouped_ct.max_version
+        AND ct.created_at <= NOW() - INTERVAL ''%s MONTH''
+        ORDER BY id ASC;',
+        older_than_months
+    );
+    
     RAISE NOTICE 'Created temp table case_type_ids_to_remove for records older than % months with % rows',
-        older_than_months, row_count;
+        older_than_months, (SELECT COUNT(*) FROM case_type_ids_to_remove);
 
     -- Create temp table of valid (static/base) field types
     CREATE TEMP TABLE valid_field_type_ids AS
