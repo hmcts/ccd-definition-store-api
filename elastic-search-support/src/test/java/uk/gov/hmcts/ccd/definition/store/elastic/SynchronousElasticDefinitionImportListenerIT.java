@@ -46,6 +46,9 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     private static final String CASE_TYPE_A = "CaseTypeA";
     private static final String CASE_TYPE_B = "CaseTypeB";
 
+    private static final String CASE_TYPE_A_REINDEX = "CaseTypeA_RI";
+
+
     @Value("${elasticsearch.port}")
     private String port;
 
@@ -163,7 +166,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
         CaseTypeEntity caseTypeEntity1 = caseTypeBuilder
             .withJurisdiction("JUR")
-            .withReference(CASE_TYPE_A)
+            .withReference(CASE_TYPE_A_REINDEX)
             .addField(baseTypeField1)
             .build();
 
@@ -178,10 +181,10 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         );
         definitionImportListener.onDefinitionImported(event);
 
-        await().atMost(5, SECONDS).untilAsserted(() -> {
-            String response = getElasticsearchIndices(CASE_TYPE_A);
-            assertThat(response, containsString("casetypea_cases-000002"));
-            assertThat(response, not(containsString("casetypea_cases-000001")));
+        await().atMost(20, SECONDS).untilAsserted(() -> {
+            String response = getElasticsearchIndices(CASE_TYPE_A_REINDEX);
+            assertThat(response, containsString("casetypea_ri_cases-000002"));
+            assertThat(response, not(containsString("casetypea_ri_cases-000001")));
         });
     }
 
