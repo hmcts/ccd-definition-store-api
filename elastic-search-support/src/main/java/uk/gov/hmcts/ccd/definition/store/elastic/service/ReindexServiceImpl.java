@@ -2,9 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -12,6 +10,7 @@ import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
+import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
@@ -68,7 +67,8 @@ public class ReindexServiceImpl implements ReindexService {
 
             //initiate reindexing
             reindexStarted = true;
-            handleReindexing(elasticClient, baseIndexName, indexName, newIndexName, event.isDeleteOldIndex());
+            String taskId = handleReindexing(elasticClient, baseIndexName, indexName, newIndexName,
+                event.isDeleteOldIndex());
             //dummy value for phase 1
             event.setTaskId("taskID");
             log.debug("reindexing successful for case type: {}", caseType.getReference());
@@ -81,23 +81,25 @@ public class ReindexServiceImpl implements ReindexService {
         }
     }
 
-    private void handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
+    private String handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
                                   String oldIndexName, String newIndexName,
                                   boolean deleteOldIndex) {
-        elasticClient.reindexData(oldIndexName, newIndexName, new ActionListener<>() {
+        return elasticClient.reindexData(oldIndexName, newIndexName, new ReindexListener() {
             @Override
-            public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
+            public void onSuccess(String response) {
                 try (elasticClient; HighLevelCCDElasticClient highLevelCCDElasticClient = clientFactory.getObject()) {
                     //if success set writable and update alias to new index
                     log.debug("updating alias from {} to {}", oldIndexName, newIndexName);
                     highLevelCCDElasticClient.setIndexReadOnly(baseIndexName, false);
                     highLevelCCDElasticClient.updateAlias(baseIndexName, oldIndexName, newIndexName);
+                    // After reindexAsync completes:
+                    highLevelCCDElasticClient.refresh(newIndexName);
                     if (deleteOldIndex) {
                         log.debug("deleting old index {}", oldIndexName);
                         highLevelCCDElasticClient.removeIndex(oldIndexName);
                     }
                     //set success status and end time for db
-                    updateEntity(newIndexName, bulkByScrollResponse.toString());
+                    updateEntity(newIndexName, response);
                     log.info("saved reindex entity"
                              + " metadata for case type {} to DB", baseIndexName);
                 } catch (IOException e) {

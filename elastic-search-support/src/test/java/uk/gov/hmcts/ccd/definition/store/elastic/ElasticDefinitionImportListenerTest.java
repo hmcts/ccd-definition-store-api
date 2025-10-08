@@ -138,7 +138,18 @@ class ElasticDefinitionImportListenerTest {
 
     @Test
     public void shouldWrapElasticsearchStatusExceptionInInitialisationException() throws IOException {
-        mockAliasResponse();
+        lenient().when(config.getCasesIndexNameFormat()).thenReturn("%s");
+        lenient().when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
+
+        GetAliasesResponse aliasResponse = mock(GetAliasesResponse.class);
+        Map<String, Set<AliasMetadata>> aliasMap = new HashMap<>();
+        aliasMap.put("casetypea_cases-000001",
+            Collections.singleton(AliasMetadata.builder(baseIndexName).build()));
+        lenient().when(aliasResponse.getAliases()).thenReturn(aliasMap);
+        lenient().when(ccdElasticClient.getAlias(anyString())).thenReturn(aliasResponse);
+
+        lenient().when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
+
         // mock upsertMapping to throw ElasticsearchStatusException
         when(ccdElasticClient.upsertMapping(anyString(), anyString()))
             .thenThrow(new ElasticsearchStatusException("Simulated ES error", RestStatus.BAD_REQUEST));
@@ -198,20 +209,6 @@ class ElasticDefinitionImportListenerTest {
         //default parameters are reindex = false and deleteOldIndex = false
         assertFalse(event.isReindex());
         assertFalse(event.isDeleteOldIndex());
-    }
-
-    private void mockAliasResponse() throws IOException {
-        lenient().when(config.getCasesIndexNameFormat()).thenReturn("%s");
-
-        GetAliasesResponse aliasResponse = mock(GetAliasesResponse.class);
-        Map<String, Set<AliasMetadata>> aliasMap = new HashMap<>();
-        String oldIndexName = "casetypea_cases-000001";
-        aliasMap.put(oldIndexName,
-            Collections.singleton(AliasMetadata.builder(baseIndexName).build()));
-        lenient().when(aliasResponse.getAliases()).thenReturn(aliasMap);
-        lenient().when(ccdElasticClient.getAlias(anyString())).thenReturn(aliasResponse);
-
-        lenient().when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
     }
 
     private DefinitionImportedEvent newEvent(CaseTypeEntity... caseTypes) {

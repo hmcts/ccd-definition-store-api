@@ -30,13 +30,13 @@ public class ReindexHelper {
     }
 
     public String reindexIndex(String sourceIndex,
-                             String destIndex,
-                             long pollIntervalMs,
-                             ReindexListener listener) throws IOException {
+                               String destIndex,
+                               long pollIntervalMs,
+                               ReindexListener listener) throws IOException {
         String jsonBody = "{"
-            + " \"source\": { \"index\": \"" + sourceIndex + "\" },"
-            + " \"dest\": { \"index\": \"" + destIndex + "\" }"
-            + "}";
+                          + " \"source\": { \"index\": \"" + sourceIndex + "\" },"
+                          + " \"dest\": { \"index\": \"" + destIndex + "\" }"
+                          + "}";
 
         Request request = new Request("POST", "/_reindex");
         request.addParameter("wait_for_completion", "false");
@@ -126,7 +126,8 @@ public class ReindexHelper {
         }
 
         logProgress(destIndex, statusJson);
-        listener.onSuccess();
+        String response = buildResponse(statusObj, taskInfo);
+        listener.onSuccess(response);
         return true;
     }
 
@@ -156,5 +157,33 @@ public class ReindexHelper {
         executor.setThreadNamePrefix("reindex-exec-");
         executor.initialize();
         return executor;
+    }
+
+    private String buildResponse(Object statusObj, TaskInfo taskInfo) throws IOException {
+        JsonNode statusJson = toStatusJson(statusObj);
+
+        // Extract fields
+        Integer updated = statusJson.path("updated").asInt(0);
+        Integer created = statusJson.path("created").asInt(0);
+        Integer deleted = statusJson.path("deleted").asInt(0);
+        Integer batches = statusJson.path("batches").asInt(0);
+        Integer took = statusJson.path("took").asInt(0);
+        Boolean timedOut = statusJson.path("timed_out").asBoolean(false);
+        Integer versionConflicts = statusJson.path("version_conflicts").asInt(0);
+        Integer noops = statusJson.path("noops").asInt(0);
+        Integer retriesBulk = statusJson.path("retries").path("bulk").asInt(0);
+        Integer retriesSearch = statusJson.path("retries").path("search").asInt(0);
+        Integer throttledUntil = statusJson.path("throttled_until_millis").asInt(0);
+
+        // Build your old-style string
+        String responseSummary = String.format(
+            "BulkByScrollResponse[took=%dms,timed_out=%b,sliceId=null,updated=%d,created=%d,"
+            + "deleted=%d,batches=%d,versionConflicts=%d,noops=%d,retries=%d,throttledUntil=%ds,"
+            + "bulk_failures=[],search_failures=[]]",
+            took, timedOut, updated, created, deleted, batches,
+            versionConflicts, noops, (retriesBulk + retriesSearch),
+            throttledUntil / 1000
+        );
+        return responseSummary;
     }
 }

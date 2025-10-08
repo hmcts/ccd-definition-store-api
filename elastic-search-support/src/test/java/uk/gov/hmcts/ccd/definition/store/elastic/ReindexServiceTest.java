@@ -1,10 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.elasticsearch.rest.RestStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,6 +15,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMappe
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
+import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
 import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexServiceImpl;
@@ -360,19 +359,19 @@ public class ReindexServiceTest {
     private void mockSuccessfulReindex() throws IOException {
         mockAliasResponse();
         doAnswer(invocation -> {
-            ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
-            listener.onResponse(mock(BulkByScrollResponse.class));
+            ReindexListener listener = invocation.getArgument(2);
+            listener.onSuccess("BulkByScrollResponse[took=1ms,...]");
             return null;
-        }).when(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any());
+        }).when(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any(ReindexListener.class));
     }
 
     private void mockFailedReindex() throws IOException {
         mockAliasResponse();
         doAnswer(invocation -> {
-            ActionListener<BulkByScrollResponse> listener = invocation.getArgument(2);
+            ReindexListener listener = invocation.getArgument(2);
             listener.onFailure(new RuntimeException("reindexing failed"));
             return null;
-        }).when(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any());
+        }).when(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any(ReindexListener.class));
     }
 
     private DefinitionImportedEvent newEvent(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity... caseTypes) {

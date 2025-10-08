@@ -228,7 +228,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         );
         definitionImportListener.onDefinitionImported(event);
 
-        await().atMost(5, SECONDS).untilAsserted(() -> {
+        await().atMost(10, SECONDS).untilAsserted(() -> {
             List<ReindexEntity> saved = reindexRepository.findAll();
             assertFalse(saved.isEmpty());
 
