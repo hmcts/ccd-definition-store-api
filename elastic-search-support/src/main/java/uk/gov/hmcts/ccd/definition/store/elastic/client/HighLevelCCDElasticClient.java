@@ -2,11 +2,11 @@ package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.action.ActionListener;
 import org.elasticsearch.action.admin.indices.alias.Alias;
 import org.elasticsearch.action.admin.indices.alias.IndicesAliasesRequest;
 import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
 import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
+import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
 import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
 import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.GetAliasesResponse;
@@ -16,11 +16,11 @@ import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.PutMappingRequest;
 import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
-import org.elasticsearch.index.reindex.ReindexRequest;
 import org.elasticsearch.xcontent.XContentType;
 import org.springframework.beans.factory.annotation.Autowired;
+import uk.gov.hmcts.ccd.definition.store.elastic.ReindexHelper;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
+import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -166,17 +166,17 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         return deleteResponse.isAcknowledged();
     }
 
-    public void reindexData(String oldIndex, String newIndex, ActionListener<BulkByScrollResponse> listener) {
-        ReindexRequest reindexRequest = new ReindexRequest();
-        reindexRequest.setSourceIndices(oldIndex);
-        reindexRequest.setDestIndex(newIndex);
-        reindexRequest.setRefresh(true);
+    public String reindexData(String oldIndex, String newIndex,
+                            ReindexListener listener) {
+        ReindexHelper helper = new ReindexHelper(elasticClient);
+        try {
+            return helper.reindexIndex(oldIndex, newIndex, 5000, listener);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-        //doesn't return taskID
-        elasticClient.reindexAsync(
-            reindexRequest,
-            RequestOptions.DEFAULT,
-            listener
-        );
+    public void refresh(String... indexes) throws IOException {
+        elasticClient.indices().refresh(new RefreshRequest(indexes),  RequestOptions.DEFAULT);
     }
 }
