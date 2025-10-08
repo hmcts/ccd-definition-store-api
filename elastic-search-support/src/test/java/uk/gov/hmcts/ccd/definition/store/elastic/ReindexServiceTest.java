@@ -16,7 +16,6 @@ import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClien
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
-import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
 import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexServiceImpl;
