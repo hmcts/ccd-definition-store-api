@@ -9,6 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperti
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
@@ -29,6 +30,7 @@ public abstract class ElasticDefinitionImportListener {
     private final ElasticsearchErrorHandler elasticsearchErrorHandler;
 
     private final ReindexService reindexService;
+
 
     public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory,
@@ -51,8 +53,6 @@ public abstract class ElasticDefinitionImportListener {
     @Transactional
     public void initialiseElasticSearch(DefinitionImportedEvent event) {
         List<CaseTypeEntity> caseTypes = event.getContent();
-        boolean reindex = event.isReindex();
-
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
 
@@ -65,7 +65,7 @@ public abstract class ElasticDefinitionImportListener {
                     String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
                     elasticClient.createIndex(actualIndexName, baseIndexName);
                 }
-                if (reindex) {
+                if (event.isReindex()) {
                     reindexService.asyncReindex(event, baseIndexName, caseType);
                 } else {
                     caseMapping = mappingGenerator.generateMapping(caseType);
