@@ -1,0 +1,46 @@
+{
+  "_guid_": "S-126.2",
+  "title": "Successfully retrieve reindexing metadata for all case types",
+  "operationName": "Get all reindexing tasks",
+  "_extends_": "F-126_Get_Reindexing_Base_Data",
+  "uri": "/elastic-support/reindex/tasks",
+   "specs": [
+    "an active profile in CCD",
+    "has the 200 OK code",
+    "contains reindexing metadata for all case types"
+  ],
+  "expectedResponse": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "tasks": [
+        {
+          "reindex": true,
+          "deleteOldIndex": false,
+          "caseType": "CaseTypeA",
+          "jurisdiction": "JurisdictionA",
+          "indexName": "case_type-000001",
+          "status": "SUCCESS",
+          "exceptionMessage": "[[ANYTHING_PRESENT]]",
+          "reindexResponse": "[[ANYTHING_PRESENT]]",
+          "startTime": "[[ANYTHING_PRESENT]]",
+          "endTime": "[[ANYTHING_PRESENT]]"
+        },
+        {
+          "reindex": true,
+          "deleteOldIndex": false,
+          "caseType": "CaseTypeB",
+          "jurisdiction": "JurisdictionB",
+          "indexName": "case_type-000001",
+          "status": "SUCCESS",
+          "exceptionMessage": "[[ANYTHING_PRESENT]]",
+          "reindexResponse": "[[ANYTHING_PRESENT]]",
+          "startTime": "[[ANYTHING_PRESENT]]",
+          "endTime": "[[ANYTHING_PRESENT]]"
+        }
+      ]
+    }
+  }
+}
