@@ -15,8 +15,6 @@
       "Content-Type": "application/json"
     },
     "body": {
-      "tasks": [
-        {
           "reindex": true,
           "deleteOldIndex": false,
           "caseType": "CaseTypeA",
@@ -27,20 +25,6 @@
           "reindexResponse": "[[ANYTHING_PRESENT]]",
           "startTime": "[[ANYTHING_PRESENT]]",
           "endTime": "[[ANYTHING_PRESENT]]"
-        },
-        {
-          "reindex": true,
-          "deleteOldIndex": false,
-          "caseType": "CaseTypeB",
-          "jurisdiction": "JurisdictionB",
-          "indexName": "case_type-000001",
-          "status": "SUCCESS",
-          "exceptionMessage": "[[ANYTHING_PRESENT]]",
-          "reindexResponse": "[[ANYTHING_PRESENT]]",
-          "startTime": "[[ANYTHING_PRESENT]]",
-          "endTime": "[[ANYTHING_PRESENT]]"
-        }
-      ]
     }
   }
 }
