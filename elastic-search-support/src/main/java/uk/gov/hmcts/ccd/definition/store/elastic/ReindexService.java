@@ -80,7 +80,6 @@ public class ReindexService {
                     }
                     log.info("Reindex process for case type {} completed", newIndex);
                 } catch (IOException e) {
-                    log.error("Cleanup failed after reindexing error", e);
                     throw new CompletionException("Failed cleanup after reindexing failure for index " + newIndex, e);
                 }
             }
@@ -97,7 +96,6 @@ public class ReindexService {
                     highLevelCCDElasticClient.setIndexReadOnly(oldIndex, false);
                     log.info("{} set to writable", oldIndex);
                 } catch (IOException e) {
-                    log.error("Cleanup failed after reindexing error", e);
                     throw new CompletionException("Failed cleanup after reindexing failure for index " + newIndex, e);
                 }
                 throw new CompletionException(ex);

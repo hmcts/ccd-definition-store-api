@@ -24,7 +24,7 @@ public class ReindexHelper {
     private final RestHighLevelClient client;
     private final ObjectMapper mapper = new ObjectMapper();
     private Executor executor = asyncExecutor();
-    private static final String failures = "failures";
+    private static final String FAILURES = "failures";
 
     public ReindexHelper(RestHighLevelClient client) {
         this.client = client;
@@ -104,15 +104,18 @@ public class ReindexHelper {
             return false;
         }
 
-        TaskInfo taskInfo = taskResponse.get().getTaskInfo();
-        if (shouldWaitForMissingInfo(taskInfo, taskId, pollIntervalMs)) {
-            return false;
-        }
+        if (taskResponse.isPresent()) {
+            GetTaskResponse response = taskResponse.get();
+            TaskInfo taskInfo = response.getTaskInfo();
 
-        if (taskResponse.get().isCompleted()) {
-            return handleCompletion(taskInfo, listener, destIndex);
-        }
+            if (shouldWaitForMissingInfo(taskInfo, taskId, pollIntervalMs)) {
+                return false;
+            }
 
+            if (response.isCompleted()) {
+                return handleCompletion(taskInfo, listener, destIndex);
+            }
+        }
         return false;
     }
 
@@ -155,7 +158,7 @@ public class ReindexHelper {
 
         JsonNode statusJson = toStatusJson(statusObj);
         if (hasFailures(statusJson)) {
-            listener.onFailure(new RuntimeException("Reindex process failed: " + statusJson.path(failures)));
+            listener.onFailure(new RuntimeException("Reindex process failed: " + statusJson.path(FAILURES)));
             return true;
         }
 
@@ -170,7 +173,7 @@ public class ReindexHelper {
     }
 
     private boolean hasFailures(JsonNode statusJson) {
-        return statusJson.has(failures) && !statusJson.path(failures).isEmpty();
+        return statusJson.has(FAILURES) && !statusJson.path(FAILURES).isEmpty();
     }
 
     private void logProgress(String destIndex, JsonNode statusJson) {
