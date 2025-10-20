@@ -16,6 +16,8 @@
       "Content-Type": "application/json"
     },
     "body": {
+      "tasks": [
+        {
           "reindex": true,
           "deleteOldIndex": false,
           "caseType": "CaseTypeA",
@@ -26,6 +28,8 @@
           "reindexResponse": "[[ANYTHING_PRESENT]]",
           "startTime": "[[ANYTHING_PRESENT]]",
           "endTime": "[[ANYTHING_PRESENT]]"
+        }
+      ]
     }
   }
 }

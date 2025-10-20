@@ -7,13 +7,5 @@
     "invokingUser": {
       "_extends_": "DefaultUserForDefinitionImports"
     }
-  },
-  "preStateVerifications": [
-    {
-      "description": "Ensure reindex tasks exist",
-      "sqlStatements": [
-        "INSERT INTO public.reindex (reindex, delete_old_index, case_type, jurisdiction, index_name, start_time, end_time, status, exception_message, reindex_response) VALUES (true, false, 'CaseTypeA', 'JurisdictionA', 'ft_mastercasetype_cases-000011', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'SUCCESS', 'Reindexing completed successfully.', '{\"updated\":10,\"created\":2,\"deleted\":0}')"
-      ]
-    }
-  ]
+  }
 }
