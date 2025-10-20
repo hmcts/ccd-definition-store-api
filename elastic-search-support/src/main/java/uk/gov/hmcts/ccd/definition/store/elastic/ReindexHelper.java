@@ -24,20 +24,43 @@ public class ReindexHelper {
     private final RestHighLevelClient client;
     private final ObjectMapper mapper = new ObjectMapper();
     private Executor executor = asyncExecutor();
+    private static final String failures = "failures";
 
     public ReindexHelper(RestHighLevelClient client) {
         this.client = client;
     }
 
     public String reindexIndex(String sourceIndex,
-                             String destIndex,
-                             long pollIntervalMs,
-                             ReindexListener listener) throws IOException {
-        String jsonBody = "{"
-            + " \"source\": { \"index\": \"" + sourceIndex + "\" },"
-            + " \"dest\": { \"index\": \"" + destIndex + "\" }"
-            + "}";
+                               String destIndex,
+                               long pollIntervalMs,
+                               ReindexListener listener) throws IOException {
 
+        String taskId = startReindexTask(sourceIndex, destIndex);
+        String[] parts = taskId.split(":");
+        String nodeId = parts[0];
+        long taskNumericId = Long.parseLong(parts[1]);
+        log.info("Reindex task started: {}", taskId);
+
+        executor.execute(() -> monitorReindexTask(nodeId, taskNumericId, taskId, destIndex, pollIntervalMs, listener));
+
+        return taskId;
+    }
+
+    private String startReindexTask(String sourceIndex, String destIndex) throws IOException {
+        String jsonBody = String.format("""
+            {
+              "source": { "index": "%s" },
+              "dest": { "index": "%s" }
+            }
+            """, sourceIndex, destIndex);
+
+        Request request = buildReindexRequest(jsonBody);
+        Response response = client.getLowLevelClient().performRequest(request);
+        String responseBody = EntityUtils.toString(response.getEntity());
+        return mapper.readTree(responseBody).get("task").asText();
+    }
+
+    private Request buildReindexRequest(String jsonBody) {
         Request request = new Request("POST", "/_reindex");
         request.addParameter("wait_for_completion", "false");
         request.addParameter("refresh", "false");
@@ -45,43 +68,54 @@ public class ReindexHelper {
         request.addParameter("timeout", "2h");
         request.addParameter("slices", "auto");
         request.setJsonEntity(jsonBody);
-
-        Response response = client.getLowLevelClient().performRequest(request);
-        String responseBody = EntityUtils.toString(response.getEntity());
-
-        String taskId = mapper.readTree(responseBody).get("task").asText();
-        String[] parts = taskId.split(":");
-        String nodeId = parts[0];
-        log.info("Reindex task started: {}", taskId);
-
-        final long taskNumericId = Long.parseLong(parts[1]);
-        executor.execute(() -> {
-            try {
-                while (!Thread.currentThread().isInterrupted()) {
-                    Optional<GetTaskResponse> taskResponse = fetchTaskResponse(nodeId, taskNumericId);
-
-                    if (!shouldWaitForMissingTask(taskResponse, taskId, pollIntervalMs)) {
-                        TaskInfo taskInfo = taskResponse.get().getTaskInfo();
-                        if (!shouldWaitForMissingInfo(taskInfo, taskId, pollIntervalMs)) {
-                            if (taskResponse.get().isCompleted()) {
-                                if (handleCompletion(taskInfo, listener, destIndex)) {
-                                    break;
-                                }
-                            } else {
-                                Thread.sleep(pollIntervalMs);
-                            }
-                        }
-                    }
-                }
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
-                listener.onFailure(new RuntimeException("Reindex polling interrupted"));
-            } catch (IOException ioe) {
-                listener.onFailure(new RuntimeException("Reindex process failed: " + ioe.getLocalizedMessage()));
-            }
-        });
-        return taskId;
+        return request;
     }
+
+    private void monitorReindexTask(String nodeId,
+                                    long taskNumericId,
+                                    String taskId,
+                                    String destIndex,
+                                    long pollIntervalMs,
+                                    ReindexListener listener) {
+
+        try {
+            while (!Thread.currentThread().isInterrupted()) {
+                Optional<GetTaskResponse> taskResponse = fetchTaskResponse(nodeId, taskNumericId);
+                if (shouldExitPolling(taskResponse, taskId, pollIntervalMs, listener, destIndex)) {
+                    break;
+                }
+                Thread.sleep(pollIntervalMs);
+            }
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            listener.onFailure(new RuntimeException("Reindex polling interrupted", ie));
+        } catch (IOException ioe) {
+            listener.onFailure(new RuntimeException("Reindex process failed: " + ioe.getLocalizedMessage(), ioe));
+        }
+    }
+
+    private boolean shouldExitPolling(Optional<GetTaskResponse> taskResponse,
+                                      String taskId,
+                                      long pollIntervalMs,
+                                      ReindexListener listener,
+                                      String destIndex) throws IOException, InterruptedException {
+
+        if (shouldWaitForMissingTask(taskResponse, taskId, pollIntervalMs)) {
+            return false;
+        }
+
+        TaskInfo taskInfo = taskResponse.get().getTaskInfo();
+        if (shouldWaitForMissingInfo(taskInfo, taskId, pollIntervalMs)) {
+            return false;
+        }
+
+        if (taskResponse.get().isCompleted()) {
+            return handleCompletion(taskInfo, listener, destIndex);
+        }
+
+        return false;
+    }
+
 
     private Optional<GetTaskResponse> fetchTaskResponse(String nodeId, long taskNumericId) throws IOException {
         GetTaskRequest getTaskRequest = new GetTaskRequest(nodeId, taskNumericId);
@@ -121,7 +155,7 @@ public class ReindexHelper {
 
         JsonNode statusJson = toStatusJson(statusObj);
         if (hasFailures(statusJson)) {
-            listener.onFailure(new RuntimeException("Reindex process failed: " + statusJson.path("failures")));
+            listener.onFailure(new RuntimeException("Reindex process failed: " + statusJson.path(failures)));
             return true;
         }
 
@@ -136,7 +170,7 @@ public class ReindexHelper {
     }
 
     private boolean hasFailures(JsonNode statusJson) {
-        return statusJson.has("failures") && !statusJson.path("failures").isEmpty();
+        return statusJson.has(failures) && !statusJson.path(failures).isEmpty();
     }
 
     private void logProgress(String destIndex, JsonNode statusJson) {
@@ -149,12 +183,12 @@ public class ReindexHelper {
     }
 
     public Executor asyncExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(10);
-        executor.setQueueCapacity(50);
-        executor.setThreadNamePrefix("reindex-exec-");
-        executor.initialize();
-        return executor;
+        ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+        threadPoolTaskExecutor.setCorePoolSize(10);
+        threadPoolTaskExecutor.setMaxPoolSize(10);
+        threadPoolTaskExecutor.setQueueCapacity(50);
+        threadPoolTaskExecutor.setThreadNamePrefix("reindex-exec-");
+        threadPoolTaskExecutor.initialize();
+        return threadPoolTaskExecutor;
     }
 }

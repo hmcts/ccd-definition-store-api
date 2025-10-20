@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.slf4j.Logger;
@@ -19,7 +18,6 @@ import java.util.concurrent.CompletionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Slf4j
 @Service
 public class ReindexService {
 
@@ -82,8 +80,8 @@ public class ReindexService {
                     }
                     log.info("Reindex process for case type {} completed", newIndex);
                 } catch (IOException e) {
-                    log.error("failed to clean up after reindexing success", e);
-                    throw new CompletionException(e);
+                    log.error("Cleanup failed after reindexing error", e);
+                    throw new CompletionException("Failed cleanup after reindexing failure for index " + newIndex, e);
                 }
             }
 
@@ -99,8 +97,8 @@ public class ReindexService {
                     highLevelCCDElasticClient.setIndexReadOnly(oldIndex, false);
                     log.info("{} set to writable", oldIndex);
                 } catch (IOException e) {
-                    log.error("failed to clean up after reindexing failure", e);
-                    throw new CompletionException(e);
+                    log.error("Cleanup failed after reindexing error", e);
+                    throw new CompletionException("Failed cleanup after reindexing failure for index " + newIndex, e);
                 }
                 throw new CompletionException(ex);
             }

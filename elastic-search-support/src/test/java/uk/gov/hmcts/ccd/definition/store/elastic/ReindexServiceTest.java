@@ -39,7 +39,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ReindexServiceTest {
+class ReindexServiceTest {
 
     @InjectMocks
     private ReindexService reindexService;
@@ -63,7 +63,7 @@ public class ReindexServiceTest {
         .build();
 
     @BeforeEach
-    void setUp() throws IOException {
+    void setUp() {
         lenient().when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
     }
 
