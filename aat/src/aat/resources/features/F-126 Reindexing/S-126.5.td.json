@@ -1,0 +1,23 @@
+{
+  "_guid_": "S-126.5",
+  "title": "Retrieve no reindexing metadata for non-existing case type",
+  "operationName": "Get filtered reindexing tasks",
+  "_extends_": "F-126_Get_Reindexing_Base_Data",
+  "uri": "/elastic-support/reindex/tasks?caseType=NonExistingCaseType",
+  "specs": [
+    "an active profile in CCD",
+    "includes a caseType query parameter with value \"NonExistingCaseType\"",
+    "has the 200 OK code",
+    "contains an empty list of reindexing tasks"
+  ],
+  "expectedResponse": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "body": {
+      "tasks": [
+      ]
+    }
+  }
+}
