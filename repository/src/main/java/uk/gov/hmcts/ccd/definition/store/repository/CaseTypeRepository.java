@@ -18,6 +18,7 @@ public interface CaseTypeRepository extends VersionedDefinitionRepository<CaseTy
     @Query(SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE)
     Optional<CaseTypeEntity> findCurrentVersionForReference(@Param("caseTypeReference") String caseTypeReference);
 
+    Optional<CaseTypeEntity> findByReferenceAndVersion(String reference, Integer version);
     /**
      * Find by jurisdiction id.
      *
