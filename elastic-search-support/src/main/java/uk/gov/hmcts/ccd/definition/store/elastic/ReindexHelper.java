@@ -64,7 +64,7 @@ public class ReindexHelper {
                         TaskInfo taskInfo = taskResponse.get().getTaskInfo();
                         if (!shouldWaitForMissingInfo(taskInfo, taskId, pollIntervalMs)) {
                             if (taskResponse.get().isCompleted()) {
-                                if (handleCompletion(taskInfo, listener, destIndex)) {
+                                if (handleCompletion(taskInfo, listener)) {
                                     break;
                                 }
                             } else {
@@ -111,23 +111,27 @@ public class ReindexHelper {
     }
 
     private boolean handleCompletion(TaskInfo taskInfo,
-                                     ReindexListener listener,
-                                     String destIndex) throws IOException {
+                                     ReindexListener listener) throws IOException {
         Object statusObj = taskInfo.getStatus();
         if (statusObj == null) {
-            listener.onFailure(new RuntimeException("Reindex process completed with unknown status"));
+            listener.onFailure(new RuntimeException(
+                String.format("Reindex process completed with unknown status (taskId=%s)", taskInfo.getTaskId())
+                ));
             return true;
         }
 
         JsonNode statusJson = toStatusJson(statusObj);
         if (hasFailures(statusJson)) {
-            listener.onFailure(new RuntimeException("Reindex process failed: " + statusJson.path("failures")));
+            String failures = statusJson.path("failures").toString();
+            listener.onFailure(new RuntimeException(
+                String.format("Reindex process failed (taskId=%s): %s", taskInfo.getTaskId(), failures)
+            ));
             return true;
         }
 
-        logProgress(destIndex, statusJson);
-        String response = buildResponse(statusObj, taskInfo);
+        String response = mapper.writeValueAsString(taskInfo);
         listener.onSuccess(response);
+        log.info("Reindex task completed successfully (taskId={}): {}", taskInfo.getTaskId(), response);
         return true;
     }
 
@@ -140,15 +144,6 @@ public class ReindexHelper {
         return statusJson.has("failures") && !statusJson.path("failures").isEmpty();
     }
 
-    private void logProgress(String destIndex, JsonNode statusJson) {
-        int total = statusJson.path("total").asInt(0);
-        int created = statusJson.path("created").asInt(0);
-        int updated = statusJson.path("updated").asInt(0);
-        int batches = statusJson.path("batches").asInt(0);
-        log.info("Progress for index {}: total={}, created={}, updated={}, batches={}",
-            destIndex, total, created, updated, batches);
-    }
-
     public Executor asyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
@@ -157,33 +152,5 @@ public class ReindexHelper {
         executor.setThreadNamePrefix("reindex-exec-");
         executor.initialize();
         return executor;
-    }
-
-    private String buildResponse(Object statusObj, TaskInfo taskInfo) throws IOException {
-        JsonNode statusJson = toStatusJson(statusObj);
-
-        // Extract fields
-        Integer updated = statusJson.path("updated").asInt(0);
-        Integer created = statusJson.path("created").asInt(0);
-        Integer deleted = statusJson.path("deleted").asInt(0);
-        Integer batches = statusJson.path("batches").asInt(0);
-        Integer took = statusJson.path("took").asInt(0);
-        Boolean timedOut = statusJson.path("timed_out").asBoolean(false);
-        Integer versionConflicts = statusJson.path("version_conflicts").asInt(0);
-        Integer noops = statusJson.path("noops").asInt(0);
-        Integer retriesBulk = statusJson.path("retries").path("bulk").asInt(0);
-        Integer retriesSearch = statusJson.path("retries").path("search").asInt(0);
-        Integer throttledUntil = statusJson.path("throttled_until_millis").asInt(0);
-
-        // Build your old-style string
-        String responseSummary = String.format(
-            "BulkByScrollResponse[took=%dms,timed_out=%b,sliceId=null,updated=%d,created=%d,"
-            + "deleted=%d,batches=%d,versionConflicts=%d,noops=%d,retries=%d,throttledUntil=%ds,"
-            + "bulk_failures=[],search_failures=[]]",
-            took, timedOut, updated, created, deleted, batches,
-            versionConflicts, noops, (retriesBulk + retriesSearch),
-            throttledUntil / 1000
-        );
-        return responseSummary;
     }
 }
