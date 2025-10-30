@@ -17,7 +17,6 @@
     "body": {
       "tasks": [
         {
-          "reindex": true,
           "deleteOldIndex": false,
           "caseType": "CaseTypeA",
           "jurisdiction": "JurisdictionA",
@@ -29,7 +28,6 @@
           "endTime": "[[ANYTHING_PRESENT]]"
         },
         {
-          "reindex": true,
           "deleteOldIndex": false,
           "caseType": "CaseTypeB",
           "jurisdiction": "JurisdictionA",
