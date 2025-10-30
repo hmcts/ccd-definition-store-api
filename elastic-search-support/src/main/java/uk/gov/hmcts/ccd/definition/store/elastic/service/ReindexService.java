@@ -17,7 +17,7 @@ public interface ReindexService {
 
     List<ReindexTask> getTasksByCaseType(String caseType);
 
-    ReindexEntity saveEntity(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity caseType,
+    ReindexEntity saveEntity(Boolean deleteOldIndex, CaseTypeEntity caseType,
                              String newIndexName);
 
     void updateEntity(String newIndexName, String response);

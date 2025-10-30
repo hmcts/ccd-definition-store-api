@@ -233,7 +233,6 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
             assertFalse(saved.isEmpty());
 
             ReindexEntity entity = saved.getLast();
-            assertTrue(entity.getReindex());
             assertTrue(entity.getDeleteOldIndex());
             assertEquals("CaseTypeA", entity.getCaseType());
             assertEquals("JUR", entity.getJurisdiction());
@@ -288,7 +287,6 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         entity.setStartTime(LocalDateTime.now());
         entity.setCaseType("CaseTypeA");
         entity.setJurisdiction("jurA");
-        entity.setReindex(true);
         entity.setDeleteOldIndex(false);
 
         reindexRepository.saveAndFlush(entity);

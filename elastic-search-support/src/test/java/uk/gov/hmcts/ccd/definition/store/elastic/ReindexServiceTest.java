@@ -163,14 +163,13 @@ public class ReindexServiceTest {
         when(reindexRepository.saveAndFlush(any(ReindexEntity.class))).thenAnswer(i -> i.getArgument(0));
 
         ReindexEntity result = reindexService.saveEntity(
-            true, true, caseType, newIndexName
+            true, caseType, newIndexName
         );
 
         verify(reindexRepository).saveAndFlush(captor.capture());
 
         ReindexEntity saved = captor.getValue();
         assertSame(saved, result);
-        assertTrue(saved.getReindex());
         assertTrue(saved.getDeleteOldIndex());
         assertEquals("caseTypeA", saved.getCaseType());
         assertEquals("jurA", saved.getJurisdiction());
