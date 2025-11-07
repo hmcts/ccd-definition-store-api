@@ -235,7 +235,7 @@
       "roleToAccessProfiles": [
         {
           "__ordering__": "UNORDERED",
-          "__elementId__": "case_type_id"
+          "__elementId__": "role_name"
         },
         {
           "case_type_id" : "FT_CaseAccessCategories",
