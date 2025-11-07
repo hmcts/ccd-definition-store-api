@@ -234,8 +234,8 @@
       "searchAliasFields": [],
       "roleToAccessProfiles": [
         {
-          "__ordering__": "UNORDERED",
-          "__elementId__": "role_name"
+          "__operator__": "equivalent",
+          "__ordering__": "unordered"
         },
         {
           "case_type_id" : "FT_CaseAccessCategories",
