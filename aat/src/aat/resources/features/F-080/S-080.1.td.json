@@ -235,7 +235,8 @@
       "roleToAccessProfiles": [
         {
           "__operator__": "equivalent",
-          "__ordering__": "unordered"
+          "__ordering__": "unordered",
+          "__elementId__": "case_type_id"
         },
         {
           "case_type_id" : "FT_CaseAccessCategories",
