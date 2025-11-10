@@ -70,11 +70,57 @@ public class TestingSupportController {
         log.info("Deleted records for changeId {} and caseTypeIds {} ", changeId, caseTypeIds);
     }
 
+    @DeleteMapping(value = "/cleanup-case-type/{caseTypeId}")
+    @ApiOperation(value = "Delete a list of Case Type Schemas", notes = "Blank body response.\n")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Success"),
+        @ApiResponse(code = 404, message = "Unable to find case type"),
+        @ApiResponse(code = 500, message = "Unexpected error")
+    })
+    @ConditionalOnExpression("${testing-support-endpoints.enabled:false}")
+    public void dataCaseTypeIdDeleteBYCaseTypeID(
+        @ApiParam(value = "Case Type ID", required = true) @RequestParam("caseTypeIds") String caseTypeIds) {
+
+        log.info("Invoked for changeId {} andcaseTypeIds {} ", caseTypeIds);
+
+        var caseIdList = Arrays.stream(caseTypeIds.split(",")).toList();
+        
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        var ids =  getCaseTypeIdsByCaseTypeId(session,caseIdList);
+        if (ids.isEmpty()) {
+            throw new NotFoundException("Unable to find case type");
+        }
+
+        var sql = getDeleteSql();
+
+        sql.forEach(sqlStatement -> executeSql(session, sqlStatement, ids));
+
+        session.close();
+
+        log.info("Deleted records for caseTypeIds {} "caseTypeIds);
+    }
+
     private List<Integer> getCaseTypeIdsByReferences(Session session, List<String> caseTypesWithChangeIds) {
         var ids = session.createNativeQuery(
                 "SELECT id FROM case_type WHERE reference IN ( :caseTypesWithChangeIds );", 
                 Integer.class)
             .setParameterList("caseTypesWithChangeIds", caseTypesWithChangeIds)
+            .list();
+        session.getTransaction().commit();
+        List<Integer> intIds = new ArrayList<>();
+        for (Object s : ids) {
+            intIds.add(Integer.valueOf(s.toString()));
+        }
+        return intIds;
+    }
+
+     private List<Integer> getCaseTypeIdsByCaseTypeId(Session session, List<String> caseTypeIds) {
+        var ids = session.createNativeQuery(
+                "SELECT id FROM case_type WHERE reference IN ( :caseTypeIds);", 
+                Integer.class)
+            .setParameterList("caseTypeIds", caseTypeIds)
             .list();
         session.getTransaction().commit();
         List<Integer> intIds = new ArrayList<>();
