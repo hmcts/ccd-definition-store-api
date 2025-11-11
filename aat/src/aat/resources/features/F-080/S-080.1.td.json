@@ -239,9 +239,10 @@
       "searchAliasFields": [],
       "roleToAccessProfiles": [
         {
+          "__operator__": "equivalent",
           "__ordering__": "unordered",
           "__elementId__": "case_type_id,role_name,read_only,authorisations,case_access_categories"
-        }, 
+        },
         {
           "case_type_id" : "FT_CaseAccessCategories",
           "disabled" : false,
