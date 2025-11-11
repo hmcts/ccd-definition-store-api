@@ -96,7 +96,7 @@ public class TestingSupportController {
         @ApiResponse(code = 500, message = "Unexpected error")
     })
     @ConditionalOnExpression("${testing-support-endpoints.enabled:false}")
-    public void dataCaseTypeIdDelete(
+    public void dataCaseTypeIdDeleteOnlyWithCaseTypeIds(
 
         @ApiParam(value = "Case Type ID", required = true) @RequestParam("caseTypeIds") String caseTypeIds) {
 
@@ -137,6 +137,7 @@ public class TestingSupportController {
         }
         return intIds;
     }
+
 
 
         private ArrayList<String> getDeleteSql () {
