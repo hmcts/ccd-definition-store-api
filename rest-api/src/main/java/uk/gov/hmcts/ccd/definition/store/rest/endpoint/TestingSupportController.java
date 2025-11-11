@@ -121,7 +121,8 @@ public class TestingSupportController {
 
 
 
-    private List<Integer> getCaseTypeIdsByReferencesForCaseTypeIds(Session session, List<String> caseTypesWithCaseTypeIds) {
+    private List<Integer> getCaseTypeIdsByReferencesForCaseTypeIds(Session session, 
+            List<String> caseTypesWithCaseTypeIds) {
         var ids = session.createNativeQuery(
                 "SELECT id FROM case_type WHERE reference IN ( :caseTypesWithCaseTypeIds );",
                 Integer.class)
