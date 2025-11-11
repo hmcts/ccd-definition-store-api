@@ -23,7 +23,8 @@ java:
 
     # enable whenever required and provide host url to match with corresponding data-store-api
     ELASTIC_SEARCH_ENABLED: true
-    ELASTIC_SEARCH_HOST: "{{ .Release.Name }}-es-master"
+
+    ELASTIC_SEARCH_HOST: ccd-data-store-api-pr-2578-es-master
     USER_PROFILE_HOST: http://${SERVICE_NAME}-ccd-user-profile-api
     TS_TRANSLATION_SERVICE_HOST: http://${SERVICE_NAME}-translation-service
 
