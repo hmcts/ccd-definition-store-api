@@ -85,7 +85,7 @@ public class TestingSupportController {
     }
 
 
-    @DeleteMapping(value = "/cleanup-case-type/{caseTypeId}")
+    @DeleteMapping(value = "/cleanup-case-type/id/{caseTypeId}")
     @ApiOperation(value = "Delete a list of Case Type Schemas", notes = "Blank body response.\n")
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "Success"),
@@ -100,12 +100,12 @@ public class TestingSupportController {
         log.info("Invoked for caseTypeIds {} ", caseTypeIds);
 
         var caseIdList = Arrays.stream(caseTypeIds.split(",")).toList();
-        var caseTypesWithChangeIds = caseIdList.stream().map(caseTypeId -> caseTypeId).toList();
+        //var caseTypesWithChangeIds = caseIdList.stream().map(caseTypeId -> caseTypeId).toList();
 
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        var ids = getCaseTypeIdsByReferencesForCaseTypeIds(session, caseTypesWithChangeIds);
+        var ids = getCaseTypeIdsByReferencesForCaseTypeIds(session, caseIdList);
         if (ids.isEmpty()) {
             throw new NotFoundException("Unable to find case type");
         }
