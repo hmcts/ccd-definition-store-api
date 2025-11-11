@@ -94,8 +94,7 @@ public class TestingSupportController {
     })
     @ConditionalOnExpression("${testing-support-endpoints.enabled:false}")
     public void dataCaseTypeIdDeleteOnlyWithCaseTypeIds(
-
-        @ApiParam(value = "Case Type ID", required = true) @RequestParam("caseTypeIds") String caseTypeIds) {
+        @ApiParam(value = "Case Type ID", required = true) @PathVariable("caseTypeIds") String caseTypeIds) {
 
         log.info("Invoked for caseTypeIds {} ", caseTypeIds);
 
