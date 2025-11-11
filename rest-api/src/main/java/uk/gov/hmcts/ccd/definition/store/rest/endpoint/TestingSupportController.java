@@ -88,7 +88,7 @@ public class TestingSupportController {
 
 
 
-    @DeleteMapping(value = "/cleanup-case-type/{changeId}")
+    @DeleteMapping(value = "/cleanup-case-type/{caseTypeId}")
     @ApiOperation(value = "Delete a list of Case Type Schemas", notes = "Blank body response.\n")
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "Success"),
