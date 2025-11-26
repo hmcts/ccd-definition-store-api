@@ -3,10 +3,10 @@ plugins {
     id 'jacoco'
     id 'idea'
     id 'eclipse'
-    id 'org.springframework.boot' version '3.5.5'
+    id 'org.springframework.boot' version '3.5.8'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'com.github.ben-manes.versions' version '0.51.0'
-    id 'org.sonarqube' version '6.3.1.5724'
+    id 'org.sonarqube' version '7.1.0.6387'
     id 'com.github.kt3k.coveralls' version '2.12.2'
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
     id 'info.solidsoft.pitest' version '1.15.0' apply(false)
@@ -32,8 +32,8 @@ tasks.register("printSuppressionFile") {
 
 ext {
     set('elasticsearch.version', '8.16.2')
-    set('spring-framework.version', '6.2.11')
-    set('spring-security.version', '6.5.3')
+    set('spring-framework.version', '6.2.14')
+    set('spring-security.version', '6.5.7')
     set('springCloudVersion', '2025.0.0')
     set('jackson.version', '2.16.0')
     set('snakeyaml.version', '2.3')
@@ -118,7 +118,7 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
         implementation 'org.springframework.cloud:spring-cloud-starter'
 
-        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.7'
+        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.8'
         implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.29.Final'
         implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5'
 
