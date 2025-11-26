@@ -303,8 +303,9 @@ public class ImportServiceImpl implements ImportService {
 
         List<String> caseTypeReferences = getCaseTypeReferences(caseTypes);
 
-        SnapshotCreationEvent snapshotEvet = new SnapshotCreationEvent(jurisdiction.getReference(), caseTypeReferences);
-        applicationEventPublisher.publishEvent(snapshotEvet);
+        SnapshotCreationEvent snapshotCreationEvent = new SnapshotCreationEvent(jurisdiction.getReference(),
+            caseTypeReferences);
+        applicationEventPublisher.publishEvent(snapshotCreationEvent);
 
         logger.info("Importing spreadsheet: OK: For jurisdiction {}", jurisdiction.getReference());
 

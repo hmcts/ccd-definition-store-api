@@ -91,6 +91,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
             .collect(toList());
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<CaseType> findByCaseTypeId(String caseTypeId) {
         return getCurrentVersion(caseTypeId)

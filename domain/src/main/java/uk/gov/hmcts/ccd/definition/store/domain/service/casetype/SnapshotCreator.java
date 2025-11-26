@@ -2,8 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Component
@@ -15,7 +13,6 @@ public class SnapshotCreator {
         this.caseTypeService = caseTypeService;
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void createSnapshotForCaseType(String caseTypeReference) {
         log.debug("Creating snapshot for case type: {}", caseTypeReference);
         caseTypeService.findByCaseTypeId(caseTypeReference)

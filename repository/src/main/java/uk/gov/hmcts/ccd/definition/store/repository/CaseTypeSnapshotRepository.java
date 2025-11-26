@@ -10,12 +10,18 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeSnapshotEntit
 public interface CaseTypeSnapshotRepository extends DefinitionRepository<CaseTypeSnapshotEntity, Integer> {
 
     /**
-     * Upsert snapshot - Insert new record or update existing one
+     * Check if snapshot exists for given case type and version.
+     */
+    boolean existsByCaseTypeReferenceAndVersionId(String caseTypeReference, Integer versionId);
+
+    /**
+     * Upsert snapshot - Insert new record or update existing one.
      */
     @Modifying
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Query(value = """
-        INSERT INTO case_type_snapshot (case_type_reference, version_id, precomputed_response, created_at, last_modified)
+        INSERT INTO case_type_snapshot
+                    (case_type_reference, version_id, precomputed_response, created_at, last_modified)
         VALUES (:caseTypeReference, :versionId, CAST(:precomputedResponse AS jsonb), NOW(), NOW())
         ON CONFLICT (case_type_reference)
         DO UPDATE SET
