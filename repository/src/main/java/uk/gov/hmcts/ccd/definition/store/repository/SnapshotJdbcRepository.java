@@ -23,17 +23,17 @@ public class SnapshotJdbcRepository {
     public Optional<CaseType> loadCaseTypeSnapshot(String caseTypeReference, Integer version) {
         try {
             return jdbcTemplate.query(
-                "SELECT precomputed_response FROM case_type_snapshot " +
-                    "WHERE case_type_reference = ? AND version_id = ?",
+                "SELECT precomputed_response FROM case_type_snapshot "
+                    + "WHERE case_type_reference = ? AND version_id = ?",
                 (rs) -> {
                     if (rs.next()) {
                         // Stream directly from ResultSet without creating a large String
                         try (InputStream inputStream = rs.getBinaryStream("precomputed_response");
                              JsonParser parser = JsonUtils.OBJECT_MAPPER.getFactory().createParser(inputStream)) {
-                                parser.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
-                                CaseType result = JsonUtils.OBJECT_MAPPER.readValue(parser, CaseType.class);
+                            parser.configure(JsonParser.Feature.AUTO_CLOSE_SOURCE, true);
+                            CaseType result = JsonUtils.OBJECT_MAPPER.readValue(parser, CaseType.class);
 
-                                return Optional.of(result);
+                            return Optional.of(result);
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }

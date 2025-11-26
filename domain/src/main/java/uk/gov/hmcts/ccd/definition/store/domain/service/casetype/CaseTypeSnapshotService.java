@@ -24,7 +24,7 @@ public class CaseTypeSnapshotService {
     }
 
     /**
-     * Retrieve a snapshot case type for a specific version
+     * Retrieve a snapshot case type for a specific version.
      *
      * @param caseTypeReference the case type reference
      * @param version the specific version to look for
@@ -37,7 +37,7 @@ public class CaseTypeSnapshotService {
     }
 
     /**
-     * store snapshot for given case type and version
+     * store snapshot for given case type and version.
      *
      * @param caseTypeReference the case type reference
      * @param version the version to cache
@@ -45,6 +45,15 @@ public class CaseTypeSnapshotService {
      */
     public void storeSnapshot(String caseTypeReference, Integer version, CaseType caseType) {
         try {
+            // Check if snapshot already exists to avoid duplicate work.
+            // Handles race condition where user queries immediately after import
+            // while async snapshot creation is still in progress.
+            if (snapshotRepository.existsByCaseTypeReferenceAndVersionId(caseTypeReference, version)) {
+                log.debug("Snapshot already exists for case type: {} version: {}, skipping",
+                    caseTypeReference, version);
+                return;
+            }
+
             log.debug("Storing the caseType snapshot for case type: {} version: {}", caseTypeReference, version);
 
             String serializedResponse = JsonUtils.toString(caseType);
