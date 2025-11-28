@@ -39,13 +39,15 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     private final List<CaseTypeEntityValidator> caseTypeEntityValidators;
     private final VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedRepository;
     private final MetadataFieldService metadataFieldService;
+    private final CaseTypeSnapshotService snapshotService;
 
     @Autowired
     public CaseTypeServiceImpl(CaseTypeRepository repository,
                                EntityToResponseDTOMapper dtoMapper,
                                LegacyCaseTypeValidator legacyCaseTypeValidator,
                                List<CaseTypeEntityValidator> caseTypeEntityValidators,
-                               MetadataFieldService metadataFieldService
+                               MetadataFieldService metadataFieldService,
+                               CaseTypeSnapshotService snapshotService
     ) {
         this.repository = repository;
         this.dtoMapper = dtoMapper;
@@ -53,6 +55,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         this.caseTypeEntityValidators = caseTypeEntityValidators;
         this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
         this.metadataFieldService = metadataFieldService;
+        this.snapshotService = snapshotService;
     }
 
     @Override
@@ -88,12 +91,22 @@ public class CaseTypeServiceImpl implements CaseTypeService {
             .collect(toList());
     }
 
-    @Transactional
     @Override
-    public Optional<CaseType> findByCaseTypeId(String id) {
-        return repository.findCurrentVersionForReference(id)
-            .map(dtoMapper::map)
-            .map(this::addMetadataFields);
+    public Optional<CaseType> findByCaseTypeId(String caseTypeId) {
+        return getCurrentVersion(caseTypeId)
+            .flatMap(currentVersion -> {
+                Optional<CaseType> cachedResult = snapshotService.getSnapshot(caseTypeId, currentVersion);
+
+                return cachedResult.or(() ->
+                    repository.findByReferenceAndVersion(caseTypeId, currentVersion)
+                        .map(dtoMapper::map)
+                        .map(this::addMetadataFields)
+                        .map(caseType -> {
+                            snapshotService.storeSnapshot(caseTypeId, currentVersion, caseType);
+                            return caseType;
+                        })
+                );
+            });
     }
 
     @Transactional
@@ -152,5 +165,9 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     private CaseType addMetadataFields(CaseType caseType) {
         caseType.addCaseFields(metadataFieldService.getCaseMetadataFields());
         return caseType;
+    }
+
+    private Optional<Integer> getCurrentVersion(String caseTypeReference) {
+        return repository.findLastVersion(caseTypeReference);
     }
 }
