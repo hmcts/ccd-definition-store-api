@@ -4,6 +4,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -25,6 +26,9 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
     private final ImportServiceImpl importService;
     private final FileStorageService fileStorageService;
     private final AzureStorageConfiguration azureStorageConfiguration;
+
+    @Value("${ccd.delete-old-index:false}")
+    private boolean deleteOldIndexDefault;
 
     @Autowired
     public ProcessUploadServiceImpl(ImportServiceImpl importService,
@@ -49,6 +53,9 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
             }
             byte[] bytes = baos.toByteArray();
             LOG.info("Importing Definition file...");
+
+            //deleteOldIndex functionality disabled by default
+            deleteOldIndex = this.deleteOldIndexDefault;
             final DefinitionFileUploadMetadata metadata =
                 importService.importFormDefinitions(new ByteArrayInputStream(bytes), reindex, deleteOldIndex);
 
