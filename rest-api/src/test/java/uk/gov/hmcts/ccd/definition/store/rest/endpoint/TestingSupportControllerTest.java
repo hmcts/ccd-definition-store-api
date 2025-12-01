@@ -99,7 +99,6 @@ class TestingSupportControllerTest {
         when(session.getTransaction())
             .thenReturn(transaction);
         mockMvc.perform(delete("/api/testing-support/cleanup-case-type/id/1")
-                .param("caseTypeIds"))
             .andDo(print())
             .andExpect(status().isOk());
 
