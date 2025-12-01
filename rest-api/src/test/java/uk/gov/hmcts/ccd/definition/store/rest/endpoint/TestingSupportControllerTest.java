@@ -84,7 +84,7 @@ class TestingSupportControllerTest {
     }
 
     @Test
-    @DisplayName("Should execute delete queries")
+    @DisplayName("Should execute delete queries Only With CaseType Ids")
     void shouldDeleteRecordsOnlyWithCaseTypeIds() throws Exception {
         when(session.createNativeQuery(anyString(), eq(Integer.class)))
             .thenReturn(nativeQuery);
