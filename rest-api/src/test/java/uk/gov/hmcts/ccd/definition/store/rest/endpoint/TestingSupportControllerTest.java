@@ -99,8 +99,8 @@ class TestingSupportControllerTest {
         when(session.getTransaction())
             .thenReturn(transaction);
         mockMvc.perform(delete("/api/testing-support/cleanup-case-type/id/1"))
-           .andDo(print())
-           .andExpect(status().isOk());
+            .andDo(print())
+            .andExpect(status().isOk());
 
         verify(session, times(1))
             .createNativeQuery(anyString(), eq(Integer.class));
