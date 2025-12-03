@@ -17,11 +17,6 @@ import java.math.BigInteger;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-
-
 class TestingSupportControllerIT extends BaseTest {
 
     private static final String CLEANUP_CASE_TYPE_URL = "/api/testing-support/cleanup-case-type/%s?caseTypeIds=%s";
@@ -81,12 +76,13 @@ class TestingSupportControllerIT extends BaseTest {
                 .andReturn();
             assertResponseCode(deleteResult, HttpStatus.SC_OK);
 
-            mockMvc.perform(MockMvcRequestBuilders.get(String.format(CASE_TYPE_URL, "1234567")))
+            mockMvc.perform(MockMvcRequestBuilders.get(String.format(CASE_TYPE_URL, "TestAddressBookCase-123")))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andReturn();
 
-            mockMvc.perform(MockMvcRequestBuilders.get(String.format(CASE_TYPE_URL, caseTypeId)))
+            mockMvc.perform(MockMvcRequestBuilders.get(String.format(CASE_TYPE_URL, "TestComplexAddressBookCase")))
                 .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.id").value("TestComplexAddressBookCase"))
                 .andReturn();
                 
         } 
