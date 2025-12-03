@@ -69,7 +69,7 @@ class TestingSupportControllerIT extends BaseTest {
                     .andReturn();
                 assertResponseCode(deleteResult, HttpStatus.SC_OK);
 
-                mockMvc.perform(MockMvcRequestBuilders.delete(String.format(CASE_TYPE_URL, "TestAddressBookCase-123")))
+                mockMvc.perform(MockMvcRequestBuilders.delete(String.format("/cleanup-case-type/id/{caseTypeIds}", "TestAddressBookCase-123")))
                     .andExpect(MockMvcResultMatchers.status().isNoContent());
 
             }
