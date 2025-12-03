@@ -187,7 +187,7 @@ class ProcessUploadServiceTest {
     }
 
     @Test
-    void whenDeleteOldIndexEnabledTrueDoesNotOverride() throws Exception {
+    void whenDeleteOldIndexEnabledTrueDoesNotOverrideTrue() throws Exception {
         when(applicationParams.isDeleteOldIndexEnabled()).thenReturn(true);
         when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(false);
 
@@ -198,5 +198,19 @@ class ProcessUploadServiceTest {
 
         //verifying that deleteOldIndex remains true
         verify(importService).importFormDefinitions(any(ByteArrayInputStream.class), eq(true), eq(true));
+    }
+
+    @Test
+    void whenDeleteOldIndexEnabledTrueDoesNotOverrideFalse() throws Exception {
+        when(applicationParams.isDeleteOldIndexEnabled()).thenReturn(true);
+        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(false);
+
+        //deleteOldIndex passed as false and applicationParams.isDeleteOldIndexEnabled() is true
+        when(importService.importFormDefinitions(any(ByteArrayInputStream.class), eq(true), eq(false)))
+            .thenReturn(metadata);
+        processUploadService.processUpload(file, true, false);
+
+        //verifying that deleteOldIndex remains false
+        verify(importService).importFormDefinitions(any(ByteArrayInputStream.class), eq(true), eq(false));
     }
 }

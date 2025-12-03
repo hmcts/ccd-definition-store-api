@@ -85,7 +85,9 @@ public class ApplicationParams {
         return Integer.valueOf(azureImportAuditsGetLimit);
     }
 
-    public boolean isDeleteOldIndexEnabled() {return deleteOldIndexEnabled;}
+    public boolean isDeleteOldIndexEnabled() {
+        return deleteOldIndexEnabled;
+    }
 
     @PostConstruct
     public void init() {
