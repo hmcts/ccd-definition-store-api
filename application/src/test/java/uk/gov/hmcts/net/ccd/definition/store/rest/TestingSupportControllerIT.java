@@ -64,14 +64,31 @@ class TestingSupportControllerIT extends BaseTest {
 
     @Test
     void shouldDeleteRecordsByCaseTypeId() throws Exception {
-        // given
         String caseTypeId = "12345";
-        String url = String.format(CLEANUP_CASE_TYPE_BY_ID_URL, caseTypeId);
 
-        // when & then
-        mockMvc.perform(delete(url))
-                .andExpect(status().isOk())               // expect HTTP 200 OK
-                .andExpect(content().string("true"));
+        try (final InputStream inputStream =
+                new ClassPathResource("/CCD_TestDefinition_TestingSupportData.xlsx", getClass()).getInputStream()) {
+            MockMultipartFile file = new MockMultipartFile("file", inputStream);
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
+                    .file(file)
+                    .header(AUTHORIZATION, "Bearer testUser"))
+                .andReturn();
+            assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
 
+            var deleteResult = mockMvc.perform(MockMvcRequestBuilders.delete(
+                String.format(CLEANUP_CASE_TYPE_URL, new BigInteger(caseTypeId))))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+            assertResponseCode(deleteResult, HttpStatus.SC_OK);
+
+            mockMvc.perform(MockMvcRequestBuilders.get(String.format(CASE_TYPE_URL, "1234567")))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andReturn();
+
+            mockMvc.perform(MockMvcRequestBuilders.get(String.format(CASE_TYPE_URL, caseTypeId)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+                
+        } 
     }
 }
