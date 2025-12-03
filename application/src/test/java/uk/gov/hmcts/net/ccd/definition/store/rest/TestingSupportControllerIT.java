@@ -59,7 +59,7 @@ class TestingSupportControllerIT extends BaseTest {
 
     @Test
     void shouldDeleteRecordsByCaseTypeId() throws Exception {
-        String caseTypeId = "12345";
+        String caseTypeId = "TestAddressBookCase-123";
 
         try (final InputStream inputStream =
                 new ClassPathResource("/CCD_TestDefinition_TestingSupportData.xlsx", getClass()).getInputStream()) {
