@@ -25,32 +25,34 @@ class TestingSupportControllerIT extends BaseTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestingSupportControllerIT.class);
 
-    @Test
-    void shouldReturnCaseType() throws Exception {
-        try (final InputStream inputStream =
-                 new ClassPathResource("/CCD_TestDefinition_TestingSupportData.xlsx", getClass()).getInputStream()) {
-            MockMultipartFile file = new MockMultipartFile("file", inputStream);
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
-                    .file(file)
-                    .header(AUTHORIZATION, "Bearer testUser"))
-                .andReturn();
-            assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
+        @Test
+        void shouldReturnCaseType() throws Exception {
+            try (final InputStream inputStream =
+                    new ClassPathResource("/CCD_TestDefinition_TestingSupportData.xlsx", getClass()).getInputStream()) {
+                MockMultipartFile file = new MockMultipartFile("file", inputStream);
+                MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
+                        .file(file)
+                        .header(AUTHORIZATION, "Bearer testUser"))
+                    .andReturn();
+                assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
 
-            var deleteResult = mockMvc.perform(MockMvcRequestBuilders.delete(
-                String.format(CLEANUP_CASE_TYPE_URL, new BigInteger("123"), "TestAddressBookCase")))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andReturn();
-            assertResponseCode(deleteResult, HttpStatus.SC_OK);
+                var deleteResult = mockMvc.perform(MockMvcRequestBuilders.delete(
+                    String.format(CLEANUP_CASE_TYPE_URL, new BigInteger("123"), "TestAddressBookCase")))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andReturn();
+                assertResponseCode(deleteResult, HttpStatus.SC_OK);
 
-            mockMvc.perform(MockMvcRequestBuilders.get(String.format(CASE_TYPE_URL, "TestAddressBookCase-123")))
-                .andExpect(MockMvcResultMatchers.status().isNotFound())
-                .andReturn();
+                mockMvc.perform(MockMvcRequestBuilders.get(String.format(CASE_TYPE_URL, "TestAddressBookCase-123")))
+                    .andExpect(MockMvcResultMatchers.status().isNotFound())
+                    .andReturn();
 
-            mockMvc.perform(MockMvcRequestBuilders.get(String.format(CASE_TYPE_URL, "TestComplexAddressBookCase")))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(jsonPath("$.id").value("TestComplexAddressBookCase"))
-                .andReturn();
-        } }
+                mockMvc.perform(MockMvcRequestBuilders.get(String.format(CASE_TYPE_URL, "TestComplexAddressBookCase")))
+                    .andExpect(MockMvcResultMatchers.status().isOk())
+                    .andExpect(jsonPath("$.id").value("TestComplexAddressBookCase"))
+                    .andReturn();
+                    
+            } 
+        }
 
         @Test
         void shouldDeleteRecordsByCaseTypeId() throws Exception {
