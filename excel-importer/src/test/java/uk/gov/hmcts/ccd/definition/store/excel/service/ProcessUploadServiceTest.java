@@ -1,15 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
-import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
-import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
-import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.Arrays;
-import java.util.Collections;
-
 import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -19,6 +9,17 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
+import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
+import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
+import java.util.Collections;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -43,6 +44,9 @@ class ProcessUploadServiceTest {
 
     @Mock
     private AzureStorageConfiguration azureStorageConfiguration;
+
+    @Mock
+    private ApplicationParams applicationParams;
 
     @InjectMocks
     private ProcessUploadServiceImpl processUploadService;
@@ -85,6 +89,17 @@ class ProcessUploadServiceTest {
         assertEquals(result.getStatusCode(), HttpStatus.CREATED);
         assertEquals(result.getBody(), ProcessUploadService.SUCCESSFULLY_CREATED);
         assertEquals(result.getHeaders().getFirst("Elasticsearch-Reindex-Task"), metadata.getTaskId());
+    }
+
+    @Test
+    void deleteOldIndexEnabledOverridesToFalse() throws Exception {
+        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
+        when(importService.importFormDefinitions(any(ByteArrayInputStream.class), eq(true), eq(false)))
+            .thenReturn(metadata);
+        var result = processUploadService.processUpload(file, true, true);
+        verify(importService).importFormDefinitions(any(ByteArrayInputStream.class), eq(true), eq(false));
+        verify(fileStorageService).uploadFile(file, metadata);
+        assertEquals(HttpStatus.CREATED, result.getStatusCode());
     }
 
     @DisplayName("Upload - Green non-path, Azure enabled")
@@ -150,9 +165,38 @@ class ProcessUploadServiceTest {
     @Test
     void invalidUploadDueToNullValues() throws Exception {
         val processUploadServiceTest =
-            new ProcessUploadServiceImpl(importService, null, null);
+            new ProcessUploadServiceImpl(importService,null, null,
+                applicationParams);
         val result = processUploadServiceTest.processUpload(file, false, false);
         assertEquals(result.getStatusCode(), HttpStatus.CREATED);
         assertEquals(result.getBody(), processUploadService.SUCCESSFULLY_CREATED);
+    }
+
+    @Test
+    void whenDeleteOldIndexEnabledFalseAndDeleteOldIndexTrueOverridesToFalse() throws Exception {
+        when(applicationParams.isDeleteOldIndexEnabled()).thenReturn(false);
+        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(false);
+
+        //deleteOldIndex passed as true but applicationParams.isDeleteOldIndexEnabled() is false
+        when(importService.importFormDefinitions(any(ByteArrayInputStream.class), eq(true), eq(false)))
+            .thenReturn(metadata);
+        processUploadService.processUpload(file, true, true);
+
+        //verifying that deleteOldIndex is overridden to false
+        verify(importService).importFormDefinitions(any(ByteArrayInputStream.class), eq(true), eq(false));
+    }
+
+    @Test
+    void whenDeleteOldIndexEnabledTrueDoesNotOverride() throws Exception {
+        when(applicationParams.isDeleteOldIndexEnabled()).thenReturn(true);
+        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(false);
+
+        //deleteOldIndex passed as true and applicationParams.isDeleteOldIndexEnabled() is true
+        when(importService.importFormDefinitions(any(ByteArrayInputStream.class), eq(true), eq(true)))
+            .thenReturn(metadata);
+        processUploadService.processUpload(file, true, true);
+
+        //verifying that deleteOldIndex remains true
+        verify(importService).importFormDefinitions(any(ByteArrayInputStream.class), eq(true), eq(true));
     }
 }

@@ -1,10 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.domain;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.List;
 
 @Named
@@ -40,6 +40,9 @@ public class ApplicationParams {
 
     @Value("${enable-case-group-access-filtering:false}")
     private boolean caseGroupAccessFilteringEnabled;
+
+    @Value("${elasticsearch.delete-old-index.enabled:false}")
+    private boolean deleteOldIndexEnabled;
 
 
     public boolean isDefaultPublish() {
@@ -81,6 +84,8 @@ public class ApplicationParams {
     public Integer getAzureImportAuditsGetLimit() {
         return Integer.valueOf(azureImportAuditsGetLimit);
     }
+
+    public boolean isDeleteOldIndexEnabled() {return deleteOldIndexEnabled;}
 
     @PostConstruct
     public void init() {

@@ -7,7 +7,6 @@ services:
       context: .
     image: hmcts/ccd-definition-store-api
     environment:
-      - CCD_DELETE_OLD_INDEX=false
       - DEFINITION_STORE_DB_HOST=ccd-definition-store-database
       - DEFINITION_STORE_DB_PORT=5432
       - DEFINITION_STORE_DB_USERNAME=definition_store
