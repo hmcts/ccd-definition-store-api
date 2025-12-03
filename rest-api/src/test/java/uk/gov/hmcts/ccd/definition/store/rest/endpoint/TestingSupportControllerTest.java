@@ -131,5 +131,6 @@ class TestingSupportControllerTest {
 
         verify(session, never())
             .createNativeMutationQuery(anyString());
+
     }
 }
