@@ -76,7 +76,7 @@ class TestingSupportControllerIT extends BaseTest {
             assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
 
             var deleteResult = mockMvc.perform(MockMvcRequestBuilders.delete(
-                String.format(CLEANUP_CASE_TYPE_BY_ID_URL, new BigInteger(caseTypeId))))
+                String.format(CLEANUP_CASE_TYPE_BY_ID_URL, caseTypeId)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andReturn();
             assertResponseCode(deleteResult, HttpStatus.SC_OK);
