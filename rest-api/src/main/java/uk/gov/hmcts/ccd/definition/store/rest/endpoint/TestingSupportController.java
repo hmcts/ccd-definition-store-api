@@ -102,7 +102,7 @@ public class TestingSupportController {
         Session session = sessionFactory.openSession();
         session.beginTransaction();
 
-        var ids = getCaseTypeIdsByReferencesForCaseTypeIds(session, caseIdList);
+        var ids = getCaseTypeIdsByReferences(session, caseIdList);
         if (ids.isEmpty()) {
             throw new NotFoundException("Unable to find case type");
         }
@@ -114,22 +114,6 @@ public class TestingSupportController {
         session.close();
 
         log.info("Deleted records for caseTypeIds {} ", caseTypeIds);
-    }
-
-
-    private List<Integer> getCaseTypeIdsByReferencesForCaseTypeIds(Session session,
-                                                                   List<String> caseTypesWithCaseTypeIds) {
-        var ids = session.createNativeQuery(
-                "SELECT id FROM case_type WHERE reference IN ( :caseTypesWithCaseTypeIds );",
-                Integer.class)
-            .setParameterList("caseTypesWithChangeIds", caseTypesWithCaseTypeIds)
-            .list();
-        session.getTransaction().commit();
-        List<Integer> intIds = new ArrayList<>();
-        for (Object s : ids) {
-            intIds.add(Integer.valueOf(s.toString()));
-        }
-        return intIds;
     }
 
     private ArrayList<String> getDeleteSql() {
