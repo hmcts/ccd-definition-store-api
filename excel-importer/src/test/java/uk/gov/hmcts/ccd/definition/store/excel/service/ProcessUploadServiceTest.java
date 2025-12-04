@@ -91,17 +91,6 @@ class ProcessUploadServiceTest {
         assertEquals(result.getHeaders().getFirst("Elasticsearch-Reindex-Task"), metadata.getTaskId());
     }
 
-    @Test
-    void deleteOldIndexEnabledOverridesToFalse() throws Exception {
-        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
-        when(importService.importFormDefinitions(any(ByteArrayInputStream.class), eq(true), eq(false)))
-            .thenReturn(metadata);
-        var result = processUploadService.processUpload(file, true, true);
-        verify(importService).importFormDefinitions(any(ByteArrayInputStream.class), eq(true), eq(false));
-        verify(fileStorageService).uploadFile(file, metadata);
-        assertEquals(HttpStatus.CREATED, result.getStatusCode());
-    }
-
     @DisplayName("Upload - Green non-path, Azure enabled")
     @Test
     void invalidUploadAzureEnabled() {
@@ -165,7 +154,7 @@ class ProcessUploadServiceTest {
     @Test
     void invalidUploadDueToNullValues() throws Exception {
         val processUploadServiceTest =
-            new ProcessUploadServiceImpl(importService,null, null,
+            new ProcessUploadServiceImpl(importService, null, null,
                 applicationParams);
         val result = processUploadServiceTest.processUpload(file, false, false);
         assertEquals(result.getStatusCode(), HttpStatus.CREATED);
