@@ -274,7 +274,7 @@ subprojects { subproject ->
         testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
         testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
 
-        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.15.2'
+        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.20.0'
         testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
         testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
         testImplementation group: 'io.github.openfeign', name: 'feign-jackson', version: feignJackson
