@@ -55,6 +55,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseRoleRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeSnapshotRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CategoryTabRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.ChallengeQuestionTabRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayGroupRepository;
@@ -69,6 +70,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchCriteriaRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchPartyRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
+import uk.gov.hmcts.ccd.definition.store.repository.SnapshotJdbcRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
 
@@ -393,6 +395,18 @@ class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public SearchPartyRepository searchPartyRepository() {
             return mock(SearchPartyRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public CaseTypeSnapshotRepository caseTypeSnapshotRepository() {
+            return mock(CaseTypeSnapshotRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public SnapshotJdbcRepository snapshotJdbcRepository() {
+            return mock(SnapshotJdbcRepository.class);
         }
     }
 }
