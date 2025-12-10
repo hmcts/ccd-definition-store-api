@@ -43,7 +43,7 @@ dependencies {
         exclude group: 'org.mapstruct', module: 'mapstruct'
     }
     
-    implementation group: 'commons-validator', name: 'commons-validator', version: '1.10.0'
+    implementation group: 'commons-validator', name: 'commons-validator', version: '1.10.1'
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     implementation "org.mapstruct:mapstruct-processor:${mapstructVersion}"
     testImplementation project(":app-insights").sourceSets.main.output
