@@ -41,7 +41,7 @@ ext {
 
     junitJupiterVersion = '5.11.4'
     junitVintageVersion = '5.11.4'
-    springDocVersion = '2.8.13'
+    springDocVersion = '2.8.14'
     hamcrestVersion = '3.0'
     flywayVersion = '10.22.0'
     reformLogging= '6.1.9'
@@ -110,8 +110,8 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter'
 
         implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.8'
-        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.29.Final'
-        implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5'
+        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.38.Final'
+        implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5.1'
 
         implementation group: 'net.minidev', name: 'json-smart', version: '2.6.0'
 
@@ -142,7 +142,7 @@ java {
 }
 
 jacoco {
-    toolVersion = "0.8.13"
+    toolVersion = "0.8.14"
 }
 
 
