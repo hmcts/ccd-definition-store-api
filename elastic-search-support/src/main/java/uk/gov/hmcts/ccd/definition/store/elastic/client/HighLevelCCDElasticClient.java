@@ -12,6 +12,8 @@ import org.elasticsearch.action.support.master.AcknowledgedResponse;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.core.CountRequest;
+import org.elasticsearch.client.core.CountResponse;
 import org.elasticsearch.client.indices.CreateIndexRequest;
 import org.elasticsearch.client.indices.CreateIndexResponse;
 import org.elasticsearch.client.indices.PutMappingRequest;
@@ -179,5 +181,11 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     public void refresh(String... indexes) throws IOException {
         elasticClient.indices().refresh(new RefreshRequest(indexes),  RequestOptions.DEFAULT);
+    }
+
+    public long countDocuments(String indexName) throws IOException {
+        CountRequest countRequest = new CountRequest(indexName);
+        CountResponse countResponse = elasticClient.count(countRequest, RequestOptions.DEFAULT);
+        return countResponse.getCount();
     }
 }
