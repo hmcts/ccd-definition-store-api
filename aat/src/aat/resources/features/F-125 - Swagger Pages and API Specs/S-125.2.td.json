@@ -17,18 +17,13 @@
     "responseCode" : 200,
     "responseMessage" : "OK",
     "body" : {
-      "host" : "[[ANYTHING_PRESENT]]",
-      "basePath": "/",
-      "tags": "[[ANYTHING_PRESENT]]",
+      "openapi" : "[[ANYTHING_PRESENT]]",
+      "servers" : "[[ANYTHING_PRESENT]]",
+      "components" : "[[ANYTHING_PRESENT]]",
       "paths": "[[ANYTHING_PRESENT]]",
-      "definitions": "[[ANYTHING_PRESENT]]",
-      "swagger": "2.0",
       "info": {
-        "description": "Create, modify, retrieve and search definitions",
-        "title": "Core Case Data - Definition store API",
-        "contact":"[[ANYTHING_PRESENT]]",
-        "license": "[[ANYTHING_PRESENT]]",
-        "version": "[[ANYTHING_PRESENT]]"
+        "description": "[[ANYTHING_PRESENT]]",
+        "title": "[[ANYTHING_PRESENT]]"
       }
     }
   }

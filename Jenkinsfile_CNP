@@ -70,9 +70,6 @@ withPipeline(type, product, app) {
     onMaster {
         enableSlackNotifications('#ccd-master-builds')
     }
-    if (env.BRANCH_NAME.equalsIgnoreCase(definitionStoreDevelopPr)) {
-        enableSlackNotifications('#ccd-develop-builds')
-    }
     onDemo {
         enableSlackNotifications('#ccd-demo-builds')
     }
