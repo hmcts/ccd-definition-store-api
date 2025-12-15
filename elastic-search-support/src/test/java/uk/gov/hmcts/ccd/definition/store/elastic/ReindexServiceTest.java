@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
 import org.elasticsearch.client.GetAliasesResponse;
 import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,6 +12,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
@@ -141,6 +145,38 @@ class ReindexServiceTest {
         verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
         //using a single mock, so close() is called twice (in event listener and reindexing failure handler)
         verify(ccdElasticClient, atLeast(2)).close();
+    }
+
+    @Test
+    void shouldLogBeginReindexingMessageEvenWhenReindexFails() throws IOException {
+        Logger logger = (Logger) LoggerFactory.getLogger(ReindexService.class);
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+
+        mockAliasResponse();
+
+        when(ccdElasticClient.countDocuments(caseTypeName)).thenReturn(50L);
+
+        doAnswer(invocation -> {
+            ReindexListener listener = invocation.getArgument(2);
+            listener.onFailure(new RuntimeException("reindexing failed"));
+            return null;
+        }).when(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
+
+        DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, true);
+        assertThrows(RuntimeException.class,
+            () -> reindexService.asyncReindex(event, baseIndexName, caseA));
+
+        // assert begin reindexing log message is present
+        String combinedLogs = appender.list.stream()
+            .map(ILoggingEvent::getFormattedMessage)
+            .reduce("", (a, b) -> a + "\n" + b);
+        assertTrue(
+            combinedLogs.contains(
+                "Begin reindexing. Source index '" + caseTypeName + "' contains 50 cases/documents"
+            )
+        );
     }
 
     @Test
