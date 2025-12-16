@@ -110,7 +110,7 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter'
 
         implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.8'
-        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.38.Final'
+        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.39.Final'
         implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5.1'
 
         implementation group: 'net.minidev', name: 'json-smart', version: '2.6.0'
