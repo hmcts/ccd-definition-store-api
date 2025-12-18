@@ -45,7 +45,7 @@ ext {
     hamcrestVersion = '3.0'
     flywayVersion = '10.22.0'
     reformLogging= '6.1.9'
-    apachePoiVersion = '5.4.1'
+    apachePoiVersion = '5.5.1'
     appInsightsVersion = '2.6.4'
     restAssuredVersion = '5.5.6'
     groovyVersion = '4.0.29'
