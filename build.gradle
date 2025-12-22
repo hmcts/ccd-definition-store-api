@@ -168,8 +168,13 @@ subprojects { subproject ->
 
     sourceSets {
         maybeCreate("integrationTest").with {
-            java.srcDir("src/integrationTest/java")
-            resources.srcDir("src/integrationTest/resources")
+            if (project.name == "integration-tests") {
+                java.srcDir("src/test/java")
+                resources.srcDir("src/test/resources")
+            } else {
+                java.srcDir("src/integrationTest/java")
+                resources.srcDir("src/integrationTest/resources")
+            }
             compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
             runtimeClasspath += output + compileClasspath
         }
@@ -298,12 +303,12 @@ subprojects { subproject ->
     }
 
     task integration(type: Test) {
-    description = "Runs integration tests"
-    group = "Verification"
-    testClassesDirs = sourceSets.integrationTest.output.classesDirs
-    classpath = sourceSets.integrationTest.runtimeClasspath
-    failFast = true
-}
+        description = "Runs integration tests"
+        group = "Verification"
+        testClassesDirs = sourceSets.integrationTest.output.classesDirs
+        classpath = sourceSets.integrationTest.runtimeClasspath
+        failFast = true
+    }
 
     // from https://github.com/junit-team/junit5/issues/1024'
     afterEvaluate {

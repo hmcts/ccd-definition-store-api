@@ -94,13 +94,13 @@ withPipeline(type, product, app) {
 
     afterAlways('test') {
 
-        builder.gradle('integration')
+        builder.gradle(':integration-tests:integration')
 
         // hmcts/cnp-jenkins-library may fail to copy artifacts after checkstyle error so repeat command (see /src/uk/gov/hmcts/contino/GradleBuilder.groovy)
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/checkstyle/*.html'
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/pmd/*.html'
 
-        copyIgnore('./build/reports/tests/integration', './Integration Tests/')
+        copyIgnore('./integration-tests/build/reports/tests/integration', './Integration Tests/')
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Integration Tests/**/*'
 
 
