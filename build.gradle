@@ -285,6 +285,18 @@ subprojects { subproject ->
         testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     }
 
+    integrationTestImplementation.extendsFrom(testImplementation)
+    integrationTestRuntimeOnly.extendsFrom(testRuntimeOnly)
+    integrationTestAnnotationProcessor.extendsFrom(annotationProcessor)
+
+    task integration(type: Test) {
+    description = "Runs integration tests"
+    group = "Verification"
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    failFast = true
+}
+
     // from https://github.com/junit-team/junit5/issues/1024'
     afterEvaluate {
         jacocoTestReport {
