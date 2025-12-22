@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,6 +14,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeSnapshotEntit
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.await;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.is;
@@ -69,12 +70,10 @@ class CaseTypeSnapshotRepositoryTest {
 
     @BeforeEach
     void setup() {
-        caseTypeSnapshotRepository.deleteAll();
-        caseTypeSnapshotRepository.flush();
+        clearSnapshots();
     }
 
-    @AfterEach
-    void cleanup() {
+    private void clearSnapshots() {
         caseTypeSnapshotRepository.deleteAll();
         caseTypeSnapshotRepository.flush();
     }
@@ -96,34 +95,32 @@ class CaseTypeSnapshotRepositoryTest {
     }
 
     @Test
-    void shouldUpdateExistingSnapshot_whenNewVersionIsHigher() throws Exception {
+    void shouldUpdateExistingSnapshot_whenNewVersionIsHigher() {
         // Given: Existing snapshot with version 1
         caseTypeSnapshotRepository.upsertSnapshot(CASE_TYPE_REF_1, 1, SAMPLE_JSON_V1);
 
-        Optional<CaseTypeSnapshotEntity> initial = findByCaseTypeReference(CASE_TYPE_REF_1);
-        assertTrue(initial.isPresent());
+        CaseTypeSnapshotEntity initial = findByCaseTypeReference(CASE_TYPE_REF_1)
+            .orElseThrow(() -> new AssertionError("Initial snapshot not found"));
 
-        // Small delay to ensure timestamp difference
-        Thread.sleep(100);
+        LocalDateTime initialLastModified = initial.getLastModified();
+        Integer initialId = initial.getId();
 
         // When: Update with version 2
         caseTypeSnapshotRepository.upsertSnapshot(CASE_TYPE_REF_1, 2, SAMPLE_JSON_V2);
 
-        // Then: Snapshot should be updated
-        Optional<CaseTypeSnapshotEntity> updated = findByCaseTypeReference(CASE_TYPE_REF_1);
+        // Then: Use Awaitility to wait for the DB to reflect the change
+        await()
+            .atMost(2, SECONDS)
+            .untilAsserted(() -> {
+                CaseTypeSnapshotEntity snapshot = findByCaseTypeReference(CASE_TYPE_REF_1)
+                    .orElseThrow(() -> new AssertionError("Updated snapshot not found"));
 
-        assertTrue(updated.isPresent());
-        CaseTypeSnapshotEntity snapshot = updated.get();
-
-        Integer initialId = initial.get().getId();
-        assertThat(snapshot.getId(), is(initialId));
-
-        assertThat(snapshot.getCaseTypeReference(), is(CASE_TYPE_REF_1));
-        assertThat(snapshot.getVersionId(), is(2));
-        assertJsonEquals(SAMPLE_JSON_V2, snapshot.getPrecomputedResponse());
-
-        LocalDateTime initialLastModified = initial.get().getLastModified();
-        assertThat(snapshot.getLastModified(), greaterThan(initialLastModified));
+                assertThat("Snapshot ID should remain the same (upsert)", snapshot.getId(), is(initialId));
+                assertThat("Version should be updated", snapshot.getVersionId(), is(2));
+                assertThat("Timestamp should have increased",
+                    snapshot.getLastModified(), greaterThan(initialLastModified));
+                assertJsonEquals(SAMPLE_JSON_V2, snapshot.getPrecomputedResponse());
+            });
     }
 
     @Test
@@ -363,7 +360,7 @@ class CaseTypeSnapshotRepositoryTest {
     }
 
     @Test
-    void shouldReturnTrue_whenSnapshotExistsAfterUpdate() throws Exception {
+    void shouldReturnTrue_whenSnapshotExistsAfterUpdate() {
         // Given: Initial snapshot with version 1
         caseTypeSnapshotRepository.upsertSnapshot(CASE_TYPE_REF_1, 1, SAMPLE_JSON_V1);
 
@@ -464,8 +461,7 @@ class CaseTypeSnapshotRepositoryTest {
         assertTrue(existsBeforeDelete);
 
         // When: Delete all snapshots
-        caseTypeSnapshotRepository.deleteAll();
-        caseTypeSnapshotRepository.flush();
+        clearSnapshots();
 
         // Then: Should return false after deletion
         boolean existsAfterDelete = caseTypeSnapshotRepository
@@ -486,17 +482,6 @@ class CaseTypeSnapshotRepositoryTest {
         assertThat(caseTypeSnapshotRepository.existsByCaseTypeReferenceAndVersionId(CASE_TYPE_REF_1, 2),
             is(false));
         assertTrue(caseTypeSnapshotRepository.existsByCaseTypeReferenceAndVersionId(CASE_TYPE_REF_1, 3));
-    }
-
-    @Test
-    void shouldReturnFalse_forEmptyDatabase() {
-        // Given: Empty database (cleanup already done in @BeforeEach)
-
-        // When: Check for any snapshot
-        boolean exists = caseTypeSnapshotRepository.existsByCaseTypeReferenceAndVersionId(CASE_TYPE_REF_1, 1);
-
-        // Then: Should return false
-        assertThat(exists, is(false));
     }
 
     @Test

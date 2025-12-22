@@ -350,7 +350,6 @@ class SnapshotJdbcRepositoryTest {
         caseTypeSnapshotRepository.upsertSnapshot(CASE_TYPE_REF_1, 1, jsonResponse);
 
         // When: Load with parameters that might cause unexpected runtime exceptions
-        // This tests the outer catch (Exception e) block
         Optional<CaseType> result = snapshotJdbcRepository.loadCaseTypeSnapshot(CASE_TYPE_REF_1, 1);
 
         // Then: Should handle any unexpected exceptions gracefully

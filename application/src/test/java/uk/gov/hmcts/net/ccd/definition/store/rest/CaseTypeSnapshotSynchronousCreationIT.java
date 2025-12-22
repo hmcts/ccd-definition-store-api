@@ -23,6 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -76,12 +77,14 @@ class CaseTypeSnapshotSynchronousCreationIT extends BaseTest {
         }
 
         // STEP 2: Wait and verify NO snapshot was created (async is disabled)
-        Thread.sleep(2000);
-
-        Integer snapshotCountBeforeGet = getSnapshotCountByCaseType(TEST_CASE_TYPE);
-
-        assertEquals(0, snapshotCountBeforeGet,
-            "Snapshot should NOT exist before GET request when async snapshot creation is disabled");
+        await()
+            .atMost(2, TimeUnit.SECONDS)
+            .pollDelay(500, TimeUnit.MILLISECONDS) // Wait at least 500ms to give async a chance to fail
+            .untilAsserted(() -> {
+                Integer snapshotCount = getSnapshotCountByCaseType(TEST_CASE_TYPE);
+                assertEquals(0, snapshotCount,
+                    "Snapshot should NOT exist before GET request when async snapshot creation is disabled");
+            });
 
         // STEP 3: Make GET request for case type (should create snapshot synchronously)
         final String caseTypeUrl = String.format(CASE_TYPE_URL, TEST_CASE_TYPE);
@@ -165,9 +168,15 @@ class CaseTypeSnapshotSynchronousCreationIT extends BaseTest {
                 .andReturn();
         }
 
-        Thread.sleep(2000);
+        await()
+            .atMost(2, TimeUnit.SECONDS)
+            .pollDelay(500, TimeUnit.MILLISECONDS) // Wait at least 500ms to give async a chance to fail
+            .untilAsserted(() -> {
+                Integer snapshotCount = getSnapshotCountByCaseType(TEST_CASE_TYPE);
+                assertEquals(0, snapshotCount,
+                    "Snapshot should NOT exist before GET request when async snapshot creation is disabled");
+            });
 
-        // STEP 2: Verify no snapshot exists
         Integer initialCount = getSnapshotCountByCaseType(TEST_CASE_TYPE);
         assertEquals(0, initialCount);
 
@@ -257,11 +266,15 @@ class CaseTypeSnapshotSynchronousCreationIT extends BaseTest {
                 .andReturn();
         }
 
-        Thread.sleep(2000);
-
         // STEP 2: Verify no snapshots exist
-        Integer initialCount = getSnapshotTotalCount();
-        assertEquals(0, initialCount, "No snapshots should exist initially with async disabled");
+        await()
+            .atMost(2, TimeUnit.SECONDS)
+            .pollDelay(500, TimeUnit.MILLISECONDS) // Wait at least 500ms to give async a chance to fail
+            .untilAsserted(() -> {
+                Integer snapshotCount = getSnapshotTotalCount();
+                assertEquals(0, snapshotCount,
+                    "No snapshots should exist initially with async disabled");
+            });
 
         // STEP 3: Query first case type
         mockMvc.perform(MockMvcRequestBuilders.get(String.format(CASE_TYPE_URL, TEST_CASE_TYPE))
