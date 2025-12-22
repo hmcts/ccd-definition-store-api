@@ -161,6 +161,8 @@ subprojects { subproject ->
         providedRuntime
 
         cucumberRuntime.extendsFrom(functionalRuntime)
+        integrationTestImplementation.extendsFrom(testImplementation)
+        integrationTestRuntimeOnly.extendsFrom(testRuntimeOnly)
     }
 
     dependencyManagement {
