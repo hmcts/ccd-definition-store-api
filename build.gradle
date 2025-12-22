@@ -161,8 +161,18 @@ subprojects { subproject ->
         providedRuntime
 
         cucumberRuntime.extendsFrom(functionalRuntime)
-        integrationTestImplementation.extendsFrom(testImplementation)
-        integrationTestRuntimeOnly.extendsFrom(testRuntimeOnly)
+        maybeCreate("integrationTestImplementation").extendsFrom(testImplementation)
+        maybeCreate("integrationTestRuntimeOnly").extendsFrom(testRuntimeOnly)
+        maybeCreate("integrationTestAnnotationProcessor").extendsFrom(annotationProcessor)
+    }
+
+    sourceSets {
+        maybeCreate("integrationTest").with {
+            java.srcDir("src/integrationTest/java")
+            resources.srcDir("src/integrationTest/resources")
+            compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+            runtimeClasspath += output + compileClasspath
+        }
     }
 
     dependencyManagement {
@@ -286,10 +296,6 @@ subprojects { subproject ->
         testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
         testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     }
-
-    integrationTestImplementation.extendsFrom(testImplementation)
-    integrationTestRuntimeOnly.extendsFrom(testRuntimeOnly)
-    integrationTestAnnotationProcessor.extendsFrom(annotationProcessor)
 
     task integration(type: Test) {
     description = "Runs integration tests"
