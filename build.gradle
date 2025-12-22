@@ -298,10 +298,13 @@ subprojects { subproject ->
                 xml.outputLocation = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
 
             }
+            
 
             classDirectories.setFrom((classDirectories.files.collect {
                 fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**','**/AppInsightsConfiguration**'])
             }))
+
+            executionData(test, integration)
 
             doLast {
                 def report = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
