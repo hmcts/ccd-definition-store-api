@@ -303,12 +303,16 @@ subprojects { subproject ->
     }
 
     task integration(type: Test) {
-        description = "Runs integration tests"
-        group = "Verification"
-        testClassesDirs = sourceSets.integrationTest.output.classesDirs
-        classpath = sourceSets.integrationTest.runtimeClasspath
-        failFast = true
+    description = "Runs integration tests"
+    group = "Verification"
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    failFast = true
+    useJUnitPlatform()
+    reports {
+        html.required = true
     }
+}
 
     // from https://github.com/junit-team/junit5/issues/1024'
     afterEvaluate {
