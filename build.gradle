@@ -6,11 +6,11 @@ plugins {
     id 'org.springframework.boot' version '3.4.1'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'com.github.ben-manes.versions' version '0.51.0'
-    id 'org.sonarqube' version '6.0.1.5171'
+    id 'org.sonarqube' version '6.3.1.5724'
     id 'com.github.kt3k.coveralls' version "2.12.2"
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
     id 'info.solidsoft.pitest' version '1.15.0' apply(false)
-    id 'org.jetbrains.gradle.plugin.idea-ext' version "1.1.9"
+    id 'org.jetbrains.gradle.plugin.idea-ext' version "1.3"
     id 'uk.gov.hmcts.java' version '0.12.67'
     id 'org.owasp.dependencycheck' version '11.1.1'
 }
@@ -41,20 +41,20 @@ ext {
 
     junitJupiterVersion = '5.11.4'
     junitVintageVersion = '5.11.4'
-    springDocVersion = '2.8.13'
+    springDocVersion = '2.8.14'
     hamcrestVersion = '3.0'
     flywayVersion = '10.22.0'
     reformLogging= '6.1.9'
-    apachePoiVersion = '5.4.1'
+    apachePoiVersion = '5.5.1'
     appInsightsVersion = '2.6.4'
     restAssuredVersion = '5.5.6'
-    groovyVersion = '4.0.28'
-    lombokVersion = '1.18.40'
+    groovyVersion = '4.0.29'
+    lombokVersion = '1.18.42'
     jjwtVersion = '0.13.0'
     feignJackson = '13.6'
     gsonVersion = '2.13.2'
     elasticSearchVersion = '7.17.29'
-    testcontainersVersion = '1.21.3'
+    testcontainersVersion = '1.21.4'
     ccdTestDefinitionVersion = '7.27.7-prerelease-CME-537'
     beftaFwVersion = '9.2.4'
     limits = [
@@ -100,7 +100,7 @@ allprojects {
         // start::CVE Vulnerability dependency overrides 
 
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.6.0' // spring-cloud-starter-openfeign
-        implementation group: 'commons-io', name: 'commons-io', version: '2.20.0' // spring-cloud-starter-openfeign
+        implementation group: 'commons-io', name: 'commons-io', version: '2.21.0' // spring-cloud-starter-openfeign
 
         // end::CVE Vulnerability dependency overrides
 
@@ -109,15 +109,15 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
         implementation 'org.springframework.cloud:spring-cloud-starter'
 
-        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.7'
-        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.29.Final'
-        implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5'
+        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.8'
+        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.39.Final'
+        implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5.1'
 
         implementation group: 'net.minidev', name: 'json-smart', version: '2.6.0'
 
         // CVE-2021-42550
-        implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.18'
-        implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.5.18'
+        implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.22'
+        implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.5.22'
 
         testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
             exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
@@ -142,7 +142,7 @@ java {
 }
 
 jacoco {
-    toolVersion = "0.8.13"
+    toolVersion = "0.8.14"
 }
 
 
@@ -197,8 +197,8 @@ subprojects { subproject ->
 
         // start::CVE Vulnerability dependency overrides 
 
-        implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.5' // spring-boot-starter-oauth2-client
-        implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.18.0' // azure-storage
+        implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.6' // spring-boot-starter-oauth2-client
+        implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.20.0' // azure-storage
         implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.5.0' // poi-ooxml
 
 
@@ -222,12 +222,12 @@ subprojects { subproject ->
 
         // HMCTS
         implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.3.3'
-        implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.4'
+        implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.5'
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: reformLogging
 
         implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '2.9.3'
         implementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
-        implementation group: 'com.google.guava', name: 'guava', version: '33.4.8-jre'
+        implementation group: 'com.google.guava', name: 'guava', version: '33.5.0-jre'
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'azure-storage', version: '8.6.6'
@@ -274,7 +274,7 @@ subprojects { subproject ->
         testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
         testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
 
-        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.15.2'
+        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.21.0'
         testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
         testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
         testImplementation group: 'io.github.openfeign', name: 'feign-jackson', version: feignJackson
@@ -372,8 +372,8 @@ sonarqube {
         property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
         property "sonar.jacoco.reportPaths", "${buildDir}/jacoco/junitPlatformTest.exec"
         property "sonar.cpd.exclusions", "**/entity/*.java,**/model/*.java"
-        property "sonar.jacoco.excludes", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java,**/TestingSupportController.java"
-        property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java,**/TestingSupportController.java"
+        property "sonar.jacoco.excludes", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/TestingSupportController.java"
+        property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/TestingSupportController.java"
         property "sonar.projectName", "ccd-definition-store-api"
         property "sonar.projectKey", "ccd-definition-store-api"
     }
