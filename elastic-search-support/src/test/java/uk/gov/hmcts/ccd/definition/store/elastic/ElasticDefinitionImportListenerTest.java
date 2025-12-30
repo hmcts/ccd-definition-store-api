@@ -72,7 +72,6 @@ class ElasticDefinitionImportListenerTest {
         .withReference("caseTypeB").build();
     private final String baseIndexName = "casetypea";
     private final String caseTypeName = "casetypea_cases-000001";
-    private final String incrementedCaseTypeName = "casetypea_cases-000002";
 
     @BeforeEach
     void setUp() {
