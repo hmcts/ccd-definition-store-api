@@ -24,6 +24,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -172,7 +173,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         try {
             return helper.reindexIndex(oldIndex, newIndex, 5000, listener);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
