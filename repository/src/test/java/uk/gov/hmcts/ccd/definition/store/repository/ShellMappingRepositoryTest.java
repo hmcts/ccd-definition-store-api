@@ -72,13 +72,13 @@ class ShellMappingRepositoryTest {
         FieldTypeEntity fieldType2 = testHelper.createType(jurisdiction2);
 
         // Create case types with case fields
-        CaseTypeEntity shellCaseType1 = createCaseTypeWithField("SHELL_CASE_TYPE_1", "Shell Case Type 1", 
+        final CaseTypeEntity shellCaseType1 = createCaseTypeWithField("SHELL_CASE_TYPE_1", "Shell Case Type 1",
             jurisdiction1, fieldType1, "shellField1");
-        CaseTypeEntity shellCaseType2 = createCaseTypeWithField("SHELL_CASE_TYPE_2", "Shell Case Type 2", 
+        final CaseTypeEntity shellCaseType2 = createCaseTypeWithField("SHELL_CASE_TYPE_2", "Shell Case Type 2",
             jurisdiction2, fieldType2, "shellField2");
-        CaseTypeEntity origCaseType1 = createCaseTypeWithField("ORIG_CASE_TYPE_1", "Orig Case Type 1", 
+        final CaseTypeEntity origCaseType1 = createCaseTypeWithField("ORIG_CASE_TYPE_1", "Orig Case Type 1",
             jurisdiction1, fieldType1, "origField1");
-        CaseTypeEntity origCaseType2 = createCaseTypeWithField("ORIG_CASE_TYPE_2", "Orig Case Type 2", 
+        final CaseTypeEntity origCaseType2 = createCaseTypeWithField("ORIG_CASE_TYPE_2", "Orig Case Type 2",
             jurisdiction2, fieldType2, "origField2");
 
         // Convert to CaseTypeLiteEntity
@@ -128,9 +128,9 @@ class ShellMappingRepositoryTest {
         // Given
         JurisdictionEntity jurisdiction = testHelper.createJurisdiction();
         FieldTypeEntity fieldType = testHelper.createType(jurisdiction);
-        CaseTypeEntity shellCaseType = createCaseTypeWithField("SHELL_CASE_TYPE_3", "Shell Case Type 3", 
+        CaseTypeEntity shellCaseType = createCaseTypeWithField("SHELL_CASE_TYPE_3", "Shell Case Type 3",
             jurisdiction, fieldType, "shellField3");
-        CaseTypeEntity origCaseType = createCaseTypeWithField("ORIG_CASE_TYPE_3", "Orig Case Type 3", 
+        CaseTypeEntity origCaseType = createCaseTypeWithField("ORIG_CASE_TYPE_3", "Orig Case Type 3",
             jurisdiction, fieldType, "origField3");
 
         CaseTypeLiteEntity shellCaseTypeLite = CaseTypeLiteEntity.toCaseTypeLiteEntity(shellCaseType);
@@ -292,9 +292,9 @@ class ShellMappingRepositoryTest {
         // Given
         JurisdictionEntity jurisdiction = testHelper.createJurisdiction();
         FieldTypeEntity fieldType = testHelper.createType(jurisdiction);
-        CaseTypeEntity shellCaseType = createCaseTypeWithField("SHELL_CASE_TYPE_NULL", "Shell Case Type Null", 
+        CaseTypeEntity shellCaseType = createCaseTypeWithField("SHELL_CASE_TYPE_NULL", "Shell Case Type Null",
             jurisdiction, fieldType, "shellFieldNull");
-        CaseTypeEntity origCaseType = createCaseTypeWithField("ORIG_CASE_TYPE_NULL", "Orig Case Type Null", 
+        CaseTypeEntity origCaseType = createCaseTypeWithField("ORIG_CASE_TYPE_NULL", "Orig Case Type Null",
             jurisdiction, fieldType, "origFieldNull");
 
         CaseTypeLiteEntity shellCaseTypeLite = CaseTypeLiteEntity.toCaseTypeLiteEntity(shellCaseType);
@@ -334,13 +334,13 @@ class ShellMappingRepositoryTest {
         // Given
         JurisdictionEntity jurisdiction = testHelper.createJurisdiction();
         FieldTypeEntity fieldType = testHelper.createType(jurisdiction);
-        CaseTypeEntity shellCaseType1 = createCaseTypeWithField("MULTI_SHELL_1", "Multi Shell 1", 
+        CaseTypeEntity shellCaseType1 = createCaseTypeWithField("MULTI_SHELL_1", "Multi Shell 1",
             jurisdiction, fieldType, "multiField1");
-        CaseTypeEntity shellCaseType2 = createCaseTypeWithField("MULTI_SHELL_2", "Multi Shell 2", 
+        CaseTypeEntity shellCaseType2 = createCaseTypeWithField("MULTI_SHELL_2", "Multi Shell 2",
             jurisdiction, fieldType, "multiField2");
-        CaseTypeEntity origCaseType1 = createCaseTypeWithField("MULTI_ORIG_1", "Multi Orig 1", 
+        CaseTypeEntity origCaseType1 = createCaseTypeWithField("MULTI_ORIG_1", "Multi Orig 1",
             jurisdiction, fieldType, "multiOrigField1");
-        CaseTypeEntity origCaseType2 = createCaseTypeWithField("MULTI_ORIG_2", "Multi Orig 2", 
+        CaseTypeEntity origCaseType2 = createCaseTypeWithField("MULTI_ORIG_2", "Multi Orig 2",
             jurisdiction, fieldType, "multiOrigField2");
 
         CaseTypeLiteEntity shellCaseTypeLite1 = CaseTypeLiteEntity.toCaseTypeLiteEntity(shellCaseType1);
@@ -438,7 +438,7 @@ class ShellMappingRepositoryTest {
         );
     }
 
-    private CaseTypeEntity createCaseTypeWithField(String reference, String name, 
+    private CaseTypeEntity createCaseTypeWithField(String reference, String name,
                                                    JurisdictionEntity jurisdiction,
                                                    FieldTypeEntity fieldType,
                                                    String fieldReference) {
@@ -449,10 +449,13 @@ class ShellMappingRepositoryTest {
         caseType.setDescription(name);
         caseType.setJurisdiction(jurisdiction);
         caseType.setSecurityClassification(PUBLIC);
-        
-        CaseFieldEntity caseField = testHelper.buildCaseField(fieldReference, fieldType, "Label " + fieldReference, false);
+
+        CaseFieldEntity caseField = testHelper.buildCaseField(fieldReference,
+            fieldType,
+            "Label " + fieldReference,
+            false);
         caseType.addCaseField(caseField);
-        
+
         return caseTypeRepository.save(caseType);
     }
 
