@@ -212,6 +212,57 @@ class FieldTypeServiceImplTest {
         assertSame(base1, saved.get(0).getBaseFieldType());
     }
 
+    @Test
+    void saveTypes_shouldKeepExistingCollectionTypeOnConflict() {
+        final FieldTypeValidationContext context = mock(FieldTypeValidationContext.class);
+        doReturn(context).when(validationContextFactory).create();
+
+        FieldTypeEntity collection1 = new FieldTypeEntity();
+        collection1.setReference("Collection1");
+        FieldTypeEntity collection2 = new FieldTypeEntity();
+        collection2.setReference("Collection2");
+
+        FieldTypeEntity type1 = new FieldTypeEntity();
+        type1.setReference("dup");
+        type1.setCollectionFieldType(collection1);
+
+        FieldTypeEntity type2 = new FieldTypeEntity();
+        type2.setReference("dup");
+        type2.setCollectionFieldType(collection2);
+
+        ArgumentCaptor<Iterable<FieldTypeEntity>> captor = ArgumentCaptor.forClass(Iterable.class);
+
+        fieldTypeService.saveTypes(JURISDICTION, Arrays.asList(type1, type2));
+
+        verify(repository).saveAll(captor.capture());
+        List<FieldTypeEntity> saved = toList(captor.getValue());
+        assertEquals(1, saved.size());
+        assertSame(collection1, saved.get(0).getCollectionFieldType());
+    }
+
+    @Test
+    void saveTypes_shouldNotDuplicateListItemsWhenValueMatches() {
+        final FieldTypeValidationContext context = mock(FieldTypeValidationContext.class);
+        doReturn(context).when(validationContextFactory).create();
+
+        FieldTypeEntity type1 = new FieldTypeEntity();
+        type1.setReference("dup");
+        type1.addListItems(Arrays.asList(listItem("A", "Label A", 1)));
+
+        FieldTypeEntity type2 = new FieldTypeEntity();
+        type2.setReference("dup");
+        type2.addListItems(Arrays.asList(listItem("A", "Label B", 2)));
+
+        ArgumentCaptor<Iterable<FieldTypeEntity>> captor = ArgumentCaptor.forClass(Iterable.class);
+
+        fieldTypeService.saveTypes(JURISDICTION, Arrays.asList(type1, type2));
+
+        verify(repository).saveAll(captor.capture());
+        List<FieldTypeEntity> saved = toList(captor.getValue());
+        assertEquals(1, saved.size());
+        assertEquals(1, saved.get(0).getListItems().size());
+    }
+
     private ValidationResult validationResultWithError(ValidationError validationError) {
         ValidationResult validationResult = new ValidationResult();
         validationResult.addError(validationError);

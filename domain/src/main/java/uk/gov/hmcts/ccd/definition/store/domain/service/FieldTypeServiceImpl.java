@@ -109,9 +109,8 @@ public class FieldTypeServiceImpl implements FieldTypeService {
 
         for (FieldTypeEntity fieldType : fieldTypes) {
             String reference = fieldType.getReference();
-            FieldTypeEntity existing = uniqueByReference.get(reference);
-            if (existing == null) {
-                uniqueByReference.put(reference, fieldType);
+            FieldTypeEntity existing = uniqueByReference.computeIfAbsent(reference, key -> fieldType);
+            if (existing == fieldType) {
                 continue;
             }
 
