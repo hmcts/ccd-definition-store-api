@@ -9,18 +9,23 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeVa
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeValidationContextFactory;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
@@ -141,6 +146,123 @@ class FieldTypeServiceImplTest {
         verifyNoMoreInteractions(repository);
     }
 
+    @Test
+    void saveTypes_shouldDeduplicateAndMergeFieldTypesWithSameReference() {
+        final FieldTypeValidationContext context = mock(FieldTypeValidationContext.class);
+        doReturn(context).when(validationContextFactory).create();
+
+        FieldTypeEntity type1 = new FieldTypeEntity();
+        type1.setReference("dup");
+        type1.setRegularExpression("regex-1");
+        type1.setMinimum("1");
+        type1.setMaximum(null);
+        type1.addListItems(Arrays.asList(listItem("A", "Label A", 1)));
+        type1.addComplexFields(Arrays.asList(complexField("cf1")));
+
+        FieldTypeEntity type2 = new FieldTypeEntity();
+        type2.setReference("dup");
+        type2.setRegularExpression("regex-2");
+        type2.setMinimum(null);
+        type2.setMaximum("9");
+        type2.addListItems(Arrays.asList(listItem("B", "Label B", 2)));
+        type2.addComplexFields(Arrays.asList(complexField("cf2")));
+
+        ArgumentCaptor<Iterable<FieldTypeEntity>> captor = ArgumentCaptor.forClass(Iterable.class);
+
+        fieldTypeService.saveTypes(JURISDICTION, Arrays.asList(type1, type2));
+
+        verify(repository).saveAll(captor.capture());
+        List<FieldTypeEntity> saved = toList(captor.getValue());
+        assertEquals(1, saved.size());
+
+        FieldTypeEntity merged = saved.get(0);
+        assertSame(JURISDICTION, merged.getJurisdiction());
+        assertEquals("regex-1", merged.getRegularExpression());
+        assertEquals("1", merged.getMinimum());
+        assertEquals("9", merged.getMaximum());
+        assertEquals(2, merged.getListItems().size());
+        assertEquals(2, merged.getComplexFields().size());
+    }
+
+    @Test
+    void saveTypes_shouldKeepExistingBaseTypeOnConflict() {
+        final FieldTypeValidationContext context = mock(FieldTypeValidationContext.class);
+        doReturn(context).when(validationContextFactory).create();
+
+        FieldTypeEntity base1 = new FieldTypeEntity();
+        base1.setReference("Base1");
+        FieldTypeEntity base2 = new FieldTypeEntity();
+        base2.setReference("Base2");
+
+        FieldTypeEntity type1 = new FieldTypeEntity();
+        type1.setReference("dup");
+        type1.setBaseFieldType(base1);
+
+        FieldTypeEntity type2 = new FieldTypeEntity();
+        type2.setReference("dup");
+        type2.setBaseFieldType(base2);
+
+        ArgumentCaptor<Iterable<FieldTypeEntity>> captor = ArgumentCaptor.forClass(Iterable.class);
+
+        fieldTypeService.saveTypes(JURISDICTION, Arrays.asList(type1, type2));
+
+        verify(repository).saveAll(captor.capture());
+        List<FieldTypeEntity> saved = toList(captor.getValue());
+        assertEquals(1, saved.size());
+        assertSame(base1, saved.get(0).getBaseFieldType());
+    }
+
+    @Test
+    void saveTypes_shouldKeepExistingCollectionTypeOnConflict() {
+        final FieldTypeValidationContext context = mock(FieldTypeValidationContext.class);
+        doReturn(context).when(validationContextFactory).create();
+
+        FieldTypeEntity collection1 = new FieldTypeEntity();
+        collection1.setReference("Collection1");
+        FieldTypeEntity collection2 = new FieldTypeEntity();
+        collection2.setReference("Collection2");
+
+        FieldTypeEntity type1 = new FieldTypeEntity();
+        type1.setReference("dup");
+        type1.setCollectionFieldType(collection1);
+
+        FieldTypeEntity type2 = new FieldTypeEntity();
+        type2.setReference("dup");
+        type2.setCollectionFieldType(collection2);
+
+        ArgumentCaptor<Iterable<FieldTypeEntity>> captor = ArgumentCaptor.forClass(Iterable.class);
+
+        fieldTypeService.saveTypes(JURISDICTION, Arrays.asList(type1, type2));
+
+        verify(repository).saveAll(captor.capture());
+        List<FieldTypeEntity> saved = toList(captor.getValue());
+        assertEquals(1, saved.size());
+        assertSame(collection1, saved.get(0).getCollectionFieldType());
+    }
+
+    @Test
+    void saveTypes_shouldNotDuplicateListItemsWhenValueMatches() {
+        final FieldTypeValidationContext context = mock(FieldTypeValidationContext.class);
+        doReturn(context).when(validationContextFactory).create();
+
+        FieldTypeEntity type1 = new FieldTypeEntity();
+        type1.setReference("dup");
+        type1.addListItems(Arrays.asList(listItem("A", "Label A", 1)));
+
+        FieldTypeEntity type2 = new FieldTypeEntity();
+        type2.setReference("dup");
+        type2.addListItems(Arrays.asList(listItem("A", "Label B", 2)));
+
+        ArgumentCaptor<Iterable<FieldTypeEntity>> captor = ArgumentCaptor.forClass(Iterable.class);
+
+        fieldTypeService.saveTypes(JURISDICTION, Arrays.asList(type1, type2));
+
+        verify(repository).saveAll(captor.capture());
+        List<FieldTypeEntity> saved = toList(captor.getValue());
+        assertEquals(1, saved.size());
+        assertEquals(1, saved.get(0).getListItems().size());
+    }
+
     private ValidationResult validationResultWithError(ValidationError validationError) {
         ValidationResult validationResult = new ValidationResult();
         validationResult.addError(validationError);
@@ -149,6 +271,30 @@ class FieldTypeServiceImplTest {
 
     private ValidationError validationErrorWithDefaultMessage(String defaultMessage) {
         return new TestValidationError(defaultMessage);
+    }
+
+    private FieldTypeListItemEntity listItem(String value, String label, Integer order) {
+        FieldTypeListItemEntity item = new FieldTypeListItemEntity();
+        item.setValue(value);
+        item.setLabel(label);
+        item.setOrder(order);
+        return item;
+    }
+
+    private ComplexFieldEntity complexField(String reference) {
+        ComplexFieldEntity field = new ComplexFieldEntity();
+        field.setReference(reference);
+        field.setLabel(reference + "-label");
+        field.setOrder(1);
+        return field;
+    }
+
+    private List<FieldTypeEntity> toList(Iterable<FieldTypeEntity> iterable) {
+        List<FieldTypeEntity> list = new ArrayList<>();
+        for (FieldTypeEntity entity : iterable) {
+            list.add(entity);
+        }
+        return list;
     }
 
 }
