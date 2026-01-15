@@ -178,11 +178,13 @@ public class FieldTypeServiceImpl implements FieldTypeService {
         }
 
         for (FieldTypeListItemEntity item : incoming.getListItems()) {
-            FieldTypeListItemEntity existing = existingByValue.get(item.getValue());
-            if (existing == null) {
+            FieldTypeListItemEntity existing = existingByValue.computeIfAbsent(item.getValue(), key -> {
                 item.setFieldType(target);
                 target.getListItems().add(item);
-                existingByValue.put(item.getValue(), item);
+                return item;
+            });
+
+            if (existing == item) {
                 continue;
             }
 
@@ -205,16 +207,16 @@ public class FieldTypeServiceImpl implements FieldTypeService {
         }
 
         for (ComplexFieldEntity field : incoming.getComplexFields()) {
-            ComplexFieldEntity existing = existingByReference.get(field.getReference());
-            if (existing == null) {
+            ComplexFieldEntity existing = existingByReference.computeIfAbsent(field.getReference(), key -> {
                 field.setComplexFieldType(target);
                 target.getComplexFields().add(field);
-                existingByReference.put(field.getReference(), field);
-                continue;
-            }
+                return field;
+            });
 
-            LOG.warn("Conflicting complex field '{}' for reference '{}': keeping existing field",
-                field.getReference(), target.getReference());
+            if (existing != field) {
+                LOG.warn("Conflicting complex field '{}' for reference '{}': keeping existing field",
+                    field.getReference(), target.getReference());
+            }
         }
     }
 
