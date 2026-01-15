@@ -161,6 +161,23 @@ subprojects { subproject ->
         providedRuntime
 
         cucumberRuntime.extendsFrom(functionalRuntime)
+        maybeCreate("integrationTestImplementation").extendsFrom(testImplementation)
+        maybeCreate("integrationTestRuntimeOnly").extendsFrom(testRuntimeOnly)
+        maybeCreate("integrationTestAnnotationProcessor").extendsFrom(annotationProcessor)
+    }
+
+    sourceSets {
+        maybeCreate("integrationTest").with {
+            if (project.name == "integration-tests") {
+                java.srcDir("src/test/java")
+                resources.srcDir("src/test/resources")
+            } else {
+                java.srcDir("src/integrationTest/java")
+                resources.srcDir("src/integrationTest/resources")
+            }
+            compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+            runtimeClasspath += output + compileClasspath
+        }
     }
 
     dependencyManagement {
@@ -285,6 +302,18 @@ subprojects { subproject ->
         testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     }
 
+    task integration(type: Test) {
+    description = "Runs integration tests"
+    group = "Verification"
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    failFast = true
+    useJUnitPlatform()
+    reports {
+        html.required = true
+    }
+}
+
     // from https://github.com/junit-team/junit5/issues/1024'
     afterEvaluate {
         jacocoTestReport {
@@ -298,10 +327,13 @@ subprojects { subproject ->
                 xml.outputLocation = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
 
             }
+            
 
             classDirectories.setFrom((classDirectories.files.collect {
                 fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**','**/AppInsightsConfiguration**'])
             }))
+
+            executionData(test, integration)
 
             doLast {
                 def report = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
