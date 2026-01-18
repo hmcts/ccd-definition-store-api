@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
@@ -45,13 +46,17 @@ public class CaseTypeServiceImpl implements CaseTypeService {
                                EntityToResponseDTOMapper dtoMapper,
                                LegacyCaseTypeValidator legacyCaseTypeValidator,
                                List<CaseTypeEntityValidator> caseTypeEntityValidators,
-                               MetadataFieldService metadataFieldService
+                               MetadataFieldService metadataFieldService,
+                               ApplicationParams applicationParams
     ) {
         this.repository = repository;
         this.dtoMapper = dtoMapper;
         this.legacyCaseTypeValidator = legacyCaseTypeValidator;
         this.caseTypeEntityValidators = caseTypeEntityValidators;
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(
+            repository,
+            applicationParams.isSkipDuplicateVersionedEntries()
+        );
         this.metadataFieldService = metadataFieldService;
     }
 

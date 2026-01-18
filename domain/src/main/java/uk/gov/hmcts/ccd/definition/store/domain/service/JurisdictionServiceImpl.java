@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeLiteRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.JurisdictionRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
@@ -31,10 +32,14 @@ public class JurisdictionServiceImpl implements JurisdictionService {
     @Autowired
     public JurisdictionServiceImpl(JurisdictionRepository repository,
                                    CaseTypeLiteRepository caseTypeLiteRepository,
-                                   EntityToResponseDTOMapper entityToResponseDTOMapper) {
+                                   EntityToResponseDTOMapper entityToResponseDTOMapper,
+                                   ApplicationParams applicationParams) {
         this.repository = repository;
         this.caseTypeLiteRepository = caseTypeLiteRepository;
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(
+            repository,
+            applicationParams.isSkipDuplicateVersionedEntries()
+        );
         this.entityToResponseDTOMapper = entityToResponseDTOMapper;
     }
 

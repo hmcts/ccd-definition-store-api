@@ -84,6 +84,31 @@ class VersionedDefinitionRepositoryDecoratorTest {
         assertThat(savedCaseType2.getVersion(), is(2));
     }
 
+    @Test
+    void saveSkipsDuplicateCaseTypeWhenEnabled() {
+        final CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("id");
+        caseType.setName("name");
+        caseType.setJurisdiction(jurisdiction);
+        caseType.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository, true);
+
+        CaseTypeEntity saved = versionedCaseTypeRepository.save(caseType);
+
+        final CaseTypeEntity caseType2 = new CaseTypeEntity();
+        caseType2.setReference("id");
+        caseType2.setName("name");
+        caseType2.setJurisdiction(jurisdiction);
+        caseType2.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        CaseTypeEntity savedCaseType2 = versionedCaseTypeRepository.save(caseType2);
+
+        assertThat(saved.getVersion(), is(1));
+        assertThat(savedCaseType2.getVersion(), is(1));
+        assertEquals(1, exampleRepository.findAll().size());
+    }
+
 
     @Test
     void saveNewCaseTypes() {
