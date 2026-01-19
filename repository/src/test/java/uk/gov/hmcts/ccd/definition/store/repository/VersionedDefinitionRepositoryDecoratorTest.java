@@ -2,11 +2,13 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.Versionable;
 
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.lang.reflect.Method;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +27,7 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -109,6 +112,80 @@ class VersionedDefinitionRepositoryDecoratorTest {
         assertEquals(1, exampleRepository.findAll().size());
     }
 
+    @Test
+    void saveDoesNotSkipDuplicateWhenDifferentFields() {
+        final CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("id");
+        caseType.setName("name1");
+        caseType.setJurisdiction(jurisdiction);
+        caseType.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository, true);
+        versionedCaseTypeRepository.save(caseType);
+
+        final CaseTypeEntity caseType2 = new CaseTypeEntity();
+        caseType2.setReference("id");
+        caseType2.setName("name2");
+        caseType2.setJurisdiction(jurisdiction);
+        caseType2.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        CaseTypeEntity savedCaseType2 = versionedCaseTypeRepository.save(caseType2);
+
+        assertThat(savedCaseType2.getVersion(), is(2));
+        assertEquals(2, exampleRepository.findAll().size());
+    }
+
+    @Test
+    void saveDoesNotSkipDuplicateWhenAssociationIdsDiffer() {
+        final CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("id");
+        caseType.setName("name");
+        caseType.setJurisdiction(jurisdiction);
+        caseType.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository, true);
+        versionedCaseTypeRepository.save(caseType);
+
+        final JurisdictionEntity otherJurisdiction = new JurisdictionEntity();
+        otherJurisdiction.setReference("jurisdiction2");
+        otherJurisdiction.setName("jname2");
+        final JurisdictionEntity savedJurisdiction = versionedJurisdictionRepository.save(otherJurisdiction);
+
+        final CaseTypeEntity caseType2 = new CaseTypeEntity();
+        caseType2.setReference("id");
+        caseType2.setName("name");
+        caseType2.setJurisdiction(savedJurisdiction);
+        caseType2.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        CaseTypeEntity savedCaseType2 = versionedCaseTypeRepository.save(caseType2);
+
+        assertThat(savedCaseType2.getVersion(), is(2));
+        assertEquals(2, exampleRepository.findAll().size());
+    }
+
+    @Test
+    void saveAllSkipsDuplicatesWhenEnabled() {
+        final CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("id");
+        caseType.setName("name");
+        caseType.setJurisdiction(jurisdiction);
+        caseType.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        final CaseTypeEntity caseType2 = new CaseTypeEntity();
+        caseType2.setReference("id");
+        caseType2.setName("name");
+        caseType2.setJurisdiction(jurisdiction);
+        caseType2.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository, true);
+
+        List<CaseTypeEntity> saved = versionedCaseTypeRepository.saveAll(asList(caseType, caseType2));
+
+        assertEquals(2, saved.size());
+        assertEquals(saved.get(0).getId(), saved.get(1).getId());
+        assertEquals(1, exampleRepository.findAll().size());
+    }
+
 
     @Test
     void saveNewCaseTypes() {
@@ -136,6 +213,24 @@ class VersionedDefinitionRepositoryDecoratorTest {
         assertNotNull(retrievedCaseType2.get());
         assertThat(retrievedCaseType2.get().getVersion(), is(1));
 
+    }
+
+    @Test
+    void isEquivalentReturnsFalseForNullOrDifferentClass() throws Exception {
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository, true);
+        Method method = VersionedDefinitionRepositoryDecorator.class
+            .getDeclaredMethod("isEquivalent", Versionable.class, Versionable.class);
+        method.setAccessible(true);
+
+        Object nullExisting = method.invoke(versionedCaseTypeRepository, null, new CaseTypeEntity());
+        assertFalse((boolean) nullExisting);
+
+        Object nullCandidate = method.invoke(versionedCaseTypeRepository, new CaseTypeEntity(), null);
+        assertFalse((boolean) nullCandidate);
+
+        Object differentClass = method.invoke(versionedCaseTypeRepository, new JurisdictionEntity(),
+            new CaseTypeEntity());
+        assertFalse((boolean) differentClass);
     }
 
     //test for required coverage of new lines in sonar

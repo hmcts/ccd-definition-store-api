@@ -41,7 +41,7 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
         this(repository, false);
     }
 
-    public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository repository,
+    public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository<T, ID> repository,
                                                   boolean skipDuplicateEntries) {
         super(repository);
         this.skipDuplicateEntries = skipDuplicateEntries;
@@ -118,30 +118,40 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
         if (existing == null || candidate == null) {
             return false;
         }
-        if (!Hibernate.getClass(existing).equals(Hibernate.getClass(candidate))) {
+        if (!isSameEntityClass(existing, candidate)) {
             return false;
         }
         for (Field field : getAllFields(candidate.getClass())) {
             if (shouldIgnoreField(field)) {
                 continue;
             }
-            Object existingValue = readField(field, existing);
-            Object candidateValue = readField(field, candidate);
-            if (isEntityAssociationField(field)) {
-                Object existingId = extractEntityId(existingValue);
-                Object candidateId = extractEntityId(candidateValue);
-                if ((existingId != null || candidateId != null) && !Objects.equals(existingId, candidateId)) {
-                    return false;
-                }
-                if (existingId == null && candidateId == null
-                    && !Objects.deepEquals(existingValue, candidateValue)) {
-                    return false;
-                }
-            } else if (!Objects.deepEquals(existingValue, candidateValue)) {
+            if (!fieldsEquivalent(field, existing, candidate)) {
                 return false;
             }
         }
         return true;
+    }
+
+    private boolean isSameEntityClass(T existing, T candidate) {
+        return Hibernate.getClass(existing).equals(Hibernate.getClass(candidate));
+    }
+
+    private boolean fieldsEquivalent(Field field, T existing, T candidate) {
+        Object existingValue = readField(field, existing);
+        Object candidateValue = readField(field, candidate);
+        if (isEntityAssociationField(field)) {
+            return associationValuesEquivalent(existingValue, candidateValue);
+        }
+        return Objects.deepEquals(existingValue, candidateValue);
+    }
+
+    private boolean associationValuesEquivalent(Object existingValue, Object candidateValue) {
+        Object existingId = extractEntityId(existingValue);
+        Object candidateId = extractEntityId(candidateValue);
+        if (existingId != null || candidateId != null) {
+            return Objects.equals(existingId, candidateId);
+        }
+        return Objects.deepEquals(existingValue, candidateValue);
     }
 
     private boolean shouldIgnoreField(Field field) {
@@ -167,7 +177,6 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
 
     private Object readField(Field field, Object target) {
         try {
-            field.setAccessible(true);
             return field.get(target);
         } catch (IllegalAccessException e) {
             throw new IllegalStateException("Unable to access field for comparison: " + field.getName(), e);
