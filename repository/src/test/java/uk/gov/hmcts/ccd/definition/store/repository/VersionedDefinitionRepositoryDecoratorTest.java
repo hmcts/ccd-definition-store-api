@@ -4,6 +4,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.Versionable;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +24,13 @@ import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
+
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Transient;
+import org.hibernate.annotations.CreationTimestamp;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -250,6 +259,7 @@ class VersionedDefinitionRepositoryDecoratorTest {
         assertEquals(0, result.size());
     }
 
+    @Test
     public void deleteAllInBatchTest() {
         versionedJurisdictionRepository.deleteAllInBatch(new Iterable<JurisdictionEntity>() {
             @NotNull
@@ -332,6 +342,176 @@ class VersionedDefinitionRepositoryDecoratorTest {
         //method being tested is stubbed as it isn't used
         //simplest assertion added to satisfy SonarScan
         assertNull(result);
+    }
+
+    @Test
+    void fieldsEquivalentHandlesInaccessibleField() throws Exception {
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository, true);
+        Method method = VersionedDefinitionRepositoryDecorator.class
+            .getDeclaredMethod("fieldsEquivalent", Field.class, Versionable.class, Versionable.class);
+        method.setAccessible(true);
+
+        Field field = DummyEntity.class.getDeclaredField("noGetter");
+        DummyEntity existing = new DummyEntity();
+        DummyEntity candidate = new DummyEntity();
+
+        Object result = method.invoke(versionedCaseTypeRepository, field, existing, candidate);
+        assertFalse((boolean) result);
+    }
+
+    @Test
+    void fieldsEquivalentHandlesAssociationField() throws Exception {
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository, true);
+        Method method = VersionedDefinitionRepositoryDecorator.class
+            .getDeclaredMethod("fieldsEquivalent", Field.class, Versionable.class, Versionable.class);
+        method.setAccessible(true);
+
+        Field field = DummyEntity.class.getDeclaredField("associated");
+        DummyEntity existing = new DummyEntity();
+        DummyEntity candidate = new DummyEntity();
+        AssociatedEntity association = new AssociatedEntity(10);
+        existing.setAssociated(association);
+        candidate.setAssociated(new AssociatedEntity(10));
+
+        Object result = method.invoke(versionedCaseTypeRepository, field, existing, candidate);
+        assertTrue((boolean) result);
+    }
+
+    @Test
+    void fieldsEquivalentHandlesSimpleField() throws Exception {
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository, true);
+        Method method = VersionedDefinitionRepositoryDecorator.class
+            .getDeclaredMethod("fieldsEquivalent", Field.class, Versionable.class, Versionable.class);
+        method.setAccessible(true);
+
+        Field field = DummyEntity.class.getDeclaredField("name");
+        DummyEntity existing = new DummyEntity();
+        DummyEntity candidate = new DummyEntity();
+        existing.setName("same");
+        candidate.setName("same");
+
+        Object result = method.invoke(versionedCaseTypeRepository, field, existing, candidate);
+        assertTrue((boolean) result);
+    }
+
+    @Test
+    void shouldIgnoreFieldCoversAnnotationsAndCollections() throws Exception {
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository, true);
+        Method method = VersionedDefinitionRepositoryDecorator.class
+            .getDeclaredMethod("shouldIgnoreField", Field.class);
+        method.setAccessible(true);
+
+        assertTrue((boolean) method.invoke(versionedCaseTypeRepository,
+            DummyEntity.class.getDeclaredField("staticField")));
+        assertTrue((boolean) method.invoke(versionedCaseTypeRepository,
+            DummyEntity.class.getDeclaredField("id")));
+        assertTrue((boolean) method.invoke(versionedCaseTypeRepository,
+            DummyEntity.class.getDeclaredField("createdAt")));
+        assertTrue((boolean) method.invoke(versionedCaseTypeRepository,
+            DummyEntity.class.getDeclaredField("transientField")));
+        assertTrue((boolean) method.invoke(versionedCaseTypeRepository,
+            DummyEntity.class.getDeclaredField("oneToMany")));
+        assertTrue((boolean) method.invoke(versionedCaseTypeRepository,
+            DummyEntity.class.getDeclaredField("manyToMany")));
+        assertTrue((boolean) method.invoke(versionedCaseTypeRepository,
+            DummyEntity.class.getDeclaredField("collectionField")));
+        assertFalse((boolean) method.invoke(versionedCaseTypeRepository,
+            DummyEntity.class.getDeclaredField("name")));
+    }
+
+    @Test
+    void readFieldThrowsIllegalStateExceptionWhenGetterFails() throws Exception {
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository, true);
+        Method method = VersionedDefinitionRepositoryDecorator.class
+            .getDeclaredMethod("readField", Field.class, Object.class);
+        method.setAccessible(true);
+
+        Field field = DummyEntity.class.getDeclaredField("failing");
+        DummyEntity existing = new DummyEntity();
+
+        try {
+            method.invoke(versionedCaseTypeRepository, field, existing);
+            fail("Expected IllegalStateException");
+        } catch (InvocationTargetException e) {
+            assertTrue(e.getCause() instanceof IllegalStateException);
+        }
+    }
+
+    private static class DummyEntity implements Versionable {
+        private static final String staticField = "static";
+
+        @Id
+        private Integer id;
+
+        @CreationTimestamp
+        private String createdAt;
+
+        @Transient
+        private String transientField;
+
+        @OneToMany
+        private List<String> oneToMany;
+
+        @ManyToMany
+        private List<String> manyToMany;
+
+        private List<String> collectionField;
+
+        private String name;
+
+        private String noGetter;
+
+        @ManyToOne
+        private AssociatedEntity associated;
+
+        private String failing;
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public AssociatedEntity getAssociated() {
+            return associated;
+        }
+
+        public void setAssociated(AssociatedEntity associated) {
+            this.associated = associated;
+        }
+
+        public String getFailing() {
+            throw new RuntimeException("boom");
+        }
+
+        @Override
+        public String getReference() {
+            return null;
+        }
+
+        @Override
+        public Integer getVersion() {
+            return null;
+        }
+
+        @Override
+        public void setVersion(Integer version) {
+        }
+    }
+
+    private static class AssociatedEntity {
+        @Id
+        private final Integer id;
+
+        AssociatedEntity(Integer id) {
+            this.id = id;
+        }
+
+        public Integer getId() {
+            return id;
+        }
     }
 
 }
