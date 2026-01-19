@@ -95,6 +95,7 @@ class VersionedDefinitionRepositoryDecoratorTest {
         versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository, true);
 
         CaseTypeEntity saved = versionedCaseTypeRepository.save(caseType);
+        assertThat(saved.getVersion(), is(1));
 
         final CaseTypeEntity caseType2 = new CaseTypeEntity();
         caseType2.setReference("id");
@@ -104,7 +105,6 @@ class VersionedDefinitionRepositoryDecoratorTest {
 
         CaseTypeEntity savedCaseType2 = versionedCaseTypeRepository.save(caseType2);
 
-        assertThat(saved.getVersion(), is(1));
         assertThat(savedCaseType2.getVersion(), is(1));
         assertEquals(1, exampleRepository.findAll().size());
     }

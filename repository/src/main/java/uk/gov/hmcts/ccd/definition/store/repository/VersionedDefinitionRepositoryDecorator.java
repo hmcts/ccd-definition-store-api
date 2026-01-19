@@ -41,7 +41,8 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
         this(repository, false);
     }
 
-    public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository repository, boolean skipDuplicateEntries) {
+    public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository repository,
+                                                  boolean skipDuplicateEntries) {
         super(repository);
         this.skipDuplicateEntries = skipDuplicateEntries;
     }
