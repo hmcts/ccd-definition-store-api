@@ -14,6 +14,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Function;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
 import jakarta.persistence.Id;
@@ -34,6 +35,7 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
         "version",
         "createdAt"
     ));
+    private static final Object INACCESSIBLE_FIELD = new Object();
 
     private final boolean skipDuplicateEntries;
 
@@ -139,6 +141,9 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
     private boolean fieldsEquivalent(Field field, T existing, T candidate) {
         Object existingValue = readField(field, existing);
         Object candidateValue = readField(field, candidate);
+        if (existingValue == INACCESSIBLE_FIELD || candidateValue == INACCESSIBLE_FIELD) {
+            return false;
+        }
         if (isEntityAssociationField(field)) {
             return associationValuesEquivalent(existingValue, candidateValue);
         }
@@ -177,9 +182,36 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
 
     private Object readField(Field field, Object target) {
         try {
-            return field.get(target);
-        } catch (IllegalAccessException e) {
+            Method getter = findGetter(field, target.getClass());
+            if (getter != null) {
+                return getter.invoke(target);
+            }
+            return INACCESSIBLE_FIELD;
+        } catch (ReflectiveOperationException e) {
             throw new IllegalStateException("Unable to access field for comparison: " + field.getName(), e);
+        }
+    }
+
+    private Method findGetter(Field field, Class<?> targetClass) {
+        String name = field.getName();
+        if (name.isEmpty()) {
+            return null;
+        }
+        String capitalized = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+        String getterName = (field.getType() == boolean.class || field.getType() == Boolean.class)
+            ? "is" + capitalized
+            : "get" + capitalized;
+        try {
+            return targetClass.getMethod(getterName);
+        } catch (NoSuchMethodException ignored) {
+            if (getterName.startsWith("is")) {
+                try {
+                    return targetClass.getMethod("get" + capitalized);
+                } catch (NoSuchMethodException ignoredAgain) {
+                    return null;
+                }
+            }
+            return null;
         }
     }
 
