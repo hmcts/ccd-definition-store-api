@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
@@ -80,6 +81,9 @@ class CaseTypeServiceImplTest {
     private LegacyCaseTypeValidator legacyCaseTypeValidator;
 
     @Mock
+    private ApplicationParams applicationParams;
+
+    @Mock
     private CaseTypeEntityValidator caseTypeEntityValidator1;
 
     @Mock
@@ -107,6 +111,7 @@ class CaseTypeServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
+        when(applicationParams.isSkipDuplicateVersionedEntries()).thenReturn(false);
         caseTypeEntity1.setReference(CASE_TYPE_REFERENCE_1);
         caseTypeEntity2.setReference(CASE_TYPE_REFERENCE_2);
         caseTypeEntity3.setReference(CASE_TYPE_REFERENCE_3);
@@ -117,7 +122,8 @@ class CaseTypeServiceImplTest {
             dtoMapper,
             legacyCaseTypeValidator,
             Arrays.asList(caseTypeEntityValidator1, caseTypeEntityValidator2),
-            metadataFieldService);
+            metadataFieldService,
+            applicationParams);
     }
 
     @Nested

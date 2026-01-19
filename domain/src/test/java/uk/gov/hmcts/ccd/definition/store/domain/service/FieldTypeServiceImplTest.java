@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.TestValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
@@ -36,6 +36,7 @@ class FieldTypeServiceImplTest {
     private FieldTypeValidator validator2;
     private FieldTypeServiceImpl fieldTypeService;
     private FieldTypeValidationContextFactory validationContextFactory;
+    private ApplicationParams applicationParams;
 
     @BeforeEach
     void setUp() {
@@ -50,7 +51,10 @@ class FieldTypeServiceImplTest {
 
         final List<FieldTypeValidator> validators = Arrays.asList(validator1, validator2);
 
-        fieldTypeService = new FieldTypeServiceImpl(repository, validationContextFactory, validators);
+        applicationParams = mock(ApplicationParams.class);
+        doReturn(false).when(applicationParams).isSkipDuplicateVersionedEntries();
+
+        fieldTypeService = new FieldTypeServiceImpl(repository, validationContextFactory, validators, applicationParams);
     }
 
     @Test
