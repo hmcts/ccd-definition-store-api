@@ -54,7 +54,11 @@ class FieldTypeServiceImplTest {
         applicationParams = mock(ApplicationParams.class);
         doReturn(false).when(applicationParams).isSkipDuplicateVersionedEntries();
 
-        fieldTypeService = new FieldTypeServiceImpl(repository, validationContextFactory, validators, applicationParams);
+        fieldTypeService = new FieldTypeServiceImpl(
+            repository,
+            validationContextFactory,
+            validators,
+            applicationParams);
     }
 
     @Test
