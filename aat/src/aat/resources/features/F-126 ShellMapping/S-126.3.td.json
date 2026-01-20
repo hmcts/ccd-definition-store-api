@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-126.3",
+  "_extends_": "F-126_Definition_Import_Test_Base_data",
+  "title": "Import a definition file containing new Tab ShellCaseMapping with invalid OriginatingCaseTypeID - not successful import",
+  "specs": [
+    "an active profile in CCD",
+    "contains a definition file with new tab ShellCaseMapping with invalid OriginatingCaseTypeId"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/shellmapping/BEFTA_Master_Definition_Invalid_OriginatingCaseTypeId.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- "
+    }
+  }
+}

@@ -55,7 +55,7 @@ ext {
     gsonVersion = '2.13.2'
     elasticSearchVersion = '7.17.29'
     testcontainersVersion = '1.21.4'
-    ccdTestDefinitionVersion = '7.27.7-prerelease-CME-537'
+    ccdTestDefinitionVersion = '7.25.5_CCD-6805'
     beftaFwVersion = '9.2.4'
     limits = [
             'instruction': 99,
@@ -97,7 +97,7 @@ allprojects {
     // Global constraints
     dependencies {
 
-        // start::CVE Vulnerability dependency overrides 
+        // start::CVE Vulnerability dependency overrides
 
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.6.0' // spring-cloud-starter-openfeign
         implementation group: 'commons-io', name: 'commons-io', version: '2.21.0' // spring-cloud-starter-openfeign
@@ -195,7 +195,7 @@ subprojects { subproject ->
 
     dependencies {
 
-        // start::CVE Vulnerability dependency overrides 
+        // start::CVE Vulnerability dependency overrides
 
         implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.6' // spring-boot-starter-oauth2-client
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.20.0' // azure-storage

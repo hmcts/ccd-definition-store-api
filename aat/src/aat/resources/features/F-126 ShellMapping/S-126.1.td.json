@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-126.1",
+  "_extends_": "F-126_Definition_Import_Test_Base_data",
+  "title": "Import a definition file containing new Tab ShellCaseMapping - successful import",
+  "specs": [
+    "an active profile in CCD",
+    "contains a definition file with new tab ShellMapping"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "localFilePath": "build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- "
+    }
+  }
+}

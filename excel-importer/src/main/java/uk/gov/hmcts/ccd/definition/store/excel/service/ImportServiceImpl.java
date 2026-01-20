@@ -1,21 +1,12 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
+import com.google.common.annotations.VisibleForTesting;
 import lombok.val;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-
-import com.google.common.annotations.VisibleForTesting;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -30,6 +21,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.category.CategoryTabServ
 import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.shellmapping.ShellMappingService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
@@ -49,6 +41,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.RoleToAccessProfilesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SearchCriteriaParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SearchPartyParser;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ShellMappingParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.UserProfilesParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -58,8 +51,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidato
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
@@ -75,9 +66,17 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigE
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCriteriaEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchPartyEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ShellMappingEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.WorkBasketUserDefault;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class ImportServiceImpl implements ImportService {
@@ -92,8 +91,6 @@ public class ImportServiceImpl implements ImportService {
     private final CaseTypeService caseTypeService;
     private final LayoutService layoutService;
     private final AccessProfileRepository accessProfileRepository;
-    private final AccessTypesRepository accessTypesRepository;
-    private final AccessTypeRolesRepository accessTypeRolesRepository;
     private final WorkBasketUserDefaultService workBasketUserDefaultService;
     private final CaseFieldRepository caseFieldRepository;
     private final ApplicationEventPublisher applicationEventPublisher;
@@ -108,6 +105,7 @@ public class ImportServiceImpl implements ImportService {
     private final TranslationService translationService;
     private final AccessTypesService accessTypesService;
     private final AccessTypeRolesService accessTypeRolesService;
+    private final ShellMappingService shellMappingService;
     private final ApplicationParams applicationParams;
 
     @Autowired
@@ -119,8 +117,6 @@ public class ImportServiceImpl implements ImportService {
                              CaseTypeService caseTypeService,
                              LayoutService layoutService,
                              AccessProfileRepository accessProfileRepository,
-                             AccessTypesRepository accessTypesRepository,
-                             AccessTypeRolesRepository accessTypeRolesRepository,
                              WorkBasketUserDefaultService workBasketUserDefaultService,
                              CaseFieldRepository caseFieldRepository,
                              ApplicationEventPublisher applicationEventPublisher,
@@ -134,6 +130,7 @@ public class ImportServiceImpl implements ImportService {
                              TranslationService translationService,
                              AccessTypesService accessTypesService,
                              AccessTypeRolesService accessTypeRolesService,
+                             ShellMappingService shellMappingService,
                              ApplicationParams applicationParams) {
 
         this.spreadsheetValidator = spreadsheetValidator;
@@ -144,8 +141,6 @@ public class ImportServiceImpl implements ImportService {
         this.caseTypeService = caseTypeService;
         this.layoutService = layoutService;
         this.accessProfileRepository = accessProfileRepository;
-        this.accessTypesRepository = accessTypesRepository;
-        this.accessTypeRolesRepository = accessTypeRolesRepository;
         this.workBasketUserDefaultService = workBasketUserDefaultService;
         this.caseFieldRepository = caseFieldRepository;
         this.idamProfileClient = idamProfileClient;
@@ -160,6 +155,7 @@ public class ImportServiceImpl implements ImportService {
         this.translationService = translationService;
         this.accessTypesService = accessTypesService;
         this.accessTypeRolesService = accessTypeRolesService;
+        this.shellMappingService = shellMappingService;
         this.applicationParams = applicationParams;
     }
 
@@ -336,6 +332,8 @@ public class ImportServiceImpl implements ImportService {
 
         parseAccessTypeRoles(definitionSheets, parseContext, accessProfileEntities);
 
+        parseShellMapping(definitionSheets, parseContext);
+
         if (applicationParams.isWelshTranslationEnabled()) {
             translationService.processDefinitionSheets(definitionSheets);
         }
@@ -464,6 +462,20 @@ public class ImportServiceImpl implements ImportService {
 
     private void importJurisdictionUiConfig(JurisdictionUiConfigEntity jurisdictionUiConfigEntity) {
         jurisdictionUiConfigService.save(jurisdictionUiConfigEntity);
+    }
+
+    private void parseShellMapping(Map<String, DefinitionSheet> definitionSheets,
+                                  ParseContext parseContext) {
+
+        // Role to Access Profiles
+        if (definitionSheets.get(SheetName.SHELL_MAPPING.getName()) != null) {
+            logger.debug("Importing spreadsheet: ShellMapping...");
+            final ShellMappingParser parser = parserFactory.createShellMappingParser();
+            List<ShellMappingEntity> searchPartyEntities = parser.parse(definitionSheets, parseContext);
+
+            shellMappingService.saveAll(searchPartyEntities);
+            logger.debug("Importing spreadsheet: ShellMapping...: OK");
+        }
     }
 
 }
