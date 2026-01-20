@@ -1,6 +1,6 @@
 #!groovy
 
-@Library("Infrastructure@DO-NOT-MERGE-FT-TIMEOUT-EXTENSION")
+@Library("Infrastructure")
 
 import uk.gov.hmcts.contino.GradleBuilder
 
