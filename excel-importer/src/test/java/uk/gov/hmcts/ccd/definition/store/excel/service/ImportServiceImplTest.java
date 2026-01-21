@@ -85,9 +85,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doCallRealMethod;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
@@ -318,11 +316,11 @@ public class ImportServiceImplTest {
 
         // Configure spreadsheetValidator spy to do nothing by default (mock behavior)
         // Individual tests can use doCallRealMethod() to enable real validation when needed
-        lenient().doNothing().when(spreadsheetValidator).validate(any(String.class), any(String.class), 
+        lenient().doNothing().when(spreadsheetValidator).validate(any(String.class), any(String.class),
             any(String.class), any(Integer.class));
-        lenient().doNothing().when(spreadsheetValidator).validate(any(String.class), any(String.class), 
+        lenient().doNothing().when(spreadsheetValidator).validate(any(String.class), any(String.class),
             any(String.class), any(String.class));
-        lenient().doNothing().when(spreadsheetValidator).validate(any(String.class), 
+        lenient().doNothing().when(spreadsheetValidator).validate(any(String.class),
             any(uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet.class), any(List.class));
         lenient().doNothing().when(spreadsheetValidator).validate(any(Map.class));
     }
@@ -787,14 +785,14 @@ public class ImportServiceImplTest {
     })
     void shouldFailImportWhenShellMappingFieldExceedsMaxLength(String fieldName) {
         // Configure validator to call real methods for this test so validation actually executes
-        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class), 
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class),
             any(String.class), any(Integer.class));
-        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class), 
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class),
             any(String.class), any(String.class));
-        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), 
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class),
             any(uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet.class), any(List.class));
         doCallRealMethod().when(spreadsheetValidator).validate(any(Map.class));
-        
+
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
         given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
@@ -819,14 +817,14 @@ public class ImportServiceImplTest {
     @Test
     void shouldFailImportWhenAnyShellMappingFieldExceedsMaxLength() {
         // Configure validator to call real methods for this test so validation actually executes
-        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class), 
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class),
             any(String.class), any(Integer.class));
-        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class), 
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class),
             any(String.class), any(String.class));
-        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), 
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class),
             any(uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet.class), any(List.class));
         doCallRealMethod().when(spreadsheetValidator).validate(any(Map.class));
-        
+
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
         given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
