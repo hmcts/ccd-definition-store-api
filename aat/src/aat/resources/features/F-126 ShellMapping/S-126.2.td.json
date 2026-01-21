@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- "
+      "__plainTextValue__": "Validation errors occurred importing the spreadsheet.- Case Type not found FT_MasterCaseType_Invalid in column 'ShellCaseTypeID' in the sheet 'ShellMapping'"
     }
   }
 }
