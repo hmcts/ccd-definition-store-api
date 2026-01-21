@@ -31,7 +31,6 @@ tasks.register("printSuppressionFile") {
 }
 
 ext {
-    set('elasticsearch.version', '8.16.2')
     set('spring-framework.version', '6.2.1')
     set('spring-security.version', '6.4.2')
     set('springCloudVersion', '2024.0.3')
@@ -39,6 +38,7 @@ ext {
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.24.3')
 
+    elasticsearchVersion = '9.1.2'
     junitJupiterVersion = '5.11.4'
     junitVintageVersion = '5.11.4'
     springDocVersion = '2.8.14'
@@ -91,13 +91,34 @@ allprojects {
         mockitoAgent
         codacy
     }
+    configurations.configureEach {
+        exclude group: 'com.vaadin.external.google', module: 'android-json'
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            eachDependency { DependencyResolveDetails details ->
+                if (details.requested.group == 'org.elasticsearch') {
+                    details.useVersion elasticsearchVersion
+                }
+
+                if (details.requested.group == 'co.elastic.clients') {
+                    details.useVersion elasticsearchVersion
+                }
+
+                if (details.requested.group == 'org.elasticsearch.client') {
+                    details.useVersion elasticsearchVersion
+                }
+            }
+        }
+    }
 
     apply plugin: 'java'
 
     // Global constraints
     dependencies {
 
-        // start::CVE Vulnerability dependency overrides 
+        // start::CVE Vulnerability dependency overrides
 
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.6.0' // spring-cloud-starter-openfeign
         implementation group: 'commons-io', name: 'commons-io', version: '2.21.0' // spring-cloud-starter-openfeign
@@ -130,7 +151,7 @@ allprojects {
         testImplementation group: 'org.apache.groovy', name: 'groovy-xml', version: groovyVersion
         testImplementation group: 'org.apache.groovy', name: 'groovy-json', version: groovyVersion
         testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.10', classifier: 'all'
-
+        testImplementation("org.json:json:20250517")
     }
 
 }
@@ -212,7 +233,7 @@ subprojects { subproject ->
 
     dependencies {
 
-        // start::CVE Vulnerability dependency overrides 
+        // start::CVE Vulnerability dependency overrides
 
         implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.6' // spring-boot-starter-oauth2-client
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.20.0' // azure-storage
@@ -260,8 +281,9 @@ subprojects { subproject ->
         implementation group: 'org.apache.poi', name: 'poi', version: apachePoiVersion
         implementation group: 'org.apache.poi', name: 'poi-ooxml', version: apachePoiVersion
         implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: apachePoiVersion
-        implementation group: 'org.elasticsearch', name: 'elasticsearch', version: elasticSearchVersion
-        implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: elasticSearchVersion
+        implementation group: 'org.elasticsearch', name: 'elasticsearch', version: elasticsearchVersion
+        implementation group: 'co.elastic.clients', name: 'elasticsearch-java', version: elasticsearchVersion
+        implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: elasticsearchVersion
         implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
         implementation group: 'org.flywaydb', name: 'flyway-database-postgresql', version: flywayVersion
         implementation group: 'org.jooq', name: 'jool-java-8', version: '0.9.15'
