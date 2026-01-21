@@ -84,6 +84,32 @@ class TestingSupportControllerTest {
     }
 
     @Test
+    @DisplayName("Should execute delete queries Only With CaseType Ids")
+    void shouldDeleteRecordsOnlyWithCaseTypeIds() throws Exception {
+        when(session.createNativeQuery(anyString(), eq(Integer.class)))
+            .thenReturn(nativeQuery);
+        when(nativeQuery.setParameterList(eq("caseTypesWithChangeIds"), anyList()))
+            .thenReturn(nativeQuery);
+        when(nativeQuery.list())
+            .thenReturn(List.of(Integer.parseInt("1"),Integer.parseInt("2")));
+        when(session.createNativeMutationQuery(anyString()))
+            .thenReturn(mutationQuery);
+        when(mutationQuery.setParameterList(eq("caseTypeIds"), anyList()))
+            .thenReturn(mutationQuery);
+        when(session.getTransaction())
+            .thenReturn(transaction);
+        mockMvc.perform(delete("/api/testing-support/cleanup-case-type/id/1"))
+            .andDo(print())
+            .andExpect(status().isOk());
+
+        verify(session, times(1))
+            .createNativeQuery(anyString(), eq(Integer.class));
+
+        verify(session, times(28))
+            .createNativeMutationQuery(anyString());
+    }
+
+    @Test
     @DisplayName("Should return case type not found")
     void shouldReturnNotFound() throws Exception {
         when(session.createNativeQuery(anyString(), eq(Integer.class)))
@@ -105,5 +131,6 @@ class TestingSupportControllerTest {
 
         verify(session, never())
             .createNativeMutationQuery(anyString());
+
     }
 }
