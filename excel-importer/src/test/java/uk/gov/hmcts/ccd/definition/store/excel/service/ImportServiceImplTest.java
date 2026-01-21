@@ -9,7 +9,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.context.ApplicationEventPublisher;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
@@ -82,6 +85,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doCallRealMethod;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
@@ -139,6 +145,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class ImportServiceImplTest {
 
     public static final String BAD_FILE = "CCD_TestDefinition_V12.xlsx";
@@ -160,8 +167,8 @@ public class ImportServiceImplTest {
     @Mock
     private FieldTypeService fieldTypeService;
 
-    @Mock
-    private SpreadsheetValidator spreadsheetValidator;
+    @Spy
+    private SpreadsheetValidator spreadsheetValidator = new SpreadsheetValidator();
 
     @Mock
     private HiddenFieldsValidator hiddenFieldsValidator;
@@ -308,6 +315,16 @@ public class ImportServiceImplTest {
         AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
         accessProfileEntity.setReference(ACCESS_PROFILE_1);
         lenient().doReturn(Arrays.asList(accessProfileEntity)).when(accessProfileRepository).findAll();
+
+        // Configure spreadsheetValidator spy to do nothing by default (mock behavior)
+        // Individual tests can use doCallRealMethod() to enable real validation when needed
+        lenient().doNothing().when(spreadsheetValidator).validate(any(String.class), any(String.class), 
+            any(String.class), any(Integer.class));
+        lenient().doNothing().when(spreadsheetValidator).validate(any(String.class), any(String.class), 
+            any(String.class), any(String.class));
+        lenient().doNothing().when(spreadsheetValidator).validate(any(String.class), 
+            any(uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet.class), any(List.class));
+        lenient().doNothing().when(spreadsheetValidator).validate(any(Map.class));
     }
 
     @Test
@@ -769,6 +786,15 @@ public class ImportServiceImplTest {
         "OriginatingCaseFieldName"
     })
     void shouldFailImportWhenShellMappingFieldExceedsMaxLength(String fieldName) {
+        // Configure validator to call real methods for this test so validation actually executes
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class), 
+            any(String.class), any(Integer.class));
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class), 
+            any(String.class), any(String.class));
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), 
+            any(uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet.class), any(List.class));
+        doCallRealMethod().when(spreadsheetValidator).validate(any(Map.class));
+        
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
         given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
@@ -792,6 +818,15 @@ public class ImportServiceImplTest {
 
     @Test
     void shouldFailImportWhenAnyShellMappingFieldExceedsMaxLength() {
+        // Configure validator to call real methods for this test so validation actually executes
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class), 
+            any(String.class), any(Integer.class));
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class), 
+            any(String.class), any(String.class));
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), 
+            any(uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet.class), any(List.class));
+        doCallRealMethod().when(spreadsheetValidator).validate(any(Map.class));
+        
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
         given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
