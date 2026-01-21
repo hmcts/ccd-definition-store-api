@@ -50,10 +50,19 @@ Feature: F-126 Import validations for CCD Definition with ShellMapping tab
     And the response has all other details as expected
 
   @S-126.6
-  Scenario: Import a definition file containing new Tab ShellCaseMapping with duplicate caseTypeId - not successful import
+  Scenario: Import a definition file containing same ShellCaseTypeID and OriginatingCaseTypeID - not successful import
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
-    And the request [contains a definition file with new tab ShellCaseMapping with duplicate CaseTypeID]
+    And the request [contains a definition file with new tab ShellCaseMapping with same ShellCaseTypeID and OriginatingCaseTypeID]
+    And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+
+  @S-126.7
+  Scenario: Import a definition file containing new Tab ShellCaseMapping with Duplicate shellCaseTypeId and shellCaseFieldName - not successful import
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And the request [contains a definition file with new tab ShellCaseMapping with duplicate ShellCaseTypeID and ShellCaseFieldName]
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a negative response is received
     And the response has all other details as expected

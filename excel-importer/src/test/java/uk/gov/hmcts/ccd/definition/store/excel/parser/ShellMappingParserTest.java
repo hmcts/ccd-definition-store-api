@@ -307,6 +307,36 @@ class ShellMappingParserTest extends ParserTestBase {
         assertThat(result.get(0).getShellCaseFieldName().getReference(), is(SHELL_CASE_FIELD_NAME));
     }
 
+    @Test
+    @DisplayName("Should throw ValidationException when duplicate ShellCaseTypeID "
+        + "and ShellCaseFieldName combination found")
+    void shouldThrowValidationExceptionWhenDuplicateShellCaseTypeAndFieldFound() {
+        // Given - add two data items with same ShellCaseTypeID and ShellCaseFieldName
+        DefinitionDataItem dataItem1 = buildDefinitionDataItem(
+            SHELL_CASE_TYPE_ID,
+            SHELL_CASE_FIELD_NAME,
+            ORIGINATING_CASE_TYPE_ID,
+            ORIGINATING_CASE_FIELD_NAME,
+            LIVE_FROM,
+            LIVE_TO
+        );
+        DefinitionDataItem dataItem2 = buildDefinitionDataItem(
+            SHELL_CASE_TYPE_ID,
+            SHELL_CASE_FIELD_NAME,
+            ORIGINATING_CASE_TYPE_ID,
+            ORIGINATING_CASE_FIELD_NAME,
+            LIVE_FROM,
+            LIVE_TO
+        );
+        definitionSheet.addDataItem(dataItem1);
+        definitionSheet.addDataItem(dataItem2);
+
+        // When/Then
+        ValidationException exception = assertThrows(ValidationException.class,
+            () -> underTest.parse(definitionSheets, parseContext));
+        assertNotNull(exception);
+    }
+
     private DefinitionDataItem buildDefinitionDataItem(String shellCaseTypeId,
                                                         String shellCaseFieldName,
                                                         String originatingCaseTypeId,

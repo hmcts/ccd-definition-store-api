@@ -14,8 +14,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ShellMappingEntity;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity.toCaseTypeLiteEntity;
 
@@ -27,13 +29,15 @@ public class ShellMappingParser {
         ValidationResult validationResult = new ValidationResult();
         try {
 
-            final List<DefinitionDataItem> accessTypeRolesItems = definitionSheets
+            final List<DefinitionDataItem> shellDefinitionDataItems = definitionSheets
                 .get(SheetName.SHELL_MAPPING.getName())
                 .getDataItems();
 
-            final List<ShellMappingEntity> shellMappingEntities = accessTypeRolesItems
-                .stream().map(accessTypeEntity ->
-                    createShellMappingEntity(parseContext, accessTypeEntity)
+            checkForDuplicateShellCaseTypeAndField(shellDefinitionDataItems);
+
+            final List<ShellMappingEntity> shellMappingEntities = shellDefinitionDataItems
+                .stream().map(shellMappingEntity ->
+                    createShellMappingEntity(parseContext, shellMappingEntity)
                 ).toList();
 
             if (!validationResult.isValid()) {
@@ -61,6 +65,14 @@ public class ShellMappingParser {
         ShellMappingEntity shellMappingEntity = new ShellMappingEntity();
 
         final String shellCaseType = definitionDataItem.getString(ColumnName.SHELL_CASE_TYPE_ID);
+
+        final String originatingCaseType = definitionDataItem.getString(ColumnName.ORIGINATING_CASE_TYPE_ID);
+        if (shellCaseType.equalsIgnoreCase(originatingCaseType)) {
+            throw new InvalidImportException(
+                String.format("Originating Case Type: '%s' and Shell Case Type: '%s' are same in the sheet '%s'",
+                    originatingCaseType, shellCaseType, SheetName.SHELL_MAPPING));
+        }
+
         CaseTypeEntity caseTypeEntity = parseContext.getCaseTypes()
             .stream()
             .filter(entity -> entity.getReference().equals(shellCaseType))
@@ -83,8 +95,6 @@ public class ShellMappingParser {
                 shellCaseFieldName, ColumnName.SHELL_CASE_FIELD_NAME, SheetName.SHELL_MAPPING)));
         shellMappingEntity.setShellCaseFieldName(shellCaseFieldEntity);
 
-
-        final String originatingCaseType = definitionDataItem.getString(ColumnName.ORIGINATING_CASE_TYPE_ID);
         CaseTypeEntity originatingCaseTypeEntity = parseContext.getCaseTypes()
             .stream()
             .filter(entity -> entity.getReference().equals(originatingCaseType))
@@ -106,6 +116,24 @@ public class ShellMappingParser {
         shellMappingEntity.setOriginatingCaseFieldName(originatingCaseFieldEntity);
 
         return shellMappingEntity;
+    }
+
+    private void checkForDuplicateShellCaseTypeAndField(List<DefinitionDataItem> shellDefinitionDataItems) {
+        Set<String> caseTypeAndField = new HashSet<>();
+        for (DefinitionDataItem dataItem : shellDefinitionDataItems) {
+            String shellCaseTypeId = dataItem.getString(ColumnName.SHELL_CASE_TYPE_ID);
+            String shellCaseFieldName = dataItem.getString(ColumnName.SHELL_CASE_FIELD_NAME);
+
+            if (shellCaseTypeId != null && shellCaseFieldName != null) {
+                String combination = shellCaseTypeId + "|" + shellCaseFieldName;
+                if (!caseTypeAndField.add(combination)) {
+                    throw new InvalidImportException(
+                        String.format("Duplicate combination of ShellCaseTypeID '%s' and ShellCaseFieldName '%s'"
+                                + " found in the sheet '%s'",
+                            shellCaseTypeId, shellCaseFieldName, SheetName.SHELL_MAPPING));
+                }
+            }
+        }
     }
 
 }
