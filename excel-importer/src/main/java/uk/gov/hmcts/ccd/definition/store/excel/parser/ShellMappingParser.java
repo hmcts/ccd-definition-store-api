@@ -94,7 +94,7 @@ public class ShellMappingParser {
                 originatingCaseType, ColumnName.ORIGINATING_CASE_TYPE_ID, SheetName.SHELL_MAPPING)));
         shellMappingEntity.setOriginatingCaseTypeId(toCaseTypeLiteEntity(originatingCaseTypeEntity));
 
-        String originatingCaseFieldName = definitionDataItem.getString(ColumnName.SHELL_CASE_FIELD_NAME);
+        String originatingCaseFieldName = definitionDataItem.getString(ColumnName.ORIGINATING_CASE_FIELD_NAME);
 
         CaseFieldEntity originatingCaseFieldEntity = originatingCaseTypeEntity.getCaseFields()
             .stream()
