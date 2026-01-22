@@ -248,6 +248,47 @@ class ShellMappingParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("Should throw ValidationException when shell case type and originating case type are same")
+    void shouldThrowValidationExceptionWhenShellCaseTypeAndOriginatingCaseTypeAreSame() {
+        // Given - use same case type for both shell and originating
+        DefinitionDataItem dataItem = buildDefinitionDataItem(
+            SHELL_CASE_TYPE_ID,
+            SHELL_CASE_FIELD_NAME,
+            SHELL_CASE_TYPE_ID, // Same as shell case type
+            ORIGINATING_CASE_FIELD_NAME,
+            LIVE_FROM,
+            LIVE_TO
+        );
+        definitionSheet.addDataItem(dataItem);
+
+        // When/Then
+        ValidationException exception = assertThrows(ValidationException.class,
+            () -> underTest.parse(definitionSheets, parseContext));
+        assertNotNull(exception);
+    }
+
+    @Test
+    @DisplayName("Should throw ValidationException when shell case type and originating "
+        + "case type are same (case insensitive)")
+    void shouldThrowValidationExceptionWhenShellCaseTypeAndOriginatingCaseTypeAreSameCaseInsensitive() {
+        // Given - use same case type with different case for shell and originating
+        DefinitionDataItem dataItem = buildDefinitionDataItem(
+            SHELL_CASE_TYPE_ID,
+            SHELL_CASE_FIELD_NAME,
+            SHELL_CASE_TYPE_ID.toLowerCase(), // Same as shell case type but different case
+            ORIGINATING_CASE_FIELD_NAME,
+            LIVE_FROM,
+            LIVE_TO
+        );
+        definitionSheet.addDataItem(dataItem);
+
+        // When/Then
+        ValidationException exception = assertThrows(ValidationException.class,
+            () -> underTest.parse(definitionSheets, parseContext));
+        assertNotNull(exception);
+    }
+
+    @Test
     @DisplayName("Should throw ValidationException when originating case field not found")
     void shouldThrowValidationExceptionWhenOriginatingCaseFieldNotFound() {
         // Given
