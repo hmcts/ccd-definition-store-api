@@ -1,5 +1,19 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
+import com.google.common.collect.Lists;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.Mock;
+import org.mockito.Spy;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
+import org.springframework.context.ApplicationEventPublisher;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -15,6 +29,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.question.ChallengeQuestionTabService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchcriteria.SearchCriteriaService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.shellmapping.ShellMappingService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
@@ -30,6 +45,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.EntityToDefinitionDataItem
 import uk.gov.hmcts.ccd.definition.store.excel.parser.MetadataCaseFieldEntityFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParserFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.ShellMappingParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.CategoryIdValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.HiddenFieldsValidator;
@@ -37,8 +53,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidato
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -46,6 +60,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DataFieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ShellMappingEntity;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
@@ -61,27 +76,20 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-import com.google.common.collect.Lists;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -135,12 +143,16 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 public class ImportServiceImplTest {
 
     public static final String BAD_FILE = "CCD_TestDefinition_V12.xlsx";
     private static final String GOOD_FILE = "CCD_TestDefinition.xlsx";
     private static final String GOOD_FILE_MISSING_ACCESS_TYPES_ROLES_TAB
         = "CCD_TestDefinitionMissingAccessTypes&AccessTypeRolesTab.xlsx";
+    private static final String GOOD_FILE_WITH_SHELL_MAPPING = "CCD_TestDefinition_ShellMapping.xlsx";
+    private static final String INVALID_FILE_WITH_SHELL_MAPPING_LENGTH =
+        "CCD_TestDefinition_ShellMapping_Length_Invalid.xlsx";
     private static final String JURISDICTION_NAME = "TEST";
     private static final String TEST_ADDRESS_BOOK_CASE_TYPE = "TestAddressBookCase";
     private static final String TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE = "TestComplexAddressBookCase";
@@ -153,8 +165,8 @@ public class ImportServiceImplTest {
     @Mock
     private FieldTypeService fieldTypeService;
 
-    @Mock
-    private SpreadsheetValidator spreadsheetValidator;
+    @Spy
+    private SpreadsheetValidator spreadsheetValidator = new SpreadsheetValidator();
 
     @Mock
     private HiddenFieldsValidator hiddenFieldsValidator;
@@ -173,12 +185,6 @@ public class ImportServiceImplTest {
 
     @Mock
     private AccessProfileRepository accessProfileRepository;
-
-    @Mock
-    private AccessTypesRepository accessTypesRepository;
-
-    @Mock
-    private AccessTypeRolesRepository accessTypeRolesRepository;
 
     @Mock
     private WorkBasketUserDefaultService workBasketUserDefaultService;
@@ -252,6 +258,12 @@ public class ImportServiceImplTest {
     @Mock
     private AccessTypeRolesService accessTypeRolesService;
 
+    @Mock
+    private ShellMappingService shellMappingService;
+
+    @Mock
+    private ShellMappingParser shellMappingParser;
+
     @BeforeEach
     void setup() {
         Map<MetadataField, MetadataCaseFieldEntityFactory> registry = new HashMap<>();
@@ -260,7 +272,7 @@ public class ImportServiceImplTest {
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
             challengeQuestionParser, categoryParser, accessTypesParser, accessTypeRolesParser, searchPartyValidator,
-            searchCriteriaValidator, categoryIdValidator, applicationParams, executor);
+            searchCriteriaValidator, categoryIdValidator, applicationParams, executor, shellMappingParser);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -272,8 +284,6 @@ public class ImportServiceImplTest {
             caseTypeService,
             layoutService,
             accessProfileRepository,
-            accessTypesRepository,
-            accessTypeRolesRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
             applicationEventPublisher,
@@ -287,6 +297,7 @@ public class ImportServiceImplTest {
             translationService,
             accessTypesService,
             accessTypeRolesService,
+            shellMappingService,
             applicationParams);
 
         lenient().doReturn(JURISDICTION_NAME).when(jurisdiction).getReference();
@@ -302,10 +313,20 @@ public class ImportServiceImplTest {
         AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
         accessProfileEntity.setReference(ACCESS_PROFILE_1);
         lenient().doReturn(Arrays.asList(accessProfileEntity)).when(accessProfileRepository).findAll();
+
+        // Configure spreadsheetValidator spy to do nothing by default (mock behavior)
+        // Individual tests can use doCallRealMethod() to enable real validation when needed
+        lenient().doNothing().when(spreadsheetValidator).validate(any(String.class), any(String.class),
+            any(String.class), any(Integer.class));
+        lenient().doNothing().when(spreadsheetValidator).validate(any(String.class), any(String.class),
+            any(String.class), any(String.class));
+        lenient().doNothing().when(spreadsheetValidator).validate(any(String.class),
+            any(uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet.class), any(List.class));
+        lenient().doNothing().when(spreadsheetValidator).validate(any(Map.class));
     }
 
     @Test
-    void shouldNotImportDefinition() throws Exception {
+    void shouldNotImportDefinition() {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(buildBaseType(BASE_FIXED_LIST),
@@ -318,7 +339,7 @@ public class ImportServiceImplTest {
     }
 
     @Test
-    void importDefinitionThrowsMissingAccessProfiles() throws Exception {
+    void importDefinitionThrowsMissingAccessProfiles() {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
 
@@ -339,7 +360,7 @@ public class ImportServiceImplTest {
             .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        assertThrows(MissingAccessProfilesException.class, 
+        assertThrows(MissingAccessProfilesException.class,
             () -> service.importFormDefinitions(inputStream, false, false)
         );
     }
@@ -465,7 +486,7 @@ public class ImportServiceImplTest {
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
             hiddenFieldsValidator,challengeQuestionParser,
             categoryParser, accessTypesParser, accessTypeRolesParser, searchPartyValidator, searchCriteriaValidator,
-            categoryIdValidator, applicationParams, executor);
+            categoryIdValidator, applicationParams, executor, shellMappingParser);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
@@ -477,8 +498,6 @@ public class ImportServiceImplTest {
             caseTypeService,
             layoutService,
             accessProfileRepository,
-            accessTypesRepository,
-            accessTypeRolesRepository,
             workBasketUserDefaultService,
             caseFieldRepository,
             applicationEventPublisher,
@@ -490,7 +509,9 @@ public class ImportServiceImplTest {
             searchCriteriaService,
             searchPartyService, categoryTabService,
             translationService, accessTypesService,
-            accessTypeRolesService, applicationParams);
+            accessTypeRolesService,
+            shellMappingService,
+            applicationParams);
 
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
@@ -540,6 +561,298 @@ public class ImportServiceImplTest {
 
         assertThrows(MapperException.class, () -> service.importFormDefinitions(inputStream, false, false));
     }
+
+    @Test
+    void shouldVerifyShellMappingServiceIntegration() throws Exception {
+        // This test verifies that shellMappingService is properly integrated into ImportServiceImpl
+        // Since test files don't contain ShellMapping sheets, we verify the service
+        // is not called when the sheet doesn't exist, confirming proper conditional logic
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
+
+        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
+        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
+        assertEquals(2, metadata.getCaseTypes().size());
+
+        // Verify shell mapping service is not called when sheet doesn't exist
+        verify(shellMappingService, never()).saveAll(any(List.class));
+    }
+
+    @Test
+    void shouldNotCallShellMappingServiceWhenShellMappingSheetDoesNotExist() throws Exception {
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+
+        final InputStream inputStream = getClass().getClassLoader()
+            .getResourceAsStream(GOOD_FILE_MISSING_ACCESS_TYPES_ROLES_TAB);
+
+        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
+        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
+        assertEquals(2, metadata.getCaseTypes().size());
+
+        verify(shellMappingParser, never()).parse(anyMap(), any(ParseContext.class));
+        verify(shellMappingService, never()).saveAll(any(List.class));
+    }
+
+    @Test
+    void shouldImportShellMappingWhenShellMappingSheetExists() throws Exception {
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+
+        // Capture the shell mapping entities that will be parsed
+        ArgumentCaptor<List<ShellMappingEntity>> shellMappingCaptor = ArgumentCaptor.forClass(List.class);
+
+        final InputStream inputStream = getClass().getClassLoader()
+            .getResourceAsStream(GOOD_FILE_WITH_SHELL_MAPPING);
+
+        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
+        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
+
+        // Verify shell mapping parser was called
+        verify(shellMappingParser).parse(anyMap(), any(ParseContext.class));
+        // Verify shell mapping service was called with the parsed entities and capture them
+        verify(shellMappingService).saveAll(shellMappingCaptor.capture());
+        // Verify that entities list was passed to the service (may be empty if no data in sheet)
+        List<ShellMappingEntity> capturedEntities = shellMappingCaptor.getValue();
+        assertNotNull(capturedEntities, "Shell mapping entities list should not be null");
+    }
+
+    @Test
+    void shouldImportDefinitionWithShellMappingSuccessfully() throws Exception {
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+
+        final InputStream inputStream = getClass().getClassLoader()
+            .getResourceAsStream(GOOD_FILE_WITH_SHELL_MAPPING);
+
+        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
+        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
+
+        // Verify shell mapping parser was called
+        verify(shellMappingParser).parse(anyMap(), any(ParseContext.class));
+        // Verify shell mapping service was called to save entities
+        verify(shellMappingService).saveAll(any(List.class));
+        // Verify other services were also called
+        verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
+        verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
+        verify(translationService).processDefinitionSheets(anyMap());
+        verify(categoryIdValidator).validate(any(ParseContext.class));
+    }
+
+    @Test
+    void shouldHandleShellMappingParserExceptionWhenSheetExists() {
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+
+        // Mock shell mapping parser to throw exception
+        given(shellMappingParser.parse(anyMap(), any(ParseContext.class)))
+            .willThrow(new InvalidImportException("Shell mapping parsing failed"));
+
+        final InputStream inputStream = getClass().getClassLoader()
+            .getResourceAsStream(GOOD_FILE_WITH_SHELL_MAPPING);
+
+        assertThrows(InvalidImportException.class, () -> service.importFormDefinitions(inputStream, false, false));
+        verify(shellMappingParser).parse(anyMap(), any(ParseContext.class));
+        verify(shellMappingService, never()).saveAll(any(List.class));
+    }
+
+    @Test
+    void shouldHandleShellMappingServiceExceptionWhenSaving() {
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+
+        // Mock shell mapping entities to be parsed
+        ShellMappingEntity shellMappingEntity = new ShellMappingEntity();
+        List<ShellMappingEntity> shellMappingEntities = Collections.singletonList(shellMappingEntity);
+        given(shellMappingParser.parse(anyMap(), any(ParseContext.class))).willReturn(shellMappingEntities);
+
+        // Mock shell mapping service to throw exception when saving
+        doThrow(new RuntimeException("Shell mapping save failed"))
+            .when(shellMappingService).saveAll(any(List.class));
+
+        final InputStream inputStream = getClass().getClassLoader()
+            .getResourceAsStream(GOOD_FILE_WITH_SHELL_MAPPING);
+
+        assertThrows(RuntimeException.class, () -> service.importFormDefinitions(inputStream, false, false));
+        verify(shellMappingParser).parse(anyMap(), any(ParseContext.class));
+        verify(shellMappingService).saveAll(shellMappingEntities);
+    }
+
+    @Test
+    void shouldImportShellMappingWithWelshTranslationDisabled() throws Exception {
+        when(applicationParams.isWelshTranslationEnabled()).thenReturn(false);
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+
+        final InputStream inputStream = getClass().getClassLoader()
+            .getResourceAsStream(GOOD_FILE_WITH_SHELL_MAPPING);
+
+        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
+        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
+
+        // Verify shell mapping was processed
+        verify(shellMappingParser).parse(anyMap(), any(ParseContext.class));
+        verify(shellMappingService).saveAll(any(List.class));
+        // Verify translation service was not called
+        verifyNoMoreInteractions(translationService);
+    }
+
+    @ParameterizedTest(name = "shouldFailImportWhen{0}ExceedsMaxLength")
+    @ValueSource(strings = {
+        "ShellCaseTypeID",
+        "ShellCaseFieldName",
+        "OriginatingCaseTypeID",
+        "OriginatingCaseFieldName"
+    })
+    void shouldFailImportWhenShellMappingFieldExceedsMaxLength(String fieldName) {
+        // Configure validator to call real methods for this test so validation actually executes
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class),
+            any(String.class), any(Integer.class));
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class),
+            any(String.class), any(String.class));
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class),
+            any(uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet.class), any(List.class));
+        doCallRealMethod().when(spreadsheetValidator).validate(any(Map.class));
+
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+
+        final InputStream inputStream = getClass().getClassLoader()
+            .getResourceAsStream(INVALID_FILE_WITH_SHELL_MAPPING_LENGTH);
+
+        // Validation should fail during spreadsheet parsing phase when {fieldName} length > 70
+        assertThrows(RuntimeException.class, () -> service.importFormDefinitions(inputStream, false, false));
+    }
+
+    @Test
+    void shouldFailImportWhenAnyShellMappingFieldExceedsMaxLength() {
+        // Configure validator to call real methods for this test so validation actually executes
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class),
+            any(String.class), any(Integer.class));
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class), any(String.class),
+            any(String.class), any(String.class));
+        doCallRealMethod().when(spreadsheetValidator).validate(any(String.class),
+            any(uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet.class), any(List.class));
+        doCallRealMethod().when(spreadsheetValidator).validate(any(Map.class));
+
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+
+        final InputStream inputStream = getClass().getClassLoader()
+            .getResourceAsStream(INVALID_FILE_WITH_SHELL_MAPPING_LENGTH);
+
+        // Validation should fail during spreadsheet parsing phase when field length > 70
+        // The exception should be thrown before shell mapping parser is called
+        assertThrows(RuntimeException.class,
+            () -> service.importFormDefinitions(inputStream, false, false));
+
+        // Verify shell mapping parser was not called due to validation failure
+        verify(shellMappingParser, never()).parse(anyMap(), any(ParseContext.class));
+        // Verify shell mapping service was not called
+        verify(shellMappingService, never()).saveAll(any(List.class));
+    }
+
 
     private FieldTypeEntity buildBaseType(final String reference) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();

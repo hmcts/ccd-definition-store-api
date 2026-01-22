@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.BeansException;
@@ -69,8 +66,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchCriteriaRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchPartyRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
+import uk.gov.hmcts.ccd.definition.store.repository.ShellMappingRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
@@ -393,6 +395,12 @@ class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public SearchPartyRepository searchPartyRepository() {
             return mock(SearchPartyRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public ShellMappingRepository shellMappingRepository() {
+            return mock(ShellMappingRepository.class);
         }
     }
 }
