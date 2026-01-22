@@ -1,5 +1,5 @@
 {
-  "_guid_": "S-126.6",
+  "_guid_": "S-126.7",
   "_extends_": "F-126_Definition_Import_Test_Base_data",
   "title": "Import a definition file containing new Tab ShellCaseMapping with Duplicate shellCaseTypeId and shellCaseFieldName - not successful import",
   "specs": [
