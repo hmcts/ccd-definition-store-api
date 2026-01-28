@@ -53,8 +53,7 @@
                 "caseGroupIdTemplate" : null,
                 "groupAccessEnabled" : true
               } ]
-            },
-            {
+            }, {
               "organisationProfileId" : "groupaccesstest_solicitor",
               "accessTypeId" : "GA_SOLICITOR",
               "accessMandatory" : true,
@@ -69,7 +68,8 @@
                 "groupRoleName" : "Role1",
                 "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
                 "groupAccessEnabled" : true
-              },
+              } ]
+            },
             {
               "organisationProfileId": "OGD_DWP_PROFILE",
               "accessTypeId": "BEFTA_SOLICITOR_2",
