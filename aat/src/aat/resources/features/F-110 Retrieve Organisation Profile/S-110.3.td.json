@@ -32,6 +32,45 @@
               "__elementId__": "organisationProfileId,accessTypeId"
             },
             {
+              "organisationProfileId" : "groupaccesstest_ogd",
+              "accessTypeId" : "GA_OGD",
+              "accessMandatory" : true,
+              "accessDefault" : true,
+              "display" : true,
+              "description" : "BEFTA bulk Solicitor Respondent for Org description2",
+              "hint" : "BEFTA bulk Solicitor Respondent for Org hint2",
+              "displayOrder" : 2,
+              "roles" : [ {
+                "caseTypeId" : "FT_CaseAccessGroups_Align_Befta",
+                "organisationalRoleName" : "Role1",
+                "groupRoleName" : "Role1",
+                "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
+                "groupAccessEnabled" : true
+              }, {
+                "caseTypeId" : "FT_CaseAccessGroups_Align_Befta",
+                "organisationalRoleName" : "Role1",
+                "groupRoleName" : null,
+                "caseGroupIdTemplate" : null,
+                "groupAccessEnabled" : true
+              } ]
+            },
+            {
+              "organisationProfileId" : "groupaccesstest_solicitor",
+              "accessTypeId" : "GA_SOLICITOR",
+              "accessMandatory" : true,
+              "accessDefault" : true,
+              "display" : true,
+              "description" : "BEFTA bulk Solicitor Respondent for Org description",
+              "hint" : "BEFTA bulk Solicitor Respondent for Org hint",
+              "displayOrder" : 1,
+              "roles" : [ {
+                "caseTypeId" : "FT_CaseAccessGroups_Align_Befta",
+                "organisationalRoleName" : "Role1",
+                "groupRoleName" : "Role1",
+                "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
+                "groupAccessEnabled" : true
+              },
+            {
               "organisationProfileId": "OGD_DWP_PROFILE",
               "accessTypeId": "BEFTA_SOLICITOR_2",
               "accessMandatory": true,
