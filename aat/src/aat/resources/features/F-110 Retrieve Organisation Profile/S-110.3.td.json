@@ -40,7 +40,10 @@
               "description" : "BEFTA bulk Solicitor Respondent for Org description2",
               "hint" : "BEFTA bulk Solicitor Respondent for Org hint2",
               "displayOrder" : 2,
-              "roles" : [ {
+              "roles" : [                 {
+                "__ordering__": "unordered",
+                "__elementId__": "caseGroupIdTemplate,groupRoleName"
+              },{
                 "caseTypeId" : "FT_CaseAccessGroups_Align_Befta",
                 "organisationalRoleName" : "Role1",
                 "groupRoleName" : "Role1",
@@ -62,7 +65,10 @@
               "description" : "BEFTA bulk Solicitor Respondent for Org description",
               "hint" : "BEFTA bulk Solicitor Respondent for Org hint",
               "displayOrder" : 1,
-              "roles" : [ {
+              "roles" : [                 {
+                "__ordering__": "unordered",
+                "__elementId__": "caseGroupIdTemplate,groupRoleName"
+              },{
                 "caseTypeId" : "FT_CaseAccessGroups_Align_Befta",
                 "organisationalRoleName" : "Role1",
                 "groupRoleName" : "Role1",
