@@ -7,6 +7,11 @@
     "contains an originalCaseTypeId that exists in CCD config",
     "contains all shellCaseMapping for originalCaseTypeId is present in the response"
   ],
+  "request": {
+    "pathVariables": {
+      "ctid": "FT_Conditionals"
+    }
+  },
   "expectedResponse": {
     "_extends_": "Common_200_Response",
     "body": {
