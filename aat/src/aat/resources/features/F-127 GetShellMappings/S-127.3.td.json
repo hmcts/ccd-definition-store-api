@@ -5,6 +5,7 @@
   "specs": [
     "an active profile in CCD",
     "contains an originalCaseTypeId that exists in CCD config",
+    "has no shellCaseMappings for the originalCaseTypeId",
     "contains 404 Not Found - No ShellCaseMapping Found"
   ],
   "request": {

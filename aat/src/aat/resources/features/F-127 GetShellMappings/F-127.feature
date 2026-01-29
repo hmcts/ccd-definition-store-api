@@ -7,6 +7,7 @@ Feature: F-127 Get Shell Mappings for Originating Case Type Id
   @S-127.2
   Scenario: Success response - Return 200 success with shell case mappings for the originalCaseTypeId
     Given a user with [an active profile in CCD]
+    And a call [to import definition file] will get the expected response as in [Import_BEFTA_Master_Definition]
     When a request is prepared with appropriate values
     And the request [contains an originalCaseTypeId that exists in CCD config]
     And it is submitted to call the [Get Shell Case Type Details] operation of [CCD Definition Store]
@@ -18,7 +19,7 @@ Feature: F-127 Get Shell Mappings for Originating Case Type Id
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains an originalCaseTypeId that exists in CCD config]
-    And there are no shellCaseMappings for the originalCaseTypeId
+    And the request [has no shellCaseMappings for the originalCaseTypeId]
     And it is submitted to call the [Get Shell Case Type Details] operation of [CCD Definition Store]
     Then a negative response is received
     And the response [contains 404 Not Found - No ShellCaseMapping Found]
@@ -37,7 +38,7 @@ Feature: F-127 Get Shell Mappings for Originating Case Type Id
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains correctly configured values]
-    And the request does not have originalCaseTypeId
+    And the request [does not have originalCaseTypeId]
     And it is submitted to call the [Get Shell Case Type Details] operation of [CCD Definition Store]
     Then a negative response is received
     And the response [contains 400 Bad Request]
