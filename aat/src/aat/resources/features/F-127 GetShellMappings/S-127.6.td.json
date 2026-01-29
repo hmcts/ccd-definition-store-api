@@ -1,0 +1,24 @@
+{
+  "_guid_": "S-127.6",
+  "_extends_": "F-127_Test_Base_Data",
+  "title": "Import a definition file containing same ShellCaseTypeID and OriginatingCaseTypeID - not successful import",
+  "specs": [
+    "an active profile in CCD",
+    "contains correctly configured values",
+    "contains an invalid S2S token",
+    "contains 401 Unauthorised"
+  ],
+  "request": {
+    "headers": {
+      "ServiceAuthorization": "${}"
+    },
+    "pathVariables": {
+      "ctid": "FT_MasterCaseType"
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 401,
+    "responseMessage": "Unauthorized",
+    "body": {}
+  }
+}

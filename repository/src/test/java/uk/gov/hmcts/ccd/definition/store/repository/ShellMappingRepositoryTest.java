@@ -29,6 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 
+@SuppressWarnings("OptionalGetWithoutIsPresent")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
     SanityCheckApplication.class,
@@ -52,14 +53,6 @@ class ShellMappingRepositoryTest {
 
     private ShellMappingEntity testShellMapping1;
     private ShellMappingEntity testShellMapping2;
-    private CaseTypeLiteEntity shellCaseTypeLite1;
-    private CaseTypeLiteEntity shellCaseTypeLite2;
-    private CaseTypeLiteEntity origCaseTypeLite1;
-    private CaseTypeLiteEntity origCaseTypeLite2;
-    private CaseFieldEntity shellCaseField1;
-    private CaseFieldEntity shellCaseField2;
-    private CaseFieldEntity origCaseField1;
-    private CaseFieldEntity origCaseField2;
 
     @BeforeEach
     void setUp() {
@@ -82,22 +75,22 @@ class ShellMappingRepositoryTest {
             jurisdiction2, fieldType2, "origField2");
 
         // Convert to CaseTypeLiteEntity
-        shellCaseTypeLite1 = CaseTypeLiteEntity.toCaseTypeLiteEntity(shellCaseType1);
-        shellCaseTypeLite2 = CaseTypeLiteEntity.toCaseTypeLiteEntity(shellCaseType2);
-        origCaseTypeLite1 = CaseTypeLiteEntity.toCaseTypeLiteEntity(origCaseType1);
-        origCaseTypeLite2 = CaseTypeLiteEntity.toCaseTypeLiteEntity(origCaseType2);
+        CaseTypeLiteEntity shellCaseTypeLite1 = CaseTypeLiteEntity.toCaseTypeLiteEntity(shellCaseType1);
+        CaseTypeLiteEntity shellCaseTypeLite2 = CaseTypeLiteEntity.toCaseTypeLiteEntity(shellCaseType2);
+        CaseTypeLiteEntity origCaseTypeLite1 = CaseTypeLiteEntity.toCaseTypeLiteEntity(origCaseType1);
+        CaseTypeLiteEntity origCaseTypeLite2 = CaseTypeLiteEntity.toCaseTypeLiteEntity(origCaseType2);
 
         // Get case fields from saved case types
-        shellCaseField1 = shellCaseType1.getCaseFields().stream()
+        CaseFieldEntity shellCaseField1 = shellCaseType1.getCaseFields().stream()
             .filter(f -> "shellField1".equals(f.getReference()))
             .findFirst().orElseThrow();
-        shellCaseField2 = shellCaseType2.getCaseFields().stream()
+        CaseFieldEntity shellCaseField2 = shellCaseType2.getCaseFields().stream()
             .filter(f -> "shellField2".equals(f.getReference()))
             .findFirst().orElseThrow();
-        origCaseField1 = origCaseType1.getCaseFields().stream()
+        CaseFieldEntity origCaseField1 = origCaseType1.getCaseFields().stream()
             .filter(f -> "origField1".equals(f.getReference()))
             .findFirst().orElseThrow();
-        origCaseField2 = origCaseType2.getCaseFields().stream()
+        CaseFieldEntity origCaseField2 = origCaseType2.getCaseFields().stream()
             .filter(f -> "origField2".equals(f.getReference()))
             .findFirst().orElseThrow();
 
@@ -216,7 +209,7 @@ class ShellMappingRepositoryTest {
         existing.setLiveTo(LocalDate.of(2025, 12, 31));
 
         // When
-        ShellMappingEntity updated = shellMappingRepository.save(existing);
+        shellMappingRepository.save(existing);
         entityManager.flush();
         entityManager.clear();
 
@@ -386,7 +379,7 @@ class ShellMappingRepositoryTest {
         // Then
         assertAll(
             () -> assertEquals(2, saved.size()),
-            () -> assertNotNull(saved.get(0).getId()),
+            () -> assertNotNull(saved.getFirst().getId()),
             () -> assertNotNull(saved.get(1).getId()),
             () -> assertEquals(4L, shellMappingRepository.count())
         );
@@ -435,6 +428,105 @@ class ShellMappingRepositoryTest {
                 .anyMatch(m -> m.getId().equals(testShellMapping1.getId()))),
             () -> assertTrue(found.stream()
                 .anyMatch(m -> m.getId().equals(testShellMapping2.getId())))
+        );
+    }
+
+    @Test
+    void shouldFindShellMappingsByOriginatingCaseTypeIdReference() {
+        // When
+        List<ShellMappingEntity> found = shellMappingRepository
+            .findByOriginatingCaseTypeIdReference("ORIG_CASE_TYPE_1");
+
+        // Then
+        assertAll(
+            () -> assertEquals(1, found.size()),
+            () -> assertEquals(testShellMapping1.getId(), found.getFirst().getId()),
+            () -> assertNotNull(found.getFirst().getOriginatingCaseTypeId()),
+            () -> assertEquals("ORIG_CASE_TYPE_1", found.getFirst().getOriginatingCaseTypeId().getReference()),
+            () -> assertNotNull(found.getFirst().getShellCaseTypeId()),
+            () -> assertEquals("SHELL_CASE_TYPE_1", found.getFirst().getShellCaseTypeId().getReference())
+        );
+    }
+
+    @Test
+    void shouldFindShellMappingsByOriginatingCaseTypeIdReferenceMultipleResults() {
+        // Given - Create another shell mapping with the same originating case type
+        JurisdictionEntity jurisdiction = testHelper.createJurisdiction("JURISDICTION_3", "Jurisdiction 3", "Desc 3");
+        FieldTypeEntity fieldType = testHelper.createType(jurisdiction);
+        CaseTypeEntity shellCaseType3 = createCaseTypeWithField("SHELL_CASE_TYPE_3", "Shell Case Type 3",
+            jurisdiction, fieldType, "shellField3");
+        CaseTypeEntity origCaseType1 = caseTypeRepository.findCurrentVersionForReference("ORIG_CASE_TYPE_1")
+            .orElseThrow();
+
+        CaseTypeLiteEntity shellCaseTypeLite3 = CaseTypeLiteEntity.toCaseTypeLiteEntity(shellCaseType3);
+        CaseTypeLiteEntity origCaseTypeLite1 = CaseTypeLiteEntity.toCaseTypeLiteEntity(origCaseType1);
+        CaseFieldEntity shellCaseField3 = shellCaseType3.getCaseFields().stream()
+            .filter(f -> "shellField3".equals(f.getReference()))
+            .findFirst().orElseThrow();
+        CaseFieldEntity origCaseField1 = origCaseType1.getCaseFields().stream()
+            .filter(f -> "origField1".equals(f.getReference()))
+            .findFirst().orElseThrow();
+
+        ShellMappingEntity testShellMapping3 = createShellMappingEntity(
+            LocalDate.of(2024, 3, 1),
+            null,
+            shellCaseTypeLite3,
+            shellCaseField3,
+            origCaseTypeLite1,
+            origCaseField1
+        );
+        saveShellMappingAndFlushSession(testShellMapping3);
+
+        // When
+        List<ShellMappingEntity> found = shellMappingRepository
+            .findByOriginatingCaseTypeIdReference("ORIG_CASE_TYPE_1");
+
+        // Then
+        assertAll(
+            () -> assertEquals(2, found.size()),
+            () -> assertTrue(found.stream()
+                .anyMatch(m -> m.getId().equals(testShellMapping1.getId()))),
+            () -> assertTrue(found.stream()
+                .anyMatch(m -> m.getId().equals(testShellMapping3.getId()))),
+            () -> assertTrue(found.stream()
+                .allMatch(m -> "ORIG_CASE_TYPE_1".equals(m.getOriginatingCaseTypeId().getReference())))
+        );
+    }
+
+    @Test
+    void shouldReturnEmptyListWhenNoShellMappingsFoundForOriginatingCaseTypeId() {
+        // When
+        List<ShellMappingEntity> found = shellMappingRepository
+            .findByOriginatingCaseTypeIdReference("NON_EXISTENT_CASE_TYPE");
+
+        // Then
+        assertTrue(found.isEmpty());
+    }
+
+    @Test
+    void shouldFindShellMappingsByOriginatingCaseTypeIdReferenceCaseSensitive() {
+        // When - searching with different case
+        List<ShellMappingEntity> found = shellMappingRepository
+            .findByOriginatingCaseTypeIdReference("orig_case_type_1");
+
+        // Then - should return empty list as query is case-sensitive
+        assertTrue(found.isEmpty());
+    }
+
+    @Test
+    void shouldFindShellMappingsByOriginatingCaseTypeIdReferenceWithDifferentCaseType() {
+        // When
+        List<ShellMappingEntity> found = shellMappingRepository
+            .findByOriginatingCaseTypeIdReference("ORIG_CASE_TYPE_2");
+
+        // Then
+        assertAll(
+            () -> assertEquals(1, found.size()),
+            () -> assertEquals(testShellMapping2.getId(), found.getFirst().getId()),
+            () -> assertNotNull(found.getFirst().getOriginatingCaseTypeId()),
+            () -> assertEquals("ORIG_CASE_TYPE_2", found.getFirst().getOriginatingCaseTypeId().getReference()),
+            () -> assertNotNull(found.getFirst().getShellCaseTypeId()),
+            () -> assertEquals("SHELL_CASE_TYPE_2", found.getFirst().getShellCaseTypeId().getReference())
         );
     }
 
