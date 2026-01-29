@@ -1,0 +1,23 @@
+{
+  "_guid_": "S-127.3",
+  "_extends_": "F-127_Test_Base_Data",
+  "title": "Negative response - Return 404 if no shell case mappings are present for the originalCaseTypeId",
+  "specs": [
+    "an active profile in CCD",
+    "contains an originalCaseTypeId that exists in CCD config",
+    "contains 404 Not Found - No ShellCaseMapping Found"
+  ],
+  "request": {
+    "pathVariables": {
+      "ctid": "FT_CaseAccessCategories"
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_404_Response_Headers",
+    "responseCode": 404,
+    "responseMessage": "Not Found",
+    "body": {
+      "__plainTextValue__": "No Shell case found for case type id FT_CaseAccessCategories"
+    }
+  }
+}
