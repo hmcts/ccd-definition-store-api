@@ -184,7 +184,7 @@ class ShellMappingControllerIT extends BaseTest {
         @Test
         @DisplayName("Should return shell mappings for valid originating case type ID")
         void shouldReturnShellMappingsForValidOriginatingCaseTypeId() throws Exception {
-            final String url = RETRIEVE_SHELL_MAPPINGS_URL + "?originalCaseTypeId=ORIG_CASE_TYPE_1";
+            final String url = RETRIEVE_SHELL_MAPPINGS_URL + "/ORIG_CASE_TYPE_1";
             final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.shellCaseTypeID").exists())
@@ -211,7 +211,7 @@ class ShellMappingControllerIT extends BaseTest {
         @Test
         @DisplayName("Should return single shell mapping when only one exists")
         void shouldReturnSingleShellMapping() throws Exception {
-            final String url = RETRIEVE_SHELL_MAPPINGS_URL + "?originalCaseTypeId=ORIG_CASE_TYPE_2";
+            final String url = RETRIEVE_SHELL_MAPPINGS_URL + "/ORIG_CASE_TYPE_2";
             final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.shellCaseTypeID").exists())
@@ -234,31 +234,17 @@ class ShellMappingControllerIT extends BaseTest {
         }
 
         @Test
-        @DisplayName("Should return 404 when no shell mappings exist for case type")
-        void shouldReturnEmptyListWhenNoShellMappingsExist() throws Exception {
-            final String url = RETRIEVE_SHELL_MAPPINGS_URL + "?originalCaseTypeId=NON_EXISTENT_CASE_TYPE";
+        @DisplayName("Should return 400 Bad Request when case type does not exist")
+        void shouldReturnBadRequestWhenCaseTypeDoesNotExist() throws Exception {
+            final String url = RETRIEVE_SHELL_MAPPINGS_URL + "/NON_EXISTENT_CASE_TYPE";
             mockMvc.perform(MockMvcRequestBuilders.get(url))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-        }
-
-        @Test
-        @DisplayName("Should return 400 Bad Request when originalCaseTypeId parameter is missing")
-        void shouldReturnBadRequestWhenParameterMissing() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.get(RETRIEVE_SHELL_MAPPINGS_URL))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
-        }
-
-        @Test
-        @DisplayName("Should return 400 Bad Request when originalCaseTypeId parameter is null")
-        void shouldReturnBadRequestWhenParameterIsNull() throws Exception {
-            mockMvc.perform(MockMvcRequestBuilders.get(RETRIEVE_SHELL_MAPPINGS_URL + "?originalCaseTypeId="))
                 .andExpect(MockMvcResultMatchers.status().isBadRequest());
         }
 
         @Test
         @DisplayName("Should return correct JSON structure")
         void shouldReturnCorrectJsonStructure() throws Exception {
-            final String url = RETRIEVE_SHELL_MAPPINGS_URL + "?originalCaseTypeId=ORIG_CASE_TYPE_1";
+            final String url = RETRIEVE_SHELL_MAPPINGS_URL + "/ORIG_CASE_TYPE_1";
             mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.shellCaseTypeID").exists())
