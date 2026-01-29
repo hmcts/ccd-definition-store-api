@@ -11,7 +11,7 @@ Feature: F-127 Get Shell Mappings for Originating Case Type Id
     When a request is prepared with appropriate values
     And the request [contains an originalCaseTypeId that exists in CCD config]
     And it is submitted to call the [Get Shell Case Type Details] operation of [CCD Definition Store]
-    Then a positive response is sent back
+    Then a positive response is received
     And the response [contains all shellCaseMapping for originalCaseTypeId is present in the response]
 
   @S-127.3
