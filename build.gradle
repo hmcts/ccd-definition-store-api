@@ -285,6 +285,7 @@ subprojects { subproject ->
         testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
         testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: junitVintageVersion
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
+        testImplementation group: 'org.junit.platform', name: 'junit-platform-commons', version: '1.14.2'
         testImplementation group: 'org.apiguardian', name: 'apiguardian-api', version: '1.1.2'
         testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainersVersion
         testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
