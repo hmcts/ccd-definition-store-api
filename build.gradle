@@ -32,9 +32,8 @@ tasks.register("printSuppressionFile") {
 
 ext {
     set('elasticsearch.version', '8.16.2')
-    set('spring-framework.version', '6.2.1')
     set('spring-security.version', '6.4.2')
-    set('springCloudVersion', '2024.0.3')
+    set('springCloudVersion', '2025.0.1')
     set('jackson.version', '2.16.0')
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.24.3')
@@ -97,7 +96,7 @@ allprojects {
     // Global constraints
     dependencies {
 
-        // start::CVE Vulnerability dependency overrides 
+        // start::CVE Vulnerability dependency overrides
 
         implementation group: 'commons-fileupload', name: 'commons-fileupload', version: '1.6.0' // spring-cloud-starter-openfeign
         implementation group: 'commons-io', name: 'commons-io', version: '2.21.0' // spring-cloud-starter-openfeign
@@ -212,7 +211,7 @@ subprojects { subproject ->
 
     dependencies {
 
-        // start::CVE Vulnerability dependency overrides 
+        // start::CVE Vulnerability dependency overrides
 
         implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.6' // spring-boot-starter-oauth2-client
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.20.0' // azure-storage
@@ -327,7 +326,7 @@ subprojects { subproject ->
                 xml.outputLocation = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
 
             }
-            
+
 
             classDirectories.setFrom((classDirectories.files.collect {
                 fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**','**/AppInsightsConfiguration**'])
