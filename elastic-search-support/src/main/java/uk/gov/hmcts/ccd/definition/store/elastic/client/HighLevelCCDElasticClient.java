@@ -3,6 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.elastic.client;
 import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch.core.CountRequest;
+import co.elastic.clients.elasticsearch.core.CountResponse;
 import co.elastic.clients.elasticsearch.indices.Alias;
 import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
 import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
@@ -12,6 +14,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.ConnectionClosedException;
+import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -303,6 +306,13 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to submit reindex task", e);
         }
+    }
+
+    public long countDocuments(String indexName) throws IOException {
+        CountResponse response = elasticClient.count(b -> b
+            .index(indexName)
+        );
+        return response.count();
     }
 }
 

@@ -38,31 +38,34 @@ public class ReindexService {
                              CaseTypeEntity caseType) throws IOException {
         HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
         GetAliasResponse aliasResponse = elasticClient.getAlias(baseIndexName);
-        String caseTypeName = aliasResponse.aliases().keySet().iterator().next();
+        String indexName = aliasResponse.aliases().keySet().iterator().next();
+        String newIndexName = incrementIndexNumber(indexName);
+
+        long sourceIndexDocumentCount = elasticClient.countDocuments(indexName);
+        log.info("Begin reindexing. Source index '{}' contains {} cases/documents",
+            indexName, sourceIndexDocumentCount);
 
         //create new index with generated mapping and incremented case type name (no alias update yet)
         String caseMapping = mappingGenerator.generateMapping(caseType);
         log.info("case mapping: {}", caseMapping);
-        String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
         log.info("Reindex process for case type {} is started, Time {}",
-            incrementedCaseTypeName, System.currentTimeMillis());
+            newIndexName, System.currentTimeMillis());
         elasticClient.setIndexReadOnly(baseIndexName, true);
-        elasticClient.createIndexAndMapping(incrementedCaseTypeName, caseMapping);
+        elasticClient.createIndexAndMapping(newIndexName, caseMapping);
 
         //initiate reindexing
         String taskId = handleReindexing(elasticClient,
             baseIndexName,
-            caseTypeName,
-            incrementedCaseTypeName,
+            indexName,
+            newIndexName,
             event.isDeleteOldIndex());
         event.setTaskId(taskId);
-        log.info("reindexing successful for case type: {}", caseType.getReference());
         log.info("task id returned from the import: {}", event.getTaskId());
     }
 
     private String handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
-                                    String oldIndex, String newIndex,
-                                    boolean deleteOldIndex) {
+                                  String oldIndex, String newIndex,
+                                  boolean deleteOldIndex) {
 
         return elasticClient.reindexData(oldIndex, newIndex, new ReindexListener() {
             @Override
@@ -74,6 +77,9 @@ public class ReindexService {
                     highLevelCCDElasticClient.updateAlias(baseIndexName, oldIndex, newIndex);
                     // After reindexAsync completes:
                     highLevelCCDElasticClient.refresh(newIndex);
+                    long targetIndexDocumentCount = elasticClient.countDocuments(newIndex);
+                    log.info("Successfully completed reindexing. New index '{}' contains {} cases/documents",
+                        newIndex, targetIndexDocumentCount);
                     if (deleteOldIndex) {
                         log.info("deleting old index {}", oldIndex);
                         highLevelCCDElasticClient.removeIndex(oldIndex);
