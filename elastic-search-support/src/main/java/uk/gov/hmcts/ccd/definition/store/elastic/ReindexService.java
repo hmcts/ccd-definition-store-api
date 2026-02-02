@@ -64,8 +64,8 @@ public class ReindexService {
     }
 
     private String handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
-                                  String oldIndex, String newIndex,
-                                  boolean deleteOldIndex) {
+                                    String oldIndex, String newIndex,
+                                    boolean deleteOldIndex) {
 
         return elasticClient.reindexData(oldIndex, newIndex, new ReindexListener() {
             @Override
