@@ -26,6 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doAnswer;
@@ -165,7 +166,7 @@ class ReindexServiceTest {
         assertTrue(ex.getMessage().contains("invalid index name format"));
     }
 
-    private void mockAliasResponse() {
+    private void mockAliasResponse() throws IOException {
         IndexAliases indexAliases = new IndexAliases.Builder()
             .aliases(Map.of(
                 baseIndexName, new AliasDefinition.Builder().build())).build();
@@ -173,6 +174,7 @@ class ReindexServiceTest {
         GetAliasResponse aliasResponse = new GetAliasResponse.Builder()
             .aliases(aliasMap)
             .build();
+        when(ccdElasticClient.getAlias(anyString())).thenReturn(aliasResponse);
         when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
     }
 

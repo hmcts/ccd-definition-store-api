@@ -73,7 +73,7 @@ public class ElasticSearchConfiguration {
             .setRequestConfigCallback(requestConfigBuilder ->
                 requestConfigBuilder
                     .setConnectTimeout(5000)
-                    .setSocketTimeout(120*60000)
+                    .setSocketTimeout(120 * 60000)
             )
             .setHttpClientConfigCallback(httpClientBuilder ->
                 httpClientBuilder.setDefaultIOReactorConfig(

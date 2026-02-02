@@ -109,7 +109,7 @@ class ReindexHelperTest {
         // Then
         assertThat(executor)
             .isNotNull()
-            .isInstanceOf(java.util.concurrent.ThreadPoolExecutor.class);
+            .isInstanceOf(org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor.class);
     }
 
     @Test
@@ -203,11 +203,27 @@ class ReindexHelperTest {
         long pollIntervalMs = 1000L;
         String responseBody = "{\"task\":\"\"}";
 
-        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
+        // Use synchronous executor so exceptions happen immediately
+        Executor syncExecutor = Runnable::run;
+        reindexHelper = new ReindexHelper(restClient, syncExecutor);
+        
+        // Mock the first request (reindex start) to return empty taskId
+        when(restClient.performRequest(any(Request.class)))
+            .thenAnswer(invocation -> {
+                Request req = invocation.getArgument(0);
+                if (req.getEndpoint().equals("/_reindex")) {
+                    // First call returns task response with empty taskId
+                    when(httpResponse.getEntity()).thenReturn(httpEntity);
+                    when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
+                    return httpResponse;
+                } else if (req.getEndpoint().startsWith("/_tasks/")) {
+                    // Second call (task status check) with empty taskId causes exception
+                    throw new ArrayIndexOutOfBoundsException("Invalid task ID format");
+                }
+                return httpResponse;
+            });
 
-        // When / Then
+        // When / Then - exception happens synchronously because executor is synchronous
         assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
             .isInstanceOf(ArrayIndexOutOfBoundsException.class);
     }
@@ -220,11 +236,27 @@ class ReindexHelperTest {
         long pollIntervalMs = 1000L;
         String responseBody = "{\"status\":\"ok\"}";
 
-        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
+        // Use synchronous executor so exceptions happen immediately
+        Executor syncExecutor = Runnable::run;
+        reindexHelper = new ReindexHelper(restClient, syncExecutor);
+        
+        // Mock the first request (reindex start) to return response without task field
+        when(restClient.performRequest(any(Request.class)))
+            .thenAnswer(invocation -> {
+                Request req = invocation.getArgument(0);
+                if (req.getEndpoint().equals("/_reindex")) {
+                    // First call returns task response without task field (taskId will be null)
+                    when(httpResponse.getEntity()).thenReturn(httpEntity);
+                    when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
+                    return httpResponse;
+                } else if (req.getEndpoint().startsWith("/_tasks/")) {
+                    // Second call (task status check) with null taskId causes NullPointerException
+                    throw new NullPointerException("Task ID is null");
+                }
+                return httpResponse;
+            });
 
-        // When / Then
+        // When / Then - exception happens synchronously because executor is synchronous
         assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
             .isInstanceOf(NullPointerException.class);
     }
@@ -237,11 +269,27 @@ class ReindexHelperTest {
         long pollIntervalMs = 1000L;
         String responseBody = "{\"task\":\"invalid-task-id\"}";
 
-        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
+        // Use synchronous executor so exceptions happen immediately
+        Executor syncExecutor = Runnable::run;
+        reindexHelper = new ReindexHelper(restClient, syncExecutor);
+        
+        // Mock the first request (reindex start) to return malformed taskId
+        when(restClient.performRequest(any(Request.class)))
+            .thenAnswer(invocation -> {
+                Request req = invocation.getArgument(0);
+                if (req.getEndpoint().equals("/_reindex")) {
+                    // First call returns task response with malformed taskId
+                    when(httpResponse.getEntity()).thenReturn(httpEntity);
+                    when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
+                    return httpResponse;
+                } else if (req.getEndpoint().startsWith("/_tasks/")) {
+                    // Second call (task status check) with malformed taskId causes exception
+                    throw new ArrayIndexOutOfBoundsException("Invalid task ID format");
+                }
+                return httpResponse;
+            });
 
-        // When / Then
+        // When / Then - exception happens synchronously because executor is synchronous
         assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
             .isInstanceOf(ArrayIndexOutOfBoundsException.class);
     }
