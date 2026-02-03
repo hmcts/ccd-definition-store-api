@@ -20,65 +20,68 @@ public class ElasticsearchClientFactory {
     private final Supplier<RestClient> restClientSupplier;
     private final JacksonJsonpMapper mapper;
 
-    private volatile RestClient restClient;
-    private volatile RestClientTransport transport;
-    private volatile ElasticsearchClient elasticsearchClient;
-    private volatile ElasticsearchAsyncClient elasticsearchAsyncClient;
+    private RestClient restClient;
+    private RestClientTransport transport;
+    private ElasticsearchClient elasticsearchClient;
+    private ElasticsearchAsyncClient elasticsearchAsyncClient;
 
     public ElasticsearchClientFactory(Supplier<RestClient> restClientSupplier, JacksonJsonpMapper mapper) {
         this.restClientSupplier = restClientSupplier;
         this.mapper = mapper;
     }
 
-    public RestClient createLowLevelClient() {
+    public synchronized RestClient createLowLevelClient() {
         if (restClient == null) {
-            synchronized (this) {
-                if (restClient == null) {
-                    restClient = restClientSupplier.get();
-                }
-            }
+            restClient = restClientSupplier.get();
         }
         return restClient;
     }
 
-    private RestClientTransport createTransport() {
+
+    private synchronized RestClientTransport createTransport() {
         if (transport == null) {
-            synchronized (this) {
-                if (transport == null) {
-                    transport = new RestClientTransport(createLowLevelClient(), mapper);
-                }
-            }
+            transport = new RestClientTransport(createLowLevelClient(), mapper);
         }
         return transport;
     }
 
-    public ElasticsearchClient createClient() {
-        if (elasticsearchClient == null) {
-            synchronized (this) {
-                if (elasticsearchClient == null) {
-                    ElasticsearchTransport t = createTransport();
-                    elasticsearchClient = new ElasticsearchClient(t);
-                    try {
-                        elasticsearchClient.cluster().putSettings(s ->
-                            s.persistent(Map.of("action.destructive_requires_name", JsonData.of(false)))
-                        );
-                    } catch (IOException e) {
-                        log.error("Failed to put cluster settings during client init", e);
-                    }
-                }
-            }
+    public synchronized ElasticsearchClient createClient() {
+        if (elasticsearchClient != null) {
+            return elasticsearchClient;
         }
-        return elasticsearchClient;
+
+        ElasticsearchClient client = null;
+        try {
+            ElasticsearchTransport t = createTransport();
+            client = new ElasticsearchClient(t);
+            try {
+                client.cluster().putSettings(s ->
+                    s.persistent(Map.of("action.destructive_requires_name", JsonData.of(false)))
+                );
+            } catch (IOException e) {
+                log.error("Failed to put cluster settings during client init", e);
+            }
+            elasticsearchClient = client;
+            return client;
+        } catch (RuntimeException | Error e) {
+            log.error("Failed to create Elasticsearch client", e);
+            throw e;
+        }
     }
 
-    public ElasticsearchAsyncClient createAsyncClient() {
-        if (elasticsearchAsyncClient == null) {
-            synchronized (this) {
-                if (elasticsearchAsyncClient == null) {
-                    elasticsearchAsyncClient = new ElasticsearchAsyncClient(createTransport());
-                }
-            }
+    public synchronized ElasticsearchAsyncClient createAsyncClient() {
+        if (elasticsearchAsyncClient != null) {
+            return elasticsearchAsyncClient;
         }
-        return elasticsearchAsyncClient;
+
+        ElasticsearchAsyncClient client = null;
+        try {
+            client = new ElasticsearchAsyncClient(createTransport());
+            elasticsearchAsyncClient = client;
+            return client;
+        } catch (RuntimeException | Error e) {
+            log.error("Failed to create Elasticsearch async client", e);
+            throw e;
+        }
     }
 }
