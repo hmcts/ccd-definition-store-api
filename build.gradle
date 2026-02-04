@@ -38,7 +38,7 @@ ext {
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.24.3')
 
-    junitJupiterVersion = '5.11.4'
+    junitJupiterVersion = '5.12.2'
     springDocVersion = '2.8.14'
     hamcrestVersion = '3.0'
     flywayVersion = '10.22.0'
@@ -117,9 +117,7 @@ allprojects {
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.22'
         implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.5.22'
 
-        testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
-            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-        }
+        testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
         testImplementation group: 'io.rest-assured', name: 'rest-assured', version: restAssuredVersion
         testImplementation group: 'io.rest-assured', name: 'xml-path', version: restAssuredVersion
