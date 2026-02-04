@@ -39,7 +39,7 @@ ext {
     set('log4j2.version', '2.24.3')
 
     junitJupiterVersion = '5.12.2'
-    springDocVersion = '2.8.14'
+    springDocVersion = '2.8.15'
     hamcrestVersion = '3.0'
     flywayVersion = '10.22.0'
     reformLogging= '6.1.9'
