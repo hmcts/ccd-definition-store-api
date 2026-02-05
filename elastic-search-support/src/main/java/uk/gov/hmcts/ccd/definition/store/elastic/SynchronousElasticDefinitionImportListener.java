@@ -21,8 +21,9 @@ public class SynchronousElasticDefinitionImportListener extends ElasticDefinitio
     public SynchronousElasticDefinitionImportListener(CcdElasticSearchProperties config,
                                                       CaseMappingGenerator mappingGenerator,
                                                       ObjectFactory<HighLevelCCDElasticClient> clientFactory,
-                                                      ElasticsearchErrorHandler elasticsearchErrorHandler) {
-        super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler);
+                                                      ElasticsearchErrorHandler elasticsearchErrorHandler,
+                                                      ReindexService reindexService) {
+        super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler, reindexService);
     }
 
     @EventListener

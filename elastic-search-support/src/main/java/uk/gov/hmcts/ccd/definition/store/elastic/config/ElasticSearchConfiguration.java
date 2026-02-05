@@ -15,6 +15,7 @@ import org.elasticsearch.client.Node;
 import org.elasticsearch.client.NodeSelector;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.ElasticsearchClientFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
+
+import java.util.concurrent.Executor;
 
 @Configuration
 @ComponentScan("uk.gov.hmcts.ccd.definition.store.elastic")
@@ -70,7 +73,7 @@ public class ElasticSearchConfiguration {
             .setRequestConfigCallback(requestConfigBuilder ->
                 requestConfigBuilder
                     .setConnectTimeout(5000)
-                    .setSocketTimeout(60000)
+                    .setSocketTimeout(120 * 60000)
             )
             .setHttpClientConfigCallback(httpClientBuilder ->
                 httpClientBuilder.setDefaultIOReactorConfig(
@@ -107,7 +110,8 @@ public class ElasticSearchConfiguration {
 
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-    public HighLevelCCDElasticClient ccdElasticClient(ElasticsearchClientFactory elasticsearchClientFactory) {
-        return new HighLevelCCDElasticClient(config, elasticsearchClientFactory);
+    public HighLevelCCDElasticClient ccdElasticClient(ElasticsearchClientFactory elasticsearchClientFactory,
+                                                      @Qualifier("reindexExecutor") Executor reindexExecutor) {
+        return new HighLevelCCDElasticClient(config, elasticsearchClientFactory, reindexExecutor);
     }
 }
