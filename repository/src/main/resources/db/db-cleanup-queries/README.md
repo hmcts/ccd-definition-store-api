@@ -35,7 +35,7 @@ This file provides a **semi-automated cleanup** process.
 > - You can adjust the 3-month threshold and number of batched deletions by editing the script logic.
 
 ---
-
+ 
 ### 3. `new-clean-up-quaries/stored-procedure-safe_delete_query_case-types_older_than_3_months.sql`
 
 This file defines a **stored procedure** (`cleanup_case_types`) for automated clean-up.
