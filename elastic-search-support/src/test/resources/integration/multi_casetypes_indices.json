@@ -7,8 +7,8 @@
             "dynamic": true,
             "properties": {
                 "@timestamp": {
-                    "type": "object",
-                    "enabled": false
+                  "type": "date",
+                  "ignore_malformed": true
                 },
                 "@version": {
                     "type": "object",
@@ -182,8 +182,8 @@
             "dynamic": true,
             "properties": {
                 "@timestamp": {
-                    "type": "object",
-                    "enabled": false
+                  "type": "date",
+                  "ignore_malformed": true
                 },
                 "@version": {
                     "type": "object",

@@ -33,7 +33,8 @@ tasks.register("printSuppressionFile") {
 ext {
     set('spring-framework.version', '6.2.1')
     set('spring-security.version', '6.4.2')
-    set('springCloudVersion', '2025.0.1')
+    set('springCloudVersion', '2024.0.3')
+
     set('jackson.version', '2.16.0')
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.24.3')
@@ -178,6 +179,23 @@ subprojects { subproject ->
         providedRuntime
 
         cucumberRuntime.extendsFrom(functionalRuntime)
+        maybeCreate("integrationTestImplementation").extendsFrom(testImplementation)
+        maybeCreate("integrationTestRuntimeOnly").extendsFrom(testRuntimeOnly)
+        maybeCreate("integrationTestAnnotationProcessor").extendsFrom(annotationProcessor)
+    }
+
+    sourceSets {
+        maybeCreate("integrationTest").with {
+            if (project.name == "integration-tests") {
+                java.srcDir("src/test/java")
+                resources.srcDir("src/test/resources")
+            } else {
+                java.srcDir("src/integrationTest/java")
+                resources.srcDir("src/integrationTest/resources")
+            }
+            compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
+            runtimeClasspath += output + compileClasspath
+        }
     }
 
     dependencyManagement {
@@ -280,7 +298,7 @@ subprojects { subproject ->
         testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
         testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-bootstrap'
         testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-starter-contract-stub-runner'
-        testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '4.1.4'
+        testImplementation group: 'org.springframework.cloud', name: 'spring-cloud-contract-wiremock', version: '4.3.1'
 
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
@@ -302,6 +320,18 @@ subprojects { subproject ->
         testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
     }
 
+    task integration(type: Test) {
+    description = "Runs integration tests"
+    group = "Verification"
+    testClassesDirs = sourceSets.integrationTest.output.classesDirs
+    classpath = sourceSets.integrationTest.runtimeClasspath
+    failFast = true
+    useJUnitPlatform()
+    reports {
+        html.required = true
+    }
+}
+
     // from https://github.com/junit-team/junit5/issues/1024'
     afterEvaluate {
         jacocoTestReport {
@@ -315,10 +345,13 @@ subprojects { subproject ->
                 xml.outputLocation = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
 
             }
+            
 
             classDirectories.setFrom((classDirectories.files.collect {
                 fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**','**/AppInsightsConfiguration**'])
             }))
+
+            executionData(test, integration)
 
             doLast {
                 def report = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
@@ -389,8 +422,8 @@ sonarqube {
         property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
         property "sonar.jacoco.reportPaths", "${buildDir}/jacoco/junitPlatformTest.exec"
         property "sonar.cpd.exclusions", "**/entity/*.java,**/model/*.java"
-        property "sonar.jacoco.excludes", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java,**/TestingSupportController.java"
-        property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java,**/TestingSupportController.java"
+        property "sonar.jacoco.excludes", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/TestingSupportController.java"
+        property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/TestingSupportController.java"
         property "sonar.projectName", "ccd-definition-store-api"
         property "sonar.projectKey", "ccd-definition-store-api"
     }
