@@ -44,13 +44,13 @@
                 "__ordering__": "unordered",
                 "__elementId__": "caseGroupIdTemplate,groupRoleName"
               },{
-                "caseTypeId" : "FT_CaseAccessGroups_Align_Befta",
+                "caseTypeId" : "FT_CaseProfessionalGroupAccess",
                 "organisationalRoleName" : "Role1",
                 "groupRoleName" : "Role1",
                 "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
                 "groupAccessEnabled" : true
               }, {
-                "caseTypeId" : "FT_CaseAccessGroups_Align_Befta",
+                "caseTypeId" : "FT_CaseProfessionalGroupAccess",
                 "organisationalRoleName" : "Role1",
                 "groupRoleName" : null,
                 "caseGroupIdTemplate" : null,
@@ -69,7 +69,7 @@
                 "__ordering__": "unordered",
                 "__elementId__": "caseGroupIdTemplate,groupRoleName"
               },{
-                "caseTypeId" : "FT_CaseAccessGroups_Align_Befta",
+                "caseTypeId" : "FT_CaseProfessionalGroupAccess",
                 "organisationalRoleName" : "Role1",
                 "groupRoleName" : "Role1",
                 "caseGroupIdTemplate" : "BEFTA_MASTER:$ORGID$",
