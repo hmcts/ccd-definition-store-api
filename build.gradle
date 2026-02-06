@@ -46,7 +46,7 @@ ext {
     apachePoiVersion = '5.5.1'
     appInsightsVersion = '2.6.4'
     restAssuredVersion = '5.5.6'
-    groovyVersion = '4.0.29'
+    groovyVersion = '4.0.30'
     lombokVersion = '1.18.42'
     jjwtVersion = '0.13.0'
     feignJackson = '13.6'
