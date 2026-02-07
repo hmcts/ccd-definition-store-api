@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
@@ -45,7 +46,10 @@ class StateMetadataCaseFieldEntityFactoryTest {
     @BeforeEach
     void setUp() {
         openMocks(this);
-        factory = new StateMetadataCaseFieldEntityFactory(mock(FieldTypeRepository.class));
+        factory = new StateMetadataCaseFieldEntityFactory(
+            mock(FieldTypeRepository.class),
+            mock(ApplicationParams.class)
+        );
         ReflectionTestUtils.setField(factory, "versionedRepository", repository);
     }
 
