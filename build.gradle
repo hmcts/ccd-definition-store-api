@@ -31,9 +31,7 @@ tasks.register("printSuppressionFile") {
 }
 
 ext {
-    set('spring-framework.version', '6.2.1')
-    set('spring-security.version', '6.4.2')
-    set('springCloudVersion', '2024.0.3')
+    set('springCloudVersion', '2025.0.1')
 
     set('jackson.version', '2.16.0')
     set('snakeyaml.version', '2.3')
@@ -68,6 +66,7 @@ ext {
 
 dependencyManagement {
     imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.10"
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
 }
