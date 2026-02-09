@@ -45,7 +45,7 @@ ext {
     reformLogging= '6.1.9'
     apachePoiVersion = '5.5.1'
     appInsightsVersion = '2.6.4'
-    restAssuredVersion = '5.5.6'
+    restAssuredVersion = '5.5.7'
     groovyVersion = '4.0.30'
     lombokVersion = '1.18.42'
     jjwtVersion = '0.13.0'
