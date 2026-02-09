@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
@@ -25,14 +26,17 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
     private final ImportServiceImpl importService;
     private final FileStorageService fileStorageService;
     private final AzureStorageConfiguration azureStorageConfiguration;
+    private final ApplicationParams applicationParams;
 
     @Autowired
     public ProcessUploadServiceImpl(ImportServiceImpl importService,
                                     @Autowired(required = false) FileStorageService fileStorageService,
-                                    @Autowired(required = false) AzureStorageConfiguration azureStorageConfiguration) {
+                                    @Autowired(required = false) AzureStorageConfiguration azureStorageConfiguration,
+                                    ApplicationParams applicationParams) {
         this.importService = importService;
         this.fileStorageService = fileStorageService;
         this.azureStorageConfiguration = azureStorageConfiguration;
+        this.applicationParams = applicationParams;
     }
 
     @Transactional
@@ -49,6 +53,9 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
             }
             byte[] bytes = baos.toByteArray();
             LOG.info("Importing Definition file...");
+
+            //deleteOldIndex functionality disabled by default
+            deleteOldIndex = applicationParams.isDeleteOldIndexEnabled() && deleteOldIndex;
             final DefinitionFileUploadMetadata metadata =
                 importService.importFormDefinitions(new ByteArrayInputStream(bytes), reindex, deleteOldIndex);
 
