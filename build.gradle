@@ -3,7 +3,7 @@ plugins {
     id 'jacoco'
     id 'idea'
     id 'eclipse'
-    id 'org.springframework.boot' version '3.4.1'
+    id 'org.springframework.boot' version '3.5.10'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'com.github.ben-manes.versions' version '0.51.0'
     id 'org.sonarqube' version '6.3.1.5724'
@@ -32,23 +32,21 @@ tasks.register("printSuppressionFile") {
 
 ext {
     set('elasticsearch.version', '8.16.2')
-    set('spring-framework.version', '6.2.1')
     set('spring-security.version', '6.4.2')
-    set('springCloudVersion', '2024.0.3')
+    set('springCloudVersion', '2025.0.1')
     set('jackson.version', '2.16.0')
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.24.3')
 
-    junitJupiterVersion = '5.11.4'
-    junitVintageVersion = '5.11.4'
-    springDocVersion = '2.8.14'
+    junitJupiterVersion = '5.12.2'
+    springDocVersion = '2.8.15'
     hamcrestVersion = '3.0'
     flywayVersion = '10.22.0'
     reformLogging= '6.1.9'
     apachePoiVersion = '5.5.1'
     appInsightsVersion = '2.6.4'
     restAssuredVersion = '5.5.6'
-    groovyVersion = '4.0.29'
+    groovyVersion = '4.0.30'
     lombokVersion = '1.18.42'
     jjwtVersion = '0.13.0'
     feignJackson = '13.6'
@@ -109,7 +107,7 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
         implementation 'org.springframework.cloud:spring-cloud-starter'
 
-        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.8'
+        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.9'
         implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.39.Final'
         implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.5.1'
 
@@ -119,9 +117,7 @@ allprojects {
         implementation group: 'ch.qos.logback', name: 'logback-classic', version: '1.5.22'
         implementation group: 'ch.qos.logback', name: 'logback-core', version: '1.5.22'
 
-        testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', {
-            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-        }
+        testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
         testImplementation group: 'io.rest-assured', name: 'rest-assured', version: restAssuredVersion
         testImplementation group: 'io.rest-assured', name: 'xml-path', version: restAssuredVersion
@@ -284,7 +280,6 @@ subprojects { subproject ->
         // To avoid compiler warnings about @API annotations in JUnit5 code.
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junitJupiterVersion
         testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: junitJupiterVersion
-        testRuntimeOnly group: 'org.junit.vintage', name: 'junit-vintage-engine', version: junitVintageVersion
         testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: junitJupiterVersion
         testImplementation group: 'org.apiguardian', name: 'apiguardian-api', version: '1.1.2'
         testImplementation group: 'org.testcontainers', name: 'postgresql', version: testcontainersVersion
@@ -327,7 +322,7 @@ subprojects { subproject ->
                 xml.outputLocation = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
 
             }
-            
+
 
             classDirectories.setFrom((classDirectories.files.collect {
                 fileTree(dir: it, exclude: ['uk/gov/hmcts/ccd/definition/store/hikari/**','**/AppInsightsConfiguration**'])
