@@ -65,7 +65,7 @@
               "description" : "BEFTA GA Solicitor Respondent for Org description",
               "hint" : "BEFTA GA Solicitor Respondent for Org hint",
               "displayOrder" : 1,
-              "roles" : [                 {
+              "roles" : [{
                 "__ordering__": "unordered",
                 "__elementId__": "caseGroupIdTemplate,groupRoleName"
               },{

@@ -44,6 +44,9 @@
               "hint" : "BEFTA GA OGD Respondent for Org hint2",
               "displayOrder" : 2,
               "roles" : [ {
+                "__ordering__": "unordered",
+                "__elementId__": "caseGroupIdTemplate,groupRoleName"
+              }, {
                 "caseTypeId" : "FT_CaseProfessionalGroupAccess",
                 "organisationalRoleName" : "CaseProfessionalGroupAccess_Org_Role",
                 "groupRoleName" : null,
