@@ -210,7 +210,7 @@ subprojects { subproject ->
 
         // start::CVE Vulnerability dependency overrides
 
-        implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.6' // spring-boot-starter-oauth2-client
+        implementation group: 'com.nimbusds', name: 'nimbus-jose-jwt', version: '10.7' // spring-boot-starter-oauth2-client
         implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.20.0' // azure-storage
         implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.5.0' // poi-ooxml
 
