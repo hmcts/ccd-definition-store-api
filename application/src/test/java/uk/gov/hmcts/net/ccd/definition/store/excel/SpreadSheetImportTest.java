@@ -1,5 +1,7 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.Translation;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
@@ -58,6 +60,14 @@ import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubFo
  * @author Daniel Lam (A533913)
  */
 @TestPropertySource(properties = {"ccd.authorised.services=ccd_data"})
+@Sql(
+    statements = "DELETE FROM case_type_snapshot",
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+    config = @SqlConfig(
+        transactionMode = SqlConfig.TransactionMode.ISOLATED,
+        transactionManager = "transactionManager"
+    )
+)
 class SpreadSheetImportTest extends BaseTest {
     private static final String TEST_CASE_TYPE = "TestAddressBookCase";
     private static final String CASE_TYPE_DEF_URL = "/api/data/caseworkers/cid/jurisdictions/jid/case-types/"
@@ -131,7 +141,7 @@ class SpreadSheetImportTest extends BaseTest {
             stubForPutDictionaryReturns4XX(getDictionaryRequest());
 
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
-            
+
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
