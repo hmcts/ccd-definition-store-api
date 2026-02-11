@@ -113,6 +113,33 @@ class VersionedDefinitionRepositoryDecoratorTest {
 
     }
 
+    @Test
+    void saveNewCaseTypesWithSameReferenceAssignsIncrementalVersions() {
+        final CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("id");
+        caseType.setName("name");
+        caseType.setJurisdiction(jurisdiction);
+        caseType.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        final CaseTypeEntity caseType2 = new CaseTypeEntity();
+        caseType2.setReference("id");
+        caseType2.setName("name");
+        caseType2.setJurisdiction(jurisdiction);
+        caseType2.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository);
+
+        List<CaseTypeEntity> savedEntities = versionedCaseTypeRepository.saveAll(asList(caseType, caseType2));
+
+        Optional<CaseTypeEntity> retrievedCaseType = versionedCaseTypeRepository.findById(savedEntities.get(0).getId());
+        assertNotNull(retrievedCaseType.get());
+        assertThat(retrievedCaseType.get().getVersion(), is(1));
+        Optional<CaseTypeEntity> retrievedCaseType2 = versionedCaseTypeRepository
+            .findById(savedEntities.get(1).getId());
+        assertNotNull(retrievedCaseType2.get());
+        assertThat(retrievedCaseType2.get().getVersion(), is(2));
+    }
+
     //test for required coverage of new lines in sonar
     @Test
     void saveAllAndFlushTest() {
