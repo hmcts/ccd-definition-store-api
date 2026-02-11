@@ -32,8 +32,6 @@ class VersionedDefinitionRepositoryDecoratorConcurrencyTest {
     @Test
     void saveAllConcurrentSameReferenceRetriesOnDuplicateKey() throws Exception {
         VersionedDefinitionRepository<CaseTypeEntity, Integer> repository = mock(VersionedDefinitionRepository.class);
-        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
-            new VersionedDefinitionRepositoryDecorator<>(repository);
 
         AtomicInteger currentVersion = new AtomicInteger(0);
         ConcurrentHashMap<String, Set<Integer>> usedVersions = new ConcurrentHashMap<>();
@@ -47,7 +45,9 @@ class VersionedDefinitionRepositoryDecoratorConcurrencyTest {
             if (call <= 2) {
                 try {
                     versionReadBarrier.await(5, TimeUnit.SECONDS);
-                } catch (Exception ignored) {
+                } catch (Exception e) {
+                    Thread.currentThread().interrupt();
+                    throw new RuntimeException(e);
                 }
             }
             return Optional.of(currentVersion.get());
@@ -87,6 +87,9 @@ class VersionedDefinitionRepositoryDecoratorConcurrencyTest {
         firstEntity.setReference("dup");
         CaseTypeEntity secondEntity = new CaseTypeEntity();
         secondEntity.setReference("dup");
+
+        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
+            new VersionedDefinitionRepositoryDecorator<>(repository);
 
         ExecutorService executor = Executors.newFixedThreadPool(2);
         CountDownLatch startGate = new CountDownLatch(1);
