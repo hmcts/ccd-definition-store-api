@@ -251,11 +251,11 @@ class VersionedDefinitionRepositoryDecoratorTest {
     @Test
     void saveRetriesThenSucceedsOnDataIntegrityViolation() {
         VersionedDefinitionRepository<CaseTypeEntity, Integer> repository = mock(VersionedDefinitionRepository.class);
-        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
-            new VersionedDefinitionRepositoryDecorator<>(repository);
-
         CaseTypeEntity entity = new CaseTypeEntity();
         entity.setReference("id");
+
+        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
+            new VersionedDefinitionRepositoryDecorator<>(repository);
 
         when(repository.findLastVersion("id")).thenReturn(Optional.of(0), Optional.of(1));
         when(repository.save(entity))
@@ -272,11 +272,11 @@ class VersionedDefinitionRepositoryDecoratorTest {
     @Test
     void saveThrowsAfterMaxRetriesOnDataIntegrityViolation() {
         VersionedDefinitionRepository<CaseTypeEntity, Integer> repository = mock(VersionedDefinitionRepository.class);
-        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
-            new VersionedDefinitionRepositoryDecorator<>(repository);
-
         CaseTypeEntity entity = new CaseTypeEntity();
         entity.setReference("id");
+
+        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
+            new VersionedDefinitionRepositoryDecorator<>(repository);
 
         when(repository.findLastVersion("id")).thenReturn(Optional.of(0), Optional.of(1), Optional.of(2));
         when(repository.save(entity))
@@ -292,12 +292,12 @@ class VersionedDefinitionRepositoryDecoratorTest {
     @Test
     void saveAllRetriesThenSucceedsOnDataIntegrityViolation() {
         VersionedDefinitionRepository<CaseTypeEntity, Integer> repository = mock(VersionedDefinitionRepository.class);
-        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
-            new VersionedDefinitionRepositoryDecorator<>(repository);
-
         CaseTypeEntity entity = new CaseTypeEntity();
         entity.setReference("id");
         List<CaseTypeEntity> entities = List.of(entity);
+
+        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
+            new VersionedDefinitionRepositoryDecorator<>(repository);
 
         when(repository.findLastVersion("id")).thenReturn(Optional.of(0), Optional.of(1));
         when(repository.saveAll(any()))
@@ -314,12 +314,12 @@ class VersionedDefinitionRepositoryDecoratorTest {
     @Test
     void saveAllThrowsAfterMaxRetriesOnDataIntegrityViolation() {
         VersionedDefinitionRepository<CaseTypeEntity, Integer> repository = mock(VersionedDefinitionRepository.class);
-        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
-            new VersionedDefinitionRepositoryDecorator<>(repository);
-
         CaseTypeEntity entity = new CaseTypeEntity();
         entity.setReference("id");
         List<CaseTypeEntity> entities = List.of(entity);
+
+        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
+            new VersionedDefinitionRepositoryDecorator<>(repository);
 
         when(repository.findLastVersion("id")).thenReturn(Optional.of(0), Optional.of(1), Optional.of(2));
         when(repository.saveAll(any()))
