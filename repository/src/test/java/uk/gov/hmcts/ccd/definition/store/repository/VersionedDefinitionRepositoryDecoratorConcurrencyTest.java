@@ -39,6 +39,7 @@ class VersionedDefinitionRepositoryDecoratorConcurrencyTest {
         AtomicInteger versionReadCount = new AtomicInteger(0);
         AtomicBoolean versionOneUsed = new AtomicBoolean(false);
         AtomicBoolean duplicateThrown = new AtomicBoolean(false);
+        AtomicBoolean firstBatchAttempt = new AtomicBoolean(true);
 
         when(repository.findLastVersion(anyString())).thenAnswer(invocation -> {
             int call = versionReadCount.incrementAndGet();
@@ -54,6 +55,13 @@ class VersionedDefinitionRepositoryDecoratorConcurrencyTest {
         });
 
         when(repository.saveAll(any())).thenAnswer(invocation -> {
+            if (firstBatchAttempt.getAndSet(false)) {
+                duplicateThrown.set(true);
+                throw new DataIntegrityViolationException(
+                    "duplicate key value violates unique constraint "
+                        + "\"unique_field_type_reference_version_jurisdiction\"");
+            }
+
             Iterable<CaseTypeEntity> iterable = invocation.getArgument(0);
             List<CaseTypeEntity> entities = new ArrayList<>();
             for (CaseTypeEntity entity : iterable) {
