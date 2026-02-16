@@ -1,7 +1,7 @@
 package uk.gov.hmcts.net.ccd.definition.store.rest;
 
 import org.apache.http.HttpStatus;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
@@ -17,19 +17,23 @@ import java.math.BigInteger;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-public class TestingSupportControllerIT extends BaseTest {
+class TestingSupportControllerIT extends BaseTest {
 
     private static final String CLEANUP_CASE_TYPE_URL = "/api/testing-support/cleanup-case-type/%s?caseTypeIds=%s";
 
+    private static final String CLEANUP_CASE_TYPE_BY_ID_URL = "/api/testing-support/cleanup-case-type/id/%s";
+
+
     private static final String CASE_TYPE_URL = "/api/data/case-type/%s";
+
     private static final Logger LOG = LoggerFactory.getLogger(TestingSupportControllerIT.class);
 
     @Test
-    public void shouldReturnCaseType() throws Exception {
+    void shouldReturnCaseType() throws Exception {
         try (final InputStream inputStream =
-                 new ClassPathResource("/CCD_TestDefinition_TestingSupportData.xlsx", getClass()).getInputStream()) {
+                new ClassPathResource("/CCD_TestDefinition_TestingSupportData.xlsx", getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
-            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.fileUpload(IMPORT_URL)
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
                     .file(file)
                     .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
@@ -49,6 +53,38 @@ public class TestingSupportControllerIT extends BaseTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.id").value("TestComplexAddressBookCase"))
                 .andReturn();
-        }
+                
+        } 
+    }
+
+    @Test
+    void shouldDeleteRecordsByCaseTypeId() throws Exception {
+        String caseTypeId = "TestAddressBookCase-123";
+
+        try (final InputStream inputStream =
+                new ClassPathResource("/CCD_TestDefinition_TestingSupportData.xlsx", getClass()).getInputStream()) {
+            MockMultipartFile file = new MockMultipartFile("file", inputStream);
+            MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
+                    .file(file)
+                    .header(AUTHORIZATION, "Bearer testUser"))
+                .andReturn();
+            assertResponseCode(mvcResult, HttpStatus.SC_CREATED);
+
+            var deleteResult = mockMvc.perform(MockMvcRequestBuilders.delete(
+                String.format(CLEANUP_CASE_TYPE_BY_ID_URL, caseTypeId)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+            assertResponseCode(deleteResult, HttpStatus.SC_OK);
+
+            mockMvc.perform(MockMvcRequestBuilders.get(String.format(CASE_TYPE_URL, "TestAddressBookCase-123")))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andReturn();
+
+            mockMvc.perform(MockMvcRequestBuilders.get(String.format(CASE_TYPE_URL, "TestComplexAddressBookCase")))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.id").value("TestComplexAddressBookCase"))
+                .andReturn();
+                
+        } 
     }
 }

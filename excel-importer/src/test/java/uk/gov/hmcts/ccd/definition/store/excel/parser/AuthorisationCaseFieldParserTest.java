@@ -40,7 +40,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.AUTH
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_FIELD;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE;
 
-public class AuthorisationCaseFieldParserTest {
+class AuthorisationCaseFieldParserTest {
 
 
     private static final String CASE_TYPE_INVALID = "Invalid Case Type";
@@ -66,8 +66,8 @@ public class AuthorisationCaseFieldParserTest {
     private EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
 
     @BeforeEach
-    public void setup() {
-        MockitoAnnotations.initMocks(this);
+    void setup() {
+        MockitoAnnotations.openMocks(this);
         final ParseContext context = new ParseContext();
         given(mockAccessProfileEntity.getReference()).willReturn(TEST_ACCESS_PROFILE_FOUND);
         context.registerAccessProfiles(Collections.singletonList(mockAccessProfileEntity));
@@ -92,7 +92,7 @@ public class AuthorisationCaseFieldParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithAccessProfileFound() {
+    void shouldParseEntityWithAccessProfileFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_FIELD.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_FOUND);
@@ -117,7 +117,7 @@ public class AuthorisationCaseFieldParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithCaseRoleFound() {
+    void shouldParseEntityWithCaseRoleFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_FIELD.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ACCESS_PROFILE.toString(), TEST_CASE_ROLE_FOUND);
@@ -142,7 +142,7 @@ public class AuthorisationCaseFieldParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithAccessProfileNotFound() {
+    void shouldParseEntityWithAccessProfileNotFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_FIELD.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_NOT_FOUND);
@@ -163,7 +163,7 @@ public class AuthorisationCaseFieldParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithInvalidCrud() {
+    void shouldParseEntityWithInvalidCrud() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_FIELD.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_FOUND);
@@ -184,7 +184,7 @@ public class AuthorisationCaseFieldParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithInvalidCrudAndAccessProfileNotFound() {
+    void shouldParseEntityWithInvalidCrudAndAccessProfileNotFound() {
         final DefinitionDataItem item1 = new DefinitionDataItem(SheetName.AUTHORISATION_CASE_FIELD.getName());
         item1.addAttribute(CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item1.addAttribute(ACCESS_PROFILE.toString(), TEST_ACCESS_PROFILE_NOT_FOUND);
@@ -205,7 +205,7 @@ public class AuthorisationCaseFieldParserTest {
     }
 
     @Test
-    public void shouldParseEntityWithInvalidCaseField() {
+    void shouldParseEntityWithInvalidCaseField() {
         CaseFieldEntity caseField1 = new CaseFieldEntity();
         caseField1.setReference("Invalid case field");
 

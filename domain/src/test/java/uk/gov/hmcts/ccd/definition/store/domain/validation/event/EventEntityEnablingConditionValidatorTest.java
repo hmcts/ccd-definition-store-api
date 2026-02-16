@@ -1,12 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.validation.event;
 
-import com.google.common.collect.Sets;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentMatchers;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -21,12 +14,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.Sets;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class EventEntityEnablingConditionValidatorTest {
+class EventEntityEnablingConditionValidatorTest {
 
     private EventEntityEnablingConditionValidator classUnderTest;
 
@@ -39,9 +40,9 @@ public class EventEntityEnablingConditionValidatorTest {
 
     private EventEntityValidationContext eventEntityValidationContext;
 
-    @Before
-    public void setUp() throws InvalidShowConditionException {
-        MockitoAnnotations.initMocks(this);
+    @BeforeEach
+    void setUp() throws InvalidShowConditionException {
+        MockitoAnnotations.openMocks(this);
         classUnderTest = new EventEntityEnablingConditionValidator(showConditionExtractor, caseTypeEntityUtil);
         caseTypeEntity = new CaseTypeEntity();
         caseTypeEntity.setReference("TestCaseType");
@@ -50,7 +51,7 @@ public class EventEntityEnablingConditionValidatorTest {
     }
 
     @Test
-    public void shouldReturnEmptyErrorListWhenNoEventEnablingConditionPresent() {
+    void shouldReturnEmptyErrorListWhenNoEventEnablingConditionPresent() {
         EventEntity eventEntity = new EventEntity();
         eventEntity.setCaseType(createCaseTypeEntity());
         eventEntity.setReference("createCase");
@@ -61,7 +62,7 @@ public class EventEntityEnablingConditionValidatorTest {
     }
 
     @Test
-    public void shouldReturnEmptyErrorListWhenInjectedDataEnablingConditionPresent() throws Exception {
+    void shouldReturnEmptyErrorListWhenInjectedDataEnablingConditionPresent() throws Exception {
         mockShowCondition(Sets.newHashSet("[INJECTED_DATA.helloWorld]"), new ArrayList<>());
         EventEntity eventEntity = createEvent("[INJECTED_DATA.helloWorld]=\"Test\"");
         eventEntity.setCaseType(createCaseTypeEntity());
@@ -73,7 +74,7 @@ public class EventEntityEnablingConditionValidatorTest {
     }
 
     @Test
-    public void shouldFailWhenInvalidInjectedDataEnablingConditionPresent() throws Exception {
+    void shouldFailWhenInvalidInjectedDataEnablingConditionPresent() throws Exception {
         mockShowCondition(Sets.newHashSet("[INJECTED_DATA.helloWorld"), new ArrayList<>());
         EventEntity eventEntity = createEvent("[INJECTED_DATA.helloWorld=\"Test\"");
         eventEntity.setCaseType(createCaseTypeEntity());
@@ -89,7 +90,7 @@ public class EventEntityEnablingConditionValidatorTest {
     }
 
     @Test
-    public void shouldFailWhenCaseFieldIsNotDefined() throws InvalidShowConditionException {
+    void shouldFailWhenCaseFieldIsNotDefined() throws InvalidShowConditionException {
         mockShowCondition(Sets.newHashSet("FieldA", "FieldC"), new ArrayList<>());
         String matchingConditionFieldNotDefined = "FieldA!=\"\" AND FieldC=\"I'm innocent\"";
 

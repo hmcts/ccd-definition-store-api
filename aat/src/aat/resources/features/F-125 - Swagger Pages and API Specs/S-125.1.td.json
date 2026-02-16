@@ -1,0 +1,13 @@
+{
+  "_guid_": "S-125.1",
+  "title": "must show Swagger UI page for APIs",
+  "_extends_": "F-125_Test_Swagger_UI_Base_Data",
+
+  "specs": [
+    "to observe the swagger UI content"
+  ],
+
+  "request" :{
+  }
+}
+

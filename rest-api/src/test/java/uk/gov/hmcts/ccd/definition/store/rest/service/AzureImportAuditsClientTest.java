@@ -1,24 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
-import com.microsoft.azure.storage.ResultSegment;
-import com.microsoft.azure.storage.StorageException;
-import com.microsoft.azure.storage.blob.BlobProperties;
-import com.microsoft.azure.storage.blob.CloudBlobContainer;
-import com.microsoft.azure.storage.blob.CloudBlockBlob;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.rest.model.ImportAudit;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
+
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -26,22 +13,34 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 
+import com.microsoft.azure.storage.ResultSegment;
+import com.microsoft.azure.storage.StorageException;
+import com.microsoft.azure.storage.blob.BlobProperties;
+import com.microsoft.azure.storage.blob.CloudBlobContainer;
+import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.MockedStatic;
+import org.mockito.MockitoAnnotations;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import static com.google.common.collect.Lists.newArrayList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.powermock.api.mockito.PowerMockito.mock;
-import static org.powermock.api.mockito.PowerMockito.when;
+import static org.mockito.Mockito.when;
 
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*"})
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({CloudBlobContainer.class, CloudBlockBlob.class, BlobProperties.class, SSLContext.class})
-public class AzureImportAuditsClientTest {
+@ExtendWith(SpringExtension.class)
+class AzureImportAuditsClientTest {
 
     public static final int IMPORT_AUDITS_GET_LIMIT = 5;
 
@@ -74,10 +73,11 @@ public class AzureImportAuditsClientTest {
 
     private SSLContext context;
 
+    private MockedStatic<SSLContext> sslContextMockedStatic;
     private SSLSocketFactory socketFactory;
 
-    @Before
-    public void setUp() throws StorageException, NoSuchAlgorithmException {
+    @BeforeEach
+    void setUp() throws StorageException, NoSuchAlgorithmException {
         final ApplicationParams applicationParams = mock(ApplicationParams.class);
 
         b11 = mock(CloudBlockBlob.class);
@@ -96,19 +96,20 @@ public class AzureImportAuditsClientTest {
         blobsPage2 = mock(ResultSegment.class);
         blobsPage3 = mock(ResultSegment.class);
 
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
 
         // create the mock to return by getInstance()
-        SSLContext context = PowerMockito.mock(SSLContext.class);
+        context = mock(SSLContext.class);
+        SSLContext.setDefault(context);
 
         // mock the static method getInstance() to return above created mock context
-        PowerMockito.mockStatic(SSLContext.class);
-        Mockito.when(SSLContext.getInstance(SSL_CONTEXT_PROTOCOL_1_DOT_2)).thenReturn(context);
-        Mockito.when(SSLContext.getInstance(SSL_CONTEXT_PROTOCOL_TLS)).thenReturn(context);
+        sslContextMockedStatic = mockStatic(SSLContext.class);
+        when(SSLContext.getInstance(SSL_CONTEXT_PROTOCOL_1_DOT_2)).thenReturn(context);
+        when(SSLContext.getInstance(SSL_CONTEXT_PROTOCOL_TLS)).thenReturn(context);
 
         //socketFactor mock required otherwise test hangs
         socketFactory = mock(SSLSocketFactory.class);
-        Mockito.when(context.getSocketFactory()).thenReturn(socketFactory);
+        when(context.getSocketFactory()).thenReturn(socketFactory);
 
         when(applicationParams.getAzureImportAuditsGetLimit()).thenReturn(IMPORT_AUDITS_GET_LIMIT);
         subject = new AzureImportAuditsClient(cloudBlobContainer, applicationParams);
@@ -157,9 +158,13 @@ public class AzureImportAuditsClientTest {
         }
     }
 
-    @Test
+    @AfterEach
+    void tearDown() {
+        sslContextMockedStatic.close();
+    }
 
-    public void shouldFetchAllImportAuditsInCorrectDescOrder() throws Exception {
+    @Test
+    void shouldFetchAllImportAuditsInCorrectDescOrder() throws Exception {
         final List<ImportAudit> audits = subject.fetchLatestImportAudits();
         assertThat(audits.size(), is(5));
         assertThat(audits.get(0).getFilename(), is("b32"));
@@ -177,7 +182,7 @@ public class AzureImportAuditsClientTest {
     }
 
     @Test
-    public void shouldFetchNoImportAuditsWhenNoPrefixFound() throws Exception {
+    void shouldFetchNoImportAuditsWhenNoPrefixFound() throws Exception {
 
         int maxDaysToCheck = 10 + IMPORT_AUDITS_GET_LIMIT * 5;
         //maxDaysToCheck starts at 0

@@ -17,17 +17,14 @@ dependencies {
 
     implementation project(':domain')
     implementation project(':repository')
-    implementation "org.elasticsearch.client:elasticsearch-rest-high-level-client:${elasticSearchVersion}"
-    implementation group: 'com.google.code.gson', name: 'gson', version: '2.9.0'
-
     // need these for command line to pass in the gradle version,
     // intellij does not need the next 2 lines though
     testImplementation project(path: ':domain', configuration: 'testOutput')
     testImplementation project(":domain").sourceSets.main.output
     testImplementation project(":repository").sourceSets.test.output
-    testImplementation group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.0'
-    testImplementation "org.testcontainers:elasticsearch:1.19.3"
-    testImplementation "org.testcontainers:junit-jupiter:1.19.3"
+    testImplementation group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.3'
+    testImplementation group: 'org.testcontainers', name: 'elasticsearch', version: testcontainersVersion
+    testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: testcontainersVersion
 }
 
 pitest {

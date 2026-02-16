@@ -3,8 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.domain.service;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
 import uk.gov.hmcts.ccd.definition.store.AppInsights;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
@@ -72,19 +72,19 @@ import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@RunWith(SpringJUnit4ClassRunner.class)
+@ExtendWith(SpringExtension.class)
 @ContextConfiguration
-public class ServicesAutowiringTest implements ApplicationContextAware {
+class ServicesAutowiringTest implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
     @Test
-    public void caseTypeServiceHasAllRequiredValidatorsWiredIntoList() {
+    void caseTypeServiceHasAllRequiredValidatorsWiredIntoList() {
 
         CaseTypeService caseTypeService
             = applicationContext.getAutowireCapableBeanFactory().getBean(CaseTypeService.class);
@@ -181,7 +181,7 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
     }
 
     @Test
-    public void fieldTypeServiceHasAllRequiredValidatorsWiredIntoList() {
+    void fieldTypeServiceHasAllRequiredValidatorsWiredIntoList() {
 
         FieldTypeService fieldTypeService
             = applicationContext.getAutowireCapableBeanFactory().getBean(FieldTypeService.class);
@@ -215,8 +215,8 @@ public class ServicesAutowiringTest implements ApplicationContextAware {
 
         for (Class validatorClass : componentClasses) {
             assertTrue(
-                String.format("Instance of %s not found", validatorClass.getCanonicalName()),
-                containsInstance(components, validatorClass)
+                containsInstance(components, validatorClass),
+                String.format("Instance of %s not found", validatorClass.getCanonicalName())
             );
         }
 

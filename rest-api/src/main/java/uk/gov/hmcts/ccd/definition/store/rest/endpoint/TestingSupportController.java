@@ -8,8 +8,6 @@ import io.swagger.annotations.ApiResponses;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -37,8 +35,6 @@ public class TestingSupportController {
     public TestingSupportController(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
-
-    private static final Logger LOG = LoggerFactory.getLogger(TestingSupportController.class);
 
     @DeleteMapping(value = "/cleanup-case-type/{changeId}")
     @ApiOperation(value = "Delete a list of Case Type Schemas", notes = "Blank body response.\n")
@@ -75,7 +71,9 @@ public class TestingSupportController {
     }
 
     private List<Integer> getCaseTypeIdsByReferences(Session session, List<String> caseTypesWithChangeIds) {
-        var ids = session.createNativeQuery("SELECT id FROM case_type WHERE reference IN ( :caseTypesWithChangeIds );")
+        var ids = session.createNativeQuery(
+                "SELECT id FROM case_type WHERE reference IN ( :caseTypesWithChangeIds );",
+                Integer.class)
             .setParameterList("caseTypesWithChangeIds", caseTypesWithChangeIds)
             .list();
         session.getTransaction().commit();
@@ -84,6 +82,38 @@ public class TestingSupportController {
             intIds.add(Integer.valueOf(s.toString()));
         }
         return intIds;
+    }
+
+    @DeleteMapping(value = "/cleanup-case-type/id/{caseTypeIds}")
+    @ApiOperation(value = "Delete a list of Case Type Schemas", notes = "Blank body response.\n")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Success"),
+        @ApiResponse(code = 404, message = "Unable to find case type"),
+        @ApiResponse(code = 500, message = "Unexpected error")
+    })
+    @ConditionalOnExpression("${testing-support-endpoints.enabled:false}")
+    public void dataCaseTypeIdDeleteOnlyWithCaseTypeIds(
+        @ApiParam(value = "Case Type ID", required = true) @PathVariable("caseTypeIds") String caseTypeIds) {
+
+        log.info("Invoked for caseTypeIds {} ", caseTypeIds);
+
+        var caseIdList = Arrays.stream(caseTypeIds.split(",")).toList();
+
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        var ids = getCaseTypeIdsByReferences(session, caseIdList);
+        if (ids.isEmpty()) {
+            throw new NotFoundException("Unable to find case type");
+        }
+
+        var sql = getDeleteSql();
+
+        sql.forEach(sqlStatement -> executeSql(session, sqlStatement, ids));
+
+        session.close();
+
+        log.info("Deleted records for caseTypeIds {} ", caseTypeIds);
     }
 
     private ArrayList<String> getDeleteSql() {
@@ -231,8 +261,8 @@ public class TestingSupportController {
 
     private void executeSql(Session session, String sql, List<Integer> ids) {
         session.beginTransaction();
-        session.createNativeQuery(sql)
-            .setParameterList("caseTypeIds", ids, org.hibernate.type.IntegerType.INSTANCE)
+        session.createNativeMutationQuery(sql)
+            .setParameterList("caseTypeIds", ids)
             .executeUpdate();
         session.getTransaction().commit();
     }
