@@ -9,7 +9,9 @@ import java.util.List;
 
 public interface ShellMappingRepository extends JpaRepository<ShellMappingEntity, Integer> {
 
-    @Query("select sm from ShellMappingEntity sm where sm.originatingCaseTypeId.reference = :caseTypeReference")
+    @Query("select sm from ShellMappingEntity sm where sm.originatingCaseTypeId.reference = :caseTypeReference "
+        + "and sm.originatingCaseTypeId.version = (select max(cm.version) from CaseTypeEntity as cm "
+        + "where cm.reference = :caseTypeReference)")
     List<ShellMappingEntity> findByOriginatingCaseTypeIdReference(@Param("caseTypeReference")
                                                                   String caseTypeReference);
 

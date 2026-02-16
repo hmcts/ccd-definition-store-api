@@ -252,6 +252,137 @@ class ShellMappingControllerIT extends BaseTest {
                 .andExpect(jsonPath("$.shellCaseMappings[0].OriginatingCaseFieldName").exists())
                 .andExpect(jsonPath("$.shellCaseMappings[0].ShellCaseFieldName").exists());
         }
+
+        @Test
+        @DisplayName("Should return only shell mappings for latest version when multiple versions exist")
+        void shouldReturnOnlyShellMappingsForLatestVersion() throws Exception {
+            // Given - Create multiple versions of the same case type
+            VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository =
+                new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
+            
+            JurisdictionEntity jurisdiction = createJurisdiction(
+                new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository),
+                "JURISDICTION_VERSION_TEST", "Jurisdiction Version Test", "Desc Version Test");
+            FieldTypeEntity fieldType = createFieldType(
+                new VersionedDefinitionRepositoryDecorator<>(fieldTypeRepository),
+                jurisdiction);
+
+            // Create version 1 of originating case type (using direct save to control version)
+            CaseTypeEntity origCaseTypeV1 = new CaseTypeEntity();
+            origCaseTypeV1.setReference("VERSIONED_CASE_TYPE");
+            origCaseTypeV1.setName("Versioned Case Type V1");
+            origCaseTypeV1.setVersion(1);
+            origCaseTypeV1.setDescription("Versioned Case Type V1");
+            origCaseTypeV1.setJurisdiction(jurisdiction);
+            origCaseTypeV1.setSecurityClassification(PUBLIC);
+            CaseFieldEntity origCaseFieldV1Entity = new CaseFieldEntity();
+            origCaseFieldV1Entity.setReference("origFieldV1");
+            origCaseFieldV1Entity.setFieldType(fieldType);
+            origCaseFieldV1Entity.setLabel("origFieldV1");
+            origCaseFieldV1Entity.setHidden(false);
+            origCaseFieldV1Entity.setSecurityClassification(PUBLIC);
+            origCaseTypeV1.addCaseField(origCaseFieldV1Entity);
+            caseTypeRepository.save(origCaseTypeV1);
+            entityManager.flush();
+
+            // Create version 2 of originating case type
+            CaseTypeEntity origCaseTypeV2 = new CaseTypeEntity();
+            origCaseTypeV2.setReference("VERSIONED_CASE_TYPE");
+            origCaseTypeV2.setName("Versioned Case Type V2");
+            origCaseTypeV2.setVersion(2);
+            origCaseTypeV2.setDescription("Versioned Case Type V2");
+            origCaseTypeV2.setJurisdiction(jurisdiction);
+            origCaseTypeV2.setSecurityClassification(PUBLIC);
+            CaseFieldEntity origCaseFieldV2Entity = new CaseFieldEntity();
+            origCaseFieldV2Entity.setReference("origFieldV2");
+            origCaseFieldV2Entity.setFieldType(fieldType);
+            origCaseFieldV2Entity.setLabel("origFieldV2");
+            origCaseFieldV2Entity.setHidden(false);
+            origCaseFieldV2Entity.setSecurityClassification(PUBLIC);
+            origCaseTypeV2.addCaseField(origCaseFieldV2Entity);
+            caseTypeRepository.save(origCaseTypeV2);
+            entityManager.flush();
+
+            // Create version 3 of originating case type (latest)
+            CaseTypeEntity origCaseTypeV3 = new CaseTypeEntity();
+            origCaseTypeV3.setReference("VERSIONED_CASE_TYPE");
+            origCaseTypeV3.setName("Versioned Case Type V3");
+            origCaseTypeV3.setVersion(3);
+            origCaseTypeV3.setDescription("Versioned Case Type V3");
+            origCaseTypeV3.setJurisdiction(jurisdiction);
+            origCaseTypeV3.setSecurityClassification(PUBLIC);
+            CaseFieldEntity origCaseFieldV3Entity = new CaseFieldEntity();
+            origCaseFieldV3Entity.setReference("origFieldV3");
+            origCaseFieldV3Entity.setFieldType(fieldType);
+            origCaseFieldV3Entity.setLabel("origFieldV3");
+            origCaseFieldV3Entity.setHidden(false);
+            origCaseFieldV3Entity.setSecurityClassification(PUBLIC);
+            origCaseTypeV3.addCaseField(origCaseFieldV3Entity);
+            caseTypeRepository.save(origCaseTypeV3);
+            entityManager.flush();
+
+            // Create shell case type
+            CaseTypeEntity shellCaseType = createCaseTypeWithField(versionedCaseTypeRepository,
+                "SHELL_VERSION_TEST", "Shell Version Test", jurisdiction, fieldType, "shellField");
+
+            // Get case fields
+            CaseFieldEntity shellCaseField = shellCaseType.getCaseFields().stream()
+                .filter(f -> "shellField".equals(f.getReference()))
+                .findFirst().orElseThrow();
+            CaseFieldEntity origCaseFieldV1 = origCaseFieldV1Entity;
+            CaseFieldEntity origCaseFieldV3 = origCaseFieldV3Entity;
+
+            // Create shell mappings linked to different versions
+            CaseTypeLiteEntity shellCaseTypeLite = toCaseTypeLiteEntity(shellCaseType);
+            CaseTypeLiteEntity origCaseTypeLiteV1 = toCaseTypeLiteEntity(origCaseTypeV1);
+            CaseTypeLiteEntity origCaseTypeLiteV3 = toCaseTypeLiteEntity(origCaseTypeV3);
+
+            // Create shell mapping for version 1 (should NOT be returned)
+            ShellMappingEntity mappingV1 = createShellMappingEntity(
+                LocalDate.of(2024, 1, 1),
+                null,
+                shellCaseTypeLite,
+                shellCaseField,
+                origCaseTypeLiteV1,
+                origCaseFieldV1
+            );
+
+            // Create shell mapping for version 3 (latest - should be returned)
+            ShellMappingEntity mappingV3 = createShellMappingEntity(
+                LocalDate.of(2024, 3, 1),
+                null,
+                shellCaseTypeLite,
+                shellCaseField,
+                origCaseTypeLiteV3,
+                origCaseFieldV3
+            );
+
+            shellMappingRepository.save(mappingV1);
+            shellMappingRepository.save(mappingV3);
+            entityManager.flush();
+            entityManager.clear();
+
+            // When - Query for shell mappings
+            final String url = RETRIEVE_SHELL_MAPPINGS_URL + "/VERSIONED_CASE_TYPE";
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+            ShellMappingResponse response = mapper.readValue(
+                result.getResponse().getContentAsString(),
+                ShellMappingResponse.class
+            );
+
+            // Then - Should only return mapping for version 3 (latest)
+            assertAll(
+                () -> assertThat(response.getShellCaseTypeID(), equalTo("SHELL_VERSION_TEST")),
+                () -> assertThat(response.getShellCaseMappings(), hasSize(1)),
+                () -> assertThat(response.getShellCaseMappings().get(0).getOriginatingCaseFieldName(),
+                    equalTo("origFieldV3")),
+                () -> assertThat(response.getShellCaseMappings().get(0).getShellCaseFieldName(),
+                    equalTo("shellField"))
+            );
+        }
     }
 
     private JurisdictionEntity createJurisdiction(
