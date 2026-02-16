@@ -537,10 +537,10 @@ class ShellMappingRepositoryTest {
     @Test
     void shouldFindShellMappingsOnlyForLatestVersionOfOriginatingCaseType() {
         // Given - Create multiple versions of the same case type
-        JurisdictionEntity jurisdiction = testHelper.createJurisdiction("JURISDICTION_VERSION_TEST", 
+        JurisdictionEntity jurisdiction = testHelper.createJurisdiction("JURISDICTION_VERSION_TEST",
             "Jurisdiction Version Test", "Desc Version Test");
         FieldTypeEntity fieldType = testHelper.createType(jurisdiction);
-        
+
         // Create version 1 of originating case type (use EntityManager.persist to bypass version decorator)
         CaseTypeEntity origCaseTypeV1 = new CaseTypeEntity();
         origCaseTypeV1.setReference("VERSIONED_CASE_TYPE");
@@ -549,12 +549,15 @@ class ShellMappingRepositoryTest {
         origCaseTypeV1.setDescription("Versioned Case Type V1");
         origCaseTypeV1.setJurisdiction(jurisdiction);
         origCaseTypeV1.setSecurityClassification(PUBLIC);
-        CaseFieldEntity origCaseFieldV1Entity = testHelper.buildCaseField("origFieldV1", fieldType, "origFieldV1", false);
+        CaseFieldEntity origCaseFieldV1Entity = testHelper.buildCaseField("origFieldV1",
+            fieldType,
+            "origFieldV1",
+            false);
         origCaseTypeV1.addCaseField(origCaseFieldV1Entity);
         entityManager.persist(origCaseTypeV1);
         entityManager.flush();
         entityManager.clear();
-        
+
         // Create version 2 of originating case type
         CaseTypeEntity origCaseTypeV2 = new CaseTypeEntity();
         origCaseTypeV2.setReference("VERSIONED_CASE_TYPE");
@@ -563,12 +566,15 @@ class ShellMappingRepositoryTest {
         origCaseTypeV2.setDescription("Versioned Case Type V2");
         origCaseTypeV2.setJurisdiction(jurisdiction);
         origCaseTypeV2.setSecurityClassification(PUBLIC);
-        CaseFieldEntity origCaseFieldV2Entity = testHelper.buildCaseField("origFieldV2", fieldType, "origFieldV2", false);
+        CaseFieldEntity origCaseFieldV2Entity = testHelper.buildCaseField("origFieldV2",
+            fieldType,
+            "origFieldV2",
+            false);
         origCaseTypeV2.addCaseField(origCaseFieldV2Entity);
         entityManager.persist(origCaseTypeV2);
         entityManager.flush();
         entityManager.clear();
-        
+
         // Create version 3 of originating case type (latest)
         CaseTypeEntity origCaseTypeV3 = new CaseTypeEntity();
         origCaseTypeV3.setReference("VERSIONED_CASE_TYPE");
@@ -577,27 +583,30 @@ class ShellMappingRepositoryTest {
         origCaseTypeV3.setDescription("Versioned Case Type V3");
         origCaseTypeV3.setJurisdiction(jurisdiction);
         origCaseTypeV3.setSecurityClassification(PUBLIC);
-        CaseFieldEntity origCaseFieldV3Entity = testHelper.buildCaseField("origFieldV3", fieldType, "origFieldV3", false);
+        CaseFieldEntity origCaseFieldV3Entity = testHelper.buildCaseField("origFieldV3",
+            fieldType,
+            "origFieldV3",
+            false);
         origCaseTypeV3.addCaseField(origCaseFieldV3Entity);
         entityManager.persist(origCaseTypeV3);
         entityManager.flush();
         entityManager.clear();
-        
+
         // Create shell case type
-        CaseTypeEntity shellCaseType = createCaseTypeWithField("SHELL_VERSION_TEST", 
+        CaseTypeEntity shellCaseType = createCaseTypeWithField("SHELL_VERSION_TEST",
             "Shell Version Test", jurisdiction, fieldType, "shellField");
-        
+
         // Create shell mappings linked to different versions
-        CaseTypeLiteEntity shellCaseTypeLite = CaseTypeLiteEntity.toCaseTypeLiteEntity(shellCaseType);
-        CaseTypeLiteEntity origCaseTypeLiteV1 = CaseTypeLiteEntity.toCaseTypeLiteEntity(origCaseTypeV1);
-        CaseTypeLiteEntity origCaseTypeLiteV2 = CaseTypeLiteEntity.toCaseTypeLiteEntity(origCaseTypeV2);
-        CaseTypeLiteEntity origCaseTypeLiteV3 = CaseTypeLiteEntity.toCaseTypeLiteEntity(origCaseTypeV3);
-        
+        final CaseTypeLiteEntity shellCaseTypeLite = CaseTypeLiteEntity.toCaseTypeLiteEntity(shellCaseType);
+        final CaseTypeLiteEntity origCaseTypeLiteV1 = CaseTypeLiteEntity.toCaseTypeLiteEntity(origCaseTypeV1);
+        final CaseTypeLiteEntity origCaseTypeLiteV2 = CaseTypeLiteEntity.toCaseTypeLiteEntity(origCaseTypeV2);
+        final CaseTypeLiteEntity origCaseTypeLiteV3 = CaseTypeLiteEntity.toCaseTypeLiteEntity(origCaseTypeV3);
+
         // Reload entities after clear to get fresh instances
         origCaseTypeV1 = caseTypeRepository.findById(origCaseTypeV1.getId()).orElseThrow();
         origCaseTypeV2 = caseTypeRepository.findById(origCaseTypeV2.getId()).orElseThrow();
         origCaseTypeV3 = caseTypeRepository.findById(origCaseTypeV3.getId()).orElseThrow();
-        
+
         CaseFieldEntity shellCaseField = shellCaseType.getCaseFields().stream()
             .filter(f -> "shellField".equals(f.getReference()))
             .findFirst().orElseThrow();
@@ -610,7 +619,7 @@ class ShellMappingRepositoryTest {
         CaseFieldEntity origCaseFieldV3 = origCaseTypeV3.getCaseFields().stream()
             .filter(f -> "origFieldV3".equals(f.getReference()))
             .findFirst().orElseThrow();
-        
+
         // Create shell mapping for version 1
         ShellMappingEntity mappingV1 = createShellMappingEntity(
             LocalDate.of(2024, 1, 1),
@@ -620,7 +629,7 @@ class ShellMappingRepositoryTest {
             origCaseTypeLiteV1,
             origCaseFieldV1
         );
-        
+
         // Create shell mapping for version 2
         ShellMappingEntity mappingV2 = createShellMappingEntity(
             LocalDate.of(2024, 2, 1),
@@ -630,7 +639,7 @@ class ShellMappingRepositoryTest {
             origCaseTypeLiteV2,
             origCaseFieldV2
         );
-        
+
         // Create shell mapping for version 3 (latest)
         ShellMappingEntity mappingV3 = createShellMappingEntity(
             LocalDate.of(2024, 3, 1),
@@ -640,13 +649,13 @@ class ShellMappingRepositoryTest {
             origCaseTypeLiteV3,
             origCaseFieldV3
         );
-        
+
         saveShellMappingAndFlushSession(mappingV1, mappingV2, mappingV3);
-        
+
         // When - Query for shell mappings
         List<ShellMappingEntity> found = shellMappingRepository
             .findByOriginatingCaseTypeIdReference("VERSIONED_CASE_TYPE");
-        
+
         // Then - Should only return mapping for version 3 (latest)
         assertAll(
             () -> assertEquals(1, found.size()),

@@ -257,13 +257,13 @@ class ShellMappingControllerIT extends BaseTest {
         @DisplayName("Should return only shell mappings for latest version when multiple versions exist")
         void shouldReturnOnlyShellMappingsForLatestVersion() throws Exception {
             // Given - Create multiple versions of the same case type
-            VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository =
+            final VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository =
                 new VersionedDefinitionRepositoryDecorator<>(caseTypeRepository);
-            
+
             JurisdictionEntity jurisdiction = createJurisdiction(
                 new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository),
                 "JURISDICTION_VERSION_TEST", "Jurisdiction Version Test", "Desc Version Test");
-            FieldTypeEntity fieldType = createFieldType(
+            final FieldTypeEntity fieldType = createFieldType(
                 new VersionedDefinitionRepositoryDecorator<>(fieldTypeRepository),
                 jurisdiction);
 
