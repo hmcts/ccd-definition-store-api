@@ -1,0 +1,27 @@
+{
+  "_guid_": "S-127.2",
+  "_extends_": "F-127_Test_Base_Data",
+  "title": "Success response - Return 200 success with shell case mappings for the originalCaseTypeId",
+  "specs": [
+    "an active profile in CCD",
+    "contains an originalCaseTypeId that exists in CCD config",
+    "contains all shellCaseMapping for originalCaseTypeId is present in the response"
+  ],
+  "request": {
+    "pathVariables": {
+      "ctid": "FT_Conditionals"
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "body": {
+      "shellCaseTypeID": "FT_MasterCaseType",
+      "shellCaseMappings": [
+        {
+          "OriginatingCaseFieldName": "EmailField",
+          "ShellCaseFieldName": "EmailField"
+        }
+      ]
+    }
+  }
+}
