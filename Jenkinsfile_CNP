@@ -1,12 +1,16 @@
 #!groovy
 
-@Library("Infrastructure@DO-NOT-MERGE-FT-TIMEOUT-EXTENSION")
+@Library("Infrastructure")
+
+import uk.gov.hmcts.contino.GradleBuilder
 
 def type = "java"
 
 def product = "ccd"
 
 def app = "definition-store-api"
+
+GradleBuilder builder = new GradleBuilder(this, product)
 
 def branchesToSync = ['demo', 'ithc', 'perftest', 'develop']
 
@@ -86,21 +90,37 @@ withPipeline(type, product, app) {
     enableHighLevelDataSetup()
 
     afterAlways('test') {
+
+        builder.gradle(':integration-tests:integration')
+
         // hmcts/cnp-jenkins-library may fail to copy artifacts after checkstyle error so repeat command (see /src/uk/gov/hmcts/contino/GradleBuilder.groovy)
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/checkstyle/*.html'
-
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/reports/pmd/*.html'
-        //copyIgnore('./build/reports/tests/test', './Unit Tests/')
-        //steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Unit Tests/**/*'
+
+        copyIgnore('./integration-tests/build/reports/tests/integration', './Integration Tests/')
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Integration Tests/**/*'
+
+
+        copyIgnore('./build/reports/tests/test', './Unit Tests/')
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/Unit Tests/**/*'
 
 
         publishHTML target: [
             allowMissing         : true,
             alwaysLinkToLastBuild: true,
             keepAll              : true,
-            reportDir            : 'build/reports/tests/test',
+            reportDir            : "Unit Tests",
             reportFiles          : "index.html",
             reportName           : "Unit Test Report"
+        ]
+
+        publishHTML target: [
+          allowMissing         : true,
+          alwaysLinkToLastBuild: true,
+          keepAll              : true,
+          reportDir            : "Integration Tests",
+          reportFiles          : "index.html",
+          reportName           : "Integration Test Report"
         ]
 
     }
@@ -158,4 +178,11 @@ withPipeline(type, product, app) {
     }
 
     echo "env.DEFINITION_STORE_URL_BASE = ${env.DEFINITION_STORE_URL_BASE}"
+}
+
+/**
+ * Forces a recursive copy by always returning 0 regardless of errors
+ */
+def copyIgnore(filePath, destinationDir) {
+  steps.sh("cp -R '${filePath}' '${destinationDir}' || :")
 }
