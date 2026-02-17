@@ -110,7 +110,42 @@ class VersionedDefinitionRepositoryDecoratorTest {
             .findById(savedEntities.get(1).getId());
         assertNotNull(retrievedCaseType2.get());
         assertThat(retrievedCaseType2.get().getVersion(), is(1));
+    }
 
+    @Test
+    void saveAllWithSameReferenceAssignsIncrementingVersionsToAvoidUniqueConstraint() {
+        // When same file yields multiple entities with same reference in one saveAll (or same file
+        // uploaded from different invocations), each must get a distinct version to avoid
+        // unique_case_type_reference_version / unique_field_type_reference_version_jurisdiction
+        final CaseTypeEntity caseType1 = new CaseTypeEntity();
+        caseType1.setReference("sameRef");
+        caseType1.setName("name1");
+        caseType1.setJurisdiction(jurisdiction);
+        caseType1.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        final CaseTypeEntity caseType2 = new CaseTypeEntity();
+        caseType2.setReference("sameRef");
+        caseType2.setName("name2");
+        caseType2.setJurisdiction(jurisdiction);
+        caseType2.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        final CaseTypeEntity caseType3 = new CaseTypeEntity();
+        caseType3.setReference("sameRef");
+        caseType3.setName("name3");
+        caseType3.setJurisdiction(jurisdiction);
+        caseType3.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository);
+
+        List<CaseTypeEntity> saved = versionedCaseTypeRepository.saveAll(asList(caseType1, caseType2, caseType3));
+
+        assertThat(saved.size(), is(3));
+        assertThat(saved.get(0).getVersion(), is(1));
+        assertThat(saved.get(1).getVersion(), is(2));
+        assertThat(saved.get(2).getVersion(), is(3));
+        assertThat(saved.get(0).getReference(), is("sameRef"));
+        assertThat(saved.get(1).getReference(), is("sameRef"));
+        assertThat(saved.get(2).getReference(), is("sameRef"));
     }
 
     //test for required coverage of new lines in sonar
