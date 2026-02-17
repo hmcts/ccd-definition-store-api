@@ -39,8 +39,8 @@ ext {
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.24.3')
 
-    junit = '5.13.4'
-    junitPlatform = '1.13.4'
+    junit = '5.14.3'
+    junitPlatform = '1.14.3'
     springDocVersion = '2.8.15'
     hamcrestVersion = '3.0'
     flywayVersion = '10.22.0'
