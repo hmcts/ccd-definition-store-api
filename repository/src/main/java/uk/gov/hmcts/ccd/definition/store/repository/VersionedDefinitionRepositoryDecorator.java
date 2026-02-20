@@ -8,18 +8,57 @@ import java.io.Serializable;
 import java.util.Optional;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Transient;
+import org.hibernate.Hibernate;
+import org.hibernate.annotations.CreationTimestamp;
 
 @SuppressWarnings({"checkstyle:InterfaceTypeParameterName", "checkstyle:ClassTypeParameterName"})
 public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID extends Serializable>
     extends AbstractDefinitionRepositoryDecorator<T, ID, VersionedDefinitionRepository<T, ID>> {
 
+    private static final Set<String> IGNORED_FIELD_NAMES = new HashSet<>(Arrays.asList(
+        "id",
+        "version",
+        "createdAt"
+    ));
+    private static final Object INACCESSIBLE_FIELD = new Object();
+
+    private final boolean skipDuplicateEntries;
+
     public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository repository) {
+        this(repository, false);
+    }
+
+    public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository<T, ID> repository,
+                                                  boolean skipDuplicateEntries) {
         super(repository);
+        this.skipDuplicateEntries = skipDuplicateEntries;
     }
 
     @Override
     public <S extends T> S save(S s) {
+        if (skipDuplicateEntries) {
+            Optional<T> existing = repository.findFirstByReferenceOrderByVersionDesc(s.getReference());
+            if (existing.isPresent() && isEquivalent(existing.get(), s)) {
+                @SuppressWarnings("unchecked")
+                S existingEntity = (S) existing.get();
+                return existingEntity;
+            }
+        }
         final Optional<Integer> version = repository.findLastVersion(s.getReference());
         s.setVersion(1 + version.orElse(0));
         return repository.save(s);
@@ -27,6 +66,13 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
 
     @Override
     public <S extends T> List<S> saveAll(Iterable<S> iterable) {
+        if (skipDuplicateEntries) {
+            List<S> results = new ArrayList<>();
+            for (S s : iterable) {
+                results.add(save(s));
+            }
+            return results;
+        }
         for (S s : iterable) {
             final Optional<Integer> version = repository.findLastVersion(s.getReference());
             s.setVersion(1 + version.orElse(0));
@@ -68,5 +114,126 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
     public <S extends T, R> R findBy(Example<S> example, Function<FluentQuery.FetchableFluentQuery<S>,
         R> queryFunction) {
         return null;
+    }
+
+    private boolean isEquivalent(T existing, T candidate) {
+        if (existing == null || candidate == null) {
+            return false;
+        }
+        if (!isSameEntityClass(existing, candidate)) {
+            return false;
+        }
+        for (Field field : getAllFields(candidate.getClass())) {
+            if (shouldIgnoreField(field)) {
+                continue;
+            }
+            if (!fieldsEquivalent(field, existing, candidate)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean isSameEntityClass(T existing, T candidate) {
+        return Hibernate.getClass(existing).equals(Hibernate.getClass(candidate));
+    }
+
+    private boolean fieldsEquivalent(Field field, T existing, T candidate) {
+        Object existingValue = readField(field, existing);
+        Object candidateValue = readField(field, candidate);
+        if (existingValue == INACCESSIBLE_FIELD || candidateValue == INACCESSIBLE_FIELD) {
+            return false;
+        }
+        if (isEntityAssociationField(field)) {
+            return associationValuesEquivalent(existingValue, candidateValue);
+        }
+        return Objects.deepEquals(existingValue, candidateValue);
+    }
+
+    private boolean associationValuesEquivalent(Object existingValue, Object candidateValue) {
+        Object existingId = extractEntityId(existingValue);
+        Object candidateId = extractEntityId(candidateValue);
+        if (existingId != null || candidateId != null) {
+            return Objects.equals(existingId, candidateId);
+        }
+        return Objects.deepEquals(existingValue, candidateValue);
+    }
+
+    private boolean shouldIgnoreField(Field field) {
+        if (Modifier.isStatic(field.getModifiers())) {
+            return true;
+        }
+        if (IGNORED_FIELD_NAMES.contains(field.getName())) {
+            return true;
+        }
+        if (field.isAnnotationPresent(Id.class)
+            || field.isAnnotationPresent(CreationTimestamp.class)
+            || field.isAnnotationPresent(Transient.class)
+            || field.isAnnotationPresent(OneToMany.class)
+            || field.isAnnotationPresent(ManyToMany.class)) {
+            return true;
+        }
+        return java.util.Collection.class.isAssignableFrom(field.getType());
+    }
+
+    private boolean isEntityAssociationField(Field field) {
+        return field.isAnnotationPresent(ManyToOne.class) || field.isAnnotationPresent(OneToOne.class);
+    }
+
+    private Object readField(Field field, Object target) {
+        try {
+            Method getter = findGetter(field, target.getClass());
+            if (getter != null) {
+                return getter.invoke(target);
+            }
+            return INACCESSIBLE_FIELD;
+        } catch (ReflectiveOperationException e) {
+            throw new IllegalStateException("Unable to access field for comparison: " + field.getName(), e);
+        }
+    }
+
+    private Method findGetter(Field field, Class<?> targetClass) {
+        String name = field.getName();
+        if (name.isEmpty()) {
+            return null;
+        }
+        String capitalized = Character.toUpperCase(name.charAt(0)) + name.substring(1);
+        String getterName = (field.getType() == boolean.class || field.getType() == Boolean.class)
+            ? "is" + capitalized
+            : "get" + capitalized;
+        try {
+            return targetClass.getMethod(getterName);
+        } catch (NoSuchMethodException ignored) {
+            if (getterName.startsWith("is")) {
+                try {
+                    return targetClass.getMethod("get" + capitalized);
+                } catch (NoSuchMethodException ignoredAgain) {
+                    return null;
+                }
+            }
+            return null;
+        }
+    }
+
+    private Object extractEntityId(Object value) {
+        if (value == null) {
+            return null;
+        }
+        for (Field field : getAllFields(value.getClass())) {
+            if (field.isAnnotationPresent(Id.class)) {
+                return readField(field, value);
+            }
+        }
+        return null;
+    }
+
+    private List<Field> getAllFields(Class<?> type) {
+        List<Field> fields = new ArrayList<>();
+        Class<?> current = type;
+        while (current != null && current != Object.class) {
+            fields.addAll(Arrays.asList(current.getDeclaredFields()));
+            current = current.getSuperclass();
+        }
+        return fields;
     }
 }

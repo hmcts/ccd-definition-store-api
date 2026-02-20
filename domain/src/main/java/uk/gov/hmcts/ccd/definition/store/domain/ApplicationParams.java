@@ -41,6 +41,9 @@ public class ApplicationParams {
     @Value("${enable-case-group-access-filtering:false}")
     private boolean caseGroupAccessFilteringEnabled;
 
+    @Value("${ccd.definition-store.versioning.skip-duplicate-entries:false}")
+    private boolean skipDuplicateVersionedEntries;
+
 
     public boolean isDefaultPublish() {
         return defaultPublish;
@@ -52,6 +55,10 @@ public class ApplicationParams {
 
     public boolean isCaseGroupAccessFilteringEnabled() {
         return caseGroupAccessFilteringEnabled;
+    }
+
+    public boolean isSkipDuplicateVersionedEntries() {
+        return skipDuplicateVersionedEntries;
     }
 
     public String userProfilePutURL() {
