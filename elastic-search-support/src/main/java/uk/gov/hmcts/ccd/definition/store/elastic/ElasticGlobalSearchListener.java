@@ -47,10 +47,6 @@ public class ElasticGlobalSearchListener {
 
         } catch (IOException | ElasticsearchStatusException e) {
             throw new ElasticSearchInitialisationException(e);
-        } finally {
-            if (elasticClient != null) {
-                elasticClient.close();
-            }
         }
     }
 }

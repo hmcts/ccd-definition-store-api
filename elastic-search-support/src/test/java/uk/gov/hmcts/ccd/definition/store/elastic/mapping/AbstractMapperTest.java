@@ -7,8 +7,8 @@ import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerat
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import org.elasticsearch.core.Set;
 import org.mockito.Mock;
 
 import static com.google.common.collect.Lists.newArrayList;

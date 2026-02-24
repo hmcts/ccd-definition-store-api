@@ -4,11 +4,11 @@
             "casetypea_cases": {}
         },
         "mappings": {
-            "dynamic": "true",
+            "dynamic": true,
             "properties": {
                 "@timestamp": {
-                    "type": "object",
-                    "enabled": false
+                  "type": "date",
+                  "ignore_malformed": true
                 },
                 "@version": {
                     "type": "object",
@@ -122,9 +122,9 @@
                 "analysis": {
                     "filter": {
                         "shingle_filter": {
-                            "max_shingle_size": "3",
-                            "min_shingle_size": "2",
-                            "output_unigrams": "true",
+                            "max_shingle_size": 3,
+                            "min_shingle_size": 2,
+                            "output_unigrams": true,
                             "type": "shingle"
                         },
                         "whitespace_remove": {
@@ -179,11 +179,11 @@
             "casetypeb_cases": {}
         },
         "mappings": {
-            "dynamic": "true",
+            "dynamic": true,
             "properties": {
                 "@timestamp": {
-                    "type": "object",
-                    "enabled": false
+                  "type": "date",
+                  "ignore_malformed": true
                 },
                 "@version": {
                     "type": "object",
@@ -297,9 +297,9 @@
                 "analysis": {
                     "filter": {
                         "shingle_filter": {
-                            "max_shingle_size": "3",
-                            "min_shingle_size": "2",
-                            "output_unigrams": "true",
+                            "max_shingle_size": 3,
+                            "min_shingle_size": 2,
+                            "output_unigrams": true,
                             "type": "shingle"
                         },
                         "whitespace_remove": {
