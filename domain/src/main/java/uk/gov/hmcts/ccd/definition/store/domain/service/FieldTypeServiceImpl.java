@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.service;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.fieldtype.FieldTypeValidationContext;
@@ -28,9 +29,13 @@ public class FieldTypeServiceImpl implements FieldTypeService {
     @Autowired
     public FieldTypeServiceImpl(FieldTypeRepository repository,
                                 FieldTypeValidationContextFactory validationContextFactory,
-                                List<FieldTypeValidator> validators) {
+                                List<FieldTypeValidator> validators,
+                                ApplicationParams applicationParams) {
         this.repository = repository;
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(
+            repository,
+            applicationParams.isSkipDuplicateVersionedEntries()
+        );
         this.validationContextFactory = validationContextFactory;
         this.validators = validators;
     }

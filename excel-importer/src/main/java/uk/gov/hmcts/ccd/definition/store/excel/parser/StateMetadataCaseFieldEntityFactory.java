@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.excel.util.ReferenceUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
@@ -29,8 +30,12 @@ public class StateMetadataCaseFieldEntityFactory implements MetadataCaseFieldEnt
     private final VersionedDefinitionRepositoryDecorator<FieldTypeEntity, Integer> versionedRepository;
 
     @Autowired
-    public StateMetadataCaseFieldEntityFactory(FieldTypeRepository repository) {
-        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
+    public StateMetadataCaseFieldEntityFactory(FieldTypeRepository repository,
+                                               ApplicationParams applicationParams) {
+        this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(
+            repository,
+            applicationParams.isSkipDuplicateVersionedEntries()
+        );
     }
 
     @Override
