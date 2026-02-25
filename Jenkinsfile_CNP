@@ -14,6 +14,9 @@ GradleBuilder builder = new GradleBuilder(this, product)
 
 def branchesToSync = ['demo', 'ithc', 'perftest', 'develop']
 
+// Variables to switch pipeline logic and wiring per type of build
+def definitionStoreDevelopPr = "PR-1529" // This doesn't change frequently, but when it does, only change this value.
+
 def secrets = [
     'ccd-${env}': [
         secret('ccd-caseworker-autotest-email', 'CCD_CASEWORKER_AUTOTEST_EMAIL'),
@@ -186,3 +189,4 @@ withPipeline(type, product, app) {
 def copyIgnore(filePath, destinationDir) {
   steps.sh("cp -R '${filePath}' '${destinationDir}' || :")
 }
+
