@@ -53,7 +53,7 @@ ext {
     jjwtVersion = '0.13.0'
     feignJackson = '13.9'
     gsonVersion = '2.13.2'
-    elasticSearchVersion = '7.17.29'
+    elasticSearchVersion = '9.3.1'
     testcontainersVersion = '1.21.4'
     ccdTestDefinitionVersion = '7.27.7-prerelease-CME-537'
     beftaFwVersion = '9.2.4'
