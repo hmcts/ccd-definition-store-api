@@ -116,9 +116,8 @@ class ReindexHelperTest {
         Executor executor = reindexHelper.asyncExecutor();
 
         // Then
-        assertThat(executor)
-            .isNotNull()
-            .isInstanceOf(org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor.class);
+        assertThat(executor).isNotNull();
+        assertThat(executor).isInstanceOf(org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor.class);
     }
 
     @Test

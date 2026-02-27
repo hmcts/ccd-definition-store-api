@@ -568,7 +568,8 @@ class HighLevelCCDElasticClientTest {
         String result = client.reindexData(oldIndex, newIndex, reindexListener);
 
         // Then
-        assertThat(result).isNotNull().isEqualTo(taskId);
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(taskId);
     }
 
     @Test
