@@ -71,7 +71,6 @@ class ElasticDefinitionImportListenerTest {
     private final CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB")
         .withReference("caseTypeB").build();
     private final String baseIndexName = "casetypea";
-    private final String caseTypeName = "casetypea_cases-000001";
 
     @BeforeEach
     void setUp() {
@@ -168,6 +167,7 @@ class ElasticDefinitionImportListenerTest {
         verify(elasticsearchErrorHandler).createException(any(ElasticsearchStatusException.class), eq(caseA));
         assertInstanceOf(RuntimeException.class, thrown.getCause());
         assertEquals("wrapped", thrown.getCause().getMessage());
+
     }
 
     @Test

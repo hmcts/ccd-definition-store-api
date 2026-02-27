@@ -234,20 +234,8 @@
       "searchAliasFields": [],
       "roleToAccessProfiles": [
         {
-          "__operator__": "equivalent",
-          "__ordering__": "unordered",
-          "__elementId__": "case_type_id,role_name,read_only,authorisations,case_access_categories"
-        },
-        {
-          "case_type_id" : "FT_CaseAccessCategories",
-          "disabled" : false,
-          "read_only" : false,
-          "authorisations" : null,
-          "access_profiles" : "caseworker-befta_master",
-          "live_from" : "2017-01-01T00:00:00.000+00:00",
-          "live_to" : null,
-          "role_name" : "idam:caseworker-befta_master",
-          "case_access_categories" : "Civil/Standard,Criminal/Serious"
+          "__ordering__": "ORDERED",
+          "__elementId__": "case_type_id"
         },
         {
           "case_type_id" : "FT_CaseAccessCategories",
@@ -259,8 +247,7 @@
           "live_to" : null,
           "role_name" : "Role1",
           "case_access_categories" : "TestValue"
-        }, 
-        {
+        }, {
           "case_type_id" : "FT_CaseAccessCategories",
           "disabled" : false,
           "read_only" : false,
@@ -269,6 +256,16 @@
           "live_from" : "2017-01-01T00:00:00.000+00:00",
           "live_to" : null,
           "role_name" : "Role1",
+          "case_access_categories" : "Civil/Standard,Criminal/Serious"
+        }, {
+          "case_type_id" : "FT_CaseAccessCategories",
+          "disabled" : false,
+          "read_only" : false,
+          "authorisations" : null,
+          "access_profiles" : "caseworker-befta_master",
+          "live_from" : "2017-01-01T00:00:00.000+00:00",
+          "live_to" : null,
+          "role_name" : "idam:caseworker-befta_master",
           "case_access_categories" : "Civil/Standard,Criminal/Serious"
         }
       ],

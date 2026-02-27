@@ -30,13 +30,13 @@ public class ReindexHelper {
     }
 
     public String reindexIndex(String sourceIndex,
-                               String destIndex,
-                               long pollIntervalMs,
-                               ReindexListener listener) throws IOException {
+                             String destIndex,
+                             long pollIntervalMs,
+                             ReindexListener listener) throws IOException {
         String jsonBody = "{"
-                          + " \"source\": { \"index\": \"" + sourceIndex + "\" },"
-                          + " \"dest\": { \"index\": \"" + destIndex + "\" }"
-                          + "}";
+            + " \"source\": { \"index\": \"" + sourceIndex + "\" },"
+            + " \"dest\": { \"index\": \"" + destIndex + "\" }"
+            + "}";
 
         Request request = new Request("POST", "/_reindex");
         request.addParameter("wait_for_completion", "false");
@@ -116,7 +116,7 @@ public class ReindexHelper {
         if (statusObj == null) {
             listener.onFailure(new RuntimeException(
                 String.format("Reindex process completed with unknown status (taskId=%s)", taskInfo.getTaskId())
-            ));
+                ));
             return true;
         }
 
