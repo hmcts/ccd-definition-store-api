@@ -296,7 +296,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     public String reindexData(String oldIndex, String newIndex,
                               ReindexListener listener) {
         RestClient lowLevelRestClient = clientFactory.createLowLevelClient();
-        ReindexHelper helper = new ReindexHelper(lowLevelRestClient, reindexExecutor);
+        ReindexHelper helper = new ReindexHelper(lowLevelRestClient, config, reindexExecutor);
         try {
             String taskId = helper.reindexIndex(oldIndex, newIndex, 5000L, listener);
             log.info("Submitted reindex from {} to {}. taskId={}", oldIndex, newIndex, taskId);

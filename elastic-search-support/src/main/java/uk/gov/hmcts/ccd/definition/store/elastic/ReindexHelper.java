@@ -8,6 +8,7 @@ import org.elasticsearch.client.Request;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 
 import java.io.IOException;
@@ -20,15 +21,17 @@ public class ReindexHelper {
 
     private final RestClient restClient;
     private final ObjectMapper mapper = new ObjectMapper();
+    private final CcdElasticSearchProperties config;
     private Executor executor = asyncExecutor();
     private static final String FAILURES = "failures";
 
-    public ReindexHelper(RestClient restClient) {
-        this(restClient, null);
+    public ReindexHelper(RestClient restClient, CcdElasticSearchProperties config) {
+        this(restClient, config,null);
     }
 
-    public ReindexHelper(RestClient restClient, Executor executor) {
+    public ReindexHelper(RestClient restClient, CcdElasticSearchProperties config, Executor executor) {
         this.restClient = restClient;
+        this.config = config;
         this.executor = (executor != null) ? executor : asyncExecutor();
     }
 
@@ -48,10 +51,15 @@ public class ReindexHelper {
     private String startReindexTask(String sourceIndex, String destIndex) throws IOException {
         String jsonBody = String.format("""
             {
-              "source": { "index": "%s" },
-              "dest": { "index": "%s" }
+              "source": {
+                "index": "%s",
+                "size": %s
+              },
+              "dest": {
+                "index": "%s"
+              }
             }
-            """, sourceIndex, destIndex);
+            """, sourceIndex, config.getBatchSize(), destIndex);
 
         Request request = buildReindexRequest(jsonBody);
         Response response = restClient.performRequest(request);
