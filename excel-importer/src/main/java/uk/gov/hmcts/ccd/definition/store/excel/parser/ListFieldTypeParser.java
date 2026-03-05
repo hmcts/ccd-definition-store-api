@@ -59,7 +59,7 @@ public class ListFieldTypeParser {
         logger.debug("List types parsing...");
 
         final Map<String, List<DefinitionDataItem>> fixedListsDataItems = definitionSheets
-            .get(SheetName.FIXED_LISTS.getName()).groupDataItemsById();
+            .get(SheetName.FIXED_LISTS.getName()).groupDataItemsByCaseTypeAndId();
 
         logger.debug("List types parsing: {} list types detected", fixedListsDataItems.size());
 
