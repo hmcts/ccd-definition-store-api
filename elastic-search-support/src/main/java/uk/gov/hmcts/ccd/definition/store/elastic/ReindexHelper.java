@@ -141,7 +141,7 @@ public class ReindexHelper {
 
     private boolean handleCompletion(JsonNode taskJson,
                                      ReindexListener listener,
-                                     String destIndex) throws IOException {
+                                     String destIndex) {
         JsonNode responseNode = taskJson.path("response");
         JsonNode errorNode = taskJson.path("error");
 
@@ -157,7 +157,7 @@ public class ReindexHelper {
                 return true;
             }
             logProgress(destIndex, responseNode);
-            listener.onSuccess();
+            listener.onSuccess(responseNode.asText());
             return true;
         }
         // fallback: if no response and no error, treat as unknown outcome
