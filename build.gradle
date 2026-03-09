@@ -238,7 +238,7 @@ subprojects { subproject ->
         // HMCTS
         implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.3.3'
         implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.4'
-        implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '6.1.9'
+        implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '8.0.0'
 
         implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.3'
         implementation group: 'com.google.code.gson', name: 'gson', version: '2.13.2'

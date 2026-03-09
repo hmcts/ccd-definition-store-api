@@ -37,7 +37,6 @@ class VersionedDefinitionRepositoryDecoratorConcurrencyTest {
         ConcurrentHashMap<String, Set<Integer>> usedVersions = new ConcurrentHashMap<>();
         CyclicBarrier versionReadBarrier = new CyclicBarrier(2);
         AtomicInteger versionReadCount = new AtomicInteger(0);
-        AtomicBoolean versionOneUsed = new AtomicBoolean(false);
         AtomicBoolean duplicateThrown = new AtomicBoolean(false);
         AtomicBoolean firstBatchAttempt = new AtomicBoolean(true);
 
@@ -73,10 +72,6 @@ class VersionedDefinitionRepositoryDecoratorConcurrencyTest {
             Set<Integer> versionsForRef = usedVersions.get(reference);
 
             for (CaseTypeEntity entity : entities) {
-                if (entity.getVersion() == 1 && !versionOneUsed.compareAndSet(false, true)) {
-                    duplicateThrown.set(true);
-                    throw new DataIntegrityViolationException("duplicate key value violates unique constraint");
-                }
                 if (versionsForRef.contains(entity.getVersion())) {
                     duplicateThrown.set(true);
                     throw new DataIntegrityViolationException("duplicate key value violates unique constraint");
