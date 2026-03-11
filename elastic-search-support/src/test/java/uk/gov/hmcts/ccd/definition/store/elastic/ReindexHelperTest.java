@@ -4,8 +4,10 @@ import org.apache.http.HttpEntity;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.Response;
+import org.elasticsearch.client.ResponseException;
 import org.elasticsearch.client.RestClient;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -16,6 +18,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.Executor;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +26,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -39,331 +44,307 @@ class ReindexHelperTest {
     private HttpEntity httpEntity;
 
     @Mock
-    private ReindexListener reindexListener;
-
-    @Mock
-    private Executor mockExecutor;
-
-    private ReindexHelper reindexHelper;
+    private ReindexListener listener;
 
     @Mock
     private CcdElasticSearchProperties config;
 
+    private final Executor syncExecutor = Runnable::run;
+
+    private ReindexHelper reindexHelper;
+
     @BeforeEach
     void setUp() {
-        reindexHelper = new ReindexHelper(restClient, config);
-    }
-
-    @Test
-    void shouldReindexIndexSuccessfully() throws IOException {
-        // Given
-        String sourceIndex = "source-index";
-        String destIndex = "dest-index";
-        long pollIntervalMs = 1000L;
-        String taskId = "node:123";
-        String responseBody = "{\"task\":\"" + taskId + "\"}";
-
-        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
-
-        // When
-        String result = reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener);
-
-        // Then
-        assertThat(result).isEqualTo(taskId);
-        verify(restClient).performRequest(any(Request.class));
-    }
-
-    @Test
-    void shouldIncludeBatchSizeInReindexRequestBody() throws IOException {
-        // Given
-        String sourceIndex = "source-index";
-        String destIndex = "dest-index";
-        long pollIntervalMs = 1000L;
-        String taskId = "node:123";
-        String responseBody = "{\"task\":\"" + taskId + "\"}";
-
-        // Explicitly configure batch size so we can assert it appears in the JSON body
-        when(config.getBatchSize()).thenReturn(1234);
-
-        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
-
-        // When
-        String result = reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener);
-
-        // Then
-        assertThat(result).isEqualTo(taskId);
-
-        ArgumentCaptor<Request> requestCaptor = ArgumentCaptor.forClass(Request.class);
-        verify(restClient, atLeastOnce()).performRequest(requestCaptor.capture());
-
-        // First invocation is the reindex POST request that contains the JSON body
-        Request capturedRequest = requestCaptor.getAllValues().get(0);
-        String jsonBody = EntityUtils.toString(capturedRequest.getEntity());
-
-        assertThat(jsonBody).contains("\"size\": 1234");
-        assertThat(jsonBody).contains("\"index\": \"" + sourceIndex + "\"");
-        assertThat(jsonBody).contains("\"index\": \"" + destIndex + "\"");
-    }
-
-    @Test
-    void shouldThrowExceptionWhenReindexRequestFails() throws IOException {
-        // Given
-        String sourceIndex = "source-index";
-        String destIndex = "dest-index";
-        long pollIntervalMs = 1000L;
-
-        when(restClient.performRequest(any(Request.class)))
-            .thenThrow(new IOException("Reindex request failed"));
-
-        // When / Then
-        assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
-            .isInstanceOf(IOException.class)
-            .hasMessageContaining("Reindex request failed");
-    }
-
-    @Test
-    void shouldThrowExceptionWhenResponseParsingFails() throws IOException {
-        // Given
-        String sourceIndex = "source-index";
-        String destIndex = "dest-index";
-        long pollIntervalMs = 1000L;
-        String invalidResponseBody = "invalid json";
-
-        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(invalidResponseBody.getBytes()));
-
-        // When / Then
-        assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
-            .isInstanceOf(IOException.class);
-    }
-
-    @Test
-    void shouldCreateAsyncExecutor() {
-        // When
-        Executor executor = reindexHelper.asyncExecutor();
-
-        // Then
-        assertThat(executor)
-            .isNotNull()
-            .isInstanceOf(org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor.class);
-    }
-
-    @Test
-    void shouldHandleInterruptedExceptionInReindexProcess() throws IOException {
-        // Given
-        String taskId = "node:123";
-        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        String responseBody = "{\"task\":\"" + taskId + "\"}";
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
-
-        // Mock executor to interrupt the thread
-        reindexHelper = new ReindexHelper(restClient, config) {
-            @Override
-            public Executor asyncExecutor() {
-                return mockExecutor;
-            }
-        };
-
-        doNothing().when(mockExecutor).execute(any(Runnable.class));
-
-        // When
-        final String sourceIndex = "source-index";
-        final String destIndex = "dest-index";
-        long pollIntervalMs = 100L;
-        String result = reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener);
-
-        // Then
-        assertThat(result).isEqualTo(taskId);
-        verify(mockExecutor).execute(any(Runnable.class));
-    }
-
-    @Test
-    void shouldHandleIOExceptionInReindexProcess() throws IOException {
-        // Given
-        String taskId = "node:123";
-        String responseBody = "{\"task\":\"" + taskId + "\"}";
-
-        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
-
-        // Mock executor to simulate IOException
-        reindexHelper = new ReindexHelper(restClient, config) {
-            @Override
-            public Executor asyncExecutor() {
-                return mockExecutor;
-            }
-        };
-
-        doNothing().when(mockExecutor).execute(any(Runnable.class));
-
-        // When
-        final String sourceIndex = "source-index";
-        final String destIndex = "dest-index";
-        final long pollIntervalMs = 100L;
-        String result = reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener);
-
-        // Then
-        assertThat(result).isEqualTo(taskId);
-        verify(mockExecutor).execute(any(Runnable.class));
-    }
-
-    @Test
-    void shouldCreateReindexHelperWithClient() {
-        // When
-        ReindexHelper helper = new ReindexHelper(restClient, config);
-
-        // Then
-        assertThat(helper).isNotNull();
-    }
-
-    @Test
-    void shouldCreateReindexHelperWithNullClient() {
-        // Given
-        RestClient client = null;
-
-        // When
-        ReindexHelper helper = new ReindexHelper(restClient, config);
-
-        // Then
-        // The constructor doesn't validate null client, so no exception is thrown
-        assertThat(helper).isNotNull();
-    }
-
-    @Test
-    void shouldHandleEmptyTaskIdInResponse() throws IOException {
-        // Given
-        String sourceIndex = "source-index";
-        String destIndex = "dest-index";
-        long pollIntervalMs = 1000L;
-        String responseBody = "{\"task\":\"\"}";
-
-        // Use synchronous executor so exceptions happen immediately
-        Executor syncExecutor = Runnable::run;
         reindexHelper = new ReindexHelper(restClient, config, syncExecutor);
-
-        // Mock the first request (reindex start) to return empty taskId
-        when(restClient.performRequest(any(Request.class)))
-            .thenAnswer(invocation -> {
-                Request req = invocation.getArgument(0);
-                if (req.getEndpoint().equals("/_reindex")) {
-                    // First call returns task response with empty taskId
-                    when(httpResponse.getEntity()).thenReturn(httpEntity);
-                    when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
-                    return httpResponse;
-                } else if (req.getEndpoint().startsWith("/_tasks/")) {
-                    // Second call (task status check) with empty taskId causes exception
-                    throw new ArrayIndexOutOfBoundsException("Invalid task ID format");
-                }
-                return httpResponse;
-            });
-
-        // When / Then - exception happens synchronously because executor is synchronous
-        assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
-            .isInstanceOf(ArrayIndexOutOfBoundsException.class);
     }
 
-    @Test
-    void shouldHandleMissingTaskFieldInResponse() throws IOException {
-        // Given
-        String sourceIndex = "source-index";
-        String destIndex = "dest-index";
-        long pollIntervalMs = 1000L;
-        String responseBody = "{\"status\":\"ok\"}";
-
-        // Use synchronous executor so exceptions happen immediately
-        Executor syncExecutor = Runnable::run;
-        reindexHelper = new ReindexHelper(restClient, config, syncExecutor);
-
-        // Mock the first request (reindex start) to return response without task field
-        when(restClient.performRequest(any(Request.class)))
-            .thenAnswer(invocation -> {
-                Request req = invocation.getArgument(0);
-                if (req.getEndpoint().equals("/_reindex")) {
-                    // First call returns task response without task field (taskId will be null)
-                    when(httpResponse.getEntity()).thenReturn(httpEntity);
-                    when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
-                    return httpResponse;
-                } else if (req.getEndpoint().startsWith("/_tasks/")) {
-                    // Second call (task status check) with null taskId causes NullPointerException
-                    throw new NullPointerException("Task ID is null");
-                }
-                return httpResponse;
-            });
-
-        // When / Then - exception happens synchronously because executor is synchronous
-        assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
-            .isInstanceOf(NullPointerException.class);
-    }
-
-    @Test
-    void shouldHandleMalformedTaskId() throws IOException {
-        // Given
-        String sourceIndex = "source-index";
-        String destIndex = "dest-index";
-        long pollIntervalMs = 1000L;
-        String responseBody = "{\"task\":\"invalid-task-id\"}";
-
-        // Use synchronous executor so exceptions happen immediately
-        Executor syncExecutor = Runnable::run;
-        reindexHelper = new ReindexHelper(restClient, config, syncExecutor);
-
-        // Mock the first request (reindex start) to return malformed taskId
-        when(restClient.performRequest(any(Request.class)))
-            .thenAnswer(invocation -> {
-                Request req = invocation.getArgument(0);
-                if (req.getEndpoint().equals("/_reindex")) {
-                    // First call returns task response with malformed taskId
-                    when(httpResponse.getEntity()).thenReturn(httpEntity);
-                    when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
-                    return httpResponse;
-                } else if (req.getEndpoint().startsWith("/_tasks/")) {
-                    // Second call (task status check) with malformed taskId causes exception
-                    throw new ArrayIndexOutOfBoundsException("Invalid task ID format");
-                }
-                return httpResponse;
-            });
-
-        // When / Then - exception happens synchronously because executor is synchronous
-        assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
-            .isInstanceOf(ArrayIndexOutOfBoundsException.class);
-    }
-
-    @Test
-    void shouldHandleNullResponseEntity() throws IOException {
-        // Given
-        String sourceIndex = "source-index";
-        String destIndex = "dest-index";
-        long pollIntervalMs = 1000L;
-
-        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(null);
-
-        // When / Then
-        assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
-            .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
-    void shouldHandleIOExceptionWhenReadingResponse() throws IOException {
-        // Given
-        String sourceIndex = "source-index";
-        String destIndex = "dest-index";
-        long pollIntervalMs = 1000L;
-
-        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
+    private void mockReindexSubmitResponse(String taskId) throws IOException {
+        String body = "{\"task\":\"" + taskId + "\"}";
+        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8)));
         when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenThrow(new IOException("Failed to read response"));
+    }
 
-        // When / Then
-        assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
-            .isInstanceOf(IOException.class)
-            .hasMessageContaining("Failed to read response");
+    private Response mockTaskResponse(String json) throws IOException {
+        Response resp = mock(Response.class);
+        HttpEntity entity = mock(HttpEntity.class);
+        when(entity.getContent()).thenReturn(new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8)));
+        when(resp.getEntity()).thenReturn(entity);
+        return resp;
+    }
+
+    private ResponseException mockException() {
+        return mock(ResponseException.class);
+    }
+
+    @Nested
+    class StartReindexTask {
+
+        @Test
+        void shouldReturnTaskId() throws IOException {
+            mockReindexSubmitResponse("node:123");
+            when(restClient.performRequest(any(Request.class)))
+                .thenReturn(httpResponse)
+                .thenReturn(mockTaskResponse("{\"completed\":true,\"response\":{\"total\":0,\"failures\":[]}}"));
+
+            String result = reindexHelper.reindexIndex("src", "dest", 10L, listener);
+
+            assertThat(result).isEqualTo("node:123");
+        }
+
+        @Test
+        void shouldIncludeBatchSizeInRequestBody() throws IOException {
+            when(config.getBatchSize()).thenReturn(2500);
+            mockReindexSubmitResponse("node:456");
+            when(restClient.performRequest(any(Request.class)))
+                .thenReturn(httpResponse)
+                .thenReturn(mockTaskResponse("{\"completed\":true,\"response\":{\"total\":0,\"failures\":[]}}"));
+
+            reindexHelper.reindexIndex("src-idx", "dest-idx", 10L, listener);
+
+            ArgumentCaptor<Request> captor = ArgumentCaptor.forClass(Request.class);
+            verify(restClient, atLeastOnce()).performRequest(captor.capture());
+
+            Request reindexRequest = captor.getAllValues().get(0);
+            String jsonBody = EntityUtils.toString(reindexRequest.getEntity());
+
+            assertThat(jsonBody).contains("\"size\": 2500");
+            assertThat(jsonBody).contains("\"index\": \"src-idx\"");
+            assertThat(jsonBody).contains("\"index\": \"dest-idx\"");
+        }
+
+        @Test
+        void shouldThrowWhenTaskIdIsEmpty() throws IOException {
+            String body = "{\"task\":\"\"}";
+            when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8)));
+            when(httpResponse.getEntity()).thenReturn(httpEntity);
+            when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
+
+            assertThatThrownBy(() -> reindexHelper.reindexIndex("src", "dest", 10L, listener))
+                .isInstanceOf(IOException.class)
+                .hasMessageContaining("did not contain a valid task ID");
+        }
+
+        @Test
+        void shouldThrowWhenTaskFieldIsMissing() throws IOException {
+            String body = "{\"status\":\"ok\"}";
+            when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8)));
+            when(httpResponse.getEntity()).thenReturn(httpEntity);
+            when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
+
+            assertThatThrownBy(() -> reindexHelper.reindexIndex("src", "dest", 10L, listener))
+                .isInstanceOf(IOException.class)
+                .hasMessageContaining("did not contain a valid task ID");
+        }
+
+        @Test
+        void shouldThrowWhenNetworkFails() throws IOException {
+            when(restClient.performRequest(any(Request.class)))
+                .thenThrow(new IOException("Connection refused"));
+
+            assertThatThrownBy(() -> reindexHelper.reindexIndex("src", "dest", 10L, listener))
+                .isInstanceOf(IOException.class)
+                .hasMessageContaining("Connection refused");
+        }
+
+        @Test
+        void shouldThrowWhenResponseIsUnparseable() throws IOException {
+            String body = "not json";
+            when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8)));
+            when(httpResponse.getEntity()).thenReturn(httpEntity);
+            when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
+
+            assertThatThrownBy(() -> reindexHelper.reindexIndex("src", "dest", 10L, listener))
+                .isInstanceOf(IOException.class);
+        }
+    }
+
+    @Nested
+    class MonitorAndCompletion {
+
+        @Test
+        void shouldCallOnSuccessWhenTaskCompletesWithoutFailures() throws IOException {
+            mockReindexSubmitResponse("node:1");
+            String taskDone = "{\"completed\":true,\"response\":{\"total\":100,\"created\":100,"
+                + "\"updated\":0,\"batches\":2,\"failures\":[]}}";
+
+            when(restClient.performRequest(any(Request.class)))
+                .thenReturn(httpResponse)
+                .thenReturn(mockTaskResponse(taskDone));
+
+            reindexHelper.reindexIndex("src", "dest", 10L, listener);
+
+            verify(listener).onSuccess();
+            verify(listener, never()).onFailure(any());
+        }
+
+        @Test
+        void shouldCallOnFailureWhenTaskCompletesWithError() throws IOException {
+            mockReindexSubmitResponse("node:1");
+            String taskError = "{\"completed\":true,\"error\":{\"type\":\"exception\","
+                + "\"reason\":\"something broke\"}}";
+
+            when(restClient.performRequest(any(Request.class)))
+                .thenReturn(httpResponse)
+                .thenReturn(mockTaskResponse(taskError));
+
+            reindexHelper.reindexIndex("src", "dest", 10L, listener);
+
+            verify(listener).onFailure(any(RuntimeException.class));
+            verify(listener, never()).onSuccess();
+        }
+
+        @Test
+        void shouldCallOnFailureWhenTaskCompletesWithFailures() throws IOException {
+            mockReindexSubmitResponse("node:1");
+            String taskFail = "{\"completed\":true,\"response\":{\"total\":10,"
+                + "\"failures\":[{\"index\":\"dest\",\"cause\":{\"type\":\"error\"}}]}}";
+
+            when(restClient.performRequest(any(Request.class)))
+                .thenReturn(httpResponse)
+                .thenReturn(mockTaskResponse(taskFail));
+
+            reindexHelper.reindexIndex("src", "dest", 10L, listener);
+
+            verify(listener).onFailure(any(RuntimeException.class));
+            verify(listener, never()).onSuccess();
+        }
+
+        @Test
+        void shouldCallOnFailureWhenTaskCompletesWithUnknownStatus() throws IOException {
+            mockReindexSubmitResponse("node:1");
+            String taskUnknown = "{\"completed\":true}";
+
+            when(restClient.performRequest(any(Request.class)))
+                .thenReturn(httpResponse)
+                .thenReturn(mockTaskResponse(taskUnknown));
+
+            reindexHelper.reindexIndex("src", "dest", 10L, listener);
+
+            verify(listener).onFailure(any(RuntimeException.class));
+            verify(listener, never()).onSuccess();
+        }
+
+        @Test
+        void shouldPollUntilTaskCompletes() throws IOException {
+            mockReindexSubmitResponse("node:1");
+            String inProgress = "{\"completed\":false,\"task\":{\"action\":\"indices:data/write/reindex\"}}";
+            String done = "{\"completed\":true,\"response\":{\"total\":5,\"created\":5,"
+                + "\"updated\":0,\"batches\":1,\"failures\":[]}}";
+
+            when(restClient.performRequest(any(Request.class)))
+                .thenReturn(httpResponse)
+                .thenReturn(mockTaskResponse(inProgress))
+                .thenReturn(mockTaskResponse(inProgress))
+                .thenReturn(mockTaskResponse(done));
+
+            reindexHelper.reindexIndex("src", "dest", 10L, listener);
+
+            verify(listener).onSuccess();
+        }
+    }
+
+    @Nested
+    class TaskNotFound {
+
+        @Test
+        void shouldGiveUpAfterMaxNotFoundRetries() throws IOException {
+            mockReindexSubmitResponse("node:1");
+
+            when(restClient.performRequest(any(Request.class)))
+                .thenReturn(httpResponse)
+                .thenThrow(mockException())
+                .thenThrow(mockException())
+                .thenThrow(mockException())
+                .thenThrow(mockException())
+                .thenThrow(mockException())
+                .thenThrow(mockException())
+                .thenThrow(mockException())
+                .thenThrow(mockException())
+                .thenThrow(mockException())
+                .thenThrow(mockException());
+
+            reindexHelper.reindexIndex("src", "dest", 10L, listener);
+
+            verify(listener).onFailure(any(RuntimeException.class));
+            verify(listener, never()).onSuccess();
+        }
+
+        @Test
+        void shouldRecoverIfTaskAppearsBeforeMaxRetries() throws IOException {
+            mockReindexSubmitResponse("node:1");
+            String done = "{\"completed\":true,\"response\":{\"total\":1,\"created\":1,"
+                + "\"updated\":0,\"batches\":1,\"failures\":[]}}";
+
+            when(restClient.performRequest(any(Request.class)))
+                .thenReturn(httpResponse)
+                .thenThrow(mockException())
+                .thenThrow(mockException())
+                .thenReturn(mockTaskResponse(done));
+
+            reindexHelper.reindexIndex("src", "dest", 10L, listener);
+
+            verify(listener).onSuccess();
+            verify(listener, never()).onFailure(any());
+        }
+    }
+
+    @Nested
+    class CallbackSafety {
+
+        @Test
+        void shouldNotPropagateExceptionFromOnSuccessCallback() throws IOException {
+            mockReindexSubmitResponse("node:1");
+            String done = "{\"completed\":true,\"response\":{\"total\":1,\"created\":1,"
+                + "\"updated\":0,\"batches\":1,\"failures\":[]}}";
+
+            when(restClient.performRequest(any(Request.class)))
+                .thenReturn(httpResponse)
+                .thenReturn(mockTaskResponse(done));
+
+            org.mockito.Mockito.doThrow(new RuntimeException("callback blew up")).when(listener).onSuccess();
+
+            reindexHelper.reindexIndex("src", "dest", 10L, listener);
+        }
+
+        @Test
+        void shouldNotPropagateExceptionFromOnFailureCallback() throws IOException {
+            mockReindexSubmitResponse("node:1");
+            String taskError = "{\"completed\":true,\"error\":{\"type\":\"exception\",\"reason\":\"bad\"}}";
+
+            when(restClient.performRequest(any(Request.class)))
+                .thenReturn(httpResponse)
+                .thenReturn(mockTaskResponse(taskError));
+
+            org.mockito.Mockito.doThrow(new RuntimeException("callback blew up")).when(listener).onFailure(any());
+
+            reindexHelper.reindexIndex("src", "dest", 10L, listener);
+        }
+    }
+
+    @Nested
+    class AsyncExecutor {
+
+        @Test
+        void shouldUseProvidedExecutor() throws IOException {
+            Executor mockExec = mock(Executor.class);
+            doNothing().when(mockExec).execute(any(Runnable.class));
+
+            reindexHelper = new ReindexHelper(restClient, config, mockExec);
+            mockReindexSubmitResponse("node:1");
+            when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
+
+            reindexHelper.reindexIndex("src", "dest", 10L, listener);
+
+            verify(mockExec).execute(any(Runnable.class));
+        }
+
+        @Test
+        void shouldCreateDefaultAsyncExecutor() {
+            Executor executor = reindexHelper.asyncExecutor();
+
+            assertThat(executor)
+                .isNotNull()
+                .isInstanceOf(org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor.class);
+        }
     }
 }
