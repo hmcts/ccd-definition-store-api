@@ -37,8 +37,8 @@
             {
               "organisationProfileId" : "GOVERNMENT_ORGANISATION_PROFILE",
               "accessTypeId" : "GA_OGD",
-              "accessMandatory" : true,
-              "accessDefault" : true,
+              "accessMandatory" : false,
+              "accessDefault" : false,
               "display" : true,
               "description" : "BEFTA GA OGD Respondent for Org description2",
               "hint" : "BEFTA GA OGD Respondent for Org hint2",
@@ -51,7 +51,7 @@
                 "organisationalRoleName" : "CaseProfessionalGroupAccess_Org_Role",
                 "groupRoleName" : null,
                 "caseGroupIdTemplate" : null,
-                "groupAccessEnabled" : true
+                "groupAccessEnabled" : false
               }, {
                 "caseTypeId" : "FT_CaseProfessionalGroupAccess",
                 "organisationalRoleName" : "CaseProfessionalGroupAccess_Org_Role",
@@ -63,8 +63,8 @@
             {
               "organisationProfileId" : "SOLICITOR_PROFILE",
               "accessTypeId" : "GA_SOLICITOR",
-              "accessMandatory" : true,
-              "accessDefault" : true,
+              "accessMandatory" : false,
+              "accessDefault" : false,
               "display" : true,
               "description" : "BEFTA GA Solicitor Respondent for Org description",
               "hint" : "BEFTA GA Solicitor Respondent for Org hint",

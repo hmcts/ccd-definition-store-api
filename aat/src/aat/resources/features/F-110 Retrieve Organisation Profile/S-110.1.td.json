@@ -33,8 +33,8 @@
             {
             "organisationProfileId" : "SOLICITOR_PROFILE",
             "accessTypeId" : "GA_SOLICITOR",
-            "accessMandatory" : true,
-            "accessDefault" : true,
+            "accessMandatory" : false,
+            "accessDefault" : false,
             "display" : true,
             "description" : "BEFTA GA Solicitor Respondent for Org description",
             "hint" : "BEFTA GA Solicitor Respondent for Org hint",
@@ -67,4 +67,3 @@
     }
   }
 }
-
