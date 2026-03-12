@@ -107,3 +107,4 @@ elasticsearch:
     '[@version]': ${elasticsearch.elasticMappings.disabled}
     index_id: ${elasticsearch.elasticMappings.disabled}
   securityClassificationMapping: ${elasticsearch.elasticMappings.defaultKeywordWithoutNormalizer}
+  batchSize: ${ELASTIC_SEARCH_SOURCE_BATCH_SIZE:100}
