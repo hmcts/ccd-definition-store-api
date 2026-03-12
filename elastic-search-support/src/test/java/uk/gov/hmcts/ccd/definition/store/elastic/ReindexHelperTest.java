@@ -16,6 +16,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 
+import org.apache.http.StatusLine;
+import org.apache.http.entity.StringEntity;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -72,8 +75,21 @@ class ReindexHelperTest {
         return resp;
     }
 
-    private ResponseException mockException() {
-        return mock(ResponseException.class);
+    private ResponseException mock404() {
+        return mock404("task not found");
+    }
+
+    private ResponseException mock404(String body) {
+        ResponseException ex = mock(ResponseException.class);
+        Response resp = mock(Response.class);
+        StatusLine statusLine = mock(StatusLine.class);
+
+        when(statusLine.getStatusCode()).thenReturn(404);
+        when(resp.getStatusLine()).thenReturn(statusLine);
+        when(resp.getEntity()).thenReturn(new StringEntity(body, StandardCharsets.UTF_8));
+        when(ex.getResponse()).thenReturn(resp);
+
+        return ex;
     }
 
     @Nested
@@ -252,21 +268,39 @@ class ReindexHelperTest {
 
             when(restClient.performRequest(any(Request.class)))
                 .thenReturn(httpResponse)
-                .thenThrow(mockException())
-                .thenThrow(mockException())
-                .thenThrow(mockException())
-                .thenThrow(mockException())
-                .thenThrow(mockException())
-                .thenThrow(mockException())
-                .thenThrow(mockException())
-                .thenThrow(mockException())
-                .thenThrow(mockException())
-                .thenThrow(mockException());
+                .thenThrow(mock404())
+                .thenThrow(mock404())
+                .thenThrow(mock404())
+                .thenThrow(mock404())
+                .thenThrow(mock404())
+                .thenThrow(mock404())
+                .thenThrow(mock404())
+                .thenThrow(mock404())
+                .thenThrow(mock404())
+                .thenThrow(mock404());
 
             reindexHelper.reindexIndex("src", "dest", 10L, listener);
 
             verify(listener).onFailure(any(RuntimeException.class));
             verify(listener, never()).onSuccess();
+        }
+
+        @Test
+        void shouldTreatCompletedWithoutStoredResultsAsSuccess() throws IOException {
+            mockReindexSubmitResponse("node:1");
+            String notStoredBody = "{\"error\":{\"root_cause\":[{\"type\":\"resource_not_found_exception\","
+                + "\"reason\":\"task [node:1] isn't running and hasn't stored its results\"}],"
+                + "\"type\":\"resource_not_found_exception\","
+                + "\"reason\":\"task [node:1] isn't running and hasn't stored its results\"},\"status\":404}";
+
+            when(restClient.performRequest(any(Request.class)))
+                .thenReturn(httpResponse)
+                .thenThrow(mock404(notStoredBody));
+
+            reindexHelper.reindexIndex("src", "dest", 10L, listener);
+
+            verify(listener).onSuccess();
+            verify(listener, never()).onFailure(any());
         }
 
         @Test
@@ -277,8 +311,8 @@ class ReindexHelperTest {
 
             when(restClient.performRequest(any(Request.class)))
                 .thenReturn(httpResponse)
-                .thenThrow(mockException())
-                .thenThrow(mockException())
+                .thenThrow(mock404())
+                .thenThrow(mock404())
                 .thenReturn(mockTaskResponse(done));
 
             reindexHelper.reindexIndex("src", "dest", 10L, listener);

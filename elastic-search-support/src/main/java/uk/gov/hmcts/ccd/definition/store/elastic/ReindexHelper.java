@@ -2,10 +2,12 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.Response;
+import org.elasticsearch.client.ResponseException;
 import org.elasticsearch.client.RestClient;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
@@ -25,6 +27,7 @@ public class ReindexHelper {
     private Executor executor = asyncExecutor();
     private static final String FAILURES = "failures";
     private static final int MAX_TASK_NOT_FOUND_RETRIES = 10;
+    private static final String COMPLETED_TASK = "isn't running and hasn't stored its results";
 
     public ReindexHelper(RestClient restClient, CcdElasticSearchProperties config) {
         this(restClient, config,null);
@@ -143,9 +146,26 @@ public class ReindexHelper {
             String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
             JsonNode root = mapper.readTree(responseBody);
             return Optional.ofNullable(root);
-        } catch (Exception re) {
-            log.error("Error while fetching task response", re);
-            return Optional.empty();
+        } catch (ResponseException re) {
+            int statusCode = re.getResponse().getStatusLine().getStatusCode();
+            if (statusCode == 404) {
+                String body = EntityUtils.toString(re.getResponse().getEntity(), StandardCharsets.UTF_8);
+                if (body != null && body.contains(COMPLETED_TASK)) {
+                    log.info("Task {} completed before results could be retrieved — treating as successful", taskId);
+                    ObjectNode synthetic = mapper.createObjectNode();
+                    synthetic.put("completed", true);
+                    synthetic.putObject("response").put("total", 0).putArray("failures");
+                    return Optional.of(synthetic);
+                }
+                log.warn("Task {} returned 404: {}", taskId, body);
+                return Optional.empty();
+            }
+            throw re;
+        } catch (IOException ioe) {
+            throw ioe;
+        } catch (Exception e) {
+            log.error("Unexpected error fetching task response for task {}", taskId, e);
+            throw new IOException("Failed to fetch task response", e);
         }
     }
 
