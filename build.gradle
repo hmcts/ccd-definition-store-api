@@ -55,7 +55,7 @@ ext {
     gsonVersion = '2.13.2'
     elasticSearchVersion = '7.17.29'
     testcontainersVersion = '1.21.4'
-    ccdTestDefinitionVersion = '7.27.7-prerelease-CME-537'
+    ccdTestDefinitionVersion = '7.26.0-SNAPSHOT-CCD-7049_3'
     beftaFwVersion = '9.2.4'
     limits = [
             'instruction': 99,
@@ -330,6 +330,12 @@ subprojects { subproject ->
             doLast {
                 def report = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
                 logger.lifecycle("Checking coverage results: ${report}")
+                def htmlIndex = file("${buildDir}/reports/jacoco/html/index.html")
+                if (htmlIndex.exists()) {
+                    logger.lifecycle("JaCoCo HTML report: file://${htmlIndex.absolutePath}")
+                } else {
+                    logger.lifecycle("JaCoCo HTML report not found at: ${htmlIndex.absolutePath}")
+                }
 
                 def parser = new XmlParser()
                 parser.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false)
@@ -475,6 +481,19 @@ task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
             outputLocation = file("${buildDir}/reports/jacoco/jacocoTestReport.xml")
         }
     }
+
+    doLast {
+        def htmlIndex = file("${buildDir}/reports/jacoco/html/index.html")
+        if (htmlIndex.exists()) {
+            logger.lifecycle("Aggregated JaCoCo HTML report: file://${htmlIndex.absolutePath}")
+        } else {
+            logger.lifecycle("Aggregated JaCoCo HTML report not found at: ${htmlIndex.absolutePath}")
+        }
+    }
+}
+
+tasks.named('build') {
+    finalizedBy(tasks.named('codeCoverageReport'))
 }
 
 // for cnp pipeline
@@ -521,6 +540,15 @@ task runRemoteDemo(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     doFirst() {
         configRemoteRunTask(it, 'demo')
+    }
+}
+
+gradle.buildFinished { result ->
+    def aggregatedIndex = file("${buildDir}/reports/jacoco/html/index.html")
+    if (aggregatedIndex.exists()) {
+        logger.lifecycle("Aggregated JaCoCo HTML report: file://${aggregatedIndex.absolutePath}")
+    } else {
+        logger.lifecycle("Aggregated JaCoCo HTML report not found at: ${aggregatedIndex.absolutePath}")
     }
 }
 
