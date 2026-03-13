@@ -186,3 +186,4 @@ withPipeline(type, product, app) {
 def copyIgnore(filePath, destinationDir) {
   steps.sh("cp -R '${filePath}' '${destinationDir}' || :")
 }
+
