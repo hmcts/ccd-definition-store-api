@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
-import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch.core.CountResponse;
@@ -44,7 +43,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     private final CcdElasticSearchProperties config;
     private final ElasticsearchClient elasticClient;
-    private final ElasticsearchAsyncClient elasticAsyncClient;
     private final ElasticsearchClientFactory clientFactory;
     private final Executor reindexExecutor;
 
@@ -54,7 +52,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         this.config = config;
         this.clientFactory = clientFactory;
         this.elasticClient = clientFactory.createClient();
-        this.elasticAsyncClient = clientFactory.createAsyncClient();
         this.reindexExecutor = reindexExecutor;
     }
 
