@@ -50,8 +50,13 @@ public class ReindexService {
         log.info("case mapping: {}", caseMapping);
         log.info("Reindex process for case type {} is started, Time {}",
             newIndexName, System.currentTimeMillis());
-        elasticClient.setIndexReadOnly(baseIndexName, true);
-        elasticClient.createIndexAndMapping(newIndexName, caseMapping);
+        try {
+            elasticClient.createIndexAndMapping(newIndexName, caseMapping);
+            elasticClient.setIndexReadOnly(indexName, true);
+        } catch (Exception e) {
+            onFailure(e, elasticClient, newIndexName, indexName);
+            throw e;
+        }
 
         //initiate reindexing
         String taskId = handleReindexing(elasticClient,
@@ -63,8 +68,10 @@ public class ReindexService {
         log.info("task id returned from the import: {}", event.getTaskId());
     }
 
-    private String handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
-                                    String oldIndex, String newIndex,
+    private String handleReindexing(HighLevelCCDElasticClient elasticClient,
+                                    String baseIndexName,
+                                    String oldIndex,
+                                    String newIndex,
                                     boolean deleteOldIndex) {
 
         return elasticClient.reindexData(oldIndex, newIndex, new ReindexListener() {
@@ -72,19 +79,12 @@ public class ReindexService {
             public void onSuccess() {
                 try (elasticClient; HighLevelCCDElasticClient highLevelCCDElasticClient = clientFactory.getObject()) {
                     //if success set writable and update alias to new index
-                    log.info("updating alias from {} to {}", oldIndex, newIndex);
-                    highLevelCCDElasticClient.setIndexReadOnly(baseIndexName, false);
-                    highLevelCCDElasticClient.updateAlias(baseIndexName, oldIndex, newIndex);
-                    // After reindexAsync completes:
-                    highLevelCCDElasticClient.refresh(newIndex);
-                    long targetIndexDocumentCount = elasticClient.countDocuments(newIndex);
-                    log.info("Successfully completed reindexing. New index '{}' contains {} cases/documents",
-                        newIndex, targetIndexDocumentCount);
-                    if (deleteOldIndex) {
-                        log.info("deleting old index {}", oldIndex);
-                        highLevelCCDElasticClient.removeIndex(oldIndex);
-                    }
-                    log.info("Reindex process for case type {} completed", newIndex);
+                    ReindexService.onSuccess(highLevelCCDElasticClient,
+                        oldIndex,
+                        newIndex,
+                        baseIndexName,
+                        elasticClient,
+                        deleteOldIndex);
                 } catch (IOException e) {
                     throw new CompletionException("Failed cleanup after reindexing failure for index " + newIndex, e);
                 }
@@ -94,19 +94,47 @@ public class ReindexService {
             public void onFailure(Exception ex) {
                 try (elasticClient; HighLevelCCDElasticClient highLevelCCDElasticClient = clientFactory.getObject()) {
                     //if failed delete new index, set old index writable
-                    log.error("Reindex process for case type {} is failed, Time {}",
-                        newIndex, System.currentTimeMillis());
-                    log.error("reindexing failed", ex);
-                    highLevelCCDElasticClient.removeIndex(newIndex);
-                    log.info("{} deleted", newIndex);
-                    highLevelCCDElasticClient.setIndexReadOnly(oldIndex, false);
-                    log.info("{} set to writable", oldIndex);
+                    ReindexService.onFailure(ex, highLevelCCDElasticClient, newIndex, baseIndexName);
                 } catch (IOException e) {
                     throw new CompletionException("Failed cleanup after reindexing failure for index " + newIndex, e);
                 }
                 throw new CompletionException(ex);
             }
         });
+    }
+
+    private static void onFailure(Exception ex,
+                                  HighLevelCCDElasticClient highLevelCCDElasticClient,
+                                  String newIndex,
+                                  String oldIndex) throws IOException {
+        log.error("Reindex process for case type {} is failed, Time {}",
+            newIndex, System.currentTimeMillis());
+        log.error("reindexing failed", ex);
+        highLevelCCDElasticClient.removeIndex(newIndex);
+        log.info("{} deleted", newIndex);
+        highLevelCCDElasticClient.setIndexReadOnly(oldIndex, false);
+        log.info("{} set to writable", oldIndex);
+    }
+
+    private static void onSuccess(HighLevelCCDElasticClient highLevelCCDElasticClient,
+                                  String oldIndex,
+                                  String newIndex,
+                                  String baseIndexName,
+                                  HighLevelCCDElasticClient elasticClient,
+                                  boolean deleteOldIndex) throws IOException {
+        log.info("updating alias from {} to {}", oldIndex, newIndex);
+        highLevelCCDElasticClient.setIndexReadOnly(oldIndex, false);
+        highLevelCCDElasticClient.updateAlias(baseIndexName, oldIndex, newIndex);
+        // After reindexAsync completes:
+        highLevelCCDElasticClient.refresh(newIndex);
+        long targetIndexDocumentCount = elasticClient.countDocuments(newIndex);
+        log.info("Successfully completed reindexing. New index '{}' contains {} cases/documents",
+            newIndex, targetIndexDocumentCount);
+        if (deleteOldIndex) {
+            log.info("deleting old index {}", oldIndex);
+            highLevelCCDElasticClient.removeIndex(oldIndex);
+        }
+        log.info("Reindex process for case type {} completed", newIndex);
     }
 
     String incrementIndexNumber(String indexName) {

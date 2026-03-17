@@ -85,11 +85,13 @@ class ReindexServiceTest {
         DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, true);
         reindexService.asyncReindex(event, baseIndexName, caseA);
 
-        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, true);
+        // index is set read-only on the concrete index name, not the alias
+        verify(ccdElasticClient).setIndexReadOnly(caseTypeName, true);
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).createIndexAndMapping(incrementedCaseTypeName, "caseMapping");
         verify(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
-        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
+        // on success we reset read-only on the old concrete index
+        verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
         verify(ccdElasticClient).updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
 
         verify(ccdElasticClient).removeIndex(caseTypeName);
@@ -115,13 +117,30 @@ class ReindexServiceTest {
         DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, false);
         reindexService.asyncReindex(event, baseIndexName, caseA);
 
-        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, true);
+        verify(ccdElasticClient).setIndexReadOnly(caseTypeName, true);
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).createIndexAndMapping(incrementedCaseTypeName, "caseMapping");
         verify(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
-        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
+        verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
         verify(ccdElasticClient).updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
         verify(ccdElasticClient, never()).removeIndex(caseTypeName);
+    }
+
+    @Test
+    void shouldCleanupWhenCreateIndexAndMappingFails() throws IOException {
+        mockAliasResponse();
+        when(ccdElasticClient.createIndexAndMapping(anyString(), anyString()))
+            .thenThrow(new IOException("put mapping failed"));
+
+        DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, true);
+
+        assertThrows(IOException.class,
+            () -> reindexService.asyncReindex(event, baseIndexName, caseA));
+
+        verify(ccdElasticClient).createIndexAndMapping(incrementedCaseTypeName, "caseMapping");
+        verify(ccdElasticClient).removeIndex(incrementedCaseTypeName);
+        verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
+        verify(ccdElasticClient, never()).reindexData(anyString(), anyString(), any());
     }
 
     @Test
@@ -139,7 +158,8 @@ class ReindexServiceTest {
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
         verify(ccdElasticClient).removeIndex(incrementedCaseTypeName);
-        verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
+        // on reindex failure we reset read-only using the alias name
+        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
         //using a single mock, so close() is called twice (in event listener and reindexing failure handler)
         verify(ccdElasticClient, atLeast(2)).close();
     }
