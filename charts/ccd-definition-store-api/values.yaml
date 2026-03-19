@@ -8,7 +8,7 @@ elastic:
   enabled: false
 
 java:
-  image: 'hmctspublic.azurecr.io/ccd/definition-store-api:latest'
+  image: 'hmctsprod.azurecr.io/ccd/definition-store-api:latest'
   ingressHost: ccd-definition-store-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
   applicationPort: 4451
   aadIdentityName: ccd
@@ -72,5 +72,7 @@ java:
     IDAM_USER_URL: https://idam-web-public.{{ .Values.global.environment }}.platform.hmcts.net
     IDAM_S2S_URL: http://rpe-service-auth-provider-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
     USER_PROFILE_HOST: http://ccd-user-profile-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
+    # Enforced JWT issuer. This must match the exact iss claim in live IDAM access tokens.
+    # Do not infer it from the discovery URL; verify it from a real token for the target environment.
     OIDC_ISSUER: https://forgerock-am.service.core-compute-idam-{{ .Values.global.environment }}.internal:8443/openam/oauth2/hmcts
     TS_TRANSLATION_SERVICE_HOST: http://ts-translation-service-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal

@@ -43,6 +43,20 @@ task highLevelDataSetup(type: JavaExec) {
     jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
 }
 
+task verifyFunctionalTestJwtIssuer(type: JavaExec) {
+    dependsOn aatClasses
+
+    description = 'Verifies the functional/smoke test token issuer matches OIDC_ISSUER'
+    group = 'Verification'
+
+    onlyIf {
+        System.getenv('VERIFY_OIDC_ISSUER')?.toBoolean()
+    }
+
+    mainClass = "uk.gov.hmcts.ccd.definitionstore.befta.JwtIssuerVerificationApp"
+    classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
+}
+
 task smoke(type: Test) {
     description = 'Executes smoke tests against the CCD Definition Store Instance just deployed'
     setTestClassesDirs(sourceSets.aat.output.classesDirs)
@@ -52,7 +66,7 @@ task smoke(type: Test) {
         includeTags 'smoke'
     }
 
-    dependsOn aatClasses
+    dependsOn aatClasses, verifyFunctionalTestJwtIssuer
 
     new File("$buildDir/test-results/test").mkdirs()
     copy {
@@ -98,7 +112,7 @@ task functional(type: Test) {
     include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
     useJUnitPlatform()
 
-    dependsOn aatClasses
+    dependsOn aatClasses, verifyFunctionalTestJwtIssuer
 
     new File("$buildDir/test-results/test").mkdirs()
     copy {
@@ -191,4 +205,3 @@ jar {
     failWhenNoMutations = false
     detectInlinedCode = true
 }*/
-
