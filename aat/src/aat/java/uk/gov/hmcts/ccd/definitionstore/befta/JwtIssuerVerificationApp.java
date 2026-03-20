@@ -27,7 +27,7 @@ public final class JwtIssuerVerificationApp {
 
     private static String resolveIssuerFromRealToken(AATHelper aat) {
         String accessToken = aat.getIdamHelper()
-            .getIdamOauth2Token(aat.getCaseworkerAutoTestEmail(), aat.getCaseworkerAutoTestPassword());
+            .getIdamOauth2Token(aat.getImporterAutoTestEmail(), aat.getImporterAutoTestPassword());
 
         try {
             String issuer = SignedJWT.parse(accessToken).getJWTClaimsSet().getIssuer();
