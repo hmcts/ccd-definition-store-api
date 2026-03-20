@@ -121,6 +121,9 @@ Spring application entry point and configuration.
 The functional tests are located in `aat` folder. The tests are written using 
 befta-fw library. To find out more about BEFTA Framework, see the repository and its README [here](https://github.com/hmcts/befta-fw).
 
+### Codex Security Skill
+For JWT issuer validation, Spring Security, IDAM/OIDC, and related security changes in this repo, you can explicitly instruct Codex to use the skill at `docs/skills/security/SKILL.md`.
+
 #### To Run the Functional Tests (FT)
 
 #####  All Functional Tests
@@ -149,4 +152,3 @@ To verify the live OIDC issuer locally, export `VERIFY_OIDC_ISSUER=true` togethe
 ## LICENSE
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
-
