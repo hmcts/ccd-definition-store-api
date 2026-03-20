@@ -36,7 +36,7 @@ tasks.named("processAatResources") {
 }
 
 task highLevelDataSetup(type: JavaExec) {
-    dependsOn aatClasses, verifyFunctionalTestJwtIssuer
+    dependsOn aatClasses, "verifyFunctionalTestJwtIssuer"
 
     mainClass = "uk.gov.hmcts.ccd.definitionstore.befta.HighLevelDataSetupApp"
     classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
