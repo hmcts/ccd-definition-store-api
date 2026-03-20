@@ -1,3 +1,7 @@
 # Agent Instructions
 
-For JWT issuer validation, Spring Security, IDAM/OIDC, Helm/Jenkins issuer settings, and related regression testing, follow `docs/skills/security/SKILL.md`.
+## Available skills
+
+- `docs/skills/security/SKILL.md`
+  Use for JWT, IDAM, Spring Security, and related regression-test work in this repo.
+  Prompt cue: `Use docs/skills/security/SKILL.md`

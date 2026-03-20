@@ -117,12 +117,12 @@ Secured endpoint and specific logic for importing case definition as an Excel sp
 
 Spring application entry point and configuration.
 
+### Codex Skill
+Repo-local workflow docs are indexed in `AGENTS.md`.
+
 ### Functional Tests
 The functional tests are located in `aat` folder. The tests are written using 
 befta-fw library. To find out more about BEFTA Framework, see the repository and its README [here](https://github.com/hmcts/befta-fw).
-
-### Codex Security Skill
-For JWT issuer validation, Spring Security, IDAM/OIDC, and related security changes in this repo, you can explicitly instruct Codex to use the skill at `docs/skills/security/SKILL.md`.
 
 #### To Run the Functional Tests (FT)
 
