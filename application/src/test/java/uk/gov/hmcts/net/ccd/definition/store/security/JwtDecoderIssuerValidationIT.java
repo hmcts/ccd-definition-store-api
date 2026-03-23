@@ -27,6 +27,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.util.Date;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -61,8 +62,10 @@ class JwtDecoderIssuerValidationIT {
 
     @Test
     void shouldRejectJwtFromUnexpectedIssuer() throws Exception {
-        assertThrows(JwtValidationException.class,
+        JwtValidationException exception = assertThrows(JwtValidationException.class,
             () -> jwtDecoder.decode(buildToken(INVALID_ISSUER, Instant.now().plusSeconds(300))));
+
+        assertThat(exception.getMessage()).contains("iss");
     }
 
     @Test

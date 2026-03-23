@@ -32,6 +32,7 @@
 ## Coverage
 
 - Unit coverage in `application/src/test/java/uk/gov/hmcts/ccd/definition/store/SecurityConfigurationTest.java` checks valid issuer, invalid issuer, and expired token behaviour at validator level.
+- Decoder exception coverage in `application/src/test/java/uk/gov/hmcts/ccd/definition/store/security/JwtDecoderExceptionTest.java` checks decoder-level issuer and expiry failures without the broader Spring integration harness.
 - Integration coverage in `application/src/test/java/uk/gov/hmcts/net/ccd/definition/store/security/JwtDecoderIssuerValidationIT.java` exercises the active decoder against WireMock-backed OIDC discovery and JWKS responses.
 
 ## Test and pipeline verification
