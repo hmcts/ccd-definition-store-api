@@ -1,10 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.integration;
 
-import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchBaseTest;
-import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
-import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -16,18 +12,13 @@ import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
 import java.io.IOException;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationEventPublisher;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
@@ -36,27 +27,7 @@ import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textField
 class CaseMappingGenerationIT extends ElasticsearchBaseTest {
 
     @Autowired
-    private ElasticDefinitionImportListener listener;
-
-    @Autowired
     private ApplicationEventPublisher publisher;
-
-    @Autowired
-    private CcdElasticSearchProperties config;
-
-    @Autowired
-    private CaseMappingGenerator mappingGenerator;
-
-    @MockBean
-    private HighLevelCCDElasticClient client;
-
-    @Mock
-    private ObjectFactory<HighLevelCCDElasticClient> clientObjectFactory;
-
-    @BeforeEach
-    void setUp() {
-        when(clientObjectFactory.getObject()).thenReturn(client);
-    }
 
     @Test
     void testListeningToDefinitionImportedEvent() throws IOException {
@@ -64,8 +35,7 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
 
         publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        verify(client).createIndex(anyString(), anyString());
-        verify(client).upsertMapping(anyString(), anyString());
+        assertThat(getElasticsearchIndices("caseTypeA"), containsString("casetypea_cases-000001"));
     }
 
     @Test
@@ -74,8 +44,7 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
 
         publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        verify(client).createIndex(anyString(), anyString());
-        verify(client).upsertMapping(anyString(), anyString());
+        assertThat(getElasticsearchIndices("caseTypeA"), containsString("casetypea_cases-000001"));
     }
 
     private CaseTypeEntity createCaseType() {
@@ -137,4 +106,5 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
         collectionField.setFieldType(collectionFieldType);
         return collectionField;
     }
+
 }
