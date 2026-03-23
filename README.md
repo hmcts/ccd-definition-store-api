@@ -117,8 +117,8 @@ Secured endpoint and specific logic for importing case definition as an Excel sp
 
 Spring application entry point and configuration.
 
-### Codex Skill
-Repo-local workflow docs are indexed in `AGENTS.md`.
+### Codex Workflow Docs
+See `AGENTS.md` for available repo-local skills.
 
 ### Functional Tests
 The functional tests are located in `aat` folder. The tests are written using 

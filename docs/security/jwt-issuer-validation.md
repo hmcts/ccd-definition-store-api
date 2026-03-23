@@ -37,7 +37,8 @@
 ## Test and pipeline verification
 
 - Focused application tests cover valid issuer, invalid issuer, and expired token cases.
-- A single build-integrated verifier acquires a real IDAM access token and compares its `iss` claim to `OIDC_ISSUER` before smoke and functional runs.
+- A single build-integrated verifier acquires a real IDAM access token and compares its `iss` claim to `OIDC_ISSUER` before authenticated setup, smoke, and functional runs.
+- The verifier currently uses the importer test credentials, matching this repo's existing setup/test path.
 - Local runs skip this live check unless `VERIFY_OIDC_ISSUER=true`.
 - Jenkins sets `VERIFY_OIDC_ISSUER=true` and exports `OIDC_ISSUER` explicitly for the verifier.
 - This is required because the verifier runs in the build container, where Helm-injected runtime environment variables are not directly visible.
@@ -47,4 +48,5 @@
 - Do not invent `OIDC_ISSUER`.
 - Resolve it from a real access token for the target environment and export that exact value into the test job.
 - If Helm or deployment values already define `OIDC_ISSUER`, keep them aligned with the resolver output. A mismatch now fails the build-integrated verifier.
+- The current enforced issuer value in this repo was verified from a real pipeline token and must stay aligned between Jenkins and deployment config.
 - If temporary multi-issuer support is ever needed, add an explicit allow-list validator rather than disabling issuer validation again.
