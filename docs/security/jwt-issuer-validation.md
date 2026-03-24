@@ -51,3 +51,26 @@
 - If Helm or deployment values already define `OIDC_ISSUER`, keep them aligned with the resolver output. A mismatch now fails the build-integrated verifier.
 - The current enforced issuer value in this repo was verified from a real pipeline token and must stay aligned between Jenkins and deployment config.
 - If temporary multi-issuer support is ever needed, add an explicit allow-list validator rather than disabling issuer validation again.
+
+## How to derive `OIDC_ISSUER`
+
+- Do not guess the issuer from the public discovery URL alone.
+- Decode only the JWT payload from a real access token for the target environment and inspect the `iss` claim.
+- Do not store or document full bearer tokens. Record only the derived issuer value.
+
+Example:
+
+```bash
+TOKEN='eyJ...'
+PAYLOAD=$(printf '%s' "$TOKEN" | cut -d '.' -f2)
+python3 - <<'PY' "$PAYLOAD"
+import base64, json, sys
+payload = sys.argv[1]
+payload += '=' * (-len(payload) % 4)
+print(json.loads(base64.urlsafe_b64decode(payload))["iss"])
+PY
+```
+
+- JWTs are `header.payload.signature`.
+- The second segment is base64url-encoded JSON.
+- This decodes the payload only. It does not verify the signature.
