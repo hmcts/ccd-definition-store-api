@@ -27,6 +27,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.client.ElasticsearchClientFacto
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 @Configuration
 @ComponentScan("uk.gov.hmcts.ccd.definition.store.elastic")
@@ -76,11 +77,15 @@ public class ElasticSearchConfiguration {
                     .setSocketTimeout(120 * 60000)
             )
             .setHttpClientConfigCallback(httpClientBuilder ->
-                httpClientBuilder.setDefaultIOReactorConfig(
-                    IOReactorConfig.custom()
-                        .setSoKeepAlive(true)
-                        .build()
-                )
+                httpClientBuilder
+                    .setDefaultIOReactorConfig(
+                        IOReactorConfig.custom()
+                            .setSoKeepAlive(true)
+                            .build()
+                    )
+                    .setMaxConnTotal(30)
+                    .setMaxConnPerRoute(10)
+                    .setConnectionTimeToLive(60L, TimeUnit.SECONDS)
             );
     }
 

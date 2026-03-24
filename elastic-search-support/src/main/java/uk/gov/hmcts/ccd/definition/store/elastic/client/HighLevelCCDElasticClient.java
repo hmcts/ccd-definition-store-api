@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
-import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch.core.CountResponse;
@@ -43,7 +42,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     private final CcdElasticSearchProperties config;
     private final ElasticsearchClient elasticClient;
-    private final ElasticsearchAsyncClient elasticAsyncClient;
     private final ElasticsearchClientFactory clientFactory;
     private final Executor reindexExecutor;
 
@@ -53,7 +51,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         this.config = config;
         this.clientFactory = clientFactory;
         this.elasticClient = clientFactory.createClient();
-        this.elasticAsyncClient = clientFactory.createAsyncClient();
         this.reindexExecutor = reindexExecutor;
     }
 
@@ -111,7 +108,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         log.info("creating index {} with alias {}", indexName, alias);
         final String file = (alias.equalsIgnoreCase(GLOBAL_SEARCH))
             ? GLOBAL_SEARCH_CASES_INDEX_SETTINGS_JSON : CASES_INDEX_SETTINGS_JSON;
-        log.info("file: {}", file);
 
         // Load settings from JSON file as a Map
         Map<String, Object> settings = casesIndexSettings(file);
@@ -197,6 +193,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     }
 
     private Map<String, Object> casesIndexSettings(String file) throws IOException {
+        log.info("file: {}", file);
         Map<String, Object> settings;
         try (InputStream inputStream = getClass().getResourceAsStream(file)) {
             if (inputStream == null) {
@@ -231,10 +228,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     public boolean createIndexAndMapping(String indexName, String caseTypeMapping) throws IOException {
         // Load settings from JSON file as a Map
-        Map<String, Object> settings;
-        try (InputStream inputStream = getClass().getResourceAsStream(CASES_INDEX_SETTINGS_JSON)) {
-            settings = new ObjectMapper().readValue(inputStream, Map.class);
-        }
+        Map<String, Object> settings = casesIndexSettings(CASES_INDEX_SETTINGS_JSON);
 
         var createIndexResponse = executeWithRetry(
             client -> client.indices().create(b -> b

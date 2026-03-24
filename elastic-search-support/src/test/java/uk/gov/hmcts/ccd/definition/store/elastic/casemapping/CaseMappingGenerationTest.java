@@ -1,17 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.casemapping;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.ObjectFactory;
-import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
-import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
-import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
-import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
-import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
-import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
+import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchBaseTest;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -23,72 +12,39 @@ import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
 import java.io.IOException;
 
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+
 import static com.google.common.collect.Lists.newArrayList;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
-/**
- * Unit test for definition-import listener behaviour (createIndex / upsertMapping).
- * Does not use Spring context, so it cannot affect other ITs (e.g. SynchronousElasticDefinitionImportListenerIT).
- */
-@ExtendWith(MockitoExtension.class)
-class CaseMappingGenerationTest {
+class CaseMappingGenerationTest extends ElasticsearchBaseTest {
 
-    @Mock
-    private CcdElasticSearchProperties config;
-
-    @Mock
-    private CaseMappingGenerator mappingGenerator;
-
-    @Mock
-    private ObjectFactory<HighLevelCCDElasticClient> clientFactory;
-
-    @Mock
-    private HighLevelCCDElasticClient client;
-
-    @Mock
-    private ElasticsearchErrorHandler elasticsearchErrorHandler;
-
-    @Mock
-    private ReindexService reindexService;
-
-    private ElasticDefinitionImportListener listener;
-
-    @BeforeEach
-    void setUp() throws IOException {
-        listener = new TestDefinitionImportListener(
-            config, mappingGenerator, clientFactory, elasticsearchErrorHandler, reindexService);
-        when(config.getCasesIndexNameFormat()).thenReturn("%s_cases");
-        when(clientFactory.getObject()).thenReturn(client);
-        doReturn(false).when(client).aliasExists(anyString());
-        when(mappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("{}");
-    }
+    @Autowired
+    private ApplicationEventPublisher publisher;
 
     @Test
     void testListeningToDefinitionImportedEvent() throws IOException {
         CaseTypeEntity caseType = createCaseType();
 
-        listener.onDefinitionImported(new DefinitionImportedEvent(newArrayList(caseType)));
+        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        verify(client).createIndex(anyString(), anyString());
-        verify(client).upsertMapping(anyString(), anyString());
+        assertThat(getElasticsearchIndices("caseTypeA"), containsString("casetypea_cases-000001"));
     }
 
     @Test
     void testListeningToDefinitionImportedEventWithDynamicLists() throws IOException {
         CaseTypeEntity caseType = createCaseTypeWithDynamicLists();
 
-        listener.onDefinitionImported(new DefinitionImportedEvent(newArrayList(caseType)));
+        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        verify(client).createIndex(anyString(), anyString());
-        verify(client).upsertMapping(anyString(), anyString());
+        assertThat(getElasticsearchIndices("caseTypeA"), containsString("casetypea_cases-000001"));
     }
 
     private CaseTypeEntity createCaseType() {
@@ -150,19 +106,4 @@ class CaseMappingGenerationTest {
         return collectionField;
     }
 
-    private static final class TestDefinitionImportListener extends ElasticDefinitionImportListener {
-
-        TestDefinitionImportListener(CcdElasticSearchProperties config,
-                                     CaseMappingGenerator mappingGenerator,
-                                     ObjectFactory<HighLevelCCDElasticClient> clientFactory,
-                                     ElasticsearchErrorHandler elasticsearchErrorHandler,
-                                     ReindexService reindexService) {
-            super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler, reindexService);
-        }
-
-        @Override
-        public void onDefinitionImported(DefinitionImportedEvent event) {
-            super.initialiseElasticSearch(event);
-        }
-    }
 }

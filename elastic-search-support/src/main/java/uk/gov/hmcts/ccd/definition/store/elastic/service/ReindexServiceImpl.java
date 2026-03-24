@@ -9,13 +9,13 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
-import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexStatus;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
 
 import java.io.IOException;
@@ -52,82 +52,113 @@ public class ReindexServiceImpl implements ReindexService {
         GetAliasResponse aliasResponse = elasticClient.getAlias(baseIndexName);
         String indexName = aliasResponse.aliases().keySet().iterator().next();
         String newIndexName = incrementIndexNumber(indexName);
-        boolean reindexStarted = false;
 
-        //prepare for db
+        long sourceIndexDocumentCount = elasticClient.countDocuments(indexName);
+        log.info("Begin reindexing. Source index '{}' contains {} cases/documents",
+            indexName, sourceIndexDocumentCount);
         saveEntity(event.isDeleteOldIndex(), caseType, newIndexName);
-
         try {
             //create new index with generated mapping and incremented case type name (no alias update yet)
             String caseMapping = mappingGenerator.generateMapping(caseType);
-            log.debug("case mapping: {}", caseMapping);
-            elasticClient.setIndexReadOnly(baseIndexName, true);
-            elasticClient.createIndexAndMapping(newIndexName, caseMapping);
+            log.info("case mapping: {}", caseMapping);
+            log.info("Reindex process for case type {} is started, Time {}",
+                newIndexName, System.currentTimeMillis());
 
-            //initiate reindexing
-            reindexStarted = true;
-            String taskId = handleReindexing(elasticClient, baseIndexName, indexName, newIndexName,
-                event.isDeleteOldIndex());
-            //dummy value for phase 1
-            event.setTaskId("taskID");
-            log.debug("reindexing successful for case type: {}", caseType.getReference());
-            log.debug("task id returned from the import: {}", event.getTaskId());
+            elasticClient.createIndexAndMapping(newIndexName, caseMapping);
+            elasticClient.setIndexReadOnly(indexName, true);
         } catch (Exception e) {
-            if (!reindexStarted) {
-                updateEntity(newIndexName, e);
-            }
-            throw new ElasticSearchInitialisationException(e);
+            updateEntity(newIndexName, e);
+            onFailure(e, elasticClient, newIndexName, indexName);
+            throw e;
         }
+
+        //initiate reindexing
+        String taskId = handleReindexing(elasticClient,
+            baseIndexName,
+            indexName,
+            newIndexName,
+            event.isDeleteOldIndex());
+        event.setTaskId(taskId);
+        log.info("task id returned from the import: {}", event.getTaskId());
     }
 
-    private String handleReindexing(HighLevelCCDElasticClient elasticClient, String baseIndexName,
-                                  String oldIndexName, String newIndexName,
-                                  boolean deleteOldIndex) {
-        return elasticClient.reindexData(oldIndexName, newIndexName, new ReindexListener() {
+    private String handleReindexing(HighLevelCCDElasticClient elasticClient,
+                                    String baseIndexName,
+                                    String oldIndex,
+                                    String newIndex,
+                                    boolean deleteOldIndex) {
+
+        return elasticClient.reindexData(oldIndex, newIndex, new ReindexListener() {
             @Override
             public void onSuccess(String response) {
                 try (elasticClient; HighLevelCCDElasticClient highLevelCCDElasticClient = clientFactory.getObject()) {
                     //if success set writable and update alias to new index
-                    log.debug("updating alias from {} to {}", oldIndexName, newIndexName);
-                    highLevelCCDElasticClient.setIndexReadOnly(baseIndexName, false);
-                    highLevelCCDElasticClient.updateAlias(baseIndexName, oldIndexName, newIndexName);
-                    // After reindexAsync completes:
-                    highLevelCCDElasticClient.refresh(newIndexName);
-                    if (deleteOldIndex) {
-                        log.debug("deleting old index {}", oldIndexName);
-                        highLevelCCDElasticClient.removeIndex(oldIndexName);
-                    }
+                    ReindexServiceImpl.onSuccess(highLevelCCDElasticClient,
+                        oldIndex,
+                        newIndex,
+                        baseIndexName,
+                        elasticClient,
+                        deleteOldIndex);
+
                     //set success status and end time for db
-                    updateEntity(newIndexName, response);
+                    updateEntity(newIndex, response);
                     log.info("saved reindex entity"
-                             + " metadata for case type {} to DB", baseIndexName);
+                        + " metadata for case type {} to DB", baseIndexName);
+
+                    log.info("Reindex process for case type {} completed", newIndex);
                 } catch (IOException e) {
-                    log.error("failed to clean up after reindexing success", e);
-                    updateEntity(newIndexName, e);
-                    throw new CompletionException(e);
+                    throw new CompletionException("Failed cleanup after reindexing failure for index " + newIndex, e);
                 }
             }
 
             @Override
             public void onFailure(Exception ex) {
                 try (elasticClient; HighLevelCCDElasticClient highLevelCCDElasticClient = clientFactory.getObject()) {
-                    //set failure status, end time and ex for db
-                    updateEntity(newIndexName, ex);
-
+                    updateEntity(newIndex, ex);
                     //if failed delete new index, set old index writable
-                    log.debug("reindexing failed", ex);
-                    highLevelCCDElasticClient.removeIndex(newIndexName);
-                    log.debug("{} deleted", newIndexName);
-                    highLevelCCDElasticClient.setIndexReadOnly(oldIndexName, false);
-                    log.debug("{} set to writable", oldIndexName);
+                    ReindexServiceImpl.onFailure(ex, highLevelCCDElasticClient, newIndex, baseIndexName);
                 } catch (IOException e) {
-                    log.error("failed to clean up after reindexing failure", e);
-                    updateEntity(newIndexName, e);
+                    log.error("Failed cleanup after reindexing failure for index " + newIndex, e);
+                    updateEntity(newIndex, e);
                     throw new CompletionException(e);
                 }
                 throw new CompletionException(ex);
             }
         });
+    }
+
+    private static void onFailure(Exception ex,
+                                  HighLevelCCDElasticClient highLevelCCDElasticClient,
+                                  String newIndex,
+                                  String oldIndex) throws IOException {
+        log.error("Reindex process for case type {} is failed, Time {}",
+            newIndex, System.currentTimeMillis());
+        log.error("reindexing failed", ex);
+
+        highLevelCCDElasticClient.removeIndex(newIndex);
+        log.info("{} deleted", newIndex);
+        highLevelCCDElasticClient.setIndexReadOnly(oldIndex, false);
+        log.info("{} set to writable", oldIndex);
+    }
+
+    private static void onSuccess(HighLevelCCDElasticClient highLevelCCDElasticClient,
+                                  String oldIndex,
+                                  String newIndex,
+                                  String baseIndexName,
+                                  HighLevelCCDElasticClient elasticClient,
+                                  boolean deleteOldIndex) throws IOException {
+        log.info("updating alias from {} to {}", oldIndex, newIndex);
+        highLevelCCDElasticClient.setIndexReadOnly(oldIndex, false);
+        highLevelCCDElasticClient.updateAlias(baseIndexName, oldIndex, newIndex);
+        // After reindexAsync completes:
+        highLevelCCDElasticClient.refresh(newIndex);
+        long targetIndexDocumentCount = elasticClient.countDocuments(newIndex);
+        log.info("Successfully completed reindexing. New index '{}' contains {} cases/documents",
+            newIndex, targetIndexDocumentCount);
+        if (deleteOldIndex) {
+            log.info("deleting old index {}", oldIndex);
+            highLevelCCDElasticClient.removeIndex(oldIndex);
+        }
     }
 
     public String incrementIndexNumber(String indexName) {
@@ -174,7 +205,7 @@ public class ReindexServiceImpl implements ReindexService {
         entity.setJurisdiction(caseType.getJurisdiction().getReference());
         entity.setIndexName(newIndexName);
         entity.setStartTime(LocalDateTime.now());
-        entity.setStatus("STARTED");
+        entity.setStatus(ReindexStatus.STARTED.name());
         return reindexRepository.saveAndFlush(entity);
     }
 
@@ -186,10 +217,10 @@ public class ReindexServiceImpl implements ReindexService {
             throw new IllegalStateException(message);
         }
         log.info("Save to DB successful for case type: {}", newIndexName);
-        reindexEntity.setStatus("SUCCESS");
+        reindexEntity.setStatus(ReindexStatus.SUCCESS.name());
         reindexEntity.setEndTime(LocalDateTime.now());
         reindexEntity.setReindexResponse(response);
-        reindexRepository.save(reindexEntity);
+        reindexRepository.saveAndFlush(reindexEntity);
     }
 
     public void updateEntity(String newIndexName, Exception ex) {
@@ -200,11 +231,11 @@ public class ReindexServiceImpl implements ReindexService {
             return;
         }
         log.info("Persisting FAILED status for index '{}'", newIndexName);
-        reindexEntity.setStatus("FAILED");
+        reindexEntity.setStatus(ReindexStatus.FAILED.name());
         reindexEntity.setEndTime(LocalDateTime.now());
         Throwable rootCause = unwrapCompletionException(ex);
         reindexEntity.setExceptionMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
-        reindexRepository.save(reindexEntity);
+        reindexRepository.saveAndFlush(reindexEntity);
     }
 
     private Throwable unwrapCompletionException(Throwable exc) {

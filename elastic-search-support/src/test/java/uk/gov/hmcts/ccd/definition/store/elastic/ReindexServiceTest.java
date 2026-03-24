@@ -15,7 +15,6 @@ import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
-import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
@@ -47,6 +46,7 @@ import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -78,6 +78,9 @@ class ReindexServiceTest {
     private final String baseIndexName = "casetypea";
     private final String oldIndexName = "casetypea_cases-000001";
     private final String newIndexName = "casetypea_cases-000002";
+    private final String caseTypeName = oldIndexName;
+    private final String incrementedCaseTypeName = newIndexName;
+
 
     @BeforeEach
     void setUp() {
@@ -100,14 +103,16 @@ class ReindexServiceTest {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(new ReindexEntity()));
         reindexService.asyncReindex(event, baseIndexName, caseA);
 
-        verify(reindexRepository).saveAndFlush(any(ReindexEntity.class));
-        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, true);
+        // index is set read-only on the concrete index name, not the alias
+        verify(ccdElasticClient).setIndexReadOnly(caseTypeName, true);
+        verify(reindexRepository, times(2)).saveAndFlush(any(ReindexEntity.class));
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).createIndexAndMapping(newIndexName, "caseMapping");
         verify(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any());
-        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
+        // on success we reset read-only on the old concrete index
+        verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
         verify(ccdElasticClient).updateAlias(baseIndexName, oldIndexName, newIndexName);
-        verify(reindexRepository).save(any(ReindexEntity.class));
+        verify(reindexRepository, times(2)).saveAndFlush(any(ReindexEntity.class));
 
         verify(ccdElasticClient).removeIndex(oldIndexName);
         ArgumentCaptor<String> oldIndexCaptor = ArgumentCaptor.forClass(String.class);
@@ -123,15 +128,32 @@ class ReindexServiceTest {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(new ReindexEntity()));
         reindexService.asyncReindex(event, baseIndexName, caseA);
 
-        verify(reindexRepository).saveAndFlush(any(ReindexEntity.class));
-        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, true);
+        verify(reindexRepository, times(2)).saveAndFlush(any(ReindexEntity.class));
+        verify(ccdElasticClient).setIndexReadOnly(caseTypeName, true);
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).createIndexAndMapping(newIndexName, "caseMapping");
         verify(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any());
-        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
+        verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
         verify(ccdElasticClient).updateAlias(baseIndexName, oldIndexName, newIndexName);
-        verify(reindexRepository).save(any(ReindexEntity.class));
+        verify(reindexRepository, times(2)).saveAndFlush(any(ReindexEntity.class));
         verify(ccdElasticClient, never()).removeIndex(oldIndexName);
+    }
+
+    @Test
+    void shouldCleanupWhenCreateIndexAndMappingFails() throws IOException {
+        mockAliasResponse();
+        when(ccdElasticClient.createIndexAndMapping(anyString(), anyString()))
+            .thenThrow(new IOException("put mapping failed"));
+
+        DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, true);
+
+        assertThrows(IOException.class,
+            () -> reindexService.asyncReindex(event, baseIndexName, caseA));
+
+        verify(ccdElasticClient).createIndexAndMapping(incrementedCaseTypeName, "caseMapping");
+        verify(ccdElasticClient).removeIndex(incrementedCaseTypeName);
+        verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
+        verify(ccdElasticClient, never()).reindexData(anyString(), anyString(), any());
     }
 
     @Test
@@ -143,8 +165,9 @@ class ReindexServiceTest {
         assertThrows(RuntimeException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
-        verify(ccdElasticClient).removeIndex(newIndexName);
-        verify(ccdElasticClient).setIndexReadOnly(oldIndexName, false);
+        verify(ccdElasticClient).removeIndex(incrementedCaseTypeName);
+        // on reindex failure we reset read-only using the alias name
+        verify(ccdElasticClient).setIndexReadOnly(baseIndexName, false);
         //using a single mock, so close() is called twice (in event listener and reindexing failure handler)
         verify(ccdElasticClient, atLeast(2)).close();
     }
@@ -185,7 +208,7 @@ class ReindexServiceTest {
 
         reindexService.updateEntity(newIndexName, anyString());
 
-        verify(reindexRepository).save(existing);
+        verify(reindexRepository).saveAndFlush(existing);
         assertEquals("SUCCESS", existing.getStatus());
         assertNotNull(existing.getEndTime());
         assertNotNull(existing.getReindexResponse());
@@ -201,7 +224,7 @@ class ReindexServiceTest {
         RuntimeException ex = new RuntimeException("Simulated failure");
         reindexService.updateEntity(newIndexName, ex);
 
-        verify(reindexRepository).save(existing);
+        verify(reindexRepository).saveAndFlush(existing);
         assertEquals("FAILED", existing.getStatus());
         assertNotNull(existing.getEndTime());
         assertTrue(existing.getExceptionMessage().contains("Simulated failure"));
@@ -222,10 +245,10 @@ class ReindexServiceTest {
             Collections.singletonList(caseA), true, true
         );
 
-        assertThrows(ElasticSearchInitialisationException.class,
+        assertThrows(ElasticsearchStatusException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
-        verify(reindexRepository).save(entity);
+        verify(reindexRepository).saveAndFlush(entity);
         assertEquals("FAILED", entity.getStatus());
         assertTrue(entity.getExceptionMessage().contains("ES error"));
     }
@@ -244,9 +267,7 @@ class ReindexServiceTest {
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
         ArgumentCaptor<ReindexEntity> captor = ArgumentCaptor.forClass(ReindexEntity.class);
-        verify(reindexRepository).save(captor.capture());
-
-        verify(reindexRepository).save(entity);
+        verify(reindexRepository, times(2)).saveAndFlush(captor.capture());
         assertEquals("FAILED", entity.getStatus());
         assertTrue(entity.getExceptionMessage().contains("reindexing failed"));
     }
@@ -265,10 +286,10 @@ class ReindexServiceTest {
             Collections.singletonList(caseA), true, true
         );
 
-        assertThrows(ElasticSearchInitialisationException.class,
+        assertThrows(RuntimeException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
-        verify(reindexRepository).save(entity);
+        verify(reindexRepository).saveAndFlush(entity);
         assertEquals("FAILED", entity.getStatus());
         assertTrue(entity.getExceptionMessage().contains("mapping failure before reindex"));
     }
@@ -283,7 +304,7 @@ class ReindexServiceTest {
 
         reindexService.updateEntity(newIndexName, completion);
 
-        verify(reindexRepository).save(entity);
+        verify(reindexRepository).saveAndFlush(entity);
         assertTrue(entity.getExceptionMessage().contains("IllegalArgumentException"));
     }
 
@@ -316,7 +337,7 @@ class ReindexServiceTest {
 
         reindexService.updateEntity(newIndexName, regularException);
 
-        verify(reindexRepository).save(entity);
+        verify(reindexRepository).saveAndFlush(entity);
         assertTrue(entity.getExceptionMessage().contains("RuntimeException"));
         assertTrue(entity.getExceptionMessage().contains("Regular exception"));
     }
