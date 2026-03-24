@@ -5,39 +5,71 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Request;
-import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.Response;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.tasks.GetTaskRequest;
-import org.elasticsearch.client.tasks.GetTaskResponse;
-import org.elasticsearch.tasks.TaskInfo;
+import org.elasticsearch.client.RestClient;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 
 @Slf4j
 public class ReindexHelper {
 
-    private final RestHighLevelClient client;
+    private final RestClient restClient;
     private final ObjectMapper mapper = new ObjectMapper();
+    private final CcdElasticSearchProperties config;
     private Executor executor = asyncExecutor();
+    private static final String FAILURES = "failures";
 
-    public ReindexHelper(RestHighLevelClient client) {
-        this.client = client;
+    public ReindexHelper(RestClient restClient, CcdElasticSearchProperties config) {
+        this(restClient, config,null);
+    }
+
+    public ReindexHelper(RestClient restClient, CcdElasticSearchProperties config, Executor executor) {
+        this.restClient = restClient;
+        this.config = config;
+        this.executor = (executor != null) ? executor : asyncExecutor();
     }
 
     public String reindexIndex(String sourceIndex,
-                             String destIndex,
-                             long pollIntervalMs,
-                             ReindexListener listener) throws IOException {
-        String jsonBody = "{"
-            + " \"source\": { \"index\": \"" + sourceIndex + "\" },"
-            + " \"dest\": { \"index\": \"" + destIndex + "\" }"
-            + "}";
+                               String destIndex,
+                               long pollIntervalMs,
+                               ReindexListener listener) throws IOException {
 
+        String taskId = startReindexTask(sourceIndex, destIndex);
+        log.info("Reindex task started: {}", taskId);
+
+        executor.execute(() -> monitorReindexTask(taskId, destIndex, pollIntervalMs, listener));
+
+        return taskId;
+    }
+
+    private String startReindexTask(String sourceIndex, String destIndex) throws IOException {
+        String jsonBody = String.format("""
+            {
+              "source": {
+                "index": "%s",
+                "size": %s
+              },
+              "dest": {
+                "index": "%s"
+              }
+            }
+            """, sourceIndex, config.getBatchSize(), destIndex);
+
+        Request request = buildReindexRequest(jsonBody);
+        Response response = restClient.performRequest(request);
+        String responseBody = EntityUtils.toString(response.getEntity());
+        JsonNode root = mapper.readTree(responseBody);
+        JsonNode taskNode = root.path("task");
+        return taskNode.isTextual() ? taskNode.asText() : null;
+    }
+
+    private Request buildReindexRequest(String jsonBody) {
         Request request = new Request("POST", "/_reindex");
         request.addParameter("wait_for_completion", "false");
         request.addParameter("refresh", "false");
@@ -45,99 +77,92 @@ public class ReindexHelper {
         request.addParameter("timeout", "2h");
         request.addParameter("slices", "auto");
         request.setJsonEntity(jsonBody);
+        return request;
+    }
 
-        Response response = client.getLowLevelClient().performRequest(request);
-        String responseBody = EntityUtils.toString(response.getEntity());
+    private void monitorReindexTask(String taskId,
+                                    String destIndex,
+                                    long pollIntervalMs,
+                                    ReindexListener listener) {
 
-        String taskId = mapper.readTree(responseBody).get("task").asText();
-        String[] parts = taskId.split(":");
-        String nodeId = parts[0];
-        log.info("Reindex task started: {}", taskId);
-
-        final long taskNumericId = Long.parseLong(parts[1]);
-        executor.execute(() -> {
-            try {
-                while (!Thread.currentThread().isInterrupted()) {
-                    Optional<GetTaskResponse> taskResponse = fetchTaskResponse(nodeId, taskNumericId);
-
-                    if (!shouldWaitForMissingTask(taskResponse, taskId, pollIntervalMs)) {
-                        TaskInfo taskInfo = taskResponse.get().getTaskInfo();
-                        if (!shouldWaitForMissingInfo(taskInfo, taskId, pollIntervalMs)) {
-                            if (taskResponse.get().isCompleted()) {
-                                if (handleCompletion(taskInfo, listener, destIndex)) {
-                                    break;
-                                }
-                            } else {
-                                Thread.sleep(pollIntervalMs);
-                            }
-                        }
-                    }
+        try {
+            while (!Thread.currentThread().isInterrupted()) {
+                Optional<JsonNode> taskJsonNode = fetchTaskResponse(taskId);
+                if (shouldExitPolling(taskJsonNode, taskId, listener, destIndex)) {
+                    break;
                 }
-            } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
-                listener.onFailure(new RuntimeException("Reindex polling interrupted"));
-            } catch (IOException ioe) {
-                listener.onFailure(new RuntimeException("Reindex process failed: " + ioe.getLocalizedMessage()));
+                Thread.sleep(pollIntervalMs);
             }
-        });
-        return taskId;
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+            listener.onFailure(new RuntimeException("Reindex polling interrupted", ie));
+        } catch (IOException ioe) {
+            listener.onFailure(new RuntimeException("Reindex process failed: " + ioe.getLocalizedMessage(), ioe));
+        }
     }
 
-    private Optional<GetTaskResponse> fetchTaskResponse(String nodeId, long taskNumericId) throws IOException {
-        GetTaskRequest getTaskRequest = new GetTaskRequest(nodeId, taskNumericId);
-        return client.tasks().get(getTaskRequest, RequestOptions.DEFAULT);
+    private Optional<JsonNode> fetchTaskResponse(String taskId) throws IOException {
+        String path = "/_tasks/" + taskId;
+        Request request = new Request("GET", path);
+        try {
+            Response response = restClient.performRequest(request);
+            String responseBody = EntityUtils.toString(response.getEntity(), StandardCharsets.UTF_8);
+            JsonNode root = mapper.readTree(responseBody);
+            return Optional.ofNullable(root);
+        } catch (org.elasticsearch.client.ResponseException re) {
+            int status = re.getResponse().getStatusLine().getStatusCode();
+            if (status == 404) {
+                // not found -> will retry
+                return Optional.empty();
+            }
+            throw re;
+        }
     }
 
-    private boolean shouldWaitForMissingTask(Optional<GetTaskResponse> taskResponse,
-                                             String taskId,
-                                             long pollIntervalMs) throws InterruptedException {
+    private boolean shouldExitPolling(Optional<JsonNode> taskResponse,
+                                      String taskId,
+                                      ReindexListener listener,
+                                      String destIndex) throws IOException {
+
         if (taskResponse.isEmpty()) {
             log.info("Task not found: {}. Retrying...", taskId);
-            Thread.sleep(pollIntervalMs);
-            return true;
+            return false;
         }
-        return false;
+
+        JsonNode taskJson = taskResponse.get();
+        boolean completed = taskJson.path("completed").asBoolean(false);
+
+        if (!completed) {
+            return false;
+        }
+        return handleCompletion(taskResponse.get(), listener, destIndex);
+
     }
 
-    private boolean shouldWaitForMissingInfo(TaskInfo taskInfo,
-                                             String taskId,
-                                             long pollIntervalMs) throws InterruptedException {
-        if (taskInfo == null) {
-            log.info("Task info not found yet for task: {}. Retrying...", taskId);
-            Thread.sleep(pollIntervalMs);
-            return true;
-        }
-        return false;
-    }
-
-    private boolean handleCompletion(TaskInfo taskInfo,
+    private boolean handleCompletion(JsonNode taskJson,
                                      ReindexListener listener,
-                                     String destIndex) throws IOException {
-        Object statusObj = taskInfo.getStatus();
-        if (statusObj == null) {
-            listener.onFailure(new RuntimeException("Reindex process completed with unknown status"));
+                                     String destIndex) {
+        JsonNode responseNode = taskJson.path("response");
+        JsonNode errorNode = taskJson.path("error");
+
+        if (!errorNode.isMissingNode() && !errorNode.isNull()) {
+            listener.onFailure(new RuntimeException("Task failed with error: " + errorNode));
             return true;
         }
 
-        JsonNode statusJson = toStatusJson(statusObj);
-        if (hasFailures(statusJson)) {
-            listener.onFailure(new RuntimeException("Reindex process failed: " + statusJson.path("failures")));
+        if (!responseNode.isMissingNode() && !responseNode.isNull()) {
+            JsonNode failuresNode = responseNode.path(FAILURES);
+            if (failuresNode.isArray() && !failuresNode.isEmpty()) {
+                listener.onFailure(new RuntimeException("Reindex process failed: " + failuresNode));
+                return true;
+            }
+            logProgress(destIndex, responseNode);
+            listener.onSuccess(responseNode.asText());
             return true;
         }
-
-        logProgress(destIndex, statusJson);
-        String response = buildResponse(statusObj, taskInfo);
-        listener.onSuccess(response);
+        // fallback: if no response and no error, treat as unknown outcome
+        listener.onFailure(new RuntimeException("Reindex process completed with unknown status: " + taskJson));
         return true;
-    }
-
-    private JsonNode toStatusJson(Object statusObj) throws IOException {
-        String json = mapper.writeValueAsString(statusObj);
-        return mapper.readTree(json);
-    }
-
-    private boolean hasFailures(JsonNode statusJson) {
-        return statusJson.has("failures") && !statusJson.path("failures").isEmpty();
     }
 
     private void logProgress(String destIndex, JsonNode statusJson) {
@@ -150,40 +175,12 @@ public class ReindexHelper {
     }
 
     public Executor asyncExecutor() {
-        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(10);
-        executor.setQueueCapacity(50);
-        executor.setThreadNamePrefix("reindex-exec-");
-        executor.initialize();
-        return executor;
-    }
-
-    private String buildResponse(Object statusObj, TaskInfo taskInfo) throws IOException {
-        JsonNode statusJson = toStatusJson(statusObj);
-
-        // Extract fields
-        Integer updated = statusJson.path("updated").asInt(0);
-        Integer created = statusJson.path("created").asInt(0);
-        Integer deleted = statusJson.path("deleted").asInt(0);
-        Integer batches = statusJson.path("batches").asInt(0);
-        Integer took = statusJson.path("took").asInt(0);
-        Boolean timedOut = statusJson.path("timed_out").asBoolean(false);
-        Integer versionConflicts = statusJson.path("version_conflicts").asInt(0);
-        Integer noops = statusJson.path("noops").asInt(0);
-        Integer retriesBulk = statusJson.path("retries").path("bulk").asInt(0);
-        Integer retriesSearch = statusJson.path("retries").path("search").asInt(0);
-        Integer throttledUntil = statusJson.path("throttled_until_millis").asInt(0);
-
-        // Build your old-style string
-        String responseSummary = String.format(
-            "BulkByScrollResponse[took=%dms,timed_out=%b,sliceId=null,updated=%d,created=%d,"
-            + "deleted=%d,batches=%d,versionConflicts=%d,noops=%d,retries=%d,throttledUntil=%ds,"
-            + "bulk_failures=[],search_failures=[]]",
-            took, timedOut, updated, created, deleted, batches,
-            versionConflicts, noops, (retriesBulk + retriesSearch),
-            throttledUntil / 1000
-        );
-        return responseSummary;
+        ThreadPoolTaskExecutor threadPoolTaskExecutor = new ThreadPoolTaskExecutor();
+        threadPoolTaskExecutor.setCorePoolSize(10);
+        threadPoolTaskExecutor.setMaxPoolSize(10);
+        threadPoolTaskExecutor.setQueueCapacity(50);
+        threadPoolTaskExecutor.setThreadNamePrefix("reindex-exec-");
+        threadPoolTaskExecutor.initialize();
+        return threadPoolTaskExecutor;
     }
 }

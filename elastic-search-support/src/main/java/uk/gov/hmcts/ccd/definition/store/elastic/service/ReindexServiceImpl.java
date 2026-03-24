@@ -1,8 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.service;
 
+import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.elasticsearch.client.GetAliasesResponse;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -49,14 +49,13 @@ public class ReindexServiceImpl implements ReindexService {
                              String baseIndexName,
                              CaseTypeEntity caseType) throws IOException {
         HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
-        GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
-        String indexName = aliasResponse.getAliases().keySet().iterator().next();
+        GetAliasResponse aliasResponse = elasticClient.getAlias(baseIndexName);
+        String indexName = aliasResponse.aliases().keySet().iterator().next();
         String newIndexName = incrementIndexNumber(indexName);
         boolean reindexStarted = false;
 
         //prepare for db
-        ReindexEntity reindexEntity = saveEntity(event.isReindex(),
-            event.isDeleteOldIndex(), caseType, newIndexName);
+        saveEntity(event.isDeleteOldIndex(), caseType, newIndexName);
 
         try {
             //create new index with generated mapping and incremented case type name (no alias update yet)
@@ -167,10 +166,9 @@ public class ReindexServiceImpl implements ReindexService {
             .toList();
     }
 
-    public ReindexEntity saveEntity(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity caseType,
+    public ReindexEntity saveEntity(Boolean deleteOldIndex, CaseTypeEntity caseType,
                                     String newIndexName) {
         ReindexEntity entity = new ReindexEntity();
-        entity.setReindex(reindex);
         entity.setDeleteOldIndex(deleteOldIndex);
         entity.setCaseType(caseType.getReference());
         entity.setJurisdiction(caseType.getJurisdiction().getReference());

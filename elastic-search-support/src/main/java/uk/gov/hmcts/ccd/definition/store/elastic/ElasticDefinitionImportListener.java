@@ -31,7 +31,6 @@ public abstract class ElasticDefinitionImportListener {
 
     private final ReindexService reindexService;
 
-
     public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory,
                                            ElasticsearchErrorHandler elasticsearchErrorHandler,
@@ -56,7 +55,8 @@ public abstract class ElasticDefinitionImportListener {
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
 
-        try (HighLevelCCDElasticClient elasticClient = clientFactory.getObject()) {
+        HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
+        try {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);

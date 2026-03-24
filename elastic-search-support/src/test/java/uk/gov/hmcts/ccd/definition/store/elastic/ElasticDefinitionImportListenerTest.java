@@ -1,8 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import co.elastic.clients.elasticsearch.indices.AliasDefinition;
+import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
+import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
 import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.rest.RestStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,10 +23,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -37,8 +35,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -78,6 +76,7 @@ class ElasticDefinitionImportListenerTest {
             clientObjectFactory, elasticsearchErrorHandler, reindexService);
 
         lenient().when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
+        ccdElasticClient.close();
     }
 
     @Test
@@ -88,7 +87,7 @@ class ElasticDefinitionImportListenerTest {
         listener.onDefinitionImported(newEvent(caseA, caseB));
 
         verify(clientObjectFactory).getObject();
-        verify(ccdElasticClient).close();
+        verify(ccdElasticClient, times(1)).close();
     }
 
     @Test
@@ -137,15 +136,17 @@ class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void shouldWrapElasticsearchStatusExceptionInInitialisationException() throws IOException {
+    void shouldWrapElasticsearchStatusExceptionInInitialisationException() throws IOException {
         lenient().when(config.getCasesIndexNameFormat()).thenReturn("%s");
         lenient().when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
 
-        GetAliasesResponse aliasResponse = mock(GetAliasesResponse.class);
-        Map<String, Set<AliasMetadata>> aliasMap = new HashMap<>();
-        aliasMap.put("casetypea_cases-000001",
-            Collections.singleton(AliasMetadata.builder(baseIndexName).build()));
-        lenient().when(aliasResponse.getAliases()).thenReturn(aliasMap);
+        IndexAliases indexAliases = new IndexAliases.Builder()
+            .aliases(Map.of(
+                baseIndexName, new AliasDefinition.Builder().build())).build();
+        Map<String, IndexAliases> aliasMap = Map.of("casetypea_cases-000001", indexAliases);
+        GetAliasResponse aliasResponse = new GetAliasResponse.Builder()
+            .aliases(aliasMap)
+            .build();
         lenient().when(ccdElasticClient.getAlias(anyString())).thenReturn(aliasResponse);
 
         lenient().when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
@@ -171,7 +172,7 @@ class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    public void throwsElasticSearchInitialisationExceptionOnErrors() {
+    void throwsElasticSearchInitialisationExceptionOnErrors() {
         assertThrows(ElasticSearchInitialisationException.class, () -> {
             when(config.getCasesIndexNameFormat()).thenThrow(new ArrayIndexOutOfBoundsException("test"));
             listener.onDefinitionImported(newEvent(caseA, caseB));
@@ -186,7 +187,7 @@ class ElasticDefinitionImportListenerTest {
 
         listener.onDefinitionImported(newEvent(false, true, caseA));
 
-        verify(reindexService, never()).saveEntity(any(), any(), any(), any());
+        verify(reindexService, never()).saveEntity(any(), any(), any());
         verify(ccdElasticClient, never()).reindexData(anyString(), anyString(), any());
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).upsertMapping(baseIndexName, "caseMapping");

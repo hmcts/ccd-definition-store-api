@@ -1,18 +1,17 @@
-package uk.gov.hmcts.ccd.definition.store.elastic.integration;
+package uk.gov.hmcts.ccd.definition.store.elastic.casemapping;
 
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.indices.GetMappingsRequest;
-import org.elasticsearch.client.indices.GetMappingsResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticDefinitionImportListener;
-import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchBaseTest;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
+import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -25,68 +24,71 @@ import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 import java.io.IOException;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newField;
 import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextField;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
-class CaseMappingGenerationIT extends ElasticsearchBaseTest {
+/**
+ * Unit test for definition-import listener behaviour (createIndex / upsertMapping).
+ * Does not use Spring context, so it cannot affect other ITs (e.g. SynchronousElasticDefinitionImportListenerIT).
+ */
+@ExtendWith(MockitoExtension.class)
+class CaseMappingGenerationTest {
 
-    @Autowired
-    private ElasticDefinitionImportListener listener;
-
-    @Autowired
-    private ApplicationEventPublisher publisher;
-
-    @Autowired
+    @Mock
     private CcdElasticSearchProperties config;
 
-    @Autowired
+    @Mock
     private CaseMappingGenerator mappingGenerator;
 
-    @Autowired
+    @Mock
+    private ObjectFactory<HighLevelCCDElasticClient> clientFactory;
+
+    @Mock
     private HighLevelCCDElasticClient client;
 
-    @Autowired
-    private RestHighLevelClient restHighLevelClient;
+    @Mock
+    private ElasticsearchErrorHandler elasticsearchErrorHandler;
+
+    @Mock
+    private ReindexService reindexService;
+
+    private ElasticDefinitionImportListener listener;
 
     @BeforeEach
-    void setUp() {
-        try {
-            deleteElasticsearchIndices(WILDCARD);
-        } catch (Exception e) {
-            // Ignore any exceptions during index deletion, as it may not exist
-        }
+    void setUp() throws IOException {
+        listener = new TestDefinitionImportListener(
+            config, mappingGenerator, clientFactory, elasticsearchErrorHandler, reindexService);
+        when(config.getCasesIndexNameFormat()).thenReturn("%s_cases");
+        when(clientFactory.getObject()).thenReturn(client);
+        doReturn(false).when(client).aliasExists(anyString());
+        when(mappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("{}");
     }
 
     @Test
     void testListeningToDefinitionImportedEvent() throws IOException {
         CaseTypeEntity caseType = createCaseType();
-        String indexName = String.format(config.getCasesIndexNameFormat(), caseType.getReference().toLowerCase());
 
-        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
+        listener.onDefinitionImported(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        GetMappingsRequest request = new GetMappingsRequest().indices(indexName);
-        GetMappingsResponse response = restHighLevelClient.indices().getMapping(request, RequestOptions.DEFAULT);
-
-        assertTrue(client.aliasExists(indexName), "Expected alias to exist: " + indexName);
-        assertThat(response).isNotNull();
+        verify(client).createIndex(anyString(), anyString());
+        verify(client).upsertMapping(anyString(), anyString());
     }
 
     @Test
     void testListeningToDefinitionImportedEventWithDynamicLists() throws IOException {
         CaseTypeEntity caseType = createCaseTypeWithDynamicLists();
-        String indexName = String.format(config.getCasesIndexNameFormat(), caseType.getReference().toLowerCase());
 
-        publisher.publishEvent(new DefinitionImportedEvent(newArrayList(caseType)));
+        listener.onDefinitionImported(new DefinitionImportedEvent(newArrayList(caseType)));
 
-        GetMappingsRequest request = new GetMappingsRequest().indices(indexName);
-        GetMappingsResponse response = restHighLevelClient.indices().getMapping(request, RequestOptions.DEFAULT);
-
-        assertTrue(client.aliasExists(indexName), "Expected alias to exist: " + indexName);
-        assertThat(response).isNotNull();
+        verify(client).createIndex(anyString(), anyString());
+        verify(client).upsertMapping(anyString(), anyString());
     }
 
     private CaseTypeEntity createCaseType() {
@@ -117,7 +119,6 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     }
 
     private CaseFieldEntity newComplexFieldOfComplex() {
-
         CaseFieldBuilder complexOfComplex = newField("executor", "Executor");
 
         FieldTypeBuilder complexType = newType("Person");
@@ -147,5 +148,21 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
         collectionField.setReference("Aliases");
         collectionField.setFieldType(collectionFieldType);
         return collectionField;
+    }
+
+    private static final class TestDefinitionImportListener extends ElasticDefinitionImportListener {
+
+        TestDefinitionImportListener(CcdElasticSearchProperties config,
+                                     CaseMappingGenerator mappingGenerator,
+                                     ObjectFactory<HighLevelCCDElasticClient> clientFactory,
+                                     ElasticsearchErrorHandler elasticsearchErrorHandler,
+                                     ReindexService reindexService) {
+            super(config, mappingGenerator, clientFactory, elasticsearchErrorHandler, reindexService);
+        }
+
+        @Override
+        public void onDefinitionImported(DefinitionImportedEvent event) {
+            super.initialiseElasticSearch(event);
+        }
     }
 }

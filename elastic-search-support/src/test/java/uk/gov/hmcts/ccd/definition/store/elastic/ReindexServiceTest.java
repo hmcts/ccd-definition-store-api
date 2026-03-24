@@ -1,8 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import co.elastic.clients.elasticsearch.indices.AliasDefinition;
+import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
+import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
 import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.cluster.metadata.AliasMetadata;
 import org.elasticsearch.rest.RestStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -28,10 +29,8 @@ import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.CompletionException;
 
 import static com.google.common.collect.Lists.newArrayList;
@@ -47,13 +46,12 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class ReindexServiceTest {
+class ReindexServiceTest {
 
     private ReindexService reindexService;
 
@@ -163,14 +161,13 @@ public class ReindexServiceTest {
         when(reindexRepository.saveAndFlush(any(ReindexEntity.class))).thenAnswer(i -> i.getArgument(0));
 
         ReindexEntity result = reindexService.saveEntity(
-            true, true, caseType, newIndexName
+            true, caseType, newIndexName
         );
 
         verify(reindexRepository).saveAndFlush(captor.capture());
 
         ReindexEntity saved = captor.getValue();
         assertSame(saved, result);
-        assertTrue(saved.getReindex());
         assertTrue(saved.getDeleteOldIndex());
         assertEquals("caseTypeA", saved.getCaseType());
         assertEquals("jurA", saved.getJurisdiction());
@@ -294,9 +291,8 @@ public class ReindexServiceTest {
     void shouldSkipMarkSuccessIfEntityNotFound() {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.empty());
 
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> {
-            reindexService.updateEntity(newIndexName, anyString());
-        });
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> reindexService.updateEntity(newIndexName, anyString()));
 
         assertTrue(exception.getMessage().contains("No reindex entity metadata found for index name"));
         verify(reindexRepository, never()).save(any());
@@ -346,11 +342,12 @@ public class ReindexServiceTest {
     private void mockAliasResponse() throws IOException {
         lenient().when(config.getCasesIndexNameFormat()).thenReturn("%s");
 
-        GetAliasesResponse aliasResponse = mock(GetAliasesResponse.class);
-        Map<String, Set<AliasMetadata>> aliasMap = new HashMap<>();
-        aliasMap.put(oldIndexName,
-            Collections.singleton(AliasMetadata.builder(baseIndexName).build()));
-        lenient().when(aliasResponse.getAliases()).thenReturn(aliasMap);
+        IndexAliases indexAliases = new IndexAliases.Builder()
+            .aliases(Map.of(baseIndexName, new AliasDefinition.Builder().build()))
+            .build();
+        GetAliasResponse aliasResponse = new GetAliasResponse.Builder()
+            .aliases(Map.of(oldIndexName, indexAliases))
+            .build();
         lenient().when(ccdElasticClient.getAlias(anyString())).thenReturn(aliasResponse);
 
         lenient().when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
@@ -363,6 +360,15 @@ public class ReindexServiceTest {
             listener.onSuccess("BulkByScrollResponse[took=1ms,...]");
             return null;
         }).when(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any(ReindexListener.class));
+        IndexAliases indexAliases = new IndexAliases.Builder()
+            .aliases(Map.of(
+                baseIndexName, new AliasDefinition.Builder().build())).build();
+        Map<String, IndexAliases> aliasMap = Map.of(oldIndexName, indexAliases);
+        GetAliasResponse aliasResponse = new GetAliasResponse.Builder()
+            .aliases(aliasMap)
+            .build();
+        when(ccdElasticClient.getAlias(anyString())).thenReturn(aliasResponse);
+        when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
     }
 
     private void mockFailedReindex() throws IOException {

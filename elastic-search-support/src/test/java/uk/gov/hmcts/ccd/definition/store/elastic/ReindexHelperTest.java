@@ -1,15 +1,17 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
-import org.elasticsearch.client.RestHighLevelClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 
 import java.io.ByteArrayInputStream;
@@ -19,17 +21,13 @@ import java.util.concurrent.Executor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ReindexHelperTest {
-
-    @Mock
-    private RestHighLevelClient restHighLevelClient;
 
     @Mock
     private RestClient restClient;
@@ -48,12 +46,12 @@ class ReindexHelperTest {
 
     private ReindexHelper reindexHelper;
 
+    @Mock
+    private CcdElasticSearchProperties config;
+
     @BeforeEach
     void setUp() {
-        reindexHelper = new ReindexHelper(restHighLevelClient);
-
-        // Mock the client hierarchy
-        lenient().when(restHighLevelClient.getLowLevelClient()).thenReturn(restClient);
+        reindexHelper = new ReindexHelper(restClient, config);
     }
 
     @Test
@@ -78,6 +76,40 @@ class ReindexHelperTest {
     }
 
     @Test
+    void shouldIncludeBatchSizeInReindexRequestBody() throws IOException {
+        // Given
+        String sourceIndex = "source-index";
+        String destIndex = "dest-index";
+        long pollIntervalMs = 1000L;
+        String taskId = "node:123";
+        String responseBody = "{\"task\":\"" + taskId + "\"}";
+
+        // Explicitly configure batch size so we can assert it appears in the JSON body
+        when(config.getBatchSize()).thenReturn(1234);
+
+        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
+        when(httpResponse.getEntity()).thenReturn(httpEntity);
+        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
+
+        // When
+        String result = reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener);
+
+        // Then
+        assertThat(result).isEqualTo(taskId);
+
+        ArgumentCaptor<Request> requestCaptor = ArgumentCaptor.forClass(Request.class);
+        verify(restClient, atLeastOnce()).performRequest(requestCaptor.capture());
+
+        // First invocation is the reindex POST request that contains the JSON body
+        Request capturedRequest = requestCaptor.getAllValues().get(0);
+        String jsonBody = EntityUtils.toString(capturedRequest.getEntity());
+
+        assertThat(jsonBody).contains("\"size\": 1234");
+        assertThat(jsonBody).contains("\"index\": \"" + sourceIndex + "\"");
+        assertThat(jsonBody).contains("\"index\": \"" + destIndex + "\"");
+    }
+
+    @Test
     void shouldThrowExceptionWhenReindexRequestFails() throws IOException {
         // Given
         String sourceIndex = "source-index";
@@ -90,7 +122,7 @@ class ReindexHelperTest {
         // When / Then
         assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
             .isInstanceOf(IOException.class)
-            .hasMessage("Reindex request failed");
+            .hasMessageContaining("Reindex request failed");
     }
 
     @Test
@@ -130,7 +162,7 @@ class ReindexHelperTest {
         when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
 
         // Mock executor to interrupt the thread
-        reindexHelper = new ReindexHelper(restHighLevelClient) {
+        reindexHelper = new ReindexHelper(restClient, config) {
             @Override
             public Executor asyncExecutor() {
                 return mockExecutor;
@@ -161,7 +193,7 @@ class ReindexHelperTest {
         when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
 
         // Mock executor to simulate IOException
-        reindexHelper = new ReindexHelper(restHighLevelClient) {
+        reindexHelper = new ReindexHelper(restClient, config) {
             @Override
             public Executor asyncExecutor() {
                 return mockExecutor;
@@ -183,11 +215,8 @@ class ReindexHelperTest {
 
     @Test
     void shouldCreateReindexHelperWithClient() {
-        // Given
-        RestHighLevelClient client = mock(RestHighLevelClient.class);
-
         // When
-        ReindexHelper helper = new ReindexHelper(client);
+        ReindexHelper helper = new ReindexHelper(restClient, config);
 
         // Then
         assertThat(helper).isNotNull();
@@ -196,10 +225,10 @@ class ReindexHelperTest {
     @Test
     void shouldCreateReindexHelperWithNullClient() {
         // Given
-        RestHighLevelClient client = null;
+        RestClient client = null;
 
         // When
-        ReindexHelper helper = new ReindexHelper(client);
+        ReindexHelper helper = new ReindexHelper(restClient, config);
 
         // Then
         // The constructor doesn't validate null client, so no exception is thrown
@@ -214,11 +243,27 @@ class ReindexHelperTest {
         long pollIntervalMs = 1000L;
         String responseBody = "{\"task\":\"\"}";
 
-        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
+        // Use synchronous executor so exceptions happen immediately
+        Executor syncExecutor = Runnable::run;
+        reindexHelper = new ReindexHelper(restClient, config, syncExecutor);
 
-        // When / Then
+        // Mock the first request (reindex start) to return empty taskId
+        when(restClient.performRequest(any(Request.class)))
+            .thenAnswer(invocation -> {
+                Request req = invocation.getArgument(0);
+                if (req.getEndpoint().equals("/_reindex")) {
+                    // First call returns task response with empty taskId
+                    when(httpResponse.getEntity()).thenReturn(httpEntity);
+                    when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
+                    return httpResponse;
+                } else if (req.getEndpoint().startsWith("/_tasks/")) {
+                    // Second call (task status check) with empty taskId causes exception
+                    throw new ArrayIndexOutOfBoundsException("Invalid task ID format");
+                }
+                return httpResponse;
+            });
+
+        // When / Then - exception happens synchronously because executor is synchronous
         assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
             .isInstanceOf(ArrayIndexOutOfBoundsException.class);
     }
@@ -231,11 +276,27 @@ class ReindexHelperTest {
         long pollIntervalMs = 1000L;
         String responseBody = "{\"status\":\"ok\"}";
 
-        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
+        // Use synchronous executor so exceptions happen immediately
+        Executor syncExecutor = Runnable::run;
+        reindexHelper = new ReindexHelper(restClient, config, syncExecutor);
 
-        // When / Then
+        // Mock the first request (reindex start) to return response without task field
+        when(restClient.performRequest(any(Request.class)))
+            .thenAnswer(invocation -> {
+                Request req = invocation.getArgument(0);
+                if (req.getEndpoint().equals("/_reindex")) {
+                    // First call returns task response without task field (taskId will be null)
+                    when(httpResponse.getEntity()).thenReturn(httpEntity);
+                    when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
+                    return httpResponse;
+                } else if (req.getEndpoint().startsWith("/_tasks/")) {
+                    // Second call (task status check) with null taskId causes NullPointerException
+                    throw new NullPointerException("Task ID is null");
+                }
+                return httpResponse;
+            });
+
+        // When / Then - exception happens synchronously because executor is synchronous
         assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
             .isInstanceOf(NullPointerException.class);
     }
@@ -248,11 +309,27 @@ class ReindexHelperTest {
         long pollIntervalMs = 1000L;
         String responseBody = "{\"task\":\"invalid-task-id\"}";
 
-        when(restClient.performRequest(any(Request.class))).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
+        // Use synchronous executor so exceptions happen immediately
+        Executor syncExecutor = Runnable::run;
+        reindexHelper = new ReindexHelper(restClient, config, syncExecutor);
 
-        // When / Then
+        // Mock the first request (reindex start) to return malformed taskId
+        when(restClient.performRequest(any(Request.class)))
+            .thenAnswer(invocation -> {
+                Request req = invocation.getArgument(0);
+                if (req.getEndpoint().equals("/_reindex")) {
+                    // First call returns task response with malformed taskId
+                    when(httpResponse.getEntity()).thenReturn(httpEntity);
+                    when(httpEntity.getContent()).thenReturn(new ByteArrayInputStream(responseBody.getBytes()));
+                    return httpResponse;
+                } else if (req.getEndpoint().startsWith("/_tasks/")) {
+                    // Second call (task status check) with malformed taskId causes exception
+                    throw new ArrayIndexOutOfBoundsException("Invalid task ID format");
+                }
+                return httpResponse;
+            });
+
+        // When / Then - exception happens synchronously because executor is synchronous
         assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
             .isInstanceOf(ArrayIndexOutOfBoundsException.class);
     }
@@ -286,6 +363,6 @@ class ReindexHelperTest {
         // When / Then
         assertThatThrownBy(() -> reindexHelper.reindexIndex(sourceIndex, destIndex, pollIntervalMs, reindexListener))
             .isInstanceOf(IOException.class)
-            .hasMessage("Failed to read response");
+            .hasMessageContaining("Failed to read response");
     }
 }

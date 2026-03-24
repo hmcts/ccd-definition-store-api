@@ -1,86 +1,467 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
-import org.elasticsearch.action.admin.indices.alias.get.GetAliasesRequest;
-import org.elasticsearch.action.admin.indices.delete.DeleteIndexRequest;
-import org.elasticsearch.action.admin.indices.refresh.RefreshRequest;
-import org.elasticsearch.action.admin.indices.refresh.RefreshResponse;
-import org.elasticsearch.action.admin.indices.settings.put.UpdateSettingsRequest;
-import org.elasticsearch.action.support.master.AcknowledgedResponse;
-import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.elasticsearch.client.indices.CreateIndexRequest;
-import org.elasticsearch.client.indices.CreateIndexResponse;
-import org.elasticsearch.client.indices.PutMappingRequest;
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch.indices.AliasDefinition;
+import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
+import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
+import co.elastic.clients.elasticsearch.indices.DeleteIndexResponse;
+import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
+import co.elastic.clients.elasticsearch.indices.GetAliasRequest;
+import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
+import co.elastic.clients.elasticsearch.indices.PutIndicesSettingsResponse;
+import co.elastic.clients.elasticsearch.indices.PutMappingResponse;
+import co.elastic.clients.elasticsearch.indices.RefreshResponse;
+import co.elastic.clients.elasticsearch.indices.UpdateAliasesRequest;
+import co.elastic.clients.elasticsearch.indices.UpdateAliasesResponse;
+import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
+import co.elastic.clients.util.ObjectBuilder;
+import org.apache.http.HttpEntity;
+import org.assertj.core.api.Assertions;
+import org.elasticsearch.client.Request;
+import org.elasticsearch.client.Response;
+import org.elasticsearch.client.RestClient;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener.GLOBAL_SEARCH;
 
 @ExtendWith(MockitoExtension.class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class HighLevelCCDElasticClientTest {
+
+    @Mock
+    private ElasticsearchClient elasticClient;
+
+    @Mock
+    private RestClient restClient;
+
+    @Mock
+    private ElasticsearchClientFactory elasticClientFactory;
 
     @Mock
     private CcdElasticSearchProperties config;
 
-    @Mock
-    private RestHighLevelClient elasticClient;
+    private HighLevelCCDElasticClient highLevelCCDElasticClient;
 
     @Mock
-    private org.elasticsearch.client.IndicesClient indicesClientMock;
-
-    @Mock
-    private org.elasticsearch.client.RestClient restClient;
-
-    @Mock
-    private org.elasticsearch.client.Response httpResponse;
-
-    @Mock
-    private org.apache.http.HttpEntity httpEntity;
-
-    @Mock
-    private CreateIndexResponse createIndexResponse;
-
-    @Mock
-    private AcknowledgedResponse acknowledgedResponse;
-
-    @Mock
-    private GetAliasesResponse getAliasesResponse;
-
-    @Mock
-    private RefreshResponse refreshResponse;
-
-    @Mock
-    private ReindexListener reindexListener;
-
-    private HighLevelCCDElasticClient client;
+    private ElasticsearchIndicesClient indicesClient;
 
     @BeforeEach
-    void setUp() {
-        client = new HighLevelCCDElasticClient(config, elasticClient);
+    void setup() {
+        MockitoAnnotations.openMocks(this);
+        doReturn(indicesClient).when(elasticClient).indices();
+        doReturn(elasticClient).when(elasticClientFactory).createClient();
+        Executor direct = Runnable::run;
+        highLevelCCDElasticClient = spy(new HighLevelCCDElasticClient(config, elasticClientFactory, direct));
+    }
 
-        // Mock elasticClient.indices() to return the mocked IndicesClient
-        lenient().when(elasticClient.indices()).thenReturn(indicesClientMock);
+    @Test
+    void createIndexCreatesIndexWithAliasSuccessfully() throws IOException {
+        final String indexName = "test_index";
+        final String alias = "test_alias";
+
+        CreateIndexResponse response = new CreateIndexResponse.Builder()
+            .index(indexName)
+            .acknowledged(true)
+            .shardsAcknowledged(true)
+            .build();
+        doReturn(response)
+            .when(indicesClient)
+            .create(Mockito.<Function<CreateIndexRequest.Builder, ObjectBuilder<CreateIndexRequest>>>any());
+
+        GetAliasResponse realAliasResponse = new GetAliasResponse.Builder()
+            .aliases(Map.of(alias, createIndexAliases(indexName)))
+            .build();
+        realGetAliasResponseStub(realAliasResponse);
+
+        assertThat(highLevelCCDElasticClient.createIndex(indexName, alias)).isTrue();
+    }
+
+    @Test
+    void aliasExistsReturnsTrueWhenAliasExists() throws IOException {
+        final String alias = "existing_alias";
+        final String index = "some_index";
+
+        GetAliasResponse realAliasResponse = new GetAliasResponse.Builder()
+            .aliases(Map.of(alias, createIndexAliases(index)))
+            .build();
+        realGetAliasResponseStub(realAliasResponse);
+
+        boolean exists = highLevelCCDElasticClient.aliasExists(alias);
+
+        assertThat(exists).isTrue();
+        verify(indicesClient).getAlias(Mockito.<java.util.function.Function<GetAliasRequest.Builder,
+            co.elastic.clients.util.ObjectBuilder<GetAliasRequest>>>any());
+    }
+
+    @Test
+    void aliasExistsReturnsFalseWhenAliasDoesNotExist() throws IOException {
+        final String alias = "non_existing_alias";
+
+        GetAliasResponse realAliasResponse = new GetAliasResponse.Builder()
+            .aliases(Collections.emptyMap())
+            .build();
+        realGetAliasResponseStub(realAliasResponse);
+
+        assertThat(highLevelCCDElasticClient.aliasExists(alias)).isFalse();
+        verify(indicesClient)
+            .getAlias(Mockito.<java.util.function.Function<GetAliasRequest.Builder,
+                co.elastic.clients.util.ObjectBuilder<GetAliasRequest>>>any());
+    }
+
+    @Test
+    void updateAliasUpdatesAliasSuccessfully() throws IOException {
+        final String alias = "test_alias";
+        final String oldIndex = "old_index";
+        final String newIndex = "new_index";
+
+        UpdateAliasesResponse realAliasesResponse = new UpdateAliasesResponse.Builder()
+            .acknowledged(true)
+            .build();
+        realUpdateAliasesResponseStub(realAliasesResponse);
+
+        assertThat(highLevelCCDElasticClient.updateAlias(alias, oldIndex, newIndex)).isTrue();
+        verify(indicesClient)
+            .updateAliases(Mockito.<java.util.function.Function<UpdateAliasesRequest.Builder,
+                co.elastic.clients.util.ObjectBuilder<UpdateAliasesRequest>>>any());
+    }
+
+    @Test
+    void updateAliasFailsWhenAliasUpdateNotAcknowledged() throws IOException {
+        final String alias = "test_alias";
+        final String oldIndex = "old_index";
+        final String newIndex = "new_index";
+
+        UpdateAliasesResponse realAliasesResponse = new UpdateAliasesResponse.Builder()
+            .acknowledged(false)
+            .build();
+        realUpdateAliasesResponseStub(realAliasesResponse);
+
+        assertThat(highLevelCCDElasticClient.updateAlias(alias, oldIndex, newIndex)).isFalse();
+        verify(indicesClient).updateAliases(Mockito.<java.util.function.Function<UpdateAliasesRequest.Builder,
+            co.elastic.clients.util.ObjectBuilder<UpdateAliasesRequest>>>any());
+    }
+
+    @Test
+    void aliasExistsReturnsFalseOn404ElasticsearchException() throws IOException {
+        final String alias = "missing_alias";
+
+        assertThat(highLevelCCDElasticClient.aliasExists(alias)).isFalse();
+    }
+
+    @Test
+    void upsertMappingUpsertsMappingSuccessfully() throws IOException {
+        String aliasName = "test_alias";
+        String caseTypeMapping = "{\"properties\":{}}";
+        String indexName = "test_index";
+
+        GetAliasResponse aliasResponse = new GetAliasResponse.Builder()
+            .aliases(Map.of(aliasName, createIndexAliases(indexName)))
+            .build();
+
+        doReturn(aliasResponse).when(indicesClient).getAlias(any(Function.class));
+
+        var putMappingResponse = mock(PutMappingResponse.class);
+        when(putMappingResponse.acknowledged()).thenReturn(true);
+        doReturn(putMappingResponse).when(indicesClient).putMapping(any(Function.class));
+
+        boolean result = highLevelCCDElasticClient.upsertMapping(aliasName, caseTypeMapping);
+
+        assertThat(result).isTrue();
+        verify(indicesClient).getAlias(any(Function.class));
+        verify(indicesClient).putMapping(any(Function.class));
+    }
+
+    @Test
+    void upsertMappingThrowsIOExceptionIfAliasLookupFails() throws IOException {
+        String aliasName = "test_alias";
+        String caseTypeMapping = "{\"properties\":{}}";
+
+        doThrow(new IOException("Alias lookup failed"))
+            .doThrow(new IOException("Alias lookup failed"))
+            .doThrow(new IOException("Alias lookup failed"))
+            .doThrow(new IOException("Alias lookup failed"))
+            .when(indicesClient).getAlias(any(Function.class));
+
+        assertThatThrownBy(() -> highLevelCCDElasticClient.upsertMapping(aliasName, caseTypeMapping))
+            .isInstanceOf(IOException.class)
+            .hasMessageContaining("Failed to execute get alias for upsert mapping after 3 attempts");
+    }
+
+    @Test
+    void upsertMappingReturnsFalseIfPutMappingNotAcknowledged() throws IOException {
+        String aliasName = "test_alias";
+        String caseTypeMapping = "{\"properties\":{}}";
+        String indexName = "test_index";
+
+        GetAliasResponse aliasResponse = new GetAliasResponse.Builder()
+            .aliases(Map.of(aliasName, createIndexAliases(indexName)))
+            .build();
+        doReturn(aliasResponse).when(indicesClient).getAlias(any(Function.class));
+
+        var putMappingResponse = mock(PutMappingResponse.class);
+        when(putMappingResponse.acknowledged()).thenReturn(false);
+        doReturn(putMappingResponse).when(indicesClient).putMapping(any(Function.class));
+
+        boolean result = highLevelCCDElasticClient.upsertMapping(aliasName, caseTypeMapping);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void setIndexReadOnlySetsIndexReadOnlyFlag() throws IOException {
+        String indexName = "readonly_index";
+        boolean readOnly = true;
+
+        var putSettingsResponse = mock(PutIndicesSettingsResponse.class);
+        doReturn(putSettingsResponse).when(indicesClient).putSettings(any(Function.class));
+
+        highLevelCCDElasticClient.setIndexReadOnly(indexName, readOnly);
+
+        verify(indicesClient).putSettings(any(Function.class));
+    }
+
+    @Test
+    void setIndexReadOnlyThrowsIOExceptionOnFailure() throws IOException {
+        String indexName = "readonly_index";
+        boolean readOnly = true;
+
+        doThrow(new IOException("PutSettings failed"))
+            .when(indicesClient).putSettings(any(Function.class));
+
+        assertThatThrownBy(() -> highLevelCCDElasticClient.setIndexReadOnly(indexName, readOnly))
+            .isInstanceOf(IOException.class)
+            .hasMessageContaining("PutSettings failed");
+    }
+
+    @Test
+    void createIndexAndMappingCreatesIndexAndMappingSuccessfully() throws IOException {
+        String indexName = "new_index";
+        String caseTypeMapping = "{\"properties\":{}}";
+
+        CreateIndexResponse createIndexResponse = new CreateIndexResponse.Builder()
+            .index(indexName)
+            .acknowledged(true)
+            .shardsAcknowledged(true)
+            .build();
+        doReturn(createIndexResponse).when(indicesClient).create(any(Function.class));
+
+        var putMappingResponse = mock(PutMappingResponse.class);
+        when(putMappingResponse.acknowledged()).thenReturn(true);
+        doReturn(putMappingResponse).when(indicesClient).putMapping(any(Function.class));
+
+        boolean result = highLevelCCDElasticClient.createIndexAndMapping(indexName, caseTypeMapping);
+
+        assertThat(result).isTrue();
+        verify(indicesClient).create(any(Function.class));
+        verify(indicesClient).putMapping(any(Function.class));
+    }
+
+    @Test
+    void createIndexAndMappingThrowsIOExceptionIfCreateFails() throws IOException {
+        String indexName = "failing_index";
+        String caseTypeMapping = "{\"properties\":{}}";
+
+        doThrow(new IOException("CreateIndex failed"))
+            .doThrow(new IOException("CreateIndex failed"))
+            .doThrow(new IOException("CreateIndex failed"))
+            .doThrow(new IOException("CreateIndex failed"))
+            .when(indicesClient).create(any(Function.class));
+
+        assertThatThrownBy(() -> highLevelCCDElasticClient.createIndexAndMapping(indexName, caseTypeMapping))
+            .isInstanceOf(IOException.class)
+            .hasMessageContaining("Failed to execute create index with mapping after 3 attempts");
+    }
+
+    @Test
+    void createIndexAndMappingThrowsIOExceptionIfPutMappingFails() throws IOException {
+        String indexName = "new_index";
+        String caseTypeMapping = "{\"properties\":{}}";
+
+        CreateIndexResponse createIndexResponse = new CreateIndexResponse.Builder()
+            .index(indexName)
+            .acknowledged(true)
+            .shardsAcknowledged(true)
+            .build();
+        doReturn(createIndexResponse).when(indicesClient).create(any(Function.class));
+
+        doThrow(new IOException("PutMapping failed")).when(indicesClient).putMapping(any(Function.class));
+
+        assertThatThrownBy(() -> highLevelCCDElasticClient.createIndexAndMapping(indexName, caseTypeMapping))
+            .isInstanceOf(IOException.class)
+            .hasMessageContaining("PutMapping failed");
+    }
+
+    @Test
+    void removeIndexDeletesIndexSuccessfully() throws IOException {
+        String indexName = "index_to_remove";
+        var deleteResponse = mock(DeleteIndexResponse.class);
+        Mockito.when(deleteResponse.acknowledged()).thenReturn(true);
+        doReturn(deleteResponse).when(indicesClient).delete(any(Function.class));
+
+        boolean result = highLevelCCDElasticClient.removeIndex(indexName);
+
+        assertThat(result).isTrue();
+        verify(indicesClient).delete(any(Function.class));
+    }
+
+    @Test
+    void removeIndexThrowsIOExceptionIfDeleteFails() throws IOException {
+        String indexName = "index_to_remove";
+        doThrow(new IOException("Delete failed")).when(indicesClient).delete(any(Function.class));
+
+        assertThatThrownBy(() -> highLevelCCDElasticClient.removeIndex(indexName))
+            .isInstanceOf(IOException.class)
+            .hasMessageContaining("Delete failed");
+    }
+
+    @Test
+    void removeIndexReturnsFalseIfDeleteNotAcknowledged() throws IOException {
+        String indexName = "index_to_remove";
+        var deleteResponse = mock(DeleteIndexResponse.class);
+        when(deleteResponse.acknowledged()).thenReturn(false);
+        doReturn(deleteResponse).when(indicesClient).delete(any(Function.class));
+
+        boolean result = highLevelCCDElasticClient.removeIndex(indexName);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void reindexDataCallsListenerOnResponse() throws Exception {
+        final String oldIndex = "old_index";
+        final String newIndex = "new_index";
+        final String taskId = "node:123";
+
+        String startResponseBody = "{\"task\":\"" + taskId + "\"}";
+
+        String taskResponseBody = """
+            {
+              "completed": true,
+              "response": {
+                "total": 10,
+                "created": 10,
+                "updated": 0,
+                "batches": 1,
+                "failures": []
+              }
+            }
+            """;
+
+        Response startResponse = mock(Response.class);
+        Response taskResponse = mock(Response.class);
+        HttpEntity startEntity = mock(HttpEntity.class);
+        HttpEntity taskEntity = mock(HttpEntity.class);
+
+        when(startResponse.getEntity()).thenReturn(startEntity);
+        when(taskResponse.getEntity()).thenReturn(taskEntity);
+
+        when(startEntity.getContent())
+            .thenReturn(new ByteArrayInputStream(startResponseBody.getBytes(StandardCharsets.UTF_8)));
+        when(taskEntity.getContent())
+            .thenReturn(new ByteArrayInputStream(taskResponseBody.getBytes(StandardCharsets.UTF_8)));
+
+        // Low-level client comes from the factory
+        when(elasticClientFactory.createLowLevelClient()).thenReturn(restClient);
+
+        // Route the two HTTP calls: one to /_reindex, one to /_tasks/{taskId}
+        when(restClient.performRequest(any(Request.class)))
+            .thenAnswer(invocation -> {
+                Request req = invocation.getArgument(0);
+                String method = req.getMethod();
+                String endpoint = req.getEndpoint();
+
+                if ("POST".equalsIgnoreCase(method) && endpoint.startsWith("/_reindex")) {
+                    return startResponse;
+                }
+                if ("GET".equalsIgnoreCase(method) && endpoint.startsWith("/_tasks/")) {
+                    return taskResponse;
+                }
+                throw new IllegalStateException("Unexpected request: " + method + " " + endpoint);
+            });
+
+        // Run async work synchronously to avoid latches / flakiness
+        Executor directExecutor = Runnable::run;
+
+        highLevelCCDElasticClient =
+            new HighLevelCCDElasticClient(config, elasticClientFactory, directExecutor);
+
+        ReindexListener listener = mock(ReindexListener.class);
+
+        // When
+        String returnedTaskId =
+            highLevelCCDElasticClient.reindexData(oldIndex, newIndex, listener);
+
+        // Then
+        assertThat(returnedTaskId).isEqualTo(taskId);
+        verify(listener).onSuccess(anyString());
+        verify(listener, never()).onFailure(any());
+    }
+
+    @Test
+    void reindexDataCallsListenerOnFailureWhenReindexThrows() throws Exception {
+        final String oldIndex = "old_index";
+        final String newIndex = "new_index";
+        @SuppressWarnings("unchecked")
+        final ReindexListener listener = mock(ReindexListener.class);
+
+        when(elasticClientFactory.createLowLevelClient()).thenReturn(restClient);
+        when(restClient.performRequest(any(Request.class))).thenThrow(new IOException("Reindex failed"));
+
+        Executor directExecutor = Runnable::run;
+        highLevelCCDElasticClient = new HighLevelCCDElasticClient(config, elasticClientFactory, directExecutor);
+
+        // When startReindexTask throws IOException, reindexData wraps it in UncheckedIOException
+        // The listener.onFailure is NOT called because monitorReindexTask never executes
+        // (it only executes if startReindexTask succeeds)
+        assertThatThrownBy(() -> highLevelCCDElasticClient.reindexData(oldIndex, newIndex, listener))
+            .isInstanceOf(RuntimeException.class)
+            .hasCauseInstanceOf(IOException.class)
+            .hasMessageContaining("Failed to submit reindex task");
+
+        // Verify listener was never called since the exception happens before async execution
+        verify(listener, never()).onFailure(any(Exception.class));
+        verify(listener, never()).onSuccess(anyString());
+    }
+
+    @Test
+    void aliasExistsRethrowsExceptionIfStatusNot404() throws IOException, ElasticsearchException {
+        final String alias = "some_alias";
+        ElasticsearchException esEx = mock(ElasticsearchException.class);
+        Mockito.when(esEx.status()).thenReturn(404);
+        doThrow(esEx)
+            .when(indicesClient).getAlias(any(Function.class));
+        assertThat(highLevelCCDElasticClient.aliasExists(alias)).isFalse();
     }
 
     @Test
@@ -91,16 +472,21 @@ class HighLevelCCDElasticClientTest {
         when(config.getIndexShards()).thenReturn(2);
         when(config.getIndexShardsReplicas()).thenReturn(1);
         when(config.getCasesIndexMappingFieldsLimit()).thenReturn(1000);
-        when(indicesClientMock.create(any(CreateIndexRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(createIndexResponse);
-        when(createIndexResponse.isAcknowledged()).thenReturn(true);
+        CreateIndexResponse createIndexResponse = mock(CreateIndexResponse.class);
+        when(indicesClient.create(any(Function.class))).thenReturn(createIndexResponse);
+        when(createIndexResponse.acknowledged()).thenReturn(true);
+
+        GetAliasResponse realAliasResponse = new GetAliasResponse.Builder()
+            .aliases(Map.of(alias, createIndexAliases(indexName)))
+            .build();
+        realGetAliasResponseStub(realAliasResponse);
 
         // When
-        boolean result = client.createIndex(indexName, alias);
+        boolean result = highLevelCCDElasticClient.createIndex(indexName, alias);
 
         // Then
         assertThat(result).isTrue();
-        verify(indicesClientMock).create(any(CreateIndexRequest.class), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).create(any(Function.class));
     }
 
     @Test
@@ -111,16 +497,21 @@ class HighLevelCCDElasticClientTest {
         when(config.getIndexShards()).thenReturn(2);
         when(config.getIndexShardsReplicas()).thenReturn(1);
         when(config.getCasesIndexMappingFieldsLimit()).thenReturn(1000);
-        when(indicesClientMock.create(any(CreateIndexRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(createIndexResponse);
-        when(createIndexResponse.isAcknowledged()).thenReturn(true);
+        CreateIndexResponse createIndexResponse = mock(CreateIndexResponse.class);
+        when(indicesClient.create(any(Function.class))).thenReturn(createIndexResponse);
+        when(createIndexResponse.acknowledged()).thenReturn(true);
+
+        GetAliasResponse realAliasResponse = new GetAliasResponse.Builder()
+            .aliases(Map.of(alias, createIndexAliases(indexName)))
+            .build();
+        realGetAliasResponseStub(realAliasResponse);
 
         // When
-        boolean result = client.createIndex(indexName, alias);
+        boolean result = highLevelCCDElasticClient.createIndex(indexName, alias);
 
         // Then
         assertThat(result).isTrue();
-        verify(indicesClientMock).create(any(CreateIndexRequest.class), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).create(any(Function.class));
     }
 
     @Test
@@ -131,35 +522,21 @@ class HighLevelCCDElasticClientTest {
         when(config.getIndexShards()).thenReturn(2);
         when(config.getIndexShardsReplicas()).thenReturn(1);
         when(config.getCasesIndexMappingFieldsLimit()).thenReturn(1000);
-        when(indicesClientMock.create(any(CreateIndexRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(createIndexResponse);
-        when(createIndexResponse.isAcknowledged()).thenReturn(true);
+        CreateIndexResponse createIndexResponse = mock(CreateIndexResponse.class);
+        when(indicesClient.create(any(Function.class))).thenReturn(createIndexResponse);
+        when(createIndexResponse.acknowledged()).thenReturn(true);
+
+        GetAliasResponse realAliasResponse = new GetAliasResponse.Builder()
+            .aliases(Map.of(alias, createIndexAliases(indexName)))
+            .build();
+        realGetAliasResponseStub(realAliasResponse);
 
         // When
-        boolean result = client.createIndex(indexName, alias);
+        boolean result = highLevelCCDElasticClient.createIndex(indexName, alias);
 
         // Then
         assertThat(result).isTrue();
-        verify(indicesClientMock).create(any(CreateIndexRequest.class), eq(RequestOptions.DEFAULT));
-    }
-
-    @Test
-    void shouldReturnFalseWhenCreateIndexFails() throws IOException {
-        // Given
-        String indexName = "test-index";
-        String alias = "test-alias";
-        when(config.getIndexShards()).thenReturn(2);
-        when(config.getIndexShardsReplicas()).thenReturn(1);
-        when(config.getCasesIndexMappingFieldsLimit()).thenReturn(1000);
-        when(indicesClientMock.create(any(CreateIndexRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(createIndexResponse);
-        when(createIndexResponse.isAcknowledged()).thenReturn(false);
-
-        // When
-        boolean result = client.createIndex(indexName, alias);
-
-        // Then
-        assertThat(result).isFalse();
+        verify(indicesClient).create(any(Function.class));
     }
 
     @Test
@@ -170,174 +547,138 @@ class HighLevelCCDElasticClientTest {
         when(config.getIndexShards()).thenReturn(2);
         when(config.getIndexShardsReplicas()).thenReturn(1);
         when(config.getCasesIndexMappingFieldsLimit()).thenReturn(1000);
-        when(indicesClientMock.create(any(CreateIndexRequest.class), eq(RequestOptions.DEFAULT)))
+        when(indicesClient.create(any(Function.class)))
+            .thenThrow(new IOException("Create index failed"))
+            .thenThrow(new IOException("Create index failed"))
+            .thenThrow(new IOException("Create index failed"))
             .thenThrow(new IOException("Create index failed"));
 
         // When / Then
-        assertThatThrownBy(() -> client.createIndex(indexName, alias))
+        Assertions.assertThatThrownBy(() -> highLevelCCDElasticClient.createIndex(indexName, alias))
             .isInstanceOf(IOException.class)
-            .hasMessage("Create index failed");
-    }
-
-    @Test
-    void shouldUpsertMappingSuccessfully() throws IOException {
-        // Given
-        Map<String, Set<org.elasticsearch.cluster.metadata.AliasMetadata>> aliases = new HashMap<>();
-        Set<org.elasticsearch.cluster.metadata.AliasMetadata> aliasSet = new HashSet<>();
-        aliasSet.add(mock(org.elasticsearch.cluster.metadata.AliasMetadata.class));
-        aliases.put("test-index-000001", aliasSet);
-        when(indicesClientMock.getAlias(any(GetAliasesRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(getAliasesResponse);
-        when(getAliasesResponse.getAliases()).thenReturn(aliases);
-        when(indicesClientMock.putMapping(any(PutMappingRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(acknowledgedResponse);
-        when(acknowledgedResponse.isAcknowledged()).thenReturn(true);
-
-        // When
-        final String aliasName = "test-alias";
-        final String caseTypeMapping = "{\"properties\":{\"field1\":{\"type\":\"text\"}}}";
-        boolean result = client.upsertMapping(aliasName, caseTypeMapping);
-
-        // Then
-        assertThat(result).isTrue();
-        verify(indicesClientMock).getAlias(any(GetAliasesRequest.class), eq(RequestOptions.DEFAULT));
-        verify(indicesClientMock).putMapping(any(PutMappingRequest.class), eq(RequestOptions.DEFAULT));
+            .hasMessageContaining("Failed to execute create index after 3 attempts");
     }
 
     @Test
     void shouldReturnFalseWhenUpsertMappingFails() throws IOException {
-        // Given
-        Map<String, Set<org.elasticsearch.cluster.metadata.AliasMetadata>> aliases = new HashMap<>();
-        Set<org.elasticsearch.cluster.metadata.AliasMetadata> aliasSet = new HashSet<>();
-        aliasSet.add(mock(org.elasticsearch.cluster.metadata.AliasMetadata.class));
-        aliases.put("test-index-000001", aliasSet);
-        when(indicesClientMock.getAlias(any(GetAliasesRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(getAliasesResponse);
-        when(getAliasesResponse.getAliases()).thenReturn(aliases);
-        when(indicesClientMock.putMapping(any(PutMappingRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(acknowledgedResponse);
-        when(acknowledgedResponse.isAcknowledged()).thenReturn(false);
+        //Given
+        GetAliasResponse getAliasResponse = mock(GetAliasResponse.class);
+        Map<String, IndexAliases> aliasMap = new HashMap<>();
+        aliasMap.put("test-index-000001", mock(IndexAliases.class));
+        when(indicesClient.getAlias(any(Function.class))).thenReturn(getAliasResponse);
+        when(getAliasResponse.aliases()).thenReturn(aliasMap);
+        PutMappingResponse putMappingResponse = mock(PutMappingResponse.class);
+        when(indicesClient.putMapping(any(Function.class))).thenReturn(putMappingResponse);
+        when(putMappingResponse.acknowledged()).thenReturn(false);
 
         // When
-        final String aliasName = "test-alias";
-        final String caseTypeMapping = "{\"properties\":{\"field1\":{\"type\":\"text\"}}}";
-        boolean result = client.upsertMapping(aliasName, caseTypeMapping);
+        String aliasName = "test-alias";
+        String caseTypeMapping = "{\"properties\":{\"field1\":{\"type\":\"text\"}}}";
+        boolean result = highLevelCCDElasticClient.upsertMapping(aliasName, caseTypeMapping);
 
         // Then
         assertThat(result).isFalse();
-        verify(indicesClientMock).getAlias(any(GetAliasesRequest.class), eq(RequestOptions.DEFAULT));
-        verify(indicesClientMock).putMapping(any(PutMappingRequest.class), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).getAlias(any(Function.class));
+        verify(indicesClient).putMapping(any(Function.class));
     }
 
     @Test
     void shouldThrowExceptionWhenUpsertMappingFailsWithIOException() throws IOException {
         // Given
-        Map<String, Set<org.elasticsearch.cluster.metadata.AliasMetadata>> aliases = new HashMap<>();
-        Set<org.elasticsearch.cluster.metadata.AliasMetadata> aliasSet = new HashSet<>();
-        aliasSet.add(mock(org.elasticsearch.cluster.metadata.AliasMetadata.class));
-        aliases.put("test-index-000001", aliasSet);
-        when(indicesClientMock.getAlias(any(GetAliasesRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(getAliasesResponse);
-        when(getAliasesResponse.getAliases()).thenReturn(aliases);
-        when(indicesClientMock.putMapping(any(PutMappingRequest.class), eq(RequestOptions.DEFAULT)))
+        GetAliasResponse getAliasResponse = mock(GetAliasResponse.class);
+        Map<String, IndexAliases> aliasMap = new HashMap<>();
+        aliasMap.put("test-index-000001", mock(IndexAliases.class));
+        when(indicesClient.getAlias(any(Function.class))).thenReturn(getAliasResponse);
+        when(getAliasResponse.aliases()).thenReturn(aliasMap);
+        when(indicesClient.putMapping(any(Function.class))).thenThrow(new IOException("Upsert mapping failed"))
+            .thenThrow(new IOException("Upsert mapping failed"))
+            .thenThrow(new IOException("Upsert mapping failed"))
             .thenThrow(new IOException("Upsert mapping failed"));
 
         // When / Then
         final String aliasName = "test-alias";
         final String caseTypeMapping = "{\"properties\":{\"field1\":{\"type\":\"text\"}}}";
-        assertThatThrownBy(() -> client.upsertMapping(aliasName, caseTypeMapping))
+        Assertions.assertThatThrownBy(() -> highLevelCCDElasticClient.upsertMapping(aliasName, caseTypeMapping))
             .isInstanceOf(IOException.class)
-            .hasMessage("Upsert mapping failed");
+            .hasMessageContaining("Failed to execute put mapping after 3 attempts");
     }
 
     @Test
     void shouldCheckAliasExistsSuccessfully() throws IOException {
         // Given
-        String alias = "test-alias";
-        when(indicesClientMock.existsAlias(any(GetAliasesRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(true);
+        final String alias = "test-alias";
+
+        GetAliasResponse getAliasResponse = mock(GetAliasResponse.class);
+        Map<String, IndexAliases> aliasMap = new HashMap<>();
+        aliasMap.put("test-index-000001", mock(IndexAliases.class));
+        when(indicesClient.getAlias(any(Function.class))).thenReturn(getAliasResponse);
+        when(getAliasResponse.aliases()).thenReturn(aliasMap);
 
         // When
-        boolean result = client.aliasExists(alias);
+        boolean result = highLevelCCDElasticClient.aliasExists(alias);
 
         // Then
         assertThat(result).isTrue();
-        verify(indicesClientMock).existsAlias(any(GetAliasesRequest.class), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).getAlias(any(Function.class));
     }
 
     @Test
     void shouldReturnFalseWhenAliasDoesNotExist() throws IOException {
         // Given
         String alias = "test-alias";
-        when(indicesClientMock.existsAlias(any(GetAliasesRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(false);
+        GetAliasResponse getAliasResponse = mock(GetAliasResponse.class);
+        when(indicesClient.getAlias(any(Function.class))).thenReturn(getAliasResponse);
+        when(getAliasResponse.aliases()).thenReturn(Collections.emptyMap());
 
         // When
-        boolean result = client.aliasExists(alias);
+        boolean result = highLevelCCDElasticClient.aliasExists(alias);
 
         // Then
         assertThat(result).isFalse();
+        verify(indicesClient).getAlias(any(Function.class));
     }
 
     @Test
     void shouldThrowExceptionWhenAliasExistsFailsWithIOException() throws IOException {
         // Given
         String alias = "test-alias";
-        when(indicesClientMock.existsAlias(any(GetAliasesRequest.class), eq(RequestOptions.DEFAULT)))
+        when(indicesClient.getAlias(any(Function.class)))
+            .thenThrow(new IOException("Alias exists check failed"))
+            .thenThrow(new IOException("Alias exists check failed"))
+            .thenThrow(new IOException("Alias exists check failed"))
             .thenThrow(new IOException("Alias exists check failed"));
 
         // When / Then
-        assertThatThrownBy(() -> client.aliasExists(alias))
+        Assertions.assertThatThrownBy(() -> highLevelCCDElasticClient.aliasExists(alias))
             .isInstanceOf(IOException.class)
-            .hasMessage("Alias exists check failed");
-    }
-
-    @Test
-    void shouldCloseClientSuccessfully() throws IOException {
-        // When
-        client.close();
-
-        // Then
-        verify(elasticClient).close();
-    }
-
-    @Test
-    void shouldHandleIOExceptionWhenClosingClient() throws IOException {
-        // Given
-        doThrow(new IOException("Close failed")).when(elasticClient).close();
-
-        // When
-        client.close();
-
-        // Then
-        verify(elasticClient).close();
-        // Verify that the error is logged, but no exception is rethrown
+            .hasMessageContaining("Failed to execute check alias existence after 3 attempts");
     }
 
     @Test
     void shouldGetAliasSuccessfully() throws IOException {
         // Given
         String alias = "test-alias";
-        when(indicesClientMock.getAlias(any(GetAliasesRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(getAliasesResponse);
+        GetAliasResponse getAliasResponse = mock(GetAliasResponse.class);
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.getAlias(any(Function.class))).thenReturn(getAliasResponse);
 
         // When
-        GetAliasesResponse result = client.getAlias(alias);
+        GetAliasResponse result = highLevelCCDElasticClient.getAlias(alias);
 
         // Then
-        assertThat(result).isEqualTo(getAliasesResponse);
-        verify(indicesClientMock).getAlias(any(GetAliasesRequest.class), eq(RequestOptions.DEFAULT));
+        assertThat(result).isEqualTo(getAliasResponse);
+        verify(indicesClient).getAlias(any(Function.class));
     }
 
     @Test
     void shouldThrowExceptionWhenGetAliasFailsWithIOException() throws IOException {
         // Given
         String alias = "test-alias";
-        when(indicesClientMock.getAlias(any(GetAliasesRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenThrow(new IOException("Get alias failed"));
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.getAlias(any(Function.class))).thenThrow(new IOException("Get alias failed"));
 
         // When / Then
-        assertThatThrownBy(() -> client.getAlias(alias))
+        Assertions.assertThatThrownBy(() -> highLevelCCDElasticClient.getAlias(alias))
             .isInstanceOf(IOException.class)
             .hasMessage("Get alias failed");
     }
@@ -347,14 +688,15 @@ class HighLevelCCDElasticClientTest {
         // Given
         String indexName = "test-index";
         boolean readOnly = true;
-        when(indicesClientMock.putSettings(any(UpdateSettingsRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(acknowledgedResponse);
+        PutIndicesSettingsResponse putSettingsResponse = mock(PutIndicesSettingsResponse.class);
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.putSettings(any(Function.class))).thenReturn(putSettingsResponse);
 
         // When
-        client.setIndexReadOnly(indexName, readOnly);
+        highLevelCCDElasticClient.setIndexReadOnly(indexName, readOnly);
 
         // Then
-        verify(indicesClientMock).putSettings(any(UpdateSettingsRequest.class), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).putSettings(any(Function.class));
     }
 
     @Test
@@ -362,14 +704,15 @@ class HighLevelCCDElasticClientTest {
         // Given
         String indexName = "test-index";
         boolean readOnly = false;
-        when(indicesClientMock.putSettings(any(UpdateSettingsRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(acknowledgedResponse);
+        PutIndicesSettingsResponse putSettingsResponse = mock(PutIndicesSettingsResponse.class);
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.putSettings(any(Function.class))).thenReturn(putSettingsResponse);
 
         // When
-        client.setIndexReadOnly(indexName, readOnly);
+        highLevelCCDElasticClient.setIndexReadOnly(indexName, readOnly);
 
         // Then
-        verify(indicesClientMock).putSettings(any(UpdateSettingsRequest.class), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).putSettings(any(Function.class));
     }
 
     @Test
@@ -377,11 +720,12 @@ class HighLevelCCDElasticClientTest {
         // Given
         String indexName = "test-index";
         boolean readOnly = true;
-        when(indicesClientMock.putSettings(any(UpdateSettingsRequest.class), eq(RequestOptions.DEFAULT)))
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.putSettings(any(Function.class)))
             .thenThrow(new IOException("Set index read-only failed"));
 
         // When / Then
-        assertThatThrownBy(() -> client.setIndexReadOnly(indexName, readOnly))
+        Assertions.assertThatThrownBy(() -> highLevelCCDElasticClient.setIndexReadOnly(indexName, readOnly))
             .isInstanceOf(IOException.class)
             .hasMessage("Set index read-only failed");
     }
@@ -395,20 +739,23 @@ class HighLevelCCDElasticClientTest {
         when(config.getIndexShards()).thenReturn(2);
         when(config.getIndexShardsReplicas()).thenReturn(1);
         when(config.getCasesIndexMappingFieldsLimit()).thenReturn(1000);
-        when(indicesClientMock.create(any(CreateIndexRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(createIndexResponse);
-        when(createIndexResponse.isAcknowledged()).thenReturn(true);
-        when(indicesClientMock.putMapping(any(PutMappingRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(acknowledgedResponse);
-        when(acknowledgedResponse.isAcknowledged()).thenReturn(true);
+
+        CreateIndexResponse createIndexResponse = mock(CreateIndexResponse.class);
+        when(indicesClient.create(any(Function.class))).thenReturn(createIndexResponse);
+        when(createIndexResponse.acknowledged()).thenReturn(true);
+
+        PutMappingResponse putMappingResponse = mock(PutMappingResponse.class);
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.putMapping(any(Function.class))).thenReturn(putMappingResponse);
+        when(putMappingResponse.acknowledged()).thenReturn(true);
 
         // When
-        boolean result = client.createIndexAndMapping(indexName, caseTypeMapping);
+        boolean result = highLevelCCDElasticClient.createIndexAndMapping(indexName, caseTypeMapping);
 
         // Then
         assertThat(result).isTrue();
-        verify(indicesClientMock).create(any(CreateIndexRequest.class), eq(RequestOptions.DEFAULT));
-        verify(indicesClientMock).putMapping(any(PutMappingRequest.class), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).create(any(Function.class));
+        verify(indicesClient).putMapping(any(Function.class));
     }
 
     @Test
@@ -420,20 +767,22 @@ class HighLevelCCDElasticClientTest {
         when(config.getIndexShards()).thenReturn(2);
         when(config.getIndexShardsReplicas()).thenReturn(1);
         when(config.getCasesIndexMappingFieldsLimit()).thenReturn(1000);
-        when(indicesClientMock.create(any(CreateIndexRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(createIndexResponse);
-        when(createIndexResponse.isAcknowledged()).thenReturn(false);
-        when(indicesClientMock.putMapping(any(PutMappingRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(acknowledgedResponse);
-        when(acknowledgedResponse.isAcknowledged()).thenReturn(true);
+        CreateIndexResponse createIndexResponse = mock(CreateIndexResponse.class);
+        when(indicesClient.create(any(Function.class))).thenReturn(createIndexResponse);
+        when(createIndexResponse.acknowledged()).thenReturn(false);
+
+        PutMappingResponse putMappingResponse = mock(PutMappingResponse.class);
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.putMapping(any(Function.class))).thenReturn(putMappingResponse);
+        when(putMappingResponse.acknowledged()).thenReturn(true);
 
         // When
-        boolean result = client.createIndexAndMapping(indexName, caseTypeMapping);
+        boolean result = highLevelCCDElasticClient.createIndexAndMapping(indexName, caseTypeMapping);
 
         // Then
         assertThat(result).isFalse();
-        verify(indicesClientMock).create(any(CreateIndexRequest.class), eq(RequestOptions.DEFAULT));
-        verify(indicesClientMock).putMapping(any(PutMappingRequest.class), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).create(any(Function.class));
+        verify(indicesClient).putMapping(any(Function.class));
     }
 
     @Test
@@ -445,13 +794,16 @@ class HighLevelCCDElasticClientTest {
         when(config.getIndexShards()).thenReturn(2);
         when(config.getIndexShardsReplicas()).thenReturn(1);
         when(config.getCasesIndexMappingFieldsLimit()).thenReturn(1000);
-        when(indicesClientMock.create(any(CreateIndexRequest.class), eq(RequestOptions.DEFAULT)))
+        when(indicesClient.create(any(Function.class)))
+            .thenThrow(new IOException("Create index and mapping failed"))
+            .thenThrow(new IOException("Create index and mapping failed"))
+            .thenThrow(new IOException("Create index and mapping failed"))
             .thenThrow(new IOException("Create index and mapping failed"));
 
         // When / Then
-        assertThatThrownBy(() -> client.createIndexAndMapping(indexName, caseTypeMapping))
+        Assertions.assertThatThrownBy(() -> highLevelCCDElasticClient.createIndexAndMapping(indexName, caseTypeMapping))
             .isInstanceOf(IOException.class)
-            .hasMessage("Create index and mapping failed");
+            .hasMessageContaining("Failed to execute create index with mapping after 3 attempts");
     }
 
     @Test
@@ -460,16 +812,18 @@ class HighLevelCCDElasticClientTest {
         String aliasName = "test-alias";
         String oldIndex = "old-index";
         String newIndex = "new-index";
-        when(indicesClientMock.updateAliases(any(), eq(RequestOptions.DEFAULT)))
-            .thenReturn(acknowledgedResponse);
-        when(acknowledgedResponse.isAcknowledged()).thenReturn(true);
+
+        UpdateAliasesResponse updateAliasesResponse = mock(UpdateAliasesResponse.class);
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.updateAliases(any(Function.class))).thenReturn(updateAliasesResponse);
+        when(updateAliasesResponse.acknowledged()).thenReturn(true);
 
         // When
-        boolean result = client.updateAlias(aliasName, oldIndex, newIndex);
+        boolean result = highLevelCCDElasticClient.updateAlias(aliasName, oldIndex, newIndex);
 
         // Then
         assertThat(result).isTrue();
-        verify(indicesClientMock).updateAliases(any(), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).updateAliases(any(Function.class));
     }
 
     @Test
@@ -478,16 +832,17 @@ class HighLevelCCDElasticClientTest {
         String aliasName = "test-alias";
         String oldIndex = "old-index";
         String newIndex = "new-index";
-        when(indicesClientMock.updateAliases(any(), eq(RequestOptions.DEFAULT)))
-            .thenReturn(acknowledgedResponse);
-        when(acknowledgedResponse.isAcknowledged()).thenReturn(false);
+        UpdateAliasesResponse updateAliasesResponse = mock(UpdateAliasesResponse.class);
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.updateAliases(any(Function.class))).thenReturn(updateAliasesResponse);
+        when(updateAliasesResponse.acknowledged()).thenReturn(false);
 
         // When
-        boolean result = client.updateAlias(aliasName, oldIndex, newIndex);
+        boolean result = highLevelCCDElasticClient.updateAlias(aliasName, oldIndex, newIndex);
 
         // Then
         assertThat(result).isFalse();
-        verify(indicesClientMock).updateAliases(any(), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).updateAliases(any(Function.class));
     }
 
     @Test
@@ -496,11 +851,12 @@ class HighLevelCCDElasticClientTest {
         String aliasName = "test-alias";
         String oldIndex = "old-index";
         String newIndex = "new-index";
-        when(indicesClientMock.updateAliases(any(), eq(RequestOptions.DEFAULT)))
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.updateAliases(any(Function.class)))
             .thenThrow(new IOException("Update alias failed"));
 
         // When / Then
-        assertThatThrownBy(() -> client.updateAlias(aliasName, oldIndex, newIndex))
+        Assertions.assertThatThrownBy(() -> highLevelCCDElasticClient.updateAlias(aliasName, oldIndex, newIndex))
             .isInstanceOf(IOException.class)
             .hasMessage("Update alias failed");
     }
@@ -509,43 +865,48 @@ class HighLevelCCDElasticClientTest {
     void shouldRemoveIndexSuccessfully() throws IOException {
         // Given
         String indexName = "test-index";
-        when(indicesClientMock.delete(any(DeleteIndexRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(acknowledgedResponse);
-        when(acknowledgedResponse.isAcknowledged()).thenReturn(true);
+        DeleteIndexResponse deleteIndexResponse = mock(DeleteIndexResponse.class);
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.delete(any(Function.class)))
+            .thenReturn(deleteIndexResponse);
+        when(deleteIndexResponse.acknowledged()).thenReturn(true);
 
         // When
-        boolean result = client.removeIndex(indexName);
+        boolean result = highLevelCCDElasticClient.removeIndex(indexName);
 
         // Then
         assertThat(result).isTrue();
-        verify(indicesClientMock).delete(any(DeleteIndexRequest.class), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).delete(any(Function.class));
     }
 
     @Test
     void shouldReturnFalseWhenRemoveIndexFails() throws IOException {
         // Given
         String indexName = "test-index";
-        when(indicesClientMock.delete(any(DeleteIndexRequest.class), eq(RequestOptions.DEFAULT)))
-            .thenReturn(acknowledgedResponse);
-        when(acknowledgedResponse.isAcknowledged()).thenReturn(false);
+        DeleteIndexResponse deleteIndexResponse = mock(DeleteIndexResponse.class);
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.delete(any(Function.class)))
+            .thenReturn(deleteIndexResponse);
+        when(deleteIndexResponse.acknowledged()).thenReturn(false);
 
         // When
-        boolean result = client.removeIndex(indexName);
+        boolean result = highLevelCCDElasticClient.removeIndex(indexName);
 
         // Then
         assertThat(result).isFalse();
-        verify(indicesClientMock).delete(any(DeleteIndexRequest.class), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).delete(any(Function.class));
     }
 
     @Test
     void shouldThrowExceptionWhenRemoveIndexFailsWithIOException() throws IOException {
         // Given
         String indexName = "test-index";
-        when(indicesClientMock.delete(any(DeleteIndexRequest.class), eq(RequestOptions.DEFAULT)))
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.delete(any(Function.class)))
             .thenThrow(new IOException("Remove index failed"));
 
         // When / Then
-        assertThatThrownBy(() -> client.removeIndex(indexName))
+        Assertions.assertThatThrownBy(() -> highLevelCCDElasticClient.removeIndex(indexName))
             .isInstanceOf(IOException.class)
             .hasMessage("Remove index failed");
     }
@@ -553,19 +914,60 @@ class HighLevelCCDElasticClientTest {
     @Test
     void shouldReindexDataSuccessfully() throws IOException {
         // Given
-        String oldIndex = "old-index";
-        String newIndex = "new-index";
-        String taskId = "node:123";
-        String responseBody = "{\"task\":\"" + taskId + "\"}";
+        final String oldIndex = "old-index";
+        final String newIndex = "new-index";
+        final String taskId = "node:123";
+        final String startResponseBody = "{\"task\":\"" + taskId + "\"}";
 
-        // Mock the low-level client for ReindexHelper
-        when(elasticClient.getLowLevelClient()).thenReturn(restClient);
-        when(restClient.performRequest(any())).thenReturn(httpResponse);
-        when(httpResponse.getEntity()).thenReturn(httpEntity);
-        when(httpEntity.getContent()).thenReturn(new java.io.ByteArrayInputStream(responseBody.getBytes()));
+        String taskResponseBody = """
+            {
+              "completed": true,
+              "response": {
+                "total": 10,
+                "created": 10,
+                "updated": 0,
+                "batches": 1,
+                "failures": []
+              }
+            }
+            """;
+
+        Response startResponse = mock(Response.class);
+        Response taskResponse = mock(Response.class);
+        HttpEntity startEntity = mock(HttpEntity.class);
+        HttpEntity taskEntity = mock(HttpEntity.class);
+
+        when(startResponse.getEntity()).thenReturn(startEntity);
+        when(taskResponse.getEntity()).thenReturn(taskEntity);
+
+        when(startEntity.getContent())
+            .thenReturn(new ByteArrayInputStream(startResponseBody.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+        when(taskEntity.getContent())
+            .thenReturn(new ByteArrayInputStream(taskResponseBody.getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+
+        when(elasticClientFactory.createLowLevelClient()).thenReturn(restClient);
+
+        when(restClient.performRequest(any(org.elasticsearch.client.Request.class)))
+            .thenAnswer(invocation -> {
+                org.elasticsearch.client.Request req = invocation.getArgument(0);
+                String method = req.getMethod();
+                String endpoint = req.getEndpoint();
+
+                if ("POST".equalsIgnoreCase(method) && endpoint.startsWith("/_reindex")) {
+                    return startResponse;
+                } else if ("GET".equalsIgnoreCase(method) && endpoint.startsWith("/_tasks/")) {
+                    return taskResponse;
+                } else {
+                    return taskResponse;
+                }
+            });
+
+        Executor directExecutor = Runnable::run;
+        highLevelCCDElasticClient = new HighLevelCCDElasticClient(config, elasticClientFactory, directExecutor);
+        ReindexListener listener = mock(ReindexListener.class);
 
         // When
-        String result = client.reindexData(oldIndex, newIndex, reindexListener);
+        String result = highLevelCCDElasticClient.reindexData(oldIndex, newIndex, listener);
 
         // Then
         assertThat(result).isNotNull();
@@ -575,14 +977,18 @@ class HighLevelCCDElasticClientTest {
     @Test
     void shouldReindexDataThrowExceptionWhenReindexHelperFails() throws IOException {
         // Given
-        String oldIndex = "old-index";
-        String newIndex = "new-index";
-        // Mock the low-level client for ReindexHelper
-        when(elasticClient.getLowLevelClient()).thenReturn(restClient);
-        when(restClient.performRequest(any())).thenThrow(new IOException("Reindex request failed"));
+        final String oldIndex = "old-index";
+        final String newIndex = "new-index";
+
+        when(elasticClientFactory.createLowLevelClient()).thenReturn(restClient);
+        when(restClient.performRequest(any(Request.class))).thenThrow(new IOException("Reindex request failed"));
+        Executor directExecutor = Runnable::run;
+        highLevelCCDElasticClient =
+            new HighLevelCCDElasticClient(config, elasticClientFactory, directExecutor);
+        ReindexListener listener = mock(ReindexListener.class);
 
         // When / Then
-        assertThatThrownBy(() -> client.reindexData(oldIndex, newIndex, reindexListener))
+        Assertions.assertThatThrownBy(() -> highLevelCCDElasticClient.reindexData(oldIndex, newIndex, listener))
             .isInstanceOf(RuntimeException.class)
             .hasCauseInstanceOf(IOException.class);
     }
@@ -591,54 +997,80 @@ class HighLevelCCDElasticClientTest {
     void shouldRefreshIndexesSuccessfully() throws IOException {
         // Given
         String[] indexes = {"index1", "index2"};
-        when(indicesClientMock.refresh(any(RefreshRequest.class), eq(RequestOptions.DEFAULT)))
+        RefreshResponse refreshResponse = mock(RefreshResponse.class);
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.refresh(any(Function.class)))
             .thenReturn(refreshResponse);
 
         // When
-        client.refresh(indexes);
+        highLevelCCDElasticClient.refresh(indexes);
 
         // Then
-        verify(indicesClientMock).refresh(any(RefreshRequest.class), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).refresh(any(Function.class));
     }
 
     @Test
     void shouldHandleEmptyIndexesInRefresh() throws IOException {
         // Given
         String[] indexes = {};
-        when(indicesClientMock.refresh(any(RefreshRequest.class), eq(RequestOptions.DEFAULT)))
+        RefreshResponse refreshResponse = mock(RefreshResponse.class);
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.refresh(any(Function.class)))
             .thenReturn(refreshResponse);
 
         // When
-        client.refresh(indexes);
+        highLevelCCDElasticClient.refresh(indexes);
 
         // Then
-        verify(indicesClientMock).refresh(any(RefreshRequest.class), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).refresh(any(Function.class));
     }
 
     @Test
     void shouldHandleNullIndexesInRefresh() throws IOException {
         // Given
         String[] indexes = null;
-        when(indicesClientMock.refresh(any(RefreshRequest.class), eq(RequestOptions.DEFAULT)))
+        RefreshResponse refreshResponse = mock(RefreshResponse.class);
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.refresh(any(Function.class)))
             .thenReturn(refreshResponse);
 
         // When
-        client.refresh(indexes);
+        highLevelCCDElasticClient.refresh(indexes);
 
         // Then
-        verify(indicesClientMock).refresh(any(RefreshRequest.class), eq(RequestOptions.DEFAULT));
+        verify(indicesClient).refresh(any(Function.class));
     }
 
     @Test
     void shouldThrowExceptionWhenRefreshFailsWithIOException() throws IOException {
         // Given
         String[] indexes = {"index1"};
-        when(indicesClientMock.refresh(any(RefreshRequest.class), eq(RequestOptions.DEFAULT)))
+        when(elasticClient.indices()).thenReturn(indicesClient);
+        when(indicesClient.refresh(any(Function.class)))
             .thenThrow(new IOException("Refresh failed"));
 
         // When / Then
-        assertThatThrownBy(() -> client.refresh(indexes))
+        Assertions.assertThatThrownBy(() -> highLevelCCDElasticClient.refresh(indexes))
             .isInstanceOf(IOException.class)
             .hasMessage("Refresh failed");
+    }
+
+    private void realGetAliasResponseStub(GetAliasResponse realAliasResponse) throws IOException {
+        doReturn(realAliasResponse)
+            .when(indicesClient)
+            .getAlias(Mockito.<Function<GetAliasRequest.Builder, ObjectBuilder<GetAliasRequest>>>any());
+
+    }
+
+    private void realUpdateAliasesResponseStub(UpdateAliasesResponse realAliasesResponse) throws IOException {
+        doReturn(realAliasesResponse)
+            .when(indicesClient)
+            .updateAliases(Mockito.<Function<UpdateAliasesRequest.Builder, ObjectBuilder<UpdateAliasesRequest>>>any());
+    }
+
+    private IndexAliases createIndexAliases(String index) {
+        IndexAliases.Builder builder = new IndexAliases.Builder();
+        builder.aliases(index, new AliasDefinition.Builder().build());
+        return builder.build();
     }
 }

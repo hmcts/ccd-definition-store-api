@@ -23,9 +23,6 @@ public class ReindexEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Integer id;
 
-    @Column(name = "reindex")
-    private Boolean reindex;
-
     @Column(name = "delete_old_index")
     private Boolean deleteOldIndex;
 
@@ -47,9 +44,9 @@ public class ReindexEntity {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "exception_message")
+    @Column(name = "exception_message", columnDefinition = "TEXT")
     private String exceptionMessage;
 
-    @Column(name = "reindex_response")
+    @Column(name = "reindex_response", columnDefinition = "TEXT")
     private String reindexResponse;
 }
