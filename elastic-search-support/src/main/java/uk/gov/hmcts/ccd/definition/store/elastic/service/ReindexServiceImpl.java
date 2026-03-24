@@ -1,33 +1,45 @@
-package uk.gov.hmcts.ccd.definition.store.elastic;
+package uk.gov.hmcts.ccd.definition.store.elastic.service;
 
 import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexStatus;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.CompletionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class ReindexService {
+@Slf4j
+public class ReindexServiceImpl implements ReindexService {
 
-    private static final Logger log = LoggerFactory.getLogger(ReindexService.class);
+    private final ReindexRepository reindexRepository;
+    private final EntityToResponseDTOMapper mapper;
     private final CaseMappingGenerator mappingGenerator;
-
     private final ObjectFactory<HighLevelCCDElasticClient> clientFactory;
 
-    public ReindexService(CaseMappingGenerator mappingGenerator,
-                          ObjectFactory<HighLevelCCDElasticClient> clientFactory) {
+    @Autowired
+    public ReindexServiceImpl(ReindexRepository reindexRepository, EntityToResponseDTOMapper mapper,
+                              CaseMappingGenerator mappingGenerator,
+                              ObjectFactory<HighLevelCCDElasticClient> clientFactory) {
+        this.reindexRepository = reindexRepository;
+        this.mapper = mapper;
         this.mappingGenerator = mappingGenerator;
         this.clientFactory = clientFactory;
     }
@@ -44,16 +56,18 @@ public class ReindexService {
         long sourceIndexDocumentCount = elasticClient.countDocuments(indexName);
         log.info("Begin reindexing. Source index '{}' contains {} cases/documents",
             indexName, sourceIndexDocumentCount);
-
-        //create new index with generated mapping and incremented case type name (no alias update yet)
-        String caseMapping = mappingGenerator.generateMapping(caseType);
-        log.info("case mapping: {}", caseMapping);
-        log.info("Reindex process for case type {} is started, Time {}",
-            newIndexName, System.currentTimeMillis());
+        saveEntity(event.isDeleteOldIndex(), caseType, newIndexName);
         try {
+            //create new index with generated mapping and incremented case type name (no alias update yet)
+            String caseMapping = mappingGenerator.generateMapping(caseType);
+            log.info("case mapping: {}", caseMapping);
+            log.info("Reindex process for case type {} is started, Time {}",
+                newIndexName, System.currentTimeMillis());
+
             elasticClient.createIndexAndMapping(newIndexName, caseMapping);
             elasticClient.setIndexReadOnly(indexName, true);
         } catch (Exception e) {
+            updateEntity(newIndexName, e);
             onFailure(e, elasticClient, newIndexName, indexName);
             throw e;
         }
@@ -76,15 +90,22 @@ public class ReindexService {
 
         return elasticClient.reindexData(oldIndex, newIndex, new ReindexListener() {
             @Override
-            public void onSuccess() {
+            public void onSuccess(String response) {
                 try (elasticClient; HighLevelCCDElasticClient highLevelCCDElasticClient = clientFactory.getObject()) {
                     //if success set writable and update alias to new index
-                    ReindexService.onSuccess(highLevelCCDElasticClient,
+                    ReindexServiceImpl.onSuccess(highLevelCCDElasticClient,
                         oldIndex,
                         newIndex,
                         baseIndexName,
                         elasticClient,
                         deleteOldIndex);
+
+                    //set success status and end time for db
+                    updateEntity(newIndex, response);
+                    log.info("saved reindex entity"
+                        + " metadata for case type {} to DB", baseIndexName);
+
+                    log.info("Reindex process for case type {} completed", newIndex);
                 } catch (IOException e) {
                     throw new CompletionException("Failed cleanup after reindexing failure for index " + newIndex, e);
                 }
@@ -93,10 +114,13 @@ public class ReindexService {
             @Override
             public void onFailure(Exception ex) {
                 try (elasticClient; HighLevelCCDElasticClient highLevelCCDElasticClient = clientFactory.getObject()) {
+                    updateEntity(newIndex, ex);
                     //if failed delete new index, set old index writable
-                    ReindexService.onFailure(ex, highLevelCCDElasticClient, newIndex, baseIndexName);
+                    ReindexServiceImpl.onFailure(ex, highLevelCCDElasticClient, newIndex, baseIndexName);
                 } catch (IOException e) {
-                    throw new CompletionException("Failed cleanup after reindexing failure for index " + newIndex, e);
+                    log.error("Failed cleanup after reindexing failure for index " + newIndex, e);
+                    updateEntity(newIndex, e);
+                    throw new CompletionException(e);
                 }
                 throw new CompletionException(ex);
             }
@@ -110,6 +134,7 @@ public class ReindexService {
         log.error("Reindex process for case type {} is failed, Time {}",
             newIndex, System.currentTimeMillis());
         log.error("reindexing failed", ex);
+
         highLevelCCDElasticClient.removeIndex(newIndex);
         log.info("{} deleted", newIndex);
         highLevelCCDElasticClient.setIndexReadOnly(oldIndex, false);
@@ -134,10 +159,9 @@ public class ReindexService {
             log.info("deleting old index {}", oldIndex);
             highLevelCCDElasticClient.removeIndex(oldIndex);
         }
-        log.info("Reindex process for case type {} completed", newIndex);
     }
 
-    String incrementIndexNumber(String indexName) {
+    public String incrementIndexNumber(String indexName) {
         Pattern pattern = Pattern.compile("(.+_cases-)(\\d+)$");
         Matcher matcher = pattern.matcher(indexName);
 
@@ -150,7 +174,74 @@ public class ReindexService {
 
         int incremented = Integer.parseInt(numberStr) + 1;
         String formattedNumber = StringUtils.leftPad(String.valueOf(incremented), numberStr.length(), '0');
+
         return prefix + formattedNumber;
     }
 
+    @Override
+    public List<ReindexTask> getAll() {
+        return reindexRepository.findAll()
+            .stream()
+            .map(mapper::map)
+            .toList();
+    }
+
+    @Override
+    public List<ReindexTask> getTasksByCaseType(String caseType) {
+        if (StringUtils.isBlank(caseType)) {
+            return getAll();
+        }
+        return reindexRepository.findByCaseType(caseType)
+            .stream()
+            .map(mapper::map)
+            .toList();
+    }
+
+    public ReindexEntity saveEntity(Boolean deleteOldIndex, CaseTypeEntity caseType,
+                                    String newIndexName) {
+        ReindexEntity entity = new ReindexEntity();
+        entity.setDeleteOldIndex(deleteOldIndex);
+        entity.setCaseType(caseType.getReference());
+        entity.setJurisdiction(caseType.getJurisdiction().getReference());
+        entity.setIndexName(newIndexName);
+        entity.setStartTime(LocalDateTime.now());
+        entity.setStatus(ReindexStatus.STARTED.name());
+        return reindexRepository.saveAndFlush(entity);
+    }
+
+    public void updateEntity(String newIndexName, String response) {
+        ReindexEntity reindexEntity = reindexRepository.findByIndexName(newIndexName).orElse(null);
+        if (reindexEntity == null) {
+            String message = String.format("No reindex entity metadata found for index name: %s", newIndexName);
+            log.error(message);
+            throw new IllegalStateException(message);
+        }
+        log.info("Save to DB successful for case type: {}", newIndexName);
+        reindexEntity.setStatus(ReindexStatus.SUCCESS.name());
+        reindexEntity.setEndTime(LocalDateTime.now());
+        reindexEntity.setReindexResponse(response);
+        reindexRepository.saveAndFlush(reindexEntity);
+    }
+
+    public void updateEntity(String newIndexName, Exception ex) {
+        ReindexEntity reindexEntity = reindexRepository.findByIndexName(newIndexName).orElse(null);
+        if (reindexEntity == null) {
+            String message = String.format("No reindex entity metadata found for index name: %s", newIndexName);
+            log.error(message);
+            return;
+        }
+        log.info("Persisting FAILED status for index '{}'", newIndexName);
+        reindexEntity.setStatus(ReindexStatus.FAILED.name());
+        reindexEntity.setEndTime(LocalDateTime.now());
+        Throwable rootCause = unwrapCompletionException(ex);
+        reindexEntity.setExceptionMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
+        reindexRepository.saveAndFlush(reindexEntity);
+    }
+
+    private Throwable unwrapCompletionException(Throwable exc) {
+        if (exc instanceof CompletionException && exc.getCause() != null) {
+            return exc.getCause();
+        }
+        return exc;
+    }
 }

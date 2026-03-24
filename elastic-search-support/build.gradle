@@ -15,6 +15,7 @@ bootJar {
 
 dependencies {
 
+    implementation group:  'org.mapstruct', name: 'mapstruct', version: '1.5.5.Final'
     implementation project(':domain')
     implementation project(':repository')
     // need these for command line to pass in the gradle version,
@@ -25,6 +26,8 @@ dependencies {
     testImplementation group: 'org.skyscreamer', name: 'jsonassert', version: '1.5.3'
     testImplementation group: 'org.testcontainers', name: 'elasticsearch', version: testcontainersVersion
     testImplementation group: 'org.testcontainers', name: 'junit-jupiter', version: testcontainersVersion
+    testImplementation 'net.ttddyy:datasource-proxy:1.8'
+    testImplementation(project(":application"))
 }
 
 pitest {

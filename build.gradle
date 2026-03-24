@@ -6,7 +6,7 @@ plugins {
     id 'org.springframework.boot' version '3.5.11'
     id 'io.spring.dependency-management' version '1.1.7'
     id 'com.github.ben-manes.versions' version '0.51.0'
-    id 'org.sonarqube' version '6.3.1.5724'
+    id 'org.sonarqube' version '6.0.1.5171'
     id 'com.github.kt3k.coveralls' version "2.12.2"
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
     id 'info.solidsoft.pitest' version '1.15.0' apply(false)
@@ -48,7 +48,7 @@ ext {
     hamcrestVersion = '3.0'
     flywayVersion = '10.22.0'
     reformLogging = '6.1.9'
-    apachePoiVersion = '5.5.1'
+    apachePoiVersion = '5.4.1'
     appInsightsVersion = '2.6.4'
     restAssuredVersion = '5.5.7'
     groovyVersion = '4.0.30'
@@ -56,7 +56,7 @@ ext {
     jjwtVersion = '0.13.0'
     feignJackson = '13.9'
     gsonVersion = '2.13.2'
-    testcontainersVersion = '1.21.4'
+    testcontainersVersion = '1.21.3'
     ccdTestDefinitionVersion = '7.27.7-prerelease-CME-537'
     beftaFwVersion = '9.2.4'
     limits = [
@@ -172,7 +172,7 @@ java {
 }
 
 jacoco {
-    toolVersion = "0.8.14"
+    toolVersion = "0.8.13"
 }
 
 
@@ -423,8 +423,8 @@ sonarqube {
         property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
         property "sonar.jacoco.reportPaths", "${buildDir}/jacoco/junitPlatformTest.exec"
         property "sonar.cpd.exclusions", "**/entity/*.java,**/model/*.java"
-        property "sonar.jacoco.excludes", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/TestingSupportController.java"
-        property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/TestingSupportController.java"
+        property "sonar.jacoco.excludes", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java,**/TestingSupportController.java"
+        property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/ProxyController.java,**/ProxyService.java,**/TestingSupportController.java"
         property "sonar.projectName", "ccd-definition-store-api"
         property "sonar.projectKey", "ccd-definition-store-api"
     }
