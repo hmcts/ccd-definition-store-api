@@ -19,6 +19,6 @@ dependencies:
     repository: 'oci://hmctspublic.azurecr.io/helm'
     condition: ts.enabled
   - name: elasticsearch
-    version: 9.2.4
+    version: 9.2.3
     repository: 'hmctsprod.azurecr.io/imported/elastic/elasticsearch'
     condition: elastic.enabled
