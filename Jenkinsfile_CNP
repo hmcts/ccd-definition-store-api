@@ -50,7 +50,13 @@ def vaultOverrides = [
 
 // Vars needed for AKS functional and smoke tests
 env.BEFTA_S2S_CLIENT_ID = "ccd_gw"
+env.CCD_API_GATEWAY_S2S_ID = "ccd_gw"
+env.CCD_API_GATEWAY_OAUTH2_CLIENT_ID = "ccd_gateway"
+env.CCD_API_GATEWAY_OAUTH2_REDIRECT_URL = "https://www-ccd.nonprod.platform.hmcts.net/oauth2redirect"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
+env.IDAM_API_URL_BASE = "https://idam-api.aat.platform.hmcts.net"
+env.S2S_URL_BASE = "http://rpe-service-auth-provider-aat.service.aat.platform.hmcts.net"
+env.OIDC_ISSUER = "https://forgerock-am.service.core-compute-idam-aat2.internal:8443/openam/oauth2/realms/root/realms/hmcts"
 env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN"
 env.CCD_STUB_SERVICE_URI_BASE="ccd-test-stubs-service-aat.aat.platform.hmcts.net"
 // BEFTA retry env variables
@@ -61,8 +67,9 @@ env.BEFTA_RETRY_MAX_DELAY = "1000"
 env.BEFTA_RETRY_NON_RETRYABLE_HTTP_METHODS = "PUT,POST"
 
 env.DEFAULT_COLLECTION_ASSERTION_MODE="UNORDERED"
-// Prevent Docker hub rate limit errors by ensuring that testcontainers uses images from hmctspublic ACR
-env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctspublic.azurecr.io/imported/"
+// Prevent Docker hub rate limit errors by ensuring that testcontainers uses images from hmctsprod ACR
+env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctsprod.azurecr.io/imported/"
+env.VERIFY_OIDC_ISSUER = "true"
 
 withPipeline(type, product, app) {
     onMaster {
