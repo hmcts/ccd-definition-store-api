@@ -94,8 +94,7 @@ public class SecurityConfiguration {
     JwtDecoder jwtDecoder() {
         NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(issuerUri);
 
-        // Discovery uses issuerUri for metadata and JWKS resolution.
-        // Token validation enforces issuerOverride so deployments can pin the exact iss claim value in live tokens.
+        // See docs/security/jwt-issuer-validation.md for issuer-uri discovery and oidc.issuer enforcement.
         OAuth2TokenValidator<Jwt> withTimestamp = new JwtTimestampValidator();
         OAuth2TokenValidator<Jwt> withIssuer = new JwtIssuerValidator(issuerOverride);
         OAuth2TokenValidator<Jwt> validator = new DelegatingOAuth2TokenValidator<>(withTimestamp, withIssuer);
