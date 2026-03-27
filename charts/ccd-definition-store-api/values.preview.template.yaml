@@ -23,9 +23,12 @@ java:
 
     # enable whenever required and provide host url to match with corresponding data-store-api
     ELASTIC_SEARCH_ENABLED: true
+
     ELASTIC_SEARCH_HOST: "{{ .Release.Name }}-es-master"
+
     USER_PROFILE_HOST: http://${SERVICE_NAME}-ccd-user-profile-api
     TS_TRANSLATION_SERVICE_HOST: http://${SERVICE_NAME}-translation-service
+
 
     # ccd-test app-insights key - remove once testing is done
     APPINSIGHTS_INSTRUMENTATIONKEY: 2dcb834e-768e-4429-9050-ab15af959995
@@ -109,12 +112,15 @@ ccd:
           secretRef: "{{ .Values.global.postgresSecret }}"
           key: PASSWORD
           disabled: true
-          
+
 
 elastic:
   enabled: true
 
+
 elasticsearch:
+  image: hmctsprod.azurecr.io/imported/elastic/elasticsearch
+  imageTag: 9.2.3
   nameOverride: ${SERVICE_NAME}-es
   clusterName: "es"
   replicas: 1
@@ -128,8 +134,6 @@ elasticsearch:
   extraEnvs:
     - name: discovery.type
       value: single-node
-    - name: cluster.initial_master_nodes
-      value: ""
     - name: action.auto_create_index
       value: .security*,.watches,.triggered_watches,.watcher-history-*,.logstash_dead_letter,.ml*
   persistence:
