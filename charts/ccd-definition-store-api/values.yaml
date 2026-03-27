@@ -5,8 +5,10 @@ ts:
   enabled: false
 
 elastic:
-  imageTag: "9.2.4"
   enabled: false
+
+elasticsearch:
+  imageTag: "9.2.4"
 
 java:
   image: 'hmctspublic.azurecr.io/ccd/definition-store-api:latest'
