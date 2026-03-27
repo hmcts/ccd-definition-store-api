@@ -7,9 +7,6 @@ ts:
 elastic:
   enabled: false
 
-elasticsearch:
-  imageTag: "9.2.4"
-
 java:
   image: 'hmctspublic.azurecr.io/ccd/definition-store-api:latest'
   ingressHost: ccd-definition-store-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
