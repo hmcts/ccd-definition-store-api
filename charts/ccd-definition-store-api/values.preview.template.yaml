@@ -119,7 +119,7 @@ elastic:
 
 
 elasticsearch:
-  imageTag: "9.2.4"
+  imageTag: "9.2.3"
   nameOverride: ${SERVICE_NAME}-es
   clusterName: "es"
   replicas: 1
