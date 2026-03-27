@@ -5,6 +5,7 @@ ts:
   enabled: false
 
 elastic:
+  imageTag: "9.2.4"
   enabled: false
 
 java:
