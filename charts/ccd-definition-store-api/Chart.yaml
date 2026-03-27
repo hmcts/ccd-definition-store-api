@@ -18,7 +18,7 @@ dependencies:
     version: 0.1.10
     repository: 'oci://hmctspublic.azurecr.io/helm'
     condition: ts.enabled
-  - name: eck-elasticsearch
-    version: 0.18.1
-    repository: 'https://helm.elastic.co'
+  - name: elasticsearch
+    version: 9.2.3
+    repository: 'oci://hmctsprod.azurecr.io/imported/elastic/elasticsearch'
     condition: elastic.enabled

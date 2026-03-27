@@ -118,7 +118,7 @@ elastic:
   enabled: true
 
 
-eck-elasticsearch:
+elasticsearch:
   imageTag: "9.2.4"
   nameOverride: ${SERVICE_NAME}-es
   clusterName: "es"
