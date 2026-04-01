@@ -403,6 +403,37 @@ sonarqube {
     }
 }
 
+task verifyOidcIssuerPolicy {
+    description = 'Fails if oidc.issuer is derived from discovery configuration'
+    group = 'Verification'
+
+    doLast {
+        def policyFiles = [
+            'application/src/main/resources/application.properties',
+            'application/src/test/resources/test.properties'
+        ]
+
+        def violations = policyFiles.findAll { path ->
+            def configFile = file(path)
+            configFile.exists() && configFile.readLines().any { line ->
+                def normalized = line.replaceAll(/\s+/, '')
+                (normalized.startsWith('oidc.issuer=') && normalized.contains('IDAM_OIDC_URL'))
+                    || (normalized.startsWith('oidc.issuer=') && normalized.contains('idam.api.url'))
+            }
+        }
+
+        if (!violations.isEmpty()) {
+            throw new GradleException(
+                "OIDC issuer policy violation. Do not derive oidc.issuer from discovery config in: ${violations.join(', ')}"
+            )
+        }
+    }
+}
+
+tasks.named('check').configure {
+    dependsOn verifyOidcIssuerPolicy
+}
+
 compileJava {
     options.compilerArgs << '-parameters' << '-Xlint:deprecation'
 }
