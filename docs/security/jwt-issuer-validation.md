@@ -52,9 +52,9 @@
 
 | Test area | Coverage |
 | --- | --- |
-| `application/src/test/java/uk/gov/hmcts/ccd/definition/store/SecurityConfigurationTest.java` | Valid issuer, invalid issuer, and expired token behaviour at validator level |
-| `application/src/test/java/uk/gov/hmcts/ccd/definition/store/security/JwtDecoderExceptionTest.java` | Decoder-level issuer and expiry failures without the broader Spring integration harness |
-| `application/src/test/java/uk/gov/hmcts/net/ccd/definition/store/security/JwtDecoderIssuerValidationIT.java` | Active decoder against WireMock-backed OIDC discovery and JWKS responses |
+| `SecurityConfigurationTest` | Valid issuer, invalid issuer, and expired token behaviour at validator level |
+| `JwtDecoderExceptionTest` | Decoder-level issuer and expiry failures without the broader Spring integration harness |
+| `JwtDecoderIssuerValidationIT` | Active decoder against WireMock-backed OIDC discovery and JWKS responses |
 
 ## Test and pipeline verification
 
