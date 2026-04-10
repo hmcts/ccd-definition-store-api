@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch.core.CountResponse;
 import co.elastic.clients.elasticsearch.indices.Alias;
 import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
 import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
@@ -11,17 +12,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Iterables;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hc.core5.http.ConnectionClosedException;
-import org.elasticsearch.action.ActionListener;
+import org.elasticsearch.client.RestClient;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import uk.gov.hmcts.ccd.definition.store.elastic.ReindexHelper;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
+import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 
 import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener.GLOBAL_SEARCH;
 
@@ -37,11 +43,16 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     private final CcdElasticSearchProperties config;
     private final ElasticsearchClient elasticClient;
+    private final ElasticsearchClientFactory clientFactory;
+    private final Executor reindexExecutor;
 
     @Autowired
-    public HighLevelCCDElasticClient(CcdElasticSearchProperties config, ElasticsearchClientFactory clientFactory) {
+    public HighLevelCCDElasticClient(CcdElasticSearchProperties config, ElasticsearchClientFactory clientFactory,
+                                     @Qualifier("reindexExecutor") Executor reindexExecutor) {
         this.config = config;
-        elasticClient = clientFactory.createClient();
+        this.clientFactory = clientFactory;
+        this.elasticClient = clientFactory.createClient();
+        this.reindexExecutor = reindexExecutor;
     }
 
     private synchronized ElasticsearchClient getElasticClient() {
@@ -80,7 +91,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         }
 
         throw new IOException("Failed to execute " + operationName
-            + " after " + MAX_RETRIES + " attempts", lastException);
+                              + " after " + MAX_RETRIES + " attempts", lastException);
     }
 
     private boolean isDeadHostException(Exception e) {
@@ -89,8 +100,8 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     private boolean isConnectionError(Exception e) {
         return e instanceof ConnectionClosedException
-            || e instanceof ElasticsearchException
-            && e.getCause() instanceof ConnectionClosedException;
+               || e instanceof ElasticsearchException
+                  && e.getCause() instanceof ConnectionClosedException;
     }
 
     @Override
@@ -98,7 +109,6 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         log.info("creating index {} with alias {}", indexName, alias);
         final String file = (alias.equalsIgnoreCase(GLOBAL_SEARCH))
             ? GLOBAL_SEARCH_CASES_INDEX_SETTINGS_JSON : CASES_INDEX_SETTINGS_JSON;
-        log.info("file: {}", file);
 
         // Load settings from JSON file as a Map
         Map<String, Object> settings = casesIndexSettings(file);
@@ -156,8 +166,8 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
             try {
                 var response = client.indices().getAlias(b -> b.name(alias));
                 boolean exists = response != null
-                    && response.aliases() != null
-                    && !response.aliases().isEmpty();
+                                 && response.aliases() != null
+                                 && !response.aliases().isEmpty();
                 log.debug("alias {} exists: {}", alias, exists);
                 return exists;
             } catch (ElasticsearchException e) {
@@ -184,6 +194,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
     }
 
     private Map<String, Object> casesIndexSettings(String file) throws IOException {
+        log.info("file: {}", file);
         Map<String, Object> settings;
         try (InputStream inputStream = getClass().getResourceAsStream(file)) {
             if (inputStream == null) {
@@ -218,10 +229,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     public boolean createIndexAndMapping(String indexName, String caseTypeMapping) throws IOException {
         // Load settings from JSON file as a Map
-        Map<String, Object> settings;
-        try (InputStream inputStream = getClass().getResourceAsStream(CASES_INDEX_SETTINGS_JSON)) {
-            settings = new ObjectMapper().readValue(inputStream, Map.class);
-        }
+        Map<String, Object> settings = casesIndexSettings(CASES_INDEX_SETTINGS_JSON);
 
         var createIndexResponse = executeWithRetry(
             client -> client.indices().create(b -> b
@@ -275,19 +283,28 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
         return null != deleteResponse && deleteResponse.acknowledged();
     }
 
-    public void reindexData(String oldIndex, String newIndex,
-                            ActionListener<co.elastic.clients.elasticsearch.core.ReindexResponse> listener) {
-        CompletableFuture.runAsync(() -> {
-            try {
-                var response = getElasticClient().reindex(b -> b
-                    .source(s -> s.index(oldIndex))
-                    .dest(d -> d.index(newIndex))
-                    .refresh(true)
-                );
-                listener.onResponse(response);
-            } catch (Exception e) {
-                listener.onFailure(e);
-            }
-        });
+    public void refresh(String... indexes) throws IOException {
+        getElasticClient().indices().refresh(b -> b.index(List.of(indexes)));
+    }
+
+    public String reindexData(String oldIndex, String newIndex,
+                              ReindexListener listener) {
+        RestClient lowLevelRestClient = clientFactory.createLowLevelClient();
+        ReindexHelper helper = new ReindexHelper(lowLevelRestClient, config, reindexExecutor);
+        try {
+            String taskId = helper.reindexIndex(oldIndex, newIndex, 5000L, listener);
+            log.info("Submitted reindex from {} to {}. taskId={}", oldIndex, newIndex, taskId);
+            return taskId;
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to submit reindex task", e);
+        }
+    }
+
+    public long countDocuments(String indexName) throws IOException {
+        CountResponse response = elasticClient.count(b -> b
+            .index(indexName)
+        );
+        return response.count();
     }
 }
+
