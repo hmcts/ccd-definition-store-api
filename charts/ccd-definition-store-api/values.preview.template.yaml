@@ -131,11 +131,10 @@ elasticsearch:
   # The tests do pass, at least as of 2023-01-19
   tests:
     enabled: false
-  extraEnvs:
-    - name: discovery.type
-      value: single-node
-    - name: action.auto_create_index
-      value: .security*,.watches,.triggered_watches,.watcher-history-*,.logstash_dead_letter,.ml*
+  esConfig:
+    elasticsearch.yml: |
+      discovery.type: single-node
+      action.auto_create_index: .security*,.watches,.triggered_watches,.watcher-history-*,.logstash_dead_letter,.ml*
   persistence:
     enabled: false
   ingress:
