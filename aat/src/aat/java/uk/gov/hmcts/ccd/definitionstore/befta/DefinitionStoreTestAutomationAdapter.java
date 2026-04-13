@@ -51,6 +51,9 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
                 if (actualValueStr.contains(expectedValueStr)) {
                     return actualValueStr;
                 }
+                BeftaUtils.defaultLog("Response body did not contain expected value. "
+                    + "Expected fragment: " + expectedValueStr);
+                BeftaUtils.defaultLog("Actual response body: " + actualValueStr);
                 return "expectedValueStr " + expectedValueStr + " not present in response ";
             } catch (Exception e) {
                 throw new FunctionalTestException("Problem checking acceptable response payload: ", e);
