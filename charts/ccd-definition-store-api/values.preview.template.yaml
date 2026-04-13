@@ -133,7 +133,6 @@ elasticsearch:
     enabled: false
   esConfig:
     elasticsearch.yml: |
-      discovery.type: single-node
       action.auto_create_index: .security*,.watches,.triggered_watches,.watcher-history-*,.logstash_dead_letter,.ml*
   persistence:
     enabled: false
