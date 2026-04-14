@@ -118,6 +118,7 @@ elastic:
   enabled: true
 
 elasticsearch:
+  imageTag: "7.17.3"
   nameOverride: ${SERVICE_NAME}-es
   clusterName: "es"
   replicas: 1
