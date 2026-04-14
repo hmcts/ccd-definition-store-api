@@ -104,8 +104,8 @@ withNightlyPipeline(type, product, component) {
                 echo "Suppression file and path: ${suppressionFile}"
 
                 sh """
-                  echo "Current contents of ${suppressionFile}:"
-                  cat -- "${suppressionFile}"
+                  echo 'Current contents of ${suppressionFile}:'
+                  cat '${suppressionFile}'
                 """
             }
 
