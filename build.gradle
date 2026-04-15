@@ -12,21 +12,39 @@ plugins {
     id 'info.solidsoft.pitest' version '1.15.0' apply(false)
     id 'org.jetbrains.gradle.plugin.idea-ext' version "1.4.1"
     id 'uk.gov.hmcts.java' version '0.12.68'
-    id 'org.owasp.dependencycheck' version '12.1.3'
+    id 'org.owasp.dependencycheck' version '12.2.1'
 }
 
 application {
     mainClass = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
 }
 
-apply from: './gradle/suppress.gradle'
 dependencyCheck {
-    suppressionFile = 'dependency-check-suppressions.xml'
+    // suppress.gradle parses dependency-check-report.xml
+    formats = ['HTML', 'XML']
+    suppressionFiles = ['dependency-check-suppressions.xml']
 }
+
+apply from: "$rootDir/gradle/suppress.gradle"
 
 tasks.register("printSuppressionFile") {
     doLast {
-        println "SUPPRESSION_FILE=${dependencyCheck.suppressionFile}"
+        def suppressionFile = dependencyCheck.getSuppressionFiles()
+
+        if (suppressionFile instanceof org.gradle.api.provider.Provider) {
+        suppressionFile = suppressionFile.getOrNull()
+        }
+        if (suppressionFile instanceof Collection) {
+        suppressionFile = suppressionFile.find { it }?.toString()
+        } else if (suppressionFile != null) {
+        suppressionFile = suppressionFile.toString()
+        }
+
+        if (!suppressionFile) {
+        throw new GradleException("No dependency-check suppression file configured")
+        }
+
+        println "SUPPRESSION_FILE=${suppressionFile}"
     }
 }
 
@@ -41,7 +59,7 @@ ext {
 
     junit = '5.14.3'
     junitPlatform = '1.14.3'
-    springDocVersion = '2.8.16'
+    springDocVersion = '2.8.17'
     hamcrestVersion = '3.0'
     flywayVersion = '10.22.0'
     reformLogging = '6.1.9'
