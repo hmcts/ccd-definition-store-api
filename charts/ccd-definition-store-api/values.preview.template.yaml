@@ -97,7 +97,7 @@ ccd:
   ccd-user-profile-api:
     java:
       ingressHost: ccd-user-profile-api-${SERVICE_FQDN}
-      image: hmctspublic.azurecr.io/ccd/user-profile-api:latest
+      image: hmctsprod.azurecr.io/ccd/user-profile-api:latest
       imagePullPolicy: Always
       environment:
         USER_PROFILE_DB_HOST: "{{ .Release.Name }}-postgresql"
@@ -109,7 +109,7 @@ ccd:
           secretRef: "{{ .Values.global.postgresSecret }}"
           key: PASSWORD
           disabled: true
-          
+
 
 elastic:
   enabled: true
