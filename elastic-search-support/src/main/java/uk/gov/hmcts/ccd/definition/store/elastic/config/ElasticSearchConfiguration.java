@@ -59,7 +59,7 @@ public class ElasticSearchConfiguration {
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     protected RestClientBuilder elasticsearchRestClientBuilder() {
-        return RestClient.builder(new HttpHost(config.getHost(), config.getPort(), HttpHost.DEFAULT_SCHEME_NAME))
+        return RestClient.builder(new HttpHost(config.getHost(), config.getPort(), config.getScheme()))
             .setFailureListener(new RestClient.FailureListener() {
                 @Override
                 public void onFailure(Node node) {
