@@ -39,7 +39,10 @@ java:
     APPINSIGHTS_INSTRUMENTATIONKEY: 2dcb834e-768e-4429-9050-ab15af959995
 
 
-  secrets: {}
+  secrets:
+    ELASTIC_SEARCH_PASSWORD:
+      secretRef: "{{ .Release.Name }}-es-master-credentials"
+      key: password
   volumes: []
   volumeMounts: []
   postgresql:
