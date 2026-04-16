@@ -42,13 +42,12 @@ java:
       secretRef: "{{ .Release.Name }}-es-master-credentials"
       key: password
   volumes:
-    elasticsearch-certs:
+    - name: elasticsearch-certs
       secret:
         secretName: "{{ .Release.Name }}-es-master-certs"
   volumeMounts:
-    elasticsearch-certs:
+    - name: elasticsearch-certs
       mountPath: /mnt/secrets/elasticsearch
-      readOnly: true
   postgresql:
     enabled: true
     primary:
