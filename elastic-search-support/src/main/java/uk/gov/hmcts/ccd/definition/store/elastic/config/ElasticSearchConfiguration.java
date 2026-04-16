@@ -23,10 +23,10 @@ import org.elasticsearch.client.NodeSelector;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.core.io.FileSystemResource;
-
 import javax.net.ssl.SSLContext;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.KeyStore;
 import java.security.cert.CertificateFactory;
@@ -124,7 +124,15 @@ public class ElasticSearchConfiguration {
             return null;
         }
 
-        try (InputStream inputStream = new FileSystemResource(Path.of(config.getCaCertPath())).getInputStream()) {
+        Path caCertPath = Path.of(config.getCaCertPath());
+        if (!Files.exists(caCertPath)) {
+            throw new IllegalStateException("Elasticsearch CA certificate file does not exist: " + caCertPath);
+        }
+        if (!Files.isReadable(caCertPath)) {
+            throw new IllegalStateException("Elasticsearch CA certificate file is not readable: " + caCertPath);
+        }
+
+        try (InputStream inputStream = Files.newInputStream(caCertPath)) {
             CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
             X509Certificate caCertificate = (X509Certificate) certificateFactory.generateCertificate(inputStream);
 
@@ -135,8 +143,10 @@ public class ElasticSearchConfiguration {
             return org.apache.http.ssl.SSLContexts.custom()
                 .loadTrustMaterial(trustStore, new TrustSelfSignedStrategy())
                 .build();
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to read Elasticsearch CA certificate file: " + caCertPath, e);
         } catch (Exception e) {
-            throw new IllegalStateException("Failed to load Elasticsearch CA certificate", e);
+            throw new IllegalStateException("Failed to load Elasticsearch CA certificate from: " + caCertPath, e);
         }
     }
 
