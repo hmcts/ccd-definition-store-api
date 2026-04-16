@@ -9,7 +9,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.elasticsearch.client.Node;
 import org.elasticsearch.client.NodeSelector;
@@ -59,6 +64,17 @@ public class ElasticSearchConfiguration {
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     protected RestClientBuilder elasticsearchRestClientBuilder() {
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        if (StringUtils.isNotBlank(config.getPassword())) {
+            credentialsProvider.setCredentials(
+                new AuthScope(config.getHost(), config.getPort()),
+                new UsernamePasswordCredentials(
+                    StringUtils.defaultIfBlank(config.getUsername(), "elastic"),
+                    config.getPassword()
+                )
+            );
+        }
+
         return RestClient.builder(new HttpHost(config.getHost(), config.getPort(), config.getScheme()))
             .setFailureListener(new RestClient.FailureListener() {
                 @Override
@@ -72,13 +88,19 @@ public class ElasticSearchConfiguration {
                     .setConnectTimeout(5000)
                     .setSocketTimeout(60000)
             )
-            .setHttpClientConfigCallback(httpClientBuilder ->
+            .setHttpClientConfigCallback(httpClientBuilder -> {
                 httpClientBuilder.setDefaultIOReactorConfig(
                     IOReactorConfig.custom()
                         .setSoKeepAlive(true)
                         .build()
-                )
-            );
+                );
+
+                if (StringUtils.isNotBlank(config.getPassword())) {
+                    httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                }
+
+                return httpClientBuilder;
+            });
     }
 
     @Bean(destroyMethod = "close")
