@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -114,7 +113,6 @@ public class ElasticSearchConfiguration {
                 if (sslContext != null) {
                     httpClientBuilder.setSSLContext(sslContext);
                     httpClientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
-                    httpClientBuilder.setSSLStrategy(new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE));
                 }
 
                 return httpClientBuilder;
