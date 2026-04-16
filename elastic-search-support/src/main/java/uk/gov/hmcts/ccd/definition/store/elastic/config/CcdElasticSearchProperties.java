@@ -13,6 +13,7 @@ public class CcdElasticSearchProperties {
     private String scheme;
     private String username;
     private String password;
+    private String caCertPath;
     private int indexShards;
     private int indexShardsReplicas;
     private String dynamic;
@@ -112,6 +113,14 @@ public class CcdElasticSearchProperties {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getCaCertPath() {
+        return caCertPath;
+    }
+
+    public void setCaCertPath(String caCertPath) {
+        this.caCertPath = caCertPath;
     }
 
     public int getIndexShards() {

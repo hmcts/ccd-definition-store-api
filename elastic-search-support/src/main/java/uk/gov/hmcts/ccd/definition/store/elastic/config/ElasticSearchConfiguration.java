@@ -11,6 +11,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -21,6 +24,14 @@ import org.elasticsearch.client.NodeSelector;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.core.io.FileSystemResource;
+
+import javax.net.ssl.SSLContext;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.security.KeyStore;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -99,8 +110,36 @@ public class ElasticSearchConfiguration {
                     httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
                 }
 
+                SSLContext sslContext = buildSslContext();
+                if (sslContext != null) {
+                    httpClientBuilder.setSSLContext(sslContext);
+                    httpClientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
+                    httpClientBuilder.setSSLStrategy(new SSLConnectionSocketFactory(sslContext, NoopHostnameVerifier.INSTANCE));
+                }
+
                 return httpClientBuilder;
             });
+    }
+
+    private SSLContext buildSslContext() {
+        if (StringUtils.isBlank(config.getCaCertPath())) {
+            return null;
+        }
+
+        try (InputStream inputStream = new FileSystemResource(Path.of(config.getCaCertPath())).getInputStream()) {
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+            X509Certificate caCertificate = (X509Certificate) certificateFactory.generateCertificate(inputStream);
+
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            trustStore.load(null, null);
+            trustStore.setCertificateEntry("elasticsearch-ca", caCertificate);
+
+            return org.apache.http.ssl.SSLContexts.custom()
+                .loadTrustMaterial(trustStore, new TrustSelfSignedStrategy())
+                .build();
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to load Elasticsearch CA certificate", e);
+        }
     }
 
     @Bean(destroyMethod = "close")
