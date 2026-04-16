@@ -14,6 +14,7 @@ public class CcdElasticSearchProperties {
     private String username;
     private String password;
     private String caCertPath;
+    private boolean insecureSkipTlsVerify;
     private int indexShards;
     private int indexShardsReplicas;
     private String dynamic;
@@ -121,6 +122,14 @@ public class CcdElasticSearchProperties {
 
     public void setCaCertPath(String caCertPath) {
         this.caCertPath = caCertPath;
+    }
+
+    public boolean isInsecureSkipTlsVerify() {
+        return insecureSkipTlsVerify;
+    }
+
+    public void setInsecureSkipTlsVerify(boolean insecureSkipTlsVerify) {
+        this.insecureSkipTlsVerify = insecureSkipTlsVerify;
     }
 
     public int getIndexShards() {

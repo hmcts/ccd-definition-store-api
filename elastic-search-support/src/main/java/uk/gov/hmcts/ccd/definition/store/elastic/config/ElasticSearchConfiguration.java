@@ -113,6 +113,17 @@ public class ElasticSearchConfiguration {
                 if (sslContext != null) {
                     httpClientBuilder.setSSLContext(sslContext);
                     httpClientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
+                } else if (config.isInsecureSkipTlsVerify()) {
+                    try {
+                        httpClientBuilder.setSSLContext(
+                            org.apache.http.ssl.SSLContexts.custom()
+                                .loadTrustMaterial(null, (certificate, authType) -> true)
+                                .build()
+                        );
+                        httpClientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
+                    } catch (Exception e) {
+                        throw new IllegalStateException("Failed to configure insecure Elasticsearch TLS client", e);
+                    }
                 }
 
                 return httpClientBuilder;
