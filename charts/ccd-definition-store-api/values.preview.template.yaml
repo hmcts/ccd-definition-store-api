@@ -125,6 +125,7 @@ elasticsearch:
   nameOverride: ${SERVICE_NAME}-es
   clusterName: "es"
   replicas: 1
+  roles: []
   minimumMasterNodes: 1
   antiAffinity: "soft"
   esJavaOpts: "-Xmx512m -Xms512m"
