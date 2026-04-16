@@ -138,7 +138,7 @@ elasticsearch:
   antiAffinity: "soft"
   esJavaOpts: "-Xmx512m -Xms512m"
   keystore:
-    - secretName: "{{ .Release.Name }}-es-master-credentials"
+    - secretName: ${SERVICE_NAME}-es-master-credentials
   # Their tests delete the pod after succeeding, we pass --logs to the test command which fail if the pod has already been deleted
   # The tests do pass, at least as of 2023-01-19
   tests:
