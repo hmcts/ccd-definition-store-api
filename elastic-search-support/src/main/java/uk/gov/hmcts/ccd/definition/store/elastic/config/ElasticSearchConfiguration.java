@@ -9,13 +9,28 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHost;
+import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.nio.reactor.IOReactorConfig;
 import org.elasticsearch.client.Node;
 import org.elasticsearch.client.NodeSelector;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.springframework.beans.factory.config.BeanDefinition;
+import javax.net.ssl.SSLContext;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.KeyStore;
+import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -59,7 +74,18 @@ public class ElasticSearchConfiguration {
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
     protected RestClientBuilder elasticsearchRestClientBuilder() {
-        return RestClient.builder(new HttpHost(config.getHost(), config.getPort(), HttpHost.DEFAULT_SCHEME_NAME))
+        CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        if (StringUtils.isNotBlank(config.getPassword())) {
+            credentialsProvider.setCredentials(
+                new AuthScope(config.getHost(), config.getPort()),
+                new UsernamePasswordCredentials(
+                    StringUtils.defaultIfBlank(config.getUsername(), "elastic"),
+                    config.getPassword()
+                )
+            );
+        }
+
+        return RestClient.builder(new HttpHost(config.getHost(), config.getPort(), config.getScheme()))
             .setFailureListener(new RestClient.FailureListener() {
                 @Override
                 public void onFailure(Node node) {
@@ -72,13 +98,67 @@ public class ElasticSearchConfiguration {
                     .setConnectTimeout(5000)
                     .setSocketTimeout(60000)
             )
-            .setHttpClientConfigCallback(httpClientBuilder ->
+            .setHttpClientConfigCallback(httpClientBuilder -> {
                 httpClientBuilder.setDefaultIOReactorConfig(
                     IOReactorConfig.custom()
                         .setSoKeepAlive(true)
                         .build()
-                )
-            );
+                );
+
+                if (StringUtils.isNotBlank(config.getPassword())) {
+                    httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider);
+                }
+
+                SSLContext sslContext = buildSslContext();
+                if (sslContext != null) {
+                    httpClientBuilder.setSSLContext(sslContext);
+                    httpClientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
+                } else if (config.isInsecureSkipTlsVerify()) {
+                    try {
+                        httpClientBuilder.setSSLContext(
+                            org.apache.http.ssl.SSLContexts.custom()
+                                .loadTrustMaterial(null, (certificate, authType) -> true)
+                                .build()
+                        );
+                        httpClientBuilder.setSSLHostnameVerifier(NoopHostnameVerifier.INSTANCE);
+                    } catch (Exception e) {
+                        throw new IllegalStateException("Failed to configure insecure Elasticsearch TLS client", e);
+                    }
+                }
+
+                return httpClientBuilder;
+            });
+    }
+
+    private SSLContext buildSslContext() {
+        if (StringUtils.isBlank(config.getCaCertPath())) {
+            return null;
+        }
+
+        Path caCertPath = Path.of(config.getCaCertPath());
+        if (!Files.exists(caCertPath)) {
+            throw new IllegalStateException("Elasticsearch CA certificate file does not exist: " + caCertPath);
+        }
+        if (!Files.isReadable(caCertPath)) {
+            throw new IllegalStateException("Elasticsearch CA certificate file is not readable: " + caCertPath);
+        }
+
+        try (InputStream inputStream = Files.newInputStream(caCertPath)) {
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+            X509Certificate caCertificate = (X509Certificate) certificateFactory.generateCertificate(inputStream);
+
+            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+            trustStore.load(null, null);
+            trustStore.setCertificateEntry("elasticsearch-ca", caCertificate);
+
+            return org.apache.http.ssl.SSLContexts.custom()
+                .loadTrustMaterial(trustStore, new TrustSelfSignedStrategy())
+                .build();
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to read Elasticsearch CA certificate file: " + caCertPath, e);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to load Elasticsearch CA certificate from: " + caCertPath, e);
+        }
     }
 
     @Bean(destroyMethod = "close")
