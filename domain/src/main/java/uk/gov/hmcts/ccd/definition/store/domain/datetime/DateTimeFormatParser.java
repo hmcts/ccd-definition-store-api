@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.datetime;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.format.DateTimeFormatter;
@@ -8,8 +9,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Component
-@Slf4j
 public class DateTimeFormatParser {
+    private static final Logger LOG = LoggerFactory.getLogger(DateTimeFormatParser.class);
 
     public void parseDateTimeFormat(String dateTimeFormat, Pattern dateTimeFormatPattern)
         throws InvalidDateTimeFormatException {
@@ -20,7 +21,7 @@ public class DateTimeFormatParser {
         try {
             DateTimeFormatter.ofPattern(dateTimeFormat);
         } catch (IllegalArgumentException e) {
-            log.error("Error occurred while parsing date time format " + dateTimeFormat, e);
+            LOG.error("Error occurred while parsing date time format {}", dateTimeFormat, e);
             throw new InvalidDateTimeFormatException(dateTimeFormat);
         }
     }
