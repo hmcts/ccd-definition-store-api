@@ -71,6 +71,7 @@ class CaseDefinitionControllerTest {
     @Deprecated
     @Disabled
     @Nested
+    @SuppressWarnings("removal")
     @DisplayName("Test the dataJurisdictionsJurisdictionIdCaseTypeGet method")
     class DataJurisdictionsJurisdictionIdCaseTypeGetTests {
 
