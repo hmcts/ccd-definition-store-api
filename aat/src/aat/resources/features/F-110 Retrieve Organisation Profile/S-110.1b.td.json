@@ -12,7 +12,7 @@
   ],
   "request": {
     "body": {
-      "organisationProfileIds": ["OGD_DWP_PROFILE"]
+      "organisationProfileIds": ["GOVERNMENT_ORGANISATION_PROFILE"]
     }
   },
   "expectedResponse": {

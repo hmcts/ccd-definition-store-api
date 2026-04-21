@@ -162,6 +162,7 @@ public interface EntityToResponseDTOMapper {
 
     @Mapping(source = "jurisdictionEntity.reference", target = "id")
     @Mapping(source = "jurisdictionEntity.liveTo", target = "liveUntil")
+    @Mapping(target = "caseTypes", ignore = true)
     Jurisdiction map(JurisdictionEntity jurisdictionEntity);
 
     @Mapping(expression = "java("
@@ -190,6 +191,10 @@ public interface EntityToResponseDTOMapper {
         + "       )",
         target = "complexACLs")
     @Mapping(expression = "java(caseFieldEntity.isMetadataField())", target = "metadata")
+    @Mapping(target = "showCondition", ignore = true)
+    @Mapping(target = "order", ignore = true)
+    @Mapping(target = "displayContextParameter", ignore = true)
+    @Mapping(target = "retainHiddenValue", ignore = true)
     CaseField map(CaseFieldEntity caseFieldEntity);
 
     @Mapping(source = "fieldTypeEntity.reference", target = "id")
@@ -236,6 +241,12 @@ public interface EntityToResponseDTOMapper {
 
     @Mapping(source = "complexFieldEntity.reference", target = "id")
     @Mapping(source = "complexFieldEntity.hint", target = "hintText")
+    @Mapping(target = "caseTypeId", ignore = true)
+    @Mapping(target = "liveFrom", ignore = true)
+    @Mapping(target = "liveUntil", ignore = true)
+    @Mapping(target = "acls", ignore = true)
+    @Mapping(target = "complexACLs", ignore = true)
+    @Mapping(target = "metadata", ignore = true)
     CaseField map(ComplexFieldEntity complexFieldEntity);
 
     @Mapping(source = "displayGroupEntity.reference", target = "id")
