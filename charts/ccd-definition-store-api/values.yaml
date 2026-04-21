@@ -1,3 +1,12 @@
+ccd:
+  enabled: false
+
+ts:
+  enabled: false
+
+elastic:
+  enabled: false
+
 java:
   image: 'hmctspublic.azurecr.io/ccd/definition-store-api:latest'
   ingressHost: ccd-definition-store-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
