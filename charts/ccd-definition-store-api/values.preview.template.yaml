@@ -118,7 +118,6 @@ elastic:
   enabled: true
 
 elasticsearch:
-  imageTag: "7.17.3"
   nameOverride: ${SERVICE_NAME}-es
   clusterName: "es"
   replicas: 1
@@ -130,8 +129,6 @@ elasticsearch:
   tests:
     enabled: false
   extraEnvs:
-    - name: discovery.type
-      value: single-node
     - name: action.auto_create_index
       value: .security*,.watches,.triggered_watches,.watcher-history-*,.logstash_dead_letter,.ml*
   persistence:
