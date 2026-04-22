@@ -17,8 +17,8 @@ java:
     DEFINITION_STORE_DB_PASSWORD: "{{ .Values.postgresql.auth.password}}"
     DEFINITION_STORE_DB_OPTIONS: ""
     DEFINITION_STORE_DB_MAX_POOL_SIZE: 5
-    ELASTIC_SEARCH_FAIL_ON_IMPORT: true
     LOG_LEVEL_ROOT: DEBUG
+
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false
 
     # enable whenever required and provide host url to match with corresponding data-store-api
@@ -129,10 +129,6 @@ elasticsearch:
   tests:
     enabled: false
   extraEnvs:
-    - name: discovery.type
-      value: single-node
-    - name: cluster.initial_master_nodes
-      value: ""
     - name: action.auto_create_index
       value: .security*,.watches,.triggered_watches,.watcher-history-*,.logstash_dead_letter,.ml*
   persistence:

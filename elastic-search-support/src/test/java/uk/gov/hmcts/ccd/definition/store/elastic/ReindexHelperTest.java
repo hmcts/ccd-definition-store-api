@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import org.apache.http.HttpEntity;
+import org.apache.http.StatusLine;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.util.EntityUtils;
 import org.elasticsearch.client.Request;
 import org.elasticsearch.client.Response;
@@ -16,9 +18,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 
-import org.apache.http.StatusLine;
-import org.apache.http.entity.StringEntity;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -27,6 +26,7 @@ import java.util.concurrent.Executor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
@@ -189,7 +189,7 @@ class ReindexHelperTest {
 
             reindexHelper.reindexIndex("src", "dest", 10L, listener);
 
-            verify(listener).onSuccess();
+            verify(listener).onSuccess(anyString());
             verify(listener, never()).onFailure(any());
         }
 
@@ -206,7 +206,7 @@ class ReindexHelperTest {
             reindexHelper.reindexIndex("src", "dest", 10L, listener);
 
             verify(listener).onFailure(any(RuntimeException.class));
-            verify(listener, never()).onSuccess();
+            verify(listener, never()).onSuccess(anyString());
         }
 
         @Test
@@ -222,7 +222,7 @@ class ReindexHelperTest {
             reindexHelper.reindexIndex("src", "dest", 10L, listener);
 
             verify(listener).onFailure(any(RuntimeException.class));
-            verify(listener, never()).onSuccess();
+            verify(listener, never()).onSuccess(anyString());
         }
 
         @Test
@@ -237,7 +237,7 @@ class ReindexHelperTest {
             reindexHelper.reindexIndex("src", "dest", 10L, listener);
 
             verify(listener).onFailure(any(RuntimeException.class));
-            verify(listener, never()).onSuccess();
+            verify(listener, never()).onSuccess(anyString());
         }
 
         @Test
@@ -255,7 +255,7 @@ class ReindexHelperTest {
 
             reindexHelper.reindexIndex("src", "dest", 10L, listener);
 
-            verify(listener).onSuccess();
+            verify(listener).onSuccess(anyString());
         }
     }
 
@@ -282,7 +282,7 @@ class ReindexHelperTest {
             reindexHelper.reindexIndex("src", "dest", 10L, listener);
 
             verify(listener).onFailure(any(RuntimeException.class));
-            verify(listener, never()).onSuccess();
+            verify(listener, never()).onSuccess(anyString());
         }
 
         @Test
@@ -299,7 +299,7 @@ class ReindexHelperTest {
 
             reindexHelper.reindexIndex("src", "dest", 10L, listener);
 
-            verify(listener).onSuccess();
+            verify(listener).onSuccess(anyString());
             verify(listener, never()).onFailure(any());
         }
 
@@ -317,7 +317,7 @@ class ReindexHelperTest {
 
             reindexHelper.reindexIndex("src", "dest", 10L, listener);
 
-            verify(listener).onSuccess();
+            verify(listener).onSuccess(anyString());
             verify(listener, never()).onFailure(any());
         }
     }
@@ -335,7 +335,8 @@ class ReindexHelperTest {
                 .thenReturn(httpResponse)
                 .thenReturn(mockTaskResponse(done));
 
-            org.mockito.Mockito.doThrow(new RuntimeException("callback blew up")).when(listener).onSuccess();
+            org.mockito.Mockito.doThrow(new RuntimeException("callback blew up"))
+                .when(listener).onSuccess(anyString());
 
             reindexHelper.reindexIndex("src", "dest", 10L, listener);
         }

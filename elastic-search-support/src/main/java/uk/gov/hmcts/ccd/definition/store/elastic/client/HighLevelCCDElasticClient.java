@@ -22,7 +22,6 @@ import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
-import java.io.UncheckedIOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -296,7 +295,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
             log.info("Submitted reindex from {} to {}. taskId={}", oldIndex, newIndex, taskId);
             return taskId;
         } catch (IOException e) {
-            throw new UncheckedIOException("Failed to submit reindex task", e);
+            throw new RuntimeException("Failed to submit reindex task", e);
         }
     }
 
