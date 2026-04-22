@@ -24,7 +24,8 @@ java:
     # enable whenever required and provide host url to match with corresponding data-store-api
     ELASTIC_SEARCH_ENABLED: true
 
-    ELASTIC_SEARCH_HOST: "{{ .Release.Name }}-es-master"
+    # ECK service name format: <release-name>-es-<clusterName>-es-http
+    ELASTIC_SEARCH_HOST: "{{ .Release.Name }}-es-es-http"
 
     USER_PROFILE_HOST: http://${SERVICE_NAME}-ccd-user-profile-api
     TS_TRANSLATION_SERVICE_HOST: http://${SERVICE_NAME}-translation-service
@@ -117,22 +118,36 @@ ccd:
 elastic:
   enabled: true
 
-elasticsearch:
-  nameOverride: ${SERVICE_NAME}-es
-  clusterName: "es"
-  replicas: 1
-  minimumMasterNodes: 1
-  antiAffinity: "soft"
-  esJavaOpts: "-Xmx512m -Xms512m"
-  # Their tests delete the pod after succeeding, we pass --logs to the test command which fail if the pod has already been deleted
-  # The tests do pass, at least as of 2023-01-19
-  tests:
-    enabled: false
-  extraEnvs:
-    - name: action.auto_create_index
-      value: .security*,.watches,.triggered_watches,.watcher-history-*,.logstash_dead_letter,.ml*
-  persistence:
-    enabled: false
-  ingress:
-    enabled: false
-    className: traefik
+eck-operator:
+  enabled: true
+
+eck-elasticsearch:
+  fullnameOverride: "${SERVICE_NAME}-es"
+  spec:
+    version: 9.0.0
+    nodeSets:
+      - name: es
+        count: 1
+        config:
+          node.store.allow_mmap: false
+          # Equivalent of old action.auto_create_index extraEnv
+          action.auto_create_index: ".security*,.watches,.triggered_watches,.watcher-history-*,.logstash_dead_letter,.ml*"
+        podTemplate:
+          spec:
+            containers:
+              - name: elasticsearch
+                env:
+                  - name: ES_JAVA_OPTS
+                    value: "-Xmx512m -Xms512m"
+                resources:
+                  requests:
+                    memory: 1Gi
+        volumeClaimTemplates:
+          - metadata:
+              name: elasticsearch-data
+            spec:
+              # Matches old persistence.enabled: false — uses emptyDir instead
+              storageClassName: ""
+              resources:
+                requests:
+                  storage: 1Gi

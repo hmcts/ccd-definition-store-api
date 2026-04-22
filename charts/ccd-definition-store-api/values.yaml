@@ -7,6 +7,9 @@ ts:
 elastic:
   enabled: false
 
+eck-operator:
+  enabled: false
+
 java:
   image: 'hmctsprod.azurecr.io/ccd/definition-store-api:latest'
   ingressHost: ccd-definition-store-api-{{ .Values.global.environment }}.service.core-compute-{{ .Values.global.environment }}.internal
