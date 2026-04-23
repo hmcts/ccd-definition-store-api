@@ -415,9 +415,6 @@ subprojects { subproject ->
 
 sonarqube {
     properties {
-        // Needed when Jenkins runs Sonar outside the Gradle task graph in this multi-module build.
-        property "sonar.java.binaries", "**/build/classes/java/main"
-        property "sonar.java.test.binaries", "**/build/classes/java/test,**/build/classes/java/integrationTest,**/build/classes/java/aat"
         property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**"
         property "sonar.exclusions", "**/AppInsightsConfiguration**"
         property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
