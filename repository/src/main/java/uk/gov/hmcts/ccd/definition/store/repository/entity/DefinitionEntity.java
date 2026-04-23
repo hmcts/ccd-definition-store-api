@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.vladmihalcea.hibernate.type.json.JsonNodeBinaryType;
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -49,7 +49,7 @@ public class DefinitionEntity implements Serializable, Versionable {
     private DefinitionStatus status;
 
     @Column(name = "data", nullable = false, columnDefinition = "jsonb")
-    @Type(JsonNodeBinaryType.class)
+    @Type(JsonBinaryType.class)
     private JsonNode data;
 
     @Column(name = "author", nullable = false)
