@@ -11,10 +11,6 @@ public class CcdElasticSearchProperties {
     private String host;
     private int port;
     private String scheme;
-    private String username;
-    private String password;
-    private String caCertPath;
-    private boolean insecureSkipTlsVerify;
     private int indexShards;
     private int indexShardsReplicas;
     private String dynamic;
