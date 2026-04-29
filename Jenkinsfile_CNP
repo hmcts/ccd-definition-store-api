@@ -63,6 +63,7 @@ env.BEFTA_RETRY_NON_RETRYABLE_HTTP_METHODS = "PUT,POST"
 env.DEFAULT_COLLECTION_ASSERTION_MODE="UNORDERED"
 // Prevent Docker hub rate limit errors by ensuring that testcontainers uses images from hmctsprod ACR
 env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctsprod.azurecr.io/imported/"
+env.JAVA_TOOL_OPTIONS = "-Dhttps.protocols=TLSv1.2 -Djdk.tls.client.protocols=TLSv1.2"
 
 withPipeline(type, product, app) {
     onMaster {
