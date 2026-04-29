@@ -21,7 +21,7 @@ class BaseTypeControllerTests extends BaseTest {
     private static final String GET_BASE_TYPES = "/api/base-types";
 
     private static final String POST_CODE_REGEX =
-        "^([A-PR-UWYZ0-9][A-HK-Y0-9][AEHMNPRTVXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$";
+        "^([A-PR-UWYZ][A-HK-Y0-9][AC-HJKMNPR-VXY0-9]?[ABEHMNPRVWXY0-9]? {1,2}[0-9][ABD-HJLN-UW-Z]{2}|GIR 0AA)$";
 
     private static final String PHONE_NUMBER_REGEX = "^(((\\+44\\s?\\d{4}|\\(?0\\d{4}\\)?)\\s?\\d{3}\\s?\\d{3})"
         + "|((\\+44\\s?\\d{3}|\\(?0\\d{3}\\)?)\\s?\\d{3}\\s?\\d{4})"
@@ -70,7 +70,7 @@ class BaseTypeControllerTests extends BaseTest {
         assertContainsFieldType(baseTypes, "FlagLauncher", "FlagLauncher");
         assertContainsFieldType(baseTypes, "ComponentLauncher", "ComponentLauncher");
     }
-    
+
     private void assertContainsFieldType(FieldType[] baseTypes, String id, String type) {
         assertTrue(Stream.of(baseTypes)
             .anyMatch(baseType -> baseType.getType().equals(type) && baseType.getId().equals(id)),
@@ -79,8 +79,8 @@ class BaseTypeControllerTests extends BaseTest {
 
     private void assertContainsFieldType(FieldType[] baseTypes, String id, String type, String regex) {
         assertTrue(Stream.of(baseTypes)
-            .anyMatch(baseType -> baseType.getType().equals(type) 
-                && baseType.getId().equals(id) 
+            .anyMatch(baseType -> baseType.getType().equals(type)
+                && baseType.getId().equals(id)
                 && baseType.getRegularExpression().equals(regex)),
             "Base Type not found: " + id + " with Type: " + type + " and Regex: " + regex);
     }
