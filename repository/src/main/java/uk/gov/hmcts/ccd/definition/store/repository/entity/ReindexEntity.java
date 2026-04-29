@@ -49,4 +49,7 @@ public class ReindexEntity {
 
     @Column(name = "reindex_response", columnDefinition = "TEXT")
     private String reindexResponse;
+
+    @Column(name = "who_imported")
+    private String whoImported;
 }

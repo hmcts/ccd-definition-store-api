@@ -17,10 +17,12 @@ public interface ReindexService {
 
     List<ReindexTask> getTasksByCaseType(String caseType);
 
-    ReindexEntity saveEntity(Boolean deleteOldIndex, CaseTypeEntity caseType,
-                             String newIndexName);
+    ReindexEntity saveEntity(Boolean deleteOldIndex,
+                             CaseTypeEntity caseType,
+                             String newIndexName,
+                             String userEmailId);
 
-    void updateEntity(String newIndexName, String response);
+    void updateEntity(String newIndexName, String response, String userEmailId);
 
-    void updateEntity(String newIndexName, Exception exception);
+    void updateEntity(String newIndexName, Exception exception, String userEmailId);
 }

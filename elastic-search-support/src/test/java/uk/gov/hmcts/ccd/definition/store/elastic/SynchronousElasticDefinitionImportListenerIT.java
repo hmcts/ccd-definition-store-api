@@ -47,6 +47,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
     private static final String CASE_TYPE_A = "CaseTypeA";
     private static final String CASE_TYPE_B = "CaseTypeB";
     private static final String CASE_TYPE_A_REINDEX = "CaseTypeA_RI";
+    public static final String TEST_USER_EMAIL = "testUser@hmcts.net";
 
     @Value("${elasticsearch.port}")
     private String port;
@@ -199,7 +200,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
 
         //reindex to casetypea_cases-000002
         DefinitionImportedEvent event = new DefinitionImportedEvent(
-            List.of(caseTypeEntity1), true, true
+            List.of(caseTypeEntity1), true, true, TEST_USER_EMAIL
         );
         definitionImportListener.onDefinitionImported(event);
 
@@ -224,7 +225,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         baseTypeField1.getFieldType().setReference("InvalidElasticType");
 
         DefinitionImportedEvent event = new DefinitionImportedEvent(Collections.singletonList(caseTypeEntity1),
-            false, false);
+            false, false, TEST_USER_EMAIL);
 
         assertThrows(ElasticSearchInitialisationException.class, () -> {
             definitionImportListener.onDefinitionImported(event);
@@ -246,7 +247,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         );
 
         DefinitionImportedEvent event = new DefinitionImportedEvent(
-            List.of(caseTypeEntity1), true, true
+            List.of(caseTypeEntity1), true, true, TEST_USER_EMAIL
         );
         definitionImportListener.onDefinitionImported(event);
 
@@ -280,7 +281,10 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         //will fail to generate mapping
         baseTypeField1.getFieldType().setReference("InvalidElasticType");
 
-        DefinitionImportedEvent event = new DefinitionImportedEvent(List.of(caseTypeEntity1), true, true);
+        DefinitionImportedEvent event = new DefinitionImportedEvent(List.of(caseTypeEntity1),
+            true,
+            true,
+            TEST_USER_EMAIL);
 
         assertThrows(ElasticSearchInitialisationException.class, () -> {
             definitionImportListener.onDefinitionImported(event);

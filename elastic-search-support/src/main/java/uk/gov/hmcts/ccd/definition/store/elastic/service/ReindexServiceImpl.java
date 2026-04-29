@@ -56,7 +56,7 @@ public class ReindexServiceImpl implements ReindexService {
         long sourceIndexDocumentCount = elasticClient.countDocuments(indexName);
         log.info("Begin reindexing. Source index '{}' contains {} cases/documents",
             indexName, sourceIndexDocumentCount);
-        saveEntity(event.isDeleteOldIndex(), caseType, newIndexName);
+        saveEntity(event.isDeleteOldIndex(), caseType, newIndexName, event.getUserEmailId());
         try {
             //create new index with generated mapping and incremented case type name (no alias update yet)
             String caseMapping = mappingGenerator.generateMapping(caseType);
@@ -67,7 +67,7 @@ public class ReindexServiceImpl implements ReindexService {
             elasticClient.createIndexAndMapping(newIndexName, caseMapping);
             elasticClient.setIndexReadOnly(indexName, true);
         } catch (Exception e) {
-            updateEntity(newIndexName, e);
+            updateEntity(newIndexName, e, event.getUserEmailId());
             onFailure(e, elasticClient, newIndexName, indexName);
             throw e;
         }
@@ -77,7 +77,8 @@ public class ReindexServiceImpl implements ReindexService {
             baseIndexName,
             indexName,
             newIndexName,
-            event.isDeleteOldIndex());
+            event.isDeleteOldIndex(),
+            event.getUserEmailId());
         event.setTaskId(taskId);
         log.info("task id returned from the import: {}", event.getTaskId());
     }
@@ -86,7 +87,8 @@ public class ReindexServiceImpl implements ReindexService {
                                     String baseIndexName,
                                     String oldIndex,
                                     String newIndex,
-                                    boolean deleteOldIndex) {
+                                    boolean deleteOldIndex,
+                                    String userEmailId) {
 
         return elasticClient.reindexData(oldIndex, newIndex, new ReindexListener() {
             @Override
@@ -101,7 +103,7 @@ public class ReindexServiceImpl implements ReindexService {
                         deleteOldIndex);
 
                     //set success status and end time for db
-                    updateEntity(newIndex, response);
+                    updateEntity(newIndex, response, userEmailId);
                     log.info("saved reindex entity"
                         + " metadata for case type {} to DB", baseIndexName);
 
@@ -114,12 +116,12 @@ public class ReindexServiceImpl implements ReindexService {
             @Override
             public void onFailure(Exception ex) {
                 try (elasticClient; HighLevelCCDElasticClient highLevelCCDElasticClient = clientFactory.getObject()) {
-                    updateEntity(newIndex, ex);
+                    updateEntity(newIndex, ex, userEmailId);
                     //if failed delete new index, set old index writable
                     ReindexServiceImpl.onFailure(ex, highLevelCCDElasticClient, newIndex, baseIndexName);
                 } catch (IOException e) {
-                    log.error("Failed cleanup after reindexing failure for index " + newIndex, e);
-                    updateEntity(newIndex, e);
+                    log.error("Failed cleanup after reindexing failure for index {}", newIndex, e);
+                    updateEntity(newIndex, e, userEmailId);
                     throw new CompletionException(e);
                 }
                 throw new CompletionException(ex);
@@ -198,18 +200,22 @@ public class ReindexServiceImpl implements ReindexService {
     }
 
     public ReindexEntity saveEntity(Boolean deleteOldIndex, CaseTypeEntity caseType,
-                                    String newIndexName) {
+                                    String newIndexName,
+                                    String userEmailId) {
         ReindexEntity entity = new ReindexEntity();
         entity.setDeleteOldIndex(deleteOldIndex);
         entity.setCaseType(caseType.getReference());
         entity.setJurisdiction(caseType.getJurisdiction().getReference());
         entity.setIndexName(newIndexName);
         entity.setStartTime(LocalDateTime.now());
+        entity.setWhoImported(userEmailId);
         entity.setStatus(ReindexStatus.STARTED.name());
         return reindexRepository.saveAndFlush(entity);
     }
 
-    public void updateEntity(String newIndexName, String response) {
+    public void updateEntity(String newIndexName,
+                             String response,
+                             String userEmailId) {
         ReindexEntity reindexEntity = reindexRepository.findByIndexName(newIndexName).orElse(null);
         if (reindexEntity == null) {
             String message = String.format("No reindex entity metadata found for index name: %s", newIndexName);
@@ -220,10 +226,13 @@ public class ReindexServiceImpl implements ReindexService {
         reindexEntity.setStatus(ReindexStatus.SUCCESS.name());
         reindexEntity.setEndTime(LocalDateTime.now());
         reindexEntity.setReindexResponse(response);
+        reindexEntity.setWhoImported(userEmailId);
         reindexRepository.saveAndFlush(reindexEntity);
     }
 
-    public void updateEntity(String newIndexName, Exception ex) {
+    public void updateEntity(String newIndexName,
+                             Exception ex,
+                             String userEmailId) {
         ReindexEntity reindexEntity = reindexRepository.findByIndexName(newIndexName).orElse(null);
         if (reindexEntity == null) {
             String message = String.format("No reindex entity metadata found for index name: %s", newIndexName);
@@ -233,6 +242,7 @@ public class ReindexServiceImpl implements ReindexService {
         log.info("Persisting FAILED status for index '{}'", newIndexName);
         reindexEntity.setStatus(ReindexStatus.FAILED.name());
         reindexEntity.setEndTime(LocalDateTime.now());
+        reindexEntity.setWhoImported(userEmailId);
         Throwable rootCause = unwrapCompletionException(ex);
         reindexEntity.setExceptionMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
         reindexRepository.saveAndFlush(reindexEntity);

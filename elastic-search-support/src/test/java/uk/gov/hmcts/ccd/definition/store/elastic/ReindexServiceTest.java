@@ -24,10 +24,14 @@ import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletionException;
@@ -53,6 +57,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ReindexServiceTest {
 
+    public static final String TEST_USER_EMAIL = "testUser@hmcts.net";
     private ReindexService reindexService;
 
     @Mock
@@ -145,7 +150,7 @@ class ReindexServiceTest {
         when(ccdElasticClient.createIndexAndMapping(anyString(), anyString()))
             .thenThrow(new IOException("put mapping failed"));
 
-        DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, true);
+        DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, true, TEST_USER_EMAIL);
 
         assertThrows(IOException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
@@ -184,7 +189,7 @@ class ReindexServiceTest {
         when(reindexRepository.saveAndFlush(any(ReindexEntity.class))).thenAnswer(i -> i.getArgument(0));
 
         ReindexEntity result = reindexService.saveEntity(
-            true, caseType, newIndexName
+            true, caseType, newIndexName, TEST_USER_EMAIL
         );
 
         verify(reindexRepository).saveAndFlush(captor.capture());
@@ -206,7 +211,7 @@ class ReindexServiceTest {
 
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(existing));
 
-        reindexService.updateEntity(newIndexName, anyString());
+        reindexService.updateEntity(newIndexName, "response", TEST_USER_EMAIL);
 
         verify(reindexRepository).saveAndFlush(existing);
         assertEquals("SUCCESS", existing.getStatus());
@@ -222,7 +227,7 @@ class ReindexServiceTest {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(existing));
 
         RuntimeException ex = new RuntimeException("Simulated failure");
-        reindexService.updateEntity(newIndexName, ex);
+        reindexService.updateEntity(newIndexName, ex, TEST_USER_EMAIL);
 
         verify(reindexRepository).saveAndFlush(existing);
         assertEquals("FAILED", existing.getStatus());
@@ -242,7 +247,7 @@ class ReindexServiceTest {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
 
         DefinitionImportedEvent event = new DefinitionImportedEvent(
-            Collections.singletonList(caseA), true, true
+            Collections.singletonList(caseA), true, true, TEST_USER_EMAIL
         );
 
         assertThrows(ElasticsearchStatusException.class,
@@ -261,7 +266,7 @@ class ReindexServiceTest {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
 
         DefinitionImportedEvent event = new DefinitionImportedEvent(
-            Collections.singletonList(caseA), true, true);
+            Collections.singletonList(caseA), true, true, TEST_USER_EMAIL);
 
         assertThrows(RuntimeException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
@@ -283,7 +288,7 @@ class ReindexServiceTest {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
 
         DefinitionImportedEvent event = new DefinitionImportedEvent(
-            Collections.singletonList(caseA), true, true
+            Collections.singletonList(caseA), true, true, TEST_USER_EMAIL
         );
 
         assertThrows(RuntimeException.class,
@@ -302,7 +307,7 @@ class ReindexServiceTest {
         ReindexEntity entity = new ReindexEntity();
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
 
-        reindexService.updateEntity(newIndexName, completion);
+        reindexService.updateEntity(newIndexName, completion, TEST_USER_EMAIL);
 
         verify(reindexRepository).saveAndFlush(entity);
         assertTrue(entity.getExceptionMessage().contains("IllegalArgumentException"));
@@ -313,7 +318,7 @@ class ReindexServiceTest {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.empty());
 
         IllegalStateException exception = assertThrows(IllegalStateException.class,
-            () -> reindexService.updateEntity(newIndexName, anyString()));
+            () -> reindexService.updateEntity(newIndexName, "response", TEST_USER_EMAIL));
 
         assertTrue(exception.getMessage().contains("No reindex entity metadata found for index name"));
         verify(reindexRepository, never()).save(any());
@@ -323,7 +328,7 @@ class ReindexServiceTest {
     void shouldSkipMarkFailureIfEntityNotFound() {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.empty());
 
-        reindexService.updateEntity(newIndexName, new RuntimeException("Fail"));
+        reindexService.updateEntity(newIndexName, new RuntimeException("Fail"), TEST_USER_EMAIL);
 
         verify(reindexRepository, never()).save(any());
     }
@@ -335,7 +340,7 @@ class ReindexServiceTest {
         ReindexEntity entity = new ReindexEntity();
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
 
-        reindexService.updateEntity(newIndexName, regularException);
+        reindexService.updateEntity(newIndexName, regularException, TEST_USER_EMAIL);
 
         verify(reindexRepository).saveAndFlush(entity);
         assertTrue(entity.getExceptionMessage().contains("RuntimeException"));
@@ -346,6 +351,46 @@ class ReindexServiceTest {
     void shouldIncrementIndexNumber() {
         String result = reindexService.incrementIndexNumber(oldIndexName);
         assertEquals(newIndexName, result);
+    }
+
+    @Test
+    void shouldReturnMappedTasksWithDurationFromGetAll() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        LocalDateTime start = LocalDateTime.of(2026, 4, 28, 14, 30, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 4, 28, 14, 45, 30);
+        mappedTask.setStartTime(start);
+        mappedTask.setEndTime(end);
+
+        when(reindexRepository.findAll()).thenReturn(List.of(entity));
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        List<ReindexTask> result = reindexService.getAll();
+
+        assertEquals(1, result.size());
+        assertSame(mappedTask, result.get(0));
+        assertEquals(start, result.get(0).getStartTime());
+        assertEquals(end, result.get(0).getEndTime());
+        assertEquals(Duration.between(start, end), result.get(0).getDuration());
+    }
+
+    @Test
+    void shouldReturnMappedTasksByCaseTypeWithDuration() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        LocalDateTime start = LocalDateTime.of(2026, 4, 28, 10, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 4, 28, 10, 1, 5);
+        mappedTask.setStartTime(start);
+        mappedTask.setEndTime(end);
+
+        when(reindexRepository.findByCaseType("caseTypeA")).thenReturn(List.of(entity));
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        List<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA");
+
+        assertEquals(1, result.size());
+        assertSame(mappedTask, result.get(0));
+        assertEquals(Duration.between(start, end), result.get(0).getDuration());
     }
 
     @Test
@@ -402,6 +447,6 @@ class ReindexServiceTest {
     }
 
     private DefinitionImportedEvent newEvent(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity... caseTypes) {
-        return new DefinitionImportedEvent(newArrayList(caseTypes), reindex, deleteOldIndex);
+        return new DefinitionImportedEvent(newArrayList(caseTypes), reindex, deleteOldIndex, TEST_USER_EMAIL);
     }
 }
