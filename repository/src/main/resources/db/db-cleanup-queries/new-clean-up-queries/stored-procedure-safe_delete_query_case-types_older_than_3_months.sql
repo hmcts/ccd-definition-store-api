@@ -108,14 +108,40 @@ BEGIN
         CALL manage_constraint('public.role', 'case_type_id_check', 'DROP');
         CALL manage_constraint('public.role', 'unique_role_case_type_id_role_reference', 'DROP');
         CALL manage_constraint('public.role', 'fk_role_case_type_id_case_type_id', 'DROP');
-        CALL manage_constraint('public.case_field_acl', 'case_field_acl', 'DROP');
+        CALL manage_constraint('public.case_field', 'fk_case_field_case_type_id', 'DROP');
+        CALL manage_constraint('public.case_field_acl', 'fk_case_field_acl_case_field_id_case_field_id', 'DROP');
+        CALL manage_constraint('public.case_field_acl', 'fk_case_field_acl_role_id_role_id', 'DROP');
+        CALL manage_constraint('public.case_type_acl', 'fk_case_type_acl_case_type_id', 'DROP');
         CALL manage_constraint('public.case_type_acl', 'fk_case_type_acl_role_id_role_id', 'DROP');
+        CALL manage_constraint('public.category', 'fk_category_case_type_id', 'DROP');
+        CALL manage_constraint('public.challenge_question', 'fk_challenge_question_case_type_id', 'DROP');
+        CALL manage_constraint('public.complex_field_acl', 'fk_complex_field_acl_case_field_id_case_field_id', 'DROP');
         CALL manage_constraint('public.complex_field_acl', 'fk_complex_field_acl_role_id_role_id', 'DROP');
+        CALL manage_constraint('public.display_group', 'fk_display_group_case_type_id', 'DROP');
         CALL manage_constraint('public.display_group', 'fk_display_group_role_id', 'DROP');
+        CALL manage_constraint('public.display_group_case_field', 'fk_display_group_case_field_case_field_id', 'DROP');
+        CALL manage_constraint('public.event', 'fk_event_case_type_id', 'DROP');
+        CALL manage_constraint('public.role_to_access_profiles', 'fk_case_field_role_to_access_profiles', 'DROP');
+        CALL manage_constraint('public.search_alias_field', 'fk_search_alias_field_case_type_id', 'DROP');
+        CALL manage_constraint('public.search_cases_result_fields', 'fk_search_cases_result_fields_case_field_id_case_field_id', 'DROP');
+        CALL manage_constraint('public.search_cases_result_fields', 'fk_search_cases_result_fields_case_type_id', 'DROP');
         CALL manage_constraint('public.search_input_case_field', 'fk_display_group_role_id', 'DROP');
+        CALL manage_constraint('public.search_input_case_field', 'fk_search_input_case_field_case_field_id', 'DROP');
+        CALL manage_constraint('public.search_input_case_field', 'fk_search_input_case_field_case_type_id', 'DROP');
         CALL manage_constraint('public.search_result_case_field', 'fk_display_group_role_id', 'DROP');
+        CALL manage_constraint('public.search_result_case_field', 'fk_search_result_case_field_case_field_id', 'DROP');
+        CALL manage_constraint('public.search_result_case_field', 'fk_search_result_case_field_case_type_id', 'DROP');
+        CALL manage_constraint('public.search_criteria', 'fk_case_field_search_criteria', 'DROP');
+        CALL manage_constraint('public.search_party', 'fk_case_field_search_party', 'DROP');
+        CALL manage_constraint('public.state', 'fk_state_case_type_id', 'DROP');
         CALL manage_constraint('public.workbasket_case_field', 'fk_display_group_role_id', 'DROP');
+        CALL manage_constraint('public.workbasket_case_field', 'fk_workbasket_case_field_case_field_id', 'DROP');
+        CALL manage_constraint('public.workbasket_case_field', 'fk_workbasket_case_field_case_type_id', 'DROP');
         CALL manage_constraint('public.workbasket_input_case_field', 'fk_display_group_role_id', 'DROP');
+        CALL manage_constraint('public.workbasket_input_case_field', 'fk_workbasket_input_case_field_case_field_id', 'DROP');
+        CALL manage_constraint('public.workbasket_input_case_field', 'fk_workbasket_input_case_field_case_type_id', 'DROP');
+        CALL manage_constraint('public.access_type_role', 'fk_access_type_role_case_type_id', 'DROP');
+        CALL manage_constraint('public.access_type', 'fk_access_type_case_type_id', 'DROP');
         CALL manage_constraint('public.search_cases_result_fields', 'fk_search_cases_result_fields_role_id_role_id', 'DROP');
         CALL manage_constraint('public.state_acl', 'fk_state_acl_role_id_role_id', 'DROP');
         CALL manage_constraint('public.event_acl', 'fk_event_acl_role_id_role_id', 'DROP');
@@ -166,7 +192,21 @@ BEGIN
               )
             )'
         );
+
+        CALL manage_constraint(
+            'public.case_field',
+            'fk_case_field_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
     
+        CALL manage_constraint(
+        'public.case_field_acl',
+        'fk_case_field_acl_case_field_id_case_field_id',
+        'ADD',
+        'FOREIGN KEY (case_field_id) REFERENCES case_field(id)'
+        );
+
         CALL manage_constraint(
         'public.case_field_acl',
         'fk_case_field_acl_role_id_role_id',
@@ -176,11 +216,39 @@ BEGIN
     
         CALL manage_constraint(
             'public.case_type_acl',
+            'fk_case_type_acl_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
+
+        CALL manage_constraint(
+            'public.case_type_acl',
             'fk_case_type_acl_role_id_role_id',
             'ADD',
             'FOREIGN KEY (role_id) REFERENCES role(id)'
         );
+
+        CALL manage_constraint(
+            'public.category',
+            'fk_category_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
+
+        CALL manage_constraint(
+            'public.challenge_question',
+            'fk_challenge_question_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
     
+        CALL manage_constraint(
+            'public.complex_field_acl',
+            'fk_complex_field_acl_case_field_id_case_field_id',
+            'ADD',
+            'FOREIGN KEY (case_field_id) REFERENCES case_field(id)'
+        );
+
         CALL manage_constraint(
             'public.complex_field_acl',
             'fk_complex_field_acl_role_id_role_id',
@@ -189,6 +257,20 @@ BEGIN
         );
     
         CALL manage_constraint(
+            'public.display_group',
+            'fk_display_group_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
+
+        CALL manage_constraint(
+            'public.display_group_case_field',
+            'fk_display_group_case_field_case_field_id',
+            'ADD',
+            'FOREIGN KEY (case_field_id) REFERENCES case_field(id)'
+        );
+
+        CALL manage_constraint(
             'public.workbasket_input_case_field',
             'fk_display_group_role_id',
             'ADD',
@@ -196,10 +278,38 @@ BEGIN
         );
     
         CALL manage_constraint(
+            'public.workbasket_input_case_field',
+            'fk_workbasket_input_case_field_case_field_id',
+            'ADD',
+            'FOREIGN KEY (case_field_id) REFERENCES case_field(id)'
+        );
+
+        CALL manage_constraint(
+            'public.workbasket_input_case_field',
+            'fk_workbasket_input_case_field_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
+
+        CALL manage_constraint(
             'public.workbasket_case_field',
             'fk_display_group_role_id',
             'ADD',
             'FOREIGN KEY (role_id) REFERENCES role(id)'
+        );
+
+        CALL manage_constraint(
+            'public.workbasket_case_field',
+            'fk_workbasket_case_field_case_field_id',
+            'ADD',
+            'FOREIGN KEY (case_field_id) REFERENCES case_field(id)'
+        );
+
+        CALL manage_constraint(
+            'public.workbasket_case_field',
+            'fk_workbasket_case_field_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
         );
     
         CALL manage_constraint(
@@ -208,12 +318,40 @@ BEGIN
             'ADD',
             'FOREIGN KEY (role_id) REFERENCES role(id)'
         );
+
+        CALL manage_constraint(
+            'public.search_result_case_field',
+            'fk_search_result_case_field_case_field_id',
+            'ADD',
+            'FOREIGN KEY (case_field_id) REFERENCES case_field(id)'
+        );
+
+        CALL manage_constraint(
+            'public.search_result_case_field',
+            'fk_search_result_case_field_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
     
         CALL manage_constraint(
             'public.search_input_case_field',
             'fk_display_group_role_id',
             'ADD',
             'FOREIGN KEY (role_id) REFERENCES role(id)'
+        );
+
+        CALL manage_constraint(
+            'public.search_input_case_field',
+            'fk_search_input_case_field_case_field_id',
+            'ADD',
+            'FOREIGN KEY (case_field_id) REFERENCES case_field(id)'
+        );
+
+        CALL manage_constraint(
+            'public.search_input_case_field',
+            'fk_search_input_case_field_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
         );
     
         CALL manage_constraint(
@@ -222,12 +360,47 @@ BEGIN
             'ADD',
             'FOREIGN KEY (role_id) REFERENCES role(id)'
         );
-    
+
+        CALL manage_constraint(
+            'public.event',
+            'fk_event_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
+
         CALL manage_constraint(
             'public.event_acl',
             'fk_event_acl_role_id_role_id',
             'ADD',
             'FOREIGN KEY (role_id) REFERENCES role(id)'
+        );
+
+        CALL manage_constraint(
+            'public.role_to_access_profiles',
+            'fk_case_field_role_to_access_profiles',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
+
+        CALL manage_constraint(
+            'public.search_alias_field',
+            'fk_search_alias_field_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
+
+        CALL manage_constraint(
+            'public.search_cases_result_fields',
+            'fk_search_cases_result_fields_case_field_id_case_field_id',
+            'ADD',
+            'FOREIGN KEY (case_field_id) REFERENCES case_field(id)'
+        );
+
+        CALL manage_constraint(
+            'public.search_cases_result_fields',
+            'fk_search_cases_result_fields_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
         );
     
         CALL manage_constraint(
@@ -236,12 +409,47 @@ BEGIN
             'ADD',
             'FOREIGN KEY (role_id) REFERENCES role(id)'
         );
+
+        CALL manage_constraint(
+            'public.search_criteria',
+            'fk_case_field_search_criteria',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
+
+        CALL manage_constraint(
+            'public.search_party',
+            'fk_case_field_search_party',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
+
+        CALL manage_constraint(
+            'public.state',
+            'fk_state_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
     
         CALL manage_constraint(
             'public.state_acl',
             'fk_state_acl_role_id_role_id',
             'ADD',
             'FOREIGN KEY (role_id) REFERENCES role(id)'
+        );
+
+        CALL manage_constraint(
+            'public.access_type_role',
+            'fk_access_type_role_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
+
+        CALL manage_constraint(
+            'public.access_type',
+            'fk_access_type_case_type_id',
+            'ADD',
+            'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
         );
         
         RAISE NOTICE 'create_foreign_key_relationships FINISHED';
@@ -262,6 +470,7 @@ BEGIN
         DROP TABLE IF EXISTS case_type_ids_to_remove;
         DROP TABLE IF EXISTS valid_field_type_ids;
         DROP TABLE IF EXISTS removable_case_fields;
+        DROP TABLE IF EXISTS removable_field_type_ids;
         DROP TABLE IF EXISTS removable_events;
         DROP TABLE IF EXISTS removable_states;
 
@@ -293,10 +502,14 @@ BEGIN
 
     	RAISE NOTICE 'Created temp table case_type_ids_to_remove for records older than % months with % rows',
         	older_than_months, row_count;
+        CREATE INDEX idx_case_type_ids_to_remove_id ON case_type_ids_to_remove(id);
+        ANALYZE case_type_ids_to_remove;
 
         BEGIN
             CREATE TEMP TABLE valid_field_type_ids AS
             SELECT id FROM field_type WHERE jurisdiction_id IS NULL;
+            CREATE INDEX idx_valid_field_type_ids_id ON valid_field_type_ids(id);
+            ANALYZE valid_field_type_ids;
             RAISE NOTICE 'Created temp table valid_field_type_ids with % rows',
                 (SELECT COUNT(*) FROM valid_field_type_ids);
         EXCEPTION WHEN OTHERS THEN
@@ -309,6 +522,9 @@ BEGIN
             FROM case_field
             WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
               AND field_type_id NOT IN (SELECT id FROM valid_field_type_ids);
+            CREATE INDEX idx_removable_case_fields_id ON removable_case_fields(id);
+            CREATE INDEX idx_removable_case_fields_case_type_id ON removable_case_fields(case_type_id);
+            ANALYZE removable_case_fields;
             RAISE NOTICE 'Created temp table removable_case_fields with % rows',
                 (SELECT COUNT(*) FROM removable_case_fields);
         EXCEPTION WHEN OTHERS THEN
@@ -316,9 +532,27 @@ BEGIN
         END;
 
         BEGIN
+            CREATE TEMP TABLE removable_field_type_ids AS
+            SELECT DISTINCT cf.field_type_id AS id
+            FROM case_field cf
+            JOIN field_type ft ON ft.id = cf.field_type_id
+            WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+              AND cf.field_type_id NOT IN (SELECT id FROM valid_field_type_ids)
+              AND ft.jurisdiction_id IS NOT NULL;
+            CREATE INDEX idx_removable_field_type_ids_id ON removable_field_type_ids(id);
+            ANALYZE removable_field_type_ids;
+            RAISE NOTICE 'Created temp table removable_field_type_ids with % rows',
+                (SELECT COUNT(*) FROM removable_field_type_ids);
+        EXCEPTION WHEN OTHERS THEN
+            RAISE NOTICE 'Could not create removable_field_type_ids: %', SQLERRM;
+        END;
+
+        BEGIN
             CREATE TEMP TABLE removable_events AS
             SELECT id FROM event
             WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
+            CREATE INDEX idx_removable_events_id ON removable_events(id);
+            ANALYZE removable_events;
             RAISE NOTICE 'Created temp table removable_events with % rows',
                 (SELECT COUNT(*) FROM removable_events);
         EXCEPTION WHEN OTHERS THEN
@@ -329,6 +563,8 @@ BEGIN
             CREATE TEMP TABLE removable_states AS
             SELECT id FROM state
             WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove);
+            CREATE INDEX idx_removable_states_id ON removable_states(id);
+            ANALYZE removable_states;
             RAISE NOTICE 'Created temp table removable_states with % rows',
                 (SELECT COUNT(*) FROM removable_states);
         EXCEPTION WHEN OTHERS THEN
@@ -350,6 +586,7 @@ BEGIN
         DROP TABLE IF EXISTS case_type_ids_to_remove;
         DROP TABLE IF EXISTS valid_field_type_ids;
         DROP TABLE IF EXISTS removable_case_fields;
+        DROP TABLE IF EXISTS removable_field_type_ids;
         DROP TABLE IF EXISTS removable_events;
         DROP TABLE IF EXISTS removable_states;
         RAISE NOTICE 'drop_cleanup_temp_tables FINISHED';
@@ -691,24 +928,6 @@ BEGIN
             RAISE NOTICE 'Skipping workbasket_case_field (redundant): driver tables empty';
         END IF;
 
-        -- field_type
-        IF EXISTS (SELECT 1 FROM case_type_ids_to_remove) THEN
-            CALL safe_delete_where(
-              'field_type',
-              'id',
-              'id IN (
-                   SELECT DISTINCT field_type_id
-                   FROM case_field
-                   WHERE case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-               )
-               AND id NOT IN (SELECT id FROM valid_field_type_ids)
-               AND jurisdiction_id IS NOT NULL',
-              batch_size
-            );
-        ELSE
-            RAISE NOTICE 'Skipping field_type: case_type_ids_to_remove empty';
-        END IF;
-
         -- case_field_acl (by case_type)
         IF EXISTS (SELECT 1 FROM case_type_ids_to_remove) THEN
             CALL safe_delete_where(
@@ -987,6 +1206,45 @@ BEGIN
             );
         ELSE
             RAISE NOTICE 'Skipping access_type: driver empty';
+        END IF;
+
+        -- field_type_list_item
+        IF EXISTS (SELECT 1 FROM removable_field_type_ids) THEN
+            CALL safe_delete_where(
+              'field_type_list_item',
+              'field_type_id',
+              'field_type_id IN (SELECT id FROM removable_field_type_ids)',
+              batch_size
+            );
+        ELSE
+            RAISE NOTICE 'Skipping field_type_list_item: removable_field_type_ids empty';
+        END IF;
+
+        -- complex_field
+        IF EXISTS (SELECT 1 FROM removable_field_type_ids) THEN
+            CALL safe_delete_where(
+              'complex_field',
+              'id',
+              'field_type_id IN (SELECT id FROM removable_field_type_ids)
+               OR complex_field_type_id IN (SELECT id FROM removable_field_type_ids)',
+              batch_size
+            );
+        ELSE
+            RAISE NOTICE 'Skipping complex_field: removable_field_type_ids empty';
+        END IF;
+
+        -- field_type
+        IF EXISTS (SELECT 1 FROM removable_field_type_ids) THEN
+            CALL safe_delete_where(
+              'field_type',
+              'id',
+              'id IN (SELECT id FROM removable_field_type_ids)
+               AND id NOT IN (SELECT id FROM valid_field_type_ids)
+               AND jurisdiction_id IS NOT NULL',
+              batch_size
+            );
+        ELSE
+            RAISE NOTICE 'Skipping field_type: removable_field_type_ids empty';
         END IF;
 
         -- final case_type cleanup
