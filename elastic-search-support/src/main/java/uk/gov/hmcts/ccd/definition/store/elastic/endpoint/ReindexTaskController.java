@@ -5,6 +5,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,8 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
-
-import java.util.List;
 
 @RestController
 @RequestMapping(ReindexTaskController.REINDEX_TASKS_URI)
@@ -37,10 +39,13 @@ public class ReindexTaskController {
         @ApiResponse(code = 200, message = "Successfully retrieved reindex tasks"),
         @ApiResponse(code = 500, message = "Internal Server Error")
     })
-    public ResponseEntity<List<ReindexTask>> getReindexTasksByCaseType(
-        @RequestParam(value = "caseType", required = false) String caseType
+    public ResponseEntity<Page<ReindexTask>> getReindexTasksByCaseType(
+        @RequestParam(value = "caseType", required = false) String caseType,
+        @RequestParam(value = "page", required = false, defaultValue = "0") Integer page,
+        @RequestParam(value = "size", required = false, defaultValue = "25") Integer size
     ) {
-        List<ReindexTask> response = reindexService.getTasksByCaseType(caseType);
+        Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "startTime"));
+        Page<ReindexTask> response = reindexService.getTasksByCaseType(caseType, pageable);
         return ResponseEntity.ok(response);
     }
 }

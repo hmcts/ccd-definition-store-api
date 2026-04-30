@@ -12,6 +12,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
@@ -391,6 +395,38 @@ class ReindexServiceTest {
         assertEquals(1, result.size());
         assertSame(mappedTask, result.get(0));
         assertEquals(Duration.between(start, end), result.get(0).getDuration());
+    }
+
+    @Test
+    void shouldReturnPagedTasksForBlankCaseType() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<ReindexEntity> entityPage = new PageImpl<>(List.of(entity), pageable, 1);
+
+        when(reindexRepository.findAll(pageable)).thenReturn(entityPage);
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        Page<ReindexTask> result = reindexService.getTasksByCaseType("", pageable);
+
+        assertEquals(1, result.getTotalElements());
+        assertSame(mappedTask, result.getContent().get(0));
+    }
+
+    @Test
+    void shouldReturnPagedTasksFilteredByCaseType() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        Pageable pageable = PageRequest.of(1, 5);
+        Page<ReindexEntity> entityPage = new PageImpl<>(List.of(entity), pageable, 6);
+
+        when(reindexRepository.findByCaseType("caseTypeA", pageable)).thenReturn(entityPage);
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        Page<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA", pageable);
+
+        assertEquals(6, result.getTotalElements());
+        assertSame(mappedTask, result.getContent().get(0));
     }
 
     @Test

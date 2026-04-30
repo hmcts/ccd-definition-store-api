@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
@@ -197,6 +199,14 @@ public class ReindexServiceImpl implements ReindexService {
             .stream()
             .map(mapper::map)
             .toList();
+    }
+
+    @Override
+    public Page<ReindexTask> getTasksByCaseType(String caseType, Pageable pageable) {
+        if (StringUtils.isBlank(caseType)) {
+            return reindexRepository.findAll(pageable).map(mapper::map);
+        }
+        return reindexRepository.findByCaseType(caseType, pageable).map(mapper::map);
     }
 
     public ReindexEntity saveEntity(Boolean deleteOldIndex, CaseTypeEntity caseType,

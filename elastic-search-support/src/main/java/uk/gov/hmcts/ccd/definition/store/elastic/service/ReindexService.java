@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
@@ -16,6 +18,8 @@ public interface ReindexService {
     List<ReindexTask> getAll();
 
     List<ReindexTask> getTasksByCaseType(String caseType);
+
+    Page<ReindexTask> getTasksByCaseType(String caseType, Pageable pageable);
 
     ReindexEntity saveEntity(Boolean deleteOldIndex,
                              CaseTypeEntity caseType,
