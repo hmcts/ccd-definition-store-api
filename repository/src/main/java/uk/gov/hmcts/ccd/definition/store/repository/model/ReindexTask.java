@@ -24,10 +24,10 @@ public class ReindexTask {
     private String reindexResponse;
     private String whoImported;
 
-    public Duration getDuration() {
+    public long getDuration() {
         if (startTime == null || endTime == null) {
-            return null;
+            return 0;
         }
-        return Duration.between(startTime, endTime);
+        return Duration.between(startTime, endTime).toSeconds();
     }
 }

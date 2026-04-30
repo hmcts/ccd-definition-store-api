@@ -32,7 +32,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -375,7 +374,7 @@ class ReindexServiceTest {
         assertSame(mappedTask, result.get(0));
         assertEquals(start, result.get(0).getStartTime());
         assertEquals(end, result.get(0).getEndTime());
-        assertEquals(Duration.between(start, end), result.get(0).getDuration());
+        assertEquals(930L, result.get(0).getDuration());
     }
 
     @Test
@@ -394,7 +393,27 @@ class ReindexServiceTest {
 
         assertEquals(1, result.size());
         assertSame(mappedTask, result.get(0));
-        assertEquals(Duration.between(start, end), result.get(0).getDuration());
+        assertEquals(65L, result.get(0).getDuration());
+    }
+
+    @Test
+    void shouldReturnMappedTasksWithLongDurationValue() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        LocalDateTime start = LocalDateTime.of(2026, 4, 20, 8, 15, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 4, 28, 11, 45, 30);
+        mappedTask.setStartTime(start);
+        mappedTask.setEndTime(end);
+
+        when(reindexRepository.findByCaseType("caseTypeA")).thenReturn(List.of(entity));
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        List<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA");
+
+        assertEquals(1, result.size());
+        assertSame(mappedTask, result.get(0));
+        assertEquals(703_830L, result.get(0).getDuration());
+        assertTrue(result.get(0).getDuration() > 86_400L);
     }
 
     @Test
