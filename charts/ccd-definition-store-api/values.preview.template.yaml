@@ -110,7 +110,7 @@ ccd:
           secretRef: "{{ .Values.global.postgresSecret }}"
           key: PASSWORD
           disabled: true
-          
+
 
 elastic:
   enabled: true
