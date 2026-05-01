@@ -40,12 +40,15 @@ import java.util.Optional;
 import java.util.concurrent.CompletionException;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
@@ -125,7 +128,7 @@ class ReindexServiceTest {
         verify(ccdElasticClient).removeIndex(oldIndexName);
         ArgumentCaptor<String> oldIndexCaptor = ArgumentCaptor.forClass(String.class);
         verify(ccdElasticClient).removeIndex(oldIndexCaptor.capture());
-        assertEquals(oldIndexName, oldIndexCaptor.getValue());
+        assertThat(oldIndexCaptor.getValue(), is(equalTo(oldIndexName)));
     }
 
     @Test
@@ -198,13 +201,13 @@ class ReindexServiceTest {
         verify(reindexRepository).saveAndFlush(captor.capture());
 
         ReindexEntity saved = captor.getValue();
-        assertSame(saved, result);
-        assertTrue(saved.getDeleteOldIndex());
-        assertEquals("caseTypeA", saved.getCaseType());
-        assertEquals("jurA", saved.getJurisdiction());
-        assertEquals(newIndexName, saved.getIndexName());
-        assertNotNull(saved.getStartTime());
-        assertEquals("STARTED", saved.getStatus());
+        assertThat(result, sameInstance(saved));
+        assertThat(saved.getDeleteOldIndex(), is(true));
+        assertThat(saved.getCaseType(), is(equalTo("caseTypeA")));
+        assertThat(saved.getJurisdiction(), is(equalTo("jurA")));
+        assertThat(saved.getIndexName(), is(equalTo(newIndexName)));
+        assertThat(saved.getStartTime(), notNullValue());
+        assertThat(saved.getStatus(), is(equalTo("STARTED")));
     }
 
     @Test
@@ -217,9 +220,9 @@ class ReindexServiceTest {
         reindexService.updateEntity(newIndexName, "response", TEST_USER_EMAIL);
 
         verify(reindexRepository).saveAndFlush(existing);
-        assertEquals("SUCCESS", existing.getStatus());
-        assertNotNull(existing.getEndTime());
-        assertNotNull(existing.getReindexResponse());
+        assertThat(existing.getStatus(), is(equalTo("SUCCESS")));
+        assertThat(existing.getEndTime(), notNullValue());
+        assertThat(existing.getReindexResponse(), notNullValue());
     }
 
     @Test
@@ -233,10 +236,10 @@ class ReindexServiceTest {
         reindexService.updateEntity(newIndexName, ex, TEST_USER_EMAIL);
 
         verify(reindexRepository).saveAndFlush(existing);
-        assertEquals("FAILED", existing.getStatus());
-        assertNotNull(existing.getEndTime());
-        assertTrue(existing.getExceptionMessage().contains("Simulated failure"));
-        assertNull(existing.getReindexResponse());
+        assertThat(existing.getStatus(), is(equalTo("FAILED")));
+        assertThat(existing.getEndTime(), notNullValue());
+        assertThat(existing.getExceptionMessage(), containsString("Simulated failure"));
+        assertThat(existing.getReindexResponse(), nullValue());
     }
 
     @Test
@@ -257,8 +260,8 @@ class ReindexServiceTest {
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
         verify(reindexRepository).saveAndFlush(entity);
-        assertEquals("FAILED", entity.getStatus());
-        assertTrue(entity.getExceptionMessage().contains("ES error"));
+        assertThat(entity.getStatus(), is(equalTo("FAILED")));
+        assertThat(entity.getExceptionMessage(), containsString("ES error"));
     }
 
     @Test
@@ -276,8 +279,8 @@ class ReindexServiceTest {
 
         ArgumentCaptor<ReindexEntity> captor = ArgumentCaptor.forClass(ReindexEntity.class);
         verify(reindexRepository, times(2)).saveAndFlush(captor.capture());
-        assertEquals("FAILED", entity.getStatus());
-        assertTrue(entity.getExceptionMessage().contains("reindexing failed"));
+        assertThat(entity.getStatus(), is(equalTo("FAILED")));
+        assertThat(entity.getExceptionMessage(), containsString("reindexing failed"));
     }
 
     @Test
@@ -298,8 +301,8 @@ class ReindexServiceTest {
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
         verify(reindexRepository).saveAndFlush(entity);
-        assertEquals("FAILED", entity.getStatus());
-        assertTrue(entity.getExceptionMessage().contains("mapping failure before reindex"));
+        assertThat(entity.getStatus(), is(equalTo("FAILED")));
+        assertThat(entity.getExceptionMessage(), containsString("mapping failure before reindex"));
     }
 
     @Test
@@ -313,7 +316,7 @@ class ReindexServiceTest {
         reindexService.updateEntity(newIndexName, completion, TEST_USER_EMAIL);
 
         verify(reindexRepository).saveAndFlush(entity);
-        assertTrue(entity.getExceptionMessage().contains("IllegalArgumentException"));
+        assertThat(entity.getExceptionMessage(), containsString("IllegalArgumentException"));
     }
 
     @Test
@@ -323,7 +326,7 @@ class ReindexServiceTest {
         IllegalStateException exception = assertThrows(IllegalStateException.class,
             () -> reindexService.updateEntity(newIndexName, "response", TEST_USER_EMAIL));
 
-        assertTrue(exception.getMessage().contains("No reindex entity metadata found for index name"));
+        assertThat(exception.getMessage(), containsString("No reindex entity metadata found for index name"));
         verify(reindexRepository, never()).save(any());
     }
 
@@ -346,14 +349,14 @@ class ReindexServiceTest {
         reindexService.updateEntity(newIndexName, regularException, TEST_USER_EMAIL);
 
         verify(reindexRepository).saveAndFlush(entity);
-        assertTrue(entity.getExceptionMessage().contains("RuntimeException"));
-        assertTrue(entity.getExceptionMessage().contains("Regular exception"));
+        assertThat(entity.getExceptionMessage(), containsString("RuntimeException"));
+        assertThat(entity.getExceptionMessage(), containsString("Regular exception"));
     }
 
     @Test
     void shouldIncrementIndexNumber() {
         String result = reindexService.incrementIndexNumber(oldIndexName);
-        assertEquals(newIndexName, result);
+        assertThat(result, is(equalTo(newIndexName)));
     }
 
     @Test
@@ -370,11 +373,11 @@ class ReindexServiceTest {
 
         List<ReindexTask> result = reindexService.getAll();
 
-        assertEquals(1, result.size());
-        assertSame(mappedTask, result.get(0));
-        assertEquals(start, result.get(0).getStartTime());
-        assertEquals(end, result.get(0).getEndTime());
-        assertEquals(930L, result.get(0).getDuration());
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0), sameInstance(mappedTask));
+        assertThat(result.get(0).getStartTime(), is(equalTo(start)));
+        assertThat(result.get(0).getEndTime(), is(equalTo(end)));
+        assertThat(result.get(0).getDuration(), is(930L));
     }
 
     @Test
@@ -391,9 +394,9 @@ class ReindexServiceTest {
 
         List<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA");
 
-        assertEquals(1, result.size());
-        assertSame(mappedTask, result.get(0));
-        assertEquals(65L, result.get(0).getDuration());
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0), sameInstance(mappedTask));
+        assertThat(result.get(0).getDuration(), is(65L));
     }
 
     @Test
@@ -410,10 +413,10 @@ class ReindexServiceTest {
 
         List<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA");
 
-        assertEquals(1, result.size());
-        assertSame(mappedTask, result.get(0));
-        assertEquals(703_830L, result.get(0).getDuration());
-        assertTrue(result.get(0).getDuration() > 86_400L);
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0), sameInstance(mappedTask));
+        assertThat(result.get(0).getDuration(), is(703_830L));
+        assertThat(result.get(0).getDuration(), greaterThan(86_400L));
     }
 
     @Test
@@ -428,8 +431,8 @@ class ReindexServiceTest {
 
         Page<ReindexTask> result = reindexService.getTasksByCaseType("", pageable);
 
-        assertEquals(1, result.getTotalElements());
-        assertSame(mappedTask, result.getContent().get(0));
+        assertThat(result.getTotalElements(), is(1L));
+        assertThat(result.getContent().get(0), sameInstance(mappedTask));
     }
 
     @Test
@@ -444,20 +447,20 @@ class ReindexServiceTest {
 
         Page<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA", pageable);
 
-        assertEquals(6, result.getTotalElements());
-        assertSame(mappedTask, result.getContent().get(0));
+        assertThat(result.getTotalElements(), is(6L));
+        assertThat(result.getContent().get(0), sameInstance(mappedTask));
     }
 
     @Test
     void incrementToDoubleDigitIndexNumber() {
         String result = reindexService.incrementIndexNumber("casetypea_cases-000009");
-        assertEquals("casetypea_cases-000010", result);
+        assertThat(result, is(equalTo("casetypea_cases-000010")));
     }
 
     @Test
     void incrementIndexNumberWithDash() {
         String result = reindexService.incrementIndexNumber("casetype-a_cases-000001");
-        assertEquals("casetype-a_cases-000002", result);
+        assertThat(result, is(equalTo("casetype-a_cases-000002")));
     }
 
     private void mockAliasResponse() throws IOException {

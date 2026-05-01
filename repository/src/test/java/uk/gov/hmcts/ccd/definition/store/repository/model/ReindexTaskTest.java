@@ -5,8 +5,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.JsonUtils;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.junit.MatcherAssert.assertThat;
 
 class ReindexTaskTest {
 
@@ -18,8 +20,8 @@ class ReindexTaskTest {
 
         String json = JsonUtils.toString(task);
 
-        assertTrue(json.contains("\"startTime\":\"2026-04-28 15:00:01\""));
-        assertTrue(json.contains("\"endTime\":\"2026-04-28 16:10:59\""));
+        assertThat(json, containsString("\"startTime\":\"2026-04-28 15:00:01\""));
+        assertThat(json, containsString("\"endTime\":\"2026-04-28 16:10:59\""));
     }
 
     @Test
@@ -33,7 +35,7 @@ class ReindexTaskTest {
 
         ReindexTask task = JsonUtils.fromString(json, ReindexTask.class);
 
-        assertEquals(LocalDateTime.of(2026, 4, 28, 15, 0, 1), task.getStartTime());
-        assertEquals(LocalDateTime.of(2026, 4, 28, 16, 10, 59), task.getEndTime());
+        assertThat(task.getStartTime(), is(equalTo(LocalDateTime.of(2026, 4, 28, 15, 0, 1))));
+        assertThat(task.getEndTime(), is(equalTo(LocalDateTime.of(2026, 4, 28, 16, 10, 59))));
     }
 }
