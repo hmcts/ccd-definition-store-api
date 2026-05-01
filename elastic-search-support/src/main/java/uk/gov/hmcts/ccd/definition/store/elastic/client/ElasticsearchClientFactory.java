@@ -8,7 +8,6 @@ import org.elasticsearch.client.RestClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -31,8 +30,8 @@ public class ElasticsearchClientFactory {
             client.cluster().putSettings(s ->
                 s.persistent(Map.of("action.destructive_requires_name", JsonData.of(false)))
             );
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
+        } catch (Exception e) {
+            log.warn("Skipping cluster settings update: {}", e.getMessage());
         }
 
         return client;
