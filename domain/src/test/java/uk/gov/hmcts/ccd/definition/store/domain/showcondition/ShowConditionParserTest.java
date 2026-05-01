@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.showcondition;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.is;
@@ -266,6 +268,47 @@ class ShowConditionParserTest {
 
         assertThat(sc.getFields(), hasItems("[INJECTED_DATA.test]"));
         assertEquals(0, sc.getFieldsWithSubtypes().size());
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "caseStatus=\"Open\" AND "
+            + "(applicantType=\"Solicitor\" OR respondentType!=\"Citizen\")",
+        "caseStatus=\"Open\" AND "
+            + "(respondentType!=\"Citizen\" OR applicantType=\"Solicitor\")",
+        "(applicantType=\"Solicitor\" OR respondentType!=\"Citizen\") "
+            + "AND caseStatus=\"Open\"",
+        "(respondentType!=\"Citizen\" OR applicantType=\"Solicitor\") "
+            + "AND caseStatus=\"Open\""
+    })
+    void shouldParseNotEqualInParenthesisedConditionOrderingsCorrectly(String condition)
+        throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition(condition);
+
+        assertThat(sc.getShowConditionExpression(), is(condition));
+        assertThat(sc.getFields(), hasItems("caseStatus", "applicantType", "respondentType"));
+        assertThat(
+            classUnderTest.parseShowCondition(sc.getShowConditionExpression()).getShowConditionExpression(),
+            is(condition));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {
+        "hearingRequired=\"Yes\" AND "
+            + "(hearingNotes=\"(listed AND urgent)\" OR priority=\"High\")",
+        "hearingRequired=\"Yes\" AND "
+            + "(priority=\"High\" OR hearingNotes=\"(listed AND urgent)\")",
+        "(hearingNotes=\"(listed AND urgent)\" OR priority=\"High\") "
+            + "AND hearingRequired=\"Yes\"",
+        "(priority=\"High\" OR hearingNotes=\"(listed AND urgent)\") "
+            + "AND hearingRequired=\"Yes\""
+    })
+    void shouldParseNestedConditionsWithParenthesisedStringValue(String condition)
+        throws InvalidShowConditionException {
+        ShowCondition sc = classUnderTest.parseShowCondition(condition);
+
+        assertThat(sc.getShowConditionExpression(), is(condition));
+        assertThat(sc.getFields(), hasItems("hearingRequired", "hearingNotes", "priority"));
     }
 
     private void assertShowCondition(ShowCondition showCondition) {

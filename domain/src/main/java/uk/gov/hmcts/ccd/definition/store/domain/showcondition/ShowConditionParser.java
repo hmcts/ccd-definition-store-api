@@ -29,7 +29,7 @@ public class ShowConditionParser {
         "\\s*?(.*)\\s*?(=|CONTAINS)\\s*?(\".*\"\\)*)\\s*?");
     @SuppressWarnings("squid:S5852")
     private static final Pattern NOT_EQUAL_CONDITION_PATTERN = Pattern.compile(
-        "\\s*?(.*)\\s*?(!=|CONTAINS)\\s*?(\".*\")\\s*?");
+        "\\s*?(.*)\\s*?(!=|CONTAINS)\\s*?(\".*\"\\)*)\\s*?");
     @SuppressWarnings("squid:S5852")
     private static final Pattern EQUALITY_CONDITION_PATTERN_WITHOUT_TRAILING_BRACKET = Pattern.compile(
         "\\s*?(.*)\\s*?(=|CONTAINS)\\s*?(\".*\")\\s*?");
@@ -41,6 +41,7 @@ public class ShowConditionParser {
     private static final Pattern INCORRECT_POSITION_PATTERN = Pattern.compile(INCORRECT_POSITION_OF_PARENTHESIS_REGEX);
     private static final Pattern INCORRECT_POSITION_CONDITION_PATTERN =
         Pattern.compile(INCORRECT_POSITION_OF_CONDITION_REGEX);
+    private static final Pattern QUOTED_VALUE_PATTERN = Pattern.compile("\"[^\"]*\"");
 
     public ShowCondition parseShowCondition(String rawShowConditionString) throws InvalidShowConditionException {
         try {
@@ -143,9 +144,13 @@ public class ShowConditionParser {
         throws InvalidShowConditionException {
         if (containsCondition(BRACKET_PATTERN.matcher(rawConditionString))) {
             rawConditionString = rawConditionString.replace(" ", "");
-            validateCorrectPosition(rawConditionString, INCORRECT_POSITION_PATTERN);
+            validateCorrectPosition(removeQuotedValues(rawConditionString), INCORRECT_POSITION_PATTERN);
             checkForMismatchInBrackets(rawConditionString, conditions);
         }
+    }
+
+    private String removeQuotedValues(String rawConditionString) {
+        return QUOTED_VALUE_PATTERN.matcher(rawConditionString).replaceAll("\"\"");
     }
 
     private void checkForMismatchInBrackets(String rawConditionString, String[] conditions)
