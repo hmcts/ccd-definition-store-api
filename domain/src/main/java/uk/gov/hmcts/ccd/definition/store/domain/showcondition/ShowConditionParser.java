@@ -150,6 +150,10 @@ public class ShowConditionParser {
     }
 
     private String removeQuotedValues(String rawConditionString) {
+        // Parentheses inside quoted values should not count as expression syntax.
+        // For example, this value is valid data: Name = "John (Senior)"
+        // Without removeQuotedValues, the parser might treat (Senior) as condition grouping.
+        // Replacing quoted values with "" lets the parser validate only the structure outside the values.
         return QUOTED_VALUE_PATTERN.matcher(rawConditionString).replaceAll("\"\"");
     }
 
