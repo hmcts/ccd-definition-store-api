@@ -11,7 +11,7 @@
   ],
   "request": {
     "pathVariables": {
-      "ctid": "FT_CaseAccessCategories"
+      "ctid": "FT_MasterCaseType"
     }
   },
   "expectedResponse": {
@@ -23,7 +23,7 @@
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body": {
-      "id": "FT_CaseAccessCategories",
+      "id": "FT_MasterCaseType",
       "states": [
         {
           "__ordering__": "UNORDERED",
@@ -35,7 +35,7 @@
         },
         {
           "id": "CaseUpdated",
-          "state_category": "[[ANYTHING_PRESENT]]"
+          "state_category": "Closed for payment,End"
         }
       ]
     }
