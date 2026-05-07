@@ -1,6 +1,6 @@
 #!groovy
 
-@Library("Infrastructure@maven-mirror-auth")
+@Library("Infrastructure")
 
 import uk.gov.hmcts.contino.GradleBuilder
 
