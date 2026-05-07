@@ -15,6 +15,7 @@ public class CaseState {
     private String description = null;
     private Integer order = null;
     private String titleDisplay;
+    private String stateCategory;
     private List<AccessControlList> acls = new ArrayList<>();
 
     /**
@@ -73,6 +74,16 @@ public class CaseState {
 
     public void setTitleDisplay(String titleDisplay) {
         this.titleDisplay = titleDisplay;
+    }
+
+    @ApiModelProperty(value = "State category")
+    @JsonProperty("state_category")
+    public String getStateCategory() {
+        return stateCategory;
+    }
+
+    public void setStateCategory(String stateCategory) {
+        this.stateCategory = stateCategory;
     }
 
     @ApiModelProperty(value = "State Access Control Lists")

@@ -1,0 +1,38 @@
+{
+  "_guid_": "S-126.3",
+  "_extends_": "F-126_Test_Base_Data",
+  "title": "Get case type details should include stateCategory for states",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid jurisdiction id",
+    "contains a valid caseType id",
+    "has the 200 OK code",
+    "contains case type details with stateCategory"
+  ],
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "headers": {
+      "Content-Encoding": "gzip",
+      "Content-Type": "[[ANYTHING_PRESENT]]",
+      "Transfer-Encoding": "[[ANYTHING_PRESENT]]",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+    },
+    "body": {
+      "id": "FT_MasterCaseType",
+      "states": [
+        {
+          "__ordering__": "UNORDERED",
+          "__elementId__": "id"
+        },
+        {
+          "id": "CaseCreated",
+          "state_category": "[[ANYTHING_PRESENT]]"
+        },
+        {
+          "id": "CaseUpdated",
+          "state_category": "[[ANYTHING_PRESENT]]"
+        }
+      ]
+    }
+  }
+}
