@@ -195,6 +195,7 @@
           "description": null,
           "order": 1,
           "title_display": null,
+          "state_category": "[[ANY_STRING_NULLABLE]]",
           "acls": [
             {
               "role": "caseworker-befta_master",
@@ -211,6 +212,7 @@
           "description": null,
           "order": 1,
           "title_display": null,
+          "state_category": "[[ANY_STRING_NULLABLE]]",
           "acls": [
             {
               "role": "caseworker-befta_master",
