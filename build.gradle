@@ -49,7 +49,7 @@ tasks.register("printSuppressionFile") {
 }
 
 ext {
-    set('elasticsearch.version', '8.16.2')
+    set('elasticsearch.version', '9.1.2')
     set('spring-framework.version', '6.2.14')
     set('spring-security.version', '6.5.7')
     set('springCloudVersion', '2025.0.1')
@@ -57,6 +57,7 @@ ext {
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.24.3')
 
+    elasticsearchVersion = '9.1.2'
     junit = '5.14.3'
     junitPlatform = '1.14.3'
     springDocVersion = '2.8.17'
@@ -71,7 +72,6 @@ ext {
     jjwtVersion = '0.13.0'
     feignJackson = '13.9'
     gsonVersion = '2.13.2'
-    elasticSearchVersion = '7.17.29'
     testcontainersVersion = '1.21.4'
     ccdTestDefinitionVersion = '7.26.2_CCD-7641-0'
     beftaFwVersion = '9.2.4'
@@ -115,11 +115,33 @@ allprojects {
             name = "AzureArtifacts"
             url = uri("https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1")
         }
+        gradlePluginPortal()
     }
 
     configurations {
         mockitoAgent
         codacy
+    }
+    configurations.configureEach {
+        exclude group: 'com.vaadin.external.google', module: 'android-json'
+    }
+
+    configurations.all {
+        resolutionStrategy {
+            eachDependency { DependencyResolveDetails details ->
+                if (details.requested.group == 'org.elasticsearch') {
+                    details.useVersion elasticsearchVersion
+                }
+
+                if (details.requested.group == 'co.elastic.clients') {
+                    details.useVersion elasticsearchVersion
+                }
+
+                if (details.requested.group == 'org.elasticsearch.client') {
+                    details.useVersion elasticsearchVersion
+                }
+            }
+        }
     }
 
     apply plugin: 'java'
@@ -138,7 +160,7 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter'
 
         implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.11'
-        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.49.Final'
+        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.50.Final'
         implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.6.1'
         implementation group: 'org.apache.httpcomponents.core5', name: 'httpcore5', version: '5.4.2'
         implementation group: 'org.apache.httpcomponents.core5', name: 'httpcore5-h2', version: '5.4.2'
@@ -154,7 +176,7 @@ allprojects {
         testImplementation group: 'org.apache.groovy', name: 'groovy-xml', version: groovyVersion
         testImplementation group: 'org.apache.groovy', name: 'groovy-json', version: groovyVersion
         testImplementation group: 'com.github.hmcts', name: 'fortify-client', version: '1.4.10', classifier: 'all'
-
+        testImplementation("org.json:json:20250517")
     }
 
 }
@@ -258,7 +280,7 @@ subprojects { subproject ->
         implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.5'
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '8.0.0'
 
-        implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.3'
+        implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.4'
         implementation group: 'com.google.code.gson', name: 'gson', version: '2.13.2'
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
@@ -275,8 +297,9 @@ subprojects { subproject ->
         implementation group: 'org.apache.poi', name: 'poi', version: apachePoiVersion
         implementation group: 'org.apache.poi', name: 'poi-ooxml', version: apachePoiVersion
         implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: apachePoiVersion
-        implementation group: 'org.elasticsearch', name: 'elasticsearch', version: elasticSearchVersion
-        implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-high-level-client', version: elasticSearchVersion
+        implementation group: 'org.elasticsearch', name: 'elasticsearch', version: elasticsearchVersion
+        implementation group: 'co.elastic.clients', name: 'elasticsearch-java', version: elasticsearchVersion
+        implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: elasticsearchVersion
         implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
         implementation group: 'org.flywaydb', name: 'flyway-database-postgresql', version: flywayVersion
         implementation group: 'org.jooq', name: 'jool-java-8', version: '0.9.15'
@@ -327,6 +350,8 @@ subprojects { subproject ->
     // from https://github.com/junit-team/junit5/issues/1024'
     afterEvaluate {
         jacocoTestReport {
+            // Gradle 8+ validation: this report reads main output classes/resources.
+            dependsOn classes
             reports {
                 // XML required by coveralls and for the below coverage checks
                 // and html are generated by default
