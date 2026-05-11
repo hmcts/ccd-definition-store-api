@@ -31,8 +31,9 @@ public class ElasticsearchClientFactory {
             client.cluster().putSettings(s ->
                 s.persistent(Map.of("action.destructive_requires_name", JsonData.of(false)))
             );
-        } catch (IOException e) {
-            log.error(e.getMessage(), e);
+
+        } catch (Exception e) {
+            log.warn("Skipping cluster settings update: {}", e.getMessage());
         }
 
         return client;

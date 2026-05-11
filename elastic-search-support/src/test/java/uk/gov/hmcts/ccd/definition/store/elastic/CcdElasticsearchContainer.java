@@ -5,7 +5,7 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
 
 public class CcdElasticsearchContainer extends ElasticsearchContainer {
 
-    private static final String VERSION = "9.1.2";
+    private static final String VERSION = "9.2.3";
 
     private static CcdElasticsearchContainer container;
 
@@ -16,7 +16,8 @@ public class CcdElasticsearchContainer extends ElasticsearchContainer {
     public static GenericContainer<ElasticsearchContainer> getInstance() {
         if (container == null) {
             container = new CcdElasticsearchContainer();
-            container.withEnv("xpack.security.enabled", "false")
+            container
+                .withEnv("xpack.security.enabled", "false")
                 .withEnv("xpack.security.http.ssl.enabled", "false");
             container.start();
         }

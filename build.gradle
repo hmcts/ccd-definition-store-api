@@ -115,6 +115,7 @@ allprojects {
             name = "AzureArtifacts"
             url = uri("https://pkgs.dev.azure.com/hmcts/Artifacts/_packaging/hmcts-lib/maven/v1")
         }
+        gradlePluginPortal()
     }
 
     configurations {
@@ -159,7 +160,7 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter'
 
         implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.11'
-        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.49.Final'
+        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.50.Final'
         implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.6.1'
         implementation group: 'org.apache.httpcomponents.core5', name: 'httpcore5', version: '5.4.2'
         implementation group: 'org.apache.httpcomponents.core5', name: 'httpcore5-h2', version: '5.4.2'
@@ -279,7 +280,7 @@ subprojects { subproject ->
         implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.5'
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '8.0.0'
 
-        implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.3'
+        implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.2.4'
         implementation group: 'com.google.code.gson', name: 'gson', version: '2.13.2'
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
