@@ -124,12 +124,12 @@ withPipeline(type, product, app) {
         ]
 
         publishHTML target: [
-          allowMissing         : true,
-          alwaysLinkToLastBuild: true,
-          keepAll              : true,
-          reportDir            : "Integration Tests",
-          reportFiles          : "index.html",
-          reportName           : "Integration Test Report"
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : "Integration Tests",
+            reportFiles          : "index.html",
+            reportName           : "Integration Test Report"
         ]
 
         publishHTML target: [
@@ -146,13 +146,13 @@ withPipeline(type, product, app) {
     afterAlways('smoketest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
         publishHTML target: [
-       allowMissing         : true,
-       alwaysLinkToLastBuild: true,
-       keepAll              : true,
-       reportDir            : 'BEFTA Report for Smoke Tests',
-       reportFiles          : "overview-features.html",
-       reportName           : "Smoke Test Report"
-      ]
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : 'BEFTA Report for Smoke Tests',
+            reportFiles          : "overview-features.html",
+            reportName           : "Smoke Test Report"
+        ]
     }
 
     before('smoketest:aat') {
@@ -161,14 +161,14 @@ withPipeline(type, product, app) {
 
     afterAlways('smoketest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
-         publishHTML target: [
+        publishHTML target: [
             allowMissing         : true,
             alwaysLinkToLastBuild: true,
             keepAll              : true,
             reportDir            : 'BEFTA Report for Smoke Tests',
             reportFiles          : "overview-features.html",
             reportName           : "Smoke Test Report"
-      ]
+        ]
     }
 
     afterAlways('functionalTest:preview') {
@@ -180,7 +180,7 @@ withPipeline(type, product, app) {
             reportDir            : 'BEFTA Report for Functional Tests',
             reportFiles          : "overview-features.html",
             reportName           : "Functional Test Report"
-    ]
+        ]
     }
 
     afterAlways('functionalTest:aat') {
@@ -192,7 +192,7 @@ withPipeline(type, product, app) {
             reportDir            : 'BEFTA Report for Functional Tests',
             reportFiles          : "overview-features.html",
             reportName           : "Functional Test Report"
-      ]
+        ]
     }
 
     echo "env.DEFINITION_STORE_URL_BASE = ${env.DEFINITION_STORE_URL_BASE}"
@@ -202,5 +202,5 @@ withPipeline(type, product, app) {
  * Forces a recursive copy by always returning 0 regardless of errors
  */
 def copyIgnore(filePath, destinationDir) {
-  steps.sh("cp -R '${filePath}' '${destinationDir}' || :")
+    steps.sh("cp -R '${filePath}' '${destinationDir}' || :")
 }
