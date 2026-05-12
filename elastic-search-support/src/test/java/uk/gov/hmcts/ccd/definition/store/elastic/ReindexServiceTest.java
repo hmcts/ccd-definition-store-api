@@ -12,6 +12,10 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
@@ -24,21 +28,27 @@ import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletionException;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.junit.MatcherAssert.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
@@ -53,6 +63,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ReindexServiceTest {
 
+    public static final String TEST_USER_EMAIL = "testUser@hmcts.net";
     private ReindexService reindexService;
 
     @Mock
@@ -117,7 +128,7 @@ class ReindexServiceTest {
         verify(ccdElasticClient).removeIndex(oldIndexName);
         ArgumentCaptor<String> oldIndexCaptor = ArgumentCaptor.forClass(String.class);
         verify(ccdElasticClient).removeIndex(oldIndexCaptor.capture());
-        assertEquals(oldIndexName, oldIndexCaptor.getValue());
+        assertThat(oldIndexCaptor.getValue(), is(equalTo(oldIndexName)));
     }
 
     @Test
@@ -145,7 +156,7 @@ class ReindexServiceTest {
         when(ccdElasticClient.createIndexAndMapping(anyString(), anyString()))
             .thenThrow(new IOException("put mapping failed"));
 
-        DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, true);
+        DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, true, TEST_USER_EMAIL);
 
         assertThrows(IOException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
@@ -184,19 +195,19 @@ class ReindexServiceTest {
         when(reindexRepository.saveAndFlush(any(ReindexEntity.class))).thenAnswer(i -> i.getArgument(0));
 
         ReindexEntity result = reindexService.saveEntity(
-            true, caseType, newIndexName
+            true, caseType, newIndexName, TEST_USER_EMAIL
         );
 
         verify(reindexRepository).saveAndFlush(captor.capture());
 
         ReindexEntity saved = captor.getValue();
-        assertSame(saved, result);
-        assertTrue(saved.getDeleteOldIndex());
-        assertEquals("caseTypeA", saved.getCaseType());
-        assertEquals("jurA", saved.getJurisdiction());
-        assertEquals(newIndexName, saved.getIndexName());
-        assertNotNull(saved.getStartTime());
-        assertEquals("STARTED", saved.getStatus());
+        assertThat(result, sameInstance(saved));
+        assertThat(saved.getDeleteOldIndex(), is(true));
+        assertThat(saved.getCaseType(), is(equalTo("caseTypeA")));
+        assertThat(saved.getJurisdiction(), is(equalTo("jurA")));
+        assertThat(saved.getIndexName(), is(equalTo(newIndexName)));
+        assertThat(saved.getStartTime(), notNullValue());
+        assertThat(saved.getStatus(), is(equalTo("STARTED")));
     }
 
     @Test
@@ -206,12 +217,12 @@ class ReindexServiceTest {
 
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(existing));
 
-        reindexService.updateEntity(newIndexName, anyString());
+        reindexService.updateEntity(newIndexName, "response", TEST_USER_EMAIL);
 
         verify(reindexRepository).saveAndFlush(existing);
-        assertEquals("SUCCESS", existing.getStatus());
-        assertNotNull(existing.getEndTime());
-        assertNotNull(existing.getReindexResponse());
+        assertThat(existing.getStatus(), is(equalTo("SUCCESS")));
+        assertThat(existing.getEndTime(), notNullValue());
+        assertThat(existing.getReindexResponse(), notNullValue());
     }
 
     @Test
@@ -222,13 +233,13 @@ class ReindexServiceTest {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(existing));
 
         RuntimeException ex = new RuntimeException("Simulated failure");
-        reindexService.updateEntity(newIndexName, ex);
+        reindexService.updateEntity(newIndexName, ex, TEST_USER_EMAIL);
 
         verify(reindexRepository).saveAndFlush(existing);
-        assertEquals("FAILED", existing.getStatus());
-        assertNotNull(existing.getEndTime());
-        assertTrue(existing.getExceptionMessage().contains("Simulated failure"));
-        assertNull(existing.getReindexResponse());
+        assertThat(existing.getStatus(), is(equalTo("FAILED")));
+        assertThat(existing.getEndTime(), notNullValue());
+        assertThat(existing.getExceptionMessage(), containsString("Simulated failure"));
+        assertThat(existing.getReindexResponse(), nullValue());
     }
 
     @Test
@@ -242,15 +253,15 @@ class ReindexServiceTest {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
 
         DefinitionImportedEvent event = new DefinitionImportedEvent(
-            Collections.singletonList(caseA), true, true
+            Collections.singletonList(caseA), true, true, TEST_USER_EMAIL
         );
 
         assertThrows(ElasticsearchStatusException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
         verify(reindexRepository).saveAndFlush(entity);
-        assertEquals("FAILED", entity.getStatus());
-        assertTrue(entity.getExceptionMessage().contains("ES error"));
+        assertThat(entity.getStatus(), is(equalTo("FAILED")));
+        assertThat(entity.getExceptionMessage(), containsString("ES error"));
     }
 
     @Test
@@ -261,15 +272,15 @@ class ReindexServiceTest {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
 
         DefinitionImportedEvent event = new DefinitionImportedEvent(
-            Collections.singletonList(caseA), true, true);
+            Collections.singletonList(caseA), true, true, TEST_USER_EMAIL);
 
         assertThrows(RuntimeException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
         ArgumentCaptor<ReindexEntity> captor = ArgumentCaptor.forClass(ReindexEntity.class);
         verify(reindexRepository, times(2)).saveAndFlush(captor.capture());
-        assertEquals("FAILED", entity.getStatus());
-        assertTrue(entity.getExceptionMessage().contains("reindexing failed"));
+        assertThat(entity.getStatus(), is(equalTo("FAILED")));
+        assertThat(entity.getExceptionMessage(), containsString("reindexing failed"));
     }
 
     @Test
@@ -283,15 +294,15 @@ class ReindexServiceTest {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
 
         DefinitionImportedEvent event = new DefinitionImportedEvent(
-            Collections.singletonList(caseA), true, true
+            Collections.singletonList(caseA), true, true, TEST_USER_EMAIL
         );
 
         assertThrows(RuntimeException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
         verify(reindexRepository).saveAndFlush(entity);
-        assertEquals("FAILED", entity.getStatus());
-        assertTrue(entity.getExceptionMessage().contains("mapping failure before reindex"));
+        assertThat(entity.getStatus(), is(equalTo("FAILED")));
+        assertThat(entity.getExceptionMessage(), containsString("mapping failure before reindex"));
     }
 
     @Test
@@ -302,10 +313,10 @@ class ReindexServiceTest {
         ReindexEntity entity = new ReindexEntity();
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
 
-        reindexService.updateEntity(newIndexName, completion);
+        reindexService.updateEntity(newIndexName, completion, TEST_USER_EMAIL);
 
         verify(reindexRepository).saveAndFlush(entity);
-        assertTrue(entity.getExceptionMessage().contains("IllegalArgumentException"));
+        assertThat(entity.getExceptionMessage(), containsString("IllegalArgumentException"));
     }
 
     @Test
@@ -313,9 +324,9 @@ class ReindexServiceTest {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.empty());
 
         IllegalStateException exception = assertThrows(IllegalStateException.class,
-            () -> reindexService.updateEntity(newIndexName, anyString()));
+            () -> reindexService.updateEntity(newIndexName, "response", TEST_USER_EMAIL));
 
-        assertTrue(exception.getMessage().contains("No reindex entity metadata found for index name"));
+        assertThat(exception.getMessage(), containsString("No reindex entity metadata found for index name"));
         verify(reindexRepository, never()).save(any());
     }
 
@@ -323,7 +334,7 @@ class ReindexServiceTest {
     void shouldSkipMarkFailureIfEntityNotFound() {
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.empty());
 
-        reindexService.updateEntity(newIndexName, new RuntimeException("Fail"));
+        reindexService.updateEntity(newIndexName, new RuntimeException("Fail"), TEST_USER_EMAIL);
 
         verify(reindexRepository, never()).save(any());
     }
@@ -335,29 +346,121 @@ class ReindexServiceTest {
         ReindexEntity entity = new ReindexEntity();
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
 
-        reindexService.updateEntity(newIndexName, regularException);
+        reindexService.updateEntity(newIndexName, regularException, TEST_USER_EMAIL);
 
         verify(reindexRepository).saveAndFlush(entity);
-        assertTrue(entity.getExceptionMessage().contains("RuntimeException"));
-        assertTrue(entity.getExceptionMessage().contains("Regular exception"));
+        assertThat(entity.getExceptionMessage(), containsString("RuntimeException"));
+        assertThat(entity.getExceptionMessage(), containsString("Regular exception"));
     }
 
     @Test
     void shouldIncrementIndexNumber() {
         String result = reindexService.incrementIndexNumber(oldIndexName);
-        assertEquals(newIndexName, result);
+        assertThat(result, is(equalTo(newIndexName)));
+    }
+
+    @Test
+    void shouldReturnMappedTasksWithDurationFromGetAll() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        LocalDateTime start = LocalDateTime.of(2026, 4, 28, 14, 30, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 4, 28, 14, 45, 30);
+        mappedTask.setStartTime(start);
+        mappedTask.setEndTime(end);
+
+        when(reindexRepository.findAll()).thenReturn(List.of(entity));
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        List<ReindexTask> result = reindexService.getAll();
+
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0), sameInstance(mappedTask));
+        assertThat(result.get(0).getStartTime(), is(equalTo(start)));
+        assertThat(result.get(0).getEndTime(), is(equalTo(end)));
+        assertThat(result.get(0).getDuration(), is(930L));
+    }
+
+    @Test
+    void shouldReturnMappedTasksByCaseTypeWithDuration() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        LocalDateTime start = LocalDateTime.of(2026, 4, 28, 10, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 4, 28, 10, 1, 5);
+        mappedTask.setStartTime(start);
+        mappedTask.setEndTime(end);
+
+        when(reindexRepository.findByCaseType("caseTypeA")).thenReturn(List.of(entity));
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        List<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA");
+
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0), sameInstance(mappedTask));
+        assertThat(result.get(0).getDuration(), is(65L));
+    }
+
+    @Test
+    void shouldReturnMappedTasksWithLongDurationValue() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        LocalDateTime start = LocalDateTime.of(2026, 4, 20, 8, 15, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 4, 28, 11, 45, 30);
+        mappedTask.setStartTime(start);
+        mappedTask.setEndTime(end);
+
+        when(reindexRepository.findByCaseType("caseTypeA")).thenReturn(List.of(entity));
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        List<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA");
+
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0), sameInstance(mappedTask));
+        assertThat(result.get(0).getDuration(), is(703_830L));
+        assertThat(result.get(0).getDuration(), greaterThan(86_400L));
+    }
+
+    @Test
+    void shouldReturnPagedTasksForBlankCaseType() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<ReindexEntity> entityPage = new PageImpl<>(List.of(entity), pageable, 1);
+
+        when(reindexRepository.findAll(pageable)).thenReturn(entityPage);
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        Page<ReindexTask> result = reindexService.getTasksByCaseType("", pageable);
+
+        assertThat(result.getTotalElements(), is(1L));
+        assertThat(result.getContent().get(0), sameInstance(mappedTask));
+    }
+
+    @Test
+    void shouldReturnPagedTasksFilteredByCaseType() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        Pageable pageable = PageRequest.of(1, 5);
+        Page<ReindexEntity> entityPage = new PageImpl<>(List.of(entity), pageable, 6);
+
+        when(reindexRepository.findByCaseType("caseTypeA", pageable)).thenReturn(entityPage);
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        Page<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA", pageable);
+
+        assertThat(result.getTotalElements(), is(6L));
+        assertThat(result.getContent().get(0), sameInstance(mappedTask));
     }
 
     @Test
     void incrementToDoubleDigitIndexNumber() {
         String result = reindexService.incrementIndexNumber("casetypea_cases-000009");
-        assertEquals("casetypea_cases-000010", result);
+        assertThat(result, is(equalTo("casetypea_cases-000010")));
     }
 
     @Test
     void incrementIndexNumberWithDash() {
         String result = reindexService.incrementIndexNumber("casetype-a_cases-000001");
-        assertEquals("casetype-a_cases-000002", result);
+        assertThat(result, is(equalTo("casetype-a_cases-000002")));
     }
 
     private void mockAliasResponse() throws IOException {
@@ -402,6 +505,6 @@ class ReindexServiceTest {
     }
 
     private DefinitionImportedEvent newEvent(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity... caseTypes) {
-        return new DefinitionImportedEvent(newArrayList(caseTypes), reindex, deleteOldIndex);
+        return new DefinitionImportedEvent(newArrayList(caseTypes), reindex, deleteOldIndex, TEST_USER_EMAIL);
     }
 }

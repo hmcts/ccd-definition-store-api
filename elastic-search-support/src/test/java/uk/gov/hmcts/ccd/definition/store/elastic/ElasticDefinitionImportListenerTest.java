@@ -187,7 +187,7 @@ class ElasticDefinitionImportListenerTest {
 
         listener.onDefinitionImported(newEvent(false, true, caseA));
 
-        verify(reindexService, never()).saveEntity(any(), any(), any());
+        verify(reindexService, never()).saveEntity(any(), any(), any(), any());
         verify(ccdElasticClient, never()).reindexData(anyString(), anyString(), any());
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).upsertMapping(baseIndexName, "caseMapping");
@@ -217,7 +217,7 @@ class ElasticDefinitionImportListenerTest {
     }
 
     private DefinitionImportedEvent newEvent(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity... caseTypes) {
-        return new DefinitionImportedEvent(newArrayList(caseTypes), reindex, deleteOldIndex);
+        return new DefinitionImportedEvent(newArrayList(caseTypes), reindex, deleteOldIndex, "testUser@hmcts.net");
     }
 
     private static class TestDefinitionImportListener extends ElasticDefinitionImportListener {

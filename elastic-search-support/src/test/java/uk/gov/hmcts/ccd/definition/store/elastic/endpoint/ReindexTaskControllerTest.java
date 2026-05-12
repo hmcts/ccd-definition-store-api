@@ -4,6 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -16,6 +18,9 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -44,16 +49,17 @@ class ReindexTaskControllerTest {
         ReindexTask task2 = new ReindexTask();
         task2.setCaseType(CASE_TYPE_2);
 
-        when(reindexService.getTasksByCaseType(null)).thenReturn(List.of(task1, task2));
+        when(reindexService.getTasksByCaseType(isNull(), any()))
+            .thenReturn(new PageImpl<>(List.of(task1, task2), PageRequest.of(0, 25), 2));
 
         mockMvc.perform(get(ReindexTaskController.REINDEX_TASKS_URI)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(2)))
-            .andExpect(jsonPath("$[0].caseType", is(CASE_TYPE_1)))
-            .andExpect(jsonPath("$[1].caseType", is(CASE_TYPE_2)));
+            .andExpect(jsonPath("$.content", hasSize(2)))
+            .andExpect(jsonPath("$.content[0].caseType", is(CASE_TYPE_1)))
+            .andExpect(jsonPath("$.content[1].caseType", is(CASE_TYPE_2)));
 
-        verify(reindexService).getTasksByCaseType(null);
+        verify(reindexService).getTasksByCaseType(isNull(), any());
     }
 
     @Test
@@ -63,15 +69,37 @@ class ReindexTaskControllerTest {
         ReindexTask task2 = new ReindexTask();
         task2.setCaseType(CASE_TYPE_2);
 
-        when(reindexService.getTasksByCaseType(CASE_TYPE_1)).thenReturn(List.of(task));
+        when(reindexService.getTasksByCaseType(eq(CASE_TYPE_1), any()))
+            .thenReturn(new PageImpl<>(List.of(task), PageRequest.of(0, 25), 1));
 
         mockMvc.perform(get(ReindexTaskController.REINDEX_TASKS_URI)
                 .param("caseType", CASE_TYPE_1)
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$", hasSize(1)))
-            .andExpect(jsonPath("$[0].caseType", is(CASE_TYPE_1)));
+            .andExpect(jsonPath("$.content", hasSize(1)))
+            .andExpect(jsonPath("$.content[0].caseType", is(CASE_TYPE_1)));
 
-        verify(reindexService).getTasksByCaseType(CASE_TYPE_1);
+        verify(reindexService).getTasksByCaseType(eq(CASE_TYPE_1), any());
+    }
+
+    @Test
+    void shouldReturnPaginatedReindexedTasksWhenPageAndSizeAreProvided() throws Exception {
+        ReindexTask task = new ReindexTask();
+        task.setCaseType(CASE_TYPE_1);
+
+        when(reindexService.getTasksByCaseType(eq(CASE_TYPE_1), any()))
+            .thenReturn(new PageImpl<>(List.of(task), PageRequest.of(0, 10), 1));
+
+        mockMvc.perform(get(ReindexTaskController.REINDEX_TASKS_URI)
+                .param("caseType", CASE_TYPE_1)
+                .param("page", "0")
+                .param("size", "10")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.content", hasSize(1)))
+            .andExpect(jsonPath("$.content[0].caseType", is(CASE_TYPE_1)))
+            .andExpect(jsonPath("$.totalElements", is(1)));
+
+        verify(reindexService).getTasksByCaseType(eq(CASE_TYPE_1), any());
     }
 }
