@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic.client;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch.core.ReindexResponse;
 import co.elastic.clients.elasticsearch.indices.AliasDefinition;
 import co.elastic.clients.elasticsearch.indices.CreateIndexRequest;
 import co.elastic.clients.elasticsearch.indices.CreateIndexResponse;
@@ -121,7 +122,7 @@ class HighLevelCCDElasticClientTest {
 
         assertThat(exists).isTrue();
         verify(indicesClient).getAlias(Mockito.<java.util.function.Function<GetAliasRequest.Builder,
-            co.elastic.clients.util.ObjectBuilder<GetAliasRequest>>>any());
+                co.elastic.clients.util.ObjectBuilder<GetAliasRequest>>>any());
     }
 
     @Test
@@ -169,7 +170,7 @@ class HighLevelCCDElasticClientTest {
 
         assertThat(highLevelCCDElasticClient.updateAlias(alias, oldIndex, newIndex)).isFalse();
         verify(indicesClient).updateAliases(Mockito.<java.util.function.Function<UpdateAliasesRequest.Builder,
-            co.elastic.clients.util.ObjectBuilder<UpdateAliasesRequest>>>any());
+                co.elastic.clients.util.ObjectBuilder<UpdateAliasesRequest>>>any());
     }
 
     @Test

@@ -25,7 +25,7 @@ java:
     ELASTIC_SEARCH_ENABLED: true
 
     ELASTIC_SEARCH_HOST: "{{ .Release.Name }}-es-master"
-
+    ELASTIC_SEARCH_SCHEME: http
     USER_PROFILE_HOST: http://${SERVICE_NAME}-ccd-user-profile-api
     TS_TRANSLATION_SERVICE_HOST: http://${SERVICE_NAME}-translation-service
 
@@ -117,9 +117,14 @@ ccd:
 elastic:
   enabled: true
 
+
 elasticsearch:
+  image: hmctsprod.azurecr.io/imported/elastic/elasticsearch
+  imageTag: 9.2.3
   nameOverride: ${SERVICE_NAME}-es
   clusterName: "es"
+  createCert: false
+  protocol: http
   replicas: 1
   minimumMasterNodes: 1
   antiAffinity: "soft"
@@ -128,7 +133,15 @@ elasticsearch:
   # The tests do pass, at least as of 2023-01-19
   tests:
     enabled: false
+  esConfig:
+    elasticsearch.yml: |
+      action.auto_create_index: .security*,.watches,.triggered_watches,.watcher-history-*,.logstash_dead_letter,.ml*,ccd-logstash-dead-letter
+      xpack.security.enabled: false
   extraEnvs:
+    - name: discovery.type
+      value: single-node
+    - name: cluster.initial_master_nodes
+      value: ""
     - name: action.auto_create_index
       value: .security*,.watches,.triggered_watches,.watcher-history-*,.logstash_dead_letter,.ml*
   persistence:
