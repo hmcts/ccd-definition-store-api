@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.rest.service;
 
-
 import lombok.val;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.config.RegistryBuilder;
@@ -71,7 +70,7 @@ public class ProxyService {
                         try {
                             return super.resolve(host);
                         } catch (Exception e) {
-                            LOG.error("Error looking up host " + host, e);
+                            LOG.error("Error looking up host {}", host, e);
                             throw e;
                         }
                     }
