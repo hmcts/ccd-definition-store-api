@@ -204,7 +204,7 @@ public class ReindexHelper {
 
         logProgress(destIndex, responseNode);
         try {
-            listener.onSuccess();
+            listener.onSuccess(responseNode.asText());
             log.info("Reindex completed successfully for index {}", destIndex);
         } catch (Exception ex) {
             log.error("onSuccess callback failed for index {}", destIndex, ex);

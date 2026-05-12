@@ -45,6 +45,7 @@ import java.util.function.Function;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -423,7 +424,7 @@ class HighLevelCCDElasticClientTest {
 
         // Then
         assertThat(returnedTaskId).isEqualTo(taskId);
-        verify(listener).onSuccess();
+        verify(listener).onSuccess(anyString());
         verify(listener, never()).onFailure(any());
     }
 
@@ -450,7 +451,7 @@ class HighLevelCCDElasticClientTest {
 
         // Verify listener was never called since the exception happens before async execution
         verify(listener, never()).onFailure(any(Exception.class));
-        verify(listener, never()).onSuccess();
+        verify(listener, never()).onSuccess(anyString());
     }
 
     @Test
@@ -969,7 +970,8 @@ class HighLevelCCDElasticClientTest {
         String result = highLevelCCDElasticClient.reindexData(oldIndex, newIndex, listener);
 
         // Then
-        assertThat(result).isNotNull().isEqualTo(taskId);
+        assertThat(result).isNotNull();
+        assertThat(result).isEqualTo(taskId);
     }
 
     @Test

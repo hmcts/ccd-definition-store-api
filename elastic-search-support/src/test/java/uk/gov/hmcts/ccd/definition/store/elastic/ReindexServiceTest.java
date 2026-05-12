@@ -1,48 +1,69 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.read.ListAppender;
 import co.elastic.clients.elasticsearch.indices.AliasDefinition;
 import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
 import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
+import org.elasticsearch.ElasticsearchStatusException;
+import org.elasticsearch.rest.RestStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ObjectFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
+import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.ReindexRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CompletionException;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.sameInstance;
+import static org.hamcrest.junit.MatcherAssert.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ReindexServiceTest {
 
-    @InjectMocks
+    public static final String TEST_USER_EMAIL = "testUser@hmcts.net";
     private ReindexService reindexService;
 
     @Mock
@@ -52,78 +73,81 @@ class ReindexServiceTest {
     private CaseMappingGenerator caseMappingGenerator;
 
     @Mock
-    private ObjectFactory<HighLevelCCDElasticClient> clientObjectFactory;
+    private ObjectFactory<HighLevelCCDElasticClient> clientFactory;
 
+    @Mock
+    private CcdElasticSearchProperties config;
+
+    @Mock
+    private ReindexRepository reindexRepository;
+
+    @Mock
+    private EntityToResponseDTOMapper mapper;
+
+    private final CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA")
+        .withReference("caseTypeA").build();
     private final String baseIndexName = "casetypea";
-    private final String caseTypeName = "casetypea_cases-000001";
-    private final String incrementedCaseTypeName = "casetypea_cases-000002";
+    private final String oldIndexName = "casetypea_cases-000001";
+    private final String newIndexName = "casetypea_cases-000002";
+    private final String caseTypeName = oldIndexName;
+    private final String incrementedCaseTypeName = newIndexName;
 
-    private final CaseTypeEntity caseA = new CaseTypeBuilder()
-        .withJurisdiction("jurA")
-        .withReference("caseTypeA")
-        .build();
 
     @BeforeEach
     void setUp() {
-        lenient().when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
+        lenient().when(clientFactory.getObject()).thenReturn(ccdElasticClient);
+        lenient().when(config.getCasesIndexNameFormat()).thenReturn("%s");
+
+        reindexService = new ReindexServiceImpl(
+            reindexRepository,
+            mapper,
+            caseMappingGenerator,
+            clientFactory
+        );
     }
 
     @Test
     void initialiseElasticSearchWhenReindexAndDeleteOldIndexAreTrue() throws IOException {
-        mockAliasResponse();
+        mockSuccessfulReindex();
 
-        doAnswer(invocation -> {
-            ReindexListener listener = invocation.getArgument(2);
-            listener.onSuccess();
-            return null;
-        }).when(ccdElasticClient).reindexData(
-            eq(caseTypeName),
-            eq(incrementedCaseTypeName),
-            any()
-        );
-
-        DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, true);
+        DefinitionImportedEvent event = newEvent(true, true, caseA);
+        when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(new ReindexEntity()));
         reindexService.asyncReindex(event, baseIndexName, caseA);
 
         // index is set read-only on the concrete index name, not the alias
         verify(ccdElasticClient).setIndexReadOnly(caseTypeName, true);
+        verify(reindexRepository, times(2)).saveAndFlush(any(ReindexEntity.class));
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
-        verify(ccdElasticClient).createIndexAndMapping(incrementedCaseTypeName, "caseMapping");
-        verify(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
+        verify(ccdElasticClient).createIndexAndMapping(newIndexName, "caseMapping");
+        verify(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any());
         // on success we reset read-only on the old concrete index
         verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
-        verify(ccdElasticClient).updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
+        verify(ccdElasticClient).updateAlias(baseIndexName, oldIndexName, newIndexName);
+        verify(reindexRepository, times(2)).saveAndFlush(any(ReindexEntity.class));
 
-        verify(ccdElasticClient).removeIndex(caseTypeName);
+        verify(ccdElasticClient).removeIndex(oldIndexName);
         ArgumentCaptor<String> oldIndexCaptor = ArgumentCaptor.forClass(String.class);
         verify(ccdElasticClient).removeIndex(oldIndexCaptor.capture());
-        assertEquals(caseTypeName, oldIndexCaptor.getValue());
+        assertThat(oldIndexCaptor.getValue(), is(equalTo(oldIndexName)));
     }
 
     @Test
     void initialiseElasticSearchWhenReindexTrueAndDeleteOldIndexFalse() throws IOException {
-        mockAliasResponse();
+        mockSuccessfulReindex();
 
-        doAnswer(invocation -> {
-            ReindexListener listener = invocation.getArgument(2);
-            listener.onSuccess();
-            return null;
-        }).when(ccdElasticClient).reindexData(
-            eq(caseTypeName),
-            eq(incrementedCaseTypeName),
-            any()
-        );
-
-        DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, false);
+        DefinitionImportedEvent event = newEvent(true, false, caseA);
+        when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(new ReindexEntity()));
         reindexService.asyncReindex(event, baseIndexName, caseA);
 
+        verify(reindexRepository, times(2)).saveAndFlush(any(ReindexEntity.class));
         verify(ccdElasticClient).setIndexReadOnly(caseTypeName, true);
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
-        verify(ccdElasticClient).createIndexAndMapping(incrementedCaseTypeName, "caseMapping");
-        verify(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
+        verify(ccdElasticClient).createIndexAndMapping(newIndexName, "caseMapping");
+        verify(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any());
         verify(ccdElasticClient).setIndexReadOnly(caseTypeName, false);
-        verify(ccdElasticClient).updateAlias(baseIndexName, caseTypeName, incrementedCaseTypeName);
-        verify(ccdElasticClient, never()).removeIndex(caseTypeName);
+        verify(ccdElasticClient).updateAlias(baseIndexName, oldIndexName, newIndexName);
+        verify(reindexRepository, times(2)).saveAndFlush(any(ReindexEntity.class));
+        verify(ccdElasticClient, never()).removeIndex(oldIndexName);
     }
 
     @Test
@@ -132,7 +156,7 @@ class ReindexServiceTest {
         when(ccdElasticClient.createIndexAndMapping(anyString(), anyString()))
             .thenThrow(new IOException("put mapping failed"));
 
-        DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, true);
+        DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, true, TEST_USER_EMAIL);
 
         assertThrows(IOException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
@@ -144,16 +168,11 @@ class ReindexServiceTest {
     }
 
     @Test
-    void deletesNewIndexWhenReindexingFails() throws IOException {
-        mockAliasResponse();
+    void deletesNewIndexOnFailedReindex() throws IOException {
+        mockFailedReindex();
 
-        doAnswer(invocation -> {
-            ReindexListener listener = invocation.getArgument(2);
-            listener.onFailure(new RuntimeException("reindexing failed"));
-            return null;
-        }).when(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
+        DefinitionImportedEvent event = newEvent(true, true, caseA);
 
-        DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, true);
         assertThrows(RuntimeException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
@@ -165,68 +184,310 @@ class ReindexServiceTest {
     }
 
     @Test
-    void shouldLogBeginReindexingMessageEvenWhenReindexFails() throws IOException {
-        Logger logger = (Logger) LoggerFactory.getLogger(ReindexService.class);
-        ListAppender<ILoggingEvent> appender = new ListAppender<>();
-        appender.start();
-        logger.addAppender(appender);
+    void shouldInitiateReindexEntity() {
+        CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("caseTypeA");
+        JurisdictionEntity jurisdiction = new JurisdictionEntity();
+        jurisdiction.setReference("jurA");
+        caseType.setJurisdiction(jurisdiction);
 
+        ArgumentCaptor<ReindexEntity> captor = ArgumentCaptor.forClass(ReindexEntity.class);
+        when(reindexRepository.saveAndFlush(any(ReindexEntity.class))).thenAnswer(i -> i.getArgument(0));
+
+        ReindexEntity result = reindexService.saveEntity(
+            true, caseType, newIndexName, TEST_USER_EMAIL
+        );
+
+        verify(reindexRepository).saveAndFlush(captor.capture());
+
+        ReindexEntity saved = captor.getValue();
+        assertThat(result, sameInstance(saved));
+        assertThat(saved.getDeleteOldIndex(), is(true));
+        assertThat(saved.getCaseType(), is(equalTo("caseTypeA")));
+        assertThat(saved.getJurisdiction(), is(equalTo("jurA")));
+        assertThat(saved.getIndexName(), is(equalTo(newIndexName)));
+        assertThat(saved.getStartTime(), notNullValue());
+        assertThat(saved.getStatus(), is(equalTo("STARTED")));
+    }
+
+    @Test
+    void shouldUpdateEntitySuccess() {
+        ReindexEntity existing = new ReindexEntity();
+        existing.setIndexName(newIndexName);
+
+        when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(existing));
+
+        reindexService.updateEntity(newIndexName, "response", TEST_USER_EMAIL);
+
+        verify(reindexRepository).saveAndFlush(existing);
+        assertThat(existing.getStatus(), is(equalTo("SUCCESS")));
+        assertThat(existing.getEndTime(), notNullValue());
+        assertThat(existing.getReindexResponse(), notNullValue());
+    }
+
+    @Test
+    void shouldUpdateEntityFailure() {
+        ReindexEntity existing = new ReindexEntity();
+        existing.setIndexName(newIndexName);
+
+        when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(existing));
+
+        RuntimeException ex = new RuntimeException("Simulated failure");
+        reindexService.updateEntity(newIndexName, ex, TEST_USER_EMAIL);
+
+        verify(reindexRepository).saveAndFlush(existing);
+        assertThat(existing.getStatus(), is(equalTo("FAILED")));
+        assertThat(existing.getEndTime(), notNullValue());
+        assertThat(existing.getExceptionMessage(), containsString("Simulated failure"));
+        assertThat(existing.getReindexResponse(), nullValue());
+    }
+
+    @Test
+    void shouldPersistFailureElasticsearchStatusExceptionBeforeReindex() throws IOException {
         mockAliasResponse();
 
-        when(ccdElasticClient.countDocuments(caseTypeName)).thenReturn(50L);
+        when(caseMappingGenerator.generateMapping(any()))
+            .thenThrow(new ElasticsearchStatusException("ES error", RestStatus.BAD_REQUEST));
 
-        doAnswer(invocation -> {
-            ReindexListener listener = invocation.getArgument(2);
-            listener.onFailure(new RuntimeException("reindexing failed"));
-            return null;
-        }).when(ccdElasticClient).reindexData(eq(caseTypeName), eq(incrementedCaseTypeName), any());
+        ReindexEntity entity = new ReindexEntity();
+        when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
 
-        DefinitionImportedEvent event = new DefinitionImportedEvent(newArrayList(caseA), true, true);
+        DefinitionImportedEvent event = new DefinitionImportedEvent(
+            Collections.singletonList(caseA), true, true, TEST_USER_EMAIL
+        );
+
+        assertThrows(ElasticsearchStatusException.class,
+            () -> reindexService.asyncReindex(event, baseIndexName, caseA));
+
+        verify(reindexRepository).saveAndFlush(entity);
+        assertThat(entity.getStatus(), is(equalTo("FAILED")));
+        assertThat(entity.getExceptionMessage(), containsString("ES error"));
+    }
+
+    @Test
+    void triggerPersistFailureOnFailedReindex() throws IOException {
+        mockFailedReindex();
+
+        ReindexEntity entity = new ReindexEntity();
+        when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
+
+        DefinitionImportedEvent event = new DefinitionImportedEvent(
+            Collections.singletonList(caseA), true, true, TEST_USER_EMAIL);
+
         assertThrows(RuntimeException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
-        // assert begin reindexing log message is present
-        String combinedLogs = appender.list.stream()
-            .map(ILoggingEvent::getFormattedMessage)
-            .reduce("", (a, b) -> a + "\n" + b);
-        assertTrue(
-            combinedLogs.contains(
-                "Begin reindexing. Source index '" + caseTypeName + "' contains 50 cases/documents"
-            )
+        ArgumentCaptor<ReindexEntity> captor = ArgumentCaptor.forClass(ReindexEntity.class);
+        verify(reindexRepository, times(2)).saveAndFlush(captor.capture());
+        assertThat(entity.getStatus(), is(equalTo("FAILED")));
+        assertThat(entity.getExceptionMessage(), containsString("reindexing failed"));
+    }
+
+    @Test
+    void triggerPersistFailureWhenReindexFailsBeforeHandleReindexing() throws IOException {
+        mockAliasResponse();
+
+        when(caseMappingGenerator.generateMapping(any())).thenThrow(
+            new RuntimeException("mapping failure before reindex"));
+
+        ReindexEntity entity = new ReindexEntity();
+        when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
+
+        DefinitionImportedEvent event = new DefinitionImportedEvent(
+            Collections.singletonList(caseA), true, true, TEST_USER_EMAIL
         );
+
+        assertThrows(RuntimeException.class,
+            () -> reindexService.asyncReindex(event, baseIndexName, caseA));
+
+        verify(reindexRepository).saveAndFlush(entity);
+        assertThat(entity.getStatus(), is(equalTo("FAILED")));
+        assertThat(entity.getExceptionMessage(), containsString("mapping failure before reindex"));
+    }
+
+    @Test
+    void shouldUnwrapCompletionException() {
+        Throwable root = new IllegalArgumentException("Root cause");
+        CompletionException completion = new CompletionException(root);
+
+        ReindexEntity entity = new ReindexEntity();
+        when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
+
+        reindexService.updateEntity(newIndexName, completion, TEST_USER_EMAIL);
+
+        verify(reindexRepository).saveAndFlush(entity);
+        assertThat(entity.getExceptionMessage(), containsString("IllegalArgumentException"));
+    }
+
+    @Test
+    void shouldSkipMarkSuccessIfEntityNotFound() {
+        when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.empty());
+
+        IllegalStateException exception = assertThrows(IllegalStateException.class,
+            () -> reindexService.updateEntity(newIndexName, "response", TEST_USER_EMAIL));
+
+        assertThat(exception.getMessage(), containsString("No reindex entity metadata found for index name"));
+        verify(reindexRepository, never()).save(any());
+    }
+
+    @Test
+    void shouldSkipMarkFailureIfEntityNotFound() {
+        when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.empty());
+
+        reindexService.updateEntity(newIndexName, new RuntimeException("Fail"), TEST_USER_EMAIL);
+
+        verify(reindexRepository, never()).save(any());
+    }
+
+    @Test
+    void shouldNotUnwrapRegularException() {
+        RuntimeException regularException = new RuntimeException("Regular exception");
+
+        ReindexEntity entity = new ReindexEntity();
+        when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
+
+        reindexService.updateEntity(newIndexName, regularException, TEST_USER_EMAIL);
+
+        verify(reindexRepository).saveAndFlush(entity);
+        assertThat(entity.getExceptionMessage(), containsString("RuntimeException"));
+        assertThat(entity.getExceptionMessage(), containsString("Regular exception"));
     }
 
     @Test
     void shouldIncrementIndexNumber() {
-        String result = reindexService.incrementIndexNumber(caseTypeName);
-        assertEquals(incrementedCaseTypeName, result);
+        String result = reindexService.incrementIndexNumber(oldIndexName);
+        assertThat(result, is(equalTo(newIndexName)));
+    }
+
+    @Test
+    void shouldReturnMappedTasksWithDurationFromGetAll() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        LocalDateTime start = LocalDateTime.of(2026, 4, 28, 14, 30, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 4, 28, 14, 45, 30);
+        mappedTask.setStartTime(start);
+        mappedTask.setEndTime(end);
+
+        when(reindexRepository.findAll()).thenReturn(List.of(entity));
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        List<ReindexTask> result = reindexService.getAll();
+
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0), sameInstance(mappedTask));
+        assertThat(result.get(0).getStartTime(), is(equalTo(start)));
+        assertThat(result.get(0).getEndTime(), is(equalTo(end)));
+        assertThat(result.get(0).getDuration(), is(930L));
+    }
+
+    @Test
+    void shouldReturnMappedTasksByCaseTypeWithDuration() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        LocalDateTime start = LocalDateTime.of(2026, 4, 28, 10, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 4, 28, 10, 1, 5);
+        mappedTask.setStartTime(start);
+        mappedTask.setEndTime(end);
+
+        when(reindexRepository.findByCaseType("caseTypeA")).thenReturn(List.of(entity));
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        List<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA");
+
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0), sameInstance(mappedTask));
+        assertThat(result.get(0).getDuration(), is(65L));
+    }
+
+    @Test
+    void shouldReturnMappedTasksWithLongDurationValue() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        LocalDateTime start = LocalDateTime.of(2026, 4, 20, 8, 15, 0);
+        LocalDateTime end = LocalDateTime.of(2026, 4, 28, 11, 45, 30);
+        mappedTask.setStartTime(start);
+        mappedTask.setEndTime(end);
+
+        when(reindexRepository.findByCaseType("caseTypeA")).thenReturn(List.of(entity));
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        List<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA");
+
+        assertThat(result.size(), is(1));
+        assertThat(result.get(0), sameInstance(mappedTask));
+        assertThat(result.get(0).getDuration(), is(703_830L));
+        assertThat(result.get(0).getDuration(), greaterThan(86_400L));
+    }
+
+    @Test
+    void shouldReturnPagedTasksForBlankCaseType() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<ReindexEntity> entityPage = new PageImpl<>(List.of(entity), pageable, 1);
+
+        when(reindexRepository.findAll(pageable)).thenReturn(entityPage);
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        Page<ReindexTask> result = reindexService.getTasksByCaseType("", pageable);
+
+        assertThat(result.getTotalElements(), is(1L));
+        assertThat(result.getContent().get(0), sameInstance(mappedTask));
+    }
+
+    @Test
+    void shouldReturnPagedTasksFilteredByCaseType() {
+        ReindexEntity entity = new ReindexEntity();
+        ReindexTask mappedTask = new ReindexTask();
+        Pageable pageable = PageRequest.of(1, 5);
+        Page<ReindexEntity> entityPage = new PageImpl<>(List.of(entity), pageable, 6);
+
+        when(reindexRepository.findByCaseType("caseTypeA", pageable)).thenReturn(entityPage);
+        when(mapper.map(entity)).thenReturn(mappedTask);
+
+        Page<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA", pageable);
+
+        assertThat(result.getTotalElements(), is(6L));
+        assertThat(result.getContent().get(0), sameInstance(mappedTask));
     }
 
     @Test
     void incrementToDoubleDigitIndexNumber() {
         String result = reindexService.incrementIndexNumber("casetypea_cases-000009");
-        assertEquals("casetypea_cases-000010", result);
+        assertThat(result, is(equalTo("casetypea_cases-000010")));
     }
 
     @Test
     void incrementIndexNumberWithDash() {
         String result = reindexService.incrementIndexNumber("casetype-a_cases-000001");
-        assertEquals("casetype-a_cases-000002", result);
-    }
-
-    @Test
-    void throwExceptionWhenIndexFormatIsInvalid() {
-        Exception ex = assertThrows(IllegalArgumentException.class, () ->
-            reindexService.incrementIndexNumber("invalidindex"));
-
-        assertTrue(ex.getMessage().contains("invalid index name format"));
+        assertThat(result, is(equalTo("casetype-a_cases-000002")));
     }
 
     private void mockAliasResponse() throws IOException {
+        lenient().when(config.getCasesIndexNameFormat()).thenReturn("%s");
+
+        IndexAliases indexAliases = new IndexAliases.Builder()
+            .aliases(Map.of(baseIndexName, new AliasDefinition.Builder().build()))
+            .build();
+        GetAliasResponse aliasResponse = new GetAliasResponse.Builder()
+            .aliases(Map.of(oldIndexName, indexAliases))
+            .build();
+        lenient().when(ccdElasticClient.getAlias(anyString())).thenReturn(aliasResponse);
+
+        lenient().when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
+    }
+
+    private void mockSuccessfulReindex() throws IOException {
+        mockAliasResponse();
+        doAnswer(invocation -> {
+            ReindexListener listener = invocation.getArgument(2);
+            listener.onSuccess("BulkByScrollResponse[took=1ms,...]");
+            return null;
+        }).when(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any(ReindexListener.class));
         IndexAliases indexAliases = new IndexAliases.Builder()
             .aliases(Map.of(
                 baseIndexName, new AliasDefinition.Builder().build())).build();
-        Map<String, IndexAliases> aliasMap = Map.of(caseTypeName, indexAliases);
+        Map<String, IndexAliases> aliasMap = Map.of(oldIndexName, indexAliases);
         GetAliasResponse aliasResponse = new GetAliasResponse.Builder()
             .aliases(aliasMap)
             .build();
@@ -234,4 +495,16 @@ class ReindexServiceTest {
         when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
     }
 
+    private void mockFailedReindex() throws IOException {
+        mockAliasResponse();
+        doAnswer(invocation -> {
+            ReindexListener listener = invocation.getArgument(2);
+            listener.onFailure(new RuntimeException("reindexing failed"));
+            return null;
+        }).when(ccdElasticClient).reindexData(eq(oldIndexName), eq(newIndexName), any(ReindexListener.class));
+    }
+
+    private DefinitionImportedEvent newEvent(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity... caseTypes) {
+        return new DefinitionImportedEvent(newArrayList(caseTypes), reindex, deleteOldIndex, TEST_USER_EMAIL);
+    }
 }

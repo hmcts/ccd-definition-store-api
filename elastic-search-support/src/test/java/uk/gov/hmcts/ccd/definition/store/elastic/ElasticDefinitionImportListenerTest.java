@@ -17,6 +17,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperti
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
@@ -27,6 +28,7 @@ import java.util.Map;
 import static com.google.common.collect.Lists.newArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -59,15 +61,20 @@ class ElasticDefinitionImportListenerTest {
     @Mock
     private ElasticsearchErrorHandler elasticsearchErrorHandler;
 
+    @Mock
+    private ReindexService reindexService;
+
     private final CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA")
         .withReference("caseTypeA").build();
     private final CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB")
         .withReference("caseTypeB").build();
     private final String baseIndexName = "casetypea";
-    private final String caseTypeName = "casetypea_cases-000001";
 
     @BeforeEach
     void setUp() {
+        listener = new TestDefinitionImportListener(config, caseMappingGenerator,
+            clientObjectFactory, elasticsearchErrorHandler, reindexService);
+
         lenient().when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
         ccdElasticClient.close();
     }
@@ -130,14 +137,13 @@ class ElasticDefinitionImportListenerTest {
 
     @Test
     void shouldWrapElasticsearchStatusExceptionInInitialisationException() throws IOException {
-        // mock alias response
         lenient().when(config.getCasesIndexNameFormat()).thenReturn("%s");
         lenient().when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
 
         IndexAliases indexAliases = new IndexAliases.Builder()
             .aliases(Map.of(
                 baseIndexName, new AliasDefinition.Builder().build())).build();
-        Map<String, IndexAliases> aliasMap = Map.of(caseTypeName, indexAliases);
+        Map<String, IndexAliases> aliasMap = Map.of("casetypea_cases-000001", indexAliases);
         GetAliasResponse aliasResponse = new GetAliasResponse.Builder()
             .aliases(aliasMap)
             .build();
@@ -160,8 +166,10 @@ class ElasticDefinitionImportListenerTest {
 
         assertEquals(wrapped, thrown);
         verify(elasticsearchErrorHandler).createException(any(ElasticsearchStatusException.class), eq(caseA));
-    }
+        assertInstanceOf(RuntimeException.class, thrown.getCause());
+        assertEquals("wrapped", thrown.getCause().getMessage());
 
+    }
 
     @Test
     void throwsElasticSearchInitialisationExceptionOnErrors() {
@@ -179,6 +187,7 @@ class ElasticDefinitionImportListenerTest {
 
         listener.onDefinitionImported(newEvent(false, true, caseA));
 
+        verify(reindexService, never()).saveEntity(any(), any(), any(), any());
         verify(ccdElasticClient, never()).reindexData(anyString(), anyString(), any());
         verify(caseMappingGenerator).generateMapping(any(CaseTypeEntity.class));
         verify(ccdElasticClient).upsertMapping(baseIndexName, "caseMapping");
@@ -208,7 +217,7 @@ class ElasticDefinitionImportListenerTest {
     }
 
     private DefinitionImportedEvent newEvent(Boolean reindex, Boolean deleteOldIndex, CaseTypeEntity... caseTypes) {
-        return new DefinitionImportedEvent(newArrayList(caseTypes), reindex, deleteOldIndex);
+        return new DefinitionImportedEvent(newArrayList(caseTypes), reindex, deleteOldIndex, "testUser@hmcts.net");
     }
 
     private static class TestDefinitionImportListener extends ElasticDefinitionImportListener {
