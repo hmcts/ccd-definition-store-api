@@ -1,11 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
+import co.elastic.clients.elasticsearch.core.ReindexResponse;
+import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.ElasticsearchStatusException;
 import org.elasticsearch.action.ActionListener;
-import org.elasticsearch.client.GetAliasesResponse;
-import org.elasticsearch.index.reindex.BulkByScrollResponse;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -60,7 +60,8 @@ public abstract class ElasticDefinitionImportListener {
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
 
-        try (HighLevelCCDElasticClient elasticClient = clientFactory.getObject()) {
+        HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
+        try {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
@@ -71,8 +72,8 @@ public abstract class ElasticDefinitionImportListener {
                 }
                 if (reindex) {
                     //get current alias index
-                    GetAliasesResponse aliasResponse = elasticClient.getAlias(baseIndexName);
-                    String caseTypeName = aliasResponse.getAliases().keySet().iterator().next();
+                    GetAliasResponse aliasResponse = elasticClient.getAlias(baseIndexName);
+                    String caseTypeName = aliasResponse.aliases().keySet().iterator().next();
 
                     //create new index with generated mapping and incremented case type name (no alias update yet)
                     caseMapping = mappingGenerator.generateMapping(caseType);
@@ -109,7 +110,7 @@ public abstract class ElasticDefinitionImportListener {
         HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
         elasticClient.reindexData(oldIndex, newIndex, new ActionListener<>() {
             @Override
-            public void onResponse(BulkByScrollResponse bulkByScrollResponse) {
+            public void onResponse(ReindexResponse reindexResponse) {
                 try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
                     //if success set writable and update alias to new index
                     log.info("updating alias from {} to {}", oldIndex, newIndex);
