@@ -16,6 +16,7 @@ public class CaseTypeTab {
     private List<CaseTypeTabField> tabFields = new ArrayList<>();
     private String showCondition;
     private String role;
+    private Boolean defaultFocus;
 
     @ApiModelProperty(value = "")
     @JsonProperty("id")
@@ -72,5 +73,13 @@ public class CaseTypeTab {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public Boolean getDefaultFocus() {
+        return defaultFocus;
+    }
+
+    public void setDefaultFocus(Boolean defaultFocus) {
+        this.defaultFocus = defaultFocus;
     }
 }

@@ -41,6 +41,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
     protected ColumnName displayGroupOrder;
     protected ColumnName displayGroupFieldDisplayOrder;
     protected ColumnName displayContextParameter = ColumnName.DISPLAY_CONTEXT_PARAMETER;
+    protected ColumnName defaultFocus;
 
     protected SheetName sheetName;
     protected Optional<ColumnName> groupShowConditionColumn = Optional.empty();
@@ -139,6 +140,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         group.setOrder(sample.getInteger(this.displayGroupOrder));
         group.setType(this.displayGroupType);
         group.setPurpose(this.displayGroupPurpose);
+        group.setDefaultFocus(sample.getBoolean(ColumnName.DEFAULT_FOCUS));
 
 
         group.setWebhookMidEvent(parseWebhook(getDataDefinitionWithValidMidEventURL(groupDefinition),

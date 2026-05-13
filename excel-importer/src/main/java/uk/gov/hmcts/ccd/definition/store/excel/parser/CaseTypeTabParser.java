@@ -17,6 +17,7 @@ public class CaseTypeTabParser extends AbstractDisplayGroupParser {
         this.displayGroupId = ColumnName.TAB_ID;
         this.displayGroupLabel = ColumnName.TAB_LABEL;
         this.displayGroupOrder = ColumnName.TAB_DISPLAY_ORDER;
+        this.defaultFocus = ColumnName.DEFAULT_FOCUS;
         this.displayGroupFieldDisplayOrder = ColumnName.TAB_FIELD_DISPLAY_ORDER;
         this.displayGroupPurpose = DisplayGroupPurpose.VIEW;
         this.displayGroupType = DisplayGroupType.TAB;

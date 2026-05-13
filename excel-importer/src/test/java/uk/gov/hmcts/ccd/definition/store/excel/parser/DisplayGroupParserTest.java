@@ -106,6 +106,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.PAGE_LABEL.toString(), "Name");
         item.addAttribute(ColumnName.PAGE_DISPLAY_ORDER.toString(), 1.0);
         item.addAttribute(ColumnName.PAGE_FIELD_DISPLAY_ORDER.toString(), 1.0);
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), false);
 
         caseEventToFieldsSheet.addDataItem(item);
         MapperException thrown = assertThrows(MapperException.class, () -> wizardPageParser.parseAll(definitionSheets));
@@ -284,6 +285,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.TAB_ID.toString(), "Name");
         item.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), "someShowCondition");
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "fieldShowCondition");
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "Y");
 
         final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
@@ -291,6 +293,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item2.addAttribute(ColumnName.TAB_ID.toString(), "Name");
         item2.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), "someShowCondition");
         item2.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "fieldShowCondition");
+        item2.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "N");
 
         definitionSheet.addDataItem(item);
         definitionSheet.addDataItem(item2);
@@ -372,6 +375,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
         item.addAttribute(ColumnName.ACCESS_PROFILE.toString(), ACCESS_PROFILE);
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "Y");
 
         // Excel parses an integer into a decimal number
         item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
@@ -393,6 +397,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         assertThat(fetched.getOrder(), is(1));
         assertThat(fetched.getCaseType(), is(caseType));
         assertThat(fetched.getAccessProfile(), is(accessProfileEntity));
+        assertThat(fetched.getDefaultFocus(), is(true));
     }
 
     @Test
@@ -412,6 +417,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "Y");
         definitionSheet.addDataItem(item);
 
         final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
@@ -423,6 +429,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item2.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonLastName");
         item2.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "yes");
         definitionSheet.addDataItem(item2);
 
         MapperException thrown = assertThrows(MapperException.class,
@@ -448,6 +455,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "yes");
         definitionSheet.addDataItem(item);
 
         MapperException thrown = assertThrows(MapperException.class,
@@ -473,6 +481,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item1.addAttribute(ColumnName.ACCESS_PROFILE.toString(), caseRole);
         item1.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item1.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
+        item1.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "yes");
         definitionSheet.addDataItem(item1);
         MapperException thrown = assertThrows(MapperException.class,
             () -> caseTypeTabParser.parseAll(definitionSheets));
@@ -499,6 +508,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item1.addAttribute(ColumnName.ACCESS_PROFILE.toString(), caseRole);
         item1.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item1.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
+        item1.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "yes");
         definitionSheet.addDataItem(item1);
         final ParseResult<DisplayGroupEntity> parseResult = caseTypeTabParser.parseAll(definitionSheets);
 

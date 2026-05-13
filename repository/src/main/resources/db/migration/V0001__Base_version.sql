@@ -412,6 +412,7 @@ CREATE TABLE public.display_group (
                                       show_condition character varying(1000),
                                       webhook_mid_event_id integer,
                                       role_id integer,
+                                      default_focus boolean,
                                       CONSTRAINT enum_display_group_purpose CHECK (((purpose)::text = ANY ((ARRAY['VIEW'::character varying, 'EDIT'::character varying])::text[]))),
                                       CONSTRAINT enum_display_group_type CHECK (((type)::text = ANY ((ARRAY['TAB'::character varying, 'PAGE'::character varying, 'EXPAND'::character varying])::text[])))
 );

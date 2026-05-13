@@ -50,6 +50,9 @@ public class DisplayGroupEntity implements Serializable {
     @Column(name = "display_order")
     private Integer order;
 
+    @Column(name = "default_focus")
+    private Boolean defaultFocus;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
     private DisplayGroupType type;
@@ -146,6 +149,14 @@ public class DisplayGroupEntity implements Serializable {
 
     public void setEvent(EventEntity event) {
         this.event = event;
+    }
+
+    public Boolean getDefaultFocus() {
+        return defaultFocus;
+    }
+
+    public void setDefaultFocus(Boolean defaultFocus) {
+        this.defaultFocus = defaultFocus;
     }
 
     public void addDisplayGroupCaseField(@NotNull final DisplayGroupCaseFieldEntity displayGroupField) {
