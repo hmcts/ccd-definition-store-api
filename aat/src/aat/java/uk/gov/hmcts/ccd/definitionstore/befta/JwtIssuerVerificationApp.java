@@ -2,10 +2,12 @@ package uk.gov.hmcts.ccd.definitionstore.befta;
 
 import com.nimbusds.jwt.SignedJWT;
 import org.apache.commons.lang3.StringUtils;
+import uk.gov.hmcts.ccd.definition.store.security.OidcIssuerConfiguration;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.Env;
 
 import java.text.ParseException;
+import java.util.Set;
 
 public final class JwtIssuerVerificationApp {
 
@@ -13,16 +15,20 @@ public final class JwtIssuerVerificationApp {
     }
 
     public static void main(String[] args) {
-        String expectedIssuer = Env.require("OIDC_ISSUER");
+        Set<String> allowedIssuers = OidcIssuerConfiguration.allowedIssuers(
+            Env.require("OIDC_ISSUER"),
+            System.getenv("OIDC_ALLOWED_ISSUERS")
+        );
         String actualIssuer = resolveIssuerFromRealToken(AATHelper.INSTANCE);
 
-        if (!expectedIssuer.equals(actualIssuer)) {
+        if (!allowedIssuers.contains(actualIssuer)) {
             throw new IllegalStateException(
-                "OIDC_ISSUER mismatch: expected `" + expectedIssuer + "` but token iss was `" + actualIssuer + "`"
+                "OIDC issuer mismatch: expected one of `" + String.join("`, `", allowedIssuers)
+                    + "` but token iss was `" + actualIssuer + "`"
             );
         }
 
-        System.out.println("Verified OIDC_ISSUER matches functional test token iss: " + actualIssuer);
+        System.out.println("Verified functional test token iss is allowed: " + actualIssuer);
     }
 
     private static String resolveIssuerFromRealToken(AATHelper aat) {

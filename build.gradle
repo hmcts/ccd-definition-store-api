@@ -453,7 +453,7 @@ sonarqube {
 }
 
 task verifyOidcIssuerPolicy {
-    description = 'Fails if oidc.issuer is derived from discovery configuration'
+    description = 'Fails if OIDC issuer settings are derived from discovery configuration'
     group = 'Verification'
 
     doLast {
@@ -466,14 +466,15 @@ task verifyOidcIssuerPolicy {
             def configFile = file(path)
             configFile.exists() && configFile.readLines().any { line ->
                 def normalized = line.replaceAll(/\s+/, '')
-                (normalized.startsWith('oidc.issuer=') && normalized.contains('IDAM_OIDC_URL'))
-                    || (normalized.startsWith('oidc.issuer=') && normalized.contains('idam.api.url'))
+                ((normalized.startsWith('oidc.issuer=') || normalized.startsWith('oidc.allowed-issuers='))
+                    && (normalized.contains('IDAM_OIDC_URL') || normalized.contains('idam.api.url')))
             }
         }
 
         if (!violations.isEmpty()) {
             throw new GradleException(
-                "OIDC issuer policy violation. Do not derive oidc.issuer from discovery config in: ${violations.join(', ')}"
+                "OIDC issuer policy violation. Do not derive issuer settings from discovery config in: "
+                    + "${violations.join(', ')}"
             )
         }
     }

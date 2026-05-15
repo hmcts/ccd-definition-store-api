@@ -40,11 +40,15 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 })
 @TestPropertySource(
     locations = "classpath:test.properties",
-    properties = "oidc.issuer=http://localhost:${wiremock.server.port}/o"
+    properties = {
+        "oidc.issuer=http://localhost:${wiremock.server.port}/o",
+        "oidc.allowed-issuers=http://public-idam/o"
+    }
 )
 @AutoConfigureWireMock(port = 0)
 class JwtDecoderIssuerValidationIT {
 
+    private static final String ADDITIONAL_ALLOWED_ISSUER = "http://public-idam/o";
     private static final String INVALID_ISSUER = "http://unexpected-issuer/o";
 
     @Autowired
@@ -61,9 +65,26 @@ class JwtDecoderIssuerValidationIT {
     }
 
     @Test
+    void shouldDecodeJwtFromAdditionalAllowedIssuer() throws Exception {
+        Jwt jwt = assertDoesNotThrow(
+            () -> jwtDecoder.decode(buildToken(ADDITIONAL_ALLOWED_ISSUER, Instant.now().plusSeconds(300)))
+        );
+
+        assertEquals(ADDITIONAL_ALLOWED_ISSUER, jwt.getIssuer().toString());
+    }
+
+    @Test
     void shouldRejectJwtFromUnexpectedIssuer() throws Exception {
         JwtValidationException exception = assertThrows(JwtValidationException.class,
             () -> jwtDecoder.decode(buildToken(INVALID_ISSUER, Instant.now().plusSeconds(300))));
+
+        assertThat(exception.getMessage()).contains("iss");
+    }
+
+    @Test
+    void shouldRejectJwtWithoutIssuer() throws Exception {
+        JwtValidationException exception = assertThrows(JwtValidationException.class,
+            () -> jwtDecoder.decode(buildTokenWithoutIssuer(Instant.now().plusSeconds(300))));
 
         assertThat(exception.getMessage()).contains("iss");
     }
@@ -82,6 +103,22 @@ class JwtDecoderIssuerValidationIT {
                 .build(),
             new JWTClaimsSet.Builder()
                 .issuer(issuer)
+                .subject("user")
+                .issueTime(Date.from(Instant.now().minusSeconds(60)))
+                .expirationTime(Date.from(expiresAt))
+                .build()
+        );
+        signedJwt.sign(new RSASSASigner(KeyGenerator.getRsaJWK().toPrivateKey()));
+        return signedJwt.serialize();
+    }
+
+    private String buildTokenWithoutIssuer(Instant expiresAt) throws JOSEException, ParseException {
+        SignedJWT signedJwt = new SignedJWT(
+            new JWSHeader.Builder(JWSAlgorithm.RS256)
+                .keyID(KeyGenerator.getRsaJWK().getKeyID())
+                .type(JOSEObjectType.JWT)
+                .build(),
+            new JWTClaimsSet.Builder()
                 .subject("user")
                 .issueTime(Date.from(Instant.now().minusSeconds(60)))
                 .expirationTime(Date.from(expiresAt))

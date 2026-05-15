@@ -28,6 +28,7 @@ configurations {
 }
 
 dependencies {
+    implementation project(':commons')
     implementation group: 'org.awaitility', name: 'awaitility', version: '4.3.0'
 }
 
@@ -46,7 +47,7 @@ task highLevelDataSetup(type: JavaExec) {
 task verifyFunctionalTestJwtIssuer(type: JavaExec) {
     dependsOn aatClasses
 
-    description = 'Verifies the functional/smoke test token issuer matches OIDC_ISSUER'
+    description = 'Verifies the functional/smoke test token issuer matches the configured OIDC issuer allow-list'
     group = 'Verification'
 
     onlyIf {
