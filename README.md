@@ -41,6 +41,8 @@ The following environment variables are required:
 | DEFINITION_STORE_S2S_AUTHORISED_SERVICES | ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp,aac_manage_case_assignment,xui_webapp | Authorised micro-service names for S2S calls |
 | IDAM_USER_URL | -                                                                           | Base URL for IdAM's User API service (idam-app). `http://localhost:4501` for the dockerised local instance or tunneled `dev` instance. |
 | IDAM_S2S_URL | -                                                                           | Base URL for IdAM's S2S API service (service-auth-provider). `http://localhost:4502` for the dockerised local instance or tunneled `dev` instance. |
+| OIDC_ISSUER | -                                                                           | Primary exact issuer claim expected in IDAM access tokens. `spring.security.oauth2.client.provider.oidc.issuer-uri`, derived from `IDAM_USER_URL`, is used for OIDC discovery and JWKS lookup. `OIDC_ISSUER` is the primary issuer claim enforced during JWT validation. These values can differ, so do not guess `OIDC_ISSUER` from the discovery URL; derive it from a real access token for the target environment. |
+| OIDC_ALLOWED_ISSUERS | -                                                                           | Optional comma-separated additional exact issuer claims. Leave unset unless this service receives both public IDAM and ForgeRock-issued tokens. When unset or not injected into the runtime environment, validation falls back to `OIDC_ISSUER` only. |
 | USER_PROFILE_HOST | -                                                                           | Base URL for the User Profile service. `http://localhost:4453` for the dockerised local instance. |
 | AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY | -                                                                           | secrets for Microsoft Insights logging, can be a dummy string in local |
 
@@ -116,6 +118,9 @@ Secured endpoint and specific logic for importing case definition as an Excel sp
 
 Spring application entry point and configuration.
 
+### Codex Workflow Docs
+See `AGENTS.md` for available repo-local skills.
+
 ### Functional Tests
 The functional tests are located in `aat` folder. The tests are written using 
 befta-fw library. To find out more about BEFTA Framework, see the repository and its README [here](https://github.com/hmcts/befta-fw).
@@ -143,8 +148,8 @@ Will run only S-110.1:
 ./gradlew functional -P tags="@S-110.1"
 ```
 
+To verify the live OIDC issuer locally, export `VERIFY_OIDC_ISSUER=true` together with the normal AAT credentials and `OIDC_ISSUER`. If `OIDC_ALLOWED_ISSUERS` is set, the verifier accepts any exact issuer in that comma-separated list plus `OIDC_ISSUER`; otherwise it falls back to `OIDC_ISSUER` only. Enabling additional issuers in an environment requires explicitly setting `OIDC_ALLOWED_ISSUERS` in that deployment environment, and in Jenkins too if the smoke/functional verifier must accept the same issuer.
+
 ## LICENSE
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
-
-

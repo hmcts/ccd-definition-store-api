@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtClaimValidator;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
@@ -21,6 +22,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ElasticsearchIndexController;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
 import uk.gov.hmcts.ccd.definition.store.security.JwtGrantedAuthoritiesConverter;
+import uk.gov.hmcts.ccd.definition.store.security.OidcIssuerConfiguration;
 import uk.gov.hmcts.ccd.definition.store.security.filters.ExceptionHandlingFilter;
 import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
 
@@ -37,6 +39,9 @@ public class SecurityConfiguration {
 
     @Value("${oidc.issuer}")
     private String issuerOverride;
+
+    @Value("${oidc.allowed-issuers:}")
+    private String allowedIssuersOverride;
 
     private final ServiceAuthFilter serviceAuthFilter;
     private final JwtAuthenticationConverter jwtAuthenticationConverter;
@@ -92,12 +97,13 @@ public class SecurityConfiguration {
     JwtDecoder jwtDecoder() {
         NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(issuerUri);
 
-        // We are using issuerOverride instead of issuerUri as SIDAM has the wrong issuer at the moment
+        // See docs/security/jwt-issuer-validation.md for issuer-uri discovery and oidc issuer enforcement.
         OAuth2TokenValidator<Jwt> withTimestamp = new JwtTimestampValidator();
-        // OAuth2TokenValidator<Jwt> withIssuer = new JwtIssuerValidator(issuerOverride);
-        // FIXME : enable `withIssuer` once idam migration is done RDM-8094
-        // OAuth2TokenValidator<Jwt> validator = new DelegatingOAuth2TokenValidator<>(withTimestamp, withIssuer);
-        OAuth2TokenValidator<Jwt> validator = new DelegatingOAuth2TokenValidator<>(withTimestamp);
+        OAuth2TokenValidator<Jwt> withIssuer = new JwtClaimValidator<>(
+            "iss",
+            OidcIssuerConfiguration.allowedIssuers(issuerOverride, allowedIssuersOverride)::contains
+        );
+        OAuth2TokenValidator<Jwt> validator = new DelegatingOAuth2TokenValidator<>(withTimestamp, withIssuer);
 
         jwtDecoder.setJwtValidator(validator);
         return jwtDecoder;

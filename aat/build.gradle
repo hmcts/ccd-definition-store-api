@@ -28,6 +28,7 @@ configurations {
 }
 
 dependencies {
+    implementation project(':commons')
     implementation group: 'org.awaitility', name: 'awaitility', version: '4.3.0'
 }
 
@@ -36,11 +37,25 @@ tasks.named("processAatResources") {
 }
 
 task highLevelDataSetup(type: JavaExec) {
-    dependsOn aatClasses
+    dependsOn aatClasses, "verifyFunctionalTestJwtIssuer"
 
     mainClass = "uk.gov.hmcts.ccd.definitionstore.befta.HighLevelDataSetupApp"
     classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
     jvmArgs = ['--add-opens=java.base/java.lang.reflect=ALL-UNNAMED']
+}
+
+task verifyFunctionalTestJwtIssuer(type: JavaExec) {
+    dependsOn aatClasses
+
+    description = 'Verifies the functional/smoke test token issuer matches the configured OIDC issuer allow-list'
+    group = 'Verification'
+
+    onlyIf {
+        System.getenv('VERIFY_OIDC_ISSUER')?.toBoolean()
+    }
+
+    mainClass = "uk.gov.hmcts.ccd.definitionstore.befta.JwtIssuerVerificationApp"
+    classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath
 }
 
 task smoke(type: Test) {
@@ -52,7 +67,7 @@ task smoke(type: Test) {
         includeTags 'smoke'
     }
 
-    dependsOn aatClasses
+    dependsOn aatClasses, verifyFunctionalTestJwtIssuer
 
     new File("$buildDir/test-results/test").mkdirs()
     copy {
@@ -98,7 +113,7 @@ task functional(type: Test) {
     include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
     useJUnitPlatform()
 
-    dependsOn aatClasses
+    dependsOn aatClasses, verifyFunctionalTestJwtIssuer
 
     new File("$buildDir/test-results/test").mkdirs()
     copy {
@@ -191,4 +206,3 @@ jar {
     failWhenNoMutations = false
     detectInlinedCode = true
 }*/
-
