@@ -53,6 +53,8 @@ public class ReindexHelper {
     }
 
     private String startReindexTask(String sourceIndex, String destIndex) throws IOException {
+        int batchSize = config.getBatchSize();
+        log.info("Batch Size: {}", config.getBatchSize());
         String jsonBody = String.format("""
             {
               "source": {
@@ -63,7 +65,7 @@ public class ReindexHelper {
                 "index": "%s"
               }
             }
-            """, sourceIndex, config.getBatchSize(), destIndex);
+            """, sourceIndex, batchSize, destIndex);
 
         Request request = buildReindexRequest(jsonBody);
         Response response = restClient.performRequest(request);
