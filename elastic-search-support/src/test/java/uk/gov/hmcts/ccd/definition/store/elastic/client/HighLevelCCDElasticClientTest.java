@@ -394,7 +394,6 @@ class HighLevelCCDElasticClientTest {
         // Low-level client comes from the factory
         when(elasticClientFactory.createLowLevelClient()).thenReturn(restClient);
 
-        // Route the two HTTP calls: one to /_reindex, one to /_tasks/{taskId}
         when(restClient.performRequest(any(Request.class)))
             .thenAnswer(invocation -> {
                 Request req = invocation.getArgument(0);
@@ -970,8 +969,7 @@ class HighLevelCCDElasticClientTest {
         String result = highLevelCCDElasticClient.reindexData(oldIndex, newIndex, listener);
 
         // Then
-        assertThat(result).isNotNull();
-        assertThat(result).isEqualTo(taskId);
+        assertThat(result).isNotNull().isEqualTo(taskId);
     }
 
     @Test

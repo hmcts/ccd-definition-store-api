@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,10 +40,10 @@ class ProxyControllerTest {
     @DisplayName("Should post proxy fail")
     @Test
     void shouldFailPostProxyRequest() throws Exception {
-        final MvcResult mvcResult = mockMvc.perform(post("/proxy")
+        mockMvc.perform(post("/proxy")
             .contentType(TEXT_PLAIN)
             .content(""))
-            .andExpect(status().is4xxClientError()).andReturn();
+            .andExpect(status().is4xxClientError());
     }
 
     @DisplayName("Should post proxy request")

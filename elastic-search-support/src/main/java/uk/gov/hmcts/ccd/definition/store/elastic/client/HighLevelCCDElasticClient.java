@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.hmcts.ccd.definition.store.elastic.ReindexHelper;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
+import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
 
 import java.io.IOException;
@@ -295,7 +296,7 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
             log.info("Submitted reindex from {} to {}. taskId={}", oldIndex, newIndex, taskId);
             return taskId;
         } catch (IOException e) {
-            throw new RuntimeException("Failed to submit reindex task", e);
+            throw new ElasticSearchInitialisationException("Failed to submit reindex task", e);
         }
     }
 

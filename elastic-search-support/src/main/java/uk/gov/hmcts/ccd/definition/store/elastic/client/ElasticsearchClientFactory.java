@@ -50,22 +50,13 @@ public class ElasticsearchClientFactory {
             return elasticsearchClient;
         }
 
-        ElasticsearchClient client = null;
         try {
-            ElasticsearchTransport t = createTransport();
-            client = new ElasticsearchClient(t);
-            try {
-                client.cluster().putSettings(s ->
-                    s.persistent(Map.of("action.destructive_requires_name", JsonData.of(false)))
-                );
-            } catch (IOException e) {
-                log.error("Failed to put cluster settings during client init", e);
-            }
+            ElasticsearchClient client = new ElasticsearchClient(createTransport());
+            applyClusterSettings(client);
             elasticsearchClient = client;
             return client;
-        } catch (RuntimeException | Error e) {
-            log.error("Failed to create Elasticsearch client", e);
-            throw e;
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("Failed to create Elasticsearch client", e);
         }
     }
 
@@ -74,14 +65,22 @@ public class ElasticsearchClientFactory {
             return elasticsearchAsyncClient;
         }
 
-        ElasticsearchAsyncClient client = null;
         try {
-            client = new ElasticsearchAsyncClient(createTransport());
+            ElasticsearchAsyncClient client = new ElasticsearchAsyncClient(createTransport());
             elasticsearchAsyncClient = client;
             return client;
-        } catch (RuntimeException | Error e) {
-            log.error("Failed to create Elasticsearch async client", e);
-            throw e;
+        } catch (RuntimeException e) {
+            throw new IllegalStateException("Failed to create Elasticsearch async client", e);
+        }
+    }
+
+    private void applyClusterSettings(ElasticsearchClient client) {
+        try {
+            client.cluster().putSettings(s ->
+                s.persistent(Map.of("action.destructive_requires_name", JsonData.of(false)))
+            );
+        } catch (IOException e) {
+            log.error("Failed to put cluster settings during client init", e);
         }
     }
 }

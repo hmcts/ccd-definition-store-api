@@ -97,7 +97,8 @@ public class ReindexHelper {
         int taskNotFoundCount = 0;
 
         try {
-            while (!Thread.currentThread().isInterrupted()) {
+            boolean polling = true;
+            while (!Thread.currentThread().isInterrupted() && polling) {
                 Optional<JsonNode> taskJsonNode = fetchTaskResponse(taskId);
 
                 if (taskJsonNode.isEmpty()) {
@@ -106,18 +107,17 @@ public class ReindexHelper {
                         log.error("Task {} not found after {} attempts — giving up", taskId, taskNotFoundCount);
                         safeOnFailure(listener, new RuntimeException(
                             "Reindex task " + taskId + " not found after " + taskNotFoundCount + " polling attempts"));
-                        break;
+                        polling = false;
+                    } else {
+                        log.warn("Task not found: {} (attempt {}/{}). Retrying...",
+                            taskId, taskNotFoundCount, MAX_TASK_NOT_FOUND_RETRIES);
+                        Thread.sleep(pollIntervalMs);
                     }
-                    log.warn("Task not found: {} (attempt {}/{}). Retrying...",
-                        taskId, taskNotFoundCount, MAX_TASK_NOT_FOUND_RETRIES);
+                } else if (shouldExitPolling(taskJsonNode.get(), listener, destIndex)) {
+                    polling = false;
+                } else {
                     Thread.sleep(pollIntervalMs);
-                    continue;
                 }
-
-                if (shouldExitPolling(taskJsonNode.get(), listener, destIndex)) {
-                    break;
-                }
-                Thread.sleep(pollIntervalMs);
             }
         } catch (InterruptedException ie) {
             Thread.currentThread().interrupt();
@@ -156,7 +156,7 @@ public class ReindexHelper {
                     log.info("Task {} completed before results could be retrieved — treating as successful", taskId);
                     ObjectNode synthetic = mapper.createObjectNode();
                     synthetic.put("completed", true);
-                    synthetic.putObject("response").put("total", 0).putArray("failures");
+                    synthetic.putObject("response").put("total", 0).putArray(FAILURES);
                     return Optional.of(synthetic);
                 }
                 log.warn("Task {} returned 404: {}", taskId, body);

@@ -69,9 +69,10 @@ public class ProxyService {
                     } else {
                         try {
                             return super.resolve(host);
-                        } catch (Exception e) {
-                            LOG.error("Error looking up host {}", host, e);
-                            throw e;
+                        } catch (UnknownHostException e) {
+                            UnknownHostException ex = new UnknownHostException("Error looking up host " + host);
+                            ex.initCause(e);
+                            throw ex;
                         }
                     }
                 }

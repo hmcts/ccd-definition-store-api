@@ -123,9 +123,10 @@ class ReindexHelperTest {
             Request reindexRequest = captor.getAllValues().get(0);
             String jsonBody = EntityUtils.toString(reindexRequest.getEntity());
 
-            assertThat(jsonBody).contains("\"size\": 2500");
-            assertThat(jsonBody).contains("\"index\": \"src-idx\"");
-            assertThat(jsonBody).contains("\"index\": \"dest-idx\"");
+            assertThat(jsonBody)
+                .contains("\"size\": 2500")
+                .contains("\"index\": \"src-idx\"")
+                .contains("\"index\": \"dest-idx\"");
         }
 
         @Test
@@ -339,6 +340,8 @@ class ReindexHelperTest {
                 .when(listener).onSuccess(anyString());
 
             reindexHelper.reindexIndex("src", "dest", 10L, listener);
+
+            verify(listener).onSuccess(anyString());
         }
 
         @Test
@@ -353,6 +356,8 @@ class ReindexHelperTest {
             org.mockito.Mockito.doThrow(new RuntimeException("callback blew up")).when(listener).onFailure(any());
 
             reindexHelper.reindexIndex("src", "dest", 10L, listener);
+
+            verify(listener).onFailure(any());
         }
     }
 
