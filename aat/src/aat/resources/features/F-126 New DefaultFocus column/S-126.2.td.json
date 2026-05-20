@@ -4,7 +4,7 @@
 	"title": "Import Definition file with invalid true value in multiple DefaultFocus column of the CaseTypeTab",
 	"specs": [
 		"an active profile in CCD",
-		"contains DefaultFocus set to true for more than one tab for same CaseType",
+		"contains DefaultFocus set to true for more than one tab for same CaseType"
 	],
   "request": {
     "body": {
