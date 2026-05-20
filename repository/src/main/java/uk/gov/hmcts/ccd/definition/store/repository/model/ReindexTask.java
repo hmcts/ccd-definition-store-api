@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 @Getter
 @Setter
@@ -28,7 +28,8 @@ public class ReindexTask {
         if (startTime == null || endTime == null) {
             return 0;
         }
-        long millis = Duration.between(startTime, endTime).toMillis();
-        return Math.round(millis / 1000.0);
+        return ChronoUnit.SECONDS.between(
+            startTime.truncatedTo(ChronoUnit.SECONDS),
+            endTime.truncatedTo(ChronoUnit.SECONDS));
     }
 }
