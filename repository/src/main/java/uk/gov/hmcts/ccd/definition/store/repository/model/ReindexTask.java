@@ -28,6 +28,7 @@ public class ReindexTask {
         if (startTime == null || endTime == null) {
             return 0;
         }
-        return Duration.between(startTime, endTime).toSeconds();
+        long millis = Duration.between(startTime, endTime).toMillis();
+        return Math.round(millis / 1000.0);
     }
 }

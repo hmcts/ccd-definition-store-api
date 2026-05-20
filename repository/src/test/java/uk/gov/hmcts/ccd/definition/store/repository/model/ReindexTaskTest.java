@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository.model;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.JsonUtils;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.containsString;
@@ -37,5 +38,16 @@ class ReindexTaskTest {
 
         assertThat(task.getStartTime(), is(equalTo(LocalDateTime.of(2026, 4, 28, 15, 0, 1))));
         assertThat(task.getEndTime(), is(equalTo(LocalDateTime.of(2026, 4, 28, 16, 10, 59))));
+    }
+
+    @Test
+    void shouldRoundDurationFromMillisToNearestSecond() {
+        ReindexTask task = new ReindexTask();
+        LocalDateTime start = LocalDateTime.of(2026, 5, 18, 16, 3, 44, 100_000_000);
+        LocalDateTime end = start.plus(Duration.ofMillis(1500));
+        task.setStartTime(start);
+        task.setEndTime(end);
+
+        assertThat(task.getDuration(), is(equalTo(2L)));
     }
 }
