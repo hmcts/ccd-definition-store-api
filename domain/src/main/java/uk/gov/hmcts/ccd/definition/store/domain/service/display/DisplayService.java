@@ -97,11 +97,7 @@ public class DisplayService {
         caseTabCollection.setTabs(
             displayGroupEntities.stream().map(
                 displayGroupEntity
-                    ->  {
-                    log.info("JEN - displayGroupEntity.reference: " +  displayGroupEntity.getReference());
-                    log.info("JEN - displayGroupEntity.defaultFocus: " +  displayGroupEntity.getDefaultFocus());
-                    return entityToResponseDTOMapper.map(displayGroupEntity);
-                }
+                    -> entityToResponseDTOMapper.map(displayGroupEntity)
             ).collect(Collectors.toList())
         );
         caseTabCollection.setChannels(
