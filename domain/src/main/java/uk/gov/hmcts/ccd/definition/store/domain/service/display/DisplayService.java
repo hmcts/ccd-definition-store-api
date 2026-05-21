@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.display;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.WorkbasketInputDefinit
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class DisplayService {
 
@@ -95,7 +97,11 @@ public class DisplayService {
         caseTabCollection.setTabs(
             displayGroupEntities.stream().map(
                 displayGroupEntity
-                    -> entityToResponseDTOMapper.map(displayGroupEntity)
+                    ->  {
+                    log.info("JEN - displayGroupEntity.reference: " +  displayGroupEntity.getReference());
+                    log.info("JEN - displayGroupEntity.defaultFocus: " +  displayGroupEntity.getDefaultFocus());
+                    return entityToResponseDTOMapper.map(displayGroupEntity);
+                }
             ).collect(Collectors.toList())
         );
         caseTabCollection.setChannels(
