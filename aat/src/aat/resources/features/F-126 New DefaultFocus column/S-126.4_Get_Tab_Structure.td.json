@@ -1,10 +1,10 @@
 {
-  "_guid_": "S-126.3_Get_Tab_Structure",
+  "_guid_": "S-126.4_Get_Tab_Structure",
   "_extends_": "F-126.3_Test_Data_Base",
   "title": "Verify defaultFocus values in tab structure for FT_MasterCaseType",
   "operationName": "GET /api/display/tab-structure/{id}",
   "specs": [
-    "get tabs for case type id which has defaultFocus value set"
+    "get tabs for case type id without newly added display_focus value"
   ],
   "method": "GET",
   "uri": "/api/display/tab-structure/{ctid}",
