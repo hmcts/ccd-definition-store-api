@@ -82,7 +82,7 @@ class ElasticDefinitionImportListenerTest {
     @Test
     void createsAndClosesANewElasticClientOnEachImportToSaveResources() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
-        when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
+        when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(anyString())).thenReturn(false);
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
 
@@ -103,7 +103,7 @@ class ElasticDefinitionImportListenerTest {
     @Test
     void createsIndexIfNotExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
-        when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
+        when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(anyString())).thenReturn(false);
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
 
@@ -114,7 +114,7 @@ class ElasticDefinitionImportListenerTest {
     @Test
     void skipIndexCreationIfNotExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
-        when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
+        when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(anyString())).thenReturn(true);
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
 
@@ -124,7 +124,7 @@ class ElasticDefinitionImportListenerTest {
     @Test
     void createsMapping() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
-        when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
+        when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(anyString())).thenReturn(false);
         when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
@@ -136,9 +136,64 @@ class ElasticDefinitionImportListenerTest {
     }
 
     @Test
+    void shouldCreateFirstIndexAndUpsertMappingWhenReindexTrueAndAliasDoesNotExist() throws IOException {
+        when(config.getCasesIndexNameFormat()).thenReturn("%s");
+        when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(baseIndexName)).thenReturn(false);
+        when(caseMappingGenerator.generateMapping(caseA)).thenReturn("caseMapping");
+
+        listener.onDefinitionImported(newEvent(true, false, caseA));
+
+        verify(ccdElasticClient).createIndex("casetypea-000001", "casetypea");
+        verify(caseMappingGenerator).generateMapping(caseA);
+        verify(ccdElasticClient).upsertMapping(baseIndexName, "caseMapping");
+        verify(reindexService, never()).asyncReindex(any(), anyString(), any());
+    }
+
+    @Test
+    void shouldRestoreAliasAndReindexWhenAliasDeletedButVersionedIndexExists() throws IOException {
+        when(config.getCasesIndexNameFormat()).thenReturn("%s");
+        when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(baseIndexName)).thenReturn(true);
+
+        listener.onDefinitionImported(newEvent(true, false, caseA));
+
+        verify(ccdElasticClient).restoreAliasFromLatestVersionedIndex(baseIndexName);
+        verify(ccdElasticClient, never()).createIndex(anyString(), anyString());
+        verify(reindexService).asyncReindex(any(), eq(baseIndexName), eq(caseA));
+        verify(ccdElasticClient, never()).upsertMapping(anyString(), anyString());
+    }
+
+    @Test
+    void shouldRestoreAliasAndUpsertMappingWhenAliasDeletedAndReindexFalse() throws IOException {
+        when(config.getCasesIndexNameFormat()).thenReturn("%s");
+        when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(baseIndexName)).thenReturn(true);
+        when(caseMappingGenerator.generateMapping(caseA)).thenReturn("caseMapping");
+
+        listener.onDefinitionImported(newEvent(false, false, caseA));
+
+        verify(ccdElasticClient).restoreAliasFromLatestVersionedIndex(baseIndexName);
+        verify(ccdElasticClient, never()).createIndex(anyString(), anyString());
+        verify(ccdElasticClient).upsertMapping(baseIndexName, "caseMapping");
+        verify(reindexService, never()).asyncReindex(any(), anyString(), any());
+    }
+
+    @Test
+    void shouldAsyncReindexWhenReindexTrueAndVersionedIndexExists() throws IOException {
+        when(config.getCasesIndexNameFormat()).thenReturn("%s");
+        when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(baseIndexName)).thenReturn(true);
+
+        listener.onDefinitionImported(newEvent(true, false, caseA));
+
+        verify(ccdElasticClient).restoreAliasFromLatestVersionedIndex(baseIndexName);
+        verify(ccdElasticClient, never()).createIndex(anyString(), anyString());
+        verify(reindexService).asyncReindex(any(), eq(baseIndexName), eq(caseA));
+        verify(caseMappingGenerator, never()).generateMapping(any());
+        verify(ccdElasticClient, never()).upsertMapping(anyString(), anyString());
+    }
+
+    @Test
     void shouldWrapElasticsearchStatusExceptionInInitialisationException() throws IOException {
         lenient().when(config.getCasesIndexNameFormat()).thenReturn("%s");
-        lenient().when(ccdElasticClient.aliasExists(anyString())).thenReturn(true);
+        lenient().when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(anyString())).thenReturn(true);
 
         IndexAliases indexAliases = new IndexAliases.Builder()
             .aliases(Map.of(
@@ -183,6 +238,7 @@ class ElasticDefinitionImportListenerTest {
     void shouldNotInitialiseElasticSearchWhenReindexFalseAndDeleteOldIndexTrue() throws IOException {
         //expected behaviour should be same as default (reindex false and old index false)
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
+        when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(baseIndexName)).thenReturn(true);
         when(caseMappingGenerator.generateMapping(caseA)).thenReturn("caseMapping");
 
         listener.onDefinitionImported(newEvent(false, true, caseA));

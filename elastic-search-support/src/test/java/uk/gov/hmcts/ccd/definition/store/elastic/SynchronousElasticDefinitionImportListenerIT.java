@@ -278,7 +278,10 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
             .addField(baseTypeField1)
             .build();
 
-        //will fail to generate mapping
+        definitionImportListener.onDefinitionImported(
+            new DefinitionImportedEvent(List.of(caseTypeEntity1))
+        );
+
         baseTypeField1.getFieldType().setReference("InvalidElasticType");
 
         DefinitionImportedEvent event = new DefinitionImportedEvent(List.of(caseTypeEntity1),
@@ -296,7 +299,6 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         ReindexEntity entity = saved.getLast();
         assertEquals("CaseTypeA", entity.getCaseType());
         assertEquals("JUR", entity.getJurisdiction());
-        // still records the attempted index name
         assertEquals("casetypea_cases-000002", entity.getIndexName());
         assertNotNull(entity.getStartTime());
         assertNotNull(entity.getEndTime());

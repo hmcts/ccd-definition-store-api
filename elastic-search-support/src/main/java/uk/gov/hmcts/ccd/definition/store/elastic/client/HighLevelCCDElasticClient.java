@@ -16,6 +16,7 @@ import org.elasticsearch.client.RestClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import uk.gov.hmcts.ccd.definition.store.elastic.ReindexHelper;
+import uk.gov.hmcts.ccd.definition.store.elastic.VersionedCaseIndexHelper;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.listener.ReindexListener;
@@ -27,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Executor;
 
 import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticGlobalSearchListener.GLOBAL_SEARCH;
@@ -177,6 +180,62 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
                 throw e;
             }
         }, "check alias existence");
+    }
+
+    @Override
+    public boolean restoreAliasFromLatestVersionedIndex(String baseIndexName) throws IOException {
+        Optional<String> latestIndex = findLatestVersionedIndex(baseIndexName);
+        if (latestIndex.isEmpty()) {
+            log.info("No versioned indices found for alias '{}'", baseIndexName);
+            return false;
+        }
+        String latest = latestIndex.get();
+        if (aliasExists(baseIndexName)) {
+            String currentIndex = getAliasIndex(baseIndexName);
+            if (latest.equals(currentIndex)) {
+                log.debug("Alias '{}' already on latest index '{}'", baseIndexName, latest);
+                return true;
+            }
+            updateAlias(baseIndexName, currentIndex, latest);
+            log.info("Updated alias '{}' from '{}' to latest '{}'", baseIndexName, currentIndex, latest);
+            return true;
+        }
+        addAlias(latest, baseIndexName);
+        log.info("Restored alias '{}' on latest versioned index '{}'", baseIndexName, latest);
+        return true;
+    }
+
+    private String getAliasIndex(String aliasName) throws IOException {
+        GetAliasResponse aliasesResponse = executeWithRetry(
+            client -> client.indices().getAlias(b -> b.name(aliasName)),
+            "get alias index"
+        );
+        return getCurrentAliasIndex(aliasName, aliasesResponse);
+    }
+
+    Optional<String> findLatestVersionedIndex(String baseIndexName) throws IOException {
+        Set<String> indexNames = listVersionedIndices(baseIndexName);
+        return VersionedCaseIndexHelper.findLatestVersionedIndex(indexNames, baseIndexName);
+    }
+
+    private Set<String> listVersionedIndices(String baseIndexName) throws IOException {
+        return executeWithRetry(client -> {
+            try {
+                var response = client.indices().get(b -> b.index(baseIndexName + "-*"));
+                return response.indices().keySet();
+            } catch (ElasticsearchException e) {
+                if (e.status() == 404) {
+                    return Set.of();
+                }
+                throw e;
+            }
+        }, "list versioned indices");
+    }
+
+    private void addAlias(String indexName, String aliasName) throws IOException {
+        executeWithRetry(client -> client.indices().updateAliases(b -> b
+            .actions(Action.of(a -> a.add(ad -> ad.index(indexName).alias(aliasName).isWriteIndex(true))))
+        ), "restore alias");
     }
 
     @FunctionalInterface

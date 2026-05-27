@@ -51,7 +51,7 @@ class AsynchronousElasticDefinitionImportListenerTest {
     @Test
     void createsIndexIfNotExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
-        when(ccdElasticClient.aliasExists(anyString())).thenReturn(false);
+        when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(anyString())).thenReturn(false);
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
 

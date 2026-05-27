@@ -5,6 +5,8 @@ import org.elasticsearch.ElasticsearchStatusException;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
+
+import static uk.gov.hmcts.ccd.definition.store.elastic.VersionedCaseIndexHelper.firstVersionIndexName;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
@@ -18,8 +20,6 @@ import java.util.List;
 
 @Slf4j
 public abstract class ElasticDefinitionImportListener {
-
-    private static final String FIRST_INDEX_SUFFIX = "-000001";
 
     private final CcdElasticSearchProperties config;
 
@@ -60,12 +60,14 @@ public abstract class ElasticDefinitionImportListener {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
-                //if alias doesn't exist create index and alias
-                if (!elasticClient.aliasExists(baseIndexName)) {
-                    String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
-                    elasticClient.createIndex(actualIndexName, baseIndexName);
+                boolean hasExistingVersionedIndex =
+                    elasticClient.restoreAliasFromLatestVersionedIndex(baseIndexName);
+                if (!hasExistingVersionedIndex) {
+                    elasticClient.createIndex(firstVersionIndexName(baseIndexName), baseIndexName);
                 }
-                if (event.isReindex()) {
+                // Reindex when a source index already exists. Skip on true first import — otherwise
+                // asyncReindex would create -000002.
+                if (event.isReindex() && hasExistingVersionedIndex) {
                     reindexService.asyncReindex(event, baseIndexName, caseType);
                 } else {
                     caseMapping = mappingGenerator.generateMapping(caseType);

@@ -9,6 +9,8 @@ import co.elastic.clients.elasticsearch.indices.DeleteIndexResponse;
 import co.elastic.clients.elasticsearch.indices.ElasticsearchIndicesClient;
 import co.elastic.clients.elasticsearch.indices.GetAliasRequest;
 import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
+import co.elastic.clients.elasticsearch.indices.GetIndexResponse;
+import co.elastic.clients.elasticsearch.indices.IndexState;
 import co.elastic.clients.elasticsearch.indices.PutIndicesSettingsResponse;
 import co.elastic.clients.elasticsearch.indices.PutMappingResponse;
 import co.elastic.clients.elasticsearch.indices.RefreshResponse;
@@ -137,6 +139,45 @@ class HighLevelCCDElasticClientTest {
         verify(indicesClient)
             .getAlias(Mockito.<java.util.function.Function<GetAliasRequest.Builder,
                 co.elastic.clients.util.ObjectBuilder<GetAliasRequest>>>any());
+    }
+
+    @Test
+    void restoreAliasFromLatestVersionedIndexReturnsFalseWhenNoIndicesExist() throws IOException {
+        final String baseIndexName = "casetypea_cases";
+
+        GetIndexResponse indexResponse = new GetIndexResponse.Builder()
+            .indices(Collections.emptyMap())
+            .build();
+        doReturn(indexResponse).when(indicesClient)
+            .get(Mockito.<Function<co.elastic.clients.elasticsearch.indices.GetIndexRequest.Builder,
+                ObjectBuilder<co.elastic.clients.elasticsearch.indices.GetIndexRequest>>>any());
+
+        assertThat(highLevelCCDElasticClient.restoreAliasFromLatestVersionedIndex(baseIndexName)).isFalse();
+    }
+
+    @Test
+    void restoreAliasFromLatestVersionedIndexAttachesAliasToHighestVersion() throws IOException {
+        final String baseIndexName = "casetypea_cases";
+        final String latestIndex = baseIndexName + "-000005";
+
+        GetIndexResponse indexResponse = new GetIndexResponse.Builder()
+            .indices(Map.of(
+                baseIndexName + "-000001", new IndexState.Builder().build(),
+                latestIndex, new IndexState.Builder().build()
+            ))
+            .build();
+        doReturn(indexResponse).when(indicesClient)
+            .get(Mockito.<Function<co.elastic.clients.elasticsearch.indices.GetIndexRequest.Builder,
+                ObjectBuilder<co.elastic.clients.elasticsearch.indices.GetIndexRequest>>>any());
+
+        UpdateAliasesResponse updateResponse = new UpdateAliasesResponse.Builder()
+            .acknowledged(true)
+            .build();
+        realUpdateAliasesResponseStub(updateResponse);
+
+        assertThat(highLevelCCDElasticClient.restoreAliasFromLatestVersionedIndex(baseIndexName)).isTrue();
+        verify(indicesClient).updateAliases(Mockito.<Function<UpdateAliasesRequest.Builder,
+            ObjectBuilder<UpdateAliasesRequest>>>any());
     }
 
     @Test
