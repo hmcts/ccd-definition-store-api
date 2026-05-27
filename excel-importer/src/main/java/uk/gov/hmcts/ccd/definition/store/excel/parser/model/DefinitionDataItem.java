@@ -200,7 +200,7 @@ public class DefinitionDataItem {
         return getBoolean(ColumnName.RETAIN_HIDDEN_VALUE);
     }
 
-    public Boolean getDefaultFocus(){
+    public Boolean getDefaultFocus() {
         return getBoolean(ColumnName.DEFAULT_FOCUS);
     }
 

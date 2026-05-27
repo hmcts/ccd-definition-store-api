@@ -14,7 +14,9 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -39,7 +41,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
     protected ColumnName displayGroupOrder;
     protected ColumnName displayGroupFieldDisplayOrder;
     protected ColumnName displayContextParameter = ColumnName.DISPLAY_CONTEXT_PARAMETER;
-    protected ColumnName displayGroupDefaultFocus;
+    protected ColumnName displayGroupDefaultFocus = ColumnName.DEFAULT_FOCUS;
 
     protected SheetName sheetName;
     protected Optional<ColumnName> groupShowConditionColumn = Optional.empty();
