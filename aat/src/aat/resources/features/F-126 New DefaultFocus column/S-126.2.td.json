@@ -17,7 +17,7 @@
     }
   },
   "expectedResponse": {
-    "responseCode": 422,
+    "responseCode": 400,
     "responseMessage": "Bad Request",
     "headers": {
       "Content-Encoding": "[[ANYTHING_PRESENT]]",
@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__" : "Validation errors occurred importing the spreadsheet."
+      "__plainTextValue__" : "For each case type only one column should have the Default Focus set to true."
     }
   }
 }
