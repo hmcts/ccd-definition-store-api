@@ -198,6 +198,7 @@ class ReindexServiceTest {
             true, caseType, newIndexName, TEST_USER_EMAIL
         );
 
+        verify(reindexRepository).deleteByIndexName(newIndexName);
         verify(reindexRepository).saveAndFlush(captor.capture());
 
         ReindexEntity saved = captor.getValue();
@@ -208,6 +209,22 @@ class ReindexServiceTest {
         assertThat(saved.getIndexName(), is(equalTo(newIndexName)));
         assertThat(saved.getStartTime(), notNullValue());
         assertThat(saved.getStatus(), is(equalTo("STARTED")));
+    }
+
+    @Test
+    void shouldDeleteExistingIndexRowsBeforeSavingEntity() {
+        CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("caseTypeA");
+        JurisdictionEntity jurisdiction = new JurisdictionEntity();
+        jurisdiction.setReference("jurA");
+        caseType.setJurisdiction(jurisdiction);
+
+        when(reindexRepository.saveAndFlush(any(ReindexEntity.class))).thenAnswer(i -> i.getArgument(0));
+
+        reindexService.saveEntity(true, caseType, newIndexName, TEST_USER_EMAIL);
+
+        verify(reindexRepository).deleteByIndexName(newIndexName);
+        verify(reindexRepository).saveAndFlush(any(ReindexEntity.class));
     }
 
     @Test

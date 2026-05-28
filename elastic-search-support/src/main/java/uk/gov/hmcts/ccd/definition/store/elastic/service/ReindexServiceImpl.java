@@ -212,6 +212,7 @@ public class ReindexServiceImpl implements ReindexService {
     public ReindexEntity saveEntity(Boolean deleteOldIndex, CaseTypeEntity caseType,
                                     String newIndexName,
                                     String userEmailId) {
+        reindexRepository.deleteByIndexName(newIndexName);
         ReindexEntity entity = new ReindexEntity();
         entity.setDeleteOldIndex(deleteOldIndex);
         entity.setCaseType(caseType.getReference());
