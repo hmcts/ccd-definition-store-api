@@ -4,7 +4,7 @@
   "title": "Verify defaultFocus values in tab structure for FT_MasterCaseType",
   "operationName": "GET /api/display/tab-structure/{id}",
   "specs": [
-    "get tabs for case type id without newly added display_focus value"
+    "get tabs for case type id without newly added default_focus value"
   ],
   "method": "GET",
   "uri": "/api/display/tab-structure/{ctid}",

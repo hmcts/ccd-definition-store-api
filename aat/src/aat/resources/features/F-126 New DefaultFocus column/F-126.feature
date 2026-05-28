@@ -39,5 +39,5 @@ Feature: F-126: New DefaultFocus Column
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a positive response is received
     And the response has all other details as expected
-    And a call [get tabs for case type id without newly added display_focus value] will get the expected response as in [S-126.4_Get_Tab_Structure]
+    And a call [get tabs for case type id without newly added default_focus value] will get the expected response as in [S-126.4_Get_Tab_Structure]
 
