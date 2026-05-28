@@ -184,33 +184,20 @@ public class HighLevelCCDElasticClient implements CCDElasticClient, AutoCloseabl
 
     @Override
     public boolean restoreAliasFromLatestVersionedIndex(String baseIndexName) throws IOException {
+        // Fast path for the common case: alias already exists, avoid listing versioned indices.
+        if (aliasExists(baseIndexName)) {
+            return true;
+        }
+
         Optional<String> latestIndex = findLatestVersionedIndex(baseIndexName);
         if (latestIndex.isEmpty()) {
             log.info("No versioned indices found for alias '{}'", baseIndexName);
             return false;
         }
         String latest = latestIndex.get();
-        if (aliasExists(baseIndexName)) {
-            String currentIndex = getAliasIndex(baseIndexName);
-            if (latest.equals(currentIndex)) {
-                log.debug("Alias '{}' already on latest index '{}'", baseIndexName, latest);
-                return true;
-            }
-            updateAlias(baseIndexName, currentIndex, latest);
-            log.info("Updated alias '{}' from '{}' to latest '{}'", baseIndexName, currentIndex, latest);
-            return true;
-        }
         addAlias(latest, baseIndexName);
         log.info("Restored alias '{}' on latest versioned index '{}'", baseIndexName, latest);
         return true;
-    }
-
-    private String getAliasIndex(String aliasName) throws IOException {
-        GetAliasResponse aliasesResponse = executeWithRetry(
-            client -> client.indices().getAlias(b -> b.name(aliasName)),
-            "get alias index"
-        );
-        return getCurrentAliasIndex(aliasName, aliasesResponse);
     }
 
     Optional<String> findLatestVersionedIndex(String baseIndexName) throws IOException {
