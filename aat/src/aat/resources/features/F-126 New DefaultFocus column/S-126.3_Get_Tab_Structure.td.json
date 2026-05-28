@@ -29,7 +29,7 @@
           "order": 2,
           "tab_fields": "[[ANYTHING_PRESENT]]",
           "show_condition": "[[ANY_STRING_NULLABLE]]",
-          "defaultFocus": false
+          "defaultFocus": true
         },
         {
           "role": "[[ANY_STRING_NULLABLE]]",
