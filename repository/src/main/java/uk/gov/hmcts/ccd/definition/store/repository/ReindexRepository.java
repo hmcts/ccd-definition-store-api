@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
 
 import java.util.List;
@@ -16,5 +17,6 @@ public interface ReindexRepository extends JpaRepository<ReindexEntity, Integer>
 
     Optional<ReindexEntity> findByIndexName(String indexName);
 
-    void deleteByIndexName(String indexName);
+    @Transactional
+    long deleteByIndexName(String indexName);
 }

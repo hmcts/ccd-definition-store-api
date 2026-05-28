@@ -192,6 +192,7 @@ class ReindexServiceTest {
         caseType.setJurisdiction(jurisdiction);
 
         ArgumentCaptor<ReindexEntity> captor = ArgumentCaptor.forClass(ReindexEntity.class);
+        when(reindexRepository.deleteByIndexName(newIndexName)).thenReturn(1L);
         when(reindexRepository.saveAndFlush(any(ReindexEntity.class))).thenAnswer(i -> i.getArgument(0));
 
         ReindexEntity result = reindexService.saveEntity(
@@ -219,6 +220,7 @@ class ReindexServiceTest {
         jurisdiction.setReference("jurA");
         caseType.setJurisdiction(jurisdiction);
 
+        when(reindexRepository.deleteByIndexName(newIndexName)).thenReturn(2L);
         when(reindexRepository.saveAndFlush(any(ReindexEntity.class))).thenAnswer(i -> i.getArgument(0));
 
         reindexService.saveEntity(true, caseType, newIndexName, TEST_USER_EMAIL);
