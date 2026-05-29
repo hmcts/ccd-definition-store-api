@@ -11,7 +11,7 @@
       "arrayInMap": [
         {
           "key": "file",
-          "localFilePath": "uk/gov/hmcts/ccd/test_definitions/invalid/defaultFocus/BEFTA_Master_Definition_Invalid_NoNew_DefaultFocus_Column.xlsx"
+          "localFilePath": "uk/gov/hmcts/ccd/test_definitions/invalid/defaultFocus/BEFTA_Master_Definition_NoNew_DefaultFocus_Column.xlsx"
         }
       ]
     }
