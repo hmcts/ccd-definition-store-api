@@ -1303,6 +1303,7 @@ class  EntityToResponseDTOMapperTest {
             displayGroupEntity.setLabel("Label");
             displayGroupEntity.setAccessProfile(accessProfileEntity);
             displayGroupEntity.setOrder(69);
+            displayGroupEntity.setDefaultFocus(true);
 
             DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity1 = new DisplayGroupCaseFieldEntity();
             displayGroupCaseFieldEntity1.setId(1);
@@ -1332,6 +1333,7 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(displayGroupEntity.getReference(), caseTypeTab.getId());
             assertEquals(displayGroupEntity.getLabel(), caseTypeTab.getLabel());
             assertEquals(displayGroupEntity.getOrder(), caseTypeTab.getOrder());
+            assertEquals(displayGroupEntity.getDefaultFocus(), caseTypeTab.getDefaultFocus());
 
             assertEquals(displayGroupEntity.getDisplayGroupCaseFields().size(), caseTypeTab.getTabFields().size());
             assertThat(caseTypeTab.getTabFields(), hasItems(caseTypeTabField1, caseTypeTabField2, caseTypeTabField3));
@@ -1791,7 +1793,7 @@ class  EntityToResponseDTOMapperTest {
             final RoleToAccessProfiles actualRoleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
 
             assertNotNull(actualRoleToAccessProfiles);
-            
+
             assertEquals("CaseTypeReference", actualRoleToAccessProfiles.getCaseTypeId());
             assertEquals("judge", actualRoleToAccessProfiles.getRoleName());
             assertEquals(liveFrom, actualRoleToAccessProfiles.getLiveFrom());
@@ -1799,7 +1801,7 @@ class  EntityToResponseDTOMapperTest {
             assertTrue(actualRoleToAccessProfiles.getReadOnly());
             assertTrue(actualRoleToAccessProfiles.getDisabled());
             assertEquals("auth1,auth2", actualRoleToAccessProfiles.getAuthorisations());
-            assertEquals("caseworker-befta_master,caseworker-befta_master-solicitor", 
+            assertEquals("caseworker-befta_master,caseworker-befta_master-solicitor",
                 actualRoleToAccessProfiles.getAccessProfiles());
             assertEquals("Cat1,Cat2", actualRoleToAccessProfiles.getCaseAccessCategories());
         }
