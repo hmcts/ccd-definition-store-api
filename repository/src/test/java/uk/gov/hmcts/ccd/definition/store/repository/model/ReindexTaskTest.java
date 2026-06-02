@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.junit.MatcherAssert.assertThat;
 
 class ReindexTaskTest {
@@ -50,5 +51,16 @@ class ReindexTaskTest {
         row2.setStartTime(LocalDateTime.of(2026, 5, 18, 13, 59, 9, 800_000_000));
         row2.setEndTime(LocalDateTime.of(2026, 5, 18, 13, 59, 15, 300_000_000));
         assertThat(row2.getDuration(), is(equalTo(6L)));
+    }
+
+    @Test
+    void shouldReturnNullDurationWhenEndTimeIsNull() {
+        ReindexTask task = new ReindexTask();
+        task.setStartTime(LocalDateTime.of(2026, 4, 30, 20, 34, 35));
+
+        String json = JsonUtils.toString(task);
+
+        assertThat(task.getDuration(), is(nullValue()));
+        assertThat(json, containsString("\"duration\":null"));
     }
 }

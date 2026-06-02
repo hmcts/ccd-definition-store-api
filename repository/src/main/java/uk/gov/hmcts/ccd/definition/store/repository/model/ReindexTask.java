@@ -24,9 +24,9 @@ public class ReindexTask {
     private String reindexResponse;
     private String whoImported;
 
-    public long getDuration() {
+    public Long getDuration() {
         if (startTime == null || endTime == null) {
-            return 0;
+            return null;
         }
         return ChronoUnit.SECONDS.between(
             startTime.truncatedTo(ChronoUnit.SECONDS),
