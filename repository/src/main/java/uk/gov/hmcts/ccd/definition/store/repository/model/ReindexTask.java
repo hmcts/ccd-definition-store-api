@@ -10,7 +10,6 @@ import java.time.temporal.ChronoUnit;
 @Getter
 @Setter
 public class ReindexTask {
-    private boolean reindex;
     private boolean deleteOldIndex;
     private String caseType;
     private String jurisdiction;
