@@ -586,6 +586,14 @@ task runRemoteDemo(type: JavaExec) {
     }
 }
 
+task runRemoteAat(type: JavaExec) {
+    mainClass = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
+    classpath = sourceSets.main.runtimeClasspath
+    doFirst() {
+        configRemoteRunTask(it, 'aat')
+    }
+}
+
 gradle.buildFinished { result ->
     def aggregatedIndex = file("${buildDir}/reports/jacoco/html/index.html")
     if (aggregatedIndex.exists()) {
