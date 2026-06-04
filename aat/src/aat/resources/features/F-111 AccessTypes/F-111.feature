@@ -1,4 +1,4 @@
-@F-111
+@F-111 @groupaccess
 Feature: F-111 Import validations for CCD Definition with AccessType tab
 
   Background:
