@@ -46,6 +46,14 @@ The following environment variables are required:
 | USER_PROFILE_HOST | -                                                                           | Base URL for the User Profile service. `http://localhost:4453` for the dockerised local instance. |
 | AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY | -                                                                           | secrets for Microsoft Insights logging, can be a dummy string in local |
 
+
+The following environment variables are optional:
+
+| Name | Default            | Description |
+|------|--------------------|-------------|
+| ENABLE_CASE_GROUP_ACCESS                     | true/false         | Enable case group access filtering.                                                                                                                                                 |
+| GROUP_ACCESS_ENABLED                         | true/false/not set | Enable group access Testing (Funtional Tests).                                                                                                                                       |
+
 ### Building
 
 The project uses [Gradle wrapper](https://docs.gradle.org/current/userguide/gradle_wrapper.html). 
