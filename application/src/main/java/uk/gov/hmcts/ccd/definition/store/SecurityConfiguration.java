@@ -3,10 +3,12 @@ package uk.gov.hmcts.ccd.definition.store;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -72,11 +74,13 @@ public class SecurityConfiguration {
             .addFilterBefore(exceptionHandlingFilter, BearerTokenAuthenticationFilter.class)
             .addFilterBefore(serviceAuthFilter, BearerTokenAuthenticationFilter.class)
             .sessionManagement(s -> s.sessionCreationPolicy(STATELESS))
-            .csrf(csrf -> csrf.disable()) // NOSONAR - CSRF is disabled as per security requirements
-            .formLogin(fl -> fl.disable())
-            .logout(lg -> lg.disable())
+            .csrf(AbstractHttpConfigurer::disable) // NOSONAR - CSRF is disabled as per security requirements
+            .formLogin(AbstractHttpConfigurer::disable)
+            .logout(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(ar ->
                 ar.requestMatchers(ImportController.URI_IMPORT, ElasticsearchIndexController.ELASTIC_INDEX_URI)
+                .hasAuthority("ccd-import")
+                .requestMatchers(HttpMethod.GET, "/import-jobs/**")
                 .hasAuthority("ccd-import")
                 .anyRequest()
                 .authenticated()

@@ -1,33 +1,46 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
-import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.AzureStorageConfiguration;
-import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.service.FileStorageService;
+import org.junit.jupiter.api.AfterEach;
+import uk.gov.hmcts.ccd.definition.store.domain.service.ImportJobService;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
+import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
+import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
-import lombok.val;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockMultipartFile;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import uk.gov.hmcts.ccd.definition.store.excel.common.TestLoggerUtils;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.willThrow;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -36,13 +49,13 @@ import static uk.gov.hmcts.ccd.definition.store.excel.service.ProcessUploadServi
 class ProcessUploadServiceTest {
 
     @Mock
-    private ImportServiceImpl importService;
+    private ImportWorkService importWorkService;
 
     @Mock
-    private FileStorageService fileStorageService;
+    private ImportJobService importJobService;
 
     @Mock
-    private AzureStorageConfiguration azureStorageConfiguration;
+    private IdamProfileClient idamProfileClient;
 
     @InjectMocks
     private ProcessUploadServiceImpl processUploadService;
@@ -51,9 +64,13 @@ class ProcessUploadServiceTest {
 
     private DefinitionFileUploadMetadata metadata;
 
+    private static final String SUBMITTER_UID = "uid-123";
+
+    private AutoCloseable closeable;
+
     @BeforeEach
     void setup() throws IOException {
-        MockitoAnnotations.openMocks(this);
+        closeable = MockitoAnnotations.openMocks(this);
 
         file =
             new MockMultipartFile("file",
@@ -63,96 +80,198 @@ class ProcessUploadServiceTest {
         metadata.setJurisdiction("TEST");
         metadata.addCaseType("TestCaseType");
         metadata.setUserId("user@hmcts.net");
-        when(importService.importFormDefinitions(any(), anyBoolean(), anyBoolean())).thenReturn(metadata);
-        when(importService.getImportWarnings()).thenReturn(Collections.emptyList());
+        metadata.setTaskId("task-001");
+
+        IdamProperties idamProperties = new IdamProperties();
+        idamProperties.setId(SUBMITTER_UID);
+        idamProperties.setEmail("user@hmcts.net");
+        when(idamProfileClient.getLoggedInUserDetails()).thenReturn(idamProperties);
+
+        when(importJobService.createPending(any(), any())).thenAnswer(inv -> {
+            UUID supplied = inv.getArgument(0);
+            return supplied != null ? supplied : UUID.randomUUID();
+        });
+
+        when(importWorkService.doImport(any(), any(), anyBoolean(), anyBoolean(), any(UUID.class)))
+            .thenReturn(new ImportWorkResult(metadata, Collections.emptyList()));
     }
 
-    @DisplayName("Upload - Green path, Azure enabled")
+    @AfterEach
+    void tearDown() throws Exception {
+        closeable.close();
+    }
+
+    @DisplayName("Upload - Green path returns CREATED and includes job id in result")
     @Test
-    void validUploadAzureEnabled() throws Exception {
-        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
-        val result = processUploadService.processUpload(file, false, false);
-        verify(fileStorageService).uploadFile(file, metadata);
-        assertEquals(result.getStatusCode(), HttpStatus.CREATED);
-        assertEquals(result.getBody(), ProcessUploadService.SUCCESSFULLY_CREATED);
+    void validUploadHappyPath() throws Exception {
+        ProcessUploadResult result = processUploadService.processUpload(file, false,
+            false, null);
+
+        assertEquals(HttpStatus.CREATED, result.response().getStatusCode());
+        assertEquals(ProcessUploadService.SUCCESSFULLY_CREATED, result.response().getBody());
+        assertNotNull(result.jobId());
     }
 
+    @DisplayName("Upload - reindex true → Elasticsearch-Reindex-Task header set from metadata")
     @Test
     void validUploadWithReindex() throws Exception {
-        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
-        val result = processUploadService.processUpload(file, true, true);
-        verify(fileStorageService).uploadFile(file, metadata);
-        assertEquals(result.getStatusCode(), HttpStatus.CREATED);
-        assertEquals(result.getBody(), ProcessUploadService.SUCCESSFULLY_CREATED);
-        assertEquals(result.getHeaders().getFirst("Elasticsearch-Reindex-Task"), metadata.getTaskId());
+        ProcessUploadResult result = processUploadService.processUpload(file,
+            true, true, null);
+
+        assertEquals(HttpStatus.CREATED, result.response().getStatusCode());
+        assertEquals(metadata.getTaskId(),
+            result.response().getHeaders().getFirst("Elasticsearch-Reindex-Task"));
     }
 
-    @DisplayName("Upload - Green non-path, Azure enabled")
+    @DisplayName("Upload - null file throws IOException")
     @Test
-    void invalidUploadAzureEnabled() {
-        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
-        final IOException
-            exception =
-            assertThrows(IOException.class, () -> processUploadService.processUpload(null, false, false));
+    void invalidUploadNullFile() {
+        final IOException exception =
+            assertThrows(IOException.class,
+                () -> processUploadService.processUpload(null, false, false, null));
         assertThat(exception.getMessage(), is(IMPORT_FILE_ERROR));
     }
 
-    @DisplayName("Upload - Green non-path due to file zero, Azure enabled")
+    @DisplayName("Upload - empty file throws IOException")
     @Test
-    void invalidUploadAzureEnabledDueToFileZero() {
-        String str = "";
-        byte[] bytes = str.getBytes();
-        val fileTest = new MockMultipartFile("name", bytes);
-        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(true);
-        final IOException
-            exception =
-            assertThrows(IOException.class, () -> processUploadService.processUpload(fileTest, false, false));
+    void invalidUploadEmptyFile() {
+        byte[] bytes = "".getBytes();
+        MockMultipartFile fileTest = new MockMultipartFile("name", bytes);
+        final IOException exception =
+            assertThrows(IOException.class,
+                () -> processUploadService.processUpload(fileTest, false, false, null));
         assertThat(exception.getMessage(), is(IMPORT_FILE_ERROR));
     }
 
-    @DisplayName("Upload - Green path, Azure disabled")
-    @Test
-    void validUploadAzureDisabled() throws Exception {
-        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(false);
-        val result = processUploadService.processUpload(file, false, false);
-        verify(fileStorageService, never()).uploadFile(file, metadata);
-        assertEquals(result.getStatusCode(), HttpStatus.CREATED);
-        assertEquals(result.getBody(), processUploadService.SUCCESSFULLY_CREATED);
-    }
-
-    @DisplayName("Upload - non-Green path")
+    @DisplayName("Upload - doImport throws → markFailed called with message, exception re-thrown")
     @Test
     void invalidUpload() throws Exception {
+        willThrow(new IOException("boo"))
+            .given(importWorkService).doImport(any(), any(), eq(false), eq(false), any(UUID.class));
 
-        willThrow(new IOException("boo")).given(importService).importFormDefinitions(any(), eq(false), eq(false));
+        final IOException exception = assertThrows(IOException.class,
+            () -> processUploadService.processUpload(file, false, false, null));
 
-        final IOException
-            exception =
-            assertThrows(IOException.class, () -> processUploadService.processUpload(file, false, false));
         assertThat(exception.getMessage(), is("boo"));
+        verify(importJobService).markFailed(any(UUID.class), eq("boo"));
+        verify(importJobService, never()).markCompleted(any(), any(), any());
     }
 
-    @DisplayName("Upload - warnings during import, Azure disabled")
+    @DisplayName("Upload - warnings from work result included in response header (not from ImportService singleton)")
     @Test
     void validUploadWithWarnings() throws Exception {
-        when(azureStorageConfiguration.isAzureUploadEnabled()).thenReturn(false);
         final String firstWarning = "First warning";
         final String secondWarning = "Second warning";
-        when(importService.getImportWarnings()).thenReturn(Arrays.asList(firstWarning, secondWarning));
-        val result = processUploadService.processUpload(file, false, false);
-        assertEquals(result.getStatusCode(), HttpStatus.CREATED);
-        assertEquals(result.getBody(), processUploadService.SUCCESSFULLY_CREATED);
-        assertEquals(result.getHeaders().get(processUploadService.IMPORT_WARNINGS_HEADER),
-            Arrays.asList(firstWarning, secondWarning));
+        List<String> warningsSnapshot = Arrays.asList(firstWarning, secondWarning);
+
+        when(importWorkService.doImport(any(), any(), anyBoolean(), anyBoolean(), any(UUID.class)))
+            .thenReturn(new ImportWorkResult(metadata, warningsSnapshot));
+
+        ProcessUploadResult result = processUploadService.processUpload(file,
+            false, false, null);
+
+        assertEquals(HttpStatus.CREATED, result.response().getStatusCode());
+        assertEquals(Arrays.asList(firstWarning, secondWarning),
+            result.response().getHeaders().get(ProcessUploadService.IMPORT_WARNINGS_HEADER));
+
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<List<String>> warningsCaptor = ArgumentCaptor.forClass(List.class);
+        verify(importJobService).markCompleted(any(UUID.class), warningsCaptor.capture(), eq(metadata.getTaskId()));
+        assertEquals(warningsSnapshot, warningsCaptor.getValue());
     }
 
-    @DisplayName("Upload - No Green path due to null values")
+    @DisplayName("Orchestration order: expireStaleJobs → createPending → doImport → markCompleted")
     @Test
-    void invalidUploadDueToNullValues() throws Exception {
-        val processUploadServiceTest =
-            new ProcessUploadServiceImpl(importService, null, null);
-        val result = processUploadServiceTest.processUpload(file, false, false);
-        assertEquals(result.getStatusCode(), HttpStatus.CREATED);
-        assertEquals(result.getBody(), processUploadService.SUCCESSFULLY_CREATED);
+    void orchestrationOrder() throws Exception {
+        processUploadService.processUpload(file, false, false, null);
+
+        var inOrder = inOrder(importJobService, importWorkService);
+        inOrder.verify(importJobService).expireStaleJobs();
+        inOrder.verify(importJobService).createPending(null, SUBMITTER_UID);
+
+        inOrder.verify(importWorkService).doImport(any(), eq(file), eq(false), eq(false), any(UUID.class));
+        inOrder.verify(importJobService).markCompleted(any(UUID.class), any(), eq(metadata.getTaskId()));
+    }
+
+    @DisplayName("createPending receives submitter UID from idamProfileClient.getId(), not email")
+    @Test
+    void submitterIsUidNotEmail() throws Exception {
+        processUploadService.processUpload(file, false, false, null);
+
+        verify(importJobService).createPending(null, SUBMITTER_UID);
+    }
+
+    @DisplayName("createPending receives the providedJobId when one is supplied")
+    @Test
+    void providedJobIdIsPassedThrough() throws Exception {
+        UUID provided = UUID.randomUUID();
+
+        ProcessUploadResult result = processUploadService.processUpload(file, false,
+            false, provided);
+
+        verify(importJobService).createPending(provided, SUBMITTER_UID);
+        assertEquals(provided, result.jobId());
+    }
+
+    @DisplayName("markCompleted throws → success result still returned, exception not propagated, ERROR log produced")
+    @Test
+    void markCompletedThrows_successReturnedAndErrorLogged() throws Exception {
+        ListAppender<ILoggingEvent> logAppender = TestLoggerUtils.setupLogger();
+        try {
+            willThrow(new RuntimeException("db gone"))
+                .given(importJobService).markCompleted(any(), any(), any());
+
+            ProcessUploadResult result = processUploadService.processUpload(file, false,
+                false, null);
+
+            assertEquals(HttpStatus.CREATED, result.response().getStatusCode());
+            boolean errorLogged = logAppender.list.stream()
+                .anyMatch(e -> e.getLevel() == Level.ERROR
+                    && e.getFormattedMessage().contains("markCompleted"));
+            assertTrue(errorLogged, "Expected ERROR log mentioning markCompleted");
+        } finally {
+            TestLoggerUtils.teardownLogger();
+        }
+    }
+
+    @DisplayName("markFailed throws → original doImport exception propagated, ERROR log produced")
+    @Test
+    void markFailedThrows_originalExceptionPropagated() throws Exception {
+        ListAppender<ILoggingEvent> logAppender = TestLoggerUtils.setupLogger();
+        try {
+            IOException originalException = new IOException("original error");
+
+            willThrow(originalException)
+                .given(importWorkService).doImport(any(), any(), anyBoolean(), anyBoolean(), any(UUID.class));
+            willThrow(new RuntimeException("marking failed"))
+                .given(importJobService).markFailed(any(), any());
+
+            IOException thrown = assertThrows(IOException.class,
+                () -> processUploadService.processUpload(file, false, false, null));
+
+            assertEquals("original error", thrown.getMessage());
+            boolean errorLogged = logAppender.list.stream()
+                .anyMatch(e -> e.getLevel() == Level.ERROR
+                    && e.getFormattedMessage().contains("markFailed"));
+            assertTrue(errorLogged, "Expected ERROR log mentioning markFailed");
+        } finally {
+            TestLoggerUtils.teardownLogger();
+        }
+    }
+
+    @DisplayName("warnings list passed to markCompleted is the snapshot returned by doImport")
+    @Test
+    void warningsSnapshotPassedToMarkCompleted() throws Exception {
+        List<String> snapshot = new ArrayList<>(Arrays.asList("w1", "w2"));
+
+        when(importWorkService.doImport(any(), any(), anyBoolean(), anyBoolean(), any(UUID.class)))
+            .thenReturn(new ImportWorkResult(metadata, snapshot));
+
+        processUploadService.processUpload(file, false, false, null);
+
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<List<String>> captor = ArgumentCaptor.forClass(List.class);
+        verify(importJobService).markCompleted(any(UUID.class), captor.capture(), eq(metadata.getTaskId()));
+        assertEquals(snapshot, captor.getValue());
     }
 }

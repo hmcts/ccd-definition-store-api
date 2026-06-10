@@ -1,0 +1,39 @@
+{
+  "_guid_": "S-113.4",
+  "_extends_": "F-113_Import_Base_data",
+  "title": "must return 409 when submitting an import with a duplicate job id",
+
+  "specs": [
+    "contains a supplied X-Import-Job-Id request header"
+  ],
+
+  "request": {
+    "headers": {
+      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+      "Content-Type": "multipart/form-data",
+      "X-Import-Job-Id": "${[scenarioContext][customValues][unique_import_job_id]}"
+    },
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "localFilePath": "build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"
+        }
+      ]
+    }
+  },
+
+  "expectedResponse": {
+    "_extends_": "Common_201_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]",
+      "X-Import-Job-Id": "[[ANY_STRING_NOT_NULLABLE]]"
+    },
+    "body": {
+      "__plainTextValue__": "Case Definition data successfully imported"
+    }
+  }
+}
