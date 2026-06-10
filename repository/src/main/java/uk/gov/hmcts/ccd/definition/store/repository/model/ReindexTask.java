@@ -4,12 +4,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 
 @Getter
 @Setter
 public class ReindexTask {
+
+    private static final ZoneId DEFAULT_ZONE = ZoneId.of("UTC");
+
     private boolean deleteOldIndex;
     private String caseType;
     private String jurisdiction;
@@ -27,8 +32,9 @@ public class ReindexTask {
         if (startTime == null || endTime == null) {
             return null;
         }
-        return ChronoUnit.SECONDS.between(
-            startTime.truncatedTo(ChronoUnit.SECONDS),
-            endTime.truncatedTo(ChronoUnit.SECONDS));
+        return Duration.between(
+            startTime.truncatedTo(ChronoUnit.SECONDS).atZone(DEFAULT_ZONE),
+            endTime.truncatedTo(ChronoUnit.SECONDS).atZone(DEFAULT_ZONE)
+        ).getSeconds();
     }
 }

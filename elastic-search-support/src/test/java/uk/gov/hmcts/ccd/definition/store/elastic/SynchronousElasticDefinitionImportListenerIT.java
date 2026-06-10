@@ -19,6 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
@@ -312,7 +313,7 @@ class SynchronousElasticDefinitionImportListenerIT extends ElasticsearchBaseTest
         ReindexEntity entity = new ReindexEntity();
         entity.setIndexName("casetypea_cases-000001");
         entity.setStatus("STARTED");
-        entity.setStartTime(LocalDateTime.now());
+        entity.setStartTime(LocalDateTime.of(2026, Month.JUNE, 10, 12, 0, 0));
         entity.setCaseType("CaseTypeA");
         entity.setJurisdiction("jurA");
         entity.setDeleteOldIndex(false);

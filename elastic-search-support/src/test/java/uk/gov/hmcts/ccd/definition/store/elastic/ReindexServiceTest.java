@@ -33,6 +33,7 @@ import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +49,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.hamcrest.junit.MatcherAssert.assertThat;
-import static org.junit.Assert.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
@@ -382,8 +383,8 @@ class ReindexServiceTest {
     void shouldReturnMappedTasksWithDurationFromGetAll() {
         ReindexEntity entity = new ReindexEntity();
         ReindexTask mappedTask = new ReindexTask();
-        LocalDateTime start = LocalDateTime.of(2026, 4, 28, 14, 30, 0);
-        LocalDateTime end = LocalDateTime.of(2026, 4, 28, 14, 45, 30);
+        LocalDateTime start = LocalDateTime.of(2026, Month.APRIL, 28, 14, 30, 0);
+        LocalDateTime end = LocalDateTime.of(2026, Month.APRIL, 28, 14, 45, 30);
         mappedTask.setStartTime(start);
         mappedTask.setEndTime(end);
 
@@ -403,8 +404,8 @@ class ReindexServiceTest {
     void shouldReturnMappedTasksByCaseTypeWithDuration() {
         ReindexEntity entity = new ReindexEntity();
         ReindexTask mappedTask = new ReindexTask();
-        LocalDateTime start = LocalDateTime.of(2026, 4, 28, 10, 0, 0);
-        LocalDateTime end = LocalDateTime.of(2026, 4, 28, 10, 1, 5);
+        LocalDateTime start = LocalDateTime.of(2026, Month.APRIL, 28, 10, 0, 0);
+        LocalDateTime end = LocalDateTime.of(2026, Month.APRIL, 28, 10, 1, 5);
         mappedTask.setStartTime(start);
         mappedTask.setEndTime(end);
 
@@ -422,8 +423,8 @@ class ReindexServiceTest {
     void shouldReturnMappedTasksWithLongDurationValue() {
         ReindexEntity entity = new ReindexEntity();
         ReindexTask mappedTask = new ReindexTask();
-        LocalDateTime start = LocalDateTime.of(2026, 4, 20, 8, 15, 0);
-        LocalDateTime end = LocalDateTime.of(2026, 4, 28, 11, 45, 30);
+        LocalDateTime start = LocalDateTime.of(2026, Month.APRIL, 20, 8, 15, 0);
+        LocalDateTime end = LocalDateTime.of(2026, Month.APRIL, 28, 11, 45, 30);
         mappedTask.setStartTime(start);
         mappedTask.setEndTime(end);
 

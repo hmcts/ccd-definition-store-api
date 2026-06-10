@@ -22,6 +22,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.concurrent.CompletionException;
 import java.util.regex.Matcher;
@@ -30,6 +31,8 @@ import java.util.regex.Pattern;
 @Service
 @Slf4j
 public class ReindexServiceImpl implements ReindexService {
+
+    private static final ZoneId DEFAULT_ZONE = ZoneId.of("UTC");
 
     private final ReindexRepository reindexRepository;
     private final EntityToResponseDTOMapper mapper;
@@ -218,7 +221,7 @@ public class ReindexServiceImpl implements ReindexService {
         entity.setCaseType(caseType.getReference());
         entity.setJurisdiction(caseType.getJurisdiction().getReference());
         entity.setIndexName(newIndexName);
-        entity.setStartTime(LocalDateTime.now());
+        entity.setStartTime(LocalDateTime.now(DEFAULT_ZONE));
         entity.setWhoImported(userEmailId);
         entity.setStatus(ReindexStatus.STARTED.name());
         return reindexRepository.saveAndFlush(entity);
@@ -235,7 +238,7 @@ public class ReindexServiceImpl implements ReindexService {
         }
         log.info("Save to DB successful for case type: {}", newIndexName);
         reindexEntity.setStatus(ReindexStatus.SUCCESS.name());
-        reindexEntity.setEndTime(LocalDateTime.now());
+        reindexEntity.setEndTime(LocalDateTime.now(DEFAULT_ZONE));
         reindexEntity.setReindexResponse(response);
         reindexEntity.setWhoImported(userEmailId);
         reindexRepository.saveAndFlush(reindexEntity);
@@ -252,7 +255,7 @@ public class ReindexServiceImpl implements ReindexService {
         }
         log.info("Persisting FAILED status for index '{}'", newIndexName);
         reindexEntity.setStatus(ReindexStatus.FAILED.name());
-        reindexEntity.setEndTime(LocalDateTime.now());
+        reindexEntity.setEndTime(LocalDateTime.now(DEFAULT_ZONE));
         reindexEntity.setWhoImported(userEmailId);
         Throwable rootCause = unwrapCompletionException(ex);
         reindexEntity.setExceptionMessage(rootCause.getClass().getName() + ": " + rootCause.getMessage());
