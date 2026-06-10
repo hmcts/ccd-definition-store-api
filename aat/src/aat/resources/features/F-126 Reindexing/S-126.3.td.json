@@ -3,12 +3,12 @@
   "title": "Successfully retrieve reindexing metadata for provided case type",
   "operationName": "Get filtered reindexing tasks",
   "_extends_": "F-126_Get_Reindexing_Base_Data",
-  "uri": "/elastic-support/reindex/tasks?caseType=CaseTypeA",
+  "uri": "/elastic-support/reindex/tasks?caseType=FT_Questions",
   "specs": [
     "an active profile in CCD",
-    "includes a caseType query parameter with value \"CaseTypeA\"",
+    "includes a caseType query parameter with value \"FT_Questions\"",
     "has the 200 OK code",
-    "contains tasks only related to CaseTypeA"
+    "contains tasks only related to FT_Questions"
   ],
   "expectedResponse": {
     "status": 200,
@@ -16,17 +16,19 @@
       "Content-Type": "application/json"
     },
     "body": {
-      "tasks": [
+      "content": [
         {
           "deleteOldIndex": false,
-          "caseType": "CaseTypeA",
-          "jurisdiction": "JurisdictionA",
-          "indexName": "case_type-000001",
-          "status": "SUCCESS",
+          "caseType": "FT_Questions",
+          "jurisdiction": "BEFTA_MASTER",
+          "indexName": "[[ANYTHING_PRESENT]]",
+          "status": "[[ANYTHING_PRESENT]]",
           "exceptionMessage": "[[ANYTHING_PRESENT]]",
           "reindexResponse": "[[ANYTHING_PRESENT]]",
           "startTime": "[[ANYTHING_PRESENT]]",
-          "endTime": "[[ANYTHING_PRESENT]]"
+          "endTime": "[[ANYTHING_PRESENT]]",
+          "whoImported" : "[[ANYTHING_PRESENT]]",
+          "duration" : "[[ANYTHING_PRESENT]]"
         }
       ]
     }

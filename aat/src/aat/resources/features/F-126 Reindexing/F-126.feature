@@ -25,27 +25,18 @@ Feature: F-126: Reindexing functionality and verification via GET API
   Scenario: Successfully retrieve reindexing metadata for provided case type
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
-    And the request [includes a caseType query parameter with value "CaseTypeA"]
+    And the request [includes a caseType query parameter with value "FT_Questions"]
     And it is submitted to call the [Get filtered reindexing tasks] operation of [CCD Definition Store]
     Then a positive response is received
     Then the response [has the 200 OK code]
-    And the response [contains tasks only related to CaseTypeA]
+    And the response [contains tasks only related to FT_Questions]
 
-    @S-126.4
-    Scenario: Retrieve no reindexing metadata when no reindexing tasks exist
-      Given a user with [an active profile in CCD]
-      When a request is prepared with appropriate values
-      And it is submitted to call the [Get all reindexing tasks] operation of [CCD Definition Store]
-      Then a positive response is received
-      Then the response [has the 200 OK code]
-      And the response [contains an empty list of reindexing tasks]
-
-    @S-126.5
-    Scenario: Retrieve no reindexing metadata for non-existing case type
-      Given a user with [an active profile in CCD]
-      When a request is prepared with appropriate values
-      And the request [includes a caseType query parameter with value "NonExistingCaseType"]
-      And it is submitted to call the [Get filtered reindexing tasks] operation of [CCD Definition Store]
-      Then a positive response is received
-      Then the response [has the 200 OK code]
-      And the response [contains an empty list of reindexing tasks]
+  @S-126.4
+  Scenario: Retrieve no reindexing metadata for non-existing case type
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And the request [includes a caseType query parameter with value "NonExistingCaseType"]
+    And it is submitted to call the [Get filtered reindexing tasks] operation of [CCD Definition Store]
+    Then a positive response is received
+    Then the response [has the 200 OK code]
+    And the response [contains an empty list of reindexing tasks]

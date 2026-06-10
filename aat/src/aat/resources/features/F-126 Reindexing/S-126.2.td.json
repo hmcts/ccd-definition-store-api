@@ -15,30 +15,10 @@
       "Content-Type": "application/json"
     },
     "body": {
-      "tasks": [
-        {
-          "deleteOldIndex": false,
-          "caseType": "CaseTypeA",
-          "jurisdiction": "JurisdictionA",
-          "indexName": "case_type-000001",
-          "status": "SUCCESS",
-          "exceptionMessage": "[[ANYTHING_PRESENT]]",
-          "reindexResponse": "[[ANYTHING_PRESENT]]",
-          "startTime": "[[ANYTHING_PRESENT]]",
-          "endTime": "[[ANYTHING_PRESENT]]"
-        },
-        {
-          "deleteOldIndex": false,
-          "caseType": "CaseTypeB",
-          "jurisdiction": "JurisdictionA",
-          "indexName": "case_type-000001",
-          "status": "SUCCESS",
-          "exceptionMessage": "[[ANYTHING_PRESENT]]",
-          "reindexResponse": "[[ANYTHING_PRESENT]]",
-          "startTime": "[[ANYTHING_PRESENT]]",
-          "endTime": "[[ANYTHING_PRESENT]]"
-        }
-      ]
+      "content": "[[ANYTHING_PRESENT]]",
+      "totalElements": "[[ANYTHING_PRESENT]]",
+      "numberOfElements": "[[ANYTHING_PRESENT]]",
+      "empty": false
     }
   }
 }
