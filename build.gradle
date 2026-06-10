@@ -62,19 +62,19 @@ ext {
     junitPlatform = '1.14.3'
     springDocVersion = '2.8.17'
     hamcrestVersion = '3.0'
-    flywayVersion = '10.22.0'
+    flywayVersion = '12.5.0'
     reformLogging = '6.1.9'
     apachePoiVersion = '5.5.1'
     appInsightsVersion = '2.6.4'
     restAssuredVersion = '5.5.7'
-    groovyVersion = '4.0.31'
+    groovyVersion = '4.0.32'
     lombokVersion = '1.18.46'
     jjwtVersion = '0.13.0'
     feignJackson = '13.9'
     gsonVersion = '2.13.2'
     testcontainersVersion = '1.21.4'
-    ccdTestDefinitionVersion = '7.26.2'
-    beftaFwVersion = '9.2.6_CCD-7522'
+    ccdTestDefinitionVersion = '7.26.4'
+    beftaFwVersion = '9.2.6'
     limits = [
             'instruction': 99,
             'branch'     : 99,
@@ -583,6 +583,14 @@ task runRemoteDemo(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     doFirst() {
         configRemoteRunTask(it, 'demo')
+    }
+}
+
+task runRemoteAat(type: JavaExec) {
+    mainClass = 'uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication'
+    classpath = sourceSets.main.runtimeClasspath
+    doFirst() {
+        configRemoteRunTask(it, 'aat')
     }
 }
 
