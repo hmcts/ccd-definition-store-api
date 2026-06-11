@@ -57,8 +57,7 @@
 | Test area | Coverage |
 | --- | --- |
 | `SecurityConfigurationTest` | Primary issuer, additional allowed issuer, invalid issuer, missing `iss`, and expired token behaviour at validator level |
-| `JwtDecoderExceptionTest` | Decoder-level primary issuer fallback, additional issuer, unexpected issuer, missing `iss`, and expiry behaviour without the broader Spring integration harness |
-| `JwtDecoderIssuerValidationIT` | Active decoder against WireMock-backed OIDC discovery and JWKS responses, including optional additional issuers and missing `iss` rejection |
+| `JwtDecoderIssuerValidationIT` | Active `JwtDecoder` bean from `SecurityConfiguration` against WireMock-backed OIDC discovery and JWKS responses, including primary issuer, optional additional issuers, unexpected issuer, missing `iss`, and expiry behaviour using signed tokens |
 
 ## Test and pipeline verification
 
