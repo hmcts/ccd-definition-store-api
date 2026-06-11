@@ -28,4 +28,15 @@ public class CcdElasticSearchProperties {
     private String securityClassificationMapping;
     private boolean enabled;
     private int batchSize;
+    private Reindex reindex = new Reindex();
+
+    public boolean isReindexEnabled() {
+        return reindex != null && reindex.isEnabled();
+    }
+
+    @Getter
+    @Setter
+    public static class Reindex {
+        private boolean enabled;
+    }
 }

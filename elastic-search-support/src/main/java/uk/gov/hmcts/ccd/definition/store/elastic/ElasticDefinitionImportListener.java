@@ -65,9 +65,9 @@ public abstract class ElasticDefinitionImportListener {
                 if (!hasExistingVersionedIndex) {
                     elasticClient.createIndex(firstVersionIndexName(baseIndexName), baseIndexName);
                 }
-                // Reindex when a source index already exists. Skip on true first import — otherwise
-                // asyncReindex would create -000002.
-                if (event.isReindex() && hasExistingVersionedIndex) {
+                // Reindex when enabled, requested on import, and a source index already exists.
+                // Skip on true first import — otherwise asyncReindex would create -000002.
+                if (config.isReindexEnabled() && event.isReindex() && hasExistingVersionedIndex) {
                     reindexService.asyncReindex(event, baseIndexName, caseType);
                 } else {
                     caseMapping = mappingGenerator.generateMapping(caseType);

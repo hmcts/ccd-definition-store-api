@@ -76,6 +76,7 @@ class ElasticDefinitionImportListenerTest {
             clientObjectFactory, elasticsearchErrorHandler, reindexService);
 
         lenient().when(clientObjectFactory.getObject()).thenReturn(ccdElasticClient);
+        lenient().when(config.isReindexEnabled()).thenReturn(false);
         ccdElasticClient.close();
     }
 
@@ -152,6 +153,7 @@ class ElasticDefinitionImportListenerTest {
     @Test
     void shouldRestoreAliasAndReindexWhenAliasDeletedButVersionedIndexExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
+        when(config.isReindexEnabled()).thenReturn(true);
         when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(baseIndexName)).thenReturn(true);
 
         listener.onDefinitionImported(newEvent(true, false, caseA));
@@ -160,6 +162,22 @@ class ElasticDefinitionImportListenerTest {
         verify(ccdElasticClient, never()).createIndex(anyString(), anyString());
         verify(reindexService).asyncReindex(any(), eq(baseIndexName), eq(caseA));
         verify(ccdElasticClient, never()).upsertMapping(anyString(), anyString());
+    }
+
+    @Test
+    void shouldUpsertMappingWhenReindexRequestedButFeatureDisabled() throws IOException {
+        when(config.getCasesIndexNameFormat()).thenReturn("%s");
+        when(config.isReindexEnabled()).thenReturn(false);
+        when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(baseIndexName)).thenReturn(true);
+        when(caseMappingGenerator.generateMapping(caseA)).thenReturn("caseMapping");
+
+        listener.onDefinitionImported(newEvent(true, false, caseA));
+
+        verify(ccdElasticClient).restoreAliasFromLatestVersionedIndex(baseIndexName);
+        verify(ccdElasticClient, never()).createIndex(anyString(), anyString());
+        verify(caseMappingGenerator).generateMapping(caseA);
+        verify(ccdElasticClient).upsertMapping(baseIndexName, "caseMapping");
+        verify(reindexService, never()).asyncReindex(any(), anyString(), any());
     }
 
     @Test
@@ -179,6 +197,7 @@ class ElasticDefinitionImportListenerTest {
     @Test
     void shouldAsyncReindexWhenReindexTrueAndVersionedIndexExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
+        when(config.isReindexEnabled()).thenReturn(true);
         when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(baseIndexName)).thenReturn(true);
 
         listener.onDefinitionImported(newEvent(true, false, caseA));
