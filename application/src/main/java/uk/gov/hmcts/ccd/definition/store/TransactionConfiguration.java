@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.util.StringUtils;
 
 import jakarta.persistence.EntityManagerFactory;
 
@@ -18,8 +19,15 @@ public class TransactionConfiguration {
                                                          @Value("${ccd.tx-timeout.default}") String defaultTimeout) {
         final JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(emf);
-        transactionManager.setDefaultTimeout(Integer.parseInt(defaultTimeout));
+        transactionManager.setDefaultTimeout(resolveDefaultTimeout(defaultTimeout));
         return transactionManager;
+    }
+
+    private int resolveDefaultTimeout(String defaultTimeout) {
+        if (!StringUtils.hasText(defaultTimeout)) {
+            return 30;
+        }
+        return Integer.parseInt(defaultTimeout);
     }
 
 }
