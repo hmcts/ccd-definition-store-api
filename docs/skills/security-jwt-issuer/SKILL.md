@@ -27,7 +27,7 @@ Use this skill for JWT issuer validation changes in `ccd-definition-store-api`.
 7. The verifier currently acquires its real token with `DEFINITION_IMPORTER_USERNAME` and `DEFINITION_IMPORTER_PASSWORD`. Keep any verifier credential changes aligned with the repo's actual setup/test credential path.
 8. Do not guess `OIDC_ISSUER` or `OIDC_ALLOWED_ISSUERS`. Decode real tokens from the target environment and keep Jenkins-exported and app-enforced issuer values aligned.
 9. Keep coverage focused across two application layers:
-   validator-level tests in [`application/src/test/java/uk/gov/hmcts/ccd/definition/store/SecurityConfigurationTest.java`](../../../application/src/test/java/uk/gov/hmcts/ccd/definition/store/SecurityConfigurationTest.java),
+   validator-level tests in [`application/src/test/java/uk/gov/hmcts/ccd/definition/store/security/JwtIssuerValidatorTest.java`](../../../application/src/test/java/uk/gov/hmcts/ccd/definition/store/security/JwtIssuerValidatorTest.java),
    and signed-token decoder integration coverage in [`application/src/test/java/uk/gov/hmcts/net/ccd/definition/store/security/JwtDecoderIssuerValidationIT.java`](../../../application/src/test/java/uk/gov/hmcts/net/ccd/definition/store/security/JwtDecoderIssuerValidationIT.java).
 
 ## References

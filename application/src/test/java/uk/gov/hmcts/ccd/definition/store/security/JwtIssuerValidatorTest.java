@@ -1,18 +1,15 @@
-package uk.gov.hmcts.ccd.definition.store;
+package uk.gov.hmcts.ccd.definition.store.security;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.Jwt;
-import uk.gov.hmcts.ccd.definition.store.security.JwtGrantedAuthoritiesConverter;
-import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
 
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.mock;
 
-class SecurityConfigurationTest {
+class JwtIssuerValidatorTest {
 
     private static final String VALID_ISSUER = "http://fr-am:8080/openam/oauth2/hmcts";
     private static final String ADDITIONAL_ALLOWED_ISSUER = "http://public-idam/o";
@@ -57,17 +54,7 @@ class SecurityConfigurationTest {
     }
 
     private OAuth2TokenValidator<Jwt> validator(String allowedIssuers) {
-        return securityConfiguration(allowedIssuers).jwtValidator();
-    }
-
-    private SecurityConfiguration securityConfiguration(String allowedIssuers) {
-        return new SecurityConfiguration(
-            mock(ServiceAuthFilter.class),
-            mock(JwtGrantedAuthoritiesConverter.class),
-            "http://localhost/o",
-            VALID_ISSUER,
-            allowedIssuers
-        );
+        return JwtIssuerValidator.validator(VALID_ISSUER, allowedIssuers);
     }
 
     private Jwt buildJwt(String issuer, Instant expiresAt) {

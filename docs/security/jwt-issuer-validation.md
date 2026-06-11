@@ -56,7 +56,7 @@
 
 | Test area | Coverage |
 | --- | --- |
-| `SecurityConfigurationTest` | Primary issuer, additional allowed issuer, invalid issuer, missing `iss`, and expired token behaviour at validator level |
+| `JwtIssuerValidatorTest` | Primary issuer, additional allowed issuer, invalid issuer, missing `iss`, and expired token behaviour at validator level |
 | `JwtDecoderIssuerValidationIT` | Active `JwtDecoder` bean from `SecurityConfiguration` against WireMock-backed OIDC discovery and JWKS responses, including primary issuer, optional additional issuers, unexpected issuer, missing `iss`, and expiry behaviour using signed tokens |
 
 ## Test and pipeline verification
