@@ -2,5 +2,19 @@
   "connectionString": "${file:/mnt/secrets/ccd/app-insights-connection-string}",
   "role": {
     "name": "ccd-definition-store-api"
+  },
+  "sampling": {
+    "percentage": 100,
+    "overrides": [
+      {
+        "telemetryType": "trace",
+        "percentage": 100
+      }
+    ]
+  },
+  "instrumentation": {
+    "logging": {
+      "level": "INFO"
+    }
   }
 }
