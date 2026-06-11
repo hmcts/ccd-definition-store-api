@@ -7,13 +7,10 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtClaimValidator;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtDecoders;
-import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
@@ -22,7 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ElasticsearchIndexController;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
 import uk.gov.hmcts.ccd.definition.store.security.JwtGrantedAuthoritiesConverter;
-import uk.gov.hmcts.ccd.definition.store.security.OidcIssuerConfiguration;
+import uk.gov.hmcts.ccd.definition.store.security.JwtIssuerValidator;
 import uk.gov.hmcts.ccd.definition.store.security.filters.ExceptionHandlingFilter;
 import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
 
@@ -34,22 +31,23 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    @Value("${spring.security.oauth2.client.provider.oidc.issuer-uri}")
-    private String issuerUri;
-
-    @Value("${oidc.issuer}")
-    private String issuerOverride;
-
-    @Value("${oidc.allowed-issuers:}")
-    private String allowedIssuersOverride;
-
+    private final String issuerUri;
+    private final String primaryIssuer;
+    private final String additionalAllowedIssuers;
     private final ServiceAuthFilter serviceAuthFilter;
     private final JwtAuthenticationConverter jwtAuthenticationConverter;
     private final ExceptionHandlingFilter exceptionHandlingFilter;
 
     @Inject
     public SecurityConfiguration(final ServiceAuthFilter serviceAuthFilter,
-                                 final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter) {
+                                 final JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter,
+                                 @Value("${spring.security.oauth2.client.provider.oidc.issuer-uri}")
+                                 final String issuerUri,
+                                 @Value("${oidc.issuer}") final String primaryIssuer,
+                                 @Value("${oidc.allowed-issuers:}") final String additionalAllowedIssuers) {
+        this.issuerUri = issuerUri;
+        this.primaryIssuer = primaryIssuer;
+        this.additionalAllowedIssuers = additionalAllowedIssuers;
         this.serviceAuthFilter = serviceAuthFilter;
         this.exceptionHandlingFilter = new ExceptionHandlingFilter();
         jwtAuthenticationConverter = new JwtAuthenticationConverter();
@@ -96,16 +94,12 @@ public class SecurityConfiguration {
     @Bean
     JwtDecoder jwtDecoder() {
         NimbusJwtDecoder jwtDecoder = (NimbusJwtDecoder) JwtDecoders.fromOidcIssuerLocation(issuerUri);
-
-        // See docs/security/jwt-issuer-validation.md for issuer-uri discovery and oidc issuer enforcement.
-        OAuth2TokenValidator<Jwt> withTimestamp = new JwtTimestampValidator();
-        OAuth2TokenValidator<Jwt> withIssuer = new JwtClaimValidator<>(
-            "iss",
-            OidcIssuerConfiguration.allowedIssuers(issuerOverride, allowedIssuersOverride)::contains
-        );
-        OAuth2TokenValidator<Jwt> validator = new DelegatingOAuth2TokenValidator<>(withTimestamp, withIssuer);
-
-        jwtDecoder.setJwtValidator(validator);
+        jwtDecoder.setJwtValidator(jwtValidator());
         return jwtDecoder;
+    }
+
+    OAuth2TokenValidator<Jwt> jwtValidator() {
+        // See docs/security/jwt-issuer-validation.md for issuer-uri discovery and oidc issuer enforcement.
+        return JwtIssuerValidator.validator(primaryIssuer, additionalAllowedIssuers);
     }
 }

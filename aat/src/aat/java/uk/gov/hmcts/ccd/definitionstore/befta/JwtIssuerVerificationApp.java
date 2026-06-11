@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definitionstore.befta;
 
 import com.nimbusds.jwt.SignedJWT;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.security.OidcIssuerConfiguration;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
@@ -9,6 +10,7 @@ import uk.gov.hmcts.ccd.definitionstore.tests.Env;
 import java.text.ParseException;
 import java.util.Set;
 
+@Slf4j
 public final class JwtIssuerVerificationApp {
 
     private JwtIssuerVerificationApp() {
@@ -28,7 +30,7 @@ public final class JwtIssuerVerificationApp {
             );
         }
 
-        System.out.println("Verified functional test token iss is allowed: " + actualIssuer);
+        log.info("Verified functional test token iss is allowed: {}", actualIssuer);
     }
 
     private static String resolveIssuerFromRealToken(AATHelper aat) {

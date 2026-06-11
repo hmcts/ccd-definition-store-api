@@ -23,6 +23,8 @@ sourceSets {
 }
 
 configurations {
+    aatCompileOnly.extendsFrom(compileOnly)
+    aatAnnotationProcessor.extendsFrom(annotationProcessor)
     aatImplementation.extendsFrom(testImplementation)
     aatRuntime.extendsFrom(testRuntimeOnly)
 }

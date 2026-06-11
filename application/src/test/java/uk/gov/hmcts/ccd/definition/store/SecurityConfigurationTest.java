@@ -1,17 +1,16 @@
 package uk.gov.hmcts.ccd.definition.store;
 
 import org.junit.jupiter.api.Test;
-import org.springframework.security.oauth2.core.DelegatingOAuth2TokenValidator;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtClaimValidator;
-import org.springframework.security.oauth2.jwt.JwtTimestampValidator;
-import uk.gov.hmcts.ccd.definition.store.security.OidcIssuerConfiguration;
+import uk.gov.hmcts.ccd.definition.store.security.JwtGrantedAuthoritiesConverter;
+import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
 
 import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
 
 class SecurityConfigurationTest {
 
@@ -58,12 +57,16 @@ class SecurityConfigurationTest {
     }
 
     private OAuth2TokenValidator<Jwt> validator(String allowedIssuers) {
-        return new DelegatingOAuth2TokenValidator<>(
-            new JwtTimestampValidator(),
-            new JwtClaimValidator<>(
-                "iss",
-                OidcIssuerConfiguration.allowedIssuers(VALID_ISSUER, allowedIssuers)::contains
-            )
+        return securityConfiguration(allowedIssuers).jwtValidator();
+    }
+
+    private SecurityConfiguration securityConfiguration(String allowedIssuers) {
+        return new SecurityConfiguration(
+            mock(ServiceAuthFilter.class),
+            mock(JwtGrantedAuthoritiesConverter.class),
+            "http://localhost/o",
+            VALID_ISSUER,
+            allowedIssuers
         );
     }
 

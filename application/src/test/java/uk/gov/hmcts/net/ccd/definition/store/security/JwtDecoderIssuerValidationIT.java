@@ -1,12 +1,5 @@
 package uk.gov.hmcts.net.ccd.definition.store.security;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JOSEObjectType;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.crypto.RSASSASigner;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,17 +13,16 @@ import org.springframework.test.context.TestPropertySource;
 import uk.gov.hmcts.ccd.definition.store.CaseDataAPIApplication;
 import uk.gov.hmcts.net.ccd.definition.store.TestConfiguration;
 import uk.gov.hmcts.net.ccd.definition.store.TestIdamConfiguration;
-import uk.gov.hmcts.net.ccd.definition.store.util.KeyGenerator;
 import uk.gov.hmcts.net.ccd.definition.store.wiremock.config.WireMockTestConfiguration;
 
-import java.text.ParseException;
 import java.time.Instant;
-import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.hmcts.net.ccd.definition.store.util.JwtTestTokenBuilder.signedToken;
+import static uk.gov.hmcts.net.ccd.definition.store.util.JwtTestTokenBuilder.signedTokenWithoutIssuer;
 
 @SpringBootTest(classes = {
     CaseDataAPIApplication.class,
@@ -59,7 +51,7 @@ class JwtDecoderIssuerValidationIT {
 
     @Test
     void shouldDecodeJwtFromConfiguredIssuer() throws Exception {
-        Jwt jwt = assertDoesNotThrow(() -> jwtDecoder.decode(buildToken(validIssuer, Instant.now().plusSeconds(300))));
+        Jwt jwt = assertDoesNotThrow(() -> jwtDecoder.decode(signedToken(validIssuer, Instant.now().plusSeconds(300))));
 
         assertEquals(validIssuer, jwt.getIssuer().toString());
     }
@@ -67,7 +59,7 @@ class JwtDecoderIssuerValidationIT {
     @Test
     void shouldDecodeJwtFromAdditionalAllowedIssuer() throws Exception {
         Jwt jwt = assertDoesNotThrow(
-            () -> jwtDecoder.decode(buildToken(ADDITIONAL_ALLOWED_ISSUER, Instant.now().plusSeconds(300)))
+            () -> jwtDecoder.decode(signedToken(ADDITIONAL_ALLOWED_ISSUER, Instant.now().plusSeconds(300)))
         );
 
         assertEquals(ADDITIONAL_ALLOWED_ISSUER, jwt.getIssuer().toString());
@@ -76,7 +68,7 @@ class JwtDecoderIssuerValidationIT {
     @Test
     void shouldRejectJwtFromUnexpectedIssuer() throws Exception {
         JwtValidationException exception = assertThrows(JwtValidationException.class,
-            () -> jwtDecoder.decode(buildToken(INVALID_ISSUER, Instant.now().plusSeconds(300))));
+            () -> jwtDecoder.decode(signedToken(INVALID_ISSUER, Instant.now().plusSeconds(300))));
 
         assertThat(exception.getMessage()).contains("iss");
     }
@@ -84,7 +76,7 @@ class JwtDecoderIssuerValidationIT {
     @Test
     void shouldRejectJwtWithoutIssuer() throws Exception {
         JwtValidationException exception = assertThrows(JwtValidationException.class,
-            () -> jwtDecoder.decode(buildTokenWithoutIssuer(Instant.now().plusSeconds(300))));
+            () -> jwtDecoder.decode(signedTokenWithoutIssuer(Instant.now().plusSeconds(300))));
 
         assertThat(exception.getMessage()).contains("iss");
     }
@@ -92,39 +84,6 @@ class JwtDecoderIssuerValidationIT {
     @Test
     void shouldRejectExpiredJwtEvenWhenIssuerMatches() throws Exception {
         assertThrows(BadJwtException.class,
-            () -> jwtDecoder.decode(buildToken(validIssuer, Instant.now().minusSeconds(60))));
-    }
-
-    private String buildToken(String issuer, Instant expiresAt) throws JOSEException, ParseException {
-        SignedJWT signedJwt = new SignedJWT(
-            new JWSHeader.Builder(JWSAlgorithm.RS256)
-                .keyID(KeyGenerator.getRsaJWK().getKeyID())
-                .type(JOSEObjectType.JWT)
-                .build(),
-            new JWTClaimsSet.Builder()
-                .issuer(issuer)
-                .subject("user")
-                .issueTime(Date.from(Instant.now().minusSeconds(60)))
-                .expirationTime(Date.from(expiresAt))
-                .build()
-        );
-        signedJwt.sign(new RSASSASigner(KeyGenerator.getRsaJWK().toPrivateKey()));
-        return signedJwt.serialize();
-    }
-
-    private String buildTokenWithoutIssuer(Instant expiresAt) throws JOSEException, ParseException {
-        SignedJWT signedJwt = new SignedJWT(
-            new JWSHeader.Builder(JWSAlgorithm.RS256)
-                .keyID(KeyGenerator.getRsaJWK().getKeyID())
-                .type(JOSEObjectType.JWT)
-                .build(),
-            new JWTClaimsSet.Builder()
-                .subject("user")
-                .issueTime(Date.from(Instant.now().minusSeconds(60)))
-                .expirationTime(Date.from(expiresAt))
-                .build()
-        );
-        signedJwt.sign(new RSASSASigner(KeyGenerator.getRsaJWK().toPrivateKey()));
-        return signedJwt.serialize();
+            () -> jwtDecoder.decode(signedToken(validIssuer, Instant.now().minusSeconds(60))));
     }
 }
