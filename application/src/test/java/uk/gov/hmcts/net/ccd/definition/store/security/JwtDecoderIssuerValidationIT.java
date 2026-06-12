@@ -1,5 +1,6 @@
 package uk.gov.hmcts.net.ccd.definition.store.security;
 
+import com.nimbusds.jose.JOSEException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -44,6 +45,8 @@ class JwtDecoderIssuerValidationIT {
 
     private static final String ADDITIONAL_ALLOWED_ISSUER = "http://public-idam/o";
     private static final String INVALID_ISSUER = "http://unexpected-issuer/o";
+    private static final Instant VALID_EXPIRES_AT = Instant.parse("2099-01-01T00:00:00Z");
+    private static final Instant EXPIRED_AT = Instant.parse("2000-01-01T00:00:00Z");
 
     @Autowired
     private JwtDecoder jwtDecoder;
@@ -65,40 +68,64 @@ class JwtDecoderIssuerValidationIT {
     }
 
     @Test
-    void shouldDecodeJwtFromConfiguredIssuer() throws Exception {
-        Jwt jwt = assertDoesNotThrow(() -> jwtDecoder.decode(signedToken(validIssuer, Instant.now().plusSeconds(300))));
+    void shouldDecodeJwtFromConfiguredIssuer() {
+        String token = signedJwt(validIssuer, VALID_EXPIRES_AT);
+
+        Jwt jwt = assertDoesNotThrow(() -> jwtDecoder.decode(token));
 
         assertEquals(validIssuer, jwt.getIssuer().toString());
     }
 
     @Test
-    void shouldDecodeJwtFromAdditionalAllowedIssuer() throws Exception {
-        Jwt jwt = assertDoesNotThrow(
-            () -> jwtDecoder.decode(signedToken(ADDITIONAL_ALLOWED_ISSUER, Instant.now().plusSeconds(300)))
-        );
+    void shouldDecodeJwtFromAdditionalAllowedIssuer() {
+        String token = signedJwt(ADDITIONAL_ALLOWED_ISSUER, VALID_EXPIRES_AT);
+
+        Jwt jwt = assertDoesNotThrow(() -> jwtDecoder.decode(token));
 
         assertEquals(ADDITIONAL_ALLOWED_ISSUER, jwt.getIssuer().toString());
     }
 
     @Test
-    void shouldRejectJwtFromUnexpectedIssuer() throws Exception {
+    void shouldRejectJwtFromUnexpectedIssuer() {
+        String token = signedJwt(INVALID_ISSUER, VALID_EXPIRES_AT);
+
         JwtValidationException exception = assertThrows(JwtValidationException.class,
-            () -> jwtDecoder.decode(signedToken(INVALID_ISSUER, Instant.now().plusSeconds(300))));
+            () -> jwtDecoder.decode(token));
 
         assertThat(exception.getMessage()).contains("iss");
     }
 
     @Test
-    void shouldRejectJwtWithoutIssuer() throws Exception {
+    void shouldRejectJwtWithoutIssuer() {
+        String token = signedJwtWithoutIssuer(VALID_EXPIRES_AT);
+
         JwtValidationException exception = assertThrows(JwtValidationException.class,
-            () -> jwtDecoder.decode(signedTokenWithoutIssuer(Instant.now().plusSeconds(300))));
+            () -> jwtDecoder.decode(token));
 
         assertThat(exception.getMessage()).contains("iss");
     }
 
     @Test
-    void shouldRejectExpiredJwtEvenWhenIssuerMatches() throws Exception {
+    void shouldRejectExpiredJwtEvenWhenIssuerMatches() {
+        String token = signedJwt(validIssuer, EXPIRED_AT);
+
         assertThrows(BadJwtException.class,
-            () -> jwtDecoder.decode(signedToken(validIssuer, Instant.now().minusSeconds(60))));
+            () -> jwtDecoder.decode(token));
+    }
+
+    private static String signedJwt(String issuer, Instant expiresAt) {
+        try {
+            return signedToken(issuer, expiresAt);
+        } catch (JOSEException exception) {
+            throw new AssertionError("Failed to create signed JWT", exception);
+        }
+    }
+
+    private static String signedJwtWithoutIssuer(Instant expiresAt) {
+        try {
+            return signedTokenWithoutIssuer(expiresAt);
+        } catch (JOSEException exception) {
+            throw new AssertionError("Failed to create signed JWT", exception);
+        }
     }
 }
