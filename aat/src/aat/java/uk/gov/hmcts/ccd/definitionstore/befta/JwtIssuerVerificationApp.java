@@ -34,8 +34,9 @@ public final class JwtIssuerVerificationApp {
     }
 
     private static String resolveIssuerFromRealToken(AATHelper aat) {
+        Credentials credentials = importerCredentials(aat);
         String accessToken = aat.getIdamHelper()
-            .getIdamOauth2Token(aat.getImporterAutoTestEmail(), aat.getImporterAutoTestPassword());
+            .getIdamOauth2Token(credentials.username(), credentials.password());
 
         try {
             String issuer = SignedJWT.parse(accessToken).getJWTClaimsSet().getIssuer();
@@ -46,5 +47,12 @@ public final class JwtIssuerVerificationApp {
         } catch (ParseException exception) {
             throw new IllegalStateException("Failed to parse IDAM access token as a JWT", exception);
         }
+    }
+
+    private static Credentials importerCredentials(AATHelper aat) {
+        return new Credentials(aat.getImporterAutoTestEmail(), aat.getImporterAutoTestPassword());
+    }
+
+    private record Credentials(String username, String password) {
     }
 }
