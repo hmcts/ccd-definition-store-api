@@ -39,7 +39,13 @@ class ActuatorSecurityIT {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        securityConfiguration = new SecurityConfiguration(serviceAuthFilter, jwtGrantedAuthoritiesConverter);
+        securityConfiguration = new SecurityConfiguration(
+            serviceAuthFilter,
+            jwtGrantedAuthoritiesConverter,
+            "http://localhost/o",
+            "http://localhost/o",
+            ""
+        );
         when(webSecurity.ignoring()).thenReturn(ignoredRequestConfigurer);
         when(ignoredRequestConfigurer.requestMatchers(any(String[].class))).thenReturn(ignoredRequestConfigurer);
     }
