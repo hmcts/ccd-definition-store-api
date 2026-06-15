@@ -4,6 +4,7 @@ package uk.gov.hmcts.net.ccd.definition.store.rest;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -14,6 +15,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BaseTypeControllerTests extends BaseTest {
@@ -69,6 +71,52 @@ class BaseTypeControllerTests extends BaseTest {
         assertContainsFieldType(baseTypes, "WaysToPay", "WaysToPay");
         assertContainsFieldType(baseTypes, "FlagLauncher", "FlagLauncher");
         assertContainsFieldType(baseTypes, "ComponentLauncher", "ComponentLauncher");
+    }
+
+    // CCD-2008: behavioural regression guard for the Postcode base type.
+    // getBaseTypesTest above asserts the endpoint serves the expected regex *string*; this test
+    // proves that the served regex actually accepts valid UK postcodes (e.g. the reported W1U 3BW)
+    // and still rejects malformed ones - the user-facing behaviour the regex fix was about.
+    // The valid samples deliberately include third-position letters (C/D/U) that the pre-fix regex
+    // wrongly rejected, plus the GIR 0AA special case; the invalid samples include a digit-first
+    // outward code which the pre-fix regex wrongly accepted.
+    private static final String[] VALID_UK_POSTCODES = {
+        "W1U 3BW", "W1D 4FA", "N1C 4AG", "EC1A 1BB", "SW1A 1AA",
+        "M1 1AE", "B33 8TH", "CR2 6XH", "DN55 1PT", "WC1B 3DG", "GIR 0AA"
+    };
+
+    private static final String[] INVALID_UK_POSTCODES = {
+        "0X1 1AA",      // outward code must not start with a digit
+        "W1U3BW",       // missing the separating space
+        "LONDON",       // not a postcode
+        "12345",        // numeric only
+        "W1"            // incomplete
+    };
+
+    @Test
+    void postcodeRegexAcceptsValidUkPostcodesAndRejectsInvalidOnes() throws Exception {
+        final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(GET_BASE_TYPES))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+
+        FieldType[] baseTypes = BaseTest.mapper.readValue(result.getResponse().getContentAsString(), FieldType[].class);
+
+        final String postcodeRegex = Stream.of(baseTypes)
+            .filter(baseType -> "Postcode".equals(baseType.getId()))
+            .map(FieldType::getRegularExpression)
+            .findFirst()
+            .orElseThrow(() -> new AssertionError("Postcode base type not found in /api/base-types response"));
+
+        final Pattern pattern = Pattern.compile(postcodeRegex);
+
+        for (String postcode : VALID_UK_POSTCODES) {
+            assertTrue(pattern.matcher(postcode).matches(),
+                "Expected valid UK postcode to be accepted by the Postcode regex but it was rejected: " + postcode);
+        }
+        for (String postcode : INVALID_UK_POSTCODES) {
+            assertFalse(pattern.matcher(postcode).matches(),
+                "Expected invalid postcode to be rejected by the Postcode regex but it was accepted: " + postcode);
+        }
     }
 
     private void assertContainsFieldType(FieldType[] baseTypes, String id, String type) {
