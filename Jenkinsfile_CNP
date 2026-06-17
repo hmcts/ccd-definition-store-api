@@ -176,6 +176,22 @@ withPipeline(type, product, app) {
         ]
     }
 
+    afterFailure('fullFunctionalTest:preview') {
+        currentBuild.result = 'UNSTABLE'
+    }
+
+    afterAlways('fullFunctionalTest:preview') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
+        publishHTML target: [
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : 'BEFTA Report for Functional Tests',
+            reportFiles          : "overview-features.html",
+            reportName           : "Functional Test Report"
+    ]
+    }
+
     afterAlways('functionalTest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
         publishHTML target: [
@@ -186,6 +202,22 @@ withPipeline(type, product, app) {
             reportFiles          : "overview-features.html",
             reportName           : "Functional Test Report"
         ]
+    }
+
+    afterFailure('fullFunctionalTest:aat') {
+        currentBuild.result = 'UNSTABLE'
+    }
+
+    afterAlways('fullFunctionalTest:aat') {
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
+        publishHTML target: [
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : 'BEFTA Report for Functional Tests',
+            reportFiles          : "overview-features.html",
+            reportName           : "Functional Test Report"
+      ]
     }
 
     echo "env.DEFINITION_STORE_URL_BASE = ${env.DEFINITION_STORE_URL_BASE}"
