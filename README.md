@@ -51,6 +51,7 @@ The following environment variables are optional:
 |------|--------------------|-------------|
 | ENABLE_CASE_GROUP_ACCESS                     | true/false         | Enable case group access filtering.                                                                                                                                                 |
 | GROUP_ACCESS_ENABLED                         | true/false/not set | Enable group access Functional Tests. When not `true`, `@groupaccess` scenarios are excluded from FT selection. |
+| DEFINITION_STORE_TX_TIMEOUT_DEFAULT          | 30                 | Default Spring transaction timeout in seconds. Increase for slow remote-database imports during local AAT debugging. |
 
 ### Building
 
