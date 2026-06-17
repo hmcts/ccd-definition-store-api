@@ -5,6 +5,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportE
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 
@@ -50,7 +51,7 @@ public class DotNotationValidator {
             final String[] splitDotNotationExpression = DOT_SEPARATOR_SPLIT_FUNCTION.apply(expression);
 
             // NB: find will throw exception if not found
-            findDotNotationFieldType(parentComplexType, splitDotNotationExpression, sheetName, columnName);
+            findDotNotationFieldType(null, parentComplexType, splitDotNotationExpression, sheetName, columnName);
 
         } catch (InvalidImportException invalidImportException) {
             // throw a new Exception using original full expression (nb: previous exception already logged)
@@ -113,6 +114,7 @@ public class DotNotationValidator {
                 .subList(1, splitDotNotationExpression.length);
 
             return findDotNotationFieldType(
+                parseContext,
                 topLevelFieldType,
                 segments.toArray(String[]::new),
                 sheetName,
@@ -124,13 +126,26 @@ public class DotNotationValidator {
         }
     }
 
-    private FieldTypeEntity findDotNotationFieldType(final FieldTypeEntity parentComplexFieldType,
+    private FieldTypeEntity findDotNotationFieldType(final ParseContext parseContext,
+                                                     final FieldTypeEntity parentComplexFieldType,
                                                      final String[] splitDotNotationExpression,
                                                      final SheetName sheetName,
                                                      final ColumnName columnName) {
         FieldTypeEntity currentFieldType = parentComplexFieldType;
 
-        for (String currentAttribute : splitDotNotationExpression) {
+        for (int i = 0; i < splitDotNotationExpression.length; i++) {
+            final String currentAttribute = splitDotNotationExpression[i];
+
+            // DynamicList / DynamicRadioList store their selection under {value:{code,label}}.
+            // These are base types with no declared ComplexField children, so the standard
+            // lookup would reject the path — permit the known sub-paths explicitly.
+            if (isSingleSelectDynamicList(currentFieldType)
+                && "value".equals(currentAttribute)
+                && i + 1 < splitDotNotationExpression.length
+                && i + 1 == splitDotNotationExpression.length - 1
+                && isDynamicListLeaf(splitDotNotationExpression[i + 1])) {
+                return resolveTextType(parseContext);
+            }
 
             // search complex fields to find next attribute
             final ComplexFieldEntity complexField = findComplexFieldEntity(
@@ -144,6 +159,28 @@ public class DotNotationValidator {
         }
 
         return currentFieldType;
+    }
+
+    private boolean isSingleSelectDynamicList(final FieldTypeEntity fieldType) {
+        final String reference = fieldType.getReference();
+        return FieldTypeUtils.BASE_DYNAMIC_LIST.equals(reference)
+            || FieldTypeUtils.BASE_DYNAMIC_RADIO_LIST.equals(reference);
+    }
+
+    private boolean isDynamicListLeaf(final String segment) {
+        return "code".equals(segment) || "label".equals(segment);
+    }
+
+    private FieldTypeEntity resolveTextType(final ParseContext parseContext) {
+        if (parseContext != null) {
+            final Optional<FieldTypeEntity> registered = parseContext.getType(FieldTypeUtils.BASE_TEXT);
+            if (registered.isPresent()) {
+                return registered.get();
+            }
+        }
+        final FieldTypeEntity textFieldType = new FieldTypeEntity();
+        textFieldType.setReference(FieldTypeUtils.BASE_TEXT);
+        return textFieldType;
     }
 
 }

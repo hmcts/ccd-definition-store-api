@@ -35,6 +35,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static uk.gov.hmcts.ccd.definition.store.excel.common.TestLoggerUtils.assertLogged;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DYNAMIC_LIST;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DYNAMIC_MULTI_SELECT_LIST;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_DYNAMIC_RADIO_LIST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 
 @DisplayName("DotNotationValidator")
@@ -67,7 +70,11 @@ class DotNotationValidatorTest {
         "SimpleText",
         "TopLevel.Text",
         "TopLevel.Child.Text",
-        "TopLevel.Child.Grandchild.Text"
+        "TopLevel.Child.Grandchild.Text",
+        "MyDynamicList.value.code",
+        "MyDynamicList.value.label",
+        "MyDynamicRadioList.value.code",
+        "MyDynamicRadioList.value.label"
     })
     void shouldValidateExpressionIfFieldExistsInParseContext(String expression) {
 
@@ -232,7 +239,13 @@ class DotNotationValidatorTest {
                 Arguments.of("SimpleText", "Text"),
                 Arguments.of("TopLevel", "TopLevelField"),
                 Arguments.of("TopLevel.Child", "ChildField"),
-                Arguments.of("TopLevel.Child.Grandchild", "GrandchildField")
+                Arguments.of("TopLevel.Child.Grandchild", "GrandchildField"),
+
+                // DynamicList / DynamicRadioList selection leaves resolve to the Text base type
+                Arguments.of("MyDynamicList.value.code", "Text"),
+                Arguments.of("MyDynamicList.value.label", "Text"),
+                Arguments.of("MyDynamicRadioList.value.code", "Text"),
+                Arguments.of("MyDynamicRadioList.value.label", "Text")
             );
         }
     }
@@ -280,7 +293,17 @@ class DotNotationValidatorTest {
                 Arguments.of("TopLevel .Text", "TopLevel "),
                 Arguments.of("TopLevel.Child .Text", "Child "),
                 Arguments.of("TopLevel.Child.Grandchild .Text", "Grandchild "),
-                Arguments.of("TopLevel.Child.Grandchild.Text ", "Text ")
+                Arguments.of("TopLevel.Child.Grandchild.Text ", "Text "),
+
+                // DynamicList sub-paths: only `.value.code` / `.value.label` are whitelisted
+                Arguments.of("MyDynamicList.value", "value"),
+                Arguments.of("MyDynamicList.value.code.extra", "value"),
+                Arguments.of("MyDynamicList.list_items", "list_items"),
+                Arguments.of("MyDynamicList.foo", "foo"),
+                Arguments.of("MyDynamicRadioList.value.bar", "value"),
+
+                // DynamicMultiSelectList is NOT whitelisted: its value is an array of {code,label}
+                Arguments.of("MyDynamicMultiList.value.code", "value")
             );
         }
     }
@@ -389,9 +412,25 @@ class DotNotationValidatorTest {
         // :: top level :: add all fields for type
         topLevelFieldType.addComplexFields(List.of(topLevelTextField, childField));
 
+        // register dynamic-list flavours — base types with no declared ComplexField children
+        FieldTypeEntity dynamicListFieldType = new FieldTypeEntity();
+        dynamicListFieldType.setReference(BASE_DYNAMIC_LIST);
+        parseContext.addToAllTypes(dynamicListFieldType);
+
+        FieldTypeEntity dynamicRadioListFieldType = new FieldTypeEntity();
+        dynamicRadioListFieldType.setReference(BASE_DYNAMIC_RADIO_LIST);
+        parseContext.addToAllTypes(dynamicRadioListFieldType);
+
+        FieldTypeEntity dynamicMultiSelectListFieldType = new FieldTypeEntity();
+        dynamicMultiSelectListFieldType.setReference(BASE_DYNAMIC_MULTI_SELECT_LIST);
+        parseContext.addToAllTypes(dynamicMultiSelectListFieldType);
+
         // register all fields that belong to case type (i.e. top level fields)
         parseContext.registerCaseFieldType(CASE_TYPE, "SimpleText", textFieldType);
         parseContext.registerCaseFieldType(CASE_TYPE, "TopLevel", topLevelFieldType);
+        parseContext.registerCaseFieldType(CASE_TYPE, "MyDynamicList", dynamicListFieldType);
+        parseContext.registerCaseFieldType(CASE_TYPE, "MyDynamicRadioList", dynamicRadioListFieldType);
+        parseContext.registerCaseFieldType(CASE_TYPE, "MyDynamicMultiList", dynamicMultiSelectListFieldType);
 
         return parseContext;
     }

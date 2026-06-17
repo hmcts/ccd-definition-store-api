@@ -77,6 +77,36 @@ class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
+    void testAnswerFormatForDynamicListValueCode() {
+        String answer = "${RespondentList.value.code}:[CLAIMANT]";
+        challengeQuestionValidator.validate(parseContext,
+                Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                        QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+    }
+
+    @Test
+    void testAnswerFormatForDynamicListValueLabel() {
+        String answer = "${RespondentList.value.label}:[CLAIMANT]";
+        challengeQuestionValidator.validate(parseContext,
+                Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                        QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+    }
+
+    @Test
+    void failAnswerFormatForDynamicListIntoListItems() {
+        InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
+            String answer = "${RespondentList.list_items}:[CLAIMANT]";
+            challengeQuestionValidator.validate(parseContext,
+                    Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                            QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+        });
+        assertThat(exception.getMessage(),
+                is("ChallengeQuestionTab Invalid value: ${RespondentList.list_items}:[CLAIMANT] "
+                        + "is not a valid Answer value. "
+                        + "The expression dot notation values should be valid caseTypes fields."));
+    }
+
+    @Test
     void failAnswerFormatForSmallestExpression() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             String answer = "${OrganisationField.OrganisationName}:[CCCCCC]";

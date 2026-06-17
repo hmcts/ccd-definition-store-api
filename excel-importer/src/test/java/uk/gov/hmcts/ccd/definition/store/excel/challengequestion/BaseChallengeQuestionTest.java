@@ -86,6 +86,13 @@ public abstract class BaseChallengeQuestionTest {
             organisation, orgPolicyCaseAssignedRole, orgPolicyReference));
         parseContext.registerCaseFieldType(CASE_TYPE, "OrganisationPolicyField", fieldTypeEntityOrganisation);
 
+        // DynamicList — base type with no declared ComplexField children; .value.code / .value.label
+        // are whitelisted by DotNotationValidator for NoC Answer paths.
+        FieldTypeEntity dynamicListFieldType = new FieldTypeEntity();
+        dynamicListFieldType.setReference("DynamicList");
+        parseContext.addToAllTypes(dynamicListFieldType);
+        parseContext.registerCaseFieldType(CASE_TYPE, "RespondentList", dynamicListFieldType);
+
         return parseContext;
     }
 
