@@ -126,8 +126,7 @@ class ImportJobIntegrationTest extends BaseTest {
      * Uses NOT_SUPPORTED so there is no outer test transaction wrapping the controller call.
      * The import fails (TX2 rolls back), but the FAILED row written by TX3 survives. The
      * case_type table is empty, confirming TX2's rollback.
-     * A client-supplied job id is used so the id is known before the request; the exception
-     * that fails TX2 also prevents the controller from echoing the header on the error response.
+     * The X-Import-Job-Id header is echoed on the error response.
      */
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
@@ -146,6 +145,10 @@ class ImportJobIntegrationTest extends BaseTest {
             int httpStatus = result.getResponse().getStatus();
             assertTrue(httpStatus >= 400,
                 "Import of invalid file must fail with 4xx, got " + httpStatus);
+
+            String jobIdHeader = result.getResponse().getHeader(ImportController.IMPORT_JOB_ID_HEADER);
+            assertNotNull(jobIdHeader, "X-Import-Job-Id must be present on error responses");
+            assertThat(jobIdHeader, is(suppliedJobId.toString()));
         }
 
         // TX1 committed a PENDING row; TX3 flipped it to FAILED
@@ -169,16 +172,20 @@ class ImportJobIntegrationTest extends BaseTest {
         try (InputStream in = new ClassPathResource(INVALID_XLSX, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", in);
 
-            mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
+            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
                     .file(file)
                     .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
+
+            String jobIdHeader = result.getResponse().getHeader(ImportController.IMPORT_JOB_ID_HEADER);
+            assertNotNull(jobIdHeader, "X-Import-Job-Id must be present on error responses");
 
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(
                 "SELECT * FROM import_jobs");
             assertThat("Server must have created an import_jobs row", rows, hasSize(1));
             String dbId = rows.getFirst().get("id").toString();
             assertDoesNotThrow(() -> UUID.fromString(dbId), "DB row id must be a valid UUID");
+            assertThat("Header job id must match DB row id", jobIdHeader, is(dbId));
         }
     }
 

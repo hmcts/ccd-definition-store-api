@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.service;
 import org.junit.jupiter.api.AfterEach;
 import uk.gov.hmcts.ccd.definition.store.domain.service.ImportJobService;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportJobFailedException;
 import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
@@ -149,10 +150,11 @@ class ProcessUploadServiceTest {
         willThrow(new IOException("boo"))
             .given(importWorkService).doImport(any(), any(), eq(false), eq(false), any(UUID.class));
 
-        final IOException exception = assertThrows(IOException.class,
+        final ImportJobFailedException exception = assertThrows(ImportJobFailedException.class,
             () -> processUploadService.processUpload(file, false, false, null));
 
-        assertThat(exception.getMessage(), is("boo"));
+        assertThat(exception.getCause().getMessage(), is("boo"));
+        assertNotNull(exception.getJobId());
         verify(importJobService).markFailed(any(UUID.class), eq("boo"));
         verify(importJobService, never()).markCompleted(any(), any(), any());
     }
@@ -246,10 +248,10 @@ class ProcessUploadServiceTest {
             willThrow(new RuntimeException("marking failed"))
                 .given(importJobService).markFailed(any(), any());
 
-            IOException thrown = assertThrows(IOException.class,
+            ImportJobFailedException thrown = assertThrows(ImportJobFailedException.class,
                 () -> processUploadService.processUpload(file, false, false, null));
 
-            assertEquals("original error", thrown.getMessage());
+            assertEquals("original error", thrown.getCause().getMessage());
             boolean errorLogged = logAppender.list.stream()
                 .anyMatch(e -> e.getLevel() == Level.ERROR
                     && e.getFormattedMessage().contains("markFailed"));

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint;
 
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportJobFailedException;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ProcessUploadResult;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ProcessUploadService;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ProcessUploadServiceImpl;
@@ -11,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -70,7 +72,8 @@ public class ImportController {
         @RequestPart("file") MultipartFile file,
         @RequestParam(value = "reindex", required = false, defaultValue = "false") Boolean reindex,
         @RequestParam(value = "deleteOldIndex", required = false, defaultValue = "false") Boolean deleteOldIndex,
-        @RequestHeader(value = IMPORT_JOB_ID_HEADER, required = false) String providedJobIdHeader
+        @RequestHeader(value = IMPORT_JOB_ID_HEADER, required = false) String providedJobIdHeader,
+        HttpServletResponse httpServletResponse
     ) throws IOException {
         UUID providedJobId;
         if (providedJobIdHeader == null || providedJobIdHeader.isBlank()) {
@@ -90,6 +93,13 @@ public class ImportController {
         } catch (DataIntegrityViolationException ex) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body("An import job with this id already exists");
+        } catch (ImportJobFailedException ex) {
+            httpServletResponse.setHeader(IMPORT_JOB_ID_HEADER, ex.getJobId().toString());
+            Throwable cause = ex.getCause();
+            if (cause instanceof IOException ioEx) {
+                throw ioEx;
+            }
+            throw (RuntimeException) cause;
         }
 
         ResponseEntity<String> response = result.response();

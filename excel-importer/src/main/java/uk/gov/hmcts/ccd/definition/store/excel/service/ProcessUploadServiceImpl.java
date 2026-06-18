@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import uk.gov.hmcts.ccd.definition.store.domain.service.ImportJobService;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportJobFailedException;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 import java.io.ByteArrayOutputStream;
@@ -64,7 +65,7 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
             } catch (Exception markFailedEx) {
                 log.error("markFailed failed for job {}. Propagating original exception", jobId, markFailedEx);
             }
-            throw ex;
+            throw new ImportJobFailedException(jobId, ex);
         }
 
         try {

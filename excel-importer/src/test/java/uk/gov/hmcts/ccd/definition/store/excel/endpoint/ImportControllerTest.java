@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportJobFailedException;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ProcessUploadResult;
 import uk.gov.hmcts.ccd.definition.store.excel.service.ProcessUploadServiceImpl;
 
@@ -33,6 +34,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController.IMPORT_JOB_ID_HEADER;
 import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController.URI_IMPORT;
 
@@ -131,6 +134,19 @@ class ImportControllerTest {
             .andExpect(status().isCreated())
             .andExpect(content().string(SUCCESS_BODY));
         verify(processUploadServiceImpl).processUpload(any(), eq(false), eq(false), isNull());
+    }
+
+    @DisplayName("Service throws ImportJobFailedException → cause re-thrown after setting header")
+    @Test
+    void importJobFailed_causeIsRethrown() throws Exception {
+        UUID jobId = UUID.randomUUID();
+        when(processUploadServiceImpl.processUpload(any(), anyBoolean(), anyBoolean(), isNull()))
+            .thenThrow(new ImportJobFailedException(jobId, new IOException("import failed")));
+
+        Exception thrown = assertThrows(Exception.class,
+            () -> mockMvc.perform(multipart(URI_IMPORT).file(file)));
+
+        assertNotNull(thrown);
     }
 
     @DisplayName("Upload - Green path, Azure disabled, reindex requested")
