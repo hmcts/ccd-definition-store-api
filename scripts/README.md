@@ -24,6 +24,17 @@ This is the recommended path when you need the local application code or local r
 dependencies. The relevant settings may include group access, Elasticsearch, import timeout, another feature flag, or
 no special feature flag.
 
+If `.aat-remote-env` does not exist, create it from the AAT Key Vault secret:
+
+```bash
+az login
+./gradlew reloadEnvSecrets -Penv=aat
+```
+
+This writes `./.aat-remote-env`, which is ignored by Git because it contains local runtime settings and secrets. If you
+start the application with `./gradlew runRemoteAat` before creating the file, the task also tries to create
+`.aat-remote-env` from Key Vault before launching the app.
+
 Before starting the application, check the local runtime settings in `.aat-remote-env` that are relevant to your test.
 For example:
 
