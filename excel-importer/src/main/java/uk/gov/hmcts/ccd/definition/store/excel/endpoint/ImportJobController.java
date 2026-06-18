@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.domain.service.ImportJobService;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ImportJobEntity;
-import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -18,11 +17,9 @@ import java.util.UUID;
 public class ImportJobController {
 
     private final ImportJobService importJobService;
-    private final IdamProfileClient idamProfileClient;
 
-    public ImportJobController(ImportJobService importJobService, IdamProfileClient idamProfileClient) {
+    public ImportJobController(ImportJobService importJobService) {
         this.importJobService = importJobService;
-        this.idamProfileClient = idamProfileClient;
     }
 
     @GetMapping("/import-jobs/{id}")
@@ -35,19 +32,11 @@ public class ImportJobController {
                 .body("Invalid import job ID: must be a valid UUID");
         }
 
-        String callerUid = idamProfileClient.getLoggedInUserDetails().getId();
         importJobService.expireStaleJobs();
 
         Optional<ImportJobEntity> optionalImportJobEntity = importJobService.findById(uuid);
-        if (optionalImportJobEntity.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Import job not found");
-        }
-
-        ImportJobEntity importJobEntity = optionalImportJobEntity.get();
-        if (!importJobEntity.getSubmittedBy().equals(callerUid)) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied");
-        }
-
-        return ResponseEntity.ok(ImportJobResponse.from(importJobEntity));
+        return optionalImportJobEntity.<ResponseEntity<Object>>map(importJobEntity ->
+            ResponseEntity.ok(ImportJobResponse.from(importJobEntity)))
+            .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Import job not found"));
     }
 }

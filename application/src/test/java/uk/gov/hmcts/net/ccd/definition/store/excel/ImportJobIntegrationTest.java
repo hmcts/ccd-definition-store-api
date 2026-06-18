@@ -309,13 +309,15 @@ class ImportJobIntegrationTest extends BaseTest {
 
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
-    void getForDifferentUsersRow_returns403() throws Exception {
+    void getForDifferentUsersRow_returns200() throws Exception {
         UUID id = UUID.randomUUID();
         importJobRepository.save(buildCompletedEntity(id, "some-other-uid"));
 
         mockMvc.perform(MockMvcRequestBuilders.get(GET_JOB_URL + id)
                 .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isForbidden());
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(id.toString()))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.submittedBy").value("some-other-uid"));
     }
 
     @Test

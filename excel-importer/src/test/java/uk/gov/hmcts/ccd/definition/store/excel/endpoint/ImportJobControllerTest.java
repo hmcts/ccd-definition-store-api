@@ -17,8 +17,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import uk.gov.hmcts.ccd.definition.store.domain.service.ImportJobService;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ImportJobEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ImportJobStatus;
-import uk.gov.hmcts.ccd.definition.store.rest.model.IdamProperties;
-import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -29,7 +27,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -38,15 +35,10 @@ class ImportJobControllerTest {
     @Mock
     private ImportJobService importJobService;
 
-    @Mock
-    private IdamProfileClient idamProfileClient;
-
     @InjectMocks
     private ImportJobController controller;
 
     private MockMvc mockMvc;
-
-    private static final String CALLER_UID = "uid-caller";
 
     private AutoCloseable closeable;
 
@@ -61,10 +53,6 @@ class ImportJobControllerTest {
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
             .setMessageConverters(new MappingJackson2HttpMessageConverter(objectMapper))
             .build();
-
-        IdamProperties callerProps = new IdamProperties();
-        callerProps.setId(CALLER_UID);
-        when(idamProfileClient.getLoggedInUserDetails()).thenReturn(callerProps);
     }
 
     @AfterEach
@@ -72,34 +60,22 @@ class ImportJobControllerTest {
         closeable.close();
     }
 
-    @DisplayName("Valid id, caller is submitter → 200 with response body, expireStaleJobs called before findById")
+    @DisplayName("Valid id → 200 with response body, expireStaleJobs called before findById")
     @Test
-    void validId_callerIsSubmitter_returns200() throws Exception {
+    void validId_returns200() throws Exception {
         UUID id = UUID.randomUUID();
-        ImportJobEntity entity = buildEntity(id, CALLER_UID);
+        ImportJobEntity entity = buildEntity(id, "uid-submitter");
         when(importJobService.findById(id)).thenReturn(Optional.of(entity));
 
         mockMvc.perform(get("/import-jobs/" + id).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.id").value(id.toString()))
             .andExpect(jsonPath("$.status").value("COMPLETED"))
-            .andExpect(jsonPath("$.submittedBy").value(CALLER_UID));
+            .andExpect(jsonPath("$.submittedBy").value("uid-submitter"));
 
         var inOrder = org.mockito.Mockito.inOrder(importJobService);
         inOrder.verify(importJobService).expireStaleJobs();
         inOrder.verify(importJobService).findById(id);
-    }
-
-    @DisplayName("Valid id, caller is not submitter → 403, no body fields leaked")
-    @Test
-    void validId_callerNotSubmitter_returns403() throws Exception {
-        UUID id = UUID.randomUUID();
-        ImportJobEntity entity = buildEntity(id, "uid-different-owner");
-        when(importJobService.findById(id)).thenReturn(Optional.of(entity));
-
-        mockMvc.perform(get("/import-jobs/" + id))
-            .andExpect(status().isForbidden())
-            .andExpect(content().string(org.hamcrest.Matchers.containsString("Access denied")));
     }
 
     @DisplayName("Valid id, job not found → 404")
@@ -126,7 +102,7 @@ class ImportJobControllerTest {
     @Test
     void warningsDeserializes_intoList() throws Exception {
         UUID id = UUID.randomUUID();
-        ImportJobEntity entity = buildEntity(id, CALLER_UID);
+        ImportJobEntity entity = buildEntity(id, "uid-submitter");
         entity.setWarnings("first\nsecond\nthird");
         when(importJobService.findById(id)).thenReturn(Optional.of(entity));
 
@@ -141,7 +117,7 @@ class ImportJobControllerTest {
     @Test
     void nullWarnings_returnsEmptyList() throws Exception {
         UUID id = UUID.randomUUID();
-        ImportJobEntity entity = buildEntity(id, CALLER_UID);
+        ImportJobEntity entity = buildEntity(id, "uid-submitter");
         entity.setWarnings(null);
         when(importJobService.findById(id)).thenReturn(Optional.of(entity));
 
