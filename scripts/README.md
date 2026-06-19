@@ -122,6 +122,12 @@ ENABLE_CASE_GROUP_ACCESS=true
 DEFINITION_STORE_TX_TIMEOUT_DEFAULT=900
 ```
 
+Before starting the app, check DNS and TCP connectivity to the remote dependencies:
+
+```bash
+./scripts/check-remote-env.sh aat
+```
+
 Start the application in one terminal:
 
 ```bash
@@ -216,6 +222,7 @@ true
 | `301 Moved Permanently ... idam-web-public ... /oauth2/authorize` | `IDAM_API_URL_BASE` is wrong. | It must be `https://idam-api.aat.platform.hmcts.net`. |
 | `401 Unauthorized ... /oauth2/authorize` | The user password is wrong or stale. | Re-source `scripts/aat-env.sh`; it refreshes the relevant user passwords from `ccd-aat`. |
 | `Connection refused ... localhost:4502/lease` | The test JVM is still using local S2S. | Source `scripts/aat-env.sh` in the same terminal used to run Gradle. |
+| `UnknownHostException: rpe-service-auth-provider-aat.service.core-compute-aat.internal` | The local app or test JVM cannot resolve internal AAT S2S DNS. | Connect to bastion and F5 VPN, then run `./scripts/check-remote-env.sh aat` before `./gradlew runRemoteAat`. |
 | `401 Unauthorized ... /lease` | The S2S key is wrong or stale. | Re-source `scripts/aat-env.sh`; it refreshes `microservicekey-ccd-gw` from `s2s-aat`. |
 | `404 page not found` for `/api/user-role` | The target URL is probably wrong or not routed to definition-store. | Check `DEFINITION_STORE_URL_BASE`. |
 | `403` for `/import` | The request reached definition-store but authorization failed. | Check that the importer user has `ccd-import` and that the target app accepts `ccd_gw` as an authorised S2S service. |
