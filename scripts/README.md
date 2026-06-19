@@ -24,16 +24,88 @@ This is the recommended path when you need the local application code or local r
 dependencies. The relevant settings may include group access, Elasticsearch, import timeout, another feature flag, or
 no special feature flag.
 
-If `.aat-remote-env` does not exist, create it from the AAT Key Vault secret:
+Remote environment files follow the pattern `.<env>-remote-env`. The `env` value maps to the Key Vault name
+`ccd-<env>` and the secret `definition-store-remote-env`.
 
 ```bash
 az login
-./gradlew reloadEnvSecrets -Penv=aat
+./gradlew reloadEnvSecrets -Penv=<env>
 ```
 
-This writes `./.aat-remote-env`, which is ignored by Git because it contains local runtime settings and secrets. If you
-start the application with `./gradlew runRemoteAat` before creating the file, the task also tries to create
-`.aat-remote-env` from Key Vault before launching the app.
+Examples:
+
+```bash
+./gradlew reloadEnvSecrets -Penv=aat
+./gradlew reloadEnvSecrets -Penv=demo
+```
+
+| Environment | File created | Run task |
+|-------------|--------------|----------|
+| `aat` | `.aat-remote-env` | `./gradlew runRemoteAat` |
+| `demo` | `.demo-remote-env` | `./gradlew runRemoteDemo` |
+
+These files are ignored by Git because they contain local runtime settings and secrets. If you start the application
+before creating the file, the remote run task calls the Gradle `configRemoteRunTask` helper internally. That helper tries
+to create the matching remote-env file from Key Vault before launching the app. To add another environment, add a
+matching `runRemote<Env>` task that calls `configRemoteRunTask(it, '<env>')`.
+
+If Key Vault generation is not available, create `.aat-remote-env` manually with plain `KEY=value` lines. Do not add
+comments or blank lines because `runRemoteAat` loads every line as an environment variable.
+
+Example. Replace every value in angle brackets before starting the app. Generated files may contain extra variables; keep
+them if present.
+
+```text
+APPINSIGHTS_INSTRUMENTATIONKEY=
+AZURE_STORAGE_CONNECTION_STRING=
+DEFINITION_STORE_DB_NAME=<aat database name>
+DEFINITION_STORE_DB_HOST=<aat database host>
+DEFINITION_STORE_DB_PASSWORD=<database password>
+DEFINITION_STORE_DB_OPTIONS=?sslmode=require
+DEFINITION_STORE_DB_PORT=5432
+DEFINITION_STORE_DB_USERNAME=<database username>
+DEFINITION_STORE_IDAM_KEY=<definition store idam key>
+ELASTIC_SEARCH_PORT=9200
+IDAM_S2S_URL=http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
+IDAM_API_URL_BASE=https://idam-api.aat.platform.hmcts.net
+IDAM_USER_URL=https://idam-api.aat.platform.hmcts.net
+IDAM_URL=https://idam-api.aat.platform.hmcts.net
+OIDC_ISSUER=https://idam-web-public.aat.platform.hmcts.net/o
+TS_TRANSLATION_SERVICE_HOST=<translation service url>
+USER_PROFILE_HOST=<user profile service url>
+CCD_API_GATEWAY_S2S_KEY=<ccd_gw s2s key>
+CCD_API_GATEWAY_S2S_ID=ccd_gw
+CCD_API_GATEWAY_OAUTH2_CLIENT_SECRET=<ccd gateway oauth2 client secret>
+S2S_URL_BASE=http://rpe-service-auth-provider-aat.service.core-compute-aat.internal
+OAUTH2_CLIENT_ID=ccd_gateway
+OAUTH2_CLIENT_SECRET=<ccd gateway oauth2 client secret>
+OAUTH2_REDIRECT_URI=https://www-ccd.nonprod.platform.hmcts.net/oauth2redirect
+ENABLE_CASE_GROUP_ACCESS=true
+DEFINITION_STORE_TX_TIMEOUT_DEFAULT=900
+CCD_TX_TIMEOUT_DEFAULT=900
+SPRING_DATASOURCE_HIKARI_KEEPALIVE_TIME=30000
+SPRING_DATASOURCE_HIKARI_MAX_LIFETIME=120000
+SPRING_DATASOURCE_HIKARI_IDLE_TIMEOUT=10000
+SPRING_DATASOURCE_HIKARI_VALIDATION_TIMEOUT=5000
+SPRING_DATASOURCE_HIKARI_CONNECTION_TIMEOUT=30000
+SPRING_DATASOURCE_HIKARI_MINIMUM_IDLE=0
+SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE=25
+```
+
+| Setting | Purpose |
+|---------|---------|
+| `APPINSIGHTS_INSTRUMENTATIONKEY` | Optional local telemetry key. Leave blank unless needed. |
+| `AZURE_STORAGE_CONNECTION_STRING` | Optional Azure Storage connection string for import archive upload. Leave blank unless needed. |
+| `DEFINITION_STORE_DB_*` | Points the local app at the AAT definition-store database. |
+| `IDAM_*`, `OIDC_ISSUER` | Points authentication and issuer validation at AAT IDAM. |
+| `S2S_URL_BASE`, `IDAM_S2S_URL` | Points service-to-service token checks at AAT S2S. |
+| `CCD_API_GATEWAY_*`, `OAUTH2_*` | Provides gateway S2S and OAuth2 credentials used by the local app. |
+| `ELASTIC_SEARCH_PORT` | Sets the Elasticsearch port used by the local app. |
+| `TS_TRANSLATION_SERVICE_HOST`, `USER_PROFILE_HOST` | Points supporting service clients at AAT-compatible services. |
+| `ENABLE_CASE_GROUP_ACCESS` | Enables group access processing in the local app. Must be `true` before importing AccessType definitions. |
+| `DEFINITION_STORE_TX_TIMEOUT_DEFAULT`, `CCD_TX_TIMEOUT_DEFAULT` | Raises transaction timeout for slow remote-database imports. |
+| `SPRING_DATASOURCE_HIKARI_*` | Reduces stale remote DB connections while debugging over VPN. |
+| `SPRING_JPA_PROPERTIES_HIBERNATE_JDBC_BATCH_SIZE` | Reduces import batch size if remote DB writes are unstable. |
 
 Before starting the application, check the local runtime settings in `.aat-remote-env` that are relevant to your test.
 For example:
