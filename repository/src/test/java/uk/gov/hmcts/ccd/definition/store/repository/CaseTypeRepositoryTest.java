@@ -192,9 +192,9 @@ class CaseTypeRepositoryTest {
         assertFalse(caseTypeEntityOptional.isPresent());
     }
 
-    @SuppressWarnings("checkstyle:LineLength")
     @Test
-    void severalVersionsOfCaseTypeExistForJurisdiction_findByJurisdictionIdReturnsCurrentVersionOfCaseTypeForJurisdiction() {
+    @SuppressWarnings("removal")
+    void findByJurisdictionIdReturnsCurrentVersionForJurisdiction() {
         List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
         assertEquals(7, caseTypeEntities.size());
@@ -202,6 +202,7 @@ class CaseTypeRepositoryTest {
     }
 
     @Test
+    @SuppressWarnings("removal")
     void caseTypeDoesNotExistForJurisdiction_emptyListReturned() {
         List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId("Non Existing Jurisdiction");
@@ -252,6 +253,7 @@ class CaseTypeRepositoryTest {
     }
 
     @Test
+    @SuppressWarnings("removal")
     void saveAndValidateCaseTypeWithACLAndAccessProfileDataTest() {
         CaseTypeEntity caseTypeEntityVersionOneWithMultiACL = createCaseTypeEntityWithCaseTypeACL(
             "CaseTypeWithACL", "CaseTypeWithACL", 1,

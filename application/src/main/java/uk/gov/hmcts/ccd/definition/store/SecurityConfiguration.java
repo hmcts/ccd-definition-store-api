@@ -63,7 +63,6 @@ public class SecurityConfiguration {
             "/health/liveness",
             "/health/readiness",
             "/",
-            "/loggers/**",
             "/api/testing-support/**");
     }
 

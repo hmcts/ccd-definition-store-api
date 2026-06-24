@@ -1,19 +1,29 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.config;
 
-import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
-
+import co.elastic.clients.elasticsearch.ElasticsearchClient;
+import co.elastic.clients.json.jackson.JacksonJsonpMapper;
+import co.elastic.clients.transport.rest_client.RestClientTransport;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpHost;
+import org.apache.http.impl.nio.reactor.IOReactorConfig;
+import org.elasticsearch.client.Node;
+import org.elasticsearch.client.NodeSelector;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
-import org.elasticsearch.client.RestHighLevelClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import uk.gov.hmcts.ccd.definition.store.elastic.client.ElasticsearchClientFactory;
+import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 
 @Configuration
 @ComponentScan("uk.gov.hmcts.ccd.definition.store.elastic")
@@ -24,33 +34,80 @@ public class ElasticSearchConfiguration {
 
     private CcdElasticSearchProperties config;
 
-    private RestHighLevelClient restHighLevelClient;
-
-    @Autowired
     public ElasticSearchConfiguration(CcdElasticSearchProperties config) {
         this.config = config;
     }
 
-    /**
-     * NOTE: imports happens seldom. To prevent unused connections to the ES cluster hanging around, we create a new
-     * HighLevelCCDElasticClient on each import and we close it once the import is completed.
-     * The HighLevelCCDElasticClient is injected every time with a new restHighLevelClient which opens new connections
-     */
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-    public RestHighLevelClient restHighLevelClient() {
-        RestClientBuilder builder = RestClient.builder(new HttpHost(config.getHost(), config.getPort()));
-        RestClientBuilder.RequestConfigCallback requestConfigCallback = requestConfigBuilder ->
-            requestConfigBuilder.setConnectTimeout(5000)
-                .setSocketTimeout(60000);
-        builder.setRequestConfigCallback(requestConfigCallback);
-        return new RestHighLevelClient(builder);
+    public JacksonJsonpMapper jsonpMapper(ObjectMapper objectMapper) {
+        return new JacksonJsonpMapper(objectMapper);
     }
 
     @Bean
     @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-    public HighLevelCCDElasticClient ccdElasticClient() {
-        return new HighLevelCCDElasticClient(config, restHighLevelClient()) {
-        };
+    public ObjectMapper objectMapper() {
+        return new Jackson2ObjectMapperBuilder()
+            .featuresToEnable(MapperFeature.DEFAULT_VIEW_INCLUSION)
+            .featuresToEnable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)
+            .featuresToEnable(JsonParser.Feature.ALLOW_SINGLE_QUOTES)
+            .modulesToInstall(JavaTimeModule.class)
+            .featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            .build();
+    }
+
+    @Bean
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    protected RestClientBuilder elasticsearchRestClientBuilder() {
+        return RestClient.builder(new HttpHost(config.getHost(), config.getPort(), HttpHost.DEFAULT_SCHEME_NAME))
+            .setFailureListener(new RestClient.FailureListener() {
+                @Override
+                public void onFailure(Node node) {
+                    log.warn("Node marked as dead: {}", node);
+                }
+            })
+            .setNodeSelector(NodeSelector.SKIP_DEDICATED_MASTERS)
+            .setRequestConfigCallback(requestConfigBuilder ->
+                requestConfigBuilder
+                    .setConnectTimeout(5000)
+                    .setSocketTimeout(60000)
+            )
+            .setHttpClientConfigCallback(httpClientBuilder ->
+                httpClientBuilder.setDefaultIOReactorConfig(
+                    IOReactorConfig.custom()
+                        .setSoKeepAlive(true)
+                        .build()
+                )
+            );
+    }
+
+    @Bean(destroyMethod = "close")
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    public RestClient restClient(RestClientBuilder builder) {
+        return builder.build();
+    }
+
+    @Bean
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    public ElasticsearchClient elasticsearchClient(ElasticsearchClientFactory elasticsearchClientFactory) {
+        return elasticsearchClientFactory.createClient();
+    }
+
+    @Bean(destroyMethod = "close")
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    public RestClientTransport restClientTransport(RestClient restClient, JacksonJsonpMapper mapper) {
+        return new RestClientTransport(restClient, mapper);
+    }
+
+    @Bean
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    public ElasticsearchClientFactory elasticsearchClientFactory(JacksonJsonpMapper mapper) {
+        return new ElasticsearchClientFactory(() -> elasticsearchRestClientBuilder().build(), mapper);
+    }
+
+    @Bean
+    @Scope(BeanDefinition.SCOPE_PROTOTYPE)
+    public HighLevelCCDElasticClient ccdElasticClient(ElasticsearchClientFactory elasticsearchClientFactory) {
+        return new HighLevelCCDElasticClient(config, elasticsearchClientFactory);
     }
 }

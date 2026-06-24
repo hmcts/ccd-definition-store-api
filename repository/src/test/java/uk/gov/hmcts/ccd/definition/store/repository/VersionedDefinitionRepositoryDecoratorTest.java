@@ -20,14 +20,21 @@ import org.springframework.data.repository.query.FluentQuery;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.times;
+import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = {
@@ -111,6 +118,33 @@ class VersionedDefinitionRepositoryDecoratorTest {
         assertNotNull(retrievedCaseType2.get());
         assertThat(retrievedCaseType2.get().getVersion(), is(1));
 
+    }
+
+    @Test
+    void saveNewCaseTypesWithSameReferenceAssignsIncrementalVersions() {
+        final CaseTypeEntity caseType = new CaseTypeEntity();
+        caseType.setReference("id");
+        caseType.setName("name");
+        caseType.setJurisdiction(jurisdiction);
+        caseType.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        final CaseTypeEntity caseType2 = new CaseTypeEntity();
+        caseType2.setReference("id");
+        caseType2.setName("name");
+        caseType2.setJurisdiction(jurisdiction);
+        caseType2.setSecurityClassification(SecurityClassification.PUBLIC);
+
+        versionedCaseTypeRepository = new VersionedDefinitionRepositoryDecorator<>(exampleRepository);
+
+        List<CaseTypeEntity> savedEntities = versionedCaseTypeRepository.saveAll(asList(caseType, caseType2));
+
+        Optional<CaseTypeEntity> retrievedCaseType = versionedCaseTypeRepository.findById(savedEntities.get(0).getId());
+        assertNotNull(retrievedCaseType.get());
+        assertThat(retrievedCaseType.get().getVersion(), is(1));
+        Optional<CaseTypeEntity> retrievedCaseType2 = versionedCaseTypeRepository
+            .findById(savedEntities.get(1).getId());
+        assertNotNull(retrievedCaseType2.get());
+        assertThat(retrievedCaseType2.get().getVersion(), is(2));
     }
 
     //test for required coverage of new lines in sonar
@@ -212,6 +246,90 @@ class VersionedDefinitionRepositoryDecoratorTest {
         //method being tested is stubbed as it isn't used
         //simplest assertion added to satisfy SonarScan
         assertNull(result);
+    }
+
+    @Test
+    void saveRetriesThenSucceedsOnDataIntegrityViolation() {
+        VersionedDefinitionRepository<CaseTypeEntity, Integer> repository = mock(VersionedDefinitionRepository.class);
+        CaseTypeEntity entity = new CaseTypeEntity();
+        entity.setReference("id");
+
+        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
+            new VersionedDefinitionRepositoryDecorator<>(repository);
+
+        when(repository.findLastVersion("id")).thenReturn(Optional.of(0), Optional.of(1));
+        when(repository.save(entity))
+            .thenThrow(new DataIntegrityViolationException("duplicate"))
+            .thenReturn(entity);
+
+        CaseTypeEntity saved = decorator.save(entity);
+
+        assertEquals(2, saved.getVersion());
+        verify(repository, times(2)).findLastVersion("id");
+        verify(repository, times(2)).save(entity);
+    }
+
+    @Test
+    void saveThrowsAfterMaxRetriesOnDataIntegrityViolation() {
+        VersionedDefinitionRepository<CaseTypeEntity, Integer> repository = mock(VersionedDefinitionRepository.class);
+        CaseTypeEntity entity = new CaseTypeEntity();
+        entity.setReference("id");
+
+        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
+            new VersionedDefinitionRepositoryDecorator<>(repository);
+
+        when(repository.findLastVersion("id")).thenReturn(Optional.of(0), Optional.of(1), Optional.of(2));
+        when(repository.save(entity))
+            .thenThrow(new DataIntegrityViolationException("duplicate"))
+            .thenThrow(new DataIntegrityViolationException("duplicate"))
+            .thenThrow(new DataIntegrityViolationException("duplicate"));
+
+        assertThrows(DataIntegrityViolationException.class, () -> decorator.save(entity));
+        verify(repository, times(3)).findLastVersion("id");
+        verify(repository, times(3)).save(entity);
+    }
+
+    @Test
+    void saveAllRetriesThenSucceedsOnDataIntegrityViolation() {
+        VersionedDefinitionRepository<CaseTypeEntity, Integer> repository = mock(VersionedDefinitionRepository.class);
+        CaseTypeEntity entity = new CaseTypeEntity();
+        entity.setReference("id");
+        List<CaseTypeEntity> entities = List.of(entity);
+
+        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
+            new VersionedDefinitionRepositoryDecorator<>(repository);
+
+        when(repository.findLastVersion("id")).thenReturn(Optional.of(0), Optional.of(1));
+        when(repository.saveAll(any()))
+            .thenThrow(new DataIntegrityViolationException("duplicate"))
+            .thenReturn(entities);
+
+        List<CaseTypeEntity> saved = decorator.saveAll(entities);
+
+        assertEquals(2, saved.get(0).getVersion());
+        verify(repository, times(2)).findLastVersion("id");
+        verify(repository, times(2)).saveAll(any());
+    }
+
+    @Test
+    void saveAllThrowsAfterMaxRetriesOnDataIntegrityViolation() {
+        VersionedDefinitionRepository<CaseTypeEntity, Integer> repository = mock(VersionedDefinitionRepository.class);
+        CaseTypeEntity entity = new CaseTypeEntity();
+        entity.setReference("id");
+        List<CaseTypeEntity> entities = List.of(entity);
+
+        VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
+            new VersionedDefinitionRepositoryDecorator<>(repository);
+
+        when(repository.findLastVersion("id")).thenReturn(Optional.of(0), Optional.of(1), Optional.of(2));
+        when(repository.saveAll(any()))
+            .thenThrow(new DataIntegrityViolationException("duplicate"))
+            .thenThrow(new DataIntegrityViolationException("duplicate"))
+            .thenThrow(new DataIntegrityViolationException("duplicate"));
+
+        assertThrows(DataIntegrityViolationException.class, () -> decorator.saveAll(entities));
+        verify(repository, times(3)).findLastVersion("id");
+        verify(repository, times(3)).saveAll(any());
     }
 
 }
