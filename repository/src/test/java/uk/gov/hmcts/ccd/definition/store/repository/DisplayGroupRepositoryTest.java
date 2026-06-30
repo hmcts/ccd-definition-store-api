@@ -93,7 +93,8 @@ class DisplayGroupRepositoryTest {
             hasProperty("type", equalTo(TAB)),
             hasProperty("purpose", equalTo(VIEW)),
             hasProperty("showCondition", equalTo(SHOW_CONDITION)),
-            hasProperty("caseType", is(caseTypeV3))
+            hasProperty("caseType", is(caseTypeV3)),
+            hasProperty("defaultFocus", is(false))
         ));
 
 
@@ -114,13 +115,13 @@ class DisplayGroupRepositoryTest {
 
     private void createDisplayGroupsForCase(CaseTypeEntity caseType) {
         displayGroupRepository.save(createDisplayGroup(
-            caseType, "ref dg page edit", "label dg", "channel dg", 4, PAGE, EDIT, SHOW_CONDITION));
+            caseType, "ref dg page edit", "label dg", "channel dg", 4, PAGE, EDIT, SHOW_CONDITION, true));
         displayGroupRepository.save(createDisplayGroup(
-            caseType, "ref dg page view", "label dg", "channel dg", 4, PAGE, VIEW, SHOW_CONDITION));
+            caseType, "ref dg page view", "label dg", "channel dg", 4, PAGE, VIEW, SHOW_CONDITION, false));
         displayGroupRepository.save(createDisplayGroup(
-            caseType, "ref dg tab edit", "label dg", "channel dg", 4, TAB, EDIT, SHOW_CONDITION));
+            caseType, "ref dg tab edit", "label dg", "channel dg", 4, TAB, EDIT, SHOW_CONDITION, false));
         displayGroupRepository.save(createDisplayGroup(
-            caseType, "ref dg tab view", "label dg", "channel dg", 4, TAB, VIEW, SHOW_CONDITION));
+            caseType, "ref dg tab view", "label dg", "channel dg", 4, TAB, VIEW, SHOW_CONDITION, false));
     }
 
     private void addDisplayGroupField(final CaseFieldEntity cf,
@@ -141,7 +142,8 @@ class DisplayGroupRepositoryTest {
                                                   final int order,
                                                   final DisplayGroupType type,
                                                   final DisplayGroupPurpose purpose,
-                                                  final String showCondition) {
+                                                  final String showCondition,
+                                                  final Boolean defaultFocus) {
         final DisplayGroupEntity dg = new DisplayGroupEntity();
         dg.setCaseType(caseType);
         dg.setReference(reference);
@@ -152,6 +154,7 @@ class DisplayGroupRepositoryTest {
         dg.setPurpose(purpose);
         dg.setShowCondition(showCondition);
         dg.setAccessProfile(createAccessProfile());
+        dg.setDefaultFocus(defaultFocus);
         addDisplayGroupField(getCaseField(caseType, "cf1"), dg, 1, null);
         addDisplayGroupField(getCaseField(caseType, "cf2"), dg, 2, 2);
         return dg;
