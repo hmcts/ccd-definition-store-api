@@ -1,4 +1,4 @@
-package uk.gov.hmcts.ccd.definition.store.elastic.integration;
+package uk.gov.hmcts.ccd.definition.store.elastic.casemapping;
 
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchBaseTest;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
@@ -24,7 +24,7 @@ import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextFi
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.newType;
 import static uk.gov.hmcts.ccd.definition.store.utils.FieldTypeBuilder.textFieldType;
 
-class CaseMappingGenerationIT extends ElasticsearchBaseTest {
+class CaseMappingGenerationTest extends ElasticsearchBaseTest {
 
     @Autowired
     private ApplicationEventPublisher publisher;
@@ -75,7 +75,6 @@ class CaseMappingGenerationIT extends ElasticsearchBaseTest {
     }
 
     private CaseFieldEntity newComplexFieldOfComplex() {
-
         CaseFieldBuilder complexOfComplex = newField("executor", "Executor");
 
         FieldTypeBuilder complexType = newType("Person");
