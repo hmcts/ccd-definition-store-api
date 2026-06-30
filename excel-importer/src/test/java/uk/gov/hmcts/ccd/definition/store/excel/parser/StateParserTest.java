@@ -28,6 +28,8 @@ class StateParserTest {
     private static final String STATE_ID = "how many more tests to get over 80%";
     private static final String TITLE_DISPLAY = "${lastName} ${[CASE_REFERENCE]}";
     private static final String EXPECTED_TITLE_DISPLAY = "${lastName} ${[CASE_REFERENCE]}";
+    private static final String SINGLE_STATE_CATEGORY = "General";
+    private static final String MULTI_STATE_CATEGORY = "General,Complex";
 
     private StateParser underTest;
     private Map<String, DefinitionSheet> definitionSheets;
@@ -57,7 +59,22 @@ class StateParserTest {
                 assertThat(s.getReference(), is(STATE_ID));
                 assertThat(s.getCaseType(), is(nullValue()));
                 assertThat(s.getTitleDisplay(), is(EXPECTED_TITLE_DISPLAY));
+                assertThat(s.getStateCategory(), is(SINGLE_STATE_CATEGORY));
                 assertThat(context.getStateForCaseType(CASE_TYPE_ID, STATE_ID), is(s));
+            });
+    }
+
+    @Test
+    @DisplayName("parse all state entities with comma separated state categories")
+    void testParseAllWithCommaSeparatedStateCategories() {
+        definitionSheets.put(STATE.getName(), buildStateSheetWithCategory(MULTI_STATE_CATEGORY));
+
+        final Collection<StateEntity> stateEntities = underTest.parseAll(definitionSheets, caseTypeEntity);
+
+        assertAll(() -> assertThat(stateEntities, hasSize(1)),
+            () -> {
+                final StateEntity s = new ArrayList<>(stateEntities).get(0);
+                assertThat(s.getStateCategory(), is(MULTI_STATE_CATEGORY));
             });
     }
 
@@ -68,11 +85,16 @@ class StateParserTest {
     }
 
     private DefinitionSheet buildStateSheet() {
+        return buildStateSheetWithCategory(SINGLE_STATE_CATEGORY);
+    }
+
+    private DefinitionSheet buildStateSheetWithCategory(String stateCategory) {
         final DefinitionSheet sheet = new DefinitionSheet();
         final DefinitionDataItem item = new DefinitionDataItem(STATE.getName());
         item.addAttribute(ColumnName.CASE_TYPE_ID, CASE_TYPE_ID);
         item.addAttribute(ColumnName.ID, STATE_ID);
         item.addAttribute(ColumnName.TITLE_DISPLAY, TITLE_DISPLAY);
+        item.addAttribute(ColumnName.STATE_CATEGORY, stateCategory);
         sheet.addDataItem(item);
         return sheet;
     }
