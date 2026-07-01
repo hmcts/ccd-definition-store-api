@@ -32,6 +32,11 @@ public class ApplicationParams {
     @Value("${azure.storage.import_audits.get-limit}")
     private String azureImportAuditsGetLimit;
 
+    @Value("${ccd.tx-timeout.default:30}")
+    private int txTimeoutDefault;
+
+    private static final int STALE_THRESHOLD_BUFFER_SECONDS = 30;
+
     @Value("${case.event.default.publish:false}")
     private boolean defaultPublish;
 
@@ -87,6 +92,11 @@ public class ApplicationParams {
 
     public boolean isDeleteOldIndexEnabled() {
         return deleteOldIndexEnabled;
+    }
+
+
+    public int getImportJobStaleThresholdSeconds() {
+        return txTimeoutDefault + STALE_THRESHOLD_BUFFER_SECONDS;
     }
 
     @PostConstruct

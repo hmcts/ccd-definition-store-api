@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -76,9 +77,11 @@ public class SecurityConfiguration {
             .csrf(csrf -> csrf.disable()) // NOSONAR - CSRF is disabled as per security requirements
             .formLogin(fl -> fl.disable())
             .logout(lg -> lg.disable())
-            .authorizeHttpRequests(ar -> 
+            .authorizeHttpRequests(ar ->
                 ar.requestMatchers(ImportController.URI_IMPORT, ElasticsearchIndexController.ELASTIC_INDEX_URI,
                         ReindexTaskController.REINDEX_TASKS_URI)
+                .hasAuthority("ccd-import")
+                .requestMatchers(HttpMethod.GET, "/import-jobs/**")
                 .hasAuthority("ccd-import")
                 .anyRequest()
                 .authenticated()

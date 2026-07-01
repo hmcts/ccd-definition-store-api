@@ -10,6 +10,8 @@ import uk.gov.hmcts.befta.player.BackEndFunctionalTestScenarioContext;
 import uk.gov.hmcts.befta.util.BeftaUtils;
 import uk.gov.hmcts.befta.util.ReflectionUtils;
 
+import java.util.UUID;
+
 import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.befta.dse.ccd.DataLoaderToDefinitionStore.VALID_CCD_TEST_DEFINITIONS_PATH;
 
@@ -34,7 +36,9 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
 
     @Override
     public synchronized Object calculateCustomValue(BackEndFunctionalTestScenarioContext scenarioContext, Object key) {
-        if (key.toString().startsWith("no_dynamic_injection_")) {
+        if (key.toString().equals("unique_import_job_id")) {
+            return UUID.randomUUID().toString();
+        } else if (key.toString().startsWith("no_dynamic_injection_")) {
             return key.toString().replace("no_dynamic_injection_","");
         } else if (key.toString().startsWith("approximately ")) {
             try {
