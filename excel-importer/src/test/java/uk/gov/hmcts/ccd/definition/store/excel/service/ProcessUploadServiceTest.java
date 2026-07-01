@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.service;
 
 import org.junit.jupiter.api.AfterEach;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.ImportJobService;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportJobFailedException;
@@ -57,6 +58,9 @@ class ProcessUploadServiceTest {
 
     @Mock
     private IdamProfileClient idamProfileClient;
+
+    @Mock
+    private ApplicationParams applicationParams;
 
     @InjectMocks
     private ProcessUploadServiceImpl processUploadService;
@@ -275,5 +279,41 @@ class ProcessUploadServiceTest {
         ArgumentCaptor<List<String>> captor = ArgumentCaptor.forClass(List.class);
         verify(importJobService).markCompleted(any(UUID.class), captor.capture(), eq(metadata.getTaskId()));
         assertEquals(snapshot, captor.getValue());
+    }
+
+    @DisplayName("deleteOldIndex disabled by config → requested true is overridden to false on doImport")
+    @Test
+    void whenDeleteOldIndexEnabledFalseAndDeleteOldIndexTrueOverridesToFalse() throws Exception {
+        when(applicationParams.isDeleteOldIndexEnabled()).thenReturn(false);
+
+        // deleteOldIndex passed as true but applicationParams.isDeleteOldIndexEnabled() is false
+        processUploadService.processUpload(file, true, true, null);
+
+        // verifying that deleteOldIndex is overridden to false
+        verify(importWorkService).doImport(any(), eq(file), eq(true), eq(false), any(UUID.class));
+    }
+
+    @DisplayName("deleteOldIndex enabled by config → requested true is preserved on doImport")
+    @Test
+    void whenDeleteOldIndexEnabledTrueDoesNotOverrideTrue() throws Exception {
+        when(applicationParams.isDeleteOldIndexEnabled()).thenReturn(true);
+
+        // deleteOldIndex passed as true and applicationParams.isDeleteOldIndexEnabled() is true
+        processUploadService.processUpload(file, true, true, null);
+
+        // verifying that deleteOldIndex remains true
+        verify(importWorkService).doImport(any(), eq(file), eq(true), eq(true), any(UUID.class));
+    }
+
+    @DisplayName("deleteOldIndex enabled by config → requested false stays false on doImport")
+    @Test
+    void whenDeleteOldIndexEnabledTrueDoesNotOverrideFalse() throws Exception {
+        when(applicationParams.isDeleteOldIndexEnabled()).thenReturn(true);
+
+        // deleteOldIndex passed as false and applicationParams.isDeleteOldIndexEnabled() is true
+        processUploadService.processUpload(file, true, false, null);
+
+        // verifying that deleteOldIndex remains false
+        verify(importWorkService).doImport(any(), eq(file), eq(true), eq(false), any(UUID.class));
     }
 }

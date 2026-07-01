@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.ImportJobService;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportJobFailedException;
 import uk.gov.hmcts.ccd.definition.store.rest.service.IdamProfileClient;
@@ -26,14 +27,17 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
     private final ImportWorkService importWorkService;
     private final ImportJobService importJobService;
     private final IdamProfileClient idamProfileClient;
+    private final ApplicationParams applicationParams;
 
     @Autowired
     public ProcessUploadServiceImpl(ImportWorkService importWorkService,
                                     ImportJobService importJobService,
-                                    IdamProfileClient idamProfileClient) {
+                                    IdamProfileClient idamProfileClient,
+                                    ApplicationParams applicationParams) {
         this.importWorkService = importWorkService;
         this.importJobService = importJobService;
         this.idamProfileClient = idamProfileClient;
+        this.applicationParams = applicationParams;
     }
 
     @Override
@@ -55,6 +59,8 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
         importJobService.expireStaleJobs();
 
         UUID jobId = importJobService.createPending(providedJobId, submitterUid);
+
+        deleteOldIndex = applicationParams.isDeleteOldIndexEnabled() && deleteOldIndex;
 
         ImportWorkResult workResult;
         try {
