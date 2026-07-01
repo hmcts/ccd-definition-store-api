@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
+import org.mockito.Mock;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.support.injection.TypeMappersManager;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerator;
@@ -7,9 +8,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.mapping.type.TypeMappingGenerat
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.elasticsearch.core.Set;
-import org.mockito.Mock;
+import java.util.Set;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static com.google.common.collect.Maps.newHashMap;
@@ -26,6 +25,7 @@ public abstract class AbstractMapperTest {
     protected Map<String, String> predefinedMappings = new HashMap<>();
     protected List<String> ignoredTypes = newArrayList("Label");
     protected String disabledMapping = "{\"enabled\": false}";
+    protected int batchSize = 100;
 
     protected void setup() {
         elasticMappings.put("disabled", disabledMapping);
@@ -33,6 +33,7 @@ public abstract class AbstractMapperTest {
         when(config.getElasticMappings()).thenReturn(elasticMappings);
         when(config.getCasePredefinedMappings()).thenReturn(predefinedMappings);
         when(config.getCcdIgnoredTypes()).thenReturn(ignoredTypes);
+        when(config.getBatchSize()).thenReturn(batchSize);
     }
 
     protected void addMappingGenerator(TypeMappingGenerator stubTypeMappingGenerator) {

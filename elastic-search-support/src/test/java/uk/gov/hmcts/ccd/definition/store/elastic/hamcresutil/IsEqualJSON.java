@@ -10,6 +10,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Description;
 import org.hamcrest.DiagnosingMatcher;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.skyscreamer.jsonassert.JSONCompare;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.JSONCompareResult;
@@ -65,7 +68,9 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
                 comparator = new DefaultComparator(jsonCompareMode);
             }
 
-            final JSONCompareResult result = JSONCompare.compareJSON(expectedJSON, actualJSON, comparator);
+            String unescapedActualJson = org.apache.commons.text.StringEscapeUtils.unescapeJson(actualJSON);
+            final JSONCompareResult result = JSONCompare.compareJSON(normalizeJson(expectedJSON),
+                normalizeJson(unescapedActualJson), comparator);
 
             if (!result.passed()) {
                 mismatchDescription.appendText(result.getMessage());
@@ -73,6 +78,18 @@ public class IsEqualJSON extends DiagnosingMatcher<Object> {
             return result.passed();
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private static String normalizeJson(String json) {
+        try {
+            return new JSONObject(json).toString(); // for JSON object
+        } catch (JSONException e) {
+            try {
+                return new JSONArray(json).toString(); // for JSON array
+            } catch (JSONException ex) {
+                throw new IllegalArgumentException("Input is not valid JSON: " + json, ex);
+            }
         }
     }
 

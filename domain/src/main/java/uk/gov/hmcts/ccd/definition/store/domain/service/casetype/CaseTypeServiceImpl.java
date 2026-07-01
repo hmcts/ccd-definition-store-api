@@ -77,7 +77,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
      * @deprecated This endpoint is deprecated due to performance issues
      */
     @Deprecated(forRemoval = true)
-    @SuppressWarnings("squid:S1133")
+    @SuppressWarnings({"squid:S1133", "removal"})
     @Transactional
     @Override
     public List<CaseType> findByJurisdictionId(String jurisdictionId) {

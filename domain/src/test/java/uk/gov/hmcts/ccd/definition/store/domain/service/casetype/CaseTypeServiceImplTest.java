@@ -347,6 +347,7 @@ class CaseTypeServiceImplTest {
     }
 
     @Nested
+    @SuppressWarnings("removal")
     class FindByJurisdictionIdTests {
 
         @SuppressWarnings("checkstyle:LineLength")

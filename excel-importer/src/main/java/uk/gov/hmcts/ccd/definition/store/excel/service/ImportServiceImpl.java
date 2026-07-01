@@ -298,7 +298,10 @@ public class ImportServiceImpl implements ImportService {
             userDetails.getEmail());
         logger.info("Importing spreadsheet: User profiles: OK");
 
-        DefinitionImportedEvent event = new DefinitionImportedEvent(caseTypes, reindex, deleteOldIndex);
+        DefinitionImportedEvent event = new DefinitionImportedEvent(caseTypes,
+            reindex,
+            deleteOldIndex,
+            userDetails.getEmail());
         applicationEventPublisher.publishEvent(event);
 
         List<String> caseTypeReferences = getCaseTypeReferences(caseTypes);
