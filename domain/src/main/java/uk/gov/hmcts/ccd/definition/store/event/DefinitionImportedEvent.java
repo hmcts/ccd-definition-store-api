@@ -11,12 +11,17 @@ public class DefinitionImportedEvent extends ImportEvent<List<CaseTypeEntity>> {
 
     private final boolean reindex;
     private final boolean deleteOldIndex;
+    private String userEmailId;
     @Setter private String taskId;
 
-    public DefinitionImportedEvent(List<CaseTypeEntity> caseTypes, boolean reindex, boolean deleteOldIndex) {
+    public DefinitionImportedEvent(List<CaseTypeEntity> caseTypes,
+                                   boolean reindex,
+                                   boolean deleteOldIndex,
+                                   String userEmailId) {
         super(caseTypes);
         this.reindex = reindex;
         this.deleteOldIndex = deleteOldIndex;
+        this.userEmailId = userEmailId;
     }
 
     public DefinitionImportedEvent(List<CaseTypeEntity> caseTypes) {
