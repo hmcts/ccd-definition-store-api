@@ -54,7 +54,7 @@ data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
 ///////////////////////
 
 module "postgresql_v15" {
-  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=master"
+  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=DTSPO-30107-additional-postgres-admins"
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
   }
