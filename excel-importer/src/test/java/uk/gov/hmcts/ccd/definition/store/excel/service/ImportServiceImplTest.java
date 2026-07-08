@@ -381,6 +381,9 @@ public class ImportServiceImplTest {
         verify(translationService).processDefinitionSheets(anyMap());
         verify(categoryIdValidator).validate(any(ParseContext.class));
         assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
+        assertEquals("user@hmcts.net", eventCaptor.getValue().getUserEmailId());
+        assertEquals(false, eventCaptor.getValue().isReindex());
+        assertEquals(false, eventCaptor.getValue().isDeleteOldIndex());
     }
 
     @Test
@@ -419,6 +422,9 @@ public class ImportServiceImplTest {
         verify(translationService).processDefinitionSheets(anyMap());
         verify(categoryIdValidator).validate(any(ParseContext.class));
         assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
+        assertEquals("user@hmcts.net", eventCaptor.getValue().getUserEmailId());
+        assertEquals(false, eventCaptor.getValue().isReindex());
+        assertEquals(false, eventCaptor.getValue().isDeleteOldIndex());
     }
 
     @Test
@@ -453,6 +459,34 @@ public class ImportServiceImplTest {
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
         verifyNoMoreInteractions(translationService);
         assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
+        assertEquals("user@hmcts.net", eventCaptor.getValue().getUserEmailId());
+        assertEquals(false, eventCaptor.getValue().isReindex());
+        assertEquals(false, eventCaptor.getValue().isDeleteOldIndex());
+    }
+
+    @Test
+    void shouldPublishEventWithProvidedReindexFlags() throws Exception {
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
+
+        service.importFormDefinitions(inputStream, true, true);
+
+        verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
+        assertEquals(true, eventCaptor.getValue().isReindex());
+        assertEquals(true, eventCaptor.getValue().isDeleteOldIndex());
+        assertEquals("user@hmcts.net", eventCaptor.getValue().getUserEmailId());
     }
 
 

@@ -3,6 +3,8 @@ elasticsearch:
   port: 9200
   scheme: http
   enabled: true
+  reindex:
+    enabled: true
   indexShards: 8
   indexShardsReplicas: 3
   failImportIfError: true
