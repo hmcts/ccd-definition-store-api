@@ -18,9 +18,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
 import static uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator.ALIAS_CASE_FIELD_PATH_PLACE_HOLDER;
@@ -72,10 +71,10 @@ class CaseMappingGeneratorTest extends AbstractMapperTest implements TestUtils {
         JsonNode newCase = supplementaryDataProperties.path("new_case");
         JsonNode orgsAssignedUsers = supplementaryDataProperties.path("orgs_assigned_users");
 
-        assertEquals("flattened", newCase.path("type").asText());
-        assertEquals("flattened", orgsAssignedUsers.path("type").asText());
-        assertFalse(newCase.has("properties"));
-        assertFalse(orgsAssignedUsers.has("properties"));
+        assertThat(newCase.path("type").asText(), is("flattened"));
+        assertThat(orgsAssignedUsers.path("type").asText(), is("flattened"));
+        assertThat(newCase.has("properties"), is(false));
+        assertThat(orgsAssignedUsers.has("properties"), is(false));
     }
 
     @Test
