@@ -62,9 +62,9 @@ task smoke(type: Test) {
 
     doLast {
         generateCucumberReports.enabled = true
-        javaexec {
-            main = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
-            classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+        project.providers.javaexec {
+            mainClass = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
+            classpath = configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
             args = [
                      '--plugin', "json:${rootDir}/target/cucumber.json",
                      '--tags', '@Smoke and not @Ignore',
@@ -73,7 +73,7 @@ task smoke(type: Test) {
                      'src/aat/resources/features'
                    ]
             jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
-        }
+        }.result.get().assertNormalExitValue()
     }
 
     finalizedBy {
@@ -112,9 +112,9 @@ task functional(type: Test) {
 
     doFirst {
         generateCucumberReports.enabled = true
-        javaexec {
+        project.providers.javaexec {
             mainClass = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
-            classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+            classpath = configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
             args = [
                      '--threads', '1', // current definition-store tests do not support multiple threads
                      '--plugin', "json:${rootDir}/target/cucumber.json",
@@ -124,7 +124,7 @@ task functional(type: Test) {
                      'src/aat/resources/features'
                    ]
             jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
-        }
+        }.result.get().assertNormalExitValue()
     }
 
     finalizedBy {

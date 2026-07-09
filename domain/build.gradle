@@ -6,17 +6,22 @@ dependencyCheck {
 }
 
 task testJar(type: Jar, dependsOn: testClasses) {
-    archiveFileName = 'test-' + project.archivesBaseName
+    archiveFileName = "test-${project.name}"
     archiveClassifier = 'tests'
     from sourceSets.test.output
 }
 
-artifacts {
-    archives testJar
+configurations {
+    testOutput {
+        canBeConsumed = true
+        canBeResolved = false
+        extendsFrom testImplementation
+    }
 }
 
-configurations {
-    testOutput.extendsFrom (testCompile)
+artifacts {
+    archives testJar
+    testOutput testJar
 }
 
 jar {
@@ -81,4 +86,3 @@ pitest {
     failWhenNoMutations = false
     detectInlinedCode = true
 }
-
