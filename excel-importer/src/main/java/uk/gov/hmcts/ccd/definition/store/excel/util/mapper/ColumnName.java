@@ -124,7 +124,8 @@ public enum ColumnName {
     CASE_ASSIGNED_ROLE_FIELD("CaseAssignedRoleField"),
     GROUP_ACCESS_ENABLED("GroupAccessEnabled"),
     CASE_GROUP_ID_TEMPLATE("CaseAccessGroupIDTemplate"),
-    NULLIFY_BY_DEFAULT("NullifyByDefault");
+    NULLIFY_BY_DEFAULT("NullifyByDefault"),
+    DEFAULT_FOCUS("DefaultFocus");
 
     private final String name;
     private final String[] aliases;

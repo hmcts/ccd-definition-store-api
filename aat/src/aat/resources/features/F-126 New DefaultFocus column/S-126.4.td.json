@@ -1,0 +1,30 @@
+{
+  "_guid_": "S-126.4",
+  "_extends_": "F-126_Test_Base_data",
+  "title": "Successful response for case type id with defaultFocus set on tab",
+  "specs": [
+    "an active profile in CCD",
+    "contains a definition file with no new column DefaultFocus"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/defaultFocus/BEFTA_Master_Definition_NoNew_DefaultFocus_Column.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_201_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Case Definition data successfully imported"
+    }
+  }
+}
