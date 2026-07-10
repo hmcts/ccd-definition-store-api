@@ -66,6 +66,7 @@ elasticsearch:
     - CaseHistoryViewer
     - WaysToPay
     - FlagLauncher
+    - SummaryLauncher
     - ComponentLauncher
   # typeMappings configured as 'defaultText' need to be declared in the data-store elasticsearch.type-mappings.defaultText property
   typeMappings:
