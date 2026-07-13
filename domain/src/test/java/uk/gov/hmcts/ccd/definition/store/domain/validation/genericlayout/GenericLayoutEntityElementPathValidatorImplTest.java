@@ -148,6 +148,7 @@ class GenericLayoutEntityElementPathValidatorImplTest {
         @ParameterizedTest
         @ArgumentsSource(ValidateGoodCollectionEntityArgProvider.class)
         void shouldValidateGoodCollectionEntity(String path, GenericLayoutEntity entity) {
+            // System.out.println("testing... " + path + "   " + entity.getClass().getSimpleName());
             CaseFieldEntity collectionCaseField = collectionCaseField();
             entity.setCaseField(collectionCaseField);
             entity.setCaseType(caseType);
