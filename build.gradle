@@ -206,12 +206,6 @@ subprojects { subproject ->
     apply plugin: "com.github.kt3k.coveralls"
     apply plugin: 'uk.gov.hmcts.java'
 
-    java {
-        toolchain {
-            languageVersion = JavaLanguageVersion.of(21)
-        }
-    }
-
     configurations {
         providedRuntime
 
