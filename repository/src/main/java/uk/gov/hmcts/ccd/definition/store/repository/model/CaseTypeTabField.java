@@ -10,6 +10,7 @@ public class CaseTypeTabField {
     private Integer order = null;
     private String showCondition = null;
     private String displayContextParameter = null;
+    private String caseFieldElementPath = null;
 
     @JsonProperty("case_field")
     public CaseField getCaseField() {
@@ -45,5 +46,14 @@ public class CaseTypeTabField {
 
     public void setDisplayContextParameter(String displayContextParameter) {
         this.displayContextParameter = displayContextParameter;
+    }
+
+    @JsonProperty("listElementCode")
+    public String getCaseFieldElementPath() {
+        return caseFieldElementPath;
+    }
+
+    public void setCaseFieldElementPath(String caseFieldElementPath) {
+        this.caseFieldElementPath = caseFieldElementPath;
     }
 }

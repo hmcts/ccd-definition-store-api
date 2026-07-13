@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,6 +31,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.AllOf.allOf;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose.EDIT;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupPurpose.VIEW;
 import static uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType.PAGE;
@@ -101,15 +103,77 @@ class DisplayGroupRepositoryTest {
             hasItem(allOf(
                 hasProperty("order", is(1)),
                 hasProperty("columnNumber", nullValue()),
+                hasProperty("caseFieldElementPath", nullValue()),
                 hasProperty("caseField", hasProperty("reference", is("cf1")))
             )),
             hasItem(allOf(
                 hasProperty("order", is(2)),
                 hasProperty("columnNumber", is(2)),
+                hasProperty("caseFieldElementPath", nullValue()),
                 hasProperty("caseField", hasProperty("reference", is("cf2")))
             ))
             )
         );
+    }
+
+    @Test
+    void shouldAllowSameDisplayGroupCaseFieldWithDifferentElementPaths() {
+        DisplayGroupEntity displayGroup = createDisplayGroupWithoutFields(
+            caseTypeV3, "ref dg tab view subfields", "label dg", "channel dg", 4, TAB, VIEW, SHOW_CONDITION);
+        addDisplayGroupField(getCaseField(caseTypeV3, "cf1"), displayGroup, 1, null, "Address");
+        addDisplayGroupField(getCaseField(caseTypeV3, "cf1"), displayGroup, 2, null, "PostCode");
+
+        displayGroupRepository.saveAndFlush(displayGroup);
+
+        final List<DisplayGroupEntity> fetched = displayGroupRepository
+            .findTabsByCaseTypeReference(CASE_TYPE_REFERENCE);
+
+        DisplayGroupEntity fetchedDg = fetched.stream()
+            .filter(dg -> "ref dg tab view subfields".equals(dg.getReference()))
+            .findFirst()
+            .orElseThrow();
+
+        assertThat(fetchedDg.getDisplayGroupCaseFields(), allOf(
+            hasItem(allOf(
+                hasProperty("caseFieldElementPath", is("Address")),
+                hasProperty("caseField", hasProperty("reference", is("cf1")))
+            )),
+            hasItem(allOf(
+                hasProperty("caseFieldElementPath", is("PostCode")),
+                hasProperty("caseField", hasProperty("reference", is("cf1")))
+            ))
+        ));
+    }
+
+    @Test
+    void shouldRejectDuplicateWholeDisplayGroupCaseField() {
+        DisplayGroupEntity displayGroup = createDisplayGroupWithoutFields(
+            caseTypeV3, "ref dg tab view duplicate whole", "label dg", "channel dg", 4, TAB, VIEW, SHOW_CONDITION);
+        addDisplayGroupField(getCaseField(caseTypeV3, "cf1"), displayGroup, 1, null);
+        addDisplayGroupField(getCaseField(caseTypeV3, "cf1"), displayGroup, 2, null);
+
+        assertThrows(DataIntegrityViolationException.class, () -> displayGroupRepository.saveAndFlush(displayGroup));
+    }
+
+    @Test
+    void shouldRejectDuplicateDisplayGroupCaseFieldElementPath() {
+        DisplayGroupEntity displayGroup = createDisplayGroupWithoutFields(
+            caseTypeV3, "ref dg tab view duplicate subfield", "label dg", "channel dg", 4, TAB, VIEW, SHOW_CONDITION);
+        addDisplayGroupField(getCaseField(caseTypeV3, "cf1"), displayGroup, 1, null, "Address");
+        addDisplayGroupField(getCaseField(caseTypeV3, "cf1"), displayGroup, 2, null, "Address");
+
+        assertThrows(DataIntegrityViolationException.class, () -> displayGroupRepository.saveAndFlush(displayGroup));
+    }
+
+    @Test
+    void shouldRejectDuplicateDisplayGroupCaseFieldElementPathIgnoringCase() {
+        DisplayGroupEntity displayGroup = createDisplayGroupWithoutFields(
+            caseTypeV3, "ref dg tab view duplicate subfield case", "label dg", "channel dg", 4, TAB, VIEW,
+            SHOW_CONDITION);
+        addDisplayGroupField(getCaseField(caseTypeV3, "cf1"), displayGroup, 1, null, "Address");
+        addDisplayGroupField(getCaseField(caseTypeV3, "cf1"), displayGroup, 2, null, "address");
+
+        assertThrows(DataIntegrityViolationException.class, () -> displayGroupRepository.saveAndFlush(displayGroup));
     }
 
     private void createDisplayGroupsForCase(CaseTypeEntity caseType) {
@@ -134,6 +198,19 @@ class DisplayGroupRepositoryTest {
         dg.addDisplayGroupCaseField(dgf);
     }
 
+    private void addDisplayGroupField(final CaseFieldEntity cf,
+                                      final DisplayGroupEntity dg,
+                                      final int order,
+                                      Integer column,
+                                      String caseFieldElementPath) {
+        final DisplayGroupCaseFieldEntity dgf = new DisplayGroupCaseFieldEntity();
+        dgf.setCaseField(cf);
+        dgf.setOrder(order);
+        dgf.setColumnNumber(column);
+        dgf.setCaseFieldElementPath(caseFieldElementPath);
+        dg.addDisplayGroupCaseField(dgf);
+    }
+
     private DisplayGroupEntity createDisplayGroup(final CaseTypeEntity caseType,
                                                   final String reference,
                                                   final String label,
@@ -154,6 +231,27 @@ class DisplayGroupRepositoryTest {
         dg.setAccessProfile(createAccessProfile());
         addDisplayGroupField(getCaseField(caseType, "cf1"), dg, 1, null);
         addDisplayGroupField(getCaseField(caseType, "cf2"), dg, 2, 2);
+        return dg;
+    }
+
+    private DisplayGroupEntity createDisplayGroupWithoutFields(final CaseTypeEntity caseType,
+                                                              final String reference,
+                                                              final String label,
+                                                              final String channel,
+                                                              final int order,
+                                                              final DisplayGroupType type,
+                                                              final DisplayGroupPurpose purpose,
+                                                              final String showCondition) {
+        final DisplayGroupEntity dg = new DisplayGroupEntity();
+        dg.setCaseType(caseType);
+        dg.setReference(reference);
+        dg.setLabel(label);
+        dg.setChannel(channel);
+        dg.setOrder(order);
+        dg.setType(type);
+        dg.setPurpose(purpose);
+        dg.setShowCondition(showCondition);
+        dg.setAccessProfile(createAccessProfile());
         return dg;
     }
 

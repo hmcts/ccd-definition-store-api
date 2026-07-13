@@ -75,7 +75,7 @@ ext {
     feignJackson = '13.9'
     gsonVersion = '2.13.2'
     testcontainersVersion = '1.21.4'
-    ccdTestDefinitionVersion = '7.26.5'
+    ccdTestDefinitionVersion = '7.26.7_CCD-6251-SNAPSHOT2'
     beftaFwVersion = '9.2.6'
     limits = [
             'instruction': 99,
@@ -205,6 +205,12 @@ subprojects { subproject ->
     apply plugin: 'jacoco'
     apply plugin: "com.github.kt3k.coveralls"
     apply plugin: 'uk.gov.hmcts.java'
+
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
 
     configurations {
         providedRuntime

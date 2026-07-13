@@ -29,6 +29,7 @@ public enum SpreadSheetValidationMappingEnum {
     CASE_TYPE_TAB_TAB_ID("CaseTypeTab", "TabID", 70),
     CASE_TYPE_TAB_TAB_LABEL("CaseTypeTab", "TabLabel", 200),
     CASE_TYPE_TAB_CHANNEL("CaseTypeTab", "Channel", 64),
+    CASE_TYPE_TAB_LIST_ELEMENT_CODE("CaseTypeTab", "ListElementCode", 300),
     CASE_TYPE_TAB_FIELD_SHOW_CONDITION("CaseTypeTab", "FieldShowCondition", 1000),
 
     STATE_ID("State", "ID", 70),

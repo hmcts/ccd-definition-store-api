@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
@@ -1373,6 +1375,7 @@ class  EntityToResponseDTOMapperTest {
         void testMapDisplayGroupCaseFieldEntity() {
             DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity = new DisplayGroupCaseFieldEntity();
             displayGroupCaseFieldEntity.setOrder(69);
+            displayGroupCaseFieldEntity.setCaseFieldElementPath("FamilyAddress.Country");
 
             CaseFieldEntity caseFieldEntity = new CaseFieldEntity();
             CaseField caseField = new CaseField();
@@ -1383,6 +1386,20 @@ class  EntityToResponseDTOMapperTest {
 
             assertEquals(displayGroupCaseFieldEntity.getOrder(), caseTypeTabField.getOrder());
             assertEquals(caseField, caseTypeTabField.getCaseField());
+            assertEquals(displayGroupCaseFieldEntity.getCaseFieldElementPath(),
+                caseTypeTabField.getCaseFieldElementPath());
+        }
+
+        @Test
+        void testSerializeCaseTypeTabFieldListElementCode() throws JsonProcessingException {
+            CaseTypeTabField caseTypeTabField = new CaseTypeTabField();
+            caseTypeTabField.setCaseFieldElementPath("FamilyAddress.Country");
+
+            String json = new ObjectMapper().writeValueAsString(caseTypeTabField);
+
+            assertTrue(json.contains("\"listElementCode\":\"FamilyAddress.Country\""));
+            assertFalse(json.contains("caseFieldElementPath"));
+            assertFalse(json.contains("case_field_element_path"));
         }
 
     }

@@ -1,0 +1,30 @@
+{
+  "_guid_": "S-127.7",
+  "_extends_": "F-127_Definition_Import_Test_Base_data",
+  "title": "Import definition file with CaseTypeTab ListElementCode on a collection field",
+  "specs": [
+    "an active profile in CCD",
+    "contains a CaseTypeTab ListElementCode value on a collection field"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/CCD_BEFTA_CTT_LISTELEMENCODE_invalid.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 422,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Type": "text/plain",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "${[scenarioContext][customValues][contains ListElementCode 'Name' is not supported for collection fields. Case Field 'MyCompany', case type 'FT_CTT_Subfield_Collection']}"
+    }
+  }
+}
