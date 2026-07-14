@@ -41,16 +41,16 @@ This file provides a **semi-automated cleanup** process.
 This file defines a **stored procedure** (`cleanup_case_types`) for automated clean-up.
 
 - Copy the full script into your SQL client (e.g. DBeaver).  
-- Execute it as **one transaction** — this will **create and persist** the stored procedure in the database.  
+- Execute it to **create and persist** the stored procedure in the database.
 - Once created, you can call it any time for future clean-ups.
+- Run the `CALL` with **autocommit enabled**; do not wrap it in `BEGIN`/`COMMIT` because the procedure commits internally.
 
 > 💻 **Run command:**
 > ```sql
 > CALL cleanup_case_types(2000, 3);
 > ```
-> This executes the stored procedure with a **batch size of 2000**, and **data deletion of 3 months** and older 
-> Each iteration deletes records in batches of 2000 rows.  
-> If any record in a batch fails to delete, the process automatically falls back to **record-by-record deletion** for reliability.
+> This executes the stored procedure with a **batch size of 2000**, and **data deletion of 3 months** and older.
+> Each iteration deletes records in batches of 2000 rows and commits between batches.
 
 > 🕐 **Use Case:**
 > - Ideal for scheduled clean-up jobs (cron, automation pipelines).  

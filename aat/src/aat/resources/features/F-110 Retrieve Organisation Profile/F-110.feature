@@ -4,7 +4,7 @@ Feature: F-110: Retrieve Access Types
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-110.1
+  @S-110.1 @groupaccess # extra accessTypes
   Scenario: Successfully retrieve access types for provided organisationProfileIds
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -15,7 +15,7 @@ Feature: F-110: Retrieve Access Types
     And the response has all other details as expected
     And the response [contains all accessTypes for organisationProfileId in the response]
 
-  @S-110.1a
+  @S-110.1a @groupaccess # extra accessTypes
   Scenario: Successfully return 200 success with content for request access type of the organisation and only latest version of the AccessTypes
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -49,7 +49,7 @@ Feature: F-110: Retrieve Access Types
     And the response has all other details as expected
     And the response [does not contain any accessTypes]
 
-  @S-110.3
+  @S-110.3 @groupaccess # extra accessTypes
   Scenario: Successfully return 200 success with content for request without organisationProfileId
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -80,7 +80,7 @@ Feature: F-110: Retrieve Access Types
     Then a negative response is received
     And the response [has a status of 401 Unauthorised]
 
-  @S-110.6 # more than one version of AccessTypeRoles
+  @S-110.6 @groupaccess # more than one version of AccessTypeRoles
   Scenario: Successfully return 200 success accessTypes of organisationProfileId and only latest version of AccessTypes
     Given a user with [an active profile in CCD]
     And a call [to import definition file, multiple versions] will get the expected response as in [Import_CCD_BEFTA_RM_CT_JURISDICTION1]
