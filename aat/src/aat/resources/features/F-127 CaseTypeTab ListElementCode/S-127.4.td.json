@@ -1,7 +1,7 @@
 {
   "_guid_": "S-127.4",
   "_extends_": "F-085_Test_Base_Data",
-  "title": "Return multiple CaseTypeTab ListElementCode values in tab structure API response",
+  "title": "Multiple CaseTypeTab ListElementCode values are returned as caseFieldSubfieldCode values",
   "specs": [
     "an active profile in CCD",
     "contains a case type id with multiple CaseTypeTab ListElementCode values"

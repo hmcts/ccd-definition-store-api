@@ -1,7 +1,7 @@
 {
   "_guid_": "S-127.2",
   "_extends_": "F-085_Test_Base_Data",
-  "title": "Return blank CaseTypeTab ListElementCode as whole field in tab structure API response",
+  "title": "Blank CaseTypeTab ListElementCode is returned as null caseFieldSubfieldCode for a whole field",
   "specs": [
     "an active profile in CCD",
     "contains a case type id with a blank CaseTypeTab ListElementCode value"

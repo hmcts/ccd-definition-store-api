@@ -1,7 +1,7 @@
 {
   "_guid_": "S-127.1",
   "_extends_": "F-085_Test_Base_Data",
-  "title": "Return direct CaseTypeTab ListElementCode value in tab structure API response",
+  "title": "CaseTypeTab ListElementCode is returned as caseFieldSubfieldCode for a direct complex subfield",
   "specs": [
     "an active profile in CCD",
     "contains a case type id with a direct CaseTypeTab ListElementCode value"
