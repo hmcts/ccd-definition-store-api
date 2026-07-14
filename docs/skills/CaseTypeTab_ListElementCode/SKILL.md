@@ -120,19 +120,19 @@ With ExUI confirmation, CaseTypeTab API response coverage should assert `caseFie
     </tr>
     <tr>
       <td>End-to-end FT</td>
-      <td>Call Tab Structure By CaseType for <code>FT_CTT_Subfield_Valid</code>, and assert <code>MySchool</code> has <code>Name</code>.</td>
+      <td>Call Tab Structure By CaseType for <code>FT_CTT_Subfield_Valid</code>, and assert <code>case_field.id</code> is <code>MySchool</code> with <code>caseFieldSubfieldCode</code> as <code>Name</code>.</td>
     </tr>
     <tr>
       <td>End-to-end FT</td>
-      <td>Call Tab Structure By CaseType for <code>FT_CTT_Subfield_Blank</code>, and assert <code>MySchool</code> is returned as a whole field with no subfield path.</td>
+      <td>Call Tab Structure By CaseType for <code>FT_CTT_Subfield_Blank</code>, and assert <code>case_field.id</code> is <code>MySchool</code> with <code>caseFieldSubfieldCode</code> as <code>null</code>.</td>
     </tr>
     <tr>
       <td>End-to-end FT</td>
-      <td>Call Tab Structure By CaseType for <code>FT_CTT_Subfield_Nested</code>, and assert <code>FamilyDetails</code> has <code>FamilyAddress.Country</code>.</td>
+      <td>Call Tab Structure By CaseType for <code>FT_CTT_Subfield_Nested</code>, and assert <code>case_field.id</code> is <code>FamilyDetails</code> with <code>caseFieldSubfieldCode</code> as <code>FamilyAddress.Country</code>.</td>
     </tr>
     <tr>
       <td>End-to-end FT</td>
-      <td>Call Tab Structure By CaseType for <code>FT_CTT_Subfield_Multiple</code>, and assert <code>MySchool</code> has both <code>Name</code> and <code>Number</code>.</td>
+      <td>Call Tab Structure By CaseType for <code>FT_CTT_Subfield_Multiple</code>, and assert <code>case_field.id</code> is <code>MySchool</code> with <code>caseFieldSubfieldCode</code> values <code>Name</code> and <code>Number</code>.</td>
     </tr>
   </tbody>
 </table>
@@ -223,36 +223,36 @@ Current scenarios:
   </thead>
   <tbody>
     <tr>
-      <td>Tab structure API returns direct CaseTypeTab subfield path</td>
+      <td>CaseTypeTab <code>ListElementCode</code> is returned as <code>caseFieldSubfieldCode</code> for a direct complex subfield</td>
       <td>AC1, API response</td>
       <td><code>FT_CTT_Subfield_Valid</code></td>
       <td><code>S-127.1.td.json</code></td>
       <td>Uses tab structure endpoint against prepared setup data; no generated workbook path</td>
-      <td><code>caseFieldSubfieldCode</code> is <code>Name</code></td>
+      <td><code>case_field.id</code> is <code>MySchool</code> and <code>caseFieldSubfieldCode</code> is <code>Name</code></td>
     </tr>
     <tr>
-      <td>Tab structure API returns blank CaseTypeTab subfield path as whole field</td>
+      <td>Blank CaseTypeTab <code>ListElementCode</code> is returned as null <code>caseFieldSubfieldCode</code> for a whole field</td>
       <td>AC3, API response</td>
       <td><code>FT_CTT_Subfield_Blank</code></td>
       <td><code>S-127.2.td.json</code></td>
       <td>Uses tab structure endpoint against prepared setup data; no generated workbook path</td>
-      <td><code>caseFieldSubfieldCode</code> is <code>null</code></td>
+      <td><code>case_field.id</code> is <code>MySchool</code> and <code>caseFieldSubfieldCode</code> is <code>null</code></td>
     </tr>
     <tr>
-      <td>Tab structure API returns nested CaseTypeTab subfield path</td>
+      <td>CaseTypeTab <code>ListElementCode</code> is returned as <code>caseFieldSubfieldCode</code> for a nested complex subfield</td>
       <td>AC5, API response</td>
       <td><code>FT_CTT_Subfield_Nested</code></td>
       <td><code>S-127.3.td.json</code></td>
       <td>Uses tab structure endpoint against prepared setup data; no generated workbook path</td>
-      <td><code>caseFieldSubfieldCode</code> is <code>FamilyAddress.Country</code></td>
+      <td><code>case_field.id</code> is <code>FamilyDetails</code> and <code>caseFieldSubfieldCode</code> is <code>FamilyAddress.Country</code></td>
     </tr>
     <tr>
-      <td>Tab structure API returns multiple CaseTypeTab subfield paths</td>
+      <td>Multiple CaseTypeTab <code>ListElementCode</code> values are returned as <code>caseFieldSubfieldCode</code> values</td>
       <td>API response</td>
       <td><code>FT_CTT_Subfield_Multiple</code></td>
       <td><code>S-127.4.td.json</code></td>
       <td>Uses tab structure endpoint against prepared setup data; no generated workbook path</td>
-      <td><code>caseFieldSubfieldCode</code> values are <code>Name</code> and <code>Number</code></td>
+      <td><code>case_field.id</code> is <code>MySchool</code> and <code>caseFieldSubfieldCode</code> values are <code>Name</code> and <code>Number</code></td>
     </tr>
     <tr>
       <td>Invalid CaseTypeTab subfield path fails validation</td>
