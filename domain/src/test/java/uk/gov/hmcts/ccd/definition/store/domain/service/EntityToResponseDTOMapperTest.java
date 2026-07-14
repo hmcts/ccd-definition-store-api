@@ -1391,13 +1391,14 @@ class  EntityToResponseDTOMapperTest {
         }
 
         @Test
-        void testSerializeCaseTypeTabFieldListElementCode() throws JsonProcessingException {
+        void testSerializeCaseTypeTabFieldCaseFieldSubfieldCode() throws JsonProcessingException {
             CaseTypeTabField caseTypeTabField = new CaseTypeTabField();
             caseTypeTabField.setCaseFieldElementPath("FamilyAddress.Country");
 
             String json = new ObjectMapper().writeValueAsString(caseTypeTabField);
 
-            assertTrue(json.contains("\"listElementCode\":\"FamilyAddress.Country\""));
+            assertTrue(json.contains("\"caseFieldSubfieldCode\":\"FamilyAddress.Country\""));
+            assertFalse(json.contains("listElementCode"));
             assertFalse(json.contains("caseFieldElementPath"));
             assertFalse(json.contains("case_field_element_path"));
         }

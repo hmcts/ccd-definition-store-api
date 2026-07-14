@@ -6,7 +6,7 @@ Feature: F-127 Import validations for CCD Definition with CaseTypeTab ListElemen
 
   @S-127.1
   @AC-1 @AC-API
-  Scenario: Return direct CaseTypeTab ListElementCode value in tab structure API response
+  Scenario: CaseTypeTab ListElementCode is returned as caseFieldSubfieldCode for a direct complex subfield
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a case type id with a direct CaseTypeTab ListElementCode value]
@@ -16,7 +16,7 @@ Feature: F-127 Import validations for CCD Definition with CaseTypeTab ListElemen
 
   @S-127.2
   @AC-3 @AC-API
-  Scenario: Return blank CaseTypeTab ListElementCode as whole field in tab structure API response
+  Scenario: Blank CaseTypeTab ListElementCode is returned as null caseFieldSubfieldCode for a whole field
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a case type id with a blank CaseTypeTab ListElementCode value]
@@ -26,7 +26,7 @@ Feature: F-127 Import validations for CCD Definition with CaseTypeTab ListElemen
 
   @S-127.3
   @AC-5 @AC-API
-  Scenario: Return nested CaseTypeTab ListElementCode value in tab structure API response
+  Scenario: CaseTypeTab ListElementCode is returned as caseFieldSubfieldCode for a nested complex subfield
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a case type id with a nested CaseTypeTab ListElementCode value]
@@ -36,7 +36,7 @@ Feature: F-127 Import validations for CCD Definition with CaseTypeTab ListElemen
 
   @S-127.4
   @AC-API
-  Scenario: Return multiple CaseTypeTab ListElementCode values in tab structure API response
+  Scenario: Multiple CaseTypeTab ListElementCode values are returned as caseFieldSubfieldCode values
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And the request [contains a case type id with multiple CaseTypeTab ListElementCode values]

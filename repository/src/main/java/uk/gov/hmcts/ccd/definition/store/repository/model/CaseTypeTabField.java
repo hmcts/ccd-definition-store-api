@@ -48,7 +48,7 @@ public class CaseTypeTabField {
         this.displayContextParameter = displayContextParameter;
     }
 
-    @JsonProperty("listElementCode")
+    @JsonProperty("caseFieldSubfieldCode")
     public String getCaseFieldElementPath() {
         return caseFieldElementPath;
     }

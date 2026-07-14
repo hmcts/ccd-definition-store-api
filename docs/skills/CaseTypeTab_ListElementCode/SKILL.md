@@ -38,14 +38,14 @@ Expected order:
 
 ## API Contract
 
-ExUI confirmed the CaseTypeTab API response property should be `listElementCode`.
+ExUI confirmed the CaseTypeTab API response property should be `caseFieldSubfieldCode`.
 
 | Layer | Name |
 |---|---|
 | Spreadsheet column | `ListElementCode` |
 | Java/internal field | `caseFieldElementPath` |
 | DB column | `case_field_element_path` |
-| CaseTypeTab API response | `listElementCode` |
+| CaseTypeTab API response | `caseFieldSubfieldCode` |
 
 ## Implementation Scope
 
@@ -56,7 +56,7 @@ Definition Store implementation:
 | Excel parsing | Read optional `CaseTypeTab.ListElementCode` without breaking older workbooks |
 | Persistence | Persist the value against the display group case field |
 | Validation | Validate `ListElementCode` as a subfield path relative to `CaseFieldID` |
-| API mapping | Expose `CaseTypeTabField.caseFieldElementPath` as `listElementCode` |
+| API mapping | Expose `CaseTypeTabField.caseFieldElementPath` as `caseFieldSubfieldCode` |
 | Backward compatibility | Missing or blank `ListElementCode` keeps existing whole-field behaviour |
 
 Implementation should keep CaseTypeTab-specific collection behaviour separate from Search/Workbasket layout behaviour because existing layout sheets support collection subfield paths, while this feature explicitly rejects them for CaseTypeTab.
@@ -68,7 +68,7 @@ Implementation should keep CaseTypeTab-specific collection behaviour separate fr
 - `repository/src/main/resources/db/migration/V20260709_6251__CCD-6251_CaseTypeTab_ListElementCode.sql` adds `display_group_case_field.case_field_element_path`.
 - Uniqueness uses partial unique indexes to allow different populated paths for the same `display_group_id` and `case_field_id`, while still rejecting duplicate whole-field rows and duplicate same-path rows case-insensitively.
 
-`CaseTypeTabField` carries `caseFieldElementPath` internally and serializes it as `listElementCode` for the CaseTypeTab API response.
+`CaseTypeTabField` carries `caseFieldElementPath` internally and serializes it as `caseFieldSubfieldCode` for the CaseTypeTab API response.
 
 ## Risks / Backward Compatibility
 
@@ -83,7 +83,7 @@ Risk to normal field behaviour is low if the implementation preserves these rule
 | Existing layout behaviour | Search/Workbasket `ListElementCode` handling must not be changed |
 | Collections | CaseTypeTab collection rejection must not affect existing Search/Workbasket collection support |
 | Persistence | Uniqueness/storage must allow valid rows for the same complex `CaseFieldID` with different `ListElementCode` values |
-| API response | DTO JSON must expose `listElementCode`, while DB/internal names remain unchanged |
+| API response | DTO JSON must expose `caseFieldSubfieldCode`, while DB/internal names remain unchanged |
 
 ## Test Coverage
 
@@ -93,14 +93,14 @@ Add focused unit/integration coverage for:
 |---|---|
 | Parser | `CaseTypeTab.ListElementCode` is read when present and ignored when missing |
 | Validator | Valid complex subfield, invalid subfield, simple field rejection, collection rejection, nested complex path |
-| Mapper/API DTO | Internal mapping to `caseFieldElementPath`; JSON exposure as `listElementCode` |
+| Mapper/API DTO | Internal mapping to `caseFieldElementPath`; JSON exposure as `caseFieldSubfieldCode` |
 | Database/schema | Multiple rows for the same `CaseFieldID` with different `ListElementCode` can be stored, while duplicate rows still fail |
 | Import/functional | Import valid/invalid workbooks supplied by `ccd-test-definitions` |
 | API functional | After ExUI confirms the JSON property name, call Tab Structure By CaseType and assert CaseTypeTab subfield paths in the response |
 
 ## API Response Coverage
 
-With ExUI confirmation, CaseTypeTab API response coverage should assert `listElementCode`:
+With ExUI confirmation, CaseTypeTab API response coverage should assert `caseFieldSubfieldCode`:
 
 <table>
   <thead>
@@ -112,7 +112,7 @@ With ExUI confirmation, CaseTypeTab API response coverage should assert `listEle
   <tbody>
     <tr>
       <td>DTO serialization</td>
-      <td>Expose <code>CaseTypeTabField.caseFieldElementPath</code> as <code>listElementCode</code>.</td>
+      <td>Expose <code>CaseTypeTabField.caseFieldElementPath</code> as <code>caseFieldSubfieldCode</code>.</td>
     </tr>
     <tr>
       <td>Mapper/unit test</td>
@@ -228,7 +228,7 @@ Current scenarios:
       <td><code>FT_CTT_Subfield_Valid</code></td>
       <td><code>S-127.1.td.json</code></td>
       <td>Uses tab structure endpoint against prepared setup data; no generated workbook path</td>
-      <td><code>listElementCode</code> is <code>Name</code></td>
+      <td><code>caseFieldSubfieldCode</code> is <code>Name</code></td>
     </tr>
     <tr>
       <td>Tab structure API returns blank CaseTypeTab subfield path as whole field</td>
@@ -236,7 +236,7 @@ Current scenarios:
       <td><code>FT_CTT_Subfield_Blank</code></td>
       <td><code>S-127.2.td.json</code></td>
       <td>Uses tab structure endpoint against prepared setup data; no generated workbook path</td>
-      <td><code>listElementCode</code> is <code>null</code></td>
+      <td><code>caseFieldSubfieldCode</code> is <code>null</code></td>
     </tr>
     <tr>
       <td>Tab structure API returns nested CaseTypeTab subfield path</td>
@@ -244,7 +244,7 @@ Current scenarios:
       <td><code>FT_CTT_Subfield_Nested</code></td>
       <td><code>S-127.3.td.json</code></td>
       <td>Uses tab structure endpoint against prepared setup data; no generated workbook path</td>
-      <td><code>listElementCode</code> is <code>FamilyAddress.Country</code></td>
+      <td><code>caseFieldSubfieldCode</code> is <code>FamilyAddress.Country</code></td>
     </tr>
     <tr>
       <td>Tab structure API returns multiple CaseTypeTab subfield paths</td>
@@ -252,7 +252,7 @@ Current scenarios:
       <td><code>FT_CTT_Subfield_Multiple</code></td>
       <td><code>S-127.4.td.json</code></td>
       <td>Uses tab structure endpoint against prepared setup data; no generated workbook path</td>
-      <td><code>listElementCode</code> values are <code>Name</code> and <code>Number</code></td>
+      <td><code>caseFieldSubfieldCode</code> values are <code>Name</code> and <code>Number</code></td>
     </tr>
     <tr>
       <td>Invalid CaseTypeTab subfield path fails validation</td>
