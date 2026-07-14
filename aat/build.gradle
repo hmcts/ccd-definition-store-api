@@ -28,7 +28,7 @@ configurations {
 }
 
 dependencies {
-    implementation group: 'org.awaitility', name: 'awaitility', version: '3.1.6'
+    implementation group: 'org.awaitility', name: 'awaitility', version: '4.3.0'
 }
 
 tasks.named("processAatResources") {
@@ -68,7 +68,9 @@ task smoke(type: Test) {
             args = [
                      '--plugin', "json:${rootDir}/target/cucumber.json",
                      '--tags', '@Smoke and not @Ignore',
-                     '--glue', 'uk.gov.hmcts.befta.player', 'src/aat/resources/features'
+                     '--glue', 'uk.gov.hmcts.befta.player',
+                     '--glue', 'uk.gov.hmcts.ccd.definitionstore.befta',
+                     'src/aat/resources/features'
                    ]
             jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
         }
@@ -117,7 +119,9 @@ task functional(type: Test) {
                      '--threads', '1', // current definition-store tests do not support multiple threads
                      '--plugin', "json:${rootDir}/target/cucumber.json",
                      '--tags', "${tags}",
-                     '--glue', 'uk.gov.hmcts.befta.player', 'src/aat/resources/features'
+                     '--glue', 'uk.gov.hmcts.befta.player',
+                     '--glue', 'uk.gov.hmcts.ccd.definitionstore.befta',
+                     'src/aat/resources/features'
                    ]
             jvmArgs = [ '--add-opens=java.base/java.lang.reflect=ALL-UNNAMED' ]
         }
@@ -191,4 +195,3 @@ jar {
     failWhenNoMutations = false
     detectInlinedCode = true
 }*/
-

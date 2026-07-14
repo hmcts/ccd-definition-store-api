@@ -32,6 +32,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionUiConfigEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.ReindexEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.RoleToAccessProfilesEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchCasesResultFieldEntity;
@@ -65,6 +66,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.JurisdictionUiConfig;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ReindexTask;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleToAccessProfiles;
 import uk.gov.hmcts.ccd.definition.store.repository.model.SearchAliasField;
@@ -160,6 +162,7 @@ public interface EntityToResponseDTOMapper {
 
     @Mapping(source = "jurisdictionEntity.reference", target = "id")
     @Mapping(source = "jurisdictionEntity.liveTo", target = "liveUntil")
+    @Mapping(target = "caseTypes", ignore = true)
     Jurisdiction map(JurisdictionEntity jurisdictionEntity);
 
     @Mapping(expression = "java("
@@ -188,6 +191,10 @@ public interface EntityToResponseDTOMapper {
         + "       )",
         target = "complexACLs")
     @Mapping(expression = "java(caseFieldEntity.isMetadataField())", target = "metadata")
+    @Mapping(target = "showCondition", ignore = true)
+    @Mapping(target = "order", ignore = true)
+    @Mapping(target = "displayContextParameter", ignore = true)
+    @Mapping(target = "retainHiddenValue", ignore = true)
     CaseField map(CaseFieldEntity caseFieldEntity);
 
     @Mapping(source = "fieldTypeEntity.reference", target = "id")
@@ -234,6 +241,12 @@ public interface EntityToResponseDTOMapper {
 
     @Mapping(source = "complexFieldEntity.reference", target = "id")
     @Mapping(source = "complexFieldEntity.hint", target = "hintText")
+    @Mapping(target = "caseTypeId", ignore = true)
+    @Mapping(target = "liveFrom", ignore = true)
+    @Mapping(target = "liveUntil", ignore = true)
+    @Mapping(target = "acls", ignore = true)
+    @Mapping(target = "complexACLs", ignore = true)
+    @Mapping(target = "metadata", ignore = true)
     CaseField map(ComplexFieldEntity complexFieldEntity);
 
     @Mapping(source = "displayGroupEntity.reference", target = "id")
@@ -333,6 +346,8 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseType.jurisdiction.reference", target = "jurisdictionId")
     @Mapping(source = "caseType.jurisdiction.name", target = "jurisdictionName")
     AccessTypeField map(AccessTypeEntity accessTypeEntity);
+
+    ReindexTask map(ReindexEntity reindexEntity);
 
     @Mapping(source = "caseType.reference", target = "id")
     @Mapping(source = "roleToAccessProfilesEntity.roleName", target = "name")

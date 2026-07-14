@@ -1,5 +1,19 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
+import org.apache.http.HttpStatus;
+import org.hamcrest.Matcher;
+import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultMatcher;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.DictionaryRequest;
 import uk.gov.hmcts.ccd.definition.store.excel.client.translation.Translation;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
@@ -16,22 +30,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-
-import com.github.tomakehurst.wiremock.client.WireMock;
-import org.apache.http.HttpStatus;
-import org.hamcrest.Matcher;
-import org.json.JSONException;
-import org.junit.jupiter.api.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.ResultMatcher;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.transaction.annotation.Transactional;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
@@ -131,7 +129,7 @@ class SpreadSheetImportTest extends BaseTest {
             stubForPutDictionaryReturns4XX(getDictionaryRequest());
 
             MvcResult mvcResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
-            
+
                 .file(file)
                 .header(AUTHORIZATION, "Bearer testUser"))
                 .andReturn();
@@ -348,12 +346,12 @@ class SpreadSheetImportTest extends BaseTest {
         return hasColumn(is(key), is(value));
     }
 
-    private void assertBody(String contentAsString) throws IOException, URISyntaxException, JSONException {
+    private void assertBody(String contentAsString) throws IOException, URISyntaxException {
         assertBody(contentAsString, RESPONSE_JSON_V55);
     }
 
     private void assertBody(String contentAsString, String fileName)
-        throws IOException, URISyntaxException, JSONException {
+        throws IOException, URISyntaxException {
 
         String expected = readFileToString(new File(getClass().getClassLoader()
             .getResource(fileName)

@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -19,6 +20,7 @@ import org.springframework.security.oauth2.server.resource.web.authentication.Be
 import org.springframework.security.web.SecurityFilterChain;
 
 import uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ElasticsearchIndexController;
+import uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ReindexTaskController;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
 import uk.gov.hmcts.ccd.definition.store.security.JwtGrantedAuthoritiesConverter;
 import uk.gov.hmcts.ccd.definition.store.security.filters.ExceptionHandlingFilter;
@@ -63,7 +65,6 @@ public class SecurityConfiguration {
             "/health/liveness",
             "/health/readiness",
             "/",
-            "/loggers/**",
             "/api/testing-support/**");
     }
 
@@ -77,7 +78,10 @@ public class SecurityConfiguration {
             .formLogin(fl -> fl.disable())
             .logout(lg -> lg.disable())
             .authorizeHttpRequests(ar ->
-                ar.requestMatchers(ImportController.URI_IMPORT, ElasticsearchIndexController.ELASTIC_INDEX_URI)
+                ar.requestMatchers(ImportController.URI_IMPORT, ElasticsearchIndexController.ELASTIC_INDEX_URI,
+                        ReindexTaskController.REINDEX_TASKS_URI)
+                .hasAuthority("ccd-import")
+                .requestMatchers(HttpMethod.GET, "/import-jobs/**")
                 .hasAuthority("ccd-import")
                 .anyRequest()
                 .authenticated()

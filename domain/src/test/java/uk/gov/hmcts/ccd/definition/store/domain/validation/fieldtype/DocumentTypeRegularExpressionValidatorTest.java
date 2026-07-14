@@ -37,7 +37,7 @@ class DocumentTypeRegularExpressionValidatorTest {
         @DisplayName("should pass validation when the regex matches the expected pattern")
         @Test
         void shouldPassValidation() {
-            fieldType.setRegularExpression(".pdf, .docx,  .xlsx");
+            fieldType.setRegularExpression(".pdf, .docx,  .xlsx, .html");
 
             ValidationResult result = validator.validate(context, fieldType);
 

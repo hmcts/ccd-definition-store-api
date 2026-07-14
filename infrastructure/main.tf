@@ -23,8 +23,8 @@ locals {
 }
 
 data "azurerm_key_vault" "ccd_shared_key_vault" {
-  name                = "${local.vaultName}"
-  resource_group_name = "${local.sharedResourceGroup}"
+  name                = local.vaultName
+  resource_group_name = local.sharedResourceGroup
 }
 
 data "azurerm_key_vault" "s2s_vault" {
@@ -46,7 +46,7 @@ resource "azurerm_storage_container" "imports_container" {
 
 data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
   name         = "microservicekey-ccd-definition"
-  key_vault_id = "${data.azurerm_key_vault.s2s_vault.id}"
+  key_vault_id = data.azurerm_key_vault.s2s_vault.id
 }
 
 ///////////////////////
@@ -54,18 +54,19 @@ data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
 ///////////////////////
 
 module "postgresql_v15" {
-  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=master"
+  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=DTSPO-30107-additional-postgres-admins"
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
   }
-  
-  admin_user_object_id = var.jenkins_AAD_objectId
-  business_area        = "cft"
-  common_tags          = var.common_tags
-  component            = var.component
-  env                  = var.env
-  subnet_suffix        = var.subnet_suffix
-  force_user_permissions_trigger = "1"
+
+  admin_user_object_id           = var.jenkins_AAD_objectId
+  business_area                  = "cft"
+  common_tags                    = var.common_tags
+  component                      = var.component
+  env                            = var.env
+  subnet_suffix                  = var.subnet_suffix
+  force_user_permissions_trigger = "2"
+
   pgsql_databases = [
     {
       name = var.database_name
@@ -77,14 +78,14 @@ module "postgresql_v15" {
       value = "pg_stat_statements,pg_buffercache,hypopg"
     }
   ]
-  pgsql_version               = "15"
-  product                     = var.product
-  name                        = local.db_name
-  pgsql_sku                   = var.pgsql_sku
-  pgsql_storage_mb            = var.pgsql_storage_mb
-  action_group_name           = join("-", [var.action_group_name, local.db_name, var.env])
-  email_address_key           = var.email_address_key
-  email_address_key_vault_id  = data.azurerm_key_vault.ccd_shared_key_vault.id
+  pgsql_version              = "15"
+  product                    = var.product
+  name                       = local.db_name
+  pgsql_sku                  = var.pgsql_sku
+  pgsql_storage_mb           = var.pgsql_storage_mb
+  action_group_name          = join("-", [var.action_group_name, local.db_name, var.env])
+  email_address_key          = var.email_address_key
+  email_address_key_vault_id = data.azurerm_key_vault.ccd_shared_key_vault.id
 }
 
 ////////////////////////////////////
