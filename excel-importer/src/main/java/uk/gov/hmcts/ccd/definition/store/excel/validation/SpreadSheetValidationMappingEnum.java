@@ -1,5 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.LIST_ELEMENT_CODE;
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.CASE_TYPE_TAB;
+
 /**
  * Enum to map column validation (maxLength) for a Case Definition import.
  */
@@ -14,23 +17,23 @@ public enum SpreadSheetValidationMappingEnum {
     CASE_FIELD_ID("CaseField", "ID", 70),
 
     FIXED_LISTS_ID("FixedLists", "ID", 70),
-    FIXED_LISTS_LIST_ELEMENT_CODE("FixedLists", "ListElementCode", 150),
+    FIXED_LISTS_LIST_ELEMENT_CODE("FixedLists", LIST_ELEMENT_CODE.toString(), 150),
 
-    COMPLEX_TYPES_LIST_ELEMENT_CODE("ComplexTypes", "ListElementCode", 70),
+    COMPLEX_TYPES_LIST_ELEMENT_CODE("ComplexTypes", LIST_ELEMENT_CODE.toString(), 70),
     COMPLEX_TYPES_ELEMENT_LABEL("ComplexTypes", "ElementLabel", 500),
     COMPLEX_TYPES_FIELD_SHOW_CONDITION("ComplexTypes", "FieldShowCondition", 1000),
 
-    CASE_TYPE_TAB_ID("CaseTypeTab", "ID", 70),
+    CASE_TYPE_TAB_ID(CASE_TYPE_TAB.toString(), "ID", 70),
 
-    EVENT_TO_COMPLEX_TYPES_LIST_ELEMENT_CODE("EventToComplexTypes", "ListElementCode", 70),
+    EVENT_TO_COMPLEX_TYPES_LIST_ELEMENT_CODE("EventToComplexTypes", LIST_ELEMENT_CODE.toString(), 70),
     EVENT_TO_COMPLEX_TYPES_EVENT_ELEMENT_LABEL("EventToComplexTypes", "EventElementLabel", 500),
     EVENT_TO_COMPLEX_TYPES_FIELD_SHOW_CONDITION("EventToComplexTypes", "FieldShowCondition", 1000),
 
-    CASE_TYPE_TAB_TAB_ID("CaseTypeTab", "TabID", 70),
-    CASE_TYPE_TAB_TAB_LABEL("CaseTypeTab", "TabLabel", 200),
-    CASE_TYPE_TAB_CHANNEL("CaseTypeTab", "Channel", 64),
-    CASE_TYPE_TAB_LIST_ELEMENT_CODE("CaseTypeTab", "ListElementCode", 300),
-    CASE_TYPE_TAB_FIELD_SHOW_CONDITION("CaseTypeTab", "FieldShowCondition", 1000),
+    CASE_TYPE_TAB_TAB_ID(CASE_TYPE_TAB.toString(), "TabID", 70),
+    CASE_TYPE_TAB_TAB_LABEL(CASE_TYPE_TAB.toString(), "TabLabel", 200),
+    CASE_TYPE_TAB_CHANNEL(CASE_TYPE_TAB.toString(), "Channel", 64),
+    CASE_TYPE_TAB_LIST_ELEMENT_CODE(CASE_TYPE_TAB.toString(), LIST_ELEMENT_CODE.toString(), 300),
+    CASE_TYPE_TAB_FIELD_SHOW_CONDITION(CASE_TYPE_TAB.toString(), "FieldShowCondition", 1000),
 
     STATE_ID("State", "ID", 70),
     STATE_NAME("State", "Name", 100),
@@ -45,19 +48,19 @@ public enum SpreadSheetValidationMappingEnum {
     CASE_EVENT_TO_FIELDS_FIELD_SHOW_CONDITION("CaseEventToFields", "FieldShowCondition", 1000),
 
     SEARCH_INPUT_FIELDS_LABEL("SearchInputFields", "Label", 200),
-    SEARCH_INPUT_FIELDS_CASE_FIELD_ELEMENT_PATH("SearchInputFields", "ListElementCode", 300),
+    SEARCH_INPUT_FIELDS_CASE_FIELD_ELEMENT_PATH("SearchInputFields", LIST_ELEMENT_CODE.toString(), 300),
 
     SEARCH_RESULTS_FIELDS_LABEL("SearchResultFields", "Label", 200),
-    SEARCH_RESULTS_FIELDS_CASE_FIELD_ELEMENT_PATH("SearchResultFields", "ListElementCode", 300),
+    SEARCH_RESULTS_FIELDS_CASE_FIELD_ELEMENT_PATH("SearchResultFields", LIST_ELEMENT_CODE.toString(), 300),
 
     SEARCH_CASES_RESULT_FIELDS_LABEL("SearchCaseResults", "Label", 200),
-    SEARCH_CASES_RESULT_FIELDS_CASE_FIELD_ELEMENT_PATH("SearchCaseResults", "ListElementCode", 300),
+    SEARCH_CASES_RESULT_FIELDS_CASE_FIELD_ELEMENT_PATH("SearchCaseResults", LIST_ELEMENT_CODE.toString(), 300),
 
     WORK_BASKET_INPUT_FIELDS_LABEL("WorkBasketInputFields", "Label", 200),
-    WORK_BASKET_INPUT_FIELDS_CASE_FIELD_ELEMENT_PATH("WorkBasketInputFields", "ListElementCode", 300),
+    WORK_BASKET_INPUT_FIELDS_CASE_FIELD_ELEMENT_PATH("WorkBasketInputFields", LIST_ELEMENT_CODE.toString(), 300),
 
     WORK_BASKET_RESULT_FIELDS_LABEL("WorkBasketResultFields", "Label", 200),
-    WORK_BASKET_RESULT_FIELDS_CASE_FIELD_ELEMENT_PATH("WorkBasketResultFields", "ListElementCode", 300),
+    WORK_BASKET_RESULT_FIELDS_CASE_FIELD_ELEMENT_PATH("WorkBasketResultFields", LIST_ELEMENT_CODE.toString(), 300),
 
     CASE_ROLES_ID("CaseRoles", "ID", 255),
     CASE_ROLES_NAME("CaseRoles", "Name", 255),

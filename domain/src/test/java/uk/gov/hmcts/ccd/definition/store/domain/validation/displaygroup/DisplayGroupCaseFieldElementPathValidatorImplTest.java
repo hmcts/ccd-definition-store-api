@@ -2,6 +2,8 @@ package uk.gov.hmcts.ccd.definition.store.domain.validation.displaygroup;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
@@ -53,23 +55,10 @@ class DisplayGroupCaseFieldElementPathValidatorImplTest {
         caseType.addCaseField(companies);
     }
 
-    @Test
-    void shouldValidateDirectComplexSubfield() {
-        ValidationResult result = validator.validate(displayGroupCaseField(applicant, "Name"));
-
-        assertThat(result.isValid(), is(true));
-    }
-
-    @Test
-    void shouldValidateNestedComplexSubfield() {
-        ValidationResult result = validator.validate(displayGroupCaseField(applicant, "Address.PostCode"));
-
-        assertThat(result.isValid(), is(true));
-    }
-
-    @Test
-    void shouldValidateParentComplexSubfield() {
-        ValidationResult result = validator.validate(displayGroupCaseField(applicant, "Address"));
+    @ParameterizedTest
+    @ValueSource(strings = {"Name", "Address.PostCode", "Address"})
+    void shouldValidateComplexSubfield(String listElementCode) {
+        ValidationResult result = validator.validate(displayGroupCaseField(applicant, listElementCode));
 
         assertThat(result.isValid(), is(true));
     }

@@ -400,7 +400,7 @@ class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("CaseTypeTabParser - should parse ListElementCode")
-    void shouldParseCaseTypeTabListElementCode() throws InvalidShowConditionException {
+    void shouldParseCaseTypeTabListElementCode() {
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
 
@@ -416,7 +416,7 @@ class DisplayGroupParserTest extends ParserTestBase {
 
     @Test
     @DisplayName("CaseTypeTabParser - should allow same CaseFieldID with different ListElementCode values")
-    void shouldParseCaseTypeTabWithMultipleListElementCodesForSameCaseField() throws InvalidShowConditionException {
+    void shouldParseCaseTypeTabWithMultipleListElementCodesForSameCaseField() {
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
 
