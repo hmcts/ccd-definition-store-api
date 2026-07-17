@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
 import com.google.common.base.Strings;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeSnapshotRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.JsonUtils;
@@ -16,11 +17,14 @@ public class CaseTypeSnapshotService {
 
     private final CaseTypeSnapshotRepository snapshotRepository;
     private final SnapshotJdbcRepository snapshotJdbcRepository;
+    private final boolean snapshotEnabled;
 
     public CaseTypeSnapshotService(CaseTypeSnapshotRepository snapshotRepository,
-                                   SnapshotJdbcRepository snapshotJdbcRepository) {
+                                   SnapshotJdbcRepository snapshotJdbcRepository,
+                                   @Value("${case-type.snapshot.enabled:true}") boolean snapshotEnabled) {
         this.snapshotRepository = snapshotRepository;
         this.snapshotJdbcRepository = snapshotJdbcRepository;
+        this.snapshotEnabled = snapshotEnabled;
     }
 
     /**
@@ -31,6 +35,12 @@ public class CaseTypeSnapshotService {
      * @return cached CaseType if found and valid, empty otherwise
      */
     public Optional<CaseType> getSnapshot(String caseTypeReference, Integer version) {
+        if (!snapshotEnabled) {
+            log.debug("Case type snapshot cache disabled; skipping lookup for case type: {} version: {}",
+                caseTypeReference, version);
+            return Optional.empty();
+        }
+
         log.debug("Looking for cached response for case type: {} version: {}", caseTypeReference, version);
 
         return snapshotJdbcRepository.loadCaseTypeSnapshot(caseTypeReference, version);
@@ -44,6 +54,12 @@ public class CaseTypeSnapshotService {
      * @param caseType the caseType object to cache
      */
     public void storeSnapshot(String caseTypeReference, Integer version, CaseType caseType) {
+        if (!snapshotEnabled) {
+            log.debug("Case type snapshot cache disabled; skipping store for case type: {} version: {}",
+                caseTypeReference, version);
+            return;
+        }
+
         try {
             // Check if snapshot already exists to avoid duplicate work.
             // Handles race condition where user queries immediately after import

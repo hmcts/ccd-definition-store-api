@@ -58,6 +58,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -651,7 +652,7 @@ class CaseTypeServiceImplTest {
         }
 
         @Test
-        @DisplayName("Should return cached snapshot when snapshot exists")
+        @DisplayName("Should return cached snapshot with metadata fields when snapshot exists")
         void shouldReturnCachedSnapshot_whenSnapshotExists() {
             // Given: Snapshot exists in cache
             CaseType cachedCaseType = new CaseType();
@@ -666,12 +667,45 @@ class CaseTypeServiceImplTest {
             // Then: Should return cached snapshot without accessing repository or mapper
             assertTrue(result.isPresent());
             assertThat(result.get(), is(cachedCaseType));
+            assertThat(result.get().getCaseFields(), hasItem(metadataField));
 
             verify(caseTypeRepository).findLastVersion(CASE_TYPE_ID);
             verify(caseTypeSnapshotService).getSnapshot(CASE_TYPE_ID, VERSION);
+            verify(metadataFieldService).getCaseMetadataFields();
             verify(caseTypeRepository, never()).findByReferenceAndVersion(anyString(), anyInt());
             verify(dtoMapper, never()).map(any(CaseTypeEntity.class));
             verify(caseTypeSnapshotService, never()).storeSnapshot(anyString(), anyInt(), any());
+        }
+
+        @Test
+        @DisplayName("Should replace metadata fields from cached snapshot")
+        void shouldReplaceMetadataFieldsFromCachedSnapshot() {
+            // Given: Old cached snapshot already contains metadata
+            CaseField normalField = new CaseField();
+            normalField.setId("ApplicantName");
+
+            CaseField staleMetadataField = new CaseField();
+            staleMetadataField.setId(MetadataField.STATE.getReference());
+            FieldType staleFieldType = new FieldType();
+            staleFieldType.setType("Text");
+            staleMetadataField.setFieldType(staleFieldType);
+
+            CaseType cachedCaseType = new CaseType();
+            cachedCaseType.setId(CASE_TYPE_ID);
+            cachedCaseType.setCaseFields(Arrays.asList(normalField, staleMetadataField));
+
+            when(caseTypeRepository.findLastVersion(CASE_TYPE_ID)).thenReturn(Optional.of(VERSION));
+            when(caseTypeSnapshotService.getSnapshot(CASE_TYPE_ID, VERSION)).thenReturn(Optional.of(cachedCaseType));
+
+            // When: Find by case type id
+            Optional<CaseType> result = classUnderTest.findByCaseTypeId(CASE_TYPE_ID);
+
+            // Then: Stale metadata is removed and current metadata is added
+            assertTrue(result.isPresent());
+            assertThat(result.get().getCaseFields(), hasSize(2));
+            assertThat(result.get().getCaseFields(), hasItem(normalField));
+            assertThat(result.get().getCaseFields(), hasItem(metadataField));
+            assertFalse(result.get().getCaseFields().contains(staleMetadataField));
         }
 
         @Test
@@ -737,23 +771,26 @@ class CaseTypeServiceImplTest {
         }
 
         @Test
-        @DisplayName("Should add metadata fields to case type before storing snapshot")
-        void shouldAddMetadataFieldsBeforeStoringSnapshot() {
+        @DisplayName("Should store snapshot before adding metadata fields to response")
+        void shouldStoreSnapshotBeforeAddingMetadataFields() {
             // Given: No snapshot exists
             when(caseTypeRepository.findLastVersion(CASE_TYPE_ID)).thenReturn(Optional.of(VERSION));
             when(caseTypeSnapshotService.getSnapshot(CASE_TYPE_ID, VERSION)).thenReturn(Optional.empty());
             when(caseTypeRepository.findByReferenceAndVersion(CASE_TYPE_ID, VERSION))
                 .thenReturn(Optional.of(caseTypeEntity));
+            doAnswer(invocation -> {
+                CaseType storedCaseType = invocation.getArgument(2);
+                assertFalse(storedCaseType.getCaseFields().contains(metadataField));
+                return null;
+            }).when(caseTypeSnapshotService).storeSnapshot(eq(CASE_TYPE_ID), eq(VERSION), any(CaseType.class));
 
             // When: Find by case type id
-            classUnderTest.findByCaseTypeId(CASE_TYPE_ID);
+            Optional<CaseType> result = classUnderTest.findByCaseTypeId(CASE_TYPE_ID);
 
-            // Then: Stored snapshot should include metadata fields
-            ArgumentCaptor<CaseType> caseTypeCaptor = ArgumentCaptor.forClass(CaseType.class);
-
-            verify(caseTypeSnapshotService).storeSnapshot(eq(CASE_TYPE_ID), eq(VERSION), caseTypeCaptor.capture());
-            CaseType storedCaseType = caseTypeCaptor.getValue();
-            assertThat(storedCaseType.getCaseFields(), hasItem(metadataField));
+            // Then: Stored snapshot is plain mapped schema; response still has metadata.
+            assertTrue(result.isPresent());
+            assertThat(result.get().getCaseFields(), hasItem(metadataField));
+            verify(caseTypeSnapshotService).storeSnapshot(eq(CASE_TYPE_ID), eq(VERSION), any(CaseType.class));
         }
 
         @Test

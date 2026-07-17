@@ -9,7 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.event.SnapshotCreationEvent;
 
 @Service
 @ConditionalOnProperty(
-    name = "case-type.snapshot.enabled",
+    name = {"case-type.snapshot.enabled", "case-type.snapshot.async-enabled"},
     havingValue = "true",
     matchIfMissing = true
 )

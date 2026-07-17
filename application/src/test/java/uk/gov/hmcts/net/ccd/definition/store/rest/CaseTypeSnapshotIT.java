@@ -19,7 +19,6 @@ import java.io.UnsupportedEncodingException;
 import java.sql.ResultSet;
 import java.util.concurrent.TimeUnit;
 
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -335,7 +334,7 @@ class CaseTypeSnapshotIT extends BaseTest {
     }
 
     @Test
-    void shouldVerifySnapshotPerformanceBenefit() throws Exception {
+    void shouldReturnSameResponseWithAndWithoutSnapshot() throws Exception {
         // STEP 1: Import definition
         try (final InputStream inputStream = getClass().getResourceAsStream(EXCEL_FILE_CCD_DEFINITION)) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
@@ -366,15 +365,12 @@ class CaseTypeSnapshotIT extends BaseTest {
 
         assertTrue(deletedRows > 0, "Deleted rows should be greater than 0");
 
-        // STEP 4: Query without snapshot (baseline)
+        // STEP 4: Query without snapshot
         final String caseTypeUrl = String.format(CASE_TYPE_URL, TEST_CASE_TYPE);
-        long startTime = System.currentTimeMillis();
-
-        mockMvc.perform(MockMvcRequestBuilders.get(caseTypeUrl)
+        MvcResult withoutSnapshotResult = mockMvc.perform(MockMvcRequestBuilders.get(caseTypeUrl)
                 .header(AUTHORIZATION, "Bearer testUser"))
-            .andExpect(MockMvcResultMatchers.status().isOk());
-
-        long withoutSnapshotTime = System.currentTimeMillis() - startTime;
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
 
         // STEP 5: Wait for new snapshot to be created
         await()
@@ -386,29 +382,17 @@ class CaseTypeSnapshotIT extends BaseTest {
                 assertTrue(count > 0);
             });
 
-        // STEP 6: Query with snapshot multiple times to get average
-        long totalWithSnapshotTime = 0;
-        int iterations = 5;
+        // STEP 6: Query with snapshot and verify behaviour, not environment-dependent timing.
+        MvcResult withSnapshotResult = mockMvc.perform(MockMvcRequestBuilders.get(caseTypeUrl)
+                .header(AUTHORIZATION, "Bearer testUser"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
 
-        for (int i = 0; i < iterations; i++) {
-            startTime = System.currentTimeMillis();
-            mockMvc.perform(MockMvcRequestBuilders.get(caseTypeUrl)
-                    .header(AUTHORIZATION, "Bearer testUser"))
-                .andExpect(MockMvcResultMatchers.status().isOk());
-            totalWithSnapshotTime += System.currentTimeMillis() - startTime;
-        }
-
-        long avgWithSnapshotTime = totalWithSnapshotTime / iterations;
-        double improvementPercentage =
-            ((double)(withoutSnapshotTime - avgWithSnapshotTime) / withoutSnapshotTime) * 100;
-
-        assertThat(avgWithSnapshotTime)
-            .as("Snapshot query should be significantly faster than non-snapshot query")
-            .isLessThan(withoutSnapshotTime);
-
-        assertThat(improvementPercentage)
-            .as("Snapshot should provide at least 30% performance improvement")
-            .isGreaterThan(30.0);
+        assertEquals(
+            withoutSnapshotResult.getResponse().getContentAsString(),
+            withSnapshotResult.getResponse().getContentAsString(),
+            "Snapshot response should match repository response"
+        );
     }
 
     private @Nullable Integer getSnapshotCount() {

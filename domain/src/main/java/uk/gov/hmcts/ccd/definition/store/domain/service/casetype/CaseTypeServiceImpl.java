@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
+import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
@@ -18,8 +19,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -98,14 +101,14 @@ public class CaseTypeServiceImpl implements CaseTypeService {
             .flatMap(currentVersion -> {
                 Optional<CaseType> cachedResult = snapshotService.getSnapshot(caseTypeId, currentVersion);
 
-                return cachedResult.or(() ->
+                return cachedResult.map(this::addMetadataFields).or(() ->
                     repository.findByReferenceAndVersion(caseTypeId, currentVersion)
                         .map(dtoMapper::map)
-                        .map(this::addMetadataFields)
                         .map(caseType -> {
                             snapshotService.storeSnapshot(caseTypeId, currentVersion, caseType);
                             return caseType;
                         })
+                        .map(this::addMetadataFields)
                 );
             });
     }
@@ -164,6 +167,15 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     }
 
     private CaseType addMetadataFields(CaseType caseType) {
+        List<CaseField> caseFields = caseType.getCaseFields();
+        if (caseFields == null) {
+            caseFields = new ArrayList<>();
+        } else {
+            caseFields = new ArrayList<>(caseFields);
+        }
+        caseType.setCaseFields(caseFields);
+
+        caseFields.removeIf(caseField -> caseField != null && MetadataField.isMetadataField(caseField.getId()));
         caseType.addCaseFields(metadataFieldService.getCaseMetadataFields());
         return caseType;
     }

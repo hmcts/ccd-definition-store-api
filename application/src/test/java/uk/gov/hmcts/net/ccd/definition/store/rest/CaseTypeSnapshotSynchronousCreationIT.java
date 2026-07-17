@@ -33,7 +33,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 /**
  * Integration test for synchronous snapshot creation when async is disabled.
- * Tests that when case-type.snapshot.enabled=false:
+ * Tests that when case-type.snapshot.async-enabled=false:
  * 1. Import does NOT create snapshots
  * 2. First GET request creates snapshot synchronously
  * 3. Subsequent GET requests use cached snapshot
@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource(
     locations = "classpath:test.properties",
     properties = {
-        "case-type.snapshot.enabled=false",  // Disable async snapshot creation
+        "case-type.snapshot.async-enabled=false",
         "spring.datasource.hikari.maximum-pool-size=25",
         "spring.datasource.hikari.minimum-idle=5",
         "spring.datasource.hikari.connection-timeout=30000",

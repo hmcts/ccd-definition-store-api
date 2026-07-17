@@ -3,7 +3,6 @@ package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeSnapshotRepository;
@@ -25,6 +24,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -39,14 +39,33 @@ class CaseTypeSnapshotServiceTest {
     @Mock
     private SnapshotJdbcRepository snapshotJdbcRepository;
 
-    @InjectMocks
     private CaseTypeSnapshotService caseTypeSnapshotService;
 
     private CaseType sampleCaseType;
 
     @BeforeEach
     void setUp() {
+        caseTypeSnapshotService = new CaseTypeSnapshotService(snapshotRepository, snapshotJdbcRepository, true);
         sampleCaseType = createSampleCaseType(CASE_TYPE_REF, VERSION);
+    }
+
+    @Test
+    void shouldSkipLookup_whenSnapshotCacheDisabled() {
+        caseTypeSnapshotService = new CaseTypeSnapshotService(snapshotRepository, snapshotJdbcRepository, false);
+
+        Optional<CaseType> result = caseTypeSnapshotService.getSnapshot(CASE_TYPE_REF, VERSION);
+
+        assertFalse(result.isPresent());
+        verifyNoInteractions(snapshotJdbcRepository);
+    }
+
+    @Test
+    void shouldSkipStore_whenSnapshotCacheDisabled() {
+        caseTypeSnapshotService = new CaseTypeSnapshotService(snapshotRepository, snapshotJdbcRepository, false);
+
+        caseTypeSnapshotService.storeSnapshot(CASE_TYPE_REF, VERSION, sampleCaseType);
+
+        verifyNoInteractions(snapshotRepository);
     }
 
     @Test
