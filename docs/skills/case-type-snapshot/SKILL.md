@@ -171,7 +171,7 @@ Before the snapshot feature, every request rebuilt the response from repositorie
 | --- | --- | --- |
 | Feature flags | Old flag stopped eager only; lazy still ran. | Global stops all; async stops eager. |
 | Snapshot content | Stored `CaseType` after metadata was added. | Stores payload before metadata decoration. |
-| Existing rows | Same-version snapshot rows are kept. | Runtime replaces known metadata. |
+| Existing rows | Same-version snapshot rows are kept. | Runtime replaces static metadata. |
 | API response | Cached and uncached paths returned normal `CaseType`. | Same public response contract. |
 | DB-to-HTTP path | `jsonb` to Jackson to Spring. | Same; not raw HTTP JSON streaming. |
 | Performance test | Asserted fixed latency improvement. | Verifies cached and uncached responses are equivalent. |
@@ -180,7 +180,8 @@ Before the snapshot feature, every request rebuilt the response from repositorie
 Snapshot rows are versioned by case type definition version, not by snapshot JSON shape.
 If code changes the snapshot payload format without a new case type import,
 old rows remain until a higher case type version is imported or rows are rebuilt.
-This change protects metadata by replacing known metadata fields at response time.
+This change protects static metadata by replacing it at response time.
+Dynamic metadata such as `[STATE]` remains in the case-type payload.
 
 ## Verification
 

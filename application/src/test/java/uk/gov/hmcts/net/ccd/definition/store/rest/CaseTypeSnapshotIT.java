@@ -213,13 +213,18 @@ class CaseTypeSnapshotIT extends BaseTest {
             Integer.class));
 
         jdbcTemplate.query(
-            "SELECT case_type_reference, version_id FROM case_type_snapshot ORDER BY case_type_reference",
+            "SELECT cts.case_type_reference, cts.version_id, "
+                + "(SELECT MAX(ct.version) FROM case_type ct WHERE ct.reference = cts.case_type_reference) "
+                + "AS actual_version "
+                + "FROM case_type_snapshot cts ORDER BY cts.case_type_reference",
             (ResultSet rs) -> {
                 String caseTypeRef = rs.getString("case_type_reference");
                 Integer versionId = rs.getInt("version_id");
+                Integer actualVersion = rs.getInt("actual_version");
 
                 assertNotNull(caseTypeRef, "Case type reference should not be null");
-                assertEquals(1, versionId, "Initial version should be 1 for " + caseTypeRef);
+                assertEquals(actualVersion, versionId, "Snapshot version should match latest version for "
+                    + caseTypeRef);
             }
         );
     }

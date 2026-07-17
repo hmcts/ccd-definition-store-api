@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
-import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
@@ -30,6 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 @Component
 public class CaseTypeServiceImpl implements CaseTypeService {
@@ -175,8 +175,13 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         }
         caseType.setCaseFields(caseFields);
 
-        caseFields.removeIf(caseField -> caseField != null && MetadataField.isMetadataField(caseField.getId()));
-        caseType.addCaseFields(metadataFieldService.getCaseMetadataFields());
+        List<CaseField> metadataFields = metadataFieldService.getCaseMetadataFields();
+        Set<String> metadataFieldIds = metadataFields.stream()
+            .map(CaseField::getId)
+            .collect(toSet());
+
+        caseFields.removeIf(caseField -> caseField != null && metadataFieldIds.contains(caseField.getId()));
+        caseType.addCaseFields(metadataFields);
         return caseType;
     }
 

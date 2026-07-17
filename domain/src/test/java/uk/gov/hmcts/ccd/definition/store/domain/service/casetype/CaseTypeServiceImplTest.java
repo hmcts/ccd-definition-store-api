@@ -639,13 +639,19 @@ class CaseTypeServiceImplTest {
         private final CaseType caseType = new CaseType();
         private final CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
         private final CaseField metadataField = new CaseField();
+        private final CaseField dynamicMetadataField = new CaseField();
 
         @BeforeEach
         void setup() {
-            metadataField.setId(MetadataField.STATE.getReference());
+            metadataField.setId(MetadataField.CASE_REFERENCE.getReference());
             FieldType fieldType = new FieldType();
-            fieldType.setType(BASE_FIXED_LIST);
+            fieldType.setType("Number");
             metadataField.setFieldType(fieldType);
+
+            dynamicMetadataField.setId(MetadataField.STATE.getReference());
+            FieldType dynamicFieldType = new FieldType();
+            dynamicFieldType.setType(BASE_FIXED_LIST);
+            dynamicMetadataField.setFieldType(dynamicFieldType);
 
             when(metadataFieldService.getCaseMetadataFields()).thenReturn(singletonList(metadataField));
             when(dtoMapper.map(caseTypeEntity)).thenReturn(caseType);
@@ -685,14 +691,14 @@ class CaseTypeServiceImplTest {
             normalField.setId("ApplicantName");
 
             CaseField staleMetadataField = new CaseField();
-            staleMetadataField.setId(MetadataField.STATE.getReference());
+            staleMetadataField.setId(MetadataField.CASE_REFERENCE.getReference());
             FieldType staleFieldType = new FieldType();
             staleFieldType.setType("Text");
             staleMetadataField.setFieldType(staleFieldType);
 
             CaseType cachedCaseType = new CaseType();
             cachedCaseType.setId(CASE_TYPE_ID);
-            cachedCaseType.setCaseFields(Arrays.asList(normalField, staleMetadataField));
+            cachedCaseType.setCaseFields(Arrays.asList(normalField, dynamicMetadataField, staleMetadataField));
 
             when(caseTypeRepository.findLastVersion(CASE_TYPE_ID)).thenReturn(Optional.of(VERSION));
             when(caseTypeSnapshotService.getSnapshot(CASE_TYPE_ID, VERSION)).thenReturn(Optional.of(cachedCaseType));
@@ -702,8 +708,9 @@ class CaseTypeServiceImplTest {
 
             // Then: Stale metadata is removed and current metadata is added
             assertTrue(result.isPresent());
-            assertThat(result.get().getCaseFields(), hasSize(2));
+            assertThat(result.get().getCaseFields(), hasSize(3));
             assertThat(result.get().getCaseFields(), hasItem(normalField));
+            assertThat(result.get().getCaseFields(), hasItem(dynamicMetadataField));
             assertThat(result.get().getCaseFields(), hasItem(metadataField));
             assertFalse(result.get().getCaseFields().contains(staleMetadataField));
         }
