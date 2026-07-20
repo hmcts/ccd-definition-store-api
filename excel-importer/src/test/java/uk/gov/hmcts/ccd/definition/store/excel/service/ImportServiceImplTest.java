@@ -108,7 +108,6 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_D
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_EMAIL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FIXED_LIST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_FLAG_LAUNCHER;
-import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_SUMMARY_LAUNCHER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_LABEL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MONEY_GBP;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_MULTI_SELECT_LIST;
@@ -361,7 +360,7 @@ public class ImportServiceImplTest {
             .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        assertThrows(MissingAccessProfilesException.class,
+        assertThrows(MissingAccessProfilesException.class, 
             () -> service.importFormDefinitions(inputStream, false, false)
         );
     }
@@ -923,7 +922,6 @@ public class ImportServiceImplTest {
             buildBaseType(BASE_REGION),
             buildBaseType(BASE_BASE_LOCATION),
             buildBaseType(BASE_FLAG_LAUNCHER),
-            buildBaseType(BASE_SUMMARY_LAUNCHER),
             buildBaseType(BASE_COMPONENT_LAUNCHER));
     }
 
