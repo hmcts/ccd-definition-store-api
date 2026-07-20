@@ -63,7 +63,8 @@
       "ignore_malformed": true
     },
     "@timestamp": {
-      "enabled": false
+      "type": "date",
+      "ignore_malformed": true
     },
     "@version": {
       "enabled": false

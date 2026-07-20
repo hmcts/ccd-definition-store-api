@@ -11,9 +11,9 @@ import uk.gov.hmcts.befta.BeftaMain;
 @RunWith(Cucumber.class)
 @CucumberOptions(
     plugin = { "json:target/cucumber.json", "pretty" },
-    glue = { "uk.gov.hmcts.befta.player" },
+    glue = { "uk.gov.hmcts.befta.player", "uk.gov.hmcts.ccd.definitionstore.befta" },
     features = { "classpath:features" },
-    tags = "not @Ignore"
+    tags = "(not @Ignore) or (not @groupaccess)"
 )
 public class DefinitionStoreBeftaRunner {
 
