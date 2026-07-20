@@ -88,9 +88,6 @@
       "_extends_": "BaseFlagLauncherFieldType"
     },
     {
-      "_extends_": "BaseSummaryLauncherFieldType"
-    },
-    {
       "_extends_": "BaseComponentLauncherFieldType"
     }
   ]
