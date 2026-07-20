@@ -88,6 +88,15 @@
       "_extends_": "BaseSummaryLauncherFieldType"
     },
     {
+      "_extends_": "BaseRolesLauncherFieldType"
+    },
+    {
+      "_extends_": "BaseHearingsLauncherFieldType"
+    },
+    {
+      "_extends_": "BaseTaskLauncherFieldType"
+    },
+    {
       "_extends_": "BaseComponentLauncherFieldType"
     }
   ]

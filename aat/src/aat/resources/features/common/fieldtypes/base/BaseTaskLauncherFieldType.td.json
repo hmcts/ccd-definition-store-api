@@ -1,0 +1,7 @@
+{
+  "_guid_": "BaseTaskLauncherFieldType",
+  "_extends_": "CommonFieldType",
+
+  "id": "TaskLauncher",
+  "type": "TaskLauncher"
+}
