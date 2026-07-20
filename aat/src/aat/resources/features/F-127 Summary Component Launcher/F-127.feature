@@ -8,7 +8,7 @@ Feature: F-127: New DefaultFocus Column
   Scenario: Import Definition file with true value in DefaultFocus column of the CaseTypeTab
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
-    And the request [contains a Summary within CaseTypeTab]
+    And the request [contains id of a case type with Summary base type fields]
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a positive response is received
     And the response has all other details as expected
