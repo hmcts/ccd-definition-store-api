@@ -108,6 +108,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_P
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_POST_CODE;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_RADIO_FIXED_LIST;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_REGION;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_RICH_TEXT_AREA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT_AREA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_WAYS_TO_PAY;
@@ -301,11 +302,11 @@ public class ImportServiceImplTest {
 
         AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
         accessProfileEntity.setReference(ACCESS_PROFILE_1);
-        lenient().doReturn(Arrays.asList(accessProfileEntity)).when(accessProfileRepository).findAll();
+        lenient().doReturn(List.of(accessProfileEntity)).when(accessProfileRepository).findAll();
     }
 
     @Test
-    void shouldNotImportDefinition() throws Exception {
+    void shouldNotImportDefinition() {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(buildBaseType(BASE_FIXED_LIST),
@@ -318,7 +319,7 @@ public class ImportServiceImplTest {
     }
 
     @Test
-    void importDefinitionThrowsMissingAccessProfiles() throws Exception {
+    void importDefinitionThrowsMissingAccessProfiles() {
 
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
 
@@ -339,7 +340,7 @@ public class ImportServiceImplTest {
             .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        assertThrows(MissingAccessProfilesException.class, 
+        assertThrows(MissingAccessProfilesException.class,
             () -> service.importFormDefinitions(inputStream, false, false)
         );
     }
@@ -555,6 +556,7 @@ public class ImportServiceImplTest {
             buildBaseType(BASE_MONEY_GBP),
             buildBaseType(BASE_PHONE_UK),
             buildBaseType(BASE_TEXT_AREA),
+            buildBaseType(BASE_RICH_TEXT_AREA),
             buildBaseType(BASE_COLLECTION),
             buildBaseType(BASE_DOCUMENT),
             buildBaseType(BASE_LABEL),
@@ -596,6 +598,7 @@ public class ImportServiceImplTest {
             buildBaseType(BASE_MONEY_GBP),
             buildBaseType(BASE_PHONE_UK),
             buildBaseType(BASE_TEXT_AREA),
+            buildBaseType(BASE_RICH_TEXT_AREA),
             buildBaseType(BASE_COLLECTION),
             buildBaseType(BASE_DOCUMENT),
             buildBaseType(BASE_LABEL),

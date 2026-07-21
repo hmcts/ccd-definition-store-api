@@ -41,7 +41,7 @@ class BaseTypeControllerTests extends BaseTest {
 
         FieldType[] baseTypes = BaseTest.mapper.readValue(result.getResponse().getContentAsString(), FieldType[].class);
 
-        assertEquals(27, baseTypes.length, "Unexpected number of Base Types");
+        assertEquals(28, baseTypes.length, "Unexpected number of Base Types");
         assertContainsFieldType(baseTypes, "Text", "Text");
         assertContainsFieldType(baseTypes, "Number", "Number");
         assertContainsFieldType(baseTypes, "Email", "Email");
@@ -52,6 +52,7 @@ class BaseTypeControllerTests extends BaseTest {
         assertContainsFieldType(baseTypes, "MoneyGBP", "MoneyGBP");
         assertContainsFieldType(baseTypes, "PhoneUK", "PhoneUK", PHONE_NUMBER_REGEX);
         assertContainsFieldType(baseTypes, "TextArea", "TextArea");
+        assertContainsFieldType(baseTypes, "RichTextArea", "RichTextArea");
         assertContainsFieldType(baseTypes, "Complex", "Complex");
         assertContainsFieldType(baseTypes, "Collection", "Collection");
         assertContainsFieldType(baseTypes, "MultiSelectList", "MultiSelectList");

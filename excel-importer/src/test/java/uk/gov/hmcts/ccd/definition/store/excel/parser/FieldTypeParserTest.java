@@ -74,4 +74,27 @@ class FieldTypeParserTest {
 
     }
 
+    @Test
+    void shouldReturnDerivedFieldTypeEntityWithMinimumWhenFieldTypeAttributeIsRichTextArea() {
+        FieldTypeEntity richTextAreaBaseType = new FieldTypeEntity();
+        String richTextAreaFieldType = "RichTextArea";
+        when(parseContext.getType(eq(richTextAreaFieldType))).thenReturn(Optional.of(richTextAreaBaseType));
+
+        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_FIELD.toString());
+        definitionDataItem.addAttribute(ColumnName.FIELD_TYPE.toString(), richTextAreaFieldType);
+        definitionDataItem.addAttribute(ColumnName.MIN.toString(), "5");
+
+        ParseResult.Entry<FieldTypeEntity> result = classUnderTest.parse("RichTextAreaField", definitionDataItem);
+
+        assertNotNull(result.getValue());
+
+        FieldTypeEntity parsedEntity = result.getValue();
+
+        assertEquals(richTextAreaBaseType, parsedEntity.getBaseFieldType());
+        assertEquals("5", parsedEntity.getMinimum());
+        assertNull(parsedEntity.getMaximum());
+        assertNull(parsedEntity.getRegularExpression());
+        assertNull(parsedEntity.getCollectionFieldType());
+    }
+
 }
