@@ -1,12 +1,11 @@
 {
-	"_guid_": "S-127.1",
-	"_extends_": "F-127_Test_Base_data",
-	"title": "Return the new Summary base type in the Get Case Type Definition Store operation",
-	"specs": [
+  "_guid_": "S-127.1",
+  "_extends_": "F-127_Test_Base_data",
+  "title": "Definition file with newly added Summary base type in CaseTypeTab with required display order",
+  "specs": [
     "an active profile in CCD",
-    "contains id of a case type with Summary base type fields",
-    "contains all details of the case type requested"
-	],
+    "contains a definition file with newly added Summary base type in CaseTypeTab with required display order"
+  ],
   "request": {
     "body": {
       "arrayInMap": [
