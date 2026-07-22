@@ -53,6 +53,7 @@ ext {
     set('spring-framework.version', '6.2.14')
     set('spring-security.version', '6.5.7')
     set('springCloudVersion', '2025.0.1')
+    set('netty.version', '4.1.135.Final')
 
     set('jackson.version', '2.16.0')
     set('snakeyaml.version', '2.3')
