@@ -6,7 +6,7 @@ dependencyCheck {
 }
 
 task testJar(type: Jar, dependsOn: testClasses) {
-    archiveFileName = 'test-' + project.archivesBaseName
+    archiveBaseName = 'test-' + project.base.archivesName.get()
     archiveClassifier = 'tests'
     from sourceSets.test.output
 }

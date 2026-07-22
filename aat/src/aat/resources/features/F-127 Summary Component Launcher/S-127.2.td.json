@@ -4,7 +4,7 @@
   "title": "must return 200 for case type details request",
   "specs": [
     "an active profile in CCD",
-    "contains a valid jurisdiction id",
+    "contains a definition file with newly added Summary base type in CaseTypeTab with required display order",
     "contains a valid caseType id",
     "has the 200 OK code",
     "contains case type details"

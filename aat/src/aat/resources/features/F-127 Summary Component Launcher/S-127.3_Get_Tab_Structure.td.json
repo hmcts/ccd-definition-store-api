@@ -1,10 +1,10 @@
 {
   "_guid_": "S-127.3_Get_Tab_Structure",
   "_extends_": "F-127.3_Test_Data_Base",
-  "title": "Verify defaultFocus values in tab structure for FT_MasterCaseType",
+  "title": "Import Definition File with valid base types: Summary base type",
   "operationName": "GET /api/display/tab-structure/{id}",
   "specs": [
-    "get tabs for case type id which has defaultFocus value set"
+    "get tabs for case type id which has summary tab"
   ],
   "method": "GET",
   "uri": "/api/display/tab-structure/{ctid}",
@@ -28,8 +28,15 @@
           "label": "Details",
           "order": 2,
           "tab_fields": "[[ANYTHING_PRESENT]]",
-          "show_condition": "[[ANY_STRING_NULLABLE]]",
-          "defaultFocus": true
+          "show_condition": "[[ANY_STRING_NULLABLE]]"
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "Task",
+          "label": "Task",
+          "order": "[[ANY_STRING_NULLABLE]]",
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]"
         },
         {
           "role": "[[ANY_STRING_NULLABLE]]",
@@ -37,8 +44,31 @@
           "label": "Linked Cases",
           "order": 3,
           "tab_fields": "[[ANYTHING_PRESENT]]",
-          "show_condition": "[[ANY_STRING_NULLABLE]]",
-          "defaultFocus": false
+          "show_condition": "[[ANY_STRING_NULLABLE]]"
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "Hearings",
+          "label": "Hearings",
+          "order": "[[ANY_STRING_NULLABLE]]",
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]"
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "Summary",
+          "label": "Summary",
+          "order": "[[ANY_STRING_NULLABLE]]",
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]"
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "Roles",
+          "label": "Roles",
+          "order": "[[ANY_STRING_NULLABLE]]",
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]"
         },
         {
           "role": "[[ANY_STRING_NULLABLE]]",
@@ -46,8 +76,7 @@
           "label": "History",
           "order": 1,
           "tab_fields": "[[ANYTHING_PRESENT]]",
-          "show_condition": "[[ANY_STRING_NULLABLE]]",
-          "defaultFocus": false
+          "show_condition": "[[ANY_STRING_NULLABLE]]"
         }
       ]
     }
