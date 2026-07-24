@@ -1,5 +1,5 @@
 {
-  "_guid_": "S-126.1",
+  "_guid_": "S-127.1",
   "_extends_": "Import_Base_data",
   "title": "Import Definition file containing new column StateCategory with single StateCategory",
   "specs": [

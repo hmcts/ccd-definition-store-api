@@ -1,19 +1,14 @@
 {
-  "_guid_": "S-126.4",
-  "_extends_": "F-126_Test_Base_Data",
-  "title": "Get case type details should include stateCategory for comma separated values",
+  "_guid_": "S-127.3",
+  "_extends_": "F-127_Test_Base_Data",
+  "title": "Get case type details should include stateCategory for states",
   "specs": [
     "an active profile in CCD",
     "contains a valid jurisdiction id",
-    "contains a valid caseType id for comma separated state categories",
+    "contains a valid caseType id",
     "has the 200 OK code",
     "contains case type details with stateCategory"
   ],
-  "request": {
-    "pathVariables": {
-      "ctid": "FT_MasterCaseType"
-    }
-  },
   "expectedResponse": {
     "_extends_": "Common_200_Response",
     "headers": {
@@ -31,11 +26,11 @@
         },
         {
           "id": "CaseCreated",
-          "state_category": "[[ANYTHING_PRESENT]]"
+          "state_category": "Start"
         },
         {
           "id": "CaseUpdated",
-          "state_category": "Closed for payment,End"
+          "state_category": "[[ANYTHING_PRESENT]]"
         }
       ]
     }
