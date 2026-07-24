@@ -35,36 +35,41 @@ public class DisplayGroupCaseFieldElementPathValidatorImpl implements DisplayGro
     @Override
     public ValidationResult validate(DisplayGroupCaseFieldEntity entity) {
         ValidationResult validationResult = new ValidationResult();
-        if (entity.getCaseField() != null && getCaseType(entity) != null
+        CaseTypeEntity caseType = getCaseType(entity);
+        if (entity.getCaseField() != null && caseType != null
             && isNotBlank(entity.getCaseFieldElementPath())) {
-            validatePath(entity, validationResult);
+            validatePath(entity, caseType, validationResult);
         }
         return validationResult;
     }
 
-    private void validatePath(DisplayGroupCaseFieldEntity entity, ValidationResult validationResult) {
+    private void validatePath(DisplayGroupCaseFieldEntity entity,
+                              CaseTypeEntity caseType,
+                              ValidationResult validationResult) {
         if (entity.getCaseField().isCollectionFieldType()) {
-            validationResult.addError(pathDefinedForCollectionFieldError(entity));
+            validationResult.addError(pathDefinedForCollectionFieldError(entity, caseType));
         } else if (entity.getCaseField().isComplexFieldType()) {
-            validateComplexFieldPath(entity, validationResult);
+            validateComplexFieldPath(entity, caseType, validationResult);
         } else {
-            validationResult.addError(pathDefinedForNonComplexFieldError(entity));
+            validationResult.addError(pathDefinedForNonComplexFieldError(entity, caseType));
         }
     }
 
-    private void validateComplexFieldPath(DisplayGroupCaseFieldEntity entity, ValidationResult validationResult) {
+    private void validateComplexFieldPath(DisplayGroupCaseFieldEntity entity,
+                                          CaseTypeEntity caseType,
+                                          ValidationResult validationResult) {
         if (hasCollectionFieldInPath(entity)) {
-            validationResult.addError(pathDefinedForCollectionFieldError(entity));
+            validationResult.addError(pathDefinedForCollectionFieldError(entity, caseType));
             return;
         }
 
-        Set<CaseFieldEntity> caseFields = getCaseType(entity).getCaseFields();
+        Set<CaseFieldEntity> caseFields = caseType.getCaseFields();
         Set<String> allPaths = caseFieldEntityUtil
             .buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(caseFields);
         String fullPath = entity.getCaseField().getReference() + '.' + entity.getCaseFieldElementPath();
 
         if (!allPaths.contains(fullPath)) {
-            validationResult.addError(invalidPathError(entity));
+            validationResult.addError(invalidPathError(entity, caseType));
         }
     }
 
@@ -93,27 +98,30 @@ public class DisplayGroupCaseFieldElementPathValidatorImpl implements DisplayGro
         return entity.getDisplayGroup() == null ? null : entity.getDisplayGroup().getCaseType();
     }
 
-    private ValidationError pathDefinedForNonComplexFieldError(DisplayGroupCaseFieldEntity entity) {
+    private ValidationError pathDefinedForNonComplexFieldError(DisplayGroupCaseFieldEntity entity,
+                                                              CaseTypeEntity caseType) {
         return new ValidationError(
             String.format(ERROR_MESSAGE_PATH_DEFINED_FOR_NON_COMPLEX_FIELD,
                 entity.getCaseFieldElementPath(),
                 entity.getCaseField().getReference(),
-                getCaseType(entity).getReference()), entity);
+                caseType.getReference()), entity);
     }
 
-    private ValidationError pathDefinedForCollectionFieldError(DisplayGroupCaseFieldEntity entity) {
+    private ValidationError pathDefinedForCollectionFieldError(DisplayGroupCaseFieldEntity entity,
+                                                              CaseTypeEntity caseType) {
         return new ValidationError(
             String.format(ERROR_MESSAGE_PATH_DEFINED_FOR_COLLECTION_FIELD,
                 entity.getCaseFieldElementPath(),
                 entity.getCaseField().getReference(),
-                getCaseType(entity).getReference()), entity);
+                caseType.getReference()), entity);
     }
 
-    private ValidationError invalidPathError(DisplayGroupCaseFieldEntity entity) {
+    private ValidationError invalidPathError(DisplayGroupCaseFieldEntity entity,
+                                            CaseTypeEntity caseType) {
         return new ValidationError(
             String.format(ERROR_MESSAGE_INVALID_PATH,
                 entity.getCaseFieldElementPath(),
-                getCaseType(entity).getReference(),
+                caseType.getReference(),
                 entity.getCaseField().getReference()), entity);
     }
 
