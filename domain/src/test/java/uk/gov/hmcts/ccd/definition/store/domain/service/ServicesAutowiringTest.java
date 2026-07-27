@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+import jakarta.persistence.EntityManagerFactory;
 import uk.gov.hmcts.ccd.definition.store.AppInsights;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
@@ -48,6 +49,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.Sear
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldUnicityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.ImportJobRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.BannerRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
@@ -393,6 +395,18 @@ class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public SearchPartyRepository searchPartyRepository() {
             return mock(SearchPartyRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public ImportJobRepository importJobRepository() {
+            return mock(ImportJobRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public EntityManagerFactory entityManagerFactory() {
+            return mock(EntityManagerFactory.class);
         }
     }
 }
