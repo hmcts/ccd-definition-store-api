@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser.model;
 
 import org.apache.commons.lang3.StringUtils;
+import uk.gov.hmcts.ccd.definition.store.excel.util.ReferenceUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -67,7 +68,7 @@ public class DefinitionSheet {
 
     private static String groupingKey(DefinitionDataItem item) {
         if (StringUtils.isNotBlank(item.getCaseTypeId())) {
-            return String.format("%s-%s", item.getId(), item.getCaseTypeId());
+            return ReferenceUtils.caseTypeScopedListId(item.getId(), item.getCaseTypeId());
         }
         return item.getId();
     }
