@@ -24,6 +24,9 @@ java:
     # Enable whenever required and point to the matching data-store preview Elasticsearch service.
     # Override DATA_STORE_ELASTIC_SEARCH_HOST at deploy time to avoid hardcoding a specific PR release.
     ELASTIC_SEARCH_ENABLED: true
+    # Disable async reindex on preview so /import?reindex=true does not leave indices read-only
+    # and break later successful imports (e.g. F-127 S-127.1 put mapping).
+    ELASTIC_SEARCH_REINDEX_ENABLED: false
 
     ELASTIC_SEARCH_HOST: ${DATA_STORE_ELASTIC_SEARCH_HOST:{{ .Release.Name }}-es-master}
     ELASTIC_SEARCH_SCHEME: http
