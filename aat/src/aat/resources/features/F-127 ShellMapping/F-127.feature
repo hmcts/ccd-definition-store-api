@@ -1,10 +1,10 @@
-@F-126
-Feature: F-126 Import validations for CCD Definition with ShellMapping tab
+@F-127
+Feature: F-127 Import validations for CCD Definition with ShellMapping tab
 
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-126.1
+  @S-127.1
   Scenario: Import a definition file containing new Tab ShellCaseMapping - successful import
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -13,7 +13,7 @@ Feature: F-126 Import validations for CCD Definition with ShellMapping tab
     Then a positive response is received
     And the response has all other details as expected
 
-  @S-126.2
+  @S-127.2
   Scenario: Import a definition file containing new Tab ShellCaseMapping with invalid ShellCaseTypeID - not successful import
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -22,7 +22,7 @@ Feature: F-126 Import validations for CCD Definition with ShellMapping tab
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-126.3
+  @S-127.3
   Scenario: Import a definition file containing new Tab ShellCaseMapping with invalid OriginatingCaseTypeID - not successful import
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -31,7 +31,7 @@ Feature: F-126 Import validations for CCD Definition with ShellMapping tab
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-126.4
+  @S-127.4
   Scenario: Import a definition file containing new Tab ShellCaseMapping with invalid ShellCaseFieldName - not successful import
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -40,7 +40,7 @@ Feature: F-126 Import validations for CCD Definition with ShellMapping tab
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-126.5
+  @S-127.5
   Scenario: Import a definition file containing new Tab ShellCaseMapping with invalid OriginatingCaseFieldName - not successful import
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -49,7 +49,7 @@ Feature: F-126 Import validations for CCD Definition with ShellMapping tab
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-126.6
+  @S-127.6
   Scenario: Import a definition file containing same ShellCaseTypeID and OriginatingCaseTypeID - not successful import
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -58,7 +58,7 @@ Feature: F-126 Import validations for CCD Definition with ShellMapping tab
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-126.7
+  @S-127.7
   Scenario: Import a definition file containing new Tab ShellCaseMapping with Duplicate shellCaseTypeId and shellCaseFieldName - not successful import
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
