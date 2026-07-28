@@ -8,7 +8,7 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Coverage/d3b02d95faf6419ca6fbb15b2e712b8b)](https://www.codacy.com/app/adr1ancho/ccd-definition-store-api?utm_source=github.com&utm_medium=referral&utm_content=hmcts/ccd-definition-store-api&utm_campaign=Badge_Coverage)
 [![Known Vulnerabilities](https://snyk.io/test/github/hmcts/ccd-definition-store-api/badge.svg)](https://snyk.io/test/github/hmcts/ccd-definition-store-api)
 [![HitCount](http://hits.dwyl.io/hmcts/ccd-definition-store-api.svg)](#ccd-definition-store-api)
-
+  
 Validation and persistence of definitions for field types, jurisdictions, case types and associated display elements.
 
 ## Overview
@@ -43,6 +43,14 @@ The following environment variables are required:
 | IDAM_S2S_URL | -                                                                           | Base URL for IdAM's S2S API service (service-auth-provider). `http://localhost:4502` for the dockerised local instance or tunneled `dev` instance. |
 | USER_PROFILE_HOST | -                                                                           | Base URL for the User Profile service. `http://localhost:4453` for the dockerised local instance. |
 | AZURE_APPLICATIONINSIGHTS_INSTRUMENTATIONKEY | -                                                                           | secrets for Microsoft Insights logging, can be a dummy string in local |
+
+
+The following environment variables are optional:
+
+| Name | Default            | Description |
+|------|--------------------|-------------|
+| ENABLE_CASE_GROUP_ACCESS                     | true/false         | Enable case group access filtering.                                                                                                                                                 |
+| GROUP_ACCESS_ENABLED                         | true/false/not set | Enable group access Testing (Funtional Tests).                                                                                                                                       |
 
 ### Building
 
