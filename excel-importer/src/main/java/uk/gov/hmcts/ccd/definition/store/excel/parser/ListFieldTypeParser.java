@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
@@ -14,8 +15,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEnti
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Parses Field types defined as part of tab `FixedLists`.
@@ -58,8 +61,12 @@ public class ListFieldTypeParser {
     public ParseResult<FieldTypeEntity> parse(Map<String, DefinitionSheet> definitionSheets) {
         logger.debug("List types parsing...");
 
-        final Map<String, List<DefinitionDataItem>> fixedListsDataItems = definitionSheets
-            .get(SheetName.FIXED_LISTS.getName()).groupDataItemsByCaseTypeAndId();
+        final DefinitionSheet fixedListsSheet = definitionSheets.get(SheetName.FIXED_LISTS.getName());
+
+        validateCaseTypeIds(definitionSheets, fixedListsSheet);
+
+        final Map<String, List<DefinitionDataItem>> fixedListsDataItems =
+            fixedListsSheet.groupDataItemsByCaseTypeAndId();
 
         logger.debug("List types parsing: {} list types detected", fixedListsDataItems.size());
 
@@ -73,6 +80,35 @@ public class ListFieldTypeParser {
         logger.info("List types parsing: OK: {} types parsed", result.getAllResults().size());
 
         return result;
+    }
+
+    /**
+     * A CaseTypeID on the FixedLists tab changes the identity of the generated field types, so a value that does not
+     * match a case type declared in the definition (a typo, or the case type name rather than its ID) would silently
+     * create list types that no case field can reference. Fail the import instead.
+     */
+    private void validateCaseTypeIds(Map<String, DefinitionSheet> definitionSheets, DefinitionSheet fixedListsSheet) {
+        final DefinitionSheet caseTypeSheet = definitionSheets.get(SheetName.CASE_TYPE.getName());
+        if (caseTypeSheet == null) {
+            return;
+        }
+
+        final Set<String> caseTypeIds = caseTypeSheet.getDataItems().stream()
+            .map(DefinitionDataItem::getId)
+            .filter(StringUtils::isNotBlank)
+            .collect(toSet());
+
+        fixedListsSheet.getDataItems().stream()
+            .map(DefinitionDataItem::getCaseTypeId)
+            .filter(StringUtils::isNotBlank)
+            .filter(caseTypeId -> !caseTypeIds.contains(caseTypeId))
+            .findFirst()
+            .ifPresent(caseTypeId -> {
+                throw new InvalidImportException(String.format(
+                    "Invalid Case Definition sheet - In sheet '%s' the column '%s' value '%s' does not match a case "
+                        + "type defined in this definition", SheetName.FIXED_LISTS.getName(),
+                    ColumnName.CASE_TYPE_ID, caseTypeId));
+            });
     }
 
     private ParseResult<FieldTypeEntity> parseListType(Map.Entry<String, List<DefinitionDataItem>> listDataItems) {
@@ -89,7 +125,7 @@ public class ListFieldTypeParser {
         fixedListType.setBaseFieldType(fixedListBaseType);
         String fixedListReference = ReferenceUtils.listReference(FIXED_LIST_TYPE, listDataItems.getKey());
         spreadsheetValidator.validate(
-            SheetName.FIXED_LISTS.getName(), "ID", fixedListReference, FIXED_RADIO_LIST_TYPE);
+            SheetName.FIXED_LISTS.getName(), "ID", fixedListReference, FIXED_LIST_TYPE);
         fixedListType.setReference(fixedListReference);
         fixedListType.setJurisdiction(parseContext.getJurisdiction());
         fixedListType.addListItems(fixedListItems);

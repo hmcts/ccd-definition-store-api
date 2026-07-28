@@ -166,6 +166,52 @@ class ListFieldTypeParserTest extends ParserTestBase {
         assertThat(fixedList.getListItems().size(), is(2));
     }
 
+    @Test
+    void shouldFail_whenCaseTypeIdDoesNotMatchACaseTypeInTheDefinition() {
+        given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.of(fieldFixedList));
+        given(parseContext.getBaseType(BASE_RADIO_FIXED_LIST)).willReturn(Optional.of(fieldFixedRadioList));
+        given(parseContext.getBaseType(BASE_MULTI_SELECT_LIST)).willReturn(Optional.of(fieldMultiList));
+
+        definitionSheets.put(SheetName.FIXED_LISTS.getName(), definitionSheet);
+        definitionSheet.addDataItem(buildDefinitionDataItemWithCaseTypeId("mylist", "Some Case Type Name",
+            "code1", "Label1", 1));
+        definitionSheets.put(SheetName.CASE_TYPE.getName(), caseTypeSheet("CaseTypeA"));
+
+        ListFieldTypeParser listFieldTypeParser = new ListFieldTypeParser(parseContext, spreadsheetValidator);
+        InvalidImportException ex = assertThrows(InvalidImportException.class, () ->
+            listFieldTypeParser.parse(definitionSheets));
+
+        assertThat(ex.getMessage(), containsString("the column 'CaseTypeID' value 'Some Case Type Name' does not "
+            + "match a case type defined in this definition"));
+    }
+
+    @Test
+    void shouldParseListType_whenCaseTypeIdMatchesACaseTypeInTheDefinition() {
+        given(parseContext.getBaseType(BASE_FIXED_LIST)).willReturn(Optional.of(fieldFixedList));
+        given(parseContext.getBaseType(BASE_RADIO_FIXED_LIST)).willReturn(Optional.of(fieldFixedRadioList));
+        given(parseContext.getBaseType(BASE_MULTI_SELECT_LIST)).willReturn(Optional.of(fieldMultiList));
+
+        definitionSheets.put(SheetName.FIXED_LISTS.getName(), definitionSheet);
+        definitionSheet.addDataItem(buildDefinitionDataItemWithCaseTypeId("mylist", "CaseTypeA",
+            "code1", "Label1", 1));
+        definitionSheets.put(SheetName.CASE_TYPE.getName(), caseTypeSheet("CaseTypeA"));
+
+        ListFieldTypeParser listFieldTypeParser = new ListFieldTypeParser(parseContext, spreadsheetValidator);
+        ParseResult<FieldTypeEntity> result = listFieldTypeParser.parse(definitionSheets);
+
+        assertThat(result.getAllResults().size(), is(3));
+    }
+
+    private DefinitionSheet caseTypeSheet(String... caseTypeIds) {
+        DefinitionSheet sheet = new DefinitionSheet();
+        for (String caseTypeId : caseTypeIds) {
+            DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE.getName());
+            item.addAttribute(ColumnName.ID.toString(), caseTypeId);
+            sheet.addDataItem(item);
+        }
+        return sheet;
+    }
+
     private DefinitionDataItem buildDefinitionDataItem() {
         DefinitionDataItem item = new DefinitionDataItem(SheetName.FIXED_LISTS.getName());
         item.addAttribute(ColumnName.ID.toString(), "ngitb");
