@@ -1,10 +1,10 @@
-@F-126
-Feature: F-126: FixedList CaseTypeID scoping on import (CCD-6594)
+@F-129
+Feature: F-129: FixedList CaseTypeID scoping on import (CCD-6594)
 
   Background:
     Given an appropriate test context as detailed in the test data source,
 
-  @S-126.1
+  @S-129.1
   Scenario: Import succeeds when the same FixedList ID is reused across two case types, each tagged with CaseTypeID
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
