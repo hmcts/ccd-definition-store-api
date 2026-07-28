@@ -75,7 +75,7 @@ ext {
     feignJackson = '13.9'
     gsonVersion = '2.13.2'
     testcontainersVersion = '1.21.4'
-    ccdTestDefinitionVersion = '77.26.10-prerelease-CCD-6805'
+    ccdTestDefinitionVersion = '7.26.11-rc2'
     beftaFwVersion = '9.2.6'
     limits = [
             'instruction': 99,
