@@ -11,6 +11,7 @@ Feature: F-126: Reindexing functionality and verification via GET API
     And the request [contains reindexing set to true]
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a positive response is received
+    And a wait time of [60] seconds [to allow reindexing to complete]
 
   @S-126.2
   Scenario: Successfully retrieve reindexing metadata for all case types
