@@ -2,24 +2,35 @@ package uk.gov.hmcts.ccd.definition.store.domain.service.shellmapping;
 
 import com.google.common.collect.Lists;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
+import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
+import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
 import uk.gov.hmcts.ccd.definition.store.repository.ShellMappingRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ShellMappingEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMapping;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMappingResponse;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -32,6 +43,9 @@ class ShellMappingServiceImplTest {
 
     @Mock
     private ShellMappingRepository repository;
+
+    @Mock
+    private CaseTypeService caseTypeService;
 
     @Mock
     private EntityToResponseDTOMapper dtoMapper;
@@ -148,6 +162,101 @@ class ShellMappingServiceImplTest {
         assertEquals(1, result.size());
         verify(repository, times(1)).findAll();
         verify(dtoMapper, times(1)).map(entity);
+    }
+
+    @Nested
+    @DisplayName("findByOriginatingCaseTypeId tests")
+    class FindByOriginatingCaseTypeIdTests {
+
+        @Test
+        @DisplayName("Should call caseTypeService.findByCaseTypeId and return"
+            + " shell mapping response when case type exists")
+        void shouldCallCaseTypeServiceAndReturnResponseWhenCaseTypeExists() {
+            // Given
+            String caseTypeId = "ORIG_TYPE_1";
+            CaseType caseType = new CaseType();
+            caseType.setId(caseTypeId);
+
+            ShellMappingEntity entity1 = createShellMappingEntity("SHELL_TYPE_1", "shellField1",
+                "ORIG_TYPE_1", "origField1");
+            ShellMappingEntity entity2 = createShellMappingEntity("SHELL_TYPE_1", "shellField2",
+                "ORIG_TYPE_1", "origField2");
+            List<ShellMappingEntity> entities = Lists.newArrayList(entity1, entity2);
+
+            when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.of(caseType));
+            when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(entities);
+
+            // When
+            ShellMappingResponse result = sut.findByOriginatingCaseTypeId(caseTypeId);
+
+            // Then
+            assertNotNull(result);
+            assertThat(result.getShellCaseTypeID(), equalTo("SHELL_TYPE_1"));
+            assertThat(result.getShellCaseMappings(), hasSize(2));
+            assertThat(result.getShellCaseMappings().get(0).getOriginatingCaseFieldName(), equalTo("origField1"));
+            assertThat(result.getShellCaseMappings().get(0).getShellCaseFieldName(), equalTo("shellField1"));
+            assertThat(result.getShellCaseMappings().get(1).getOriginatingCaseFieldName(), equalTo("origField2"));
+            assertThat(result.getShellCaseMappings().get(1).getShellCaseFieldName(), equalTo("shellField2"));
+
+            verify(caseTypeService, times(1)).findByCaseTypeId(caseTypeId);
+            verify(repository, times(1)).findByOriginatingCaseTypeIdReference(caseTypeId);
+        }
+
+        @Test
+        @DisplayName("Should throw CaseTypeValidationException when case type does not exist")
+        void shouldThrowCaseTypeValidationExceptionWhenCaseTypeDoesNotExist() {
+            // Given
+            String caseTypeId = "NON_EXISTENT_CASE_TYPE";
+            when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.empty());
+
+            // When & Then
+            CaseTypeValidationException exception = assertThrows(CaseTypeValidationException.class,
+                () -> sut.findByOriginatingCaseTypeId(caseTypeId));
+
+            assertThat(exception.getErrors().size(), equalTo(1));
+            assertThat(exception.getErrors().iterator().next(), equalTo("Case Type not found " + caseTypeId));
+
+            verify(caseTypeService, times(1)).findByCaseTypeId(caseTypeId);
+            verify(repository, times(0)).findByOriginatingCaseTypeIdReference(any());
+        }
+
+        @Test
+        @DisplayName("Should call caseTypeService.findByCaseTypeId with correct parameter")
+        void shouldCallCaseTypeServiceWithCorrectParameter() {
+            // Given
+            String caseTypeId = "ORIG_TYPE_1";
+            CaseType caseType = new CaseType();
+            ShellMappingEntity entity = createShellMappingEntity("SHELL_TYPE_1", "shellField1",
+                "ORIG_TYPE_1", "origField1");
+
+            when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.of(caseType));
+            when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(Lists.newArrayList(entity));
+
+            // When
+            sut.findByOriginatingCaseTypeId(caseTypeId);
+
+            // Then
+            verify(caseTypeService, times(1)).findByCaseTypeId(eq(caseTypeId));
+        }
+
+        @Test
+        @DisplayName("Should throw NotFoundException when case type exists but no shell mappings found")
+        void shouldThrowNotFoundExceptionWhenCaseTypeExistsButNoShellMappingsFound() {
+            // Given
+            String caseTypeId = "ORIG_TYPE_1";
+            CaseType caseType = new CaseType();
+            when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.of(caseType));
+            when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(new ArrayList<>());
+
+            // When & Then
+            NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> sut.findByOriginatingCaseTypeId(caseTypeId));
+
+            assertThat(exception.getMessage(), equalTo("No Shell case found for case type id " + caseTypeId));
+
+            verify(caseTypeService, times(1)).findByCaseTypeId(caseTypeId);
+            verify(repository, times(1)).findByOriginatingCaseTypeIdReference(caseTypeId);
+        }
     }
 
     private ShellMappingEntity createShellMappingEntity(String shellCaseTypeRef, String shellCaseFieldRef,
