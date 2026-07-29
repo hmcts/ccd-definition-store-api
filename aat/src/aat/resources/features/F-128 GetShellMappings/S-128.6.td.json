@@ -1,6 +1,6 @@
 {
-  "_guid_": "S-127.6",
-  "_extends_": "F-127_Test_Base_Data",
+  "_guid_": "S-128.6",
+  "_extends_": "F-128_Test_Base_Data",
   "title": "Import a definition file containing same ShellCaseTypeID and OriginatingCaseTypeID - not successful import",
   "specs": [
     "an active profile in CCD",

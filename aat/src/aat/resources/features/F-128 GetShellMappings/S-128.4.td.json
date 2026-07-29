@@ -1,6 +1,6 @@
 {
-  "_guid_": "S-127.4",
-  "_extends_": "F-127_Test_Base_Data",
+  "_guid_": "S-128.4",
+  "_extends_": "F-128_Test_Base_Data",
   "title": "Negative response - Return 400  if originalCaseTypeId pass is not valid",
   "specs": [
     "an active profile in CCD",

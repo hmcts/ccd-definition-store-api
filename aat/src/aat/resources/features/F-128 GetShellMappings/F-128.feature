@@ -1,10 +1,10 @@
-@F-127
-Feature: F-127 Get Shell Mappings for Originating Case Type Id
+@F-128
+Feature: F-128 Get Shell Mappings for Originating Case Type Id
 
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-127.2
+  @S-128.2
   Scenario: Success response - Return 200 success with shell case mappings for the originalCaseTypeId
     Given a user with [an active profile in CCD]
     And a call [to import definition file] will get the expected response as in [Import_BEFTA_Master_Definition]
@@ -14,7 +14,7 @@ Feature: F-127 Get Shell Mappings for Originating Case Type Id
     Then a positive response is received
     And the response [contains all shellCaseMapping for originalCaseTypeId is present in the response]
 
-  @S-127.3
+  @S-128.3
   Scenario: Negative response - Return 404 if no shell case mappings are present for the originalCaseTypeId
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -24,7 +24,7 @@ Feature: F-127 Get Shell Mappings for Originating Case Type Id
     Then a negative response is received
     And the response [contains 404 Not Found - No ShellCaseMapping Found]
 
-  @S-127.4
+  @S-128.4
   Scenario: Negative response - Return 400 if originalCaseTypeId pass is not valid
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -33,7 +33,7 @@ Feature: F-127 Get Shell Mappings for Originating Case Type Id
     Then a negative response is received
     And the response [contains 400 Bad Request - invalid case type id]
 
-  @S-127.5
+  @S-128.5
   Scenario: Negative response - Return 400 Bad Request
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -43,7 +43,7 @@ Feature: F-127 Get Shell Mappings for Originating Case Type Id
     Then a negative response is received
     And the response [contains 400 Bad Request]
 
-  @S-127.6
+  @S-128.6
   Scenario: Negative response - Return 401 Unauthorised
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
