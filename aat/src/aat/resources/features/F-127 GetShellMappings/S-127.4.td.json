@@ -1,0 +1,27 @@
+{
+  "_guid_": "S-127.4",
+  "_extends_": "F-127_Test_Base_Data",
+  "title": "Negative response - Return 400  if originalCaseTypeId pass is not valid",
+  "specs": [
+    "an active profile in CCD",
+    "contains an originalCaseTypeId that does not exists in CCD config",
+    "contains 400 Bad Request - invalid case type id"
+  ],
+  "request": {
+    "pathVariables": {
+      "ctid": "FT_CaseAccessCategories_NotExists"
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Unprocessable Entity",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__" : "Case Type not found FT_CaseAccessCategories_NotExists"
+    }
+  }
+}
