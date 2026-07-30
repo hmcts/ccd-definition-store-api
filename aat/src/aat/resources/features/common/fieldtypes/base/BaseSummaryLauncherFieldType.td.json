@@ -1,0 +1,7 @@
+{
+  "_guid_": "BaseSummaryLauncherFieldType",
+  "_extends_": "CommonFieldType",
+
+  "id": "SummaryLauncher",
+  "type": "SummaryLauncher"
+}
