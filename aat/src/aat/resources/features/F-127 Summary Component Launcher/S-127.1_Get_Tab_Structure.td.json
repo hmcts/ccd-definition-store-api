@@ -34,7 +34,7 @@
           "role": "[[ANY_STRING_NULLABLE]]",
           "id": "Task",
           "label": "Task",
-          "order": 4,
+          "order": 7,
           "tab_fields": [
             {
               "case_field": {
@@ -75,7 +75,7 @@
           "role": "[[ANY_STRING_NULLABLE]]",
           "id": "Hearings",
           "label": "Hearings",
-          "order": 3,
+          "order": 6,
           "tab_fields": [
             {
               "case_field": {
@@ -108,7 +108,7 @@
           "role": "[[ANY_STRING_NULLABLE]]",
           "id": "Summary",
           "label": "Summary",
-          "order": 1,
+          "order": 4,
           "tab_fields": [
             {
               "case_field": {
@@ -141,7 +141,7 @@
           "role": "[[ANY_STRING_NULLABLE]]",
           "id": "Roles",
           "label": "Roles",
-          "order": 2,
+          "order": 5,
           "tab_fields": [
             {
               "case_field": {
