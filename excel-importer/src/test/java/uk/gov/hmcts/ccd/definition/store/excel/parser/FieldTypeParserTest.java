@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -86,15 +87,15 @@ class FieldTypeParserTest {
 
         ParseResult.Entry<FieldTypeEntity> result = classUnderTest.parse("RichTextAreaField", definitionDataItem);
 
-        assertNotNull(result.getValue());
+        assertThat(result.getValue()).isNotNull();
 
         FieldTypeEntity parsedEntity = result.getValue();
 
-        assertEquals(richTextAreaBaseType, parsedEntity.getBaseFieldType());
-        assertEquals("5", parsedEntity.getMinimum());
-        assertNull(parsedEntity.getMaximum());
-        assertNull(parsedEntity.getRegularExpression());
-        assertNull(parsedEntity.getCollectionFieldType());
+        assertThat(parsedEntity.getBaseFieldType()).isEqualTo(richTextAreaBaseType);
+        assertThat(parsedEntity.getMinimum()).isEqualTo("5");
+        assertThat(parsedEntity.getMaximum()).isNull();
+        assertThat(parsedEntity.getRegularExpression()).isNull();
+        assertThat(parsedEntity.getCollectionFieldType()).isNull();
     }
 
 }
