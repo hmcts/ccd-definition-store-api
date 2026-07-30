@@ -42,9 +42,9 @@ class BaseTypeControllerTests extends BaseTest {
 
         FieldType[] baseTypes = BaseTest.mapper.readValue(result.getResponse().getContentAsString(), FieldType[].class);
 
-        assertThat(baseTypes.length)
+        assertThat(baseTypes)
             .as("Unexpected number of Base Types")
-            .isEqualTo(28);
+            .hasSize(28);
         assertContainsFieldType(baseTypes, "Text", "Text");
         assertContainsFieldType(baseTypes, "Number", "Number");
         assertContainsFieldType(baseTypes, "Email", "Email");
