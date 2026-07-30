@@ -79,7 +79,7 @@ class FieldTypeParserTest {
     void shouldReturnDerivedFieldTypeEntityWithMinimumWhenFieldTypeAttributeIsRichTextArea() {
         FieldTypeEntity richTextAreaBaseType = new FieldTypeEntity();
         String richTextAreaFieldType = "RichTextArea";
-        when(parseContext.getType(eq(richTextAreaFieldType))).thenReturn(Optional.of(richTextAreaBaseType));
+        when(parseContext.getType(richTextAreaFieldType)).thenReturn(Optional.of(richTextAreaBaseType));
 
         DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_FIELD.toString());
         definitionDataItem.addAttribute(ColumnName.FIELD_TYPE.toString(), richTextAreaFieldType);
