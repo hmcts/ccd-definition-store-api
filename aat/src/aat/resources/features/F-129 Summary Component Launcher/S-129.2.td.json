@@ -1,6 +1,6 @@
 {
-  "_guid_": "S-127.2",
-  "_extends_": "F-127.2_Test_Base_Data",
+  "_guid_": "S-129.2",
+  "_extends_": "F-129.2_Test_Base_Data",
   "title": "Return the new Summary base type in the Get Case Type Definition Store operation",
   "specs": [
     "an active profile in CCD",

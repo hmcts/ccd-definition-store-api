@@ -1,6 +1,6 @@
 {
-  "_guid_": "S-127.1_Get_Tab_Structure",
-  "_extends_": "F-127.1_Test_Data_Base",
+  "_guid_": "S-129.1_Get_Tab_Structure",
+  "_extends_": "F-129.1_Test_Data_Base",
   "title": "Import Definition File with valid base types: Summary base type",
   "operationName": "GET /api/display/tab-structure/{id}",
   "specs": [

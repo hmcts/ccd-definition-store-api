@@ -1,10 +1,10 @@
-@F-127
-Feature: F-127: Test new base types
+@F-129
+Feature: F-129: Test new base types
 
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-127.1
+  @S-129.1
   Scenario: Import Definition File with valid base types: Summary base type
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -12,9 +12,9 @@ Feature: F-127: Test new base types
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a positive response is received
     And the response has all other details as expected
-    And a call [get tabs for case type id which has summary tab] will get the expected response as in [S-127.1_Get_Tab_Structure]
+    And a call [get tabs for case type id which has summary tab] will get the expected response as in [S-129.1_Get_Tab_Structure]
 
-  @S-127.2
+  @S-129.2
   Scenario: Return the new Summary base type in the Get Case Type Definition Store operation
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
