@@ -400,10 +400,79 @@ class CaseTypeSnapshotIT extends BaseTest {
         );
     }
 
+    @Test
+    void shouldRebuildSnapshotWhenStoredPayloadCannotBeRead() throws Exception {
+        // STEP 1: Import definition and wait for the eager snapshot
+        try (final InputStream inputStream = getClass().getResourceAsStream(EXCEL_FILE_CCD_DEFINITION)) {
+            MockMultipartFile file = new MockMultipartFile("file", inputStream);
+
+            MvcResult importResult = mockMvc.perform(MockMvcRequestBuilders.multipart(IMPORT_URL)
+                    .file(file)
+                    .header(AUTHORIZATION, "Bearer testUser"))
+                .andReturn();
+
+            assertResponseCode(importResult, HttpStatus.SC_CREATED);
+        }
+
+        await()
+            .atMost(10, TimeUnit.SECONDS)
+            .pollInterval(500, TimeUnit.MILLISECONDS)
+            .untilAsserted(() -> assertTrue(getSnapshotCount() > 0));
+
+        // STEP 2: Corrupt the stored payload while leaving the version untouched, so the row still
+        // matches the lookup key but can no longer be deserialized into a CaseType. This is what a
+        // release that removes a field from the CaseType response model leaves behind.
+        int updatedRows = jdbcTemplate.update(
+            "UPDATE case_type_snapshot SET precomputed_response = CAST(? AS jsonb) "
+                + "WHERE case_type_reference = ?",
+            "{\"aFieldTheResponseModelDoesNotHave\":true}",
+            TEST_CASE_TYPE
+        );
+
+        assertEquals(1, updatedRows, "Seeded payload should have replaced the stored snapshot");
+
+        // STEP 3: The request still succeeds - the unreadable snapshot must never reach the client
+        final String caseTypeUrl = String.format(CASE_TYPE_URL, TEST_CASE_TYPE);
+
+        MvcResult repairResult = mockMvc.perform(MockMvcRequestBuilders.get(caseTypeUrl)
+                .header(AUTHORIZATION, "Bearer testUser"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andExpect(jsonPath("$.id").value(TEST_CASE_TYPE))
+            .andReturn();
+
+        // STEP 4: The broken row has been discarded and rebuilt rather than left in place
+        assertEquals(TEST_CASE_TYPE, getSnapshotId(),
+            "Unreadable snapshot should have been discarded and rebuilt");
+
+        Integer actualCaseTypeVersion = getActualCaseTypeVersion();
+        assertEquals(actualCaseTypeVersion, getSnapshotVersion(),
+            "Rebuilt snapshot should carry the current case type version");
+
+        // STEP 5: The next request is served from the repaired snapshot and matches byte for byte
+        MvcResult cachedResult = mockMvc.perform(MockMvcRequestBuilders.get(caseTypeUrl)
+                .header(AUTHORIZATION, "Bearer testUser"))
+            .andExpect(MockMvcResultMatchers.status().isOk())
+            .andReturn();
+
+        assertEquals(
+            repairResult.getResponse().getContentAsString(),
+            cachedResult.getResponse().getContentAsString(),
+            "Response served from the rebuilt snapshot should match the rebuilt response"
+        );
+    }
+
     private @Nullable Integer getSnapshotCount() {
         return jdbcTemplate.queryForObject(
             "SELECT COUNT(*) FROM case_type_snapshot WHERE case_type_reference = ?",
             Integer.class,
+            TEST_CASE_TYPE
+        );
+    }
+
+    private @Nullable String getSnapshotId() {
+        return jdbcTemplate.queryForObject(
+            "SELECT precomputed_response ->> 'id' FROM case_type_snapshot WHERE case_type_reference = ?",
+            String.class,
             TEST_CASE_TYPE
         );
     }

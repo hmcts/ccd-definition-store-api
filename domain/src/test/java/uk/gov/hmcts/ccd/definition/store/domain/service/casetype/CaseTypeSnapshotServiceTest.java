@@ -22,6 +22,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -95,6 +96,83 @@ class CaseTypeSnapshotServiceTest {
         // Then: Should return empty
         assertFalse(result.isPresent());
         verify(snapshotJdbcRepository, times(1)).loadCaseTypeSnapshot(CASE_TYPE_REF, VERSION);
+    }
+
+    @Test
+    void shouldDiscardSnapshot_whenRowExistsForVersionButCannotBeRead() {
+        // Given: A row exists for the current version but the read could not deserialize it
+        when(snapshotJdbcRepository.loadCaseTypeSnapshot(CASE_TYPE_REF, VERSION))
+            .thenReturn(Optional.empty());
+        when(snapshotRepository.existsByCaseTypeReferenceAndVersionId(CASE_TYPE_REF, VERSION))
+            .thenReturn(true);
+
+        // When: Get snapshot
+        Optional<CaseType> result = caseTypeSnapshotService.getSnapshot(CASE_TYPE_REF, VERSION);
+
+        // Then: The broken row is removed so the following store can rebuild it
+        assertFalse(result.isPresent());
+        verify(snapshotRepository, times(1)).deleteSnapshot(CASE_TYPE_REF, VERSION);
+    }
+
+    @Test
+    void shouldNotDiscardSnapshot_whenNoRowExistsForVersion() {
+        // Given: An ordinary cache miss - nothing is stored for this version
+        when(snapshotJdbcRepository.loadCaseTypeSnapshot(CASE_TYPE_REF, VERSION))
+            .thenReturn(Optional.empty());
+        when(snapshotRepository.existsByCaseTypeReferenceAndVersionId(CASE_TYPE_REF, VERSION))
+            .thenReturn(false);
+
+        // When: Get snapshot
+        Optional<CaseType> result = caseTypeSnapshotService.getSnapshot(CASE_TYPE_REF, VERSION);
+
+        // Then: Nothing is deleted
+        assertFalse(result.isPresent());
+        verify(snapshotRepository, never()).deleteSnapshot(anyString(), anyInt());
+    }
+
+    @Test
+    void shouldNotDiscardSnapshot_whenSnapshotIsReadSuccessfully() {
+        // Given: The snapshot reads back cleanly
+        when(snapshotJdbcRepository.loadCaseTypeSnapshot(CASE_TYPE_REF, VERSION))
+            .thenReturn(Optional.of(sampleCaseType));
+
+        // When: Get snapshot
+        Optional<CaseType> result = caseTypeSnapshotService.getSnapshot(CASE_TYPE_REF, VERSION);
+
+        // Then: The existence check is not even reached
+        assertTrue(result.isPresent());
+        verify(snapshotRepository, never()).existsByCaseTypeReferenceAndVersionId(anyString(), anyInt());
+        verify(snapshotRepository, never()).deleteSnapshot(anyString(), anyInt());
+    }
+
+    @Test
+    void shouldReturnEmpty_whenDiscardingUnreadableSnapshotFails() {
+        // Given: The delete of a broken row fails
+        when(snapshotJdbcRepository.loadCaseTypeSnapshot(CASE_TYPE_REF, VERSION))
+            .thenReturn(Optional.empty());
+        when(snapshotRepository.existsByCaseTypeReferenceAndVersionId(CASE_TYPE_REF, VERSION))
+            .thenReturn(true);
+        doThrow(new RuntimeException("Database error")).when(snapshotRepository)
+            .deleteSnapshot(anyString(), anyInt());
+
+        // When: Get snapshot
+        Optional<CaseType> result = caseTypeSnapshotService.getSnapshot(CASE_TYPE_REF, VERSION);
+
+        // Then: The failure is swallowed so the request can still fall back to the database
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    void shouldSkipStore_whenSnapshotAlreadyExistsForVersion() {
+        // Given: A snapshot is already held for this exact version
+        when(snapshotRepository.existsByCaseTypeReferenceAndVersionId(CASE_TYPE_REF, VERSION))
+            .thenReturn(true);
+
+        // When: Store snapshot
+        caseTypeSnapshotService.storeSnapshot(CASE_TYPE_REF, VERSION, sampleCaseType);
+
+        // Then: No write is attempted
+        verify(snapshotRepository, never()).upsertSnapshot(anyString(), anyInt(), anyString());
     }
 
     @Test

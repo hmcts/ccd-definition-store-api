@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -50,18 +51,13 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.Sear
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldUnicityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.ImportJobRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.SearchCriteriaRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.SearchPartyRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.ShellMappingRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
-import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -320,7 +316,9 @@ class ServicesAutowiringTest {
         @Bean
         public FieldTypeValidationContextFactory fieldTypeValidationContextFactory() {
             return mock(FieldTypeValidationContextFactory.class);
+        }
 
+        @Bean
         @Primary
         public ShellMappingRepository shellMappingRepository() {
             return mock(ShellMappingRepository.class);

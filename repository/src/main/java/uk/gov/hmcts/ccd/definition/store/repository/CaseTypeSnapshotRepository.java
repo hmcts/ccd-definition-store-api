@@ -15,7 +15,7 @@ public interface CaseTypeSnapshotRepository extends DefinitionRepository<CaseTyp
     boolean existsByCaseTypeReferenceAndVersionId(String caseTypeReference, Integer versionId);
 
     /**
-     * Upsert snapshot - Insert new record or update existing one.
+     * Upsert snapshot - Insert a new record or update an existing one.
      */
     @Modifying
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -33,5 +33,21 @@ public interface CaseTypeSnapshotRepository extends DefinitionRepository<CaseTyp
     void upsertSnapshot(@Param("caseTypeReference") String caseTypeReference,
                         @Param("versionId") Integer versionId,
                         @Param("precomputedResponse") String precomputedResponse);
+
+    /**
+     * Remove the snapshot held for a specific case type version.
+     *
+     * <p>Scoped by a version as well as reference so that a row written for a newer version by a
+     * concurrent import is never removed.
+     */
+    @Modifying
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Query(value = """
+        DELETE FROM case_type_snapshot
+        WHERE case_type_reference = :caseTypeReference
+          AND version_id = :versionId
+        """, nativeQuery = true)
+    void deleteSnapshot(@Param("caseTypeReference") String caseTypeReference,
+                        @Param("versionId") Integer versionId);
 
 }
