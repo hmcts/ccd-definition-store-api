@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import java.util.Collection;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +52,16 @@ import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.FieldTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SearchCriteriaRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SearchPartyRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
+import uk.gov.hmcts.ccd.definition.store.repository.ShellMappingRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -312,6 +320,16 @@ class ServicesAutowiringTest {
         @Bean
         public FieldTypeValidationContextFactory fieldTypeValidationContextFactory() {
             return mock(FieldTypeValidationContextFactory.class);
+
+        @Primary
+        public ShellMappingRepository shellMappingRepository() {
+            return mock(ShellMappingRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public ImportJobRepository importJobRepository() {
+            return mock(ImportJobRepository.class);
         }
 
         @Bean
