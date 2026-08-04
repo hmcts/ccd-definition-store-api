@@ -48,6 +48,17 @@ Lazy path:
 - On cache miss, it loads the case type from repositories, maps it, stores a snapshot, and returns the response.
 - Snapshot store failures are logged and swallowed so the API response can still succeed.
 
+Repair path:
+
+- An empty read combined with an existing row for that version means the stored payload could not be
+  deserialized, so the row is broken.
+- `CaseTypeSnapshotService` deletes it, which restores the ordinary cache-miss path and lets the store
+  that follows the lookup rebuild it from the database.
+- Without this the cache could not recover: `storeSnapshot` skips the write when a row already exists
+  for the version, so every later request would fail the read and rebuild, indefinitely.
+- The delete is scoped by reference *and* version, so a row written for a newer version by a
+  concurrent import is never removed. Delete failures are swallowed like store failures.
+
 Eager snapshot creation:
 
 ```text
@@ -175,30 +186,54 @@ Before the snapshot feature, every request rebuilt the response from repositorie
 | API response | Cached and uncached paths returned normal `CaseType`. | Same public response contract. |
 | DB-to-HTTP path | `jsonb` to Jackson to Spring. | Same; not raw HTTP JSON streaming. |
 | Performance test | Asserted fixed latency improvement. | Verifies cached and uncached responses are equivalent. |
-| Index/query match | Index uses lower-case reference and version. | Lookup still uses exact reference and version. |
+| Unreadable rows | Read failed, row kept, cache stuck until re-import. | Row is discarded and rebuilt on the same request. |
+| Indexing | Added a `LOWER(reference), version_id` index. | Dropped: no query uses `LOWER`, and `UNIQUE (case_type_reference)` already indexes the lookup. |
 
-Snapshot rows are versioned by case type definition version, not by snapshot JSON shape.
-If code changes the snapshot payload format without a new case type import,
-old rows remain until a higher case type version is imported or rows are rebuilt.
-This change protects static metadata by replacing it at response time.
-Dynamic metadata such as `[STATE]` remains in the case-type payload.
+## Response shape drift
+
+Snapshot rows are keyed by case type definition **version**, not by the shape of the stored JSON.
+Changing the response model is a **code** change, so the version does not move and the key still
+matches. Rows written before the change keep being served in the old shape until each case type is
+imported again.
+
+Which way that matters depends on the direction of the change:
+
+- **Field removed** - deserialization fails, the repair path above discards the row and rebuilds it.
+  Self-healing, nothing to do.
+- **Field added, populated by new import data** - harmless. A case type that has not been re-imported
+  has no value for it either way, so cached and rebuilt responses agree.
+- **Field added, exposing data already in the database** - the snapshot returns null while a rebuild
+  returns the real value, and nothing reports the disagreement. `case_type.live_from` / `live_to` are
+  a live example: populated on every import, not currently in the response.
+
+`CaseTypeResponseShapeGuardTest` fails the build on any change to the serialized shape - field added
+or removed, `@JsonIgnore` added or removed, `@JsonProperty` renamed - and asks the author to decide
+which case applies. When it is the third, invalidate the cache in the same release with a migration
+containing `DELETE FROM case_type_snapshot;`.
+
+Note that such a migration runs at pod startup, so during a rolling deploy the cache is briefly cold
+fleet-wide. Prefer a low-traffic window for a large jurisdiction set.
+
+Static metadata is protected by being replaced at response time. Dynamic metadata such as `[STATE]`
+remains in the case-type payload.
 
 ## Verification
 
 Run:
 
 ```bash
-./gradlew :domain:test \
-  --tests uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeSnapshotServiceTest \
-  --tests uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeServiceImplTest
-./gradlew :application:test --tests uk.gov.hmcts.net.ccd.definition.store.rest.CaseTypeSnapshotDisabledIT
-./gradlew :application:compileTestJava
-./gradlew :domain:checkstyleMain :domain:checkstyleTest :application:checkstyleTest
+./gradlew :domain:test --tests '*CaseTypeSnapshotServiceTest' --tests '*CaseTypeServiceImplTest'
+./gradlew :repository:test --tests '*CaseTypeSnapshotRepositoryTest' --tests '*SnapshotJdbcRepositoryTest' \
+  --tests '*CaseTypeResponseShapeGuardTest'
+./gradlew :application:test --tests '*CaseTypeSnapshot*' --tests '*SpreadSheetImportTest'
+./gradlew :repository:checkstyleMain :repository:checkstyleTest \
+  :domain:checkstyleMain :domain:checkstyleTest :application:checkstyleTest
 ```
 
 Recommended pipeline coverage:
 
 - snapshot repository and JDBC integration tests
 - case type snapshot endpoint integration tests
-- broader `/case-type` BEFTA scenarios if time allows
-- ensure local `.DS_Store` files are not committed
+- the response shape guard test, which gates cache invalidation on model changes
+- broader `/case-type` BEFTA scenarios - the cached and rebuilt paths must agree byte for byte, and
+  only one integration test covers that, on a single case type
