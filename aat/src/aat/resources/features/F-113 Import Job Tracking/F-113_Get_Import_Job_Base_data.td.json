@@ -1,0 +1,23 @@
+{
+  "_guid_": "F-113_Get_Import_Job_Base_data",
+
+  "productName": "CCD Definition Store",
+  "operationName": "Get Import Job",
+
+  "method": "GET",
+  "uri": "/import-jobs/{id}",
+
+  "users": {
+    "invokingUser": {
+      "_extends_": "DefaultUserForDefinitionImports"
+    }
+  },
+
+  "request": {
+    "headers": {
+      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+      "Content-Type": "application/json"
+    }
+  }
+}

@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definitionstore.befta;
 
+import io.cucumber.java.Before;
+import org.junit.AssumptionViolatedException;
 import uk.gov.hmcts.befta.BeftaTestDataLoader;
 import uk.gov.hmcts.befta.DefaultTestAutomationAdapter;
 import uk.gov.hmcts.befta.dse.ccd.DataLoaderToDefinitionStore;
@@ -8,6 +10,9 @@ import uk.gov.hmcts.befta.player.BackEndFunctionalTestScenarioContext;
 import uk.gov.hmcts.befta.util.BeftaUtils;
 import uk.gov.hmcts.befta.util.ReflectionUtils;
 
+import java.util.UUID;
+
+import static java.util.Optional.ofNullable;
 import static uk.gov.hmcts.befta.dse.ccd.DataLoaderToDefinitionStore.VALID_CCD_TEST_DEFINITIONS_PATH;
 
 public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationAdapter {
@@ -15,6 +20,13 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
     public static final String TEMPORARY_DEFINITION_FOLDER = "build/tmp/definition_files_copy";
 
     private DataLoaderToDefinitionStore testDataLoader;
+
+    @Before("@groupaccess")
+    public void skipGroupAccessTestsIfNotEnabled() {
+        if (!ofNullable(System.getenv("GROUP_ACCESS_ENABLED")).map(Boolean::valueOf).orElse(false)) {
+            throw new AssumptionViolatedException("Group Access not Enabled");
+        }
+    }
 
     @Override
     protected BeftaTestDataLoader buildTestDataLoader() {
@@ -24,7 +36,9 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
 
     @Override
     public synchronized Object calculateCustomValue(BackEndFunctionalTestScenarioContext scenarioContext, Object key) {
-        if (key.toString().startsWith("no_dynamic_injection_")) {
+        if (key.toString().equals("unique_import_job_id")) {
+            return UUID.randomUUID().toString();
+        } else if (key.toString().startsWith("no_dynamic_injection_")) {
             return key.toString().replace("no_dynamic_injection_","");
         } else if (key.toString().startsWith("approximately ")) {
             try {

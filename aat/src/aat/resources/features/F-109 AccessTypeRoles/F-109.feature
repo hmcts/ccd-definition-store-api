@@ -1,4 +1,4 @@
-@F-109
+@F-109 @groupaccess
 Feature: F-109 Import validations for CCD Definition with AccessTypeRole tab
 
   Background:
