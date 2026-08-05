@@ -687,7 +687,7 @@
           "field_type": {
             "id": "[[ANY_STRING_NOT_NULLABLE]]",
             "type": "RichTextArea",
-            "min": 10,
+            "min": "10",
             "max": null,
             "regular_expression": null,
             "fixed_list_items": [],
