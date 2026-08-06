@@ -15,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -72,6 +73,29 @@ class FieldTypeParserTest {
         assertNull(parsedEntity.getMinimum());
         assertNull(parsedEntity.getMaximum());
 
+    }
+
+    @Test
+    void shouldReturnDerivedFieldTypeEntityWithMinimumWhenFieldTypeAttributeIsRichTextArea() {
+        FieldTypeEntity richTextAreaBaseType = new FieldTypeEntity();
+        String richTextAreaFieldType = "RichTextArea";
+        when(parseContext.getType(richTextAreaFieldType)).thenReturn(Optional.of(richTextAreaBaseType));
+
+        DefinitionDataItem definitionDataItem = new DefinitionDataItem(SheetName.CASE_FIELD.toString());
+        definitionDataItem.addAttribute(ColumnName.FIELD_TYPE.toString(), richTextAreaFieldType);
+        definitionDataItem.addAttribute(ColumnName.MIN.toString(), "5");
+
+        ParseResult.Entry<FieldTypeEntity> result = classUnderTest.parse("RichTextAreaField", definitionDataItem);
+
+        assertThat(result.getValue()).isNotNull();
+
+        FieldTypeEntity parsedEntity = result.getValue();
+
+        assertThat(parsedEntity.getBaseFieldType()).isEqualTo(richTextAreaBaseType);
+        assertThat(parsedEntity.getMinimum()).isEqualTo("5");
+        assertThat(parsedEntity.getMaximum()).isNull();
+        assertThat(parsedEntity.getRegularExpression()).isNull();
+        assertThat(parsedEntity.getCollectionFieldType()).isNull();
     }
 
 }
