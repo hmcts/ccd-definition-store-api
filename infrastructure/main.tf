@@ -20,6 +20,8 @@ locals {
 
   db_name = "${local.app_full_name}-postgres-db-v15"
 
+  azure_extensions = contains(["aat", "demo"], var.env) ? "pg_stat_statements,pg_buffercache,hypopg,pg_cron" : "pg_stat_statements,pg_buffercache,hypopg"
+
 }
 
 data "azurerm_key_vault" "ccd_shared_key_vault" {
@@ -72,10 +74,6 @@ module "postgresql_v15" {
       name = var.database_name
     }
   ]
-
-  locals {
-    azure_extensions = contains(["aat", "demo"], var.env) ? "pg_stat_statements,pg_buffercache,hypopg,pg_cron" : "pg_stat_statements,pg_buffercache,hypopg"
-  }
 
   pgsql_server_configuration = [
     {
