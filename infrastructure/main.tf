@@ -73,12 +73,12 @@ module "postgresql_v15" {
     }
   ]
   pgsql_server_configuration = [
-    {
-      name  = "azure.extensions"
-      value = contains(["aat", "demo"], var.environment)
+  {
+    name  = "azure.extensions"
+    value = contains(["aat", "demo"], var.env)
       ? "pg_stat_statements,pg_buffercache,hypopg,pg_cron"
       : "pg_stat_statements,pg_buffercache,hypopg"
-    }
+  }
   ]
   pgsql_version              = "15"
   product                    = var.product
