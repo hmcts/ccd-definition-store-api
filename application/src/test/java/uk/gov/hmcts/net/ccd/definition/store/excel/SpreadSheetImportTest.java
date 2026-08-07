@@ -37,7 +37,6 @@ import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static java.util.stream.Collectors.toMap;
 import static org.apache.commons.io.FileUtils.readFileToString;
 import static org.hamcrest.CoreMatchers.allOf;
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -212,7 +211,7 @@ class SpreadSheetImportTest extends BaseTest {
             // Check the error response message.
             assertThat("Incorrect HTTP response",
                 result.getResponse().getContentAsString(),
-                containsString("403 Forbidden"));
+                is("An internal server error occurred"));
         }
     }
 
@@ -232,7 +231,7 @@ class SpreadSheetImportTest extends BaseTest {
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
             result.getResponse().getContentAsString(),
-            containsString("Invalid Case Definition sheet - no Definition data attribute headers found"));
+            is("Bad request"));
 
         // Check that no Definition data has been persisted.
         assertEquals(0,
@@ -255,7 +254,7 @@ class SpreadSheetImportTest extends BaseTest {
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
             result.getResponse().getContentAsString(),
-            containsString("A definition must contain a WorkBasketResultFields sheet"));
+            is("Bad request"));
 
         // Check that no Definition data has been persisted.
         assertEquals(
@@ -295,8 +294,7 @@ class SpreadSheetImportTest extends BaseTest {
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
             result.getResponse().getContentAsString(),
-            containsString("Post state condition CaseEnteredIntoLegacy(PersonHasSecondAddress=\"Yes\"):1 "
-                + "has to include non conditional post state for event 'enterCaseIntoLegacy' in CaseEvent tab"));
+            is("Validation errors occurred importing the spreadsheet."));
     }
 
     @Test
@@ -310,10 +308,7 @@ class SpreadSheetImportTest extends BaseTest {
         // Check the error response message.
         assertThat("Incorrect HTTP status message for bad request",
             result.getResponse().getContentAsString(),
-            containsString("Post state condition "
-                + "CaseEnteredIntoLegacy(PersonHasSecondAddress=\"Yes\"):1;"
-                + "CaseStopped(PersonHasSecondAddress=\"Yes\"):1;CaseEnteredIntoLegacy "
-                + "has duplicate priorities for event 'enterCaseIntoLegacy' in CaseEvent tab"));
+            is("Validation errors occurred importing the spreadsheet."));
     }
 
     private MvcResult performAndGetMvcResult(InputStream inputStream) throws Exception {

@@ -80,7 +80,7 @@ class ControllerExceptionHandlerTest {
         final ResponseEntity<Object> response = handler.handleBadRequest(exception, mock(WebRequest.class));
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
-        assertThat(response.getBody().toString(), equalTo("Invalid request"));
+        assertThat(response.getBody().toString(), equalTo("Bad request"));
     }
 
     @Nested
@@ -93,7 +93,7 @@ class ControllerExceptionHandlerTest {
 
             assertAll(
                 () -> assertThat(details, is(notNullValue())),
-                () -> assertThat(details.get("message"), equalTo("Object Not Found for:" + INNER_MESSAGE))
+                () -> assertThat(details.get("message"), equalTo("Object not found"))
             );
         }
     }
@@ -108,7 +108,7 @@ class ControllerExceptionHandlerTest {
 
             assertAll(
                 () -> assertThat(details, is(notNullValue())),
-                () -> assertThat(details.get("message"), equalTo("Object already exists for:" + INNER_MESSAGE))
+                () -> assertThat(details.get("message"), equalTo("A conflict error occurred"))
             );
         }
     }
@@ -150,11 +150,9 @@ class ControllerExceptionHandlerTest {
         @DisplayName("should return error details as map")
         void shouldReturnErrorDetailsAsMap() {
             final String error = handler.caseTypeValidation(
-                new CaseTypeValidationException(new CaseTypeValidationResult("")));
+                new CaseTypeValidationException(new CaseTypeValidationResult("Sensitive validation detail")));
 
-            assertAll(
-                () -> assertThat(error, is(notNullValue()))
-            );
+            assertThat(error, equalTo("Validation failed"));
         }
     }
 

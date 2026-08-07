@@ -35,6 +35,7 @@ build/
 **/out/
 **/build/
 /bin/
+**/bin/
 
 /BEFTA Report for Smoke Tests/
 /BEFTA Report for Functional Tests/

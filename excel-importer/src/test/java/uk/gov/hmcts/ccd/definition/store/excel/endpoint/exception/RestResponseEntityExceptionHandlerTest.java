@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
+import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
+import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.rules.CaseTypeValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
@@ -25,7 +27,6 @@ import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.WebRequest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
@@ -46,7 +47,7 @@ class RestResponseEntityExceptionHandlerTest {
 
         final ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
 
-        assertThat(response.getBody().toString(), equalTo("Outer message\nInner message"));
+        assertThat(response.getBody().toString(), equalTo("Bad request"));
         assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
 
@@ -61,7 +62,7 @@ class RestResponseEntityExceptionHandlerTest {
         final ResponseEntity<Object> response = exceptionHandler
             .handleAccessProfilesMissing(exception, mock(WebRequest.class));
 
-        assertThat(response.getBody().toString(), containsString("Missing AccessProfiles."));
+        assertThat(response.getBody().toString(), equalTo("Validation failed"));
         assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
 
@@ -76,7 +77,7 @@ class RestResponseEntityExceptionHandlerTest {
             .handleValidationException(validationException, mock(WebRequest.class));
 
         assertThat(response.getBody().toString(),
-            containsString("Validation errors occurred importing the spreadsheet."));
+            equalTo("Validation errors occurred importing the spreadsheet."));
         assertThat(response.getStatusCode(), equalTo(HttpStatus.UNPROCESSABLE_ENTITY));
     }
 
@@ -91,7 +92,7 @@ class RestResponseEntityExceptionHandlerTest {
 
         final ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
 
-        assertThat(response.getBody().toString(), equalTo("Depth 1\nDepth 2\nDepth 3\nDepth 4\nDepth 5"));
+        assertThat(response.getBody().toString(), equalTo("Bad request"));
         assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
 
@@ -126,6 +127,7 @@ class RestResponseEntityExceptionHandlerTest {
             .handleHttpClientErrorException(ex, mock(WebRequest.class));
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        assertEquals("An internal server error occurred", response.getBody());
     }
 
     @Test
@@ -137,6 +139,7 @@ class RestResponseEntityExceptionHandlerTest {
             .handleHttpClientErrorException(ex, mock(WebRequest.class));
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("An internal server error occurred", response.getBody());
     }
 
     @Test
@@ -176,6 +179,7 @@ class RestResponseEntityExceptionHandlerTest {
             .handleFeignClientException(ex, mock(WebRequest.class));
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.getStatusCode());
+        assertEquals("An internal server error occurred", response.getBody());
     }
 
     @Test
@@ -189,6 +193,15 @@ class RestResponseEntityExceptionHandlerTest {
             .handleFeignClientException(ex, mock(WebRequest.class));
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+        assertEquals("An internal server error occurred", response.getBody());
+    }
+
+    @Test
+    void caseTypeValidation_shouldNotExposeValidationDetails() {
+        String response = exceptionHandler.caseTypeValidation(
+            new CaseTypeValidationException(new CaseTypeValidationResult("Sensitive validation detail")));
+
+        assertEquals("Validation failed", response);
     }
 
 }
