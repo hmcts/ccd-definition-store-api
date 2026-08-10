@@ -329,7 +329,7 @@
           "label": "[[ANYTHING_PRESENT]]",
           "hint_text": null,
           "field_type": {
-            "id": "StaffUser",
+            "id": "Text",
             "type": "Text",
             "min": null,
             "max": null,
@@ -344,7 +344,7 @@
           "live_until": null,
           "acls": [
             {
-              "role": "caseworker-befta_master",
+              "role": "caseworker-befta_jurisdiction_1",
               "create": true,
               "read": true,
               "update": true,
@@ -672,14 +672,14 @@
             "regular_expression": null,
             "fixed_list_items": [
               {
-                "code": "CaseUpdated",
-                "label": "Update case",
-                "order": 1
-              },
-              {
                 "code": "CaseCreated",
                 "label": "Create case",
                 "order": 1
+              },
+              {
+                "code": "CaseUpdated",
+                "label": "Updated case",
+                "order": 2
               }
             ],
             "complex_fields": [],
@@ -894,7 +894,7 @@
           "category_id": null
         }
       ],
-      "printable_document_url": null,
+      "printable_document_url": "[[ANYTHING_PRESENT]]",
       "callback_get_case_url": null,
       "retries_get_case_url": [],
       "security_classification": "PUBLIC"

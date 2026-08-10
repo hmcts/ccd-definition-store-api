@@ -17,10 +17,11 @@ Feature: F-131: Test new base types
   @S-131.4
   Scenario: A new case is created with StaffUser base type
     Given a user with [an active profile in CCD]
+    And a call [to import definition file] will get the expected response as in [Import_BEFTA_Master_Definition]
     When a request is prepared with appropriate values
     And the request [contains correctly configured event details]
     And the request [contains StaffUser base type with idamId]
-    And it is submitted to [create a new case] operation of [CCD Definition Store]
+    And it is submitted to call the [Get Case Type Details] operation of [CCD Definition Store]
     And the response [has the 200 OK code]
     Then a positive response is received
     And the response has all other details as expected
