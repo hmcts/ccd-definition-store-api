@@ -927,7 +927,7 @@ public class ImportServiceImplTest {
             buildBaseType(BASE_BASE_LOCATION),
             buildBaseType(BASE_FLAG_LAUNCHER),
             buildBaseType(BASE_COMPONENT_LAUNCHER),
-        buildBaseType(BASE_STAFF_USER));
+            buildBaseType(BASE_STAFF_USER));
     }
 
     private List<FieldTypeEntity> getPredefinedComplexBaseTypesList() {
