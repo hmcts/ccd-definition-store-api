@@ -1,0 +1,17 @@
+{
+  "_guid_": "S-131.2",
+  "_extends_": "F-131.2_Test_Base_Data",
+  "title": "Fetch all base types should include StaffUser details",
+  "specs": [
+    "an active profile in CCD",
+    "has the 200 OK code",
+    "contains a list of all the base type data structures"
+  ],
+  "expectedResponse": {
+    "responseCode": 200,
+    "responseMessage": "OK",
+    "body": {
+      "_extends_": "AllValidBaseTypeArrayPayload"
+    }
+  }
+}

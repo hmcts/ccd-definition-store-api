@@ -41,7 +41,7 @@ class BaseTypeControllerTests extends BaseTest {
 
         FieldType[] baseTypes = BaseTest.mapper.readValue(result.getResponse().getContentAsString(), FieldType[].class);
 
-        assertEquals(27, baseTypes.length, "Unexpected number of Base Types");
+        assertEquals(29, baseTypes.length, "Unexpected number of Base Types");
         assertContainsFieldType(baseTypes, "Text", "Text");
         assertContainsFieldType(baseTypes, "Number", "Number");
         assertContainsFieldType(baseTypes, "Email", "Email");
@@ -69,8 +69,9 @@ class BaseTypeControllerTests extends BaseTest {
         assertContainsFieldType(baseTypes, "WaysToPay", "WaysToPay");
         assertContainsFieldType(baseTypes, "FlagLauncher", "FlagLauncher");
         assertContainsFieldType(baseTypes, "ComponentLauncher", "ComponentLauncher");
+        assertContainsFieldType(baseTypes, "StaffUser", "StaffUser");
     }
-    
+
     private void assertContainsFieldType(FieldType[] baseTypes, String id, String type) {
         assertTrue(Stream.of(baseTypes)
             .anyMatch(baseType -> baseType.getType().equals(type) && baseType.getId().equals(id)),
@@ -79,8 +80,8 @@ class BaseTypeControllerTests extends BaseTest {
 
     private void assertContainsFieldType(FieldType[] baseTypes, String id, String type, String regex) {
         assertTrue(Stream.of(baseTypes)
-            .anyMatch(baseType -> baseType.getType().equals(type) 
-                && baseType.getId().equals(id) 
+            .anyMatch(baseType -> baseType.getType().equals(type)
+                && baseType.getId().equals(id)
                 && baseType.getRegularExpression().equals(regex)),
             "Base Type not found: " + id + " with Type: " + type + " and Regex: " + regex);
     }
