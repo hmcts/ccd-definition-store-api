@@ -108,7 +108,7 @@ dependencyManagement {
 
 // tag::repositories[]
 allprojects {
-    group = 'uk.gov.hmcts.ccd.definition'
+    group 'uk.gov.hmcts.ccd.definition'
 
     repositories {
         mavenLocal()
@@ -210,6 +210,9 @@ subprojects { subproject ->
         providedRuntime
 
         cucumberRuntime.extendsFrom(functionalRuntime)
+        maybeCreate("integrationTestImplementation").extendsFrom(testImplementation)
+        maybeCreate("integrationTestRuntimeOnly").extendsFrom(testRuntimeOnly)
+        maybeCreate("integrationTestAnnotationProcessor").extendsFrom(annotationProcessor)
     }
 
     sourceSets {
@@ -224,12 +227,6 @@ subprojects { subproject ->
             compileClasspath += sourceSets.main.output + configurations.testRuntimeClasspath
             runtimeClasspath += output + compileClasspath
         }
-    }
-
-    configurations {
-        integrationTestImplementation.extendsFrom(testImplementation)
-        integrationTestRuntimeOnly.extendsFrom(testRuntimeOnly)
-        integrationTestAnnotationProcessor.extendsFrom(annotationProcessor)
     }
 
     dependencyManagement {

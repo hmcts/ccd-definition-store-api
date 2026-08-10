@@ -4,6 +4,7 @@ package uk.gov.hmcts.net.ccd.definition.store.rest;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class BaseTypeControllerTests extends BaseTest {
@@ -41,7 +42,9 @@ class BaseTypeControllerTests extends BaseTest {
 
         FieldType[] baseTypes = BaseTest.mapper.readValue(result.getResponse().getContentAsString(), FieldType[].class);
 
-        assertEquals(29, baseTypes.length, "Unexpected number of Base Types");
+        assertThat(baseTypes)
+            .as("Unexpected number of Base Types")
+            .hasSize(29);
         assertContainsFieldType(baseTypes, "Text", "Text");
         assertContainsFieldType(baseTypes, "Number", "Number");
         assertContainsFieldType(baseTypes, "Email", "Email");
