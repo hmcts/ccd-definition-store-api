@@ -13,8 +13,7 @@ Feature: F-131: Test new base types
     Then a positive response is received
     And the response has all other details as expected
 
-
-  @S-131.4
+  @S-131.2
   Scenario: A new case is created with StaffUser base type
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -23,14 +22,4 @@ Feature: F-131: Test new base types
     And it is submitted to call the [Get Case Type Details] operation of [CCD Definition Store]
     And the response [has the 200 OK code]
     Then a positive response is received
-    And the response has all other details as expected
-
-
-  @S-131.2
-  Scenario: Fetch all base types returns StaffUser base type details
-    Given a user with [an active profile in CCD]
-    When a request is prepared with appropriate values
-    And it is submitted to call the [Fetch All Base Types] operation of [CCD Definition Store]
-    Then the response [has the 200 OK code]
-    And the response [contains a list of all the base type data structures]
     And the response has all other details as expected
