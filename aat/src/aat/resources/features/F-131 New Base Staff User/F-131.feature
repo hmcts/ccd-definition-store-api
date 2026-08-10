@@ -1,5 +1,5 @@
 @F-131
-Feature: F-131: Test new base types
+Feature: F-131: Test new StaffUser base type
 
   Background:
     Given an appropriate test context as detailed in the test data source
