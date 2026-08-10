@@ -52,6 +52,7 @@ class BaseTypeControllerTests extends BaseTest {
         assertContainsFieldType(baseTypes, "MoneyGBP", "MoneyGBP");
         assertContainsFieldType(baseTypes, "PhoneUK", "PhoneUK", PHONE_NUMBER_REGEX);
         assertContainsFieldType(baseTypes, "TextArea", "TextArea");
+        assertContainsFieldType(baseTypes, "RichTextArea", "RichTextArea");
         assertContainsFieldType(baseTypes, "Complex", "Complex");
         assertContainsFieldType(baseTypes, "Collection", "Collection");
         assertContainsFieldType(baseTypes, "MultiSelectList", "MultiSelectList");
@@ -79,10 +80,11 @@ class BaseTypeControllerTests extends BaseTest {
     }
 
     private void assertContainsFieldType(FieldType[] baseTypes, String id, String type, String regex) {
-        assertTrue(Stream.of(baseTypes)
+        assertThat(Stream.of(baseTypes)
             .anyMatch(baseType -> baseType.getType().equals(type)
                 && baseType.getId().equals(id)
-                && baseType.getRegularExpression().equals(regex)),
-            "Base Type not found: " + id + " with Type: " + type + " and Regex: " + regex);
+                && Objects.equals(baseType.getRegularExpression(), regex)))
+            .as("Base Type not found: %s with Type: %s and Regex: %s", id, type, regex)
+            .isTrue();
     }
 }
