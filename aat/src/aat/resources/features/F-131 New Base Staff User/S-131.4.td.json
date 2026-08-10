@@ -6,8 +6,7 @@
     "an active profile in CCD",
     "contains correctly configured event details",
     "contains StaffUser base type with idamId",
-    "has the 200 OK code",
-    "contains case type details"
+    "has the 200 OK code"
   ],
   "expectedResponse": {
     "_extends_": "Common_200_Response",
@@ -295,6 +294,42 @@
           "hint_text": null,
           "field_type": {
             "id": "Text",
+            "type": "Text",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
+          "hidden": null,
+          "security_classification": "PUBLIC",
+          "live_from": "[[ANYTHING_PRESENT]]",
+          "live_until": null,
+          "acls": [
+            {
+              "role": "caseworker-befta_master",
+              "create": true,
+              "read": true,
+              "update": true,
+              "delete": true
+            }
+          ],
+          "complexACLs": [],
+          "order": null,
+          "show_condition": null,
+          "display_context_parameter": null,
+          "retain_hidden_value": null,
+          "category_id": null
+        },
+        {
+          "metadata": false,
+          "id": "StaffUser",
+          "case_type_id": "FT_MasterCaseType",
+          "label": "[[ANYTHING_PRESENT]]",
+          "hint_text": null,
+          "field_type": {
+            "id": "StaffUser",
             "type": "Text",
             "min": null,
             "max": null,

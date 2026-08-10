@@ -20,10 +20,10 @@ Feature: F-131: Test new base types
     When a request is prepared with appropriate values
     And the request [contains correctly configured event details]
     And the request [contains StaffUser base type with idamId]
-    And it is submitted to [create a new case] operation of [CCD Data Store API]
+    And it is submitted to [create a new case] operation of [CCD Definition Store]
     And the response [has the 200 OK code]
     Then a positive response is received
-    And the response has all other details as expected and a new case is created
+    And the response has all other details as expected
 
 
   @S-131.2
