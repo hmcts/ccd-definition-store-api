@@ -54,7 +54,7 @@ data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
 ///////////////////////
 
 module "postgresql_v15" {
-  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=master"
+  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=DTSPO-30107-additional-postgres-admins"
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
   }
@@ -65,7 +65,8 @@ module "postgresql_v15" {
   component                      = var.component
   env                            = var.env
   subnet_suffix                  = var.subnet_suffix
-  force_user_permissions_trigger = "1"
+  force_user_permissions_trigger = "2"
+
   pgsql_databases = [
     {
       name = var.database_name
