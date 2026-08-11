@@ -227,6 +227,11 @@
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
+           "case_field_id" : "StaffUser",
+           "order" : "[[ANYTHING_PRESENT]]",
+           "page_column_no" : null,
+           "complex_field_overrides" : [ ]
+         }, {
          "case_field_id" : "MarritalStatus",
          "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
