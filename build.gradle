@@ -462,7 +462,7 @@ compileJava {
 idea.project.settings {
     compiler {
         javac {
-            javacAdditionalOptions = ["-parameters"]
+            javacAdditionalOptions "-parameters"
         }
     }
 }
