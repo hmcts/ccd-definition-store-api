@@ -1,5 +1,5 @@
 @F-129
-Feature: F-129: Test new base types
+Feature: F-129: Test new base types Summary, Roles, Hearings and Task
 
   Background:
     Given an appropriate test context as detailed in the test data source
