@@ -17,11 +17,15 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
+import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorageException;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -35,28 +39,36 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @ControllerAdvice
 class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final String BAD_REQUEST_ERROR_MSG = "Bad request";
-    private static final String VALIDATION_ERROR_MSG = "Validation failed";
-    private static final String IMPORT_VALIDATION_ERROR_MSG = "Validation errors occurred importing the spreadsheet.";
-    private static final String INTERNAL_SERVER_ERROR_MSG = "An internal server error occurred";
+    private static final Integer MAX_DEPTH = 5;
     private static Logger log = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
+
+    private SpreadsheetValidationErrorMessageCreator spreadsheetValidationErrorMessageCreator;
 
     public RestResponseEntityExceptionHandler(
         SpreadsheetValidationErrorMessageCreator spreadsheetValidationErrorMessageCreator) {
+        this.spreadsheetValidationErrorMessageCreator = spreadsheetValidationErrorMessageCreator;
     }
 
     @ExceptionHandler(value = {InvalidImportException.class, MapperException.class})
     ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
         log.error("Exception thrown '{}'", ex.getMessage(), ex);
         return handleExceptionInternal(
-            ex, BAD_REQUEST_ERROR_MSG, responseContentType(), HttpStatus.BAD_REQUEST, request);
+            ex, flattenExceptionMessages(ex), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value = MissingAccessProfilesException.class)
     ResponseEntity<Object> handleAccessProfilesMissing(MissingAccessProfilesException ex, WebRequest request) {
-        log.warn("Missing access profiles while importing spreadsheet", ex);
+        String missingAccessProfiles = new StringBuilder("Missing AccessProfiles.\n\n")
+            .append(ex.getMissingAccessProfiles()
+                .stream()
+                .collect(Collectors.joining("\n"))).toString();
+        log.warn(missingAccessProfiles);
+
+        String validationErrors = getValidationErrorMessage(
+            "\n\nValidation errors occurred importing the spreadsheet.\n\n", ex.getValidationErrors());
+
         return handleExceptionInternal(
-            ex, VALIDATION_ERROR_MSG, responseContentType(), HttpStatus.BAD_REQUEST, request);
+            ex, missingAccessProfiles + validationErrors, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     private HttpHeaders responseContentType() {
@@ -69,10 +81,12 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     public ResponseEntity<Object> handleValidationException(ValidationException validationException,
                                                             WebRequest request) {
 
-        log.warn("Validation failed while importing spreadsheet", validationException);
+        String errorMessage = getValidationErrorMessage(
+            "Validation errors occurred importing the spreadsheet.\n\n",
+            validationException.getValidationResult().getValidationErrors());
+
         return handleExceptionInternal(
-            validationException, IMPORT_VALIDATION_ERROR_MSG, responseContentType(),
-            HttpStatus.UNPROCESSABLE_ENTITY, request);
+            validationException, errorMessage, responseContentType(), HttpStatus.UNPROCESSABLE_ENTITY, request);
     }
 
     @ExceptionHandler(CaseTypeValidationException.class)
@@ -80,7 +94,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     String caseTypeValidation(CaseTypeValidationException e) {
         log.error("Exception thrown {}", e.getMessage(), e);
-        return VALIDATION_ERROR_MSG;
+        return getMessagesAsString(e.getErrors());
     }
 
     @ExceptionHandler(FileStorageException.class)
@@ -101,7 +115,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
             status = HttpStatus.INTERNAL_SERVER_ERROR.value();
         }
 
-        return handleExceptionInternal(exception, INTERNAL_SERVER_ERROR_MSG, responseContentType(),
+        return handleExceptionInternal(exception, flattenExceptionMessages(exception), new HttpHeaders(),
             HttpStatus.valueOf(status), request);
     }
 
@@ -144,8 +158,41 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
             status = HttpStatus.INTERNAL_SERVER_ERROR.value();
         }
 
-        return handleExceptionInternal(exception, INTERNAL_SERVER_ERROR_MSG, responseContentType(),
+        return handleExceptionInternal(exception, flattenExceptionMessages(exception), new HttpHeaders(),
             HttpStatus.valueOf(status), request);
     }
 
+    private String flattenExceptionMessages(RuntimeException ex) {
+        final StringBuilder sb = new StringBuilder(ex.getMessage());
+
+        Integer remaining = MAX_DEPTH;
+        Throwable inner = ex;
+        while ((inner = inner.getCause()) != null && 0 < --remaining) {
+            log.debug("Remaining '{}' out of '{}'", remaining, MAX_DEPTH);
+            sb.append("\n").append(inner.getMessage());
+        }
+
+        return sb.toString();
+    }
+
+    private String getMessagesAsString(Set<String> messages) {
+        StringBuilder result = new StringBuilder();
+        messages.remove(null);
+        for (String message : messages) {
+            result.append(message + ". ");
+        }
+        return result.toString();
+    }
+
+    private String getValidationErrorMessage(String message, List<ValidationError> validationErrors) {
+        return new StringBuilder(message)
+            .append(validationErrors
+                .stream()
+                .map(validationError -> String.format(
+                    "- %s",
+                    validationError.createMessage(this.spreadsheetValidationErrorMessageCreator)
+                    )
+                )
+                .collect(Collectors.joining("\n"))).toString();
+    }
 }

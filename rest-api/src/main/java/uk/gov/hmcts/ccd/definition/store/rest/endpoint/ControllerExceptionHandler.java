@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 import com.google.common.collect.ImmutableMap;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.persistence.PersistenceException;
+import jakarta.validation.ConstraintViolation;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,8 @@ import uk.gov.hmcts.ccd.definition.store.rest.endpoint.exceptions.DuplicateFound
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
@@ -36,9 +39,6 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String EXCEPTION_THROWN = "Exception thrown ";
     private static final String INTERNAL_SERVER_ERROR_MSG = "An internal server error occurred";
     private static final String CONFLICT_ERROR_MSG = "A conflict error occurred";
-    private static final String BAD_REQUEST_ERROR_MSG = "Bad request";
-    private static final String NOT_FOUND_ERROR_MSG = "Object not found";
-    private static final String VALIDATION_ERROR_MSG = "Validation failed";
     private static final Logger LOG = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     @ExceptionHandler(value = {PersistenceException.class})
@@ -74,13 +74,16 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseBody
     public Map<String, String> handleMethodConstraintViolation(jakarta.validation.ConstraintViolationException ex) {
         log(ex);
-        return ImmutableMap.of("message", VALIDATION_ERROR_MSG);
+        String message = ex.getConstraintViolations().stream()
+            .map(ConstraintViolation::getMessage)
+            .collect(Collectors.joining(", "));
+        return ImmutableMap.of("message", "Validation failed: " + message);
     }
 
     @ExceptionHandler(value = {BadRequestException.class})
     public ResponseEntity<Object> handleBadRequest(BadRequestException ex, WebRequest request) {
         log(ex);
-        return handleExceptionInternal(ex, BAD_REQUEST_ERROR_MSG, new HttpHeaders(),
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
             HttpStatus.BAD_REQUEST, request);
     }
 
@@ -89,7 +92,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseBody
     Map<String, String> objectNotFound(NotFoundException e) {
         log(e);
-        return ImmutableMap.of("message", NOT_FOUND_ERROR_MSG);
+        return getMessage(e, "Object Not Found for:%s");
     }
 
     @ExceptionHandler(DuplicateFoundException.class)
@@ -97,7 +100,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseBody
     Map<String, String> objectFound(DuplicateFoundException e) {
         log(e);
-        return ImmutableMap.of("message", CONFLICT_ERROR_MSG);
+        return getMessage(e, "Object already exists for:%s");
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
@@ -121,7 +124,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseBody
     String caseTypeValidation(CaseTypeValidationException e) {
         log(e);
-        return VALIDATION_ERROR_MSG;
+        return getMessagesAstring(e.getErrors());
     }
 
     @ExceptionHandler(ElasticSearchInitialisationException.class)
@@ -132,6 +135,17 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return ImmutableMap.of("message", "ElasticSearch initialisation exception");
     }
 
+    private Map<String, String> getMessage(Throwable e, String message) {
+        return ImmutableMap.of("message", String.format(message, e.getMessage()));
+    }
+
+    private String getMessagesAstring(Set<String> messages) {
+        StringBuilder result = new StringBuilder();
+        for (String message : messages) {
+            result.append(message).append(". ");
+        }
+        return result.toString();
+    }
 
     private void log(final Exception e) {
         LOG.debug(EXCEPTION_THROWN + "{}", e.getMessage(), e);

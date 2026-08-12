@@ -124,7 +124,7 @@ class TestingSupportControllerTest {
                 .param("caseTypeIds", "NoFound"))
             .andDo(print())
             .andExpect(status().isNotFound())
-            .andExpect(content().json("{\"message\":\"Object not found\"}"));
+            .andExpect(content().json("{\"message\":\"Object Not Found for:Unable to find case type\"}"));
 
         verify(session, times(1))
             .createNativeQuery(anyString(), eq(Integer.class));
