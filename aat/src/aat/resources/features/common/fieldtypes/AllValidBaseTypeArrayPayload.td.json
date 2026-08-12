@@ -37,6 +37,9 @@
       "_extends_": "BaseTextAreaFieldType"
     },
     {
+      "_extends_": "BaseRichTextAreaFieldType"
+    },
+    {
       "_extends_": "BaseComplexFieldType"
     },
     {
