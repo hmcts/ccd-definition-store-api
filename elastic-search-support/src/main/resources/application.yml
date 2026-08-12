@@ -71,6 +71,7 @@ elasticsearch:
   typeMappings:
     Text: ${elasticsearch.elasticMappings.defaultText}
     TextArea: ${elasticsearch.elasticMappings.defaultText}
+    RichTextArea: ${elasticsearch.elasticMappings.defaultText}
     Number: ${elasticsearch.elasticMappings.defaultDouble}
     Date: ${elasticsearch.elasticMappings.defaultDate}
     Time: ${elasticsearch.elasticMappings.defaultDate}
