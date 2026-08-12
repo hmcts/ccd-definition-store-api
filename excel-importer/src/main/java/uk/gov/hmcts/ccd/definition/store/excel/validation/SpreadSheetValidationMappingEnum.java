@@ -77,7 +77,7 @@ public enum SpreadSheetValidationMappingEnum {
 
     CASE_ROLES_ID(CASE_ROLE.toString(), ID.toString(), 255),
     CASE_ROLES_NAME(CASE_ROLE.toString(), NAME.toString(), 255),
-    CASE_ROLES_DESCRIPTION(CASE_ROLE.toString(), DESCRIPTION.toString(), 255);
+    CASE_ROLES_DESCRIPTION(CASE_ROLE.toString(), DESCRIPTION.toString(), 255),
 
     SHELL_MAPPING_SHELL_CASE_TYPE_ID(Constants.SHELL_MAPPING, "ShellCaseTypeID", 70),
     SHELL_MAPPING_SHELL_CASE_FIELD_NAME(Constants.SHELL_MAPPING, "ShellCaseFieldName", 70),
