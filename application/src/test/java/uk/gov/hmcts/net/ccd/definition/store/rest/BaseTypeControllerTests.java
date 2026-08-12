@@ -4,7 +4,6 @@ package uk.gov.hmcts.net.ccd.definition.store.rest;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
-import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
