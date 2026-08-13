@@ -1,14 +1,14 @@
 {
-  "_guid_": "S-127.4",
+  "_guid_": "S-131.2",
   "_extends_": "F-085_Test_Base_Data",
-  "title": "Multiple CaseTypeTab ListElementCode values are returned as caseFieldSubfieldCode values",
+  "title": "Blank CaseTypeTab ListElementCode is returned as null caseFieldSubfieldCode for a whole field",
   "specs": [
     "an active profile in CCD",
-    "contains a case type id with multiple CaseTypeTab ListElementCode values"
+    "contains a case type id with a blank CaseTypeTab ListElementCode value"
   ],
   "request": {
     "pathVariables": {
-      "id": "FT_CTT_Subfield_Multiple"
+      "id": "FT_CTT_Subfield_Blank"
     }
   },
   "expectedResponse": {
@@ -20,7 +20,7 @@
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body": {
-      "case_type_id": "FT_CTT_Subfield_Multiple",
+      "case_type_id": "FT_CTT_Subfield_Blank",
       "channels": "[[ANYTHING_PRESENT]]",
       "tabs": [
         {
@@ -72,7 +72,7 @@
               "case_field": {
                 "metadata": false,
                 "id": "MySchool",
-                "case_type_id": "FT_CTT_Subfield_Multiple",
+                "case_type_id": "FT_CTT_Subfield_Blank",
                 "label": "My School",
                 "hint_text": null,
                 "field_type": "[[ANYTHING_PRESENT]]",
@@ -91,32 +91,7 @@
               "order": 1,
               "show_condition": null,
               "display_context_parameter": null,
-              "caseFieldSubfieldCode": "Name"
-            },
-            {
-              "case_field": {
-                "metadata": false,
-                "id": "MySchool",
-                "case_type_id": "FT_CTT_Subfield_Multiple",
-                "label": "My School",
-                "hint_text": null,
-                "field_type": "[[ANYTHING_PRESENT]]",
-                "hidden": false,
-                "security_classification": "PUBLIC",
-                "live_from": "2017-01-01",
-                "live_until": null,
-                "acls": "[[ANYTHING_PRESENT]]",
-                "complexACLs": "[[ANYTHING_PRESENT]]",
-                "order": null,
-                "show_condition": null,
-                "display_context_parameter": null,
-                "retain_hidden_value": null,
-                "category_id": null
-              },
-              "order": 2,
-              "show_condition": null,
-              "display_context_parameter": null,
-              "caseFieldSubfieldCode": "Number"
+              "caseFieldSubfieldCode": null
             }
           ],
           "show_condition": null,

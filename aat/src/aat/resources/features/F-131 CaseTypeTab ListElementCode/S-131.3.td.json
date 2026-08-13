@@ -1,14 +1,14 @@
 {
-  "_guid_": "S-127.2",
+  "_guid_": "S-131.3",
   "_extends_": "F-085_Test_Base_Data",
-  "title": "Blank CaseTypeTab ListElementCode is returned as null caseFieldSubfieldCode for a whole field",
+  "title": "CaseTypeTab ListElementCode is returned as caseFieldSubfieldCode for a nested complex subfield",
   "specs": [
     "an active profile in CCD",
-    "contains a case type id with a blank CaseTypeTab ListElementCode value"
+    "contains a case type id with a nested CaseTypeTab ListElementCode value"
   ],
   "request": {
     "pathVariables": {
-      "id": "FT_CTT_Subfield_Blank"
+      "id": "FT_CTT_Subfield_Nested"
     }
   },
   "expectedResponse": {
@@ -20,7 +20,7 @@
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body": {
-      "case_type_id": "FT_CTT_Subfield_Blank",
+      "case_type_id": "FT_CTT_Subfield_Nested",
       "channels": "[[ANYTHING_PRESENT]]",
       "tabs": [
         {
@@ -44,24 +44,8 @@
           "role": null
         },
         {
-          "id": "FamilyTab",
-          "label": "Family Details",
-          "order": 2,
-          "tab_fields": "[[ANYTHING_PRESENT]]",
-          "show_condition": null,
-          "role": null
-        },
-        {
-          "id": "History",
-          "label": "History",
-          "order": 1,
-          "tab_fields": "[[ANYTHING_PRESENT]]",
-          "show_condition": null,
-          "role": null
-        },
-        {
-          "id": "MySchoolDetails",
-          "label": "My School Details",
+          "id": "FamilyAddressDetails",
+          "label": "Family Address Details",
           "order": 3,
           "tab_fields": [
             {
@@ -71,9 +55,9 @@
             {
               "case_field": {
                 "metadata": false,
-                "id": "MySchool",
-                "case_type_id": "FT_CTT_Subfield_Blank",
-                "label": "My School",
+                "id": "FamilyDetails",
+                "case_type_id": "FT_CTT_Subfield_Nested",
+                "label": "Family Details",
                 "hint_text": null,
                 "field_type": "[[ANYTHING_PRESENT]]",
                 "hidden": false,
@@ -91,9 +75,25 @@
               "order": 1,
               "show_condition": null,
               "display_context_parameter": null,
-              "caseFieldSubfieldCode": null
+              "caseFieldSubfieldCode": "FamilyAddress.Country"
             }
           ],
+          "show_condition": null,
+          "role": null
+        },
+        {
+          "id": "FamilyTab",
+          "label": "Family Details",
+          "order": 2,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": null,
+          "role": null
+        },
+        {
+          "id": "History",
+          "label": "History",
+          "order": 1,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
           "show_condition": null,
           "role": null
         }

@@ -1,10 +1,10 @@
 {
-  "_guid_": "S-127.5",
-  "_extends_": "F-127_Definition_Import_Test_Base_data",
-  "title": "Import definition file with invalid CaseTypeTab ListElementCode path",
+  "_guid_": "S-131.6",
+  "_extends_": "F-131_Definition_Import_Test_Base_data",
+  "title": "Import definition file with CaseTypeTab ListElementCode on a simple field",
   "specs": [
     "an active profile in CCD",
-    "contains a CaseTypeTab ListElementCode path that does not exist"
+    "contains a CaseTypeTab ListElementCode value on a simple field"
   ],
   "request": {
     "body": {
@@ -24,7 +24,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "${[scenarioContext][customValues][contains Invalid ListElementCode 'DoesNotExist' for case type 'FT_CTT_Subfield_BadPath', case field 'MySchool']}"
+      "__plainTextValue__": "${[scenarioContext][customValues][contains ListElementCode 'Name' can be only defined for complex fields. Case Field 'Homeless', case type 'FT_CTT_Subfield_Simple']}"
     }
   }
 }

@@ -1,10 +1,10 @@
 {
-  "_guid_": "S-127.7",
-  "_extends_": "F-127_Definition_Import_Test_Base_data",
-  "title": "Import definition file with CaseTypeTab ListElementCode on a collection field",
+  "_guid_": "S-131.8",
+  "_extends_": "F-131_Definition_Import_Test_Base_data",
+  "title": "Import definition file with CaseTypeTab ListElementCode on a collection complex field",
   "specs": [
     "an active profile in CCD",
-    "contains a CaseTypeTab ListElementCode value on a collection field"
+    "contains a CaseTypeTab ListElementCode value on a collection complex field"
   ],
   "request": {
     "body": {
@@ -24,7 +24,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "${[scenarioContext][customValues][contains ListElementCode 'Name' is not supported for collection fields. Case Field 'MyCompany', case type 'FT_CTT_Subfield_Collection']}"
+      "__plainTextValue__": "${[scenarioContext][customValues][contains ListElementCode 'AddressLine1' is not supported for collection fields. Case Field 'CollectionComplexField', case type 'FT_CTT_Subfield_Collection']}"
     }
   }
 }
