@@ -21,6 +21,10 @@ java:
     LOG_LEVEL_ROOT: DEBUG
     AZURE_STORAGE_DEFINITION_UPLOAD_ENABLED: false
 
+    # Testing support endpoints are unauthenticated and delete case type definitions.
+    # Enable in lower environments only - never in production.
+    TESTING_SUPPORT_ENDPOINTS_ENABLED: true
+
     # Enable whenever required and point to the matching data-store preview Elasticsearch service.
     # Override DATA_STORE_ELASTIC_SEARCH_HOST at deploy time to avoid hardcoding a specific PR release.
     ELASTIC_SEARCH_ENABLED: true
