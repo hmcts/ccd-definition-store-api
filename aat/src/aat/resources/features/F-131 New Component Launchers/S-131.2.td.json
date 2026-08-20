@@ -1,39 +1,43 @@
 {
-  "_guid_": "S-130.1",
-  "_extends_": "Get_CaseType",
-  "title": "Must return all details successfully for a case type containing RichTextArea fields",
+  "_guid_": "S-131.2",
+  "_extends_": "F-131.2_Test_Base_Data",
+  "title": "Return the new Summary base type in the Get Case Type Definition Store operation",
   "specs": [
     "an active profile in CCD",
-    "contains id of a case type with RichTextArea fields",
-    "contains a case field whose type resolves to the RichTextArea base type",
-    "contains a case field whose Min constraint has been carried through to a derived RichTextArea type"
+    "contains id of a case type with Summary base type fields",
+    "contains all details of the case type requested"
   ],
-  "request": {
-    "pathVariables": {
-      "id": "FT_MasterCaseType"
-    }
-  },
   "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "[[ANYTHING_PRESENT]]",
+      "Transfer-Encoding": "[[ANYTHING_PRESENT]]",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+    },
     "body": {
       "id": "FT_MasterCaseType",
-      "description": "Test case containing all data types",
-      "version": {
-        "number": "[[ANY_INTEGER_NOT_NULLABLE]]",
+      "description": "[[ANY_STRING_NOT_NULLABLE]]",
+      "version": "[[ANYTHING_PRESENT]]",
+      "name": "FT-All Field Data Types",
+      "jurisdiction": {
+        "id": "BEFTA_MASTER",
+        "name": "BEFTA Master",
+        "description": "[[ANY_STRING_NOT_NULLABLE]]",
         "live_from": "[[ANYTHING_PRESENT]]",
-        "live_until": null
+        "live_until": null,
+        "case_types": "[[ANYTHING_PRESENT]]"
       },
-      "name": "[[ANYTHING_PRESENT]]",
-      "jurisdiction": "[[ANYTHING_PRESENT]]",
       "events": "[[ANYTHING_PRESENT]]",
       "states": "[[ANYTHING_PRESENT]]",
       "acls": "[[ANYTHING_PRESENT]]",
-      "searchAliasFields": [],
+      "searchAliasFields": "[[ANYTHING_PRESENT]]",
       "roleToAccessProfiles": "[[ANYTHING_PRESENT]]",
-      "searchParties": [],
+      "searchParties": "[[ANYTHING_PRESENT]]",
       "accessTypeRoles": "[[ANYTHING_PRESENT]]",
       "accessTypes": "[[ANYTHING_PRESENT]]",
       "categories": "[[ANYTHING_PRESENT]]",
-      "searchCriterias": [],
+      "searchCriterias": "[[ANYTHING_PRESENT]]",
       "case_fields": [
         {
           "__ordering__": "UNORDERED",
@@ -712,7 +716,16 @@
           "case_type_id": "FT_MasterCaseType",
           "label": "Summary",
           "hint_text": null,
-          "field_type": "[[ANYTHING_PRESENT]]",
+          "field_type": {
+            "id": "[[ANY_STRING_NOT_NULLABLE]]",
+            "type": "ComponentLauncher",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
           "hidden": false,
           "security_classification": "PUBLIC",
           "live_from": "[[ANYTHING_PRESENT]]",
@@ -731,7 +744,16 @@
           "case_type_id": "FT_MasterCaseType",
           "label": "Roles",
           "hint_text": null,
-          "field_type": "[[ANYTHING_PRESENT]]",
+          "field_type": {
+            "id": "[[ANY_STRING_NOT_NULLABLE]]",
+            "type": "ComponentLauncher",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
           "hidden": false,
           "security_classification": "PUBLIC",
           "live_from": "[[ANYTHING_PRESENT]]",
@@ -750,7 +772,16 @@
           "case_type_id": "FT_MasterCaseType",
           "label": "Hearings",
           "hint_text": null,
-          "field_type": "[[ANYTHING_PRESENT]]",
+          "field_type": {
+            "id": "[[ANY_STRING_NOT_NULLABLE]]",
+            "type": "ComponentLauncher",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
           "hidden": false,
           "security_classification": "PUBLIC",
           "live_from": "[[ANYTHING_PRESENT]]",
@@ -769,7 +800,16 @@
           "case_type_id": "FT_MasterCaseType",
           "label": "Task",
           "hint_text": null,
-          "field_type": "[[ANYTHING_PRESENT]]",
+          "field_type": {
+            "id": "[[ANY_STRING_NOT_NULLABLE]]",
+            "type": "ComponentLauncher",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [],
+            "collection_field_type": null
+          },
           "hidden": false,
           "security_classification": "PUBLIC",
           "live_from": "[[ANYTHING_PRESENT]]",
@@ -992,9 +1032,9 @@
           "category_id": null
         }
       ],
-      "printable_document_url": "[[ANY_STRING_NOT_NULLABLE]]",
-      "callback_get_case_url": null,
-      "retries_get_case_url": [],
+      "printable_document_url": "[[ANY_STRING_NULLABLE]]",
+      "callback_get_case_url": "[[ANY_STRING_NULLABLE]]",
+      "retries_get_case_url": "[[ANYTHING_PRESENT]]",
       "security_classification": "PUBLIC"
     }
   }

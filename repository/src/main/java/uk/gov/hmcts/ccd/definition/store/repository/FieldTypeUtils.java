@@ -47,6 +47,10 @@ public class FieldTypeUtils {
     public static final String BASE_DYNAMIC_MULTI_SELECT_LIST = "DynamicMultiSelectList";
     public static final String BASE_WAYS_TO_PAY = "WaysToPay";
     public static final String BASE_FLAG_LAUNCHER = "FlagLauncher";
+    public static final String BASE_SUMMARY_LAUNCHER = "SummaryLauncher";
+    public static final String BASE_ROLES_LAUNCHER = "RolesLauncher";
+    public static final String BASE_HEARINGS_LAUNCHER = "HearingsLauncher";
+    public static final String BASE_TASK_LAUNCHER = "TaskLauncher";
     public static final String BASE_COMPONENT_LAUNCHER = "ComponentLauncher";
 
     public static final String PREDEFINED_COMPLEX_CASE_ACCESS_GROUP = "CaseAccessGroup";
