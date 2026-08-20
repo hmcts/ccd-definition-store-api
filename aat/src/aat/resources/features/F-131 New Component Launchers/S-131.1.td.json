@@ -1,6 +1,6 @@
 {
-  "_guid_": "S-129.1",
-  "_extends_": "F-129_Test_Base_data",
+  "_guid_": "S-131.1",
+  "_extends_": "F-131_Test_Base_data",
   "title": "Definition file with newly added Summary base type in CaseTypeTab with required display order",
   "specs": [
     "an active profile in CCD",
