@@ -122,6 +122,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_T
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT_AREA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_WAYS_TO_PAY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_YES_OR_NO;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_STAFF_USER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
@@ -363,7 +364,7 @@ public class ImportServiceImplTest {
             .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        assertThrows(MissingAccessProfilesException.class,
+        assertThrows(MissingAccessProfilesException.class, 
             () -> service.importFormDefinitions(inputStream, false, false)
         );
     }
@@ -967,7 +968,8 @@ public class ImportServiceImplTest {
             buildBaseType(BASE_REGION),
             buildBaseType(BASE_BASE_LOCATION),
             buildBaseType(BASE_FLAG_LAUNCHER),
-            buildBaseType(BASE_COMPONENT_LAUNCHER));
+            buildBaseType(BASE_COMPONENT_LAUNCHER),
+            buildBaseType(BASE_STAFF_USER));
     }
 
     private List<FieldTypeEntity> getPredefinedComplexBaseTypesList() {
