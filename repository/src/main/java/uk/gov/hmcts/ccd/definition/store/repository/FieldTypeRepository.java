@@ -65,6 +65,8 @@ public interface FieldTypeRepository extends VersionedDefinitionRepository<Field
         + "', '" + PREDEFINED_COMPLEX_CASE_MESSAGE
         + "', '" + PREDEFINED_COMPLEX_CASE_ACCESS_GROUP
         + "', '" + PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS
-        + "')")
+        + "') and entity.jurisdiction is null and entity.version = "
+        + "(select max(e2.version) from FieldTypeEntity e2 where e2.reference = entity.reference "
+        + "and e2.jurisdiction is null)")
     List<FieldTypeEntity> findPredefinedComplexTypes();
 }
