@@ -183,6 +183,10 @@ withPipeline(type, product, app) {
         ]
     }
 
+    before('functionalTest:aat') {
+        env.GROUP_ACCESS_ENABLED = "true"
+    }
+
     afterAlways('functionalTest:aat') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
         publishHTML target: [
