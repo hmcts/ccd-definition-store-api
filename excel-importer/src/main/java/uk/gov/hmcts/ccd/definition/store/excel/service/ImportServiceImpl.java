@@ -214,8 +214,13 @@ public class ImportServiceImpl implements ImportService {
 
         // Initialise parse context with existing types
         parseContext.addBaseTypes(fieldTypeService.getBaseTypes());
-        parseContext.addToAllTypes(fieldTypeService.getPredefinedComplexTypes());
+        // addToAllTypes keys by reference and overwrites, so whatever is added last
+        // wins. Predefined complex types are added after the jurisdiction's own types so a
+        // jurisdiction-owned copy can never displace the platform definition. getTypesByJurisdiction
+        // returns an empty list today, so this ordering changes nothing on its own - it is a guard
+        // that keeps the defect from reappearing here if that method is ever implemented.
         parseContext.addToAllTypes(fieldTypeService.getTypesByJurisdiction(jurisdiction.getReference()));
+        parseContext.addToAllTypes(fieldTypeService.getPredefinedComplexTypes());
 
         final FieldsTypeParser fieldsTypeParser = parserFactory.createFieldsTypeParser(parseContext);
 

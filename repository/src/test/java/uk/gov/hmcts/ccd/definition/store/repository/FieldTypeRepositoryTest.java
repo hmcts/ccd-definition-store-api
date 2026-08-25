@@ -291,6 +291,32 @@ class FieldTypeRepositoryTest {
             .getId());
     }
 
+    @Test
+    void returnLatestJurisdictionNeutralVersionOfPreDefinedComplexType() {
+
+        final FieldTypeEntity seededCaseLocation = fieldTypeRepository.findPredefinedComplexTypes().stream()
+            .filter(fieldType -> PREDEFINED_COMPLEX_CASE_LOCATION.equals(fieldType.getReference()))
+            .findFirst()
+            .orElseThrow();
+
+        // A second jurisdiction-neutral row for the same reference at a higher version. Only the
+        // newer one may be returned - this is what exercises the max-version clause, which the
+        // jurisdiction filter alone would leave untested.
+        FieldTypeEntity newerCaseLocation = new FieldTypeEntity();
+        newerCaseLocation.setReference(PREDEFINED_COMPLEX_CASE_LOCATION);
+        newerCaseLocation.setVersion(seededCaseLocation.getVersion() + 1);
+        fieldTypeRepository.save(newerCaseLocation);
+
+        List<FieldTypeEntity> predefinedComplexTypes = fieldTypeRepository.findPredefinedComplexTypes();
+
+        assertEquals(20, predefinedComplexTypes.size());
+        assertEquals(newerCaseLocation.getId(), predefinedComplexTypes.stream()
+            .filter(fieldType -> PREDEFINED_COMPLEX_CASE_LOCATION.equals(fieldType.getReference()))
+            .findFirst()
+            .orElseThrow()
+            .getId());
+    }
+
     private Matcher fieldTypeWithReference(String reference) {
         return new BaseMatcher() {
             @Override
