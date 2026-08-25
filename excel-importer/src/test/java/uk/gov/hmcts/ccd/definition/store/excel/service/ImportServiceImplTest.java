@@ -80,6 +80,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -121,6 +122,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_T
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT_AREA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_WAYS_TO_PAY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_YES_OR_NO;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_STAFF_USER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_GLOBAL_UK;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_ADDRESS_UK;
@@ -151,6 +153,7 @@ public class ImportServiceImplTest {
     private static final String GOOD_FILE = "CCD_TestDefinition.xlsx";
     private static final String GOOD_FILE_MISSING_ACCESS_TYPES_ROLES_TAB
         = "CCD_TestDefinitionMissingAccessTypes&AccessTypeRolesTab.xlsx";
+    private static final String GOOD_FILE_FIXED_LIST_CASE_TYPE = "CCD_TestDefinition_V12_FixedList_CaseType.xlsx";
     private static final String GOOD_FILE_WITH_SHELL_MAPPING = "CCD_TestDefinition_ShellMapping.xlsx";
     private static final String INVALID_FILE_WITH_SHELL_MAPPING_LENGTH =
         "CCD_TestDefinition_ShellMapping_Length_Invalid.xlsx";
@@ -361,7 +364,7 @@ public class ImportServiceImplTest {
             .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        assertThrows(MissingAccessProfilesException.class,
+        assertThrows(MissingAccessProfilesException.class, 
             () -> service.importFormDefinitions(inputStream, false, false)
         );
     }
@@ -447,6 +450,46 @@ public class ImportServiceImplTest {
         assertEquals("user@hmcts.net", eventCaptor.getValue().getUserEmailId());
         assertEquals(false, eventCaptor.getValue().isReindex());
         assertEquals(false, eventCaptor.getValue().isDeleteOldIndex());
+    }
+
+    /**
+     * Imports a definition that includes Fixed Lists with CaseTypeID (groupDataItemsByCaseTypeAndId).
+     * The spreadsheet must reference list types consistently: list type keys are either "id" (no CaseTypeID)
+     * or "id-CaseTypeId"; CaseField type parameters must match.
+     */
+    @Test
+    void shouldImportDefinitionWithFixedListCaseType() throws Exception {
+
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+
+        final InputStream inputStream = getClass().getClassLoader()
+            .getResourceAsStream(GOOD_FILE_FIXED_LIST_CASE_TYPE);
+
+        final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
+
+        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
+        assertFalse(metadata.getCaseTypes().isEmpty());
+        assertEquals("user@hmcts.net", metadata.getUserId());
+
+        verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
+        verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
+        verify(translationService).processDefinitionSheets(anyMap());
+        verify(categoryIdValidator).validate(any(ParseContext.class));
+        assertThat(eventCaptor.getValue().getContent().size(), equalTo(metadata.getCaseTypes().size()));
     }
 
     @Test
@@ -925,7 +968,8 @@ public class ImportServiceImplTest {
             buildBaseType(BASE_REGION),
             buildBaseType(BASE_BASE_LOCATION),
             buildBaseType(BASE_FLAG_LAUNCHER),
-            buildBaseType(BASE_COMPONENT_LAUNCHER));
+            buildBaseType(BASE_COMPONENT_LAUNCHER),
+            buildBaseType(BASE_STAFF_USER));
     }
 
     private List<FieldTypeEntity> getPredefinedComplexBaseTypesList() {
