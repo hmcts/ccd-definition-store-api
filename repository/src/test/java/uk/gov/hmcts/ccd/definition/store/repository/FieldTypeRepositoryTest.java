@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.repository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeListItemEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -63,6 +64,9 @@ class FieldTypeRepositoryTest {
 
     @Autowired
     private FieldTypeRepository fieldTypeRepository;
+
+    @Autowired
+    private JurisdictionRepository jurisdictionRepository;
 
     private VersionedDefinitionRepositoryDecorator<FieldTypeEntity, Integer> versionedFieldTypeRepository;
     private static FieldTypeEntity textBaseType;
@@ -236,6 +240,23 @@ class FieldTypeRepositoryTest {
         notPredefined.setReference("NotPredefinedComplexType");
         versionedFieldTypeRepository.save(notPredefined);
 
+        final FieldTypeEntity globalCaseLocation = fieldTypeRepository.findPredefinedComplexTypes().stream()
+            .filter(fieldType -> PREDEFINED_COMPLEX_CASE_LOCATION.equals(fieldType.getReference()))
+            .findFirst()
+            .orElseThrow();
+
+        JurisdictionEntity jurisdiction = new JurisdictionEntity();
+        jurisdiction.setReference("TEST");
+        jurisdiction.setName("Test");
+        jurisdiction.setVersion(1);
+        jurisdictionRepository.save(jurisdiction);
+
+        FieldTypeEntity jurisdictionCaseLocation = new FieldTypeEntity();
+        jurisdictionCaseLocation.setReference(PREDEFINED_COMPLEX_CASE_LOCATION);
+        jurisdictionCaseLocation.setVersion(globalCaseLocation.getVersion() + 1);
+        jurisdictionCaseLocation.setJurisdiction(jurisdiction);
+        fieldTypeRepository.save(jurisdictionCaseLocation);
+
         List<FieldTypeEntity> predefinedComplexTypes = fieldTypeRepository.findPredefinedComplexTypes();
 
         assertEquals(20, predefinedComplexTypes.size());
@@ -263,6 +284,37 @@ class FieldTypeRepositoryTest {
             fieldTypeWithReference(PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS)
             )
         );
+        assertEquals(globalCaseLocation.getId(), predefinedComplexTypes.stream()
+            .filter(fieldType -> PREDEFINED_COMPLEX_CASE_LOCATION.equals(fieldType.getReference()))
+            .findFirst()
+            .orElseThrow()
+            .getId());
+    }
+
+    @Test
+    void returnLatestJurisdictionNeutralVersionOfPreDefinedComplexType() {
+
+        final FieldTypeEntity seededCaseLocation = fieldTypeRepository.findPredefinedComplexTypes().stream()
+            .filter(fieldType -> PREDEFINED_COMPLEX_CASE_LOCATION.equals(fieldType.getReference()))
+            .findFirst()
+            .orElseThrow();
+
+        // A second jurisdiction-neutral row for the same reference at a higher version. Only the
+        // newer one may be returned - this is what exercises the max-version clause, which the
+        // jurisdiction filter alone would leave untested.
+        FieldTypeEntity newerCaseLocation = new FieldTypeEntity();
+        newerCaseLocation.setReference(PREDEFINED_COMPLEX_CASE_LOCATION);
+        newerCaseLocation.setVersion(seededCaseLocation.getVersion() + 1);
+        fieldTypeRepository.save(newerCaseLocation);
+
+        List<FieldTypeEntity> predefinedComplexTypes = fieldTypeRepository.findPredefinedComplexTypes();
+
+        assertEquals(20, predefinedComplexTypes.size());
+        assertEquals(newerCaseLocation.getId(), predefinedComplexTypes.stream()
+            .filter(fieldType -> PREDEFINED_COMPLEX_CASE_LOCATION.equals(fieldType.getReference()))
+            .findFirst()
+            .orElseThrow()
+            .getId());
     }
 
     private Matcher fieldTypeWithReference(String reference) {
