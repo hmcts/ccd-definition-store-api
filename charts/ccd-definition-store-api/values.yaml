@@ -39,6 +39,11 @@ java:
     DEFINITION_STORE_DB_OPTIONS: "?sslmode=require&gssEncMode=disable"
     DEFINITION_STORE_DB_MAX_POOL_SIZE: 25
 
+    # Case type snapshot cache. CASE_TYPE_SNAPSHOT_ENABLED=false is the kill switch and disables
+    # snapshot reads, writes and eager creation. CASE_TYPE_SNAPSHOT_ASYNC_ENABLED=false disables only
+    # eager creation after import. Both are read at startup, so a change needs a restart.
+    CASE_TYPE_SNAPSHOT_ENABLED: true
+    CASE_TYPE_SNAPSHOT_ASYNC_ENABLED: true
 
     DEFINITION_STORE_S2S_AUTHORISED_SERVICES: ccd_data,ccd_gw,ccd_admin,jui_webapp,pui_webapp,aac_manage_case_assignment,xui_webapp,am_org_role_mapping_service
 
