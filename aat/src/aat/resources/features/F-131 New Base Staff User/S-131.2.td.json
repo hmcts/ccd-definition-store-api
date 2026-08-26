@@ -2619,48 +2619,29 @@
         "category_id" : null
       }, {
         "metadata" : false,
-        "id" : "StaffUser",
+        "id" : "StaffUserCollection",
         "case_type_id" : "FT_MasterCaseType",
-        "label" : "StaffUser",
+        "label" : "Staff User Collection",
         "hint_text" : null,
         "field_type" : {
-          "id" : "StaffUser",
-          "type" : "Complex",
+          "id" : "[[ANYTHING_PRESENT]]",
+          "type" : "Collection",
           "min" : null,
           "max" : null,
           "regular_expression" : null,
           "fixed_list_items" : [ ],
-          "complex_fields" : [ {
-            "metadata" : false,
-            "id" : "IdamId",
-            "case_type_id" : null,
-            "label" : "Idam id",
-            "hint_text" : null,
-            "field_type" : {
-              "id" : "Text",
-              "type" : "Text",
-              "min" : null,
-              "max" : null,
-              "regular_expression" : null,
-              "fixed_list_items" : [ ],
-              "complex_fields" : [ ],
-              "collection_field_type" : null
-            },
-            "hidden" : null,
-            "security_classification" : "PUBLIC",
-            "live_from" : null,
-            "live_until" : null,
-            "acls" : null,
-            "complexACLs" : [ ],
-            "order" : null,
-            "show_condition" : null,
-            "display_context_parameter" : null,
-            "retain_hidden_value" : null,
-            "category_id" : null
-          } ],
-          "collection_field_type" : null
-        }
-      },
+          "complex_fields" : [ ],
+          "collection_field_type" : {
+            "id" : "StaffUser",
+            "type" : "StaffUser",
+            "min" : null,
+            "max" : null,
+            "regular_expression" : null,
+            "fixed_list_items" : [ ],
+            "complex_fields" : [ ],
+            "collection_field_type" : null
+          }
+        },
         "hidden" : false,
         "security_classification" : "PUBLIC",
         "live_from" : "[[ANYTHING_PRESENT]]",
@@ -3773,14 +3754,27 @@
         "hint_text" : null,
         "field_type" : {
           "id" : "StaffUser",
-          "type" : "StaffUser",
+          "type" : "Complex",
           "min" : null,
           "max" : null,
           "regular_expression" : null,
           "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
-          "collection_field_type" : null
-        },
+          "complex_fields" : [ {
+            "metadata" : false,
+            "id" : "IdamId",
+            "case_type_id" : null,
+            "label" : "Idam id",
+            "hint_text" : null,
+            "field_type" : {
+              "id" : "Text",
+              "type" : "Text",
+              "min" : null,
+              "max" : null,
+              "regular_expression" : null,
+              "fixed_list_items" : [ ],
+              "complex_fields" : [ ],
+              "collection_field_type" : null
+            },
         "hidden" : false,
         "security_classification" : "PUBLIC",
         "live_from" : "[[ANYTHING_PRESENT]]",
