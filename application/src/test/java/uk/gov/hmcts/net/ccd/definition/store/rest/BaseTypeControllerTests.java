@@ -73,7 +73,7 @@ class BaseTypeControllerTests extends BaseTest {
         assertContainsFieldType(baseTypes, "WaysToPay", "WaysToPay");
         assertContainsFieldType(baseTypes, "FlagLauncher", "FlagLauncher");
         assertContainsFieldType(baseTypes, "ComponentLauncher", "ComponentLauncher");
-        assertContainsFieldType(baseTypes, "StaffUser", "StaffUser");
+        assertContainsFieldType(baseTypes, "StaffUser_old", "StaffUser_old");
     }
 
     private void assertContainsFieldType(FieldType[] baseTypes, String id, String type) {
