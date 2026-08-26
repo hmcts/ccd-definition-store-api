@@ -3754,27 +3754,14 @@
         "hint_text" : null,
         "field_type" : {
           "id" : "StaffUser",
-          "type" : "Complex",
+          "type" : "StaffUser",
           "min" : null,
           "max" : null,
           "regular_expression" : null,
           "fixed_list_items" : [ ],
-          "complex_fields" : [ {
-            "metadata" : false,
-            "id" : "IdamId",
-            "case_type_id" : null,
-            "label" : "Idam id",
-            "hint_text" : null,
-            "field_type" : {
-              "id" : "Text",
-              "type" : "Text",
-              "min" : null,
-              "max" : null,
-              "regular_expression" : null,
-              "fixed_list_items" : [ ],
-              "complex_fields" : [ ],
-              "collection_field_type" : null
-            },
+          "complex_fields" : [ ],
+          "collection_field_type" : null
+        },
         "hidden" : false,
         "security_classification" : "PUBLIC",
         "live_from" : "[[ANYTHING_PRESENT]]",
