@@ -1,4 +1,4 @@
-Delete from public.field_type where reference = 'StaffUser';
+UPDATE public.field_type set reference 'StaffUser_old' where reference = 'StaffUser';
 
 insert into field_type (created_at, reference, version, base_field_type_id)
 values (now(), 'StaffUser', 1,
@@ -11,6 +11,6 @@ values (now(), 'StaffUser', 1,
        );
 
 insert into complex_field (reference, label, security_classification, field_type_id, complex_field_type_id)
-values ('IdamId', 'Idam id', 'PUBLIC',
+values ('idamId', 'IdamId', 'PUBLIC',
         (select id from field_type where reference = 'Text' and version = 1 and jurisdiction_id is null),
         (select id from field_type where reference = 'StaffUser' and version = 1 and jurisdiction_id is null));
