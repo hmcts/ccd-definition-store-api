@@ -1,4 +1,4 @@
-Delete from public.field_type where refrence = 'StaffUser';
+Delete from public.field_type where reference = 'StaffUser';
 
 insert into field_type (created_at, reference, version, base_field_type_id)
 values (now(), 'StaffUser', 1,
