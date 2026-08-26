@@ -1,4 +1,4 @@
-UPDATE public.field_type set reference = 'StaffUser_old' where reference = 'StaffUser' and version = '1';
+UPDATE public.field_type set reference = 'StaffUser_old' where reference = 'StaffUser';
 
 insert into field_type (created_at, reference, version, base_field_type_id)
 values (now(), 'StaffUser', 1,
