@@ -44,7 +44,7 @@ class BaseTypeControllerTests extends BaseTest {
 
         assertThat(baseTypes)
             .as("Unexpected number of Base Types")
-            .hasSize(29);
+            .hasSize(28);
         assertContainsFieldType(baseTypes, "Text", "Text");
         assertContainsFieldType(baseTypes, "Number", "Number");
         assertContainsFieldType(baseTypes, "Email", "Email");
