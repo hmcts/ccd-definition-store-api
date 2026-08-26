@@ -4,7 +4,7 @@ LANGUAGE plpgsql
 AS $$
 DECLARE
     summary_msg text;
-    cleanup_started_at timestamp := clock_timestamp();
+    constraint_restore_failures_before int := 0;
 BEGIN
     ----------------------------------------------------------------------
     -- 1. CREATE HELPER PROCEDURES dynamically
@@ -116,6 +116,7 @@ BEGIN
         CALL manage_constraint('public.case_type_acl', 'fk_case_type_acl_role_id_role_id', 'DROP');
         CALL manage_constraint('public.category', 'fk_category_case_type_id', 'DROP');
         CALL manage_constraint('public.challenge_question', 'fk_challenge_question_case_type_id', 'DROP');
+        CALL manage_constraint('public.challenge_question', 'fk_challenge_question_field_type_id', 'DROP');
         CALL manage_constraint('public.complex_field_acl', 'fk_complex_field_acl_case_field_id_case_field_id', 'DROP');
         CALL manage_constraint('public.complex_field_acl', 'fk_complex_field_acl_role_id_role_id', 'DROP');
         CALL manage_constraint('public.display_group', 'fk_display_group_case_type_id', 'DROP');
@@ -124,6 +125,7 @@ BEGIN
         CALL manage_constraint('public.event', 'fk_event_case_type_id', 'DROP');
         CALL manage_constraint('public.role_to_access_profiles', 'fk_case_field_role_to_access_profiles', 'DROP');
         CALL manage_constraint('public.search_alias_field', 'fk_search_alias_field_case_type_id', 'DROP');
+        CALL manage_constraint('public.search_alias_field', 'fk_search_alias_field_field_type_id', 'DROP');
         CALL manage_constraint('public.search_cases_result_fields', 'fk_search_cases_result_fields_case_field_id_case_field_id', 'DROP');
         CALL manage_constraint('public.search_cases_result_fields', 'fk_search_cases_result_fields_case_type_id', 'DROP');
         CALL manage_constraint('public.search_input_case_field', 'fk_display_group_role_id', 'DROP');
@@ -241,6 +243,13 @@ BEGIN
             'fk_challenge_question_case_type_id',
             'ADD',
             'FOREIGN KEY (case_type_id) REFERENCES case_type(id)'
+        );
+
+        CALL manage_constraint(
+            'public.challenge_question',
+            'fk_challenge_question_field_type_id',
+            'ADD',
+            'FOREIGN KEY (answer_field_type) REFERENCES field_type(id)'
         );
     
         CALL manage_constraint(
@@ -391,6 +400,13 @@ BEGIN
         );
 
         CALL manage_constraint(
+            'public.search_alias_field',
+            'fk_search_alias_field_field_type_id',
+            'ADD',
+            'FOREIGN KEY (field_type_id) REFERENCES field_type(id)'
+        );
+
+        CALL manage_constraint(
             'public.search_cases_result_fields',
             'fk_search_cases_result_fields_case_field_id_case_field_id',
             'ADD',
@@ -485,13 +501,8 @@ BEGIN
     	    message TEXT
     	);
 
-        CREATE TABLE IF NOT EXISTS case_type_cleanup_removable_field_type_ids (
-            id integer PRIMARY KEY,
-            created_at TIMESTAMP DEFAULT now()
-        );
-
         EXECUTE format(
-	        'CREATE TEMP TABLE case_type_ids_to_remove AS
+            'CREATE TEMP TABLE case_type_ids_to_remove AS
             SELECT id
             FROM case_type ct
             INNER JOIN (
@@ -544,21 +555,12 @@ BEGIN
         BEGIN
             CREATE TEMP TABLE candidate_field_type_ids AS
             WITH RECURSIVE candidate(id) AS (
-                SELECT id
-                FROM (
-                    SELECT cf.field_type_id AS id
-                    FROM case_field cf
-                    JOIN field_type ft ON ft.id = cf.field_type_id
-                    WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
-                      AND ft.jurisdiction_id IS NOT NULL
-
-                    UNION
-
-                    SELECT persisted.id AS id
-                    FROM case_type_cleanup_removable_field_type_ids persisted
-                    JOIN field_type ft ON ft.id = persisted.id
-                ) seed
-                WHERE id IS NOT NULL
+                SELECT cf.field_type_id AS id
+                FROM case_field cf
+                JOIN field_type ft ON ft.id = cf.field_type_id
+                WHERE cf.case_type_id IN (SELECT id FROM case_type_ids_to_remove)
+                  AND ft.jurisdiction_id IS NOT NULL
+                  AND cf.field_type_id IS NOT NULL
 
                 UNION
 
@@ -643,6 +645,26 @@ BEGIN
                               WHERE candidate_parent.id = ft.id
                           )
                     )
+                       OR EXISTS (
+                        SELECT 1
+                        FROM search_alias_field saf
+                        WHERE saf.field_type_id = c.id
+                          AND NOT EXISTS (
+                              SELECT 1
+                              FROM case_type_ids_to_remove ctr
+                              WHERE ctr.id = saf.case_type_id
+                          )
+                    )
+                       OR EXISTS (
+                        SELECT 1
+                        FROM challenge_question cq
+                        WHERE cq.answer_field_type = c.id
+                          AND NOT EXISTS (
+                              SELECT 1
+                              FROM case_type_ids_to_remove ctr
+                              WHERE ctr.id = cq.case_type_id
+                          )
+                    )
                 ) seed
                 WHERE id IS NOT NULL
 
@@ -690,18 +712,6 @@ BEGIN
               );
             CREATE INDEX idx_removable_field_type_ids_id ON removable_field_type_ids(id);
             ANALYZE removable_field_type_ids;
-
-            DELETE FROM case_type_cleanup_removable_field_type_ids persisted
-            WHERE NOT EXISTS (
-                SELECT 1
-                FROM removable_field_type_ids removable
-                WHERE removable.id = persisted.id
-            );
-
-            INSERT INTO case_type_cleanup_removable_field_type_ids(id)
-            SELECT id
-            FROM removable_field_type_ids
-            ON CONFLICT (id) DO NOTHING;
 
             RAISE NOTICE 'Created temp table removable_field_type_ids with % rows',
                 (SELECT COUNT(*) FROM removable_field_type_ids);
@@ -756,7 +766,6 @@ BEGIN
         DROP TABLE IF EXISTS removable_field_type_ids;
         DROP TABLE IF EXISTS removable_events;
         DROP TABLE IF EXISTS removable_states;
-        DROP TABLE IF EXISTS case_type_cleanup_removable_field_type_ids;
         RAISE NOTICE 'drop_cleanup_temp_tables FINISHED';
     END;
     $body$;
@@ -778,6 +787,7 @@ BEGIN
         full_tbl_name text := tbl::text;
         delete_failed boolean;
         failure_message text;
+        restore_failures_before int;
     BEGIN
         LOOP
             RAISE NOTICE 'Attempting to delete up to % rows from %', batch_size, full_tbl_name;
@@ -809,8 +819,21 @@ BEGIN
 
             IF delete_failed THEN
                 RAISE NOTICE 'Attempting to restore foreign key relationships after delete failure';
+                SELECT COUNT(*)
+                INTO restore_failures_before
+                FROM ddl_log
+                WHERE action = 'ADD CONSTRAINT FAILED';
+
                 CALL create_foreign_key_relationships();
                 COMMIT;
+                IF (
+                    SELECT COUNT(*)
+                    FROM ddl_log
+                    WHERE action = 'ADD CONSTRAINT FAILED'
+                ) > restore_failures_before THEN
+                    RAISE EXCEPTION '% One or more foreign key relationships failed to restore. See latest ADD CONSTRAINT FAILED ddl_log entries.',
+                        failure_message;
+                END IF;
                 RAISE EXCEPTION '%', failure_message;
             END IF;
 
@@ -1402,7 +1425,50 @@ BEGIN
             CALL safe_delete_where(
               'field_type_list_item',
               'field_type_id',
-              'field_type_id IN (SELECT id FROM removable_field_type_ids)',
+              'field_type_id IN (
+                   SELECT rft.id
+                   FROM removable_field_type_ids rft
+                   JOIN field_type ft ON ft.id = rft.id
+                   WHERE rft.id NOT IN (SELECT id FROM valid_field_type_ids)
+                     AND ft.jurisdiction_id IS NOT NULL
+                     AND NOT EXISTS (
+                         SELECT 1
+                         FROM case_field cf
+                         WHERE cf.field_type_id = ft.id
+                     )
+                     AND NOT EXISTS (
+                         SELECT 1
+                         FROM complex_field cf
+                         WHERE (cf.field_type_id = ft.id
+                                OR cf.complex_field_type_id = ft.id)
+                           AND NOT EXISTS (
+                               SELECT 1
+                               FROM removable_field_type_ids removable_parent
+                               WHERE removable_parent.id = cf.complex_field_type_id
+                           )
+                     )
+                     AND NOT EXISTS (
+                         SELECT 1
+                         FROM field_type parent_ft
+                         WHERE (parent_ft.base_field_type_id = ft.id
+                                OR parent_ft.collection_field_type_id = ft.id)
+                           AND NOT EXISTS (
+                               SELECT 1
+                               FROM removable_field_type_ids removable_parent
+                               WHERE removable_parent.id = parent_ft.id
+                           )
+                     )
+                     AND NOT EXISTS (
+                         SELECT 1
+                         FROM search_alias_field saf
+                         WHERE saf.field_type_id = ft.id
+                     )
+                     AND NOT EXISTS (
+                         SELECT 1
+                         FROM challenge_question cq
+                         WHERE cq.answer_field_type = ft.id
+                     )
+               )',
               batch_size
             );
         ELSE
@@ -1445,6 +1511,21 @@ BEGIN
                    FROM field_type ft
                    WHERE ft.base_field_type_id = field_type.id
                       OR ft.collection_field_type_id = field_type.id
+               )
+               AND NOT EXISTS (
+                   SELECT 1
+                   FROM field_type_list_item ftli
+                   WHERE ftli.field_type_id = field_type.id
+               )
+               AND NOT EXISTS (
+                   SELECT 1
+                   FROM search_alias_field saf
+                   WHERE saf.field_type_id = field_type.id
+               )
+               AND NOT EXISTS (
+                   SELECT 1
+                   FROM challenge_question cq
+                   WHERE cq.answer_field_type = field_type.id
                )',
               batch_size
             );
@@ -1481,6 +1562,10 @@ BEGIN
         table_name TEXT,
         message TEXT
     );
+    SELECT COUNT(*)
+    INTO constraint_restore_failures_before
+    FROM ddl_log
+    WHERE action = 'ADD CONSTRAINT FAILED';
     COMMIT;
 
     CALL prepare_cleanup_temp_tables(older_than_months::int);
@@ -1495,14 +1580,12 @@ BEGIN
     CALL create_foreign_key_relationships();
     COMMIT;
 
-    IF EXISTS (
-        SELECT 1
+    IF (
+        SELECT COUNT(*)
         FROM ddl_log
         WHERE action = 'ADD CONSTRAINT FAILED'
-          AND log_time >= cleanup_started_at
-    ) THEN
-        RAISE EXCEPTION 'One or more foreign key relationships failed to restore. See ddl_log entries since %',
-            cleanup_started_at;
+    ) > constraint_restore_failures_before THEN
+        RAISE EXCEPTION 'One or more foreign key relationships failed to restore. See latest ADD CONSTRAINT FAILED ddl_log entries.';
     END IF;
 
     CALL drop_cleanup_temp_tables();
