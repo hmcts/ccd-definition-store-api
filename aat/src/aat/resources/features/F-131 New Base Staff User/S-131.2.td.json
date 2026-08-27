@@ -2619,6 +2619,183 @@
         "category_id" : null
       }, {
         "metadata" : false,
+        "id" : "StaffUserCollection",
+        "case_type_id" : "FT_MasterCaseType",
+        "label" : "Staff User Collection",
+        "hint_text" : null,
+        "field_type": {
+          "id": "[[ANYTHING_PRESENT]]",
+          "type": "Collection",
+          "min": null,
+          "max": null,
+          "regular_expression": null,
+          "fixed_list_items": [],
+          "complex_fields": [],
+          "collection_field_type": {
+            "id": "StaffUser",
+            "type": "Complex",
+            "min": null,
+            "max": null,
+            "regular_expression": null,
+            "fixed_list_items": [],
+            "complex_fields": [
+              {
+                "metadata": false,
+                "id": "idamId",
+                "case_type_id": null,
+                "label": "IdamId",
+                "hint_text": null,
+                "field_type": {
+                  "id": "Text",
+                  "type": "Text",
+                  "min": null,
+                  "max": null,
+                  "regular_expression": null,
+                  "fixed_list_items": [],
+                  "complex_fields": [],
+                  "collection_field_type": null
+                },
+                "hidden": null,
+                "security_classification": "PUBLIC",
+                "live_from": null,
+                "live_until": null,
+                "acls": null,
+                "complexACLs": [
+                ],
+                "order": null,
+                "show_condition": null,
+                "display_context_parameter": null,
+                "retain_hidden_value": null,
+                "category_id": null
+              }
+            ],
+            "collection_field_type": null
+          }
+        },
+        "hidden" : false,
+        "security_classification" : "PUBLIC",
+        "live_from" : "[[ANYTHING_PRESENT]]",
+        "live_until" : null,
+        "acls" : [ {
+          "role" : "caseworker-befta_master",
+          "create" : true,
+          "read" : true,
+          "update" : true,
+          "delete" : true
+        }, {
+          "role" : "caseworker-befta_master-solicitor",
+          "create" : true,
+          "read" : true,
+          "update" : true,
+          "delete" : true
+        } ],
+        "complexACLs" : [ ],
+        "order" : null,
+        "show_condition" : null,
+        "display_context_parameter" : null,
+        "retain_hidden_value" : null,
+        "category_id" : null
+      }, {
+        "metadata" : false,
+        "id" : "StaffUserComplexField",
+        "case_type_id" : "FT_MasterCaseType",
+        "label" : "Staff User Complex",
+        "hint_text" : null,
+        "field_type": {
+          "id": "StaffUserComplex",
+          "type": "Complex",
+          "min": null,
+          "max": null,
+          "regular_expression": null,
+          "fixed_list_items": [],
+          "complex_fields": [
+            {
+              "metadata": false,
+              "id": "staffUser",
+              "case_type_id": null,
+              "label": "Staff User",
+              "hint_text": null,
+              "field_type": {
+                "id": "StaffUser",
+                "type": "Complex",
+                "min": null,
+                "max": null,
+                "regular_expression": null,
+                "fixed_list_items": [],
+                "complex_fields": [
+                  {
+                    "metadata": false,
+                    "id": "idamId",
+                    "case_type_id": null,
+                    "label": "IdamId",
+                    "hint_text": null,
+                    "field_type": {
+                      "id": "Text",
+                      "type": "Text",
+                      "min": null,
+                      "max": null,
+                      "regular_expression": null,
+                      "fixed_list_items": [],
+                      "complex_fields": [],
+                      "collection_field_type": null
+                    },
+                    "hidden": null,
+                    "security_classification": "PUBLIC",
+                    "live_from": null,
+                    "live_until": null,
+                    "acls": null,
+                    "complexACLs": [
+                    ],
+                    "order": null,
+                    "show_condition": null,
+                    "display_context_parameter": null,
+                    "retain_hidden_value": null,
+                    "category_id": null
+                  }
+                ],
+                "collection_field_type": null
+              },
+              "hidden": null,
+              "security_classification": "PUBLIC",
+              "live_from": null,
+              "live_until": null,
+              "acls": null,
+              "complexACLs": [
+              ],
+              "order": null,
+              "show_condition": null,
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "category_id": null
+            }
+          ],
+          "collection_field_type": null
+        },
+        "hidden" : false,
+        "security_classification" : "PUBLIC",
+        "live_from" : "[[ANYTHING_PRESENT]]",
+        "live_until" : null,
+        "acls" : [ {
+          "role" : "caseworker-befta_master",
+          "create" : true,
+          "read" : true,
+          "update" : true,
+          "delete" : true
+        }, {
+          "role" : "caseworker-befta_master-solicitor",
+          "create" : true,
+          "read" : true,
+          "update" : true,
+          "delete" : true
+        } ],
+        "complexACLs" : [ ],
+        "order" : null,
+        "show_condition" : null,
+        "display_context_parameter" : null,
+        "retain_hidden_value" : null,
+        "category_id" : null
+      }, {
+        "metadata" : false,
         "id" : "MarritalStatus",
         "case_type_id" : "FT_MasterCaseType",
         "label" : "Fixed List",
@@ -3639,13 +3816,43 @@
         "label" : "StaffUser",
         "hint_text" : null,
         "field_type" : {
-          "id" : "Text",
-          "type" : "Text",
+          "id" : "StaffUser",
+          "type" : "Complex",
           "min" : null,
           "max" : null,
           "regular_expression" : null,
           "fixed_list_items" : [ ],
-          "complex_fields" : [ ],
+          "complex_fields": [
+            {
+              "metadata": false,
+              "id": "idamId",
+              "case_type_id": null,
+              "label": "IdamId",
+              "hint_text": null,
+              "field_type": {
+                "id": "Text",
+                "type": "Text",
+                "min": null,
+                "max": null,
+                "regular_expression": null,
+                "fixed_list_items": [],
+                "complex_fields": [],
+                "collection_field_type": null
+              },
+              "hidden": null,
+              "security_classification": "PUBLIC",
+              "live_from": null,
+              "live_until": null,
+              "acls": null,
+              "complexACLs": [
+              ],
+              "order": null,
+              "show_condition": null,
+              "display_context_parameter": null,
+              "retain_hidden_value": null,
+              "category_id": null
+            }
+          ],
           "collection_field_type" : null
         },
         "hidden" : false,
