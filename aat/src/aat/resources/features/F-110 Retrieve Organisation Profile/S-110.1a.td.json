@@ -23,6 +23,7 @@
     "body": {
       "jurisdictions": [
         {
+          "__operator__": "SUPERSET",
           "__ordering__": "unordered",
           "__elementId__": "jurisdictionId"
         },
@@ -31,8 +32,9 @@
           "jurisdictionName": "BEFTA Master",
           "accessTypes": [
             {
+              "__operator__": "SUPERSET",
               "__ordering__": "unordered",
-              "__elementId__": "organisationProfileId,accessTypeId, displayOrder"
+              "__elementId__": "organisationProfileId,accessTypeId,displayOrder,description"
             },
             {
               "organisationProfileId" : "GOVERNMENT_ORGANISATION_PROFILE",
@@ -44,8 +46,9 @@
               "hint" : "BEFTA GA OGD Respondent for Org hint2",
               "displayOrder" : 2,
               "roles" : [ {
+                "__operator__": "SUPERSET",
                 "__ordering__": "unordered",
-                "__elementId__": "caseGroupIdTemplate,groupRoleName"
+                "__elementId__": "caseTypeId,caseGroupIdTemplate,groupRoleName,organisationalRoleName"
               }, {
                 "caseTypeId" : "FT_CaseProfessionalGroupAccess",
                 "organisationalRoleName" : "CaseProfessionalGroupAccess_Org_Role",
@@ -70,6 +73,10 @@
               "hint" : "BEFTA GA Solicitor Respondent for Org hint",
               "displayOrder" : 1,
               "roles" : [ {
+                "__operator__": "SUPERSET",
+                "__ordering__": "unordered",
+                "__elementId__": "caseTypeId,caseGroupIdTemplate,groupRoleName,organisationalRoleName"
+              }, {
                 "caseTypeId" : "FT_CaseProfessionalGroupAccess",
                 "organisationalRoleName" : null,
                 "groupRoleName" : "CaseProfessionalGroupAccess_GA_Role",
@@ -88,6 +95,11 @@
               "displayOrder": 1,
               "roles": [
                 {
+                  "__operator__": "SUPERSET",
+                  "__ordering__": "unordered",
+                  "__elementId__": "caseTypeId,caseGroupIdTemplate,groupRoleName,organisationalRoleName"
+                },
+                {
                   "caseTypeId": "FT_CaseAccessGroups",
                   "organisationalRoleName": "Role1",
                   "groupRoleName": "Role1",
@@ -103,8 +115,9 @@
           "jurisdictionName": "BEFTA_JURISDICTION_1",
           "accessTypes": [
             {
+              "__operator__": "SUPERSET",
               "__ordering__": "unordered",
-              "__elementId__": "organisationProfileId,accessTypeId, displayOrder"
+              "__elementId__": "organisationProfileId,accessTypeId,displayOrder,description"
             },
             {
               "organisationProfileId": "SOLICITOR_PROFILE",
@@ -117,8 +130,9 @@
               "displayOrder": 2,
               "roles": [
                 {
+                  "__operator__": "SUPERSET",
                   "__ordering__": "unordered",
-                  "__elementId__": "caseGroupIdTemplate,groupRoleName"
+                  "__elementId__": "caseTypeId,caseGroupIdTemplate,groupRoleName,organisationalRoleName"
                 },
                 {
                   "caseTypeId": "CaseAccessGroups_Casetype",

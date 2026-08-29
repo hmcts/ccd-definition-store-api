@@ -328,6 +328,11 @@ subprojects { subproject ->
 
         testImplementation group: 'com.google.guava', name: 'guava', version: '33.6.0-jre'
         testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
+        // Pin transitive Cucumber artifacts pulled by befta-fw.
+        // Without these, test compilation can fail resolving version ranges such as io.cucumber:query:[12.1.1,13.0.0)
+        // and io.cucumber:messages:[24.0.0,25.0.0) from the formatter chain.
+        testImplementation group: 'io.cucumber', name: 'query', version: '12.2.0'
+        testImplementation group: 'io.cucumber', name: 'messages', version: '24.1.0'
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: ccdTestDefinitionVersion
         testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
         testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
@@ -575,9 +580,7 @@ cucumberReports {
 task reloadEnvSecrets {
     doFirst {
         def env = project.findProperty('env') ?: 'demo'
-        if (project.file("./.${env}-remote-env").exists()) {
-            project.file("./.${env}-remote-env").delete()
-        }
+        ensureRemoteEnvFile(env)
     }
 }
 
