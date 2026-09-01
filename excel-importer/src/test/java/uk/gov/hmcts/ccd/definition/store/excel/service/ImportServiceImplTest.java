@@ -141,6 +141,7 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_PREVIOUS_ORGANISATION;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_CRITERIA;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_PARTY;
+import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_STAFF_USER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_TTL;
 
 
@@ -991,6 +992,7 @@ public class ImportServiceImplTest {
             buildBaseType(PREDEFINED_COMPLEX_CASE_QUERIES_COLLECTION),
             buildBaseType(PREDEFINED_COMPLEX_CASE_MESSAGE),
             buildBaseType(PREDEFINED_COMPLEX_CASE_ACCESS_GROUP),
-            buildBaseType(PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS));
+            buildBaseType(PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS),
+            buildBaseType(PREDEFINED_COMPLEX_STAFF_USER));
     }
 }
