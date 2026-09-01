@@ -1,10 +1,10 @@
 {
-  "_guid_": "S-127.2",
+  "_guid_": "S-132.1",
   "_extends_": "Import_Base_data",
-  "title": "Import Definition file containing new column StateCategory with comma separated State Categories",
+  "title": "Import Definition file containing new column StateCategory with single StateCategory",
   "specs": [
     "an active profile in CCD and with CCD-import role",
-    "contains a definition file with new column StateCategory with comma separated State Categories"
+    "contains a definition file with new column StateCategory with single StateCategory"
   ],
   "request": {
     "body": {

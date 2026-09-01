@@ -1,10 +1,10 @@
-@F-127
-Feature: F-127: New StateCategory Column
+@F-132
+Feature: F-132: New StateCategory Column
 
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-127.1
+  @S-132.1
   Scenario: Import a definition file containing new column StateCategory with single StateCategory
     Given a user with [an active profile in CCD and with CCD-import role]
     When a request is prepared with appropriate values
@@ -13,7 +13,7 @@ Feature: F-127: New StateCategory Column
     Then a positive response is received
     And the response has all other details as expected
 
-  @S-127.2
+  @S-132.2
   Scenario: Import a definition file containing new column StateCategory with comma separated State Categories
     Given a user with [an active profile in CCD and with CCD-import role]
     When a request is prepared with appropriate values
@@ -22,7 +22,7 @@ Feature: F-127: New StateCategory Column
     Then a positive response is received
     And the response has all other details as expected
 
-  @S-127.3
+  @S-132.3
   Scenario: Get Case Type Details should include stateCategory for single StateCategory import
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -32,7 +32,7 @@ Feature: F-127: New StateCategory Column
     Then the response [has the 200 OK code]
     And the response [contains case type details with stateCategory]
 
-  @S-127.4
+  @S-132.4
   Scenario: Get Case Type Details should include stateCategory for comma separated State Categories import
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
