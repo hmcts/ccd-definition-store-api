@@ -18,6 +18,7 @@ public class FieldTypeUtils {
     public static final String BASE_MONEY_GBP = "MoneyGBP";
     public static final String BASE_PHONE_UK = "PhoneUK";
     public static final String BASE_TEXT_AREA = "TextArea";
+    public static final String BASE_RICH_TEXT_AREA = "RichTextArea";
     public static final String BASE_DOCUMENT = "Document";
     public static final String BASE_LABEL = "Label";
     public static final String BASE_CASE_PAYMENT_HISTORY_VIEWER = "CasePaymentHistoryViewer";
@@ -48,6 +49,7 @@ public class FieldTypeUtils {
     public static final String BASE_FLAG_LAUNCHER = "FlagLauncher";
     public static final String BASE_COMPONENT_LAUNCHER = "ComponentLauncher";
 
+    public static final String PREDEFINED_COMPLEX_STAFF_USER = "StaffUser";
     public static final String PREDEFINED_COMPLEX_CASE_ACCESS_GROUP = "CaseAccessGroup";
     public static final String PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS = "CaseAccessGroups";
 

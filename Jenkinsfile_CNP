@@ -1,6 +1,6 @@
 #!groovy
 
-@Library("Infrastructure@2.4.0")
+@Library("Infrastructure@cve-dashboard")
 
 import uk.gov.hmcts.contino.GradleBuilder
 
@@ -68,6 +68,7 @@ env.DEFAULT_COLLECTION_ASSERTION_MODE="UNORDERED"
 env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctsprod.azurecr.io/imported/"
 
 withPipeline(type, product, app) {
+    enableCveDashboardIngestion()
     onMaster {
         enableSlackNotifications('#ccd-master-builds')
     }
@@ -170,6 +171,10 @@ withPipeline(type, product, app) {
         ]
     }
 
+    before('functionalTest:preview') {
+        env.GROUP_ACCESS_ENABLED = "true"
+    }
+
     afterAlways('functionalTest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
         publishHTML target: [
@@ -180,6 +185,10 @@ withPipeline(type, product, app) {
             reportFiles          : "overview-features.html",
             reportName           : "Functional Test Report"
         ]
+    }
+
+    before('functionalTest:aat') {
+        env.GROUP_ACCESS_ENABLED = "true"
     }
 
     afterAlways('functionalTest:aat') {
