@@ -62,6 +62,9 @@ public class StateEntity implements Serializable, Referencable {
     @Column(name = "title_display")
     private String titleDisplay;
 
+    @Column(name = "state_category", length = 500)
+    private String stateCategory;
+
     public Integer getId() {
         return id;
     }
@@ -133,6 +136,14 @@ public class StateEntity implements Serializable, Referencable {
 
     public void setTitleDisplay(String titleDisplay) {
         this.titleDisplay = titleDisplay;
+    }
+
+    public String getStateCategory() {
+        return stateCategory;
+    }
+
+    public void setStateCategory(String stateCategory) {
+        this.stateCategory = stateCategory;
     }
 
     public StateEntity addStateACL(final StateACLEntity stateACLEntity) {
