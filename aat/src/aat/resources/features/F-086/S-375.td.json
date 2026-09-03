@@ -36,6 +36,16 @@
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
+         "case_field_id" : "StaffUserCollection",
+         "order" : "[[ANYTHING_PRESENT]]",
+         "page_column_no" : null,
+         "complex_field_overrides" : [ ]
+       }, {
+         "case_field_id" : "StaffUserComplexField",
+         "order" : "[[ANYTHING_PRESENT]]",
+         "page_column_no" : null,
+         "complex_field_overrides" : [ ]
+       }, {
          "case_field_id" : "AddressField",
          "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
@@ -84,6 +94,14 @@
            "default_value" : "[Defendant]",
            "retain_hidden_value" : null
          }, {
+             "complex_field_element_id" : "OrganisationPolicyField2.newCase",
+             "display_context" : "HIDDEN",
+             "label" : null,
+             "hint_text" : null,
+             "show_condition" : null,
+             "default_value" : null,
+             "retain_hidden_value" : null
+           }, {
            "complex_field_element_id" : "OrganisationPolicyField2.OrgPolicyReference",
            "display_context" : "OPTIONAL",
            "label" : null,
@@ -209,6 +227,21 @@
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
+         "case_field_id" : "RichTextAreaField",
+         "order" : "[[ANYTHING_PRESENT]]",
+         "page_column_no" : null,
+         "complex_field_overrides" : [ ]
+       }, {
+         "case_field_id" : "RichTextAreaMinField",
+         "order" : "[[ANYTHING_PRESENT]]",
+         "page_column_no" : null,
+         "complex_field_overrides" : [ ]
+       }, {
+           "case_field_id" : "StaffUser",
+           "order" : "[[ANYTHING_PRESENT]]",
+           "page_column_no" : null,
+           "complex_field_overrides" : [ ]
+         }, {
          "case_field_id" : "MarritalStatus",
          "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
@@ -289,6 +322,14 @@
            "default_value" : null,
            "retain_hidden_value" : null
          }, {
+             "complex_field_element_id" : "OrganisationPolicyField1.newCase",
+             "display_context" : "HIDDEN",
+             "label" : null,
+             "hint_text" : null,
+             "show_condition" : null,
+             "default_value" : null,
+             "retain_hidden_value" : null
+           }, {
            "complex_field_element_id" : "OrganisationPolicyField1.OrgPolicyCaseAssignedRole",
            "display_context" : "OPTIONAL",
            "label" : null,

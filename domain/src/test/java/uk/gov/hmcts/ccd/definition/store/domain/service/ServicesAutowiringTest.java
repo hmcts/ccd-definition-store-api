@@ -1,8 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.BeansException;
@@ -15,6 +12,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+import jakarta.persistence.EntityManagerFactory;
 import uk.gov.hmcts.ccd.definition.store.AppInsights;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
@@ -48,6 +46,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.Sear
 import uk.gov.hmcts.ccd.definition.store.domain.validation.searchaliasfield.SearchAliasFieldUnicityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypeRolesRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.ImportJobRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessTypesRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.BannerRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
@@ -69,8 +68,13 @@ import uk.gov.hmcts.ccd.definition.store.repository.SearchAliasFieldRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchCriteriaRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SearchPartyRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityUtils;
+import uk.gov.hmcts.ccd.definition.store.repository.ShellMappingRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.DefinitionModelMapper;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
@@ -393,6 +397,24 @@ class ServicesAutowiringTest implements ApplicationContextAware {
         @Primary
         public SearchPartyRepository searchPartyRepository() {
             return mock(SearchPartyRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public ShellMappingRepository shellMappingRepository() {
+            return mock(ShellMappingRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public ImportJobRepository importJobRepository() {
+            return mock(ImportJobRepository.class);
+        }
+
+        @Bean
+        @Primary
+        public EntityManagerFactory entityManagerFactory() {
+            return mock(EntityManagerFactory.class);
         }
     }
 }

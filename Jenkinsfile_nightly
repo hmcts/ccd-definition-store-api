@@ -6,7 +6,7 @@ properties([
     //pipelineTriggers([cron('H 07 * * 1-5')])
 ])
 
-@Library("Infrastructure")
+@Library("Infrastructure@2.4.9")
 
 def type = "java"
 def product = "ccd"
