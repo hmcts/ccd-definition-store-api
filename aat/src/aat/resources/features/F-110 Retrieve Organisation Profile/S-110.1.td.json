@@ -11,7 +11,7 @@
   ],
   "request": {
     "body": {
-      "organisationProfileIds": ["SOLICITOR_PROFILE"]
+      "organisationProfileIds": ["BEFTA_SOLICITOR_PROFILE"]
     }
   },
   "expectedResponse": {
@@ -31,7 +31,7 @@
               "__elementId__": "organisationProfileId,accessTypeId, displayOrder"
             },
             {
-            "organisationProfileId" : "SOLICITOR_PROFILE",
+            "organisationProfileId" : "BEFTA_SOLICITOR_PROFILE",
             "accessTypeId" : "GA_SOLICITOR",
             "accessMandatory" : false,
             "accessDefault" : false,
@@ -47,7 +47,7 @@
               "groupAccessEnabled" : true
             } ]
           }, {
-            "organisationProfileId" : "SOLICITOR_PROFILE",
+            "organisationProfileId" : "BEFTA_SOLICITOR_PROFILE",
             "accessTypeId" : "BEFTA_SOLICITOR_1",
             "accessMandatory" : true,
             "accessDefault" : true,
@@ -71,7 +71,7 @@
             "__ordering__": "unordered",
             "__elementId__": "organisationProfileId,accessTypeId, displayOrder"
           }, {
-            "organisationProfileId" : "SOLICITOR_PROFILE",
+            "organisationProfileId" : "BEFTA_SOLICITOR_PROFILE",
             "accessTypeId" : "BEFTA_SOLICITOR_1",
             "accessMandatory" : true,
             "accessDefault" : true,
