@@ -49,6 +49,7 @@ public class FieldTypeUtils {
     public static final String BASE_FLAG_LAUNCHER = "FlagLauncher";
     public static final String BASE_COMPONENT_LAUNCHER = "ComponentLauncher";
 
+    public static final String PREDEFINED_COMPLEX_STAFF_USER = "StaffUser";
     public static final String PREDEFINED_COMPLEX_CASE_ACCESS_GROUP = "CaseAccessGroup";
     public static final String PREDEFINED_COMPLEX_CASE_ACCESS_GROUPS = "CaseAccessGroups";
 
