@@ -19,6 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -73,6 +74,66 @@ class FieldTypeParserTest {
         assertNull(parsedEntity.getMinimum());
         assertNull(parsedEntity.getMaximum());
 
+    }
+
+    @Test
+    void shouldUseCaseTypeScopedListType_whenListIsDeclaredAgainstTheCaseTypeOfTheField() {
+
+        FieldTypeEntity scopedListType = new FieldTypeEntity();
+        when(parseContext.getType(eq("FixedList-coCourtList-AAT"))).thenReturn(Optional.of(scopedListType));
+
+        ParseResult.Entry<FieldTypeEntity> result =
+            classUnderTest.parse("CourtField", caseFieldWithListType("FixedList", "coCourtList", "AAT"));
+
+        assertEquals(scopedListType, result.getValue());
+    }
+
+    @Test
+    void shouldUseSharedListType_whenNoCaseTypeScopedListIsDeclared() {
+
+        FieldTypeEntity sharedListType = new FieldTypeEntity();
+        when(parseContext.getType(eq("FixedList-coCourtList-AAT"))).thenReturn(Optional.empty());
+        when(parseContext.getType(eq("FixedList-coCourtList"))).thenReturn(Optional.of(sharedListType));
+
+        ParseResult.Entry<FieldTypeEntity> result =
+            classUnderTest.parse("CourtField", caseFieldWithListType("FixedList", "coCourtList", "AAT"));
+
+        assertEquals(sharedListType, result.getValue());
+    }
+
+    @Test
+    void shouldUseSharedListType_whenRowHasNoCaseTypeId() {
+
+        FieldTypeEntity sharedListType = new FieldTypeEntity();
+        when(parseContext.getType(eq("MultiSelectList-coCourtList"))).thenReturn(Optional.of(sharedListType));
+
+        DefinitionDataItem complexType = new DefinitionDataItem(SheetName.COMPLEX_TYPES.toString());
+        complexType.addAttribute(ColumnName.FIELD_TYPE.toString(), "MultiSelectList");
+        complexType.addAttribute(ColumnName.FIELD_TYPE_PARAMETER.toString(), "coCourtList");
+
+        ParseResult.Entry<FieldTypeEntity> result = classUnderTest.parse("CourtField", complexType);
+
+        assertEquals(sharedListType, result.getValue());
+    }
+
+    @Test
+    void shouldFail_whenNeitherScopedNorSharedListTypeIsDeclared() {
+
+        when(parseContext.getType(eq("FixedList-coCourtList-AAT"))).thenReturn(Optional.empty());
+        when(parseContext.getType(eq("FixedList-coCourtList"))).thenReturn(Optional.empty());
+
+        SpreadsheetParsingException exception = assertThrows(SpreadsheetParsingException.class, () ->
+            classUnderTest.parse("CourtField", caseFieldWithListType("FixedList", "coCourtList", "AAT")));
+
+        assertEquals("Missing field type: FixedList-coCourtList", exception.getMessage());
+    }
+
+    private DefinitionDataItem caseFieldWithListType(String fieldType, String fieldTypeParameter, String caseTypeId) {
+        DefinitionDataItem caseField = new DefinitionDataItem(SheetName.CASE_FIELD.toString());
+        caseField.addAttribute(ColumnName.FIELD_TYPE.toString(), fieldType);
+        caseField.addAttribute(ColumnName.FIELD_TYPE_PARAMETER.toString(), fieldTypeParameter);
+        caseField.addAttribute(ColumnName.CASE_TYPE_ID.toString(), caseTypeId);
+        return caseField;
     }
 
     @Test
