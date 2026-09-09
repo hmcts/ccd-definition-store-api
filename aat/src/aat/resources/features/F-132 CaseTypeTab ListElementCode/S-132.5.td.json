@@ -1,6 +1,6 @@
 {
-  "_guid_": "S-131.5",
-  "_extends_": "F-131_Definition_Import_Test_Base_data",
+  "_guid_": "S-132.5",
+  "_extends_": "F-132_Definition_Import_Test_Base_data",
   "title": "Import definition file with invalid CaseTypeTab ListElementCode path",
   "specs": [
     "an active profile in CCD",

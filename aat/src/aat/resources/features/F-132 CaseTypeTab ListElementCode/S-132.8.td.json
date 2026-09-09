@@ -1,6 +1,6 @@
 {
-  "_guid_": "S-131.8",
-  "_extends_": "F-131_Definition_Import_Test_Base_data",
+  "_guid_": "S-132.8",
+  "_extends_": "F-132_Definition_Import_Test_Base_data",
   "title": "Import definition file with CaseTypeTab ListElementCode on a collection complex field",
   "specs": [
     "an active profile in CCD",
