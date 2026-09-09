@@ -188,6 +188,7 @@ withPipeline(type, product, app) {
     }
 
     before('functionalTest:aat') {
+        env.TEST_URL = "http://ccd-definition-store-api-aat.service.core-compute-aat.internal"
         env.GROUP_ACCESS_ENABLED = "true"
     }
 
