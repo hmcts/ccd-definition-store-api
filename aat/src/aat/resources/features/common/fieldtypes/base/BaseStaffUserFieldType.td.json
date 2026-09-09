@@ -3,6 +3,6 @@
 
   "_extends_": "CommonFieldType",
 
-  "id": "StaffUser",
-  "type": "StaffUser"
+  "id": "StaffUser_old",
+  "type": "StaffUser_old"
 }
