@@ -279,7 +279,7 @@ subprojects { subproject ->
         implementation group: 'org.springframework.security', name: 'spring-security-config'
 
         // HMCTS
-        implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.3.3'
+        implementation group: 'com.github.hmcts', name: 'service-auth-provider-java-client', version: '5.3.5'
         implementation group: 'com.github.hmcts', name: 'idam-java-client', version: '3.0.5'
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '8.0.0'
 
