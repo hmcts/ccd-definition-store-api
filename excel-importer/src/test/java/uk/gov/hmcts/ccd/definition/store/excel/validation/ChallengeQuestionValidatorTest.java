@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -41,6 +42,24 @@ class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
         challengeQuestionValidator = new ChallengeQuestionValidator(
                 challengeQuestionDisplayContextParameterValidator,
                 new DotNotationValidator());
+    }
+
+    @Test
+    void testAnswerFormatWhenNull() {
+        String answer = null;
+        InvalidImportException exception = assertThrows(InvalidImportException.class,
+            () -> challengeQuestionValidator.validate(parseContext,
+                Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                    QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId"))));
+        assertEquals("ChallengeQuestionTab Invalid value: answer cannot be null.", exception.getMessage());
+    }
+
+    @Test
+    void testAnswerFormatWhenNotRequired() {
+        String answer = ChallengeQuestionValidator.ANSWER_FIELD_NOT_REQUIRED;
+        challengeQuestionValidator.validate(parseContext,
+                Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                    QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
     }
 
     @Test
