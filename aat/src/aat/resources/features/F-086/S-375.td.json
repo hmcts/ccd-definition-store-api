@@ -36,6 +36,16 @@
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
+         "case_field_id" : "StaffUserCollection",
+         "order" : "[[ANYTHING_PRESENT]]",
+         "page_column_no" : null,
+         "complex_field_overrides" : [ ]
+       }, {
+         "case_field_id" : "StaffUserComplexField",
+         "order" : "[[ANYTHING_PRESENT]]",
+         "page_column_no" : null,
+         "complex_field_overrides" : [ ]
+       }, {
          "case_field_id" : "AddressField",
          "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,
@@ -227,6 +237,11 @@
          "page_column_no" : null,
          "complex_field_overrides" : [ ]
        }, {
+           "case_field_id" : "StaffUser",
+           "order" : "[[ANYTHING_PRESENT]]",
+           "page_column_no" : null,
+           "complex_field_overrides" : [ ]
+         }, {
          "case_field_id" : "MarritalStatus",
          "order" : "[[ANYTHING_PRESENT]]",
          "page_column_no" : null,

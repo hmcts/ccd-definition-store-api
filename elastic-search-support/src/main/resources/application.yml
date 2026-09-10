@@ -89,6 +89,7 @@ elasticsearch:
     DynamicList: ${elasticsearch.elasticMappings.ccdDynamicList}
     Region: ${elasticsearch.elasticMappings.defaultText}
     BaseLocation: ${elasticsearch.elasticMappings.defaultText}
+    StaffUser: ${elasticsearch.elasticMappings.defaultText}
     DynamicRadioList: ${elasticsearch.elasticMappings.ccdDynamicList}
     DynamicMultiSelectList: ${elasticsearch.elasticMappings.ccdDynamicList}
   casesIndexNameFormat: ${ELASTIC_SEARCH_CASE_INDEX_NAME_FORMAT:%s_cases}
