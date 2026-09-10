@@ -174,8 +174,8 @@ withPipeline(type, product, app) {
     before('functionalTest:preview') {
         env.GROUP_ACCESS_ENABLED = "true"
         // TEMPORARY: one-off PR test against the same AAT route used by master.
-        env.BEFTA_TEST_URL_OVERRIDE = "https://ccd-definition-store-api-staging.aat.platform.hmcts.net"
-        env.DEFINITION_STORE_URL_BASE = "https://ccd-definition-store-api-staging.aat.platform.hmcts.net"
+        env.BEFTA_TEST_URL_OVERRIDE = "http://ccd-definition-store-api-aat.service.core-compute-aat.internal"
+        env.DEFINITION_STORE_URL_BASE = "http://ccd-definition-store-api-aat.service.core-compute-aat.internal"
         echo "TEMPORARY AAT functional test from PR"
         echo "CNP stage TEST_URL = ${env.TEST_URL}"
         echo "BEFTA child-process TEST_URL override = ${env.BEFTA_TEST_URL_OVERRIDE}"
