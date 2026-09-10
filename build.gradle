@@ -632,3 +632,41 @@ void loadEnvSecrets(String env) {
         }
     }
 }
+
+// Provider PACT verification (consumer contracts published against the definition store)
+sourceSets {
+    contractTest {
+        java {
+            srcDir('src/contractTest/java')
+        }
+        resources {
+            srcDir('src/contractTest/resources')
+        }
+    }
+}
+
+configurations {
+    contractTestImplementation.extendsFrom(testImplementation)
+    contractTestRuntimeOnly.extendsFrom(testRuntimeOnly)
+}
+
+dependencies {
+    contractTestImplementation project(':rest-api')
+    contractTestImplementation project(':domain')
+    contractTestImplementation project(':repository')
+    contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5', version: '4.7.1'
+    contractTestImplementation group: 'au.com.dius.pact.provider', name: 'spring', version: '4.7.1'
+    contractTestImplementation group: 'au.com.dius.pact.provider', name: 'junit5spring', version: '4.7.1'
+}
+
+task runProviderPactVerification(type: Test) {
+    description = 'Runs provider pact verification against consumer contracts from the broker'
+    group = 'Verification'
+    useJUnitPlatform()
+    testClassesDirs = sourceSets.contractTest.output.classesDirs
+    classpath = sourceSets.contractTest.runtimeClasspath
+    if (project.hasProperty('pact.verifier.publishResults')) {
+        systemProperty 'pact.verifier.publishResults', project.property('pact.verifier.publishResults')
+    }
+    systemProperty 'pact.provider.version', project.findProperty('pact.provider.version') ?: 'local'
+}
