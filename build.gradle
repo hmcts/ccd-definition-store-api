@@ -154,6 +154,7 @@ allprojects {
 
         // start::CVE Vulnerability dependency overrides
 
+        implementation group: 'com.sun.mail', name: 'jakarta.mail', version: '2.0.2' // CVE-2025-7962
 
         // end::CVE Vulnerability dependency overrides
 
