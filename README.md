@@ -50,7 +50,8 @@ The following environment variables are optional:
 | Name | Default            | Description |
 |------|--------------------|-------------|
 | ENABLE_CASE_GROUP_ACCESS                     | true/false         | Enable case group access filtering.                                                                                                                                                 |
-| GROUP_ACCESS_ENABLED                         | true/false/not set | Enable group access Testing (Funtional Tests).                                                                                                                                       |
+| GROUP_ACCESS_ENABLED                         | true/false/not set | Enable group access Functional Tests. When not `true`, `@groupaccess` scenarios are excluded from FT selection. |
+| DEFINITION_STORE_TX_TIMEOUT_DEFAULT          | 30                 | Default Spring transaction timeout in seconds. Increase for slow remote-database imports during local AAT debugging. |
 
 ### Building
 
@@ -138,6 +139,11 @@ Will run all the FT's:
 ./gradlew functional
 ```
 
+For remote AAT runs, `runRemoteAat` uses `./.aat-remote-env` if it already exists, otherwise `./target/.aat-remote-env`.
+If neither file exists, the task tries to recreate `./.aat-remote-env` from Key Vault.
+You can force a refresh with `./gradlew -PrefreshRemoteEnv=true runRemoteAat` or `./gradlew -DrefreshRemoteEnv=true runRemoteAat`.
+If refresh fails and a local file already exists, the existing file is kept.
+
 #####  Some Functional Tests
 Will run both F-105 and F-110:
 
@@ -154,5 +160,3 @@ Will run only S-110.1:
 ## LICENSE
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
-
-
