@@ -37,8 +37,10 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
     @Before("@F-110")
     public void installRetrieveAccessTypesDiagnosticFilter() {
         BeftaUtils.defaultLog(String.format(
-            "F-110 environment: TEST_URL=%s, DEFINITION_STORE_URL_BASE=%s, IDAM_API_URL_BASE=%s, S2S_URL_BASE=%s",
+            "F-110 environment: TEST_URL=%s, BEFTA_TEST_URL_OVERRIDE=%s, "
+                + "DEFINITION_STORE_URL_BASE=%s, IDAM_API_URL_BASE=%s, S2S_URL_BASE=%s",
             environmentValue("TEST_URL"),
+            environmentValue("BEFTA_TEST_URL_OVERRIDE"),
             environmentValue("DEFINITION_STORE_URL_BASE"),
             environmentValue("IDAM_API_URL_BASE"),
             environmentValue("S2S_URL_BASE")

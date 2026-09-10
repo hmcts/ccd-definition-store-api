@@ -111,10 +111,16 @@ task functional(type: Test) {
     generateCucumberReports.enabled = false
 
     doFirst {
+        def testUrlOverride = System.getenv('BEFTA_TEST_URL_OVERRIDE')?.trim()
+
         generateCucumberReports.enabled = true
         javaexec {
             mainClass = "uk.gov.hmcts.ccd.definitionstore.befta.DefinitionStoreBeftaMain"
             classpath += configurations.cucumberRuntime + sourceSets.aat.runtimeClasspath + sourceSets.main.output + sourceSets.test.output
+            if (testUrlOverride) {
+                environment 'TEST_URL', testUrlOverride
+                logger.quiet("Using BEFTA_TEST_URL_OVERRIDE for functional TEST_URL: ${testUrlOverride}")
+            }
             args = [
                      '--threads', '1', // current definition-store tests do not support multiple threads
                      '--plugin', "json:${rootDir}/target/cucumber.json",
