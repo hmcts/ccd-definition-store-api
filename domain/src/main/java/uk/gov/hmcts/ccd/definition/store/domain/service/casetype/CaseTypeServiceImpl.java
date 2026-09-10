@@ -18,8 +18,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepositoryDecorator;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +29,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 @Component
 public class CaseTypeServiceImpl implements CaseTypeService {
@@ -39,13 +42,15 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     private final List<CaseTypeEntityValidator> caseTypeEntityValidators;
     private final VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedRepository;
     private final MetadataFieldService metadataFieldService;
+    private final CaseTypeSnapshotService snapshotService;
 
     @Autowired
     public CaseTypeServiceImpl(CaseTypeRepository repository,
                                EntityToResponseDTOMapper dtoMapper,
                                LegacyCaseTypeValidator legacyCaseTypeValidator,
                                List<CaseTypeEntityValidator> caseTypeEntityValidators,
-                               MetadataFieldService metadataFieldService
+                               MetadataFieldService metadataFieldService,
+                               CaseTypeSnapshotService snapshotService
     ) {
         this.repository = repository;
         this.dtoMapper = dtoMapper;
@@ -53,6 +58,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         this.caseTypeEntityValidators = caseTypeEntityValidators;
         this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
         this.metadataFieldService = metadataFieldService;
+        this.snapshotService = snapshotService;
     }
 
     @Override
@@ -88,12 +94,23 @@ public class CaseTypeServiceImpl implements CaseTypeService {
             .collect(toList());
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     @Override
-    public Optional<CaseType> findByCaseTypeId(String id) {
-        return repository.findCurrentVersionForReference(id)
-            .map(dtoMapper::map)
-            .map(this::addMetadataFields);
+    public Optional<CaseType> findByCaseTypeId(String caseTypeId) {
+        return getCurrentVersion(caseTypeId)
+            .flatMap(currentVersion -> {
+                Optional<CaseType> cachedResult = snapshotService.getSnapshot(caseTypeId, currentVersion);
+
+                return cachedResult.map(this::addMetadataFields).or(() ->
+                    repository.findByReferenceAndVersion(caseTypeId, currentVersion)
+                        .map(dtoMapper::map)
+                        .map(caseType -> {
+                            snapshotService.storeSnapshot(caseTypeId, currentVersion, caseType);
+                            return caseType;
+                        })
+                        .map(this::addMetadataFields)
+                );
+            });
     }
 
     @Transactional
@@ -150,7 +167,25 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     }
 
     private CaseType addMetadataFields(CaseType caseType) {
-        caseType.addCaseFields(metadataFieldService.getCaseMetadataFields());
+        List<CaseField> caseFields = caseType.getCaseFields();
+        if (caseFields == null) {
+            caseFields = new ArrayList<>();
+        } else {
+            caseFields = new ArrayList<>(caseFields);
+        }
+        caseType.setCaseFields(caseFields);
+
+        List<CaseField> metadataFields = metadataFieldService.getCaseMetadataFields();
+        Set<String> metadataFieldIds = metadataFields.stream()
+            .map(CaseField::getId)
+            .collect(toSet());
+
+        caseFields.removeIf(caseField -> caseField != null && metadataFieldIds.contains(caseField.getId()));
+        caseType.addCaseFields(metadataFields);
         return caseType;
+    }
+
+    private Optional<Integer> getCurrentVersion(String caseTypeReference) {
+        return repository.findLastVersion(caseTypeReference);
     }
 }

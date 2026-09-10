@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
-import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
+import  uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.rules.CaseTypeValidationResult;
@@ -49,12 +49,18 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -69,6 +75,9 @@ class CaseTypeServiceImplTest {
     private static final String CASE_TYPE_REFERENCE_2 = "TestAddressBookCase2";
     private static final String CASE_TYPE_REFERENCE_3 = "TestAddressBookCase3";
     private static final int DEFAULT_VERSION = 69;
+
+    @Mock
+    private CaseTypeSnapshotService caseTypeSnapshotService;
 
     @Mock
     private CaseTypeRepository caseTypeRepository;
@@ -117,7 +126,8 @@ class CaseTypeServiceImplTest {
             dtoMapper,
             legacyCaseTypeValidator,
             Arrays.asList(caseTypeEntityValidator1, caseTypeEntityValidator2),
-            metadataFieldService);
+            metadataFieldService,
+            caseTypeSnapshotService);
     }
 
     @Nested
@@ -195,7 +205,7 @@ class CaseTypeServiceImplTest {
                 CaseTypeValidationException.class, () -> classUnderTest.createAll(
                     jurisdiction, caseTypeEntities, new HashSet<>()));
 
-            assertTrue(actualCaseTypeValidationException == caseTypeValidationException);
+            assertSame(actualCaseTypeValidationException, caseTypeValidationException);
 
             assertComponentsCalled(false, caseTypeEntity2);
 
@@ -384,14 +394,14 @@ class CaseTypeServiceImplTest {
             assertThat(caseTypes.get(1).getCaseFields(), hasItem(metadataField));
 
             CaseTypeEntity firstCallToMapper = caseTypeCaptor.getAllValues().get(0);
-            assertTrue(firstCallToMapper == caseTypeEntity1);
+            assertSame(firstCallToMapper, caseTypeEntity1);
             assertThat(firstCallToMapper.getEvents(), hasItem(eventEntity1));
             assertThat(firstCallToMapper.getEvents(), hasItem(eventEntity2));
             assertThat(firstCallToMapper.getEvents(), hasItem(eventEntity3));
             assertThat(firstCallToMapper.getEvents(), hasItem(eventEntity4));
 
             CaseTypeEntity secondCallToMapper = caseTypeCaptor.getAllValues().get(1);
-            assertTrue(secondCallToMapper == caseTypeEntity2);
+            assertSame(secondCallToMapper, caseTypeEntity2);
             assertThat(secondCallToMapper.getEvents(), hasItem(eventEntity1));
             assertThat(secondCallToMapper.getEvents(), hasItem(eventEntity2));
             assertThat(secondCallToMapper.getEvents(), hasItem(eventEntity3));
@@ -471,7 +481,7 @@ class CaseTypeServiceImplTest {
         void shouldReturnFalse_whenCaseTypeForJurisdictionOtherThanGivenDoesNotExist() {
             when(caseTypeRepository.caseTypeExistsInAnyJurisdiction(CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE))
                 .thenReturn(0);
-            Boolean caseTypeExists = classUnderTest.caseTypeExistsInAnyJurisdiction(
+            boolean caseTypeExists = classUnderTest.caseTypeExistsInAnyJurisdiction(
                 CASE_TYPE_REFERENCE, JURISDICTION_REFERENCE);
 
             assertFalse(caseTypeExists);
@@ -502,12 +512,25 @@ class CaseTypeServiceImplTest {
         @Test
         @DisplayName("Should call the mapper with the value returned from the repository and return the mapped value")
         void shouldCallMapperAndReturnResult_whenRepositoryReturnsAnEntity() {
-            Optional<CaseType> caseType = classUnderTest.findByCaseTypeId(caseTypeId);
+            // Given: Repository returns entity with version 1
+            when(caseTypeRepository.findLastVersion(caseTypeId)).thenReturn(Optional.of(1));
+            when(caseTypeRepository.findByReferenceAndVersion(caseTypeId, 1))
+                .thenReturn(Optional.of(caseTypeEntity));
+            when(caseTypeSnapshotService.getSnapshot(caseTypeId, 1)).thenReturn(Optional.empty());
 
-            verify(caseTypeRepository).findCurrentVersionForReference(same(caseTypeId));
+            // When: Find by case type id
+            Optional<CaseType> result = classUnderTest.findByCaseTypeId(caseTypeId);
+
+            // Then: Should return mapped case type with metadata
+            assertTrue(result.isPresent());
+            assertThat(result.get(), is(this.caseType));
+
+            verify(caseTypeRepository).findLastVersion(caseTypeId);
+            verify(caseTypeSnapshotService).getSnapshot(caseTypeId, 1);
+            verify(caseTypeRepository).findByReferenceAndVersion(caseTypeId, 1);
             verify(dtoMapper).map(same(caseTypeEntity));
-            assertTrue(caseType.isPresent());
-            assertThat(caseType.get(), is(this.caseType));
+            verify(caseTypeSnapshotService).storeSnapshot(eq(caseTypeId), eq(1), any(CaseType.class));
+            verify(metadataFieldService).getCaseMetadataFields();
         }
 
         @Test
@@ -527,18 +550,27 @@ class CaseTypeServiceImplTest {
         @Test
         @DisplayName("Should return case type with metadata fields")
         void shouldReturnCaseTypeWithMetadataFieldsAndFixedListItems_whenMetadataFieldIsOfTypeFixedList() {
+            // Given: Repository returns entity with version 1
+            when(caseTypeRepository.findLastVersion(caseTypeId)).thenReturn(Optional.of(1));
+            when(caseTypeRepository.findByReferenceAndVersion(caseTypeId, 1))
+                .thenReturn(Optional.of(caseTypeEntity));
+            when(caseTypeSnapshotService.getSnapshot(caseTypeId, 1)).thenReturn(Optional.empty());
+
+            // When: Find by case type id
             Optional<CaseType> response = classUnderTest.findByCaseTypeId(caseTypeId);
 
+            // Then: Should return case type with metadata fields
             assertTrue(response.isPresent());
             CaseType result = response.get();
             verifyResult(result);
-            assertThat(result.getCaseFields().get(0), is(metadataField));
+            assertThat(result.getCaseFields().getFirst(), is(metadataField));
+            verify(caseTypeSnapshotService).storeSnapshot(eq(caseTypeId), eq(1), any(CaseType.class));
         }
 
         private void verifyResult(CaseType result) {
             assertThat(result.getCaseFields(), hasSize(1));
-            assertThat(result.getCaseFields().get(0).getId(), is(MetadataField.STATE.getReference()));
-            verify(caseTypeRepository).findCurrentVersionForReference(same(caseTypeId));
+            assertThat(result.getCaseFields().getFirst().getId(), is(MetadataField.STATE.getReference()));
+            verify(caseTypeRepository).findByReferenceAndVersion(same(caseTypeId), eq(1));
             verify(dtoMapper).map(same(caseTypeEntity));
             verify(metadataFieldService).getCaseMetadataFields();
         }
@@ -596,6 +628,224 @@ class CaseTypeServiceImplTest {
                 .thenReturn(Optional.empty());
             String caseTypeId = classUnderTest.findDefinitiveCaseTypeId(CASE_TYPE_REFERENCE);
             assertNull(caseTypeId);
+        }
+    }
+
+    @Nested
+    class SnapshotIntegrationTests {
+
+        private static final String CASE_TYPE_ID = "caseTypeID";
+        private static final Integer VERSION = 5;
+        private final CaseType caseType = new CaseType();
+        private final CaseTypeEntity caseTypeEntity = new CaseTypeEntity();
+        private final CaseField metadataField = new CaseField();
+        private final CaseField dynamicMetadataField = new CaseField();
+
+        @BeforeEach
+        void setup() {
+            metadataField.setId(MetadataField.CASE_REFERENCE.getReference());
+            FieldType fieldType = new FieldType();
+            fieldType.setType("Number");
+            metadataField.setFieldType(fieldType);
+
+            dynamicMetadataField.setId(MetadataField.STATE.getReference());
+            FieldType dynamicFieldType = new FieldType();
+            dynamicFieldType.setType(BASE_FIXED_LIST);
+            dynamicMetadataField.setFieldType(dynamicFieldType);
+
+            when(metadataFieldService.getCaseMetadataFields()).thenReturn(singletonList(metadataField));
+            when(dtoMapper.map(caseTypeEntity)).thenReturn(caseType);
+        }
+
+        @Test
+        @DisplayName("Should return cached snapshot with metadata fields when snapshot exists")
+        void shouldReturnCachedSnapshot_whenSnapshotExists() {
+            // Given: Snapshot exists in cache
+            CaseType cachedCaseType = new CaseType();
+            cachedCaseType.setId(CASE_TYPE_ID);
+
+            when(caseTypeRepository.findLastVersion(CASE_TYPE_ID)).thenReturn(Optional.of(VERSION));
+            when(caseTypeSnapshotService.getSnapshot(CASE_TYPE_ID, VERSION)).thenReturn(Optional.of(cachedCaseType));
+
+            // When: Find by case type id
+            Optional<CaseType> result = classUnderTest.findByCaseTypeId(CASE_TYPE_ID);
+
+            // Then: Should return cached snapshot without accessing repository or mapper
+            assertTrue(result.isPresent());
+            assertThat(result.get(), is(cachedCaseType));
+            assertThat(result.get().getCaseFields(), hasItem(metadataField));
+
+            verify(caseTypeRepository).findLastVersion(CASE_TYPE_ID);
+            verify(caseTypeSnapshotService).getSnapshot(CASE_TYPE_ID, VERSION);
+            verify(metadataFieldService).getCaseMetadataFields();
+            verify(caseTypeRepository, never()).findByReferenceAndVersion(anyString(), anyInt());
+            verify(dtoMapper, never()).map(any(CaseTypeEntity.class));
+            verify(caseTypeSnapshotService, never()).storeSnapshot(anyString(), anyInt(), any());
+        }
+
+        @Test
+        @DisplayName("Should replace metadata fields from cached snapshot")
+        void shouldReplaceMetadataFieldsFromCachedSnapshot() {
+            // Given: Old cached snapshot already contains metadata
+            CaseField normalField = new CaseField();
+            normalField.setId("ApplicantName");
+
+            CaseField staleMetadataField = new CaseField();
+            staleMetadataField.setId(MetadataField.CASE_REFERENCE.getReference());
+            FieldType staleFieldType = new FieldType();
+            staleFieldType.setType("Text");
+            staleMetadataField.setFieldType(staleFieldType);
+
+            CaseType cachedCaseType = new CaseType();
+            cachedCaseType.setId(CASE_TYPE_ID);
+            cachedCaseType.setCaseFields(Arrays.asList(normalField, dynamicMetadataField, staleMetadataField));
+
+            when(caseTypeRepository.findLastVersion(CASE_TYPE_ID)).thenReturn(Optional.of(VERSION));
+            when(caseTypeSnapshotService.getSnapshot(CASE_TYPE_ID, VERSION)).thenReturn(Optional.of(cachedCaseType));
+
+            // When: Find by case type id
+            Optional<CaseType> result = classUnderTest.findByCaseTypeId(CASE_TYPE_ID);
+
+            // Then: Stale metadata is removed and current metadata is added
+            assertTrue(result.isPresent());
+            assertThat(result.get().getCaseFields(), hasSize(3));
+            assertThat(result.get().getCaseFields(), hasItem(normalField));
+            assertThat(result.get().getCaseFields(), hasItem(dynamicMetadataField));
+            assertThat(result.get().getCaseFields(), hasItem(metadataField));
+            assertFalse(result.get().getCaseFields().contains(staleMetadataField));
+        }
+
+        @Test
+        @DisplayName("Should fetch from repository and store snapshot when snapshot does not exist")
+        void shouldFetchFromRepositoryAndStoreSnapshot_whenSnapshotDoesNotExist() {
+            // Given: No snapshot exists
+            when(caseTypeRepository.findLastVersion(CASE_TYPE_ID)).thenReturn(Optional.of(VERSION));
+            when(caseTypeSnapshotService.getSnapshot(CASE_TYPE_ID, VERSION)).thenReturn(Optional.empty());
+            when(caseTypeRepository.findByReferenceAndVersion(CASE_TYPE_ID, VERSION))
+                .thenReturn(Optional.of(caseTypeEntity));
+
+            // When: Find by case type id
+            Optional<CaseType> result = classUnderTest.findByCaseTypeId(CASE_TYPE_ID);
+
+            // Then: Should fetch from repository, map, add metadata, and store snapshot
+            assertTrue(result.isPresent());
+
+            verify(caseTypeRepository).findLastVersion(CASE_TYPE_ID);
+            verify(caseTypeSnapshotService).getSnapshot(CASE_TYPE_ID, VERSION);
+            verify(caseTypeRepository).findByReferenceAndVersion(CASE_TYPE_ID, VERSION);
+            verify(dtoMapper).map(caseTypeEntity);
+            verify(metadataFieldService).getCaseMetadataFields();
+            verify(caseTypeSnapshotService).storeSnapshot(eq(CASE_TYPE_ID), eq(VERSION), any(CaseType.class));
+        }
+
+        @Test
+        @DisplayName("Should return empty when version not found")
+        void shouldReturnEmpty_whenVersionNotFound() {
+            // Given: No version exists
+            when(caseTypeRepository.findLastVersion(CASE_TYPE_ID)).thenReturn(Optional.empty());
+
+            // When: Find by case type id
+            Optional<CaseType> result = classUnderTest.findByCaseTypeId(CASE_TYPE_ID);
+
+            // Then: Should return empty without checking snapshot
+            assertFalse(result.isPresent());
+
+            verify(caseTypeRepository).findLastVersion(CASE_TYPE_ID);
+            verify(caseTypeSnapshotService, never()).getSnapshot(anyString(), anyInt());
+            verify(caseTypeRepository, never()).findByReferenceAndVersion(anyString(), anyInt());
+            verify(caseTypeSnapshotService, never()).storeSnapshot(anyString(), anyInt(), any());
+        }
+
+        @Test
+        @DisplayName("Should return empty when entity not found for version")
+        void shouldReturnEmpty_whenEntityNotFoundForVersion() {
+            // Given: Version exists but entity doesn't
+            when(caseTypeRepository.findLastVersion(CASE_TYPE_ID)).thenReturn(Optional.of(VERSION));
+            when(caseTypeSnapshotService.getSnapshot(CASE_TYPE_ID, VERSION)).thenReturn(Optional.empty());
+            when(caseTypeRepository.findByReferenceAndVersion(CASE_TYPE_ID, VERSION))
+                .thenReturn(Optional.empty());
+
+            // When: Find by case type id
+            Optional<CaseType> result = classUnderTest.findByCaseTypeId(CASE_TYPE_ID);
+
+            // Then: Should return empty without storing snapshot
+            assertFalse(result.isPresent());
+
+            verify(caseTypeRepository).findLastVersion(CASE_TYPE_ID);
+            verify(caseTypeSnapshotService).getSnapshot(CASE_TYPE_ID, VERSION);
+            verify(caseTypeRepository).findByReferenceAndVersion(CASE_TYPE_ID, VERSION);
+            verify(caseTypeSnapshotService, never()).storeSnapshot(anyString(), anyInt(), any());
+        }
+
+        @Test
+        @DisplayName("Should store snapshot before adding metadata fields to response")
+        void shouldStoreSnapshotBeforeAddingMetadataFields() {
+            // Given: No snapshot exists
+            when(caseTypeRepository.findLastVersion(CASE_TYPE_ID)).thenReturn(Optional.of(VERSION));
+            when(caseTypeSnapshotService.getSnapshot(CASE_TYPE_ID, VERSION)).thenReturn(Optional.empty());
+            when(caseTypeRepository.findByReferenceAndVersion(CASE_TYPE_ID, VERSION))
+                .thenReturn(Optional.of(caseTypeEntity));
+            doAnswer(invocation -> {
+                CaseType storedCaseType = invocation.getArgument(2);
+                assertFalse(storedCaseType.getCaseFields().contains(metadataField));
+                return null;
+            }).when(caseTypeSnapshotService).storeSnapshot(eq(CASE_TYPE_ID), eq(VERSION), any(CaseType.class));
+
+            // When: Find by case type id
+            Optional<CaseType> result = classUnderTest.findByCaseTypeId(CASE_TYPE_ID);
+
+            // Then: Stored snapshot is plain mapped schema; response still has metadata.
+            assertTrue(result.isPresent());
+            assertThat(result.get().getCaseFields(), hasItem(metadataField));
+            verify(caseTypeSnapshotService).storeSnapshot(eq(CASE_TYPE_ID), eq(VERSION), any(CaseType.class));
+        }
+
+        @Test
+        @DisplayName("Should fallback to repository when snapshot service returns empty due to error")
+        void shouldFallbackToRepository_whenSnapshotServiceReturnsEmptyDueToError() {
+            // Given: Snapshot service returns empty (simulating internal error handling)
+            when(caseTypeRepository.findLastVersion(CASE_TYPE_ID)).thenReturn(Optional.of(VERSION));
+            when(caseTypeSnapshotService.getSnapshot(CASE_TYPE_ID, VERSION))
+                .thenReturn(Optional.empty()); // Service handles errors internally and returns empty
+            when(caseTypeRepository.findByReferenceAndVersion(CASE_TYPE_ID, VERSION))
+                .thenReturn(Optional.of(caseTypeEntity));
+
+            // When: Find by case type id
+            Optional<CaseType> result = classUnderTest.findByCaseTypeId(CASE_TYPE_ID);
+
+            // Then: Should fallback to repository and return result
+            assertTrue(result.isPresent());
+            assertThat(result.get(), is(caseType));
+
+            verify(caseTypeRepository).findLastVersion(CASE_TYPE_ID);
+            verify(caseTypeSnapshotService).getSnapshot(CASE_TYPE_ID, VERSION);
+            verify(caseTypeRepository).findByReferenceAndVersion(CASE_TYPE_ID, VERSION);
+            verify(dtoMapper).map(caseTypeEntity);
+            verify(metadataFieldService).getCaseMetadataFields();
+            verify(caseTypeSnapshotService).storeSnapshot(eq(CASE_TYPE_ID), eq(VERSION), any(CaseType.class));
+        }
+
+        @Test
+        @DisplayName("Should continue successfully even when store snapshot fails")
+        void shouldContinueSuccessfully_whenStoreSnapshotFails() {
+            // Given: Snapshot doesn't exist, but storing fails
+            when(caseTypeRepository.findLastVersion(CASE_TYPE_ID)).thenReturn(Optional.of(VERSION));
+            when(caseTypeSnapshotService.getSnapshot(CASE_TYPE_ID, VERSION)).thenReturn(Optional.empty());
+            when(caseTypeRepository.findByReferenceAndVersion(CASE_TYPE_ID, VERSION))
+                .thenReturn(Optional.of(caseTypeEntity));
+
+            // Store snapshot is void and catches exceptions internally, so we just verify it was called
+            doNothing().when(caseTypeSnapshotService).storeSnapshot(eq(CASE_TYPE_ID), eq(VERSION), any());
+
+            // When: Find by case type id
+            Optional<CaseType> result = classUnderTest.findByCaseTypeId(CASE_TYPE_ID);
+
+            // Then: Should return result successfully
+            assertTrue(result.isPresent());
+            assertThat(result.get(), is(caseType));
+
+            // Verify store was attempted (even if it failed internally, it won't throw)
+            verify(caseTypeSnapshotService).storeSnapshot(eq(CASE_TYPE_ID), eq(VERSION), any(CaseType.class));
         }
     }
 }
