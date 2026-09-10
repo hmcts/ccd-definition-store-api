@@ -1,6 +1,12 @@
 package uk.gov.hmcts.ccd.definitionstore.befta;
 
 import io.cucumber.java.Before;
+import io.restassured.RestAssured;
+import io.restassured.filter.FilterContext;
+import io.restassured.filter.OrderedFilter;
+import io.restassured.response.Response;
+import io.restassured.specification.FilterableRequestSpecification;
+import io.restassured.specification.FilterableResponseSpecification;
 import org.junit.AssumptionViolatedException;
 import uk.gov.hmcts.befta.BeftaTestDataLoader;
 import uk.gov.hmcts.befta.DefaultTestAutomationAdapter;
@@ -25,6 +31,21 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
     public void skipGroupAccessTestsIfNotEnabled() {
         if (!ofNullable(System.getenv("GROUP_ACCESS_ENABLED")).map(Boolean::valueOf).orElse(false)) {
             throw new AssumptionViolatedException("Group Access not Enabled");
+        }
+    }
+
+    @Before("@F-110")
+    public void installRetrieveAccessTypesDiagnosticFilter() {
+        BeftaUtils.defaultLog(String.format(
+            "F-110 environment: TEST_URL=%s, DEFINITION_STORE_URL_BASE=%s, IDAM_API_URL_BASE=%s, S2S_URL_BASE=%s",
+            environmentValue("TEST_URL"),
+            environmentValue("DEFINITION_STORE_URL_BASE"),
+            environmentValue("IDAM_API_URL_BASE"),
+            environmentValue("S2S_URL_BASE")
+        ));
+
+        if (RestAssured.filters().stream().noneMatch(RetrieveAccessTypesDiagnosticFilter.class::isInstance)) {
+            RestAssured.filters(new RetrieveAccessTypesDiagnosticFilter());
         }
     }
 
@@ -94,6 +115,50 @@ public class DefinitionStoreTestAutomationAdapter extends DefaultTestAutomationA
             ));
             testDataLoader.getAllDefinitionFilesToLoadAt(VALID_CCD_TEST_DEFINITIONS_PATH, TEMPORARY_DEFINITION_FOLDER);
             BeftaUtils.defaultLog("Copy complete.\n");
+        }
+    }
+
+    private String environmentValue(String name) {
+        return ofNullable(System.getenv(name)).filter(value -> !value.trim().isEmpty()).orElse("<not set>");
+    }
+
+    private static class RetrieveAccessTypesDiagnosticFilter implements OrderedFilter {
+
+        private static final String RETRIEVE_ACCESS_TYPES_URI = "/retrieve-access-types";
+
+        @Override
+        public int getOrder() {
+            return HIGHEST_PRECEDENCE;
+        }
+
+        @Override
+        public Response filter(FilterableRequestSpecification requestSpec,
+                               FilterableResponseSpecification responseSpec,
+                               FilterContext ctx) {
+            if (!isRetrieveAccessTypesRequest(requestSpec)) {
+                return ctx.next(requestSpec, responseSpec);
+            }
+
+            BeftaUtils.defaultLog(String.format(
+                "Submitting F-110 request: method=%s, uri=%s, userDefinedPath=%s",
+                valueOrNotAvailable(requestSpec.getMethod()),
+                valueOrNotAvailable(requestSpec.getURI()),
+                valueOrNotAvailable(requestSpec.getUserDefinedPath())
+            ));
+            return ctx.next(requestSpec, responseSpec);
+        }
+
+        private boolean isRetrieveAccessTypesRequest(FilterableRequestSpecification requestSpec) {
+            String uri = requestSpec.getURI();
+            String userDefinedPath = requestSpec.getUserDefinedPath();
+
+            return "POST".equalsIgnoreCase(requestSpec.getMethod())
+                && (RETRIEVE_ACCESS_TYPES_URI.equals(userDefinedPath)
+                    || uri != null && uri.contains(RETRIEVE_ACCESS_TYPES_URI));
+        }
+
+        private String valueOrNotAvailable(String value) {
+            return value == null ? "<not available>" : value;
         }
     }
 
