@@ -1,10 +1,14 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.mapping;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import uk.gov.hmcts.ccd.definition.store.elastic.TestUtils;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.SearchAliasFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 import uk.gov.hmcts.ccd.definition.store.utils.SearchAliasFieldBuilder;
+
+import java.io.IOException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.elastic.hamcresutil.IsEqualJSON.equalToJSONInFile;
@@ -27,6 +32,10 @@ import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextFi
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 class CaseMappingGeneratorTest extends AbstractMapperTest implements TestUtils {
+
+    private static final String SUPPLEMENTARY_DATA_MAPPING =
+        "{\"properties\":{\"new_case\":{\"type\":\"flattened\"},"
+            + "\"orgs_assigned_users\":{\"type\":\"flattened\"}}}";
 
     @InjectMocks
     private CaseMappingGenerator mappingGenerator;
@@ -45,11 +54,27 @@ class CaseMappingGeneratorTest extends AbstractMapperTest implements TestUtils {
     void shouldCrateMappingForPredefinedProperties() {
         predefinedMappings.put("testPropA", "valuePropA");
         predefinedMappings.put("testPropB", "valuePropB");
+        predefinedMappings.put("supplementary_data", SUPPLEMENTARY_DATA_MAPPING);
 
         String result = mappingGenerator.generateMapping(caseType.build());
 
         assertThat(result, equalToJSONInFile(
             readFileFromClasspath("json/case_mapping_generator_predefined_properties.json")));
+    }
+
+    @Test
+    void shouldMapOrganisationKeyedSupplementaryDataAsFlattenedFields() throws IOException {
+        predefinedMappings.put("supplementary_data", SUPPLEMENTARY_DATA_MAPPING);
+
+        JsonNode mapping = new ObjectMapper().readTree(mappingGenerator.generateMapping(caseType.build()));
+        JsonNode supplementaryDataProperties = mapping.path("properties").path("supplementary_data").path("properties");
+        JsonNode newCase = supplementaryDataProperties.path("new_case");
+        JsonNode orgsAssignedUsers = supplementaryDataProperties.path("orgs_assigned_users");
+
+        assertThat(newCase.path("type").asText(), is("flattened"));
+        assertThat(orgsAssignedUsers.path("type").asText(), is("flattened"));
+        assertThat(newCase.has("properties"), is(false));
+        assertThat(orgsAssignedUsers.has("properties"), is(false));
     }
 
     @Test
