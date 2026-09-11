@@ -34,7 +34,7 @@ public class ChallengeQuestionValidator {
     private static final String ANSWER_FIELD_SEPARATOR = "|";
     private static final String ANSWER_FIELD_ROLE_SEPARATOR = ":";
     private static final String ANSWER_FIELD_MATCHER
-        = "^\\$\\{\\S.{1,}.\\S.{1,}}$|^\\$\\{\\S.{1,}.\\S.{1,}}:\\[\\S{1,}\\]$";
+        = "^\\$\\{\\S.{1,}.\\S.{1,}}$|^\\$\\{\\S.{1,}.\\S.{1,}}:\\S{1,}$";
     private static final String ERROR_MESSAGE = "ChallengeQuestionTab Invalid";
     private static final String NOT_VALID = " is not a valid ";
 
