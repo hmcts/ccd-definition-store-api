@@ -77,6 +77,27 @@ class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     @Test
+    void testAnswerFormatForUnbracketedAccessProfileRole() {
+        String answer = "${OrganisationField.OrganisationID}:defendant-solicitor";
+        challengeQuestionValidator.validate(parseContext,
+                Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                        QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+    }
+
+    @Test
+    void failAnswerFormatForUnknownUnbracketedRole() {
+        InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
+            String answer = "${OrganisationField.OrganisationID}:unknown-solicitor";
+            challengeQuestionValidator.validate(parseContext,
+                    Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                            QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+        });
+        assertThat(exception.getMessage(),
+                is("ChallengeQuestionTab Invalid value: ${OrganisationField.OrganisationID}:unknown-solicitor "
+                        + "is not a valid Answer, Please check the expression format and the roles."));
+    }
+
+    @Test
     void failAnswerFormatForSmallestExpression() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
             String answer = "${OrganisationField.OrganisationName}:[CCCCCC]";
