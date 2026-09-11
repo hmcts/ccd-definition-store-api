@@ -1,0 +1,22 @@
+{
+  "_guid_": "S-128.1",
+  "_extends_": "F-128_Test_Base_Data",
+  "title": "must return a successful response containing the import audits",
+
+  "specs": [
+    "an active profile in CCD",
+    "has the 200 OK code",
+    "contains the list of import audits"
+  ],
+
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "headers": {
+      "Content-Type": "[[ANYTHING_PRESENT]]",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+    },
+    "body": {
+      "arrayInMap": []
+    }
+  }
+}
