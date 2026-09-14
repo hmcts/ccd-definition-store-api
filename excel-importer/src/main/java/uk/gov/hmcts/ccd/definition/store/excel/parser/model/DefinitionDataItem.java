@@ -14,16 +14,20 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class DefinitionDataItem {
 
     private final String sheetName;
-    private final List<Pair<String, Object>> attributes;
+    private final SheetName sheet;
+    private final List<Pair<ColumnName, Object>> attributes;
+    private static final Map<String, ColumnName> COLUMN_NAMES = columnNames();
 
     private static final String NO_COLUMN = "Couldn't find the column %s in the sheet %s";
     private static final String INVALID_VALUE_COLUMN = "Invalid value '%s' is found in column '%s' in the sheet '%s'";
@@ -33,28 +37,32 @@ public class DefinitionDataItem {
 
     public DefinitionDataItem(String sheetName) {
         this.sheetName = sheetName;
+        this.sheet = SheetName.forName(sheetName);
         attributes = new ArrayList<>();
     }
 
     public void addAttribute(ColumnName columnName, Object value) {
-        attributes.add(Pair.of(columnName.toString(), value));
+        attributes.add(Pair.of(columnName, value));
     }
 
     public void addAttribute(String key, Object value) {
-        attributes.add(Pair.of(key, value));
+        ColumnName columnName = COLUMN_NAMES.get(key.toLowerCase(Locale.ENGLISH));
+        if (columnName != null) {
+            attributes.add(Pair.of(columnName, value));
+        }
     }
 
     public Object findAttribute(ColumnName columnName) {
         final String name = columnName.toString();
         Object result = null;
-        for (Pair<String, Object> attribute : attributes) {
-            if (columnName.equalsColumnNameOrAlias(attribute.getKey())) {
+        for (Pair<ColumnName, Object> attribute : attributes) {
+            if (columnName == attribute.getKey()) {
                 result = attribute.getValue();
                 break;
             }
         }
 
-        if (ColumnName.isRequired(SheetName.forName(sheetName), columnName)) {
+        if (ColumnName.isRequired(sheet, columnName)) {
             if (result == null) {
                 throw new MapperException(String.format(NO_COLUMN, name, sheetName));
             }
@@ -63,6 +71,17 @@ public class DefinitionDataItem {
             }
         }
         return result;
+    }
+
+    private static Map<String, ColumnName> columnNames() {
+        Map<String, ColumnName> columnNames = new HashMap<>();
+        for (ColumnName columnName : ColumnName.values()) {
+            columnNames.put(columnName.toString().toLowerCase(Locale.ENGLISH), columnName);
+            for (String alias : columnName.getAliases()) {
+                columnNames.put(alias.toLowerCase(Locale.ENGLISH), columnName);
+            }
+        }
+        return columnNames;
     }
 
     public String getString(ColumnName columnName) {

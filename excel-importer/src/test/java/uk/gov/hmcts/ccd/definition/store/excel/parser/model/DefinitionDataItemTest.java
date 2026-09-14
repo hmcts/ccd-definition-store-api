@@ -62,6 +62,13 @@ class DefinitionDataItemTest {
     }
 
     @Test
+    void shouldMatchAttributeNamesIgnoringCase() {
+        item.addAttribute("id", "event-id");
+
+        assertEquals("event-id", item.findAttribute(ColumnName.ID));
+    }
+
+    @Test
     void shouldGetNull_whenBigDecimalAttributeDoesNotExist() {
         final BigDecimal result = item.getBigDecimal(ColumnName.DISPLAY_ORDER);
         assertThat(result, is(nullValue()));
