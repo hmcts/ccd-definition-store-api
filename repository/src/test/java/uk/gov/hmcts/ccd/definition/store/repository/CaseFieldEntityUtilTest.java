@@ -19,6 +19,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil.parseParentCodes;
 
@@ -61,6 +62,24 @@ class CaseFieldEntityUtilTest {
         assertTrue(result.contains("field2.MiddleName"));
         assertTrue(result.contains("field2.LastNameWithSomeCplxFields.LastName"));
         assertTrue(result.contains("field3"));
+    }
+
+    @Test
+    void checksOnlyTheRequestedDottedPossibility() {
+        Set<CaseFieldEntity> fields = Stream.of(
+            caseFieldEntity("field1"),
+            caseFieldEntity("field2", exampleFieldTypeEntityWithComplexFields()),
+            caseFieldEntity("field3")
+        ).collect(Collectors.toSet());
+
+        assertTrue(caseFieldEntityUtil.isDottedComplexFieldPossibility(
+            "field2.LastNameWithSomeCplxFields.LastName", fields));
+        assertTrue(caseFieldEntityUtil.isDottedComplexFieldPossibility("field1", fields));
+        assertFalse(caseFieldEntityUtil.isDottedComplexFieldPossibility(
+            "field2.LastNameWithSomeCplxFields", fields));
+        assertFalse(caseFieldEntityUtil.isDottedComplexFieldPossibility("field2.Unknown", fields));
+        assertFalse(caseFieldEntityUtil.isDottedComplexFieldPossibility("field2..LastName", fields));
+        assertFalse(caseFieldEntityUtil.isDottedComplexFieldPossibility(null, fields));
     }
 
     @Test

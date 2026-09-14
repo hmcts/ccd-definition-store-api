@@ -54,7 +54,7 @@ public class EventCaseFieldShowConditionValidatorImpl implements EventCaseFieldE
 
         showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
             if (!eventCaseFieldEntityValidationContext
-                .getAllDottedComplexFieldPossibilities(caseFieldEntityUtil).contains(showConditionField)) {
+                .isDottedComplexFieldPossibility(showConditionField, caseFieldEntityUtil)) {
                 validationResult.addError(
                     new EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError(
                         showConditionField,

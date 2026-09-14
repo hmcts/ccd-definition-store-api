@@ -46,11 +46,9 @@ abstract class  AbstractShowConditionValidator implements EventEntityValidator {
 
             ShowCondition showCondition = showConditionExtractor.parseShowCondition(enablingCondition);
 
-            Set<String> allSubTypePossibilities = caseFieldEntityUtil
-                .buildDottedComplexFieldPossibilities(eventEntity.getCaseType().getCaseFields());
-
             showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
-                if (!allSubTypePossibilities.contains(showConditionField)) {
+                if (!caseFieldEntityUtil.isDottedComplexFieldPossibility(
+                    showConditionField, eventEntity.getCaseType().getCaseFields())) {
                     validationResult.addError(getValidationError(
                         showConditionField,
                         eventEntity,

@@ -49,7 +49,7 @@ public class EventComplexTypeShowConditionValidatorImpl implements EventComplexT
 
         showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
             if (!eventCaseFieldEntityValidationContext
-                .getAllDottedComplexFieldPossibilities(caseFieldEntityUtil).contains(showConditionField)
+                .isDottedComplexFieldPossibility(showConditionField, caseFieldEntityUtil)
                 && !MetadataField.isMetadataField(showConditionField)) {
                 validationResult.addError(
                     new EventComplexTypeEntityWithShowConditionReferencesInvalidCaseFieldError(

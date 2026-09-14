@@ -28,6 +28,30 @@ public class CaseFieldEntityUtil {
         return buildAllDottedComplexFieldPossibilities(caseFieldEntities, true);
     }
 
+    public boolean isDottedComplexFieldPossibility(String path,
+                                                    Collection<? extends FieldEntity> caseFieldEntities) {
+        if (path == null) {
+            return false;
+        }
+
+        Collection<? extends FieldEntity> fields = caseFieldEntities;
+        FieldEntity matchedField = null;
+        for (String reference : path.split("\\.", -1)) {
+            matchedField = null;
+            for (FieldEntity field : fields) {
+                if (field != null && field.getReference().equals(reference)) {
+                    matchedField = field;
+                    break;
+                }
+            }
+            if (matchedField == null) {
+                return false;
+            }
+            fields = getComplexFields(matchedField);
+        }
+        return matchedField != null && fields.isEmpty();
+    }
+
     public Set<String> buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(
         Set<? extends FieldEntity> caseFieldEntities) {
         return removeElementsThatAreCaseFields(buildAllDottedComplexFieldPossibilities(

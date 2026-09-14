@@ -9,6 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
 
 import java.util.List;
@@ -53,9 +54,12 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
             return validationResult;
         }
 
-        Set<String> allSubTypePossibilities = getAllSubTypePossibilities(allGenericLayouts);
+        Set<? extends FieldEntity> caseFields = allGenericLayouts
+            .stream()
+            .map(GenericLayoutEntity::getCaseField)
+            .collect(Collectors.toSet());
         showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
-            if (!allSubTypePossibilities.contains(showConditionField)) {
+            if (!caseFieldEntityUtil.isDottedComplexFieldPossibility(showConditionField, caseFields)) {
                 validationResult.addError(buildError(entity, showConditionField, showConditionString));
             }
         });
@@ -70,13 +74,6 @@ public class GenericLayoutShowConditionValidatorImpl implements GenericLayoutVal
         });
 
         return validationResult;
-    }
-
-    private Set<String> getAllSubTypePossibilities(List<GenericLayoutEntity> layoutEntities) {
-        return caseFieldEntityUtil.buildDottedComplexFieldPossibilities(
-            layoutEntities.stream()
-                .map(GenericLayoutEntity::getCaseField)
-                .collect(Collectors.toSet()));
     }
 
     private boolean showConditionFieldExistsInAtLeastOneLayOutEntity(

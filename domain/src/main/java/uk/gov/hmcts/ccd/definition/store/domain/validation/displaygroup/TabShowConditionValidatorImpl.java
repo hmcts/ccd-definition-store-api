@@ -16,7 +16,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.DisplayGroupType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -39,7 +38,6 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
         List<DisplayGroupEntity> allTabDisplayGroups = getAllTabDisplayGroups(thisDisplayGroup, allDisplayGroups);
         boolean tabShowCondition = hasTabShowCondition(thisDisplayGroup);
         boolean fieldShowCondition = hasFieldShowCondition(thisDisplayGroup);
-        Set<String> allSubTypePossibilities = null;
 
         // Excel CaseTypeTab.TabShowCondition
         if (tabShowCondition) {
@@ -50,12 +48,9 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                 validationResult.addError(new DisplayGroupInvalidTabShowCondition(thisDisplayGroup));
                 return validationResult;
             }
-            allSubTypePossibilities = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(
-                thisDisplayGroup.getCaseType().getCaseFields());
-            Set<String> paths = allSubTypePossibilities;
-
             showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
-                if (!paths.contains(showConditionField)) {
+                if (!caseFieldEntityUtil.isDottedComplexFieldPossibility(
+                    showConditionField, thisDisplayGroup.getCaseType().getCaseFields())) {
                     validationResult.addError(
                         new DisplayGroupInvalidTabShowCondition(showConditionField, thisDisplayGroup));
                 }
@@ -82,14 +77,9 @@ public class TabShowConditionValidatorImpl implements DisplayGroupValidator {
                         validationResult.addError(new DisplayGroupInvalidTabFieldShowCondition(caseField));
                         return validationResult;
                     }
-                    if (allSubTypePossibilities == null) {
-                        allSubTypePossibilities = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(
-                            thisDisplayGroup.getCaseType().getCaseFields());
-                    }
-                    Set<String> paths = allSubTypePossibilities;
-
                     showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
-                        if (!paths.contains(showConditionField)) {
+                        if (!caseFieldEntityUtil.isDottedComplexFieldPossibility(
+                            showConditionField, thisDisplayGroup.getCaseType().getCaseFields())) {
                             validationResult.addError(
                                 new DisplayGroupInvalidTabFieldShowCondition(showConditionField, caseField));
                         }
