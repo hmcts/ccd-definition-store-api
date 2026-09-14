@@ -299,7 +299,12 @@ class VersionedDefinitionRepositoryDecoratorTest {
         VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
             new VersionedDefinitionRepositoryDecorator<>(repository);
 
-        when(repository.findLastVersion("id")).thenReturn(Optional.of(0), Optional.of(1));
+        VersionedDefinitionRepository.ReferenceVersion version0 = referenceVersion("id", 0);
+        VersionedDefinitionRepository.ReferenceVersion version1 = referenceVersion("id", 1);
+        when(repository.findLastVersions(any())).thenReturn(
+            List.of(version0),
+            List.of(version1)
+        );
         when(repository.saveAll(any()))
             .thenThrow(new DataIntegrityViolationException("duplicate"))
             .thenReturn(entities);
@@ -307,7 +312,7 @@ class VersionedDefinitionRepositoryDecoratorTest {
         List<CaseTypeEntity> saved = decorator.saveAll(entities);
 
         assertEquals(2, saved.get(0).getVersion());
-        verify(repository, times(2)).findLastVersion("id");
+        verify(repository, times(2)).findLastVersions(any());
         verify(repository, times(2)).saveAll(any());
     }
 
@@ -321,15 +326,30 @@ class VersionedDefinitionRepositoryDecoratorTest {
         VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> decorator =
             new VersionedDefinitionRepositoryDecorator<>(repository);
 
-        when(repository.findLastVersion("id")).thenReturn(Optional.of(0), Optional.of(1), Optional.of(2));
+        VersionedDefinitionRepository.ReferenceVersion version0 = referenceVersion("id", 0);
+        VersionedDefinitionRepository.ReferenceVersion version1 = referenceVersion("id", 1);
+        VersionedDefinitionRepository.ReferenceVersion version2 = referenceVersion("id", 2);
+        when(repository.findLastVersions(any())).thenReturn(
+            List.of(version0),
+            List.of(version1),
+            List.of(version2)
+        );
         when(repository.saveAll(any()))
             .thenThrow(new DataIntegrityViolationException("duplicate"))
             .thenThrow(new DataIntegrityViolationException("duplicate"))
             .thenThrow(new DataIntegrityViolationException("duplicate"));
 
         assertThrows(DataIntegrityViolationException.class, () -> decorator.saveAll(entities));
-        verify(repository, times(3)).findLastVersion("id");
+        verify(repository, times(3)).findLastVersions(any());
         verify(repository, times(3)).saveAll(any());
+    }
+
+    private VersionedDefinitionRepository.ReferenceVersion referenceVersion(String reference, int version) {
+        VersionedDefinitionRepository.ReferenceVersion result =
+            mock(VersionedDefinitionRepository.ReferenceVersion.class);
+        when(result.getReference()).thenReturn(reference);
+        when(result.getVersion()).thenReturn(version);
+        return result;
     }
 
 }

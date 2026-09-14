@@ -9,7 +9,9 @@ import java.io.Serializable;
 import java.util.Optional;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -19,7 +21,7 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
 
     private static final int MAX_SAVE_RETRIES = 3;
 
-    public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository repository) {
+    public VersionedDefinitionRepositoryDecorator(VersionedDefinitionRepository<T, ID> repository) {
         super(repository);
     }
 
@@ -40,10 +42,11 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
 
     @Override
     public <S extends T> List<S> saveAll(Iterable<S> iterable) {
+        List<S> entities = toList(iterable);
         for (int attempt = 1; attempt <= MAX_SAVE_RETRIES; attempt++) {
-            assignNextVersions(iterable);
+            assignNextVersions(entities);
             try {
-                return repository.saveAll(iterable);
+                return repository.saveAll(entities);
             } catch (DataIntegrityViolationException ex) {
                 if (attempt == MAX_SAVE_RETRIES) {
                     throw ex;
@@ -58,18 +61,30 @@ public class VersionedDefinitionRepositoryDecorator<T extends Versionable, ID ex
         s.setVersion(1 + version.orElse(0));
     }
 
-    private <S extends T> void assignNextVersions(Iterable<S> iterable) {
+    private <S extends T> void assignNextVersions(List<S> entities) {
+        Collection<String> references = new LinkedHashSet<>();
+        for (S entity : entities) {
+            references.add(entity.getReference());
+        }
+
         Map<String, Integer> nextVersionsByReference = new HashMap<>();
-        for (S s : iterable) {
+        for (VersionedDefinitionRepository.ReferenceVersion referenceVersion
+            : repository.findLastVersions(references)) {
+            nextVersionsByReference.put(referenceVersion.getReference(), referenceVersion.getVersion() + 1);
+        }
+
+        for (S s : entities) {
             String reference = s.getReference();
-            Integer nextVersion = nextVersionsByReference.get(reference);
-            if (nextVersion == null) {
-                final Optional<Integer> version = repository.findLastVersion(reference);
-                nextVersion = 1 + version.orElse(0);
-            }
+            Integer nextVersion = nextVersionsByReference.getOrDefault(reference, 1);
             s.setVersion(nextVersion);
             nextVersionsByReference.put(reference, nextVersion + 1);
         }
+    }
+
+    private <S extends T> List<S> toList(Iterable<S> iterable) {
+        List<S> entities = new ArrayList<>();
+        iterable.forEach(entities::add);
+        return entities;
     }
 
     @Override

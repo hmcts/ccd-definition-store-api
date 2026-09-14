@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CountDownLatch;
@@ -25,7 +24,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -43,7 +41,7 @@ class VersionedDefinitionRepositoryDecoratorConcurrencyTest {
         AtomicBoolean firstBatchAttempt = new AtomicBoolean(true);
         Object saveLock = new Object();
 
-        when(repository.findLastVersion(anyString())).thenAnswer(invocation -> {
+        when(repository.findLastVersions(any())).thenAnswer(invocation -> {
             int call = versionReadCount.incrementAndGet();
             if (call <= 2) {
                 try {
@@ -53,7 +51,11 @@ class VersionedDefinitionRepositoryDecoratorConcurrencyTest {
                     throw new RuntimeException(e);
                 }
             }
-            return Optional.of(currentVersion.get());
+            VersionedDefinitionRepository.ReferenceVersion result =
+                mock(VersionedDefinitionRepository.ReferenceVersion.class);
+            when(result.getReference()).thenReturn("dup");
+            when(result.getVersion()).thenReturn(currentVersion.get());
+            return List.of(result);
         });
 
         when(repository.saveAll(any())).thenAnswer(invocation -> {
