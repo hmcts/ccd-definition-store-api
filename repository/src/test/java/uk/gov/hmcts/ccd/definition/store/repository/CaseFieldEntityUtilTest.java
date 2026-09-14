@@ -64,6 +64,26 @@ class CaseFieldEntityUtilTest {
     }
 
     @Test
+    void createsPossibilitiesIncludingParentComplexFieldsWithoutTopLevelCaseFields() {
+        Set<CaseFieldEntity> fields = Stream.of(
+            caseFieldEntity("field1"),
+            caseFieldEntity("field2", exampleFieldTypeEntityWithComplexFields()),
+            caseFieldEntity("field3")
+        ).collect(Collectors.toSet());
+
+        Set<String> result = caseFieldEntityUtil
+            .buildDottedComplexFieldPossibilitiesIncludingParentComplexFields(fields);
+
+        assertThat(result, is(Set.of(
+            "field2.NamePrefix",
+            "field2.FirstName",
+            "field2.MiddleName",
+            "field2.LastNameWithSomeCplxFields",
+            "field2.LastNameWithSomeCplxFields.LastName"
+        )));
+    }
+
+    @Test
     void testparseParentCodes() {
         String listElementCodes0 = ".awesome";
         final List<String> parentCodes0 = parseParentCodes(listElementCodes0);
