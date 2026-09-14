@@ -29,6 +29,11 @@ configurations {
 
 dependencies {
     implementation group: 'org.awaitility', name: 'awaitility', version: '4.3.0'
+    // Pin transitive Cucumber artifacts pulled by befta-fw.
+    // Without these, :aat:compileAatJava can fail resolving version ranges such as io.cucumber:query:[12.1.1,13.0.0)
+    // and io.cucumber:messages:[24.0.0,25.0.0) from the Cucumber formatter chain.
+    testImplementation group: 'io.cucumber', name: 'query', version: '12.2.0'
+    testImplementation group: 'io.cucumber', name: 'messages', version: '24.1.0'
 }
 
 tasks.named("processAatResources") {
