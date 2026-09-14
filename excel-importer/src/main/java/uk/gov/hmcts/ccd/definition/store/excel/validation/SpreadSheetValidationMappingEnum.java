@@ -60,7 +60,12 @@ public enum SpreadSheetValidationMappingEnum {
 
     CASE_ROLES_ID("CaseRoles", "ID", 255),
     CASE_ROLES_NAME("CaseRoles", "Name", 255),
-    CASE_ROLES_DESCRIPTION("CaseRoles", "Description", 255);
+    CASE_ROLES_DESCRIPTION("CaseRoles", "Description", 255),
+
+    SHELL_MAPPING_SHELL_CASE_TYPE_ID(Constants.SHELL_MAPPING, "ShellCaseTypeID", 70),
+    SHELL_MAPPING_SHELL_CASE_FIELD_NAME(Constants.SHELL_MAPPING, "ShellCaseFieldName", 70),
+    SHELL_MAPPING_ORIGINATING_CASE_TYPE_ID(Constants.SHELL_MAPPING, "OriginatingCaseTypeID", 70),
+    SHELL_MAPPING_ORIGINATING_CASE_FIELD_NAME(Constants.SHELL_MAPPING, "OriginatingCaseFieldName", 70);
 
     private String sheetName;
     private String sheetColumnName;
@@ -84,5 +89,9 @@ public enum SpreadSheetValidationMappingEnum {
 
     public Integer getMaxLength() {
         return maxLength;
+    }
+
+    private static class Constants {
+        public static final String SHELL_MAPPING = "ShellMapping";
     }
 }

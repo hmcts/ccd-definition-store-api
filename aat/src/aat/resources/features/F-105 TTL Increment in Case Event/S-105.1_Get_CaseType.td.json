@@ -46,7 +46,7 @@
           "security_classification" : "PUBLIC",
           "acls" : "[[ANYTHING_PRESENT]]",
           "show_summary" : true,
-          "publish" : false,
+          "publish" : true,
           "show_event_notes" : null,
           "can_save_draft" : false,
           "end_button_label" : null,

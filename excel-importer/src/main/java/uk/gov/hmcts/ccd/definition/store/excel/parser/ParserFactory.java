@@ -33,6 +33,7 @@ public class ParserFactory {
     private final CategoryIdValidator categoryIdValidator;
     private final ApplicationParams applicationParams;
     private final Executor executor;
+    private final ShellMappingParser shellMappingParser;
 
     @Autowired
     public ParserFactory(ShowConditionParser showConditionParser,
@@ -47,7 +48,9 @@ public class ParserFactory {
                          SearchPartyValidator searchPartyValidator,
                          SearchCriteriaValidator searchCriteriaValidator,
                          CategoryIdValidator categoryIdValidator,
-                         ApplicationParams applicationParams, @Qualifier("validateExecutor") Executor executor) {
+                         ApplicationParams applicationParams,
+                         @Qualifier("validateExecutor") Executor executor,
+                         ShellMappingParser shellMappingParser) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
@@ -62,6 +65,7 @@ public class ParserFactory {
         this.categoryIdValidator = categoryIdValidator;
         this.applicationParams = applicationParams;
         this.executor = executor;
+        this.shellMappingParser = shellMappingParser;
     }
 
     public JurisdictionParser createJurisdictionParser() {
@@ -175,5 +179,9 @@ public class ParserFactory {
 
     public AccessTypeRolesParser createAccessTypeRolesParser() {
         return accessTypeRolesParser;
+    }
+
+    public ShellMappingParser createShellMappingParser() {
+        return shellMappingParser;
     }
 }
