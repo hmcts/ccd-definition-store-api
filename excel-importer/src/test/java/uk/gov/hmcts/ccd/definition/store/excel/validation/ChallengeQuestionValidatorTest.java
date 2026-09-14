@@ -111,6 +111,24 @@ class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
     }
 
     /**
+     * Dropping the brackets is not a general licence to write any role unbracketed. CaseRoles are
+     * registered under their bracketed reference, so the unbracketed spelling of one resolves
+     * against neither the AccessProfile map nor the CaseRole table and must still be rejected.
+     */
+    @Test
+    void failAnswerFormatForUnbracketedCaseRole() {
+        InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
+            String answer = "${OrganisationField.OrganisationID}:CLAIMANT";
+            challengeQuestionValidator.validate(parseContext,
+                    Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                            QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+        });
+        assertThat(exception.getMessage(),
+                is("ChallengeQuestionTab Invalid value: ${OrganisationField.OrganisationID}:CLAIMANT "
+                        + "is not a valid Answer, Please check the expression format and the roles."));
+    }
+
+    /**
      * Only the first segment after the separator is looked up as a role, so an expression carrying
      * a trailing segment must be rejected by the format check rather than silently importing with
      * the remainder ignored.
