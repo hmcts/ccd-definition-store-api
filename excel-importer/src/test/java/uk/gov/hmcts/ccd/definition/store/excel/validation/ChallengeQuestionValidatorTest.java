@@ -5,6 +5,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.challengequestion.BaseChallengeQuestionTest;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 
 import com.google.common.collect.Lists;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -117,12 +120,12 @@ class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
      */
     @Test
     void failAnswerFormatForUnbracketedCaseRole() {
-        InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
-            String answer = "${OrganisationField.OrganisationID}:CLAIMANT";
-            challengeQuestionValidator.validate(parseContext,
-                    Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
-                            QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
-        });
+        String answer = "${OrganisationField.OrganisationID}:CLAIMANT";
+        List<DefinitionDataItem> items = Lists.newArrayList(buildDefinitionDataItem(
+                CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+                QUESTION_ID, answer, "questionId"));
+        InvalidImportException exception = assertThrows(InvalidImportException.class,
+            () -> challengeQuestionValidator.validate(parseContext, items));
         assertThat(exception.getMessage(),
                 is("ChallengeQuestionTab Invalid value: ${OrganisationField.OrganisationID}:CLAIMANT "
                         + "is not a valid Answer, Please check the expression format and the roles."));
@@ -135,12 +138,12 @@ class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
      */
     @Test
     void failAnswerFormatForRoleContainingSeparator() {
-        InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
-            String answer = "${OrganisationField.OrganisationID}:defendant-solicitor:extra";
-            challengeQuestionValidator.validate(parseContext,
-                    Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
-                            QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
-        });
+        String answer = "${OrganisationField.OrganisationID}:defendant-solicitor:extra";
+        List<DefinitionDataItem> items = Lists.newArrayList(buildDefinitionDataItem(
+                CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+                QUESTION_ID, answer, "questionId"));
+        InvalidImportException exception = assertThrows(InvalidImportException.class,
+            () -> challengeQuestionValidator.validate(parseContext, items));
         assertThat(exception.getMessage(),
                 is("ChallengeQuestionTab Invalid value: ${OrganisationField.OrganisationID}"
                         + ":defendant-solicitor:extra is not a valid Answer, "
@@ -233,11 +236,11 @@ class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
 
     @Test
     void failForIDValidation() {
-        InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
-            challengeQuestionValidator.validate(parseContext,
-                    Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
-                            QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, null, ANSWERD, "questionId")));
-        });
+        List<DefinitionDataItem> idItems = Lists.newArrayList(buildDefinitionDataItem(
+                CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+                null, ANSWERD, "questionId"));
+        InvalidImportException exception = assertThrows(InvalidImportException.class,
+            () -> challengeQuestionValidator.validate(parseContext, idItems));
         assertThat(exception.getMessage(),
                 is("ChallengeQuestionTab Invalid value: ID cannot be null."));
     }
