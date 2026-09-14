@@ -15,6 +15,8 @@ import static uk.gov.hmcts.ccd.definition.store.repository.QueryConstants.SELECT
 
 public interface GenericLayoutRepository extends DefinitionRepository<GenericLayoutEntity, Integer> {
 
+    void insertAll(List<GenericLayoutEntity> layouts);
+
     @Query("select wbicf from WorkBasketInputCaseFieldEntity wbicf where wbicf.caseType = ("
         + SELECT_LATEST_CASE_TYPE_ENTITY_FOR_REFERENCE + ")")
     List<WorkBasketInputCaseFieldEntity> findWorkbasketInputByCaseTypeReference(

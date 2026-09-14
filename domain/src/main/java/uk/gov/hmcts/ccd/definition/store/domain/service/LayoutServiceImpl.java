@@ -35,7 +35,7 @@ public class LayoutServiceImpl implements LayoutService {
     @Override
     public void createGenerics(List<GenericLayoutEntity> genericLayouts) {
         validate(genericLayouts);
-        genericRepository.saveAll(genericLayouts);
+        genericRepository.insertAll(genericLayouts);
     }
 
     @Override

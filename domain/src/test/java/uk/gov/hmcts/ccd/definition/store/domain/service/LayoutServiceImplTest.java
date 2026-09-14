@@ -46,7 +46,7 @@ class LayoutServiceImplTest {
     private ArgumentCaptor<Collection<DisplayGroupEntity>> displayGroupCaptor;
 
     @Captor
-    private ArgumentCaptor<Collection<GenericLayoutEntity>> genericLayoutCaptor;
+    private ArgumentCaptor<List<GenericLayoutEntity>> genericLayoutCaptor;
 
     private LayoutServiceImpl classUnderTest;
 
@@ -69,7 +69,7 @@ class LayoutServiceImplTest {
 
         classUnderTest.createGenerics(asList(entity1));
 
-        verify(genericRepository).saveAll(genericLayoutCaptor.capture());
+        verify(genericRepository).insertAll(genericLayoutCaptor.capture());
         Collection<GenericLayoutEntity> savedDisplayGroupEntities = genericLayoutCaptor.getValue();
         assertEquals(1, savedDisplayGroupEntities.size());
         assertThat(savedDisplayGroupEntities, allOf(hasItem(entity1)));
@@ -87,7 +87,7 @@ class LayoutServiceImplTest {
 
         classUnderTest.createGenerics(asList(entity1, entity2));
 
-        verify(genericRepository).saveAll(genericLayoutCaptor.capture());
+        verify(genericRepository).insertAll(genericLayoutCaptor.capture());
         Collection<GenericLayoutEntity> savedDisplayGroupEntities = genericLayoutCaptor.getValue();
         assertEquals(2, savedDisplayGroupEntities.size());
         assertThat(savedDisplayGroupEntities, allOf(hasItem(entity1), hasItem(entity2)));
