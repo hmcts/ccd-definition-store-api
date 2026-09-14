@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser.model;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
@@ -24,10 +23,13 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class DefinitionDataItem {
 
+    private static final int COLUMN_COUNT = ColumnName.values().length;
+    private static final Map<String, ColumnName> COLUMN_NAMES = columnNames();
+
     private final String sheetName;
     private final SheetName sheet;
-    private final List<Pair<ColumnName, Object>> attributes;
-    private static final Map<String, ColumnName> COLUMN_NAMES = columnNames();
+    private final List<Object> attributes;
+    private final byte[] attributeIndexes;
 
     private static final String NO_COLUMN = "Couldn't find the column %s in the sheet %s";
     private static final String INVALID_VALUE_COLUMN = "Invalid value '%s' is found in column '%s' in the sheet '%s'";
@@ -39,28 +41,28 @@ public class DefinitionDataItem {
         this.sheetName = sheetName;
         this.sheet = SheetName.forName(sheetName);
         attributes = new ArrayList<>();
+        attributeIndexes = new byte[COLUMN_COUNT];
     }
 
     public void addAttribute(ColumnName columnName, Object value) {
-        attributes.add(Pair.of(columnName, value));
+        int ordinal = columnName.ordinal();
+        if (attributeIndexes[ordinal] == 0) {
+            attributes.add(value);
+            attributeIndexes[ordinal] = (byte) attributes.size();
+        }
     }
 
     public void addAttribute(String key, Object value) {
         ColumnName columnName = COLUMN_NAMES.get(key.toLowerCase(Locale.ENGLISH));
         if (columnName != null) {
-            attributes.add(Pair.of(columnName, value));
+            addAttribute(columnName, value);
         }
     }
 
     public Object findAttribute(ColumnName columnName) {
         final String name = columnName.toString();
-        Object result = null;
-        for (Pair<ColumnName, Object> attribute : attributes) {
-            if (columnName == attribute.getKey()) {
-                result = attribute.getValue();
-                break;
-            }
-        }
+        int attributeIndex = Byte.toUnsignedInt(attributeIndexes[columnName.ordinal()]);
+        final Object result = attributeIndex == 0 ? null : attributes.get(attributeIndex - 1);
 
         if (ColumnName.isRequired(sheet, columnName)) {
             if (result == null) {
