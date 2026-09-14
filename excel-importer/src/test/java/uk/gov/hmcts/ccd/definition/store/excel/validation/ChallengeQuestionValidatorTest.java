@@ -84,6 +84,51 @@ class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
                         QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
     }
 
+    /**
+     * The shape every service shipping a hand-written ChallengeQuestion.json uses today: several
+     * comma-separated answers, each naming a bracketed CaseRole. Relaxing the role pattern must
+     * leave these importing unchanged.
+     */
+    @Test
+    void testAnswerFormatForMultipleBracketedCaseRoles() {
+        String answer = "${OrganisationField.OrganisationID}:[CLAIMANT],"
+                + "${OrganisationField.OrganisationID}:[DEFENDANT]";
+        challengeQuestionValidator.validate(parseContext,
+                Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                        QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+    }
+
+    /**
+     * A service migrating one party at a time will briefly have both spellings in one Answer.
+     */
+    @Test
+    void testAnswerFormatForMixedBracketedAndUnbracketedRoles() {
+        String answer = "${OrganisationField.OrganisationID}:[CLAIMANT],"
+                + "${OrganisationField.OrganisationID}:defendant-solicitor";
+        challengeQuestionValidator.validate(parseContext,
+                Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                        QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+    }
+
+    /**
+     * Only the first segment after the separator is looked up as a role, so an expression carrying
+     * a trailing segment must be rejected by the format check rather than silently importing with
+     * the remainder ignored.
+     */
+    @Test
+    void failAnswerFormatForRoleContainingSeparator() {
+        InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
+            String answer = "${OrganisationField.OrganisationID}:defendant-solicitor:extra";
+            challengeQuestionValidator.validate(parseContext,
+                    Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                            QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+        });
+        assertThat(exception.getMessage(),
+                is("ChallengeQuestionTab Invalid value: ${OrganisationField.OrganisationID}"
+                        + ":defendant-solicitor:extra is not a valid Answer, "
+                        + "Please check the expression format and the roles."));
+    }
+
     @Test
     void failAnswerFormatForUnknownUnbracketedRole() {
         InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
