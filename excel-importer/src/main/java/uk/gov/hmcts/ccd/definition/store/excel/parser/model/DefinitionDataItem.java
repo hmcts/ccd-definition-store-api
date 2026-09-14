@@ -46,13 +46,13 @@ public class DefinitionDataItem {
 
     public Object findAttribute(ColumnName columnName) {
         final String name = columnName.toString();
-        final Object
-            result =
-            attributes.stream()
-                .filter(attribute -> columnName.equalsColumnNameOrAlias(attribute.getKey()))
-                .findFirst()
-                .map(Pair::getValue)
-                .orElse(null);
+        Object result = null;
+        for (Pair<String, Object> attribute : attributes) {
+            if (columnName.equalsColumnNameOrAlias(attribute.getKey())) {
+                result = attribute.getValue();
+                break;
+            }
+        }
 
         if (ColumnName.isRequired(SheetName.forName(sheetName), columnName)) {
             if (result == null) {
