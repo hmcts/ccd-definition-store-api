@@ -73,8 +73,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -163,8 +161,6 @@ public class ImportServiceImplTest {
     private static final String ACCESS_PROFILE_1 = "AccessProfile1";
 
     private ImportServiceImpl service;
-
-    private final Executor executor = Executors.newSingleThreadExecutor();
 
     @Mock
     private FieldTypeService fieldTypeService;
@@ -276,7 +272,7 @@ public class ImportServiceImplTest {
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
             challengeQuestionParser, categoryParser, accessTypesParser, accessTypeRolesParser, searchPartyValidator,
-            searchCriteriaValidator, categoryIdValidator, applicationParams, executor, shellMappingParser);
+            searchCriteriaValidator, categoryIdValidator, applicationParams, shellMappingParser);
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -564,7 +560,7 @@ public class ImportServiceImplTest {
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
             hiddenFieldsValidator,challengeQuestionParser,
             categoryParser, accessTypesParser, accessTypeRolesParser, searchPartyValidator, searchCriteriaValidator,
-            categoryIdValidator, applicationParams, executor, shellMappingParser);
+            categoryIdValidator, applicationParams, shellMappingParser);
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
@@ -604,7 +600,8 @@ public class ImportServiceImplTest {
 
     @Test
     void shouldThrowMapperException() {
-        given(hiddenFieldsValidator.parseComplexTypesHiddenFields(any(), any())).willThrow(MapperException.class);
+        doThrow(MapperException.class).when(hiddenFieldsValidator)
+            .validateComplexTypesHiddenFields(any(), any());
         given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
         given(fieldTypeService.getBaseTypes()).willReturn(Arrays.asList(
             buildBaseType(BASE_FIXED_LIST),

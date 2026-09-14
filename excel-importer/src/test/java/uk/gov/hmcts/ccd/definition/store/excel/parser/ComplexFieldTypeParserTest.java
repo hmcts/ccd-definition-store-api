@@ -18,11 +18,12 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.same;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -40,8 +41,6 @@ class ComplexFieldTypeParserTest extends ParserTestBase {
     private static final Integer COMPLEX_DISPLAY_ORDER = 1;
     private static final Boolean COMPLEX_SEARCHABLE = true;
     private static final Boolean COMPLEX_RETAIN_HIDDEN_VALUE = true;
-
-    private final Executor executor = Executors.newSingleThreadExecutor();
 
     private ComplexFieldTypeParser complexFieldTypeParser;
 
@@ -75,7 +74,7 @@ class ComplexFieldTypeParserTest extends ParserTestBase {
         definitionSheet.addDataItem(buildDefinitionDataItem());
 
         complexFieldTypeParser = new ComplexFieldTypeParser(parseContext, fieldTypeParser,
-            showConditionParser, entityToDefinitionDataItemRegistry, hiddenFieldsValidator, executor);
+            showConditionParser, entityToDefinitionDataItemRegistry, hiddenFieldsValidator);
     }
 
     @Test
@@ -83,12 +82,12 @@ class ComplexFieldTypeParserTest extends ParserTestBase {
         FieldTypeEntity fieldTypeEntity2 = new FieldTypeEntity();
         final ParseResult.Entry<FieldTypeEntity> resultEntry = ParseResult.Entry.createNew(fieldTypeEntity2);
 
-        when(hiddenFieldsValidator
-            .parseComplexTypesHiddenFields(definitionSheet.getDataItems().get(0), definitionSheets)).thenReturn(true);
         when(fieldTypeParser
             .parse(COMPLEX_LIST_ELEMENT_CODE, definitionSheet.getDataItems().get(0))).thenReturn(resultEntry);
 
         ParseResult<FieldTypeEntity> parseResult = complexFieldTypeParser.parse(definitionSheets);
+
+        verify(hiddenFieldsValidator).validateComplexTypesHiddenFields(any(), same(definitionSheets));
 
         FieldTypeEntity complexType =
             parseResult.getAllResults().get(1);

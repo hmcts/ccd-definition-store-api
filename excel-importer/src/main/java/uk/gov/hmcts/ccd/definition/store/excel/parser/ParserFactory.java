@@ -2,7 +2,6 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
@@ -14,7 +13,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchCriteriaValidato
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 
-import java.util.concurrent.Executor;
 
 @Component
 public class ParserFactory {
@@ -32,7 +30,6 @@ public class ParserFactory {
     private final SearchCriteriaValidator searchCriteriaValidator;
     private final CategoryIdValidator categoryIdValidator;
     private final ApplicationParams applicationParams;
-    private final Executor executor;
     private final ShellMappingParser shellMappingParser;
 
     @Autowired
@@ -49,7 +46,6 @@ public class ParserFactory {
                          SearchCriteriaValidator searchCriteriaValidator,
                          CategoryIdValidator categoryIdValidator,
                          ApplicationParams applicationParams,
-                         @Qualifier("validateExecutor") Executor executor,
                          ShellMappingParser shellMappingParser) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
@@ -64,7 +60,6 @@ public class ParserFactory {
         this.searchCriteriaValidator = searchCriteriaValidator;
         this.categoryIdValidator = categoryIdValidator;
         this.applicationParams = applicationParams;
-        this.executor = executor;
         this.shellMappingParser = shellMappingParser;
     }
 
@@ -82,7 +77,7 @@ public class ParserFactory {
                 fieldTypeParser,
                 showConditionParser,
                 entityToDefinitionDataItemRegistry,
-                hiddenFieldsValidator, executor),
+                hiddenFieldsValidator),
             new CaseFieldTypeParser(context, fieldTypeParser)
         );
     }

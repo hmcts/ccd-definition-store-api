@@ -7,6 +7,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,26 @@ class HiddenFieldsValidatorTest {
     @BeforeEach
     void setup() {
         definitionSheets = new LinkedHashMap<>();
+    }
+
+    @Test
+    void shouldCollectBulkValidationErrorsInSheetOrder() {
+        DefinitionSheet complexTypes = addDefinitionSheet(SheetName.COMPLEX_TYPES);
+        addDefinitionSheet(SheetName.CASE_FIELD);
+        addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS);
+
+        DefinitionDataItem first = invalidComplexType("First", "bad-1");
+        DefinitionDataItem second = invalidComplexType("Second", "bad-2");
+        complexTypes.addDataItem(first);
+        complexTypes.addDataItem(second);
+
+        MapperException exception = assertThrows(MapperException.class,
+            () -> validator.validateComplexTypesHiddenFields(
+                List.of(List.of(first), List.of(second)), definitionSheets));
+
+        assertThat(exception.getMessage(), is(
+            "Invalid value 'bad-1' is found in column 'RetainHiddenValue' in the sheet 'ComplexTypes'\n"
+                + "Invalid value 'bad-2' is found in column 'RetainHiddenValue' in the sheet 'ComplexTypes'"));
     }
 
     @Test
@@ -859,6 +880,13 @@ class HiddenFieldsValidatorTest {
         sheet.setName(sheetName.toString());
         definitionSheets.put(sheetName.getName(), sheet);
         return sheet;
+    }
+
+    private DefinitionDataItem invalidComplexType(String id, String retainHiddenValue) {
+        DefinitionDataItem item = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
+        item.addAttribute(ColumnName.ID, id);
+        item.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, retainHiddenValue);
+        return item;
     }
 
     private void addDataItem(final DefinitionSheet sheetCT) {
