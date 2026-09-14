@@ -29,9 +29,11 @@ import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.hamcrest.MockitoHamcrest.argThat;
@@ -87,6 +89,11 @@ class EventEntityEventCaseFieldsValidatorImplTest {
         assertTrue(validationResult.getValidationErrors().isEmpty());
 
         verifyAllValidatorsCalledOnceForEachCaseFieldWithCorrectValidationContext();
+        ArgumentCaptor<EventCaseFieldEntityValidationContext> contextCaptor =
+            ArgumentCaptor.forClass(EventCaseFieldEntityValidationContext.class);
+        verify(eventCaseFieldValidator1, times(3)).validate(any(), contextCaptor.capture());
+        EventCaseFieldEntityValidationContext sharedContext = contextCaptor.getAllValues().get(0);
+        contextCaptor.getAllValues().forEach(context -> assertSame(sharedContext, context));
 
     }
 

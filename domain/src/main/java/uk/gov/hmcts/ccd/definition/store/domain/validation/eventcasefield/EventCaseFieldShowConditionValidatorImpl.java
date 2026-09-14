@@ -11,7 +11,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldEntityUtil;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventCaseFieldEntity;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -53,13 +52,9 @@ public class EventCaseFieldShowConditionValidatorImpl implements EventCaseFieldE
             eventCaseFieldEntityValidationContext.getAllEventCaseFieldEntitiesForEventCase();
 
 
-        Set<String> allSubTypePossibilities = caseFieldEntityUtil.buildDottedComplexFieldPossibilities(
-            allEventCaseFieldEntitiesForEventCase.stream()
-                .map(EventCaseFieldEntity::getCaseField)
-                .collect(Collectors.toSet()));
-
         showCondition.getFieldsWithSubtypes().forEach(showConditionField -> {
-            if (!allSubTypePossibilities.contains(showConditionField)) {
+            if (!eventCaseFieldEntityValidationContext
+                .getAllDottedComplexFieldPossibilities(caseFieldEntityUtil).contains(showConditionField)) {
                 validationResult.addError(
                     new EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError(
                         showConditionField,

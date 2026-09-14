@@ -23,14 +23,14 @@ public class EventEntityEventCaseFieldsValidatorImpl implements EventEntityValid
 
         ValidationResult validationResult = new ValidationResult();
         List<EventCaseFieldEntity> allEventCaseFieldsForEvent = caseEvent.getEventCaseFields();
+        EventCaseFieldEntityValidationContext validationContext = new EventCaseFieldEntityValidationContext(
+            caseEvent.getReference(), allEventCaseFieldsForEvent, eventEntityValidationContext.getCaseRoles());
 
         for (EventCaseFieldEntity eventCaseField : allEventCaseFieldsForEvent) {
             for (EventCaseFieldEntityValidator eventCaseFieldValidator : eventCaseFieldValidators) {
                 validationResult.merge(eventCaseFieldValidator.validate(
                     eventCaseField,
-                    new EventCaseFieldEntityValidationContext(caseEvent.getReference(),
-                        allEventCaseFieldsForEvent,
-                        eventEntityValidationContext.getCaseRoles())
+                    validationContext
                     )
                 );
             }
