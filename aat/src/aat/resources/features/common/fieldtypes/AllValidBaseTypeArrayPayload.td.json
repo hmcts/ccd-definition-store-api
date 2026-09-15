@@ -37,6 +37,9 @@
       "_extends_": "BaseTextAreaFieldType"
     },
     {
+      "_extends_": "BaseRichTextAreaFieldType"
+    },
+    {
       "_extends_": "BaseComplexFieldType"
     },
     {
@@ -83,6 +86,9 @@
     },
     {
       "_extends_": "BaseFlagLauncherFieldType"
+    },
+    {
+      "_extends_": "BaseStaffUserFieldType"
     },
     {
       "_extends_": "BaseComponentLauncherFieldType"
