@@ -33,8 +33,11 @@ public class ChallengeQuestionValidator {
     private static final String ANSWER_MAIN_SEPARATOR = ",";
     private static final String ANSWER_FIELD_SEPARATOR = "|";
     private static final String ANSWER_FIELD_ROLE_SEPARATOR = ":";
+    // The role may be a bracketed CaseRole or a bare AccessProfile name, but never contains the
+    // separator itself: only the first segment after it is looked up, so allowing a second would
+    // import with the remainder silently ignored.
     private static final String ANSWER_FIELD_MATCHER
-        = "^\\$\\{\\S.{1,}.\\S.{1,}}$|^\\$\\{\\S.{1,}.\\S.{1,}}:\\[\\S{1,}\\]$";
+        = "^\\$\\{\\S.+.\\S.+}$|^\\$\\{\\S.+.\\S.+}:[^:\\s]+$";
     private static final String ERROR_MESSAGE = "ChallengeQuestionTab Invalid";
     private static final String NOT_VALID = " is not a valid ";
 

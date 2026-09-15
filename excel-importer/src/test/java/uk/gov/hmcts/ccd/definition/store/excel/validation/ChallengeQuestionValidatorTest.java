@@ -5,6 +5,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.excel.challengequestion.BaseChallengeQuestionTest;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ChallengeQuestionTabEntity;
 
 import com.google.common.collect.Lists;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -74,6 +77,90 @@ class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
         challengeQuestionValidator.validate(parseContext,
                 Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
                         QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+    }
+
+    @Test
+    void testAnswerFormatForUnbracketedAccessProfileRole() {
+        String answer = "${OrganisationField.OrganisationID}:defendant-solicitor";
+        challengeQuestionValidator.validate(parseContext,
+                Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                        QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+    }
+
+    /**
+     * The shape every service shipping a hand-written ChallengeQuestion.json uses today: several
+     * comma-separated answers, each naming a bracketed CaseRole. Relaxing the role pattern must
+     * leave these importing unchanged.
+     */
+    @Test
+    void testAnswerFormatForMultipleBracketedCaseRoles() {
+        String answer = "${OrganisationField.OrganisationID}:[CLAIMANT],"
+                + "${OrganisationField.OrganisationID}:[DEFENDANT]";
+        challengeQuestionValidator.validate(parseContext,
+                Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                        QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+    }
+
+    /**
+     * A service migrating one party at a time will briefly have both spellings in one Answer.
+     */
+    @Test
+    void testAnswerFormatForMixedBracketedAndUnbracketedRoles() {
+        String answer = "${OrganisationField.OrganisationID}:[CLAIMANT],"
+                + "${OrganisationField.OrganisationID}:defendant-solicitor";
+        challengeQuestionValidator.validate(parseContext,
+                Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                        QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+    }
+
+    /**
+     * Dropping the brackets is not a general licence to write any role unbracketed. CaseRoles are
+     * registered under their bracketed reference, so the unbracketed spelling of one resolves
+     * against neither the AccessProfile map nor the CaseRole table and must still be rejected.
+     */
+    @Test
+    void failAnswerFormatForUnbracketedCaseRole() {
+        String answer = "${OrganisationField.OrganisationID}:CLAIMANT";
+        List<DefinitionDataItem> items = Lists.newArrayList(buildDefinitionDataItem(
+                CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+                QUESTION_ID, answer, "questionId"));
+        InvalidImportException exception = assertThrows(InvalidImportException.class,
+            () -> challengeQuestionValidator.validate(parseContext, items));
+        assertThat(exception.getMessage(),
+                is("ChallengeQuestionTab Invalid value: ${OrganisationField.OrganisationID}:CLAIMANT "
+                        + "is not a valid Answer, Please check the expression format and the roles."));
+    }
+
+    /**
+     * Only the first segment after the separator is looked up as a role, so an expression carrying
+     * a trailing segment must be rejected by the format check rather than silently importing with
+     * the remainder ignored.
+     */
+    @Test
+    void failAnswerFormatForRoleContainingSeparator() {
+        String answer = "${OrganisationField.OrganisationID}:defendant-solicitor:extra";
+        List<DefinitionDataItem> items = Lists.newArrayList(buildDefinitionDataItem(
+                CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+                QUESTION_ID, answer, "questionId"));
+        InvalidImportException exception = assertThrows(InvalidImportException.class,
+            () -> challengeQuestionValidator.validate(parseContext, items));
+        assertThat(exception.getMessage(),
+                is("ChallengeQuestionTab Invalid value: ${OrganisationField.OrganisationID}"
+                        + ":defendant-solicitor:extra is not a valid Answer, "
+                        + "Please check the expression format and the roles."));
+    }
+
+    @Test
+    void failAnswerFormatForUnknownUnbracketedRole() {
+        InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
+            String answer = "${OrganisationField.OrganisationID}:unknown-solicitor";
+            challengeQuestionValidator.validate(parseContext,
+                    Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
+                            QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, QUESTION_ID, answer, "questionId")));
+        });
+        assertThat(exception.getMessage(),
+                is("ChallengeQuestionTab Invalid value: ${OrganisationField.OrganisationID}:unknown-solicitor "
+                        + "is not a valid Answer, Please check the expression format and the roles."));
     }
 
     @Test
@@ -149,11 +236,11 @@ class ChallengeQuestionValidatorTest extends BaseChallengeQuestionTest {
 
     @Test
     void failForIDValidation() {
-        InvalidImportException exception = assertThrows(InvalidImportException.class, () -> {
-            challengeQuestionValidator.validate(parseContext,
-                    Lists.newArrayList(buildDefinitionDataItem(CASE_TYPE, FIELD_TYPE, "2",
-                            QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1, null, ANSWERD, "questionId")));
-        });
+        List<DefinitionDataItem> idItems = Lists.newArrayList(buildDefinitionDataItem(
+                CASE_TYPE, FIELD_TYPE, "2", QUESTION_TEXT, DISPLAY_CONTEXT_PARAMETER_1,
+                null, ANSWERD, "questionId"));
+        InvalidImportException exception = assertThrows(InvalidImportException.class,
+            () -> challengeQuestionValidator.validate(parseContext, idItems));
         assertThat(exception.getMessage(),
                 is("ChallengeQuestionTab Invalid value: ID cannot be null."));
     }
