@@ -1,0 +1,14 @@
+{
+  "_guid_": "F-127_Test_Base_Data",
+  "_extends_": "Get_Operation_Base_Data_on_Definition_Store",
+
+  "operationName": "Get Case Roles for a Case Type",
+  "uri": "/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/roles",
+  "request": {
+    "pathVariables": {
+      "uid": "[[DEFAULT_AUTO_VALUE]]",
+      "jid": "BEFTA_MASTER",
+      "ctid": "FT_MasterCaseType"
+    }
+  }
+}
