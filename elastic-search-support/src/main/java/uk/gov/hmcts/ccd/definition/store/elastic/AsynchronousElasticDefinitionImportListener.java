@@ -5,6 +5,7 @@ import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.event.TransactionalEventListener;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -35,7 +36,7 @@ public class AsynchronousElasticDefinitionImportListener extends ElasticDefiniti
     }
 
     @Async
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener
     public void onDefinitionImported(DefinitionImportedEvent event) {
         log.warn("Errors initialising ElasticSearch will not fail the definition import");
