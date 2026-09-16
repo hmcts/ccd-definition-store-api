@@ -71,7 +71,7 @@ ext {
     appInsightsVersion = '2.6.4'
     restAssuredVersion = '5.5.7'
     groovyVersion = '4.0.32'
-    lombokVersion = '1.18.46'
+    lombokVersion = '1.18.48'
     jjwtVersion = '0.13.0'
     feignJackson = '13.9'
     gsonVersion = '2.13.2'
