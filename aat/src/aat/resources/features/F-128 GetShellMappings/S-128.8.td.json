@@ -1,11 +1,11 @@
 {
   "_guid_": "S-128.8",
   "_extends_": "F-128_Test_Base_Data",
-  "title": "Success response - Return 200 with caseStates filtered by multiple stateCategoriesFilter values",
+  "title": "Success response - Return 200 with caseStates filtered by multiple stateCategoriesToExclude values",
   "specs": [
     "an active profile in CCD",
     "contains an originalCaseTypeId that exists in CCD config",
-    "contains multiple stateCategoriesFilter query params",
+    "contains multiple stateCategoriesToExclude query params",
     "contains empty caseStates when all states match the filter"
   ],
   "request": {
@@ -13,7 +13,7 @@
       "ctid": "FT_Conditionals"
     },
     "queryParams": {
-      "stateCategoriesFilter": "Start,End"
+      "stateCategoriesToExclude": "Start,End"
     }
   },
   "expectedResponse": {

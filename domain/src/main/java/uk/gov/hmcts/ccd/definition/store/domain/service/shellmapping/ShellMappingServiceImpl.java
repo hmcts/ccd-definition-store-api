@@ -49,7 +49,8 @@ public class ShellMappingServiceImpl implements ShellMappingService {
     }
 
     @Override
-    public ShellMappingResponse findByOriginatingCaseTypeId(String caseTypeId, List<String> stateCategories) {
+    public ShellMappingResponse findByOriginatingCaseTypeId(String caseTypeId,
+                                                            List<String> stateCategoriesToExclude) {
         CaseType caseType = caseTypeService.findByCaseTypeId(caseTypeId)
             .orElseThrow(() -> new CaseTypeValidationException(
                 new CaseTypeValidationResult("Case Type not found " + caseTypeId)
@@ -69,7 +70,7 @@ public class ShellMappingServiceImpl implements ShellMappingService {
             .toList();
 
         String shellCaseTypeID = shellMappingEntities.getFirst().getShellCaseTypeId().getReference();
-        List<String> caseStates = getFilteredCaseStateIds(caseType, stateCategories);
+        List<String> caseStates = getFilteredCaseStateIds(caseType, stateCategoriesToExclude);
         return new ShellMappingResponse(shellCaseTypeID, caseStates, fieldMappings);
     }
 

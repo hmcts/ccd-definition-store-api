@@ -12,5 +12,5 @@ public interface ShellMappingService {
 
     List<ShellMapping> findAll();
 
-    ShellMappingResponse findByOriginatingCaseTypeId(String caseTypeId, List<String> stateCategories);
+    ShellMappingResponse findByOriginatingCaseTypeId(String caseTypeId, List<String> stateCategoriesToExclude);
 }

@@ -229,7 +229,7 @@ class ShellMappingServiceImplTest {
         }
 
         @Nested
-        @DisplayName("caseStates filtering by stateCategories")
+        @DisplayName("caseStates filtering by stateCategoriesToExclude")
         class CaseStatesFilteringTests {
 
             private static final String CASE_TYPE_ID = "ORIG_TYPE_1";
@@ -259,7 +259,7 @@ class ShellMappingServiceImplTest {
             }
 
             @Test
-            @DisplayName("Should return all case states when stateCategories filter is null")
+            @DisplayName("Should return all case states when stateCategoriesToExclude is null")
             void shouldReturnAllCaseStatesWhenFilterIsNull() {
                 stubCaseTypeWithStates(
                     createCaseState("OPEN", "General"),
@@ -272,7 +272,7 @@ class ShellMappingServiceImplTest {
             }
 
             @Test
-            @DisplayName("Should return all case states when stateCategories filter is empty")
+            @DisplayName("Should return all case states when stateCategoriesToExclude is empty")
             void shouldReturnAllCaseStatesWhenFilterIsEmpty() {
                 stubCaseTypeWithStates(
                     createCaseState("OPEN", "General"),

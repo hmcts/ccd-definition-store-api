@@ -49,10 +49,10 @@ public class ShellMappingController {
     public ShellMappingResponse shellMappings(
         @PathVariable("originalCaseTypeId") @NotBlank String originalCaseTypeId,
         @ApiParam(value = "State categories to exclude from the returned case states")
-        @RequestParam(value = "stateCategoriesFilter", required = false) List<String> stateCategoriesFilter) {
+        @RequestParam(value = "stateCategoriesToExclude", required = false) List<String> stateCategoriesToExclude) {
         return shellMappingService.findByOriginatingCaseTypeId(
             originalCaseTypeId,
-            stateCategoriesFilter == null ? Collections.emptyList() : stateCategoriesFilter
+            stateCategoriesToExclude == null ? Collections.emptyList() : stateCategoriesToExclude
         );
     }
 }

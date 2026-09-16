@@ -219,10 +219,10 @@ class ShellMappingControllerIT extends BaseTest {
         }
 
         @Test
-        @DisplayName("Should exclude case states matching stateCategoriesFilter query params")
-        void shouldExcludeCaseStatesMatchingStateCategoriesFilter() throws Exception {
+        @DisplayName("Should exclude case states matching stateCategoriesToExclude query params")
+        void shouldExcludeCaseStatesMatchingStateCategoriesToExclude() throws Exception {
             final String url = RETRIEVE_SHELL_MAPPINGS_URL
-                + "/ORIG_CASE_TYPE_1?stateCategoriesFilter=Complex&stateCategoriesFilter=Archived";
+                + "/ORIG_CASE_TYPE_1?stateCategoriesToExclude=Complex&stateCategoriesToExclude=Archived";
             final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.caseStates").isArray())
@@ -237,8 +237,8 @@ class ShellMappingControllerIT extends BaseTest {
         }
 
         @Test
-        @DisplayName("Should return all case states when stateCategoriesFilter is not provided")
-        void shouldReturnAllCaseStatesWhenStateCategoriesFilterNotProvided() throws Exception {
+        @DisplayName("Should return all case states when stateCategoriesToExclude is not provided")
+        void shouldReturnAllCaseStatesWhenStateCategoriesToExcludeNotProvided() throws Exception {
             final String url = RETRIEVE_SHELL_MAPPINGS_URL + "/ORIG_CASE_TYPE_1";
             final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
