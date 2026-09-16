@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import jakarta.validation.constraints.NotBlank;
@@ -11,10 +12,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.domain.service.shellmapping.ShellMappingService;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMappingResponse;
+
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @Validated
@@ -41,7 +46,13 @@ public class ShellMappingController {
         @ApiResponse(code = 401, message = "Unauthorised"),
         @ApiResponse(code = 400, message = "Bad Request")
     })
-    public ShellMappingResponse shellMappings(@PathVariable("originalCaseTypeId") @NotBlank String originalCaseTypeId) {
-        return shellMappingService.findByOriginatingCaseTypeId(originalCaseTypeId);
+    public ShellMappingResponse shellMappings(
+        @PathVariable("originalCaseTypeId") @NotBlank String originalCaseTypeId,
+        @ApiParam(value = "State categories to exclude from the returned case states")
+        @RequestParam(value = "stateCategoriesFilter", required = false) List<String> stateCategoriesFilter) {
+        return shellMappingService.findByOriginatingCaseTypeId(
+            originalCaseTypeId,
+            stateCategoriesFilter == null ? Collections.emptyList() : stateCategoriesFilter
+        );
     }
 }

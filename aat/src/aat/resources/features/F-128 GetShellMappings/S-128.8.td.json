@@ -1,25 +1,26 @@
 {
-  "_guid_": "S-128.2",
+  "_guid_": "S-128.8",
   "_extends_": "F-128_Test_Base_Data",
-  "title": "Success response - Return 200 success with shell case mappings for the originalCaseTypeId",
+  "title": "Success response - Return 200 with caseStates filtered by multiple stateCategoriesFilter values",
   "specs": [
     "an active profile in CCD",
     "contains an originalCaseTypeId that exists in CCD config",
-    "contains all shellCaseMapping for originalCaseTypeId is present in the response"
+    "contains multiple stateCategoriesFilter query params",
+    "contains empty caseStates when all states match the filter"
   ],
   "request": {
     "pathVariables": {
       "ctid": "FT_Conditionals"
+    },
+    "queryParams": {
+      "stateCategoriesFilter": "Start,End"
     }
   },
   "expectedResponse": {
     "_extends_": "Common_200_Response",
     "body": {
       "shellCaseTypeID": "FT_MasterCaseType",
-      "caseStates": [
-        "CaseCreated",
-        "CaseApproved"
-      ],
+      "caseStates": [],
       "shellCaseMappings": [
         {
           "OriginatingCaseFieldName": "EmailField",

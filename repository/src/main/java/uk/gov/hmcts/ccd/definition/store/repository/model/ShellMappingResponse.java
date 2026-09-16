@@ -16,6 +16,9 @@ public class ShellMappingResponse {
     @JsonProperty("shellCaseTypeID")
     private String shellCaseTypeID;
 
+    @JsonProperty("caseStates")
+    private List<String> caseStates = new ArrayList<>();
+
     @JsonProperty("shellCaseMappings")
     private List<ShellCaseFieldMapping> shellCaseMappings = new ArrayList<>();
 }

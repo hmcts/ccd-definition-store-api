@@ -16,16 +16,19 @@ import uk.gov.hmcts.ccd.definition.store.repository.ShellMappingRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ShellMappingEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseState;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMapping;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMappingResponse;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -176,6 +179,10 @@ class ShellMappingServiceImplTest {
             String caseTypeId = "ORIG_TYPE_1";
             CaseType caseType = new CaseType();
             caseType.setId(caseTypeId);
+            caseType.setStates(List.of(
+                createCaseState("OPEN", "General"),
+                createCaseState("SUBMITTED", "Complex")
+            ));
 
             ShellMappingEntity entity1 = createShellMappingEntity("SHELL_TYPE_1", "shellField1",
                 "ORIG_TYPE_1", "origField1");
@@ -187,11 +194,12 @@ class ShellMappingServiceImplTest {
             when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(entities);
 
             // When
-            ShellMappingResponse result = sut.findByOriginatingCaseTypeId(caseTypeId);
+            ShellMappingResponse result = sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList());
 
             // Then
             assertNotNull(result);
             assertThat(result.getShellCaseTypeID(), equalTo("SHELL_TYPE_1"));
+            assertThat(result.getCaseStates(), contains("OPEN", "SUBMITTED"));
             assertThat(result.getShellCaseMappings(), hasSize(2));
             assertThat(result.getShellCaseMappings().get(0).getOriginatingCaseFieldName(), equalTo("origField1"));
             assertThat(result.getShellCaseMappings().get(0).getShellCaseFieldName(), equalTo("shellField1"));
@@ -203,6 +211,47 @@ class ShellMappingServiceImplTest {
         }
 
         @Test
+        @DisplayName("Should exclude case states that match provided state categories")
+        void shouldExcludeCaseStatesMatchingStateCategories() {
+            String caseTypeId = "ORIG_TYPE_1";
+            CaseType caseType = new CaseType();
+            caseType.setId(caseTypeId);
+            caseType.setStates(List.of(
+                createCaseState("OPEN", "General"),
+                createCaseState("SUBMITTED", "Complex"),
+                createCaseState("CLOSED", "General,Archived"),
+                createCaseState("DRAFT", null)
+            ));
+
+            ShellMappingEntity entity = createShellMappingEntity("SHELL_TYPE_1", "shellField1",
+                "ORIG_TYPE_1", "origField1");
+
+            when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.of(caseType));
+            when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(Lists.newArrayList(entity));
+
+            ShellMappingResponse result = sut.findByOriginatingCaseTypeId(caseTypeId, List.of("Complex", "Archived"));
+
+            assertThat(result.getCaseStates(), contains("OPEN", "DRAFT"));
+        }
+
+        @Test
+        @DisplayName("Should return empty caseStates when originating case type has no states")
+        void shouldReturnEmptyCaseStatesWhenCaseTypeHasNoStates() {
+            String caseTypeId = "ORIG_TYPE_1";
+            CaseType caseType = new CaseType();
+            caseType.setId(caseTypeId);
+            ShellMappingEntity entity = createShellMappingEntity("SHELL_TYPE_1", "shellField1",
+                "ORIG_TYPE_1", "origField1");
+
+            when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.of(caseType));
+            when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(Lists.newArrayList(entity));
+
+            ShellMappingResponse result = sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList());
+
+            assertThat(result.getCaseStates(), hasSize(0));
+        }
+
+        @Test
         @DisplayName("Should throw CaseTypeValidationException when case type does not exist")
         void shouldThrowCaseTypeValidationExceptionWhenCaseTypeDoesNotExist() {
             // Given
@@ -211,7 +260,7 @@ class ShellMappingServiceImplTest {
 
             // When & Then
             CaseTypeValidationException exception = assertThrows(CaseTypeValidationException.class,
-                () -> sut.findByOriginatingCaseTypeId(caseTypeId));
+                () -> sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList()));
 
             assertThat(exception.getErrors().size(), equalTo(1));
             assertThat(exception.getErrors().iterator().next(), equalTo("Case Type not found " + caseTypeId));
@@ -233,7 +282,7 @@ class ShellMappingServiceImplTest {
             when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(Lists.newArrayList(entity));
 
             // When
-            sut.findByOriginatingCaseTypeId(caseTypeId);
+            sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList());
 
             // Then
             verify(caseTypeService, times(1)).findByCaseTypeId(eq(caseTypeId));
@@ -250,13 +299,20 @@ class ShellMappingServiceImplTest {
 
             // When & Then
             NotFoundException exception = assertThrows(NotFoundException.class,
-                () -> sut.findByOriginatingCaseTypeId(caseTypeId));
+                () -> sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList()));
 
             assertThat(exception.getMessage(), equalTo("No Shell case found for case type id " + caseTypeId));
 
             verify(caseTypeService, times(1)).findByCaseTypeId(caseTypeId);
             verify(repository, times(1)).findByOriginatingCaseTypeIdReference(caseTypeId);
         }
+    }
+
+    private CaseState createCaseState(String id, String stateCategory) {
+        CaseState caseState = new CaseState();
+        caseState.setId(id);
+        caseState.setStateCategory(stateCategory);
+        return caseState;
     }
 
     private ShellMappingEntity createShellMappingEntity(String shellCaseTypeRef, String shellCaseFieldRef,
