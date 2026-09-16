@@ -11,10 +11,12 @@ import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClien
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 
 import java.io.IOException;
+import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -39,6 +41,9 @@ class AsynchronousElasticDefinitionImportListenerTest {
     @Mock
     private CaseMappingGenerator caseMappingGenerator;
 
+    @Mock
+    private CaseTypeRepository caseTypeRepository;
+
     private CaseTypeEntity caseA = new CaseTypeBuilder().withJurisdiction("jurA").withReference("caseTypeA").build();
     private CaseTypeEntity caseB = new CaseTypeBuilder().withJurisdiction("jurB").withReference("caseTypeB").build();
 
@@ -52,6 +57,8 @@ class AsynchronousElasticDefinitionImportListenerTest {
     void createsIndexIfNotExists() throws IOException {
         when(config.getCasesIndexNameFormat()).thenReturn("%s");
         when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(anyString())).thenReturn(false);
+        when(caseTypeRepository.findAllLatestVersions(List.of("caseTypeA", "caseTypeB")))
+            .thenReturn(List.of(caseA, caseB));
 
         listener.onDefinitionImported(newEvent(caseA, caseB));
 
@@ -62,4 +69,3 @@ class AsynchronousElasticDefinitionImportListenerTest {
         return new DefinitionImportedEvent(newArrayList(caseTypes));
     }
 }
-
