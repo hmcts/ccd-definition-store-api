@@ -22,12 +22,15 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ShellMappingEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ShellCaseState;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMappingResponse;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
 import java.time.LocalDate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasProperty;
@@ -114,7 +117,14 @@ class ShellMappingControllerIT extends BaseTest {
         origCaseField1b.setHidden(false);
         origCaseField1b.setSecurityClassification(PUBLIC);
         origCaseType1.addCaseField(origCaseField1b);
+        origCaseType1.addState(createState("OPEN", "Open", "General"));
+        origCaseType1.addState(createState("SUBMITTED", "Submitted", "Complex"));
+        origCaseType1.addState(createState("CLOSED", "Closed", "General,Archived"));
         caseTypeRepository.save(origCaseType1);
+        entityManager.flush();
+
+        origCaseType2.addState(createState("DRAFT", "Draft", "General"));
+        caseTypeRepository.save(origCaseType2);
         entityManager.flush();
 
         // Get case fields
@@ -198,6 +208,11 @@ class ShellMappingControllerIT extends BaseTest {
 
             assertAll(
                 () -> assertThat(response.getShellCaseTypeID(), equalTo("SHELL_CASE_TYPE_1")),
+                () -> assertThat(response.getCaseStates(), contains(
+                    new ShellCaseState("OPEN", "General"),
+                    new ShellCaseState("SUBMITTED", "Complex"),
+                    new ShellCaseState("CLOSED", "General,Archived")
+                )),
                 () -> assertThat(response.getShellCaseMappings(), hasSize(2)),
                 () -> assertThat(response.getShellCaseMappings(), hasItem(hasProperty("originatingCaseFieldName",
                     equalTo("origField1")))),
@@ -209,6 +224,46 @@ class ShellMappingControllerIT extends BaseTest {
         }
 
         @Test
+        @DisplayName("Should exclude case states matching stateCategoriesToExclude query params")
+        void shouldExcludeCaseStatesMatchingStateCategoriesToExclude() throws Exception {
+            final String url = RETRIEVE_SHELL_MAPPINGS_URL
+                + "/ORIG_CASE_TYPE_1?stateCategoriesToExclude=Complex&stateCategoriesToExclude=Archived";
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(jsonPath("$.caseStates").isArray())
+                .andExpect(jsonPath("$.caseStates[0].name").value("OPEN"))
+                .andExpect(jsonPath("$.caseStates[0].stateCategory").value("General"))
+                .andReturn();
+
+            ShellMappingResponse response = mapper.readValue(
+                result.getResponse().getContentAsString(),
+                ShellMappingResponse.class
+            );
+
+            assertThat(response.getCaseStates(), contains(new ShellCaseState("OPEN", "General")));
+        }
+
+        @Test
+        @DisplayName("Should return all case states when stateCategoriesToExclude is not provided")
+        void shouldReturnAllCaseStatesWhenStateCategoriesToExcludeNotProvided() throws Exception {
+            final String url = RETRIEVE_SHELL_MAPPINGS_URL + "/ORIG_CASE_TYPE_1";
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+            ShellMappingResponse response = mapper.readValue(
+                result.getResponse().getContentAsString(),
+                ShellMappingResponse.class
+            );
+
+            assertThat(response.getCaseStates(), contains(
+                new ShellCaseState("OPEN", "General"),
+                new ShellCaseState("SUBMITTED", "Complex"),
+                new ShellCaseState("CLOSED", "General,Archived")
+            ));
+        }
+
+        @Test
         @DisplayName("Should return single shell mapping when only one exists")
         void shouldReturnSingleShellMapping() throws Exception {
             final String url = RETRIEVE_SHELL_MAPPINGS_URL + "/ORIG_CASE_TYPE_2";
@@ -216,6 +271,7 @@ class ShellMappingControllerIT extends BaseTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.shellCaseTypeID").exists())
                 .andExpect(jsonPath("$.shellCaseMappings").isArray())
+                .andExpect(jsonPath("$.caseStates").isArray())
                 .andReturn();
 
             ShellMappingResponse response = mapper.readValue(
@@ -225,6 +281,7 @@ class ShellMappingControllerIT extends BaseTest {
 
             assertAll(
                 () -> assertThat(response.getShellCaseTypeID(), equalTo("SHELL_CASE_TYPE_2")),
+                () -> assertThat(response.getCaseStates(), contains(new ShellCaseState("DRAFT", "General"))),
                 () -> assertThat(response.getShellCaseMappings(), hasSize(1)),
                 () -> assertThat(response.getShellCaseMappings().get(0).getOriginatingCaseFieldName(),
                     equalTo("origField2")),
@@ -248,6 +305,9 @@ class ShellMappingControllerIT extends BaseTest {
             mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.shellCaseTypeID").exists())
+                .andExpect(jsonPath("$.caseStates").isArray())
+                .andExpect(jsonPath("$.caseStates[0].name").exists())
+                .andExpect(jsonPath("$.caseStates[0].stateCategory").exists())
                 .andExpect(jsonPath("$.shellCaseMappings").isArray())
                 .andExpect(jsonPath("$.shellCaseMappings[0].OriginatingCaseFieldName").exists())
                 .andExpect(jsonPath("$.shellCaseMappings[0].ShellCaseFieldName").exists());
@@ -446,5 +506,14 @@ class ShellMappingControllerIT extends BaseTest {
         entity.setOriginatingCaseTypeId(originatingCaseTypeId);
         entity.setOriginatingCaseFieldName(originatingCaseFieldName);
         return entity;
+    }
+
+    private StateEntity createState(String reference, String name, String stateCategory) {
+        StateEntity state = new StateEntity();
+        state.setReference(reference);
+        state.setName(name);
+        state.setDescription(name);
+        state.setStateCategory(stateCategory);
+        return state;
     }
 }

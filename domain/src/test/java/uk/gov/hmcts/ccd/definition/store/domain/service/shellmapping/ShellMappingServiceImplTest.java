@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.shellmapping;
 
 import com.google.common.collect.Lists;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -16,16 +17,20 @@ import uk.gov.hmcts.ccd.definition.store.repository.ShellMappingRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ShellMappingEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseState;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ShellCaseState;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMapping;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMappingResponse;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -176,6 +181,10 @@ class ShellMappingServiceImplTest {
             String caseTypeId = "ORIG_TYPE_1";
             CaseType caseType = new CaseType();
             caseType.setId(caseTypeId);
+            caseType.setStates(List.of(
+                createCaseState("OPEN", "General"),
+                createCaseState("SUBMITTED", "Complex")
+            ));
 
             ShellMappingEntity entity1 = createShellMappingEntity("SHELL_TYPE_1", "shellField1",
                 "ORIG_TYPE_1", "origField1");
@@ -187,11 +196,15 @@ class ShellMappingServiceImplTest {
             when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(entities);
 
             // When
-            ShellMappingResponse result = sut.findByOriginatingCaseTypeId(caseTypeId);
+            ShellMappingResponse result = sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList());
 
             // Then
             assertNotNull(result);
             assertThat(result.getShellCaseTypeID(), equalTo("SHELL_TYPE_1"));
+            assertThat(result.getCaseStates(), contains(
+                new ShellCaseState("OPEN", "General"),
+                new ShellCaseState("SUBMITTED", "Complex")
+            ));
             assertThat(result.getShellCaseMappings(), hasSize(2));
             assertThat(result.getShellCaseMappings().get(0).getOriginatingCaseFieldName(), equalTo("origField1"));
             assertThat(result.getShellCaseMappings().get(0).getShellCaseFieldName(), equalTo("shellField1"));
@@ -203,6 +216,209 @@ class ShellMappingServiceImplTest {
         }
 
         @Test
+        @DisplayName("Should return empty caseStates when originating case type has no states")
+        void shouldReturnEmptyCaseStatesWhenCaseTypeHasNoStates() {
+            String caseTypeId = "ORIG_TYPE_1";
+            CaseType caseType = new CaseType();
+            caseType.setId(caseTypeId);
+            ShellMappingEntity entity = createShellMappingEntity("SHELL_TYPE_1", "shellField1",
+                "ORIG_TYPE_1", "origField1");
+
+            when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.of(caseType));
+            when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(Lists.newArrayList(entity));
+
+            ShellMappingResponse result = sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList());
+
+            assertThat(result.getCaseStates(), hasSize(0));
+        }
+
+        @Nested
+        @DisplayName("caseStates filtering by stateCategoriesToExclude")
+        class CaseStatesFilteringTests {
+
+            private static final String CASE_TYPE_ID = "ORIG_TYPE_1";
+
+            @BeforeEach
+            void setUpShellMapping() {
+                ShellMappingEntity entity = createShellMappingEntity("SHELL_TYPE_1", "shellField1",
+                    "ORIG_TYPE_1", "origField1");
+                when(repository.findByOriginatingCaseTypeIdReference(CASE_TYPE_ID))
+                    .thenReturn(Lists.newArrayList(entity));
+            }
+
+            @Test
+            @DisplayName("Should exclude case states that match provided state categories")
+            void shouldExcludeCaseStatesMatchingStateCategories() {
+                stubCaseTypeWithStates(
+                    createCaseState("OPEN", "General"),
+                    createCaseState("SUBMITTED", "Complex"),
+                    createCaseState("CLOSED", "General,Archived"),
+                    createCaseState("DRAFT", null)
+                );
+
+                ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
+                    CASE_TYPE_ID, List.of("Complex", "Archived"));
+
+                assertThat(result.getCaseStates(), contains(
+                    new ShellCaseState("OPEN", "General"),
+                    new ShellCaseState("DRAFT", null)
+                ));
+            }
+
+            @Test
+            @DisplayName("Should return all case states when stateCategoriesToExclude is null")
+            void shouldReturnAllCaseStatesWhenFilterIsNull() {
+                stubCaseTypeWithStates(
+                    createCaseState("OPEN", "General"),
+                    createCaseState("SUBMITTED", "Complex")
+                );
+
+                ShellMappingResponse result = sut.findByOriginatingCaseTypeId(CASE_TYPE_ID, null);
+
+                assertThat(result.getCaseStates(), contains(
+                    new ShellCaseState("OPEN", "General"),
+                    new ShellCaseState("SUBMITTED", "Complex")
+                ));
+            }
+
+            @Test
+            @DisplayName("Should return all case states when stateCategoriesToExclude is empty")
+            void shouldReturnAllCaseStatesWhenFilterIsEmpty() {
+                stubCaseTypeWithStates(
+                    createCaseState("OPEN", "General"),
+                    createCaseState("SUBMITTED", "Complex")
+                );
+
+                ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
+                    CASE_TYPE_ID, Collections.emptyList());
+
+                assertThat(result.getCaseStates(), contains(
+                    new ShellCaseState("OPEN", "General"),
+                    new ShellCaseState("SUBMITTED", "Complex")
+                ));
+            }
+
+            @Test
+            @DisplayName("Should ignore null, blank and whitespace-only filter values")
+            void shouldIgnoreNullBlankAndWhitespaceFilterValues() {
+                stubCaseTypeWithStates(
+                    createCaseState("OPEN", "General"),
+                    createCaseState("SUBMITTED", "Complex")
+                );
+
+                List<String> filter = new ArrayList<>();
+                filter.add(null);
+                filter.add("");
+                filter.add("   ");
+                filter.add("Complex");
+
+                ShellMappingResponse result = sut.findByOriginatingCaseTypeId(CASE_TYPE_ID, filter);
+
+                assertThat(result.getCaseStates(), contains(new ShellCaseState("OPEN", "General")));
+            }
+
+            @Test
+            @DisplayName("Should trim filter values before matching")
+            void shouldTrimFilterValuesBeforeMatching() {
+                stubCaseTypeWithStates(
+                    createCaseState("OPEN", "General"),
+                    createCaseState("SUBMITTED", "Complex")
+                );
+
+                ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
+                    CASE_TYPE_ID, List.of("  Complex  "));
+
+                assertThat(result.getCaseStates(), contains(new ShellCaseState("OPEN", "General")));
+            }
+
+            @Test
+            @DisplayName("Should match comma-separated state categories with surrounding whitespace")
+            void shouldMatchCommaSeparatedStateCategoriesWithWhitespace() {
+                stubCaseTypeWithStates(
+                    createCaseState("OPEN", "General"),
+                    createCaseState("CLOSED", " General , Archived ")
+                );
+
+                ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
+                    CASE_TYPE_ID, List.of("Archived"));
+
+                assertThat(result.getCaseStates(), contains(new ShellCaseState("OPEN", "General")));
+            }
+
+            @Test
+            @DisplayName("Should keep states with blank or null stateCategory when filtering")
+            void shouldKeepStatesWithBlankOrNullStateCategory() {
+                stubCaseTypeWithStates(
+                    createCaseState("OPEN", null),
+                    createCaseState("DRAFT", ""),
+                    createCaseState("PENDING", "   "),
+                    createCaseState("SUBMITTED", "Complex")
+                );
+
+                ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
+                    CASE_TYPE_ID, List.of("Complex"));
+
+                assertThat(result.getCaseStates(), contains(
+                    new ShellCaseState("OPEN", null),
+                    new ShellCaseState("DRAFT", ""),
+                    new ShellCaseState("PENDING", "   ")
+                ));
+            }
+
+            @Test
+            @DisplayName("Should return all case states when filter does not match any category")
+            void shouldReturnAllCaseStatesWhenFilterDoesNotMatch() {
+                stubCaseTypeWithStates(
+                    createCaseState("OPEN", "General"),
+                    createCaseState("SUBMITTED", "Complex")
+                );
+
+                ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
+                    CASE_TYPE_ID, List.of("Archived"));
+
+                assertThat(result.getCaseStates(), contains(
+                    new ShellCaseState("OPEN", "General"),
+                    new ShellCaseState("SUBMITTED", "Complex")
+                ));
+            }
+
+            @Test
+            @DisplayName("Should return empty caseStates when all states match the filter")
+            void shouldReturnEmptyCaseStatesWhenAllStatesMatchFilter() {
+                stubCaseTypeWithStates(
+                    createCaseState("OPEN", "Start"),
+                    createCaseState("SUBMITTED", "End")
+                );
+
+                ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
+                    CASE_TYPE_ID, List.of("Start", "End"));
+
+                assertThat(result.getCaseStates(), hasSize(0));
+            }
+
+            @Test
+            @DisplayName("Should exclude state when any of its comma-separated categories match")
+            void shouldExcludeStateWhenAnyCommaSeparatedCategoryMatches() {
+                stubCaseTypeWithStates(
+                    createCaseState("OPEN", "General"),
+                    createCaseState("CLOSED", "Start,End")
+                );
+
+                ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
+                    CASE_TYPE_ID, List.of("End"));
+
+                assertThat(result.getCaseStates(), contains(new ShellCaseState("OPEN", "General")));
+            }
+
+            private void stubCaseTypeWithStates(CaseState... states) {
+                CaseType caseType = new CaseType();
+                caseType.setId(CASE_TYPE_ID);
+                caseType.setStates(List.of(states));
+                when(caseTypeService.findByCaseTypeId(CASE_TYPE_ID)).thenReturn(Optional.of(caseType));
+            }
+        }
+
+        @Test
         @DisplayName("Should throw CaseTypeValidationException when case type does not exist")
         void shouldThrowCaseTypeValidationExceptionWhenCaseTypeDoesNotExist() {
             // Given
@@ -211,7 +427,7 @@ class ShellMappingServiceImplTest {
 
             // When & Then
             CaseTypeValidationException exception = assertThrows(CaseTypeValidationException.class,
-                () -> sut.findByOriginatingCaseTypeId(caseTypeId));
+                () -> sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList()));
 
             assertThat(exception.getErrors().size(), equalTo(1));
             assertThat(exception.getErrors().iterator().next(), equalTo("Case Type not found " + caseTypeId));
@@ -233,7 +449,7 @@ class ShellMappingServiceImplTest {
             when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(Lists.newArrayList(entity));
 
             // When
-            sut.findByOriginatingCaseTypeId(caseTypeId);
+            sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList());
 
             // Then
             verify(caseTypeService, times(1)).findByCaseTypeId(eq(caseTypeId));
@@ -250,13 +466,20 @@ class ShellMappingServiceImplTest {
 
             // When & Then
             NotFoundException exception = assertThrows(NotFoundException.class,
-                () -> sut.findByOriginatingCaseTypeId(caseTypeId));
+                () -> sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList()));
 
             assertThat(exception.getMessage(), equalTo("No Shell case found for case type id " + caseTypeId));
 
             verify(caseTypeService, times(1)).findByCaseTypeId(caseTypeId);
             verify(repository, times(1)).findByOriginatingCaseTypeIdReference(caseTypeId);
         }
+    }
+
+    private CaseState createCaseState(String id, String stateCategory) {
+        CaseState caseState = new CaseState();
+        caseState.setId(id);
+        caseState.setStateCategory(stateCategory);
+        return caseState;
     }
 
     private ShellMappingEntity createShellMappingEntity(String shellCaseTypeRef, String shellCaseFieldRef,
