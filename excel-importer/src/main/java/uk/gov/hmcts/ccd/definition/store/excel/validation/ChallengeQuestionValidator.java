@@ -29,6 +29,8 @@ import static java.util.stream.Collectors.groupingBy;
 @Component
 public class ChallengeQuestionValidator {
 
+    static final String ANSWER_FIELD_NOT_REQUIRED = "NOT_REQUIRED_FOR_DECENTRALISED_SERVICE";
+
     private ParseContext parseContext;
     private static final String ANSWER_MAIN_SEPARATOR = ",";
     private static final String ANSWER_FIELD_SEPARATOR = "|";
@@ -122,6 +124,12 @@ public class ChallengeQuestionValidator {
     private void validateAnswer(DefinitionDataItem definitionDataItem, CaseTypeEntity caseTypeEntity) {
         final String answers = definitionDataItem.getString(ColumnName.CHALLENGE_QUESTION_ANSWER_FIELD);
         validateNullValue(answers, ERROR_MESSAGE + " value: answer cannot be null.");
+
+        if (ANSWER_FIELD_NOT_REQUIRED.equals(answers)) {
+            // No need for further validation
+            return;
+        }
+
         final String[] answersRules = answers.split(ANSWER_MAIN_SEPARATOR);
 
         if (answersRules.length > 0 && answersRules.length != 1) {
