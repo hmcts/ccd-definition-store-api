@@ -21,7 +21,10 @@
     "body": {
       "shellCaseTypeID": "FT_MasterCaseType",
       "caseStates": [
-        "CaseApproved"
+        {
+          "name": "CaseApproved",
+          "stateCategory": "End"
+        }
       ],
       "shellCaseMappings": [
         {

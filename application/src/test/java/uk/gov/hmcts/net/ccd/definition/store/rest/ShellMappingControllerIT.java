@@ -23,6 +23,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ShellMappingEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ShellCaseState;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMappingResponse;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
@@ -207,7 +208,11 @@ class ShellMappingControllerIT extends BaseTest {
 
             assertAll(
                 () -> assertThat(response.getShellCaseTypeID(), equalTo("SHELL_CASE_TYPE_1")),
-                () -> assertThat(response.getCaseStates(), contains("OPEN", "SUBMITTED", "CLOSED")),
+                () -> assertThat(response.getCaseStates(), contains(
+                    new ShellCaseState("OPEN", "General"),
+                    new ShellCaseState("SUBMITTED", "Complex"),
+                    new ShellCaseState("CLOSED", "General,Archived")
+                )),
                 () -> assertThat(response.getShellCaseMappings(), hasSize(2)),
                 () -> assertThat(response.getShellCaseMappings(), hasItem(hasProperty("originatingCaseFieldName",
                     equalTo("origField1")))),
@@ -226,6 +231,8 @@ class ShellMappingControllerIT extends BaseTest {
             final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(url))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.caseStates").isArray())
+                .andExpect(jsonPath("$.caseStates[0].name").value("OPEN"))
+                .andExpect(jsonPath("$.caseStates[0].stateCategory").value("General"))
                 .andReturn();
 
             ShellMappingResponse response = mapper.readValue(
@@ -233,7 +240,7 @@ class ShellMappingControllerIT extends BaseTest {
                 ShellMappingResponse.class
             );
 
-            assertThat(response.getCaseStates(), contains("OPEN"));
+            assertThat(response.getCaseStates(), contains(new ShellCaseState("OPEN", "General")));
         }
 
         @Test
@@ -249,7 +256,11 @@ class ShellMappingControllerIT extends BaseTest {
                 ShellMappingResponse.class
             );
 
-            assertThat(response.getCaseStates(), contains("OPEN", "SUBMITTED", "CLOSED"));
+            assertThat(response.getCaseStates(), contains(
+                new ShellCaseState("OPEN", "General"),
+                new ShellCaseState("SUBMITTED", "Complex"),
+                new ShellCaseState("CLOSED", "General,Archived")
+            ));
         }
 
         @Test
@@ -270,7 +281,7 @@ class ShellMappingControllerIT extends BaseTest {
 
             assertAll(
                 () -> assertThat(response.getShellCaseTypeID(), equalTo("SHELL_CASE_TYPE_2")),
-                () -> assertThat(response.getCaseStates(), contains("DRAFT")),
+                () -> assertThat(response.getCaseStates(), contains(new ShellCaseState("DRAFT", "General"))),
                 () -> assertThat(response.getShellCaseMappings(), hasSize(1)),
                 () -> assertThat(response.getShellCaseMappings().get(0).getOriginatingCaseFieldName(),
                     equalTo("origField2")),
@@ -295,6 +306,8 @@ class ShellMappingControllerIT extends BaseTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(jsonPath("$.shellCaseTypeID").exists())
                 .andExpect(jsonPath("$.caseStates").isArray())
+                .andExpect(jsonPath("$.caseStates[0].name").exists())
+                .andExpect(jsonPath("$.caseStates[0].stateCategory").exists())
                 .andExpect(jsonPath("$.shellCaseMappings").isArray())
                 .andExpect(jsonPath("$.shellCaseMappings[0].OriginatingCaseFieldName").exists())
                 .andExpect(jsonPath("$.shellCaseMappings[0].ShellCaseFieldName").exists());

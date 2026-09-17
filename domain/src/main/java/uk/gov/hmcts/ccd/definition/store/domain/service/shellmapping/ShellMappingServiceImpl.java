@@ -11,6 +11,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.ShellMappingEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseState;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellCaseFieldMapping;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ShellCaseState;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMapping;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMappingResponse;
 
@@ -70,11 +71,11 @@ public class ShellMappingServiceImpl implements ShellMappingService {
             .toList();
 
         String shellCaseTypeID = shellMappingEntities.getFirst().getShellCaseTypeId().getReference();
-        List<String> caseStates = getFilteredCaseStateIds(caseType, stateCategoriesToExclude);
+        List<ShellCaseState> caseStates = getFilteredCaseStates(caseType, stateCategoriesToExclude);
         return new ShellMappingResponse(shellCaseTypeID, caseStates, fieldMappings);
     }
 
-    private List<String> getFilteredCaseStateIds(CaseType caseType, List<String> stateCategoriesToExclude) {
+    private List<ShellCaseState> getFilteredCaseStates(CaseType caseType, List<String> stateCategoriesToExclude) {
         List<CaseState> states = caseType.getStates();
         if (states == null || states.isEmpty()) {
             return Collections.emptyList();
@@ -84,7 +85,7 @@ public class ShellMappingServiceImpl implements ShellMappingService {
 
         return states.stream()
             .filter(state -> !hasMatchingStateCategory(state, excludeCategories))
-            .map(CaseState::getId)
+            .map(state -> new ShellCaseState(state.getId(), state.getStateCategory()))
             .toList();
     }
 

@@ -19,6 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeLiteEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ShellMappingEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseState;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.ShellCaseState;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMapping;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMappingResponse;
 
@@ -200,7 +201,10 @@ class ShellMappingServiceImplTest {
             // Then
             assertNotNull(result);
             assertThat(result.getShellCaseTypeID(), equalTo("SHELL_TYPE_1"));
-            assertThat(result.getCaseStates(), contains("OPEN", "SUBMITTED"));
+            assertThat(result.getCaseStates(), contains(
+                new ShellCaseState("OPEN", "General"),
+                new ShellCaseState("SUBMITTED", "Complex")
+            ));
             assertThat(result.getShellCaseMappings(), hasSize(2));
             assertThat(result.getShellCaseMappings().get(0).getOriginatingCaseFieldName(), equalTo("origField1"));
             assertThat(result.getShellCaseMappings().get(0).getShellCaseFieldName(), equalTo("shellField1"));
@@ -255,7 +259,10 @@ class ShellMappingServiceImplTest {
                 ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
                     CASE_TYPE_ID, List.of("Complex", "Archived"));
 
-                assertThat(result.getCaseStates(), contains("OPEN", "DRAFT"));
+                assertThat(result.getCaseStates(), contains(
+                    new ShellCaseState("OPEN", "General"),
+                    new ShellCaseState("DRAFT", null)
+                ));
             }
 
             @Test
@@ -268,7 +275,10 @@ class ShellMappingServiceImplTest {
 
                 ShellMappingResponse result = sut.findByOriginatingCaseTypeId(CASE_TYPE_ID, null);
 
-                assertThat(result.getCaseStates(), contains("OPEN", "SUBMITTED"));
+                assertThat(result.getCaseStates(), contains(
+                    new ShellCaseState("OPEN", "General"),
+                    new ShellCaseState("SUBMITTED", "Complex")
+                ));
             }
 
             @Test
@@ -282,7 +292,10 @@ class ShellMappingServiceImplTest {
                 ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
                     CASE_TYPE_ID, Collections.emptyList());
 
-                assertThat(result.getCaseStates(), contains("OPEN", "SUBMITTED"));
+                assertThat(result.getCaseStates(), contains(
+                    new ShellCaseState("OPEN", "General"),
+                    new ShellCaseState("SUBMITTED", "Complex")
+                ));
             }
 
             @Test
@@ -301,7 +314,7 @@ class ShellMappingServiceImplTest {
 
                 ShellMappingResponse result = sut.findByOriginatingCaseTypeId(CASE_TYPE_ID, filter);
 
-                assertThat(result.getCaseStates(), contains("OPEN"));
+                assertThat(result.getCaseStates(), contains(new ShellCaseState("OPEN", "General")));
             }
 
             @Test
@@ -315,7 +328,7 @@ class ShellMappingServiceImplTest {
                 ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
                     CASE_TYPE_ID, List.of("  Complex  "));
 
-                assertThat(result.getCaseStates(), contains("OPEN"));
+                assertThat(result.getCaseStates(), contains(new ShellCaseState("OPEN", "General")));
             }
 
             @Test
@@ -329,7 +342,7 @@ class ShellMappingServiceImplTest {
                 ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
                     CASE_TYPE_ID, List.of("Archived"));
 
-                assertThat(result.getCaseStates(), contains("OPEN"));
+                assertThat(result.getCaseStates(), contains(new ShellCaseState("OPEN", "General")));
             }
 
             @Test
@@ -345,7 +358,11 @@ class ShellMappingServiceImplTest {
                 ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
                     CASE_TYPE_ID, List.of("Complex"));
 
-                assertThat(result.getCaseStates(), contains("OPEN", "DRAFT", "PENDING"));
+                assertThat(result.getCaseStates(), contains(
+                    new ShellCaseState("OPEN", null),
+                    new ShellCaseState("DRAFT", ""),
+                    new ShellCaseState("PENDING", "   ")
+                ));
             }
 
             @Test
@@ -359,7 +376,10 @@ class ShellMappingServiceImplTest {
                 ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
                     CASE_TYPE_ID, List.of("Archived"));
 
-                assertThat(result.getCaseStates(), contains("OPEN", "SUBMITTED"));
+                assertThat(result.getCaseStates(), contains(
+                    new ShellCaseState("OPEN", "General"),
+                    new ShellCaseState("SUBMITTED", "Complex")
+                ));
             }
 
             @Test
@@ -387,7 +407,7 @@ class ShellMappingServiceImplTest {
                 ShellMappingResponse result = sut.findByOriginatingCaseTypeId(
                     CASE_TYPE_ID, List.of("End"));
 
-                assertThat(result.getCaseStates(), contains("OPEN"));
+                assertThat(result.getCaseStates(), contains(new ShellCaseState("OPEN", "General")));
             }
 
             private void stubCaseTypeWithStates(CaseState... states) {
