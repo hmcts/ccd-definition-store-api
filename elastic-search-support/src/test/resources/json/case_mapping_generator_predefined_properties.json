@@ -3,6 +3,16 @@
   "properties": {
     "testPropA": "valuePropA",
     "testPropB": "valuePropB",
+    "supplementary_data": {
+      "properties": {
+        "new_case": {
+          "type": "flattened"
+        },
+        "orgs_assigned_users": {
+          "type": "flattened"
+        }
+      }
+    },
     "data": {
       "properties": {}
     },
