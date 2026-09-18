@@ -47,6 +47,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
     protected Optional<ColumnName> fieldShowConditionColumn = Optional.empty();
     protected Optional<ColumnName> columnId = Optional.empty();
     protected boolean displayGroupItemMandatory;
+    protected Optional<ColumnName> caseFieldElementPathColumn = Optional.empty();
 
     protected Optional<ColumnName> accessProfileColumn = Optional.empty();
 
@@ -108,6 +109,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
                     groupId,
                     groupDefinition.getValue().size());
 
+                validateDuplicateGroupCaseFields(caseType, groupId, groupDefinition.getValue());
                 ParseResult.Entry<DisplayGroupEntity> parseResult = parseGroup(caseType, groupId, groupDefinition);
                 result.add(parseResult);
                 entityToDefinitionDataItemRegistry.addDefinitionDataItemForEntity(
@@ -158,6 +160,39 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
             column, group, groupDefinition.getValue()));
         this.accessProfileColumn.ifPresent(column -> parseAccessProfile(caseType, group, groupDefinition.getValue()));
         return ParseResult.Entry.createNew(group);
+    }
+
+    private void validateDuplicateGroupCaseFields(CaseTypeEntity caseType,
+                                                  String groupId,
+                                                  List<DefinitionDataItem> groupDefinition) {
+        if (caseFieldElementPathColumn.isPresent() && hasDuplicateGroupCaseFieldRows(groupDefinition)) {
+            throw new MapperException(
+                String.format("Please make sure each row in worksheet %s is unique for case type %s and tab %s",
+                    groupDefinition.get(0).getSheetName(), caseType.getReference(), groupId));
+        }
+    }
+
+    private boolean hasDuplicateGroupCaseFieldRows(List<DefinitionDataItem> groupDefinition) {
+        return groupDefinition.stream()
+            .anyMatch(ddi -> groupDefinition.stream()
+                .filter(item -> StringUtils.equalsIgnoreCase(
+                    ddi.getString(ColumnName.CASE_FIELD_ID), item.getString(ColumnName.CASE_FIELD_ID))
+                    && hasSameCaseFieldElementPath(ddi, item))
+                .count() > 1);
+    }
+
+    private boolean hasSameCaseFieldElementPath(DefinitionDataItem lhs, DefinitionDataItem rhs) {
+        String lhsPath = getCaseFieldElementPath(lhs);
+        String rhsPath = getCaseFieldElementPath(rhs);
+        return StringUtils.isNotEmpty(lhsPath)
+            ? StringUtils.equalsIgnoreCase(lhsPath, rhsPath)
+            : StringUtils.isEmpty(rhsPath);
+    }
+
+    private String getCaseFieldElementPath(DefinitionDataItem dataItem) {
+        return caseFieldElementPathColumn
+            .map(column -> StringUtils.trimToNull(dataItem.getString(column)))
+            .orElse(null);
     }
 
     private void parseAccessProfile(CaseTypeEntity caseType,
@@ -214,6 +249,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         groupCaseField.setLiveTo(groupCaseFieldDefinition.getLocalDate(ColumnName.LIVE_TO));
         groupCaseField.setOrder(groupCaseFieldDefinition.getInteger(this.displayGroupFieldDisplayOrder));
         groupCaseField.setDisplayContextParameter(groupCaseFieldDefinition.getString(this.displayContextParameter));
+        groupCaseField.setCaseFieldElementPath(getCaseFieldElementPath(groupCaseFieldDefinition));
         this.columnId.ifPresent(cId -> groupCaseField.setColumnNumber(groupCaseFieldDefinition.getInteger(cId)));
         this.fieldShowConditionColumn.ifPresent(sC -> groupCaseField
             .setShowCondition(parseShowCondition(groupCaseFieldDefinition.getString(sC))));
