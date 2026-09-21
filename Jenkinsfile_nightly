@@ -73,6 +73,8 @@ withNightlyPipeline(type, product, component) {
     // Vars needed for functional and smoke tests run against AKS
     env.OAUTH2_CLIENT_ID = "ccd_gateway"
     env.OAUTH2_REDIRECT_URI = "https://www-ccd.nonprod.platform.hmcts.net/oauth2redirect"
+    env.OAUTH2_ACCESS_TOKEN_TYPE = "OIDC" // use new OIDC authentication for BEFTA tests
+    env.OAUTH2_SCOPE_VARIABLES = "profile openid roles"
     env.IDAM_URL = "https://idam-api.aat.platform.hmcts.net"
     env.S2S_URL = "http://rpe-service-auth-provider-aat.service.aat.platform.hmcts.net"
     env.CCD_GW_SERVICE_NAME = "ccd_gw"
@@ -235,6 +237,11 @@ withNightlyPipeline(type, product, component) {
     }
 
     enableFullFunctionalTest(200)
+
+    // Set IDAM_API_URL_BASE post high-level data setup where it would have been overridden
+    before('fullFunctionalTest') {
+        env.IDAM_API_URL_BASE = "https://idam-web-public.aat.platform.hmcts.net"
+    }
 
     afterAlways('fullFunctionalTest') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
