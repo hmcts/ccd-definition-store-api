@@ -58,6 +58,7 @@ env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN"
 env.CCD_STUB_SERVICE_URI_BASE="ccd-test-stubs-service-aat.aat.platform.hmcts.net"
 env.OAUTH2_ACCESS_TOKEN_TYPE = "OIDC" // use new OIDC authentication for BEFTA tests
 env.OAUTH2_SCOPE_VARIABLES = "profile openid roles"
+env.CCD_API_GATEWAY_OAUTH2_SCOPE = "openid profile roles"
 // BEFTA retry env variables
 env.BEFTA_RETRY_MAX_ATTEMPTS = "3"
 env.BEFTA_RETRY_STATUS_CODES = "500,502,503,504"
