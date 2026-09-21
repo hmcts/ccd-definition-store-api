@@ -70,7 +70,7 @@ class EventCaseFieldComplexTypeParserTest {
                                                                    publishAsTest);
 
         List<DefinitionDataItem> definitionDataItems = singletonList(definitionDataItem);
-        Map<String, DefinitionSheet> definitionSheets = new LinkedHashMap<>();;
+        Map<String, DefinitionSheet> definitionSheets = new LinkedHashMap<>();
         definitionSheets.put(SheetName.CASE_EVENT.getName(), definitionSheet);
         when(hiddenFieldsValidator
             .parseCaseEventComplexTypesHiddenFields(definitionDataItem, definitionSheets)).thenReturn(false);
@@ -95,6 +95,8 @@ class EventCaseFieldComplexTypeParserTest {
                      eventComplexTypeEntities.get(0).getPublish());
         assertEquals(definitionDataItem.getString(ColumnName.PUBLISH_AS),
                      eventComplexTypeEntities.get(0).getPublishAs());
+        assertEquals(definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER),
+            eventComplexTypeEntities.get(0).getDisplayContextParameter());
         assertFalse(eventComplexTypeEntities.get(0).getRetainHiddenValue());
     }
 
