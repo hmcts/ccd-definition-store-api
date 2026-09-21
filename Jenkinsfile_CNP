@@ -63,6 +63,12 @@ env.BEFTA_RETRY_MAX_DELAY = "1000"
 
 env.BEFTA_RETRY_NON_RETRYABLE_HTTP_METHODS = "PUT,POST"
 
+// test functionality to create a new connection per definition import, rather than default
+// behaviour which is to re-use the connection
+// this is to try and fix the ssl tag mismatch error often seen in the master pipeline
+// this environment variable when set to true will explicitly switch on the config within befta-fw 9.2.12+
+env.BEFTA_HTTP_CLOSE_CONNECTION_AFTER_RESPONSE = "true"
+
 env.DEFAULT_COLLECTION_ASSERTION_MODE="UNORDERED"
 // Prevent Docker hub rate limit errors by ensuring that testcontainers uses images from hmctsprod ACR
 env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctsprod.azurecr.io/imported/"
