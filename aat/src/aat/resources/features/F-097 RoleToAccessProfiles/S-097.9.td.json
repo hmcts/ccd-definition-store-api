@@ -1,0 +1,13 @@
+{
+  "_guid_": "S-097.9",
+  "_extends_": "F-097_Get_Case_Roles_Base_Data",
+  "title": "Return case roles for a case type",
+  "specs": [
+    "an active profile in CCD",
+    "has the 200 OK code"
+  ],
+  "expectedResponse": {
+    "responseCode": 200,
+    "body": []
+  }
+}
