@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class IdamHelper {
 
-    private static final String GRANT_TYPE = "PASSWORD";
+    private static final String GRANT_TYPE = "password";
 
     private final Map<String, AuthenticatedUser> users = new HashMap<>();
 
