@@ -8,6 +8,8 @@
   ],
   "expectedResponse": {
     "responseCode": 200,
-    "body": []
+    "body": {
+      "arrayInMap": []
+    }
   }
 }
