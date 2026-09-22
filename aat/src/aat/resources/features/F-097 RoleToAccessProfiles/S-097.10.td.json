@@ -15,15 +15,15 @@
         },
         {
           "id": "FT_CaseAccessCategories",
+          "name": "Role1"
+        },
+        {
+          "id": "FT_CaseAccessCategories",
+          "name": "Role1"
+        },
+        {
+          "id": "FT_CaseAccessCategories",
           "name": "idam:caseworker-befta_master"
-        },
-        {
-          "id": "FT_CaseAccessCategories",
-          "name": "Role1"
-        },
-        {
-          "id": "FT_CaseAccessCategories",
-          "name": "Role1"
         }
       ]
     }
