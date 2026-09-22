@@ -22,7 +22,8 @@
           "id": "FT_CaseAccessCategories",
           "name": "Role1"
         }
-      ]
+      ],
+      "__ordering__": "ORDERED"
     }
   }
 }
