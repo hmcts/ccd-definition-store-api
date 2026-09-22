@@ -9,8 +9,12 @@ import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
 import java.util.function.Supplier;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+
 class DisplayApiTest extends BaseTest {
 
+    private static final String JURISDICTION = "AUTOTEST1";
     private static final String CASE_TYPE = "AAT";
     private static final String EVENT = "START_PROGRESS";
 
@@ -110,6 +114,52 @@ class DisplayApiTest extends BaseTest {
                 "/api/display/work-basket-definition/{ctid}")
             .then()
             .statusCode(200);
+    }
+
+    @Test
+    @DisplayName("Should return banners for a list of jurisdictions")
+    void shouldReturnBanners() {
+
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .queryParam("ids", JURISDICTION)
+            .when()
+            .get("/api/display/banners")
+            .then()
+            .statusCode(200)
+            .body("banners", notNullValue());
+    }
+
+    @Test
+    @DisplayName("Should return UI configs for a list of jurisdictions")
+    void shouldReturnJurisdictionUiConfigs() {
+
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .queryParam("ids", JURISDICTION)
+            .when()
+            .get("/api/display/jurisdiction-ui-configs")
+            .then()
+            .statusCode(200)
+            .body("configs", notNullValue());
+    }
+
+    @Test
+    @DisplayName("Should return search cases result fields for a given Case Type")
+    void shouldReturnSearchCasesResultFields() {
+
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/display/search-cases-result-fields/{ctid}")
+            .then()
+            .statusCode(200)
+            .body("case_type_id", equalTo(CASE_TYPE))
+            .body("fields", notNullValue());
     }
 
 }
