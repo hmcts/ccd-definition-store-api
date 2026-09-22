@@ -9,8 +9,11 @@
   "expectedResponse": {
     "responseCode": 200,
     "body": {
-      "arrayInMap": [],
-      "__ordering__": "ORDERED"
+      "arrayInMap": [
+        {
+          "__ordering__": "ORDERED"
+        }
+      ]
     }
   }
 }

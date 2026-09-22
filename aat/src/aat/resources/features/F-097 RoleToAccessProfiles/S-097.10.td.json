@@ -11,6 +11,9 @@
     "body": {
       "arrayInMap": [
         {
+          "__ordering__": "ORDERED"
+        },
+        {
           "id": "FT_CaseAccessCategories",
           "name": "idam:caseworker-befta_master"
         },
@@ -22,8 +25,7 @@
           "id": "FT_CaseAccessCategories",
           "name": "Role1"
         }
-      ],
-      "__ordering__": "ORDERED"
+      ]
     }
   }
 }
