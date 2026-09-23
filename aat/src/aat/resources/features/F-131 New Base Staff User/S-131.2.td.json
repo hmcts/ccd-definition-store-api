@@ -2748,7 +2748,7 @@
                     ],
                     "order": null,
                     "show_condition": null,
-                    "display_context_parameter": null,
+                    "display_context_parameter": "#ARGUMENT(CATEGORY-LEGAL-OPS,CATEGORY-ADMIN,REGION-1235)",
                     "retain_hidden_value": null,
                     "category_id": null
                   }
@@ -2764,7 +2764,7 @@
               ],
               "order": null,
               "show_condition": null,
-              "display_context_parameter": null,
+              "display_context_parameter": "#ARGUMENT(CATEGORY-LEGAL-OPS,CATEGORY-ADMIN,REGION-1235)",
               "retain_hidden_value": null,
               "category_id": null
             }
