@@ -94,6 +94,16 @@ class DefinitionModelMapperTest {
     }
 
     @Test
+    @DisplayName("Should map an omitted deleted value to false")
+    void shouldMapOmittedDeletedValueToFalse() {
+        definition.setDeleted(null);
+
+        final DefinitionEntity entity = classUnderTest.toEntity(definition);
+
+        assertThat(entity.isDeleted(), is(false));
+    }
+
+    @Test
     @DisplayName("Should copy model to an existent entity")
     void shouldCopyModelToExistentEntity() {
         final DefinitionEntity entity = new DefinitionEntity();

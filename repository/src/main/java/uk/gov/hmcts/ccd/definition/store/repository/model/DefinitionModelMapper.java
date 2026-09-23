@@ -33,7 +33,7 @@ public class DefinitionModelMapper {
         }
         definitionEntity.setAuthor(definition.getAuthor());
         definitionEntity.setLastModified(definition.getLastModified());
-        definitionEntity.setDeleted(definition.isDeleted());
+        definitionEntity.setDeleted(Boolean.TRUE.equals(definition.isDeleted()));
 
         return definitionEntity;
     }
@@ -55,7 +55,7 @@ public class DefinitionModelMapper {
             definitionEntity.setData(JacksonUtils.convertValueJsonNode(definition.getData()));
         }
         definitionEntity.setAuthor(definition.getAuthor());
-        definitionEntity.setDeleted(definition.isDeleted());
+        definitionEntity.setDeleted(Boolean.TRUE.equals(definition.isDeleted()));
         definitionEntity.setLastModified(definition.getLastModified());
     }
 
