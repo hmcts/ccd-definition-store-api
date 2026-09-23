@@ -16,7 +16,8 @@
 			"Content-Encoding": "gzip",
 			"Content-Type": "[[ANYTHING_PRESENT]]",
 			"Transfer-Encoding": "[[ANYTHING_PRESENT]]",
-			"Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+			"Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]",
+			"X-XSS-Protection": "[[ANY_STRING_NULLABLE]]"
 		},
 		"body": {
       "id": "FT_ComplexOrganisation",
@@ -70,7 +71,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "OrganisationID",
@@ -81,7 +83,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": true,
-                  "publishAs": "organisation_id"
+                  "publishAs": "organisation_id",
+                  "displayContextParameter": null
                 }
               ]
             },
@@ -109,7 +112,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "OrgPolicyCaseAssignedRole",
@@ -120,7 +124,8 @@
                   "showCondition": null,
                   "defaultValue": "[Claimant]",
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "Organisation.OrganisationName",
@@ -131,7 +136,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "Organisation.OrganisationID",
@@ -142,7 +148,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 }
               ]
             },
@@ -170,7 +177,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "ApprovalRejectionTimestamp",
@@ -181,7 +189,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "ApprovalStatus",
@@ -192,7 +201,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "RequestTimestamp",
@@ -203,7 +213,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "Reason",
@@ -214,7 +225,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "CaseRoleId",
@@ -225,7 +237,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "OrganisationToRemove.OrganisationName",
@@ -236,7 +249,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "OrganisationToRemove.OrganisationID",
@@ -247,7 +261,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "OrganisationToAdd.OrganisationName",
@@ -258,7 +273,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "OrganisationToAdd.OrganisationID",
@@ -269,7 +285,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 }
               ]
             }
@@ -340,7 +357,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "OrganisationID",
@@ -351,7 +369,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": true,
-                  "publishAs": "organisation_id"
+                  "publishAs": "organisation_id",
+                  "displayContextParameter": null
                 }
               ]
             },
@@ -379,7 +398,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "OrgPolicyCaseAssignedRole",
@@ -390,7 +410,8 @@
                   "showCondition": null,
                   "defaultValue": "[Defendant]",
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "Organisation.OrganisationName",
@@ -401,7 +422,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "Organisation.OrganisationID",
@@ -412,7 +434,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 }
               ]
             },
@@ -440,7 +463,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "ApprovalRejectionTimestamp",
@@ -451,7 +475,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "ApprovalStatus",
@@ -462,7 +487,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "RequestTimestamp",
@@ -473,7 +499,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "Reason",
@@ -484,7 +511,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "CaseRoleId",
@@ -495,7 +523,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "OrganisationToRemove.OrganisationName",
@@ -506,7 +535,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "OrganisationToRemove.OrganisationID",
@@ -517,7 +547,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "OrganisationToAdd.OrganisationName",
@@ -528,7 +559,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 },
                 {
                   "reference": "OrganisationToAdd.OrganisationID",
@@ -539,7 +571,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter": null
                 }
               ]
             }

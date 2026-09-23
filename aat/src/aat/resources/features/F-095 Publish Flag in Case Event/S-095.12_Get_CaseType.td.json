@@ -421,7 +421,8 @@
                   "showCondition": null,
                   "defaultValue": null,
                   "publish": false,
-                  "publishAs": null
+                  "publishAs": null,
+                  "displayContextParameter" : null
                 },
                 {
                   "reference": "OrganisationToAdd.OrganisationID",
