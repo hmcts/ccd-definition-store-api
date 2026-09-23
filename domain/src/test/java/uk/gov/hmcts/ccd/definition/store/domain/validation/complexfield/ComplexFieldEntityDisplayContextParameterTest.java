@@ -193,10 +193,47 @@ class ComplexFieldEntityDisplayContextParameterTest {
         );
     }
 
+    @Test
+    void shouldFailValidationForComplexField() {
+        ComplexFieldEntity entity = complexFieldEntity(
+            "staffUser", fieldTypeEntity(FieldTypeUtils.BASE_COMPLEX));
+        entity.setDisplayContextParameter("#ARGUMENT(CATEGORY-STAFF)");
+
+        final ValidationResult result = validator.validate(entity, caseFieldComplexFieldEntityValidator);
+
+        assertAll(
+            () -> assertThat(result.isValid(), is(false)),
+            () -> assertThat(result.getValidationErrors().size(), is(1)),
+            () -> assertThat(result.getValidationErrors().get(0).getDefaultMessage(),
+                is("Display context parameter '#ARGUMENT(CATEGORY-STAFF)' is unsupported for field type 'Complex' "
+                    + "of field 'staffUser' on tab 'ComplexTypes'"))
+        );
+    }
+
+    @Test
+    void shouldPassValidationForDisplayComplexParameter() {
+        ComplexFieldEntity entity = complexFieldEntity(
+            "staffUser", staffUserFieldTypeEntity());
+        entity.setDisplayContextParameter("#ARGUMENT(CATEGORY-STAFF)");
+
+        final ValidationResult result = validator.validate(entity, caseFieldComplexFieldEntityValidator);
+
+        assertAll(
+            () -> assertThat(result.isValid(), is(true)),
+            () -> assertThat(result.getValidationErrors().size(), is(0))
+        );
+    }
+
     private static FieldTypeEntity fieldTypeEntity(String reference) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();
         fieldTypeEntity.setReference(reference);
         return fieldTypeEntity;
+    }
+
+    private static FieldTypeEntity staffUserFieldTypeEntity() {
+        FieldTypeEntity staffUser = fieldTypeEntity(FieldTypeUtils.PREDEFINED_COMPLEX_STAFF_USER);
+        staffUser.setBaseFieldType(fieldTypeEntity(FieldTypeUtils.BASE_COMPLEX));
+        return staffUser;
     }
 
     private static ComplexFieldEntity complexFieldEntity(String reference, FieldTypeEntity fieldType) {
