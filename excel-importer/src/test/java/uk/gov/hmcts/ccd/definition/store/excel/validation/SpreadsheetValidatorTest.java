@@ -222,6 +222,63 @@ class SpreadsheetValidatorTest {
         // Could have used Latest AssertJ to assert no exception is thrown but it is not in POM
     }
 
+
+    @Test
+    void shouldFail_whenShellCaseTypeIDValueExceedsMaxLength() {
+        String columnName = "ShellCaseTypeID";
+        String sheetName = "ShellMapping";
+        int rowNumber = 5;
+        String longValue = "TestShellCaseTypeIDTestShellCaseTypeIDTestShellCaseTypeIDTestShellCaseTypeIDExceedsMax";
+        InvalidImportException ex = assertThrows(InvalidImportException.class, () -> {
+            validator.validate(sheetName, columnName, longValue, rowNumber);
+        });
+        String rowNumberInfo = " at row number '" + rowNumber + "'";
+        assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(
+            sheetName, columnName, 70, rowNumberInfo)));
+    }
+
+    @Test
+    void shouldFail_whenShellCaseFieldNameValueExceedsMaxLength() {
+        String columnName = "ShellCaseFieldName";
+        String sheetName = "ShellMapping";
+        int rowNumber = 5;
+        String longValue = "TestShellCaseFieldNameTestShellCaseFieldNameTestShellCaseFieldNameTestShellCaseField";
+        InvalidImportException ex = assertThrows(InvalidImportException.class, () -> {
+            validator.validate(sheetName, columnName, longValue, rowNumber);
+        });
+        String rowNumberInfo = " at row number '" + rowNumber + "'";
+        assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(
+            sheetName, columnName, 70, rowNumberInfo)));
+    }
+
+    @Test
+    void shouldFail_whenOriginatingCaseTypeIDValueExceedsMaxLength() {
+        String columnName = "OriginatingCaseTypeID";
+        String sheetName = "ShellMapping";
+        int rowNumber = 5;
+        String longValue = "TestOriginatingCaseTypeIDTestOriginatingCaseTypeIDTestOriginatingCaseTypeID";
+        InvalidImportException ex = assertThrows(InvalidImportException.class, () -> {
+            validator.validate(sheetName, columnName, longValue, rowNumber);
+        });
+        String rowNumberInfo = " at row number '" + rowNumber + "'";
+        assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(
+            sheetName, columnName, 70, rowNumberInfo)));
+    }
+
+    @Test
+    void shouldFail_whenOriginatingCaseFieldNameValueExceedsMaxLength() {
+        String columnName = "OriginatingCaseFieldName";
+        String sheetName = "ShellMapping";
+        int rowNumber = 5;
+        String longValue = "TestOriginatingCaseFieldNameTestOriginatingCaseFieldNameTestOriginatingCaseFieldNameT";
+        InvalidImportException ex = assertThrows(InvalidImportException.class, () -> {
+            validator.validate(sheetName, columnName, longValue, rowNumber);
+        });
+        String rowNumberInfo = " at row number '" + rowNumber + "'";
+        assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(
+            sheetName, columnName, 70, rowNumberInfo)));
+    }
+
     private DefinitionSheet addDefinitionSheet(SheetName sheetName) {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(sheetName.toString());

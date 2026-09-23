@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +26,7 @@ import java.util.List;
 @RestController
 @Api(value = "/api/testing-support")
 @RequestMapping(value = "/api/testing-support")
+@ConditionalOnProperty(name = "testing-support-endpoints.enabled", havingValue = "true")
 @Slf4j
 public class TestingSupportController {
 
@@ -34,6 +35,9 @@ public class TestingSupportController {
     @Autowired
     public TestingSupportController(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
+        log.warn("Testing support endpoints are ENABLED on /api/testing-support - "
+            + "these are unauthenticated and delete case type definitions. "
+            + "This must never be the case in production.");
     }
 
     @DeleteMapping(value = "/cleanup-case-type/{changeId}")
@@ -43,7 +47,6 @@ public class TestingSupportController {
         @ApiResponse(code = 404, message = "Unable to find case type"),
         @ApiResponse(code = 500, message = "Unexpected error")
     })
-    @ConditionalOnExpression("${testing-support-endpoints.enabled:false}")
     public void dataCaseTypeIdDelete(
         @ApiParam(value = "Change ID", required = true) @PathVariable("changeId") BigInteger changeId,
         @ApiParam(value = "Case Type ID", required = true) @RequestParam("caseTypeIds") String caseTypeIds) {
@@ -91,7 +94,6 @@ public class TestingSupportController {
         @ApiResponse(code = 404, message = "Unable to find case type"),
         @ApiResponse(code = 500, message = "Unexpected error")
     })
-    @ConditionalOnExpression("${testing-support-endpoints.enabled:false}")
     public void dataCaseTypeIdDeleteOnlyWithCaseTypeIds(
         @ApiParam(value = "Case Type ID", required = true) @PathVariable("caseTypeIds") String caseTypeIds) {
 

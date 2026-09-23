@@ -13,8 +13,8 @@
   "request": {
     "body": {
       "organisationProfileIds": [
-        "GOVERNMENT_ORGANISATION_PROFILE",
-        "SOLICITOR_PROFILE"
+        "BEFTA_GOVERNMENT_ORGANISATION_PROFILE",
+        "BEFTA_SOLICITOR_PROFILE"
       ]
     }
   },
@@ -37,7 +37,7 @@
               "__elementId__": "organisationProfileId,accessTypeId,displayOrder,description"
             },
             {
-              "organisationProfileId" : "GOVERNMENT_ORGANISATION_PROFILE",
+              "organisationProfileId" : "BEFTA_GOVERNMENT_ORGANISATION_PROFILE",
               "accessTypeId" : "GA_OGD",
               "accessMandatory" : false,
               "accessDefault" : false,
@@ -64,7 +64,7 @@
               } ]
             },
             {
-              "organisationProfileId" : "SOLICITOR_PROFILE",
+              "organisationProfileId" : "BEFTA_SOLICITOR_PROFILE",
               "accessTypeId" : "GA_SOLICITOR",
               "accessMandatory" : false,
               "accessDefault" : false,
@@ -85,7 +85,7 @@
               } ]
             },
             {
-              "organisationProfileId": "SOLICITOR_PROFILE",
+              "organisationProfileId": "BEFTA_SOLICITOR_PROFILE",
               "accessTypeId": "BEFTA_SOLICITOR_1",
               "accessMandatory": true,
               "accessDefault": true,
@@ -120,7 +120,7 @@
               "__elementId__": "organisationProfileId,accessTypeId,displayOrder,description"
             },
             {
-              "organisationProfileId": "SOLICITOR_PROFILE",
+              "organisationProfileId": "BEFTA_SOLICITOR_PROFILE",
               "accessTypeId": "BEFTA_SOLICITOR_1",
               "accessMandatory": true,
               "accessDefault": true,
