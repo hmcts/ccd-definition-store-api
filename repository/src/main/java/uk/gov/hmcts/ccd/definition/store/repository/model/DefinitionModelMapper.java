@@ -48,7 +48,9 @@ public class DefinitionModelMapper {
                          @NotNull final DefinitionEntity definitionEntity) {
         definitionEntity.setCaseTypes(definition.getCaseTypes());
         definitionEntity.setDescription(definition.getDescription());
-        definitionEntity.setStatus(definition.getStatus());
+        if (definition.getStatus() != null) {
+            definitionEntity.setStatus(definition.getStatus());
+        }
         if (definition.getData() == null) {
             definitionEntity.setData(new ObjectMapper().createObjectNode());
         } else {
