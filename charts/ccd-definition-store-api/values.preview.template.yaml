@@ -68,14 +68,10 @@ ts-translation-service:
       TS_TRANSLATION_SERVICE_DB_OPTIONS: ?stringtype=unspecified
 
 
-ccd:
+ccd-core:
   enabled: true
   ccd:
     s2s:
-      enabled: false
-    dataStore:
-      enabled: false
-    definitionStore:
       enabled: false
     adminWeb:
       enabled: false
