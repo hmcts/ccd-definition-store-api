@@ -22,8 +22,6 @@ public class CaseEventFieldComplex {
 
     private String publishAs;
 
-    private String displayContextParameter;
-
     public CaseEventFieldComplex() {
     }
 
@@ -35,8 +33,7 @@ public class CaseEventFieldComplex {
                                  String showCondition,
                                  String defaultValue,
                                  Boolean publish,
-                                 String publishAs,
-                                 String displayContextParameter) {
+                                 String publishAs) {
         this.reference = reference;
         this.hint = hint;
         this.label = label;
@@ -46,7 +43,6 @@ public class CaseEventFieldComplex {
         this.defaultValue = defaultValue;
         this.publish = publish;
         this.publishAs = publishAs;
-        this.displayContextParameter = displayContextParameter;
     }
 
     public String getReference() {
@@ -115,13 +111,5 @@ public class CaseEventFieldComplex {
 
     public void setPublishAs(String publishAs) {
         this.publishAs = publishAs;
-    }
-
-    public String getDisplayContextParameter() {
-        return displayContextParameter;
-    }
-
-    public void setDisplayContextParameter(String displayContextParameter) {
-        this.displayContextParameter = displayContextParameter;
     }
 }

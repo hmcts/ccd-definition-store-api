@@ -201,7 +201,6 @@ class  EntityToResponseDTOMapperTest {
             eventComplexTypeEntity1.setHint("Hint text");
             eventComplexTypeEntity1.setLabel("Label text");
             eventComplexTypeEntity1.setDefaultValue("DefaultValue1");
-            eventComplexTypeEntity1.setDisplayContextParameter("displayContextParameter");
 
             EventComplexTypeEntity eventComplexTypeEntity2 = new EventComplexTypeEntity();
             String ref2 = "Some ref2";
@@ -217,7 +216,6 @@ class  EntityToResponseDTOMapperTest {
             eventCaseFieldEntity.setShowSummaryChangeOption(true);
             eventCaseFieldEntity.setShowSummaryContentOption(2);
             eventCaseFieldEntity.setDisplayContext(DisplayContext.COMPLEX);
-            eventCaseFieldEntity.setDisplayContextParameter("displayContextParemeter1");
             eventCaseFieldEntity.addComplexFields(asList(eventComplexTypeEntity1, eventComplexTypeEntity2));
 
             CaseEventField caseEventField = spyOnClassUnderTest.map(eventCaseFieldEntity);
@@ -259,14 +257,7 @@ class  EntityToResponseDTOMapperTest {
                 () -> assertEquals(
                     findEventComplexTypeEntity(eventCaseFieldEntity.getEventComplexTypes(), ref1).getOrder(),
                     findCaseEventFieldComplex(caseEventField.getCaseEventFieldComplex(), ref1).getOrder(),
-                    "order"),
-
-                () -> assertEquals(
-                    findEventComplexTypeEntity(
-                        eventCaseFieldEntity.getEventComplexTypes(), ref1).getDisplayContextParameter(),
-                    findCaseEventFieldComplex(
-                        caseEventField.getCaseEventFieldComplex(), ref1).getDisplayContextParameter(),
-                    "displayContextParameter1")
+                    "order")
             );
         }
     }

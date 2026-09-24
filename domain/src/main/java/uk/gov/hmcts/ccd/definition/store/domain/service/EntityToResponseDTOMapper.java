@@ -310,8 +310,7 @@ public interface EntityToResponseDTOMapper {
                                                                     complexTypeEntity.getShowCondition(),
                                                                     complexTypeEntity.getDefaultValue(),
                                                                     complexTypeEntity.getPublish(),
-                                                                    complexTypeEntity.getPublishAs(),
-                                                                    complexTypeEntity.getDisplayContextParameter()
+                                                                    complexTypeEntity.getPublishAs()
                 ))
                 .collect(Collectors.toList());
         }

@@ -6,6 +6,5 @@
   "order": null,
   "displayContext": "OPTIONAL",
   "showCondition": null,
-  "defaultValue": null,
-  "displayContextParameter": null
+  "defaultValue": null
 }

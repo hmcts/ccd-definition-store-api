@@ -16,8 +16,7 @@
 			"Content-Encoding": "gzip",
 			"Content-Type": "[[ANYTHING_PRESENT]]",
 			"Transfer-Encoding": "[[ANYTHING_PRESENT]]",
-			"Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]",
-			"X-XSS-Protection": "[[ANY_STRING_NULLABLE]]"
+			"Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
 		},
 		"body": {
       "id": "FT_ComplexOrganisation",

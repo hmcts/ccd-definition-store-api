@@ -95,8 +95,6 @@ class EventCaseFieldComplexTypeParserTest {
                      eventComplexTypeEntities.get(0).getPublish());
         assertEquals(definitionDataItem.getString(ColumnName.PUBLISH_AS),
                      eventComplexTypeEntities.get(0).getPublishAs());
-        assertEquals(definitionDataItem.getString(ColumnName.DISPLAY_CONTEXT_PARAMETER),
-            eventComplexTypeEntities.get(0).getDisplayContextParameter());
         assertFalse(eventComplexTypeEntities.get(0).getRetainHiddenValue());
     }
 
