@@ -121,10 +121,12 @@ class UserRoleTest extends BaseTest {
     @Test
     @DisplayName("Should reject creating a user role without a security classification")
     void shouldRejectUserRoleWithoutSecurityClassification() {
+        String role = "functional-invalid-role-" + UUID.randomUUID();
+
         asUser.get()
             .given()
             .contentType(ContentType.JSON)
-            .body("{\"role\": \"functional-invalid-role\"}")
+            .body("{\"role\": \"" + role + "\"}")
             .when()
             .post("/api/user-role")
             .then()
@@ -134,10 +136,12 @@ class UserRoleTest extends BaseTest {
     @Test
     @DisplayName("Should reject an invalid security classification")
     void shouldRejectInvalidSecurityClassification() {
+        String role = "functional-invalid-classification-" + UUID.randomUUID();
+
         asUser.get()
             .given()
             .contentType(ContentType.JSON)
-            .body("{\"role\": \"functional-invalid-classification\","
+            .body("{\"role\": \"" + role + "\","
                 + " \"security_classification\": \"INVALID\"}")
             .when()
             .post("/api/user-role")
