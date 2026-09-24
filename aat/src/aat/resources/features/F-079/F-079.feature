@@ -34,7 +34,7 @@ Scenario: must return 401 when request does not provide valid authentication cre
       And the response has all the details as expected
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-@S-510 @Ignore # Response code mismatch, expected: 403, actual: 200 CCD-4455
+@S-510
 Scenario: must return 403 when request provides authentic credentials without authorised access to the operation 
 
     Given a user with [an active profile in CCD, and insufficient privilege to the case type]
