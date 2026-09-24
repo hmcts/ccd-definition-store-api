@@ -47,6 +47,9 @@
       "accessTypeRoles": [],
       "accessTypes": [],
       "case_fields": [ {
+        "__ordering__": "UNORDERED",
+        "__elementId__": "id"
+      }, {
         "metadata" : false,
         "id" : "AddressUKField",
         "case_type_id" : "FT_MasterCaseType",
