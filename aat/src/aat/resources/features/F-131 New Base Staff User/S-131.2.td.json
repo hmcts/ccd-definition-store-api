@@ -47,12 +47,9 @@
       "accessTypeRoles": [],
       "accessTypes": [],
       "case_fields": [ {
-<<<<<<< Updated upstream
         "__ordering__": "UNORDERED",
         "__elementId__": "id"
       }, {
-=======
->>>>>>> Stashed changes
         "metadata" : false,
         "id" : "AddressUKField",
         "case_type_id" : "FT_MasterCaseType",
@@ -2625,7 +2622,6 @@
         "category_id" : null
       }, {
         "metadata" : false,
-<<<<<<< Updated upstream
         "id" : "StaffUserCollection",
         "case_type_id" : "FT_MasterCaseType",
         "label" : "Staff User Collection",
@@ -2803,8 +2799,6 @@
         "category_id" : null
       }, {
         "metadata" : false,
-=======
->>>>>>> Stashed changes
         "id" : "MarritalStatus",
         "case_type_id" : "FT_MasterCaseType",
         "label" : "Fixed List",
@@ -3825,18 +3819,12 @@
         "label" : "StaffUser",
         "hint_text" : null,
         "field_type" : {
-<<<<<<< Updated upstream
           "id" : "StaffUser",
           "type" : "Complex",
-=======
-          "id" : "Text",
-          "type" : "Text",
->>>>>>> Stashed changes
           "min" : null,
           "max" : null,
           "regular_expression" : null,
           "fixed_list_items" : [ ],
-<<<<<<< Updated upstream
           "complex_fields": [
             {
               "metadata": false,
@@ -3868,9 +3856,6 @@
               "category_id": null
             }
           ],
-=======
-          "complex_fields" : [ ],
->>>>>>> Stashed changes
           "collection_field_type" : null
         },
         "hidden" : false,

@@ -3,11 +3,6 @@
 
   "_extends_": "CommonFieldType",
 
-<<<<<<< Updated upstream
   "id": "StaffUser_old",
   "type": "StaffUser_old"
-=======
-  "id": "StaffUser",
-  "type": "StaffUser"
->>>>>>> Stashed changes
 }
