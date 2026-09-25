@@ -50,14 +50,15 @@ tasks.register("printSuppressionFile") {
 
 ext {
     set('elasticsearch.version', '9.1.2')
-    set('spring-framework.version', '6.2.14')
-    set('spring-security.version', '6.5.7')
+    set('spring-framework.version', '6.2.15')
+    set('spring-security.version', '6.5.11')
     set('springCloudVersion', '2025.0.1')
     set('netty.version', '4.1.136.Final')
+    set('tomcat.version', '10.1.60')
 
-    set('jackson.version', '2.16.0')
+    set('jackson.version', '2.21.4')
     set('snakeyaml.version', '2.3')
-    set('log4j2.version', '2.24.3')
+    set('log4j2.version', '2.26.1')
 
     elasticsearchVersion = '9.1.2'
     junit = '5.14.4'
@@ -105,6 +106,9 @@ dependencyManagement {
         mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.16"
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
+    dependencies {
+        dependency 'org.apache.commons:commons-lang3:3.20.0'
+    }
 }
 
 // tag::repositories[]
@@ -132,6 +136,10 @@ allprojects {
 
     configurations.all {
         resolutionStrategy {
+            force 'commons-fileupload:commons-fileupload:1.6.0',
+                'org.apache.commons:commons-lang3:3.20.0',
+                'com.google.guava:guava:33.7.1-jre'
+
             eachDependency { DependencyResolveDetails details ->
                 if (details.requested.group == 'org.elasticsearch') {
                     details.useVersion elasticsearchVersion
@@ -144,6 +152,22 @@ allprojects {
                 if (details.requested.group == 'org.elasticsearch.client') {
                     details.useVersion elasticsearchVersion
                 }
+
+                if (details.requested.group == 'commons-fileupload'
+                    && details.requested.name == 'commons-fileupload') {
+                    details.useVersion '1.6.0'
+                }
+
+                if (details.requested.group == 'org.apache.commons'
+                    && details.requested.name == 'commons-lang3') {
+                    details.useVersion '3.20.0'
+                }
+
+                if (details.requested.group == 'com.google.guava'
+                    && details.requested.name == 'guava') {
+                    details.useVersion '33.7.1-jre'
+                }
+
             }
         }
     }
@@ -233,6 +257,9 @@ subprojects { subproject ->
     dependencyManagement {
         imports {
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+        }
+        dependencies {
+            dependency 'org.apache.commons:commons-lang3:3.20.0'
         }
     }
 
