@@ -22,6 +22,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.AccessProfileService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.model.UserRole;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.util.Base64;
 import java.util.List;
@@ -54,7 +55,7 @@ public class UserRoleController {
         @ApiResponse(code = 409, message = "Bad request, for example, incorrect data")
     })
     public ResponseEntity<UserRole> userRolePut(
-        @ApiParam(value = "user role", required = true) @RequestBody @NotNull UserRole userRole) {
+        @ApiParam(value = "user role", required = true) @Valid @RequestBody @NotNull UserRole userRole) {
         final ServiceResponse<UserRole> serviceResponse = accessProfileService.saveRole(userRole);
         final ResponseEntity.BodyBuilder responseEntityBuilder = serviceResponse.getOperation() == CREATE
             ? ResponseEntity.status(CREATED) : ResponseEntity.status(RESET_CONTENT);
@@ -72,7 +73,7 @@ public class UserRoleController {
         @ApiResponse(code = 409, message = "Bad request, for example, incorrect data")
     })
     public ResponseEntity<UserRole> userRoleCreate(
-        @ApiParam(value = "user role", required = true) @RequestBody @NotNull UserRole userRole) {
+        @ApiParam(value = "user role", required = true) @Valid @RequestBody @NotNull UserRole userRole) {
         final ServiceResponse<UserRole> serviceResponse = accessProfileService.createRole(userRole);
         final ResponseEntity.BodyBuilder responseEntityBuilder = ResponseEntity.status(CREATED);
         return responseEntityBuilder.body(serviceResponse.getResponseBody());
