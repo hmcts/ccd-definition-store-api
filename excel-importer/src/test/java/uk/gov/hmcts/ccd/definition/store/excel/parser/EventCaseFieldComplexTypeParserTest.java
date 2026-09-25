@@ -70,7 +70,7 @@ class EventCaseFieldComplexTypeParserTest {
                                                                    publishAsTest);
 
         List<DefinitionDataItem> definitionDataItems = singletonList(definitionDataItem);
-        Map<String, DefinitionSheet> definitionSheets = new LinkedHashMap<>();;
+        Map<String, DefinitionSheet> definitionSheets = new LinkedHashMap<>();
         definitionSheets.put(SheetName.CASE_EVENT.getName(), definitionSheet);
         when(hiddenFieldsValidator
             .parseCaseEventComplexTypesHiddenFields(definitionDataItem, definitionSheets)).thenReturn(false);
