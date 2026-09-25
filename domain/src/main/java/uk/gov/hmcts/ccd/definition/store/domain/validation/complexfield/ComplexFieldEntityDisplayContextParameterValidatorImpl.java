@@ -15,15 +15,22 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType.ARGUMENT;
+import static uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType.DATETIMEDISPLAY;
+import static uk.gov.hmcts.ccd.definition.store.domain.displaycontextparameter.DisplayContextParameterType.DATETIMEENTRY;
+
 @Component
 public class ComplexFieldEntityDisplayContextParameterValidatorImpl
     extends AbstractDisplayContextParameterValidator<ComplexFieldEntity>
     implements ComplexFieldValidator {
 
     private static final DisplayContextParameterType[] ALLOWED_TYPES =
-        {DisplayContextParameterType.DATETIMEDISPLAY, DisplayContextParameterType.DATETIMEENTRY};
+        {DATETIMEDISPLAY, DATETIMEENTRY, ARGUMENT};
+
     private static final List<String> ALLOWED_FIELD_TYPES =
-        Arrays.asList(FieldTypeUtils.BASE_DATE, FieldTypeUtils.BASE_DATE_TIME);
+        Arrays.asList(FieldTypeUtils.BASE_DATE,
+            FieldTypeUtils.BASE_DATE_TIME,
+            FieldTypeUtils.PREDEFINED_COMPLEX_STAFF_USER);
 
     @Autowired
     public ComplexFieldEntityDisplayContextParameterValidatorImpl(
@@ -40,8 +47,9 @@ public class ComplexFieldEntityDisplayContextParameterValidatorImpl
     protected void validateDisplayContextParameterType(final DisplayContextParameter displayContextParameter,
                                                        final ComplexFieldEntity entity,
                                                        final ValidationResult validationResult) {
-        if (displayContextParameter.getType() != DisplayContextParameterType.DATETIMEDISPLAY
-            && displayContextParameter.getType() != DisplayContextParameterType.DATETIMEENTRY) {
+        if (displayContextParameter.getType() != DATETIMEDISPLAY
+            && displayContextParameter.getType() != DATETIMEENTRY
+            && displayContextParameter.getType() != ARGUMENT) {
             validationResult.addError(unsupportedDisplayContextParameterTypeError(entity));
         }
         super.validateDisplayContextParameterType(displayContextParameter, entity, validationResult);
@@ -55,6 +63,14 @@ public class ComplexFieldEntityDisplayContextParameterValidatorImpl
     @Override
     protected FieldTypeEntity getFieldTypeEntity(final ComplexFieldEntity entity) {
         return entity.getFieldType();
+    }
+
+    @Override
+    protected String getFieldType(final ComplexFieldEntity entity) {
+        if (FieldTypeUtils.PREDEFINED_COMPLEX_STAFF_USER.equals(entity.getFieldType().getReference())) {
+            return FieldTypeUtils.PREDEFINED_COMPLEX_STAFF_USER;
+        }
+        return super.getFieldType(entity);
     }
 
     protected String getCaseFieldReference(final ComplexFieldEntity entity) {
