@@ -24,6 +24,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.searchparty.SearchPartyS
 import uk.gov.hmcts.ccd.definition.store.domain.service.shellmapping.ShellMappingService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.workbasket.WorkBasketUserDefaultService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
+import uk.gov.hmcts.ccd.definition.store.event.SnapshotCreationEvent;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionFileUploadMetadata;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.AccessTypeRolesParser;
@@ -299,6 +300,12 @@ public class ImportServiceImpl implements ImportService {
             userDetails.getEmail());
         applicationEventPublisher.publishEvent(event);
 
+        List<String> caseTypeReferences = getCaseTypeReferences(caseTypes);
+
+        SnapshotCreationEvent snapshotCreationEvent = new SnapshotCreationEvent(jurisdiction.getReference(),
+            caseTypeReferences);
+        applicationEventPublisher.publishEvent(snapshotCreationEvent);
+
         logger.info("Importing spreadsheet: OK: For jurisdiction {}", jurisdiction.getReference());
 
         // Populate the metadata to be returned for use when uploading the Definition File to Azure Storage
@@ -344,6 +351,12 @@ public class ImportServiceImpl implements ImportService {
         metadata.setTaskId(event.getTaskId());
 
         return metadata;
+    }
+
+    private List<String> getCaseTypeReferences(List<CaseTypeEntity> caseTypes) {
+        return caseTypes.stream()
+            .map(CaseTypeEntity::getReference)
+            .toList();
     }
 
     public void parseCategoryTab(Map<String, DefinitionSheet> definitionSheets, ParseContext parseContext) {
