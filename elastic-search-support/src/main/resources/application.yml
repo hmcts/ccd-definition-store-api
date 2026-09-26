@@ -106,6 +106,7 @@ elasticsearch:
     security_classification: ${elasticsearch.elasticMappings.defaultKeyword}
     case_type_id: ${elasticsearch.elasticMappings.defaultText}
     last_state_modified_date: ${elasticsearch.elasticMappings.defaultDate}
+    supplementary_data: '{"properties":{"new_case":{"type":"flattened"},"orgs_assigned_users":{"type":"flattened"}}}'
 #    '[@timestamp]' brackets added for getting along with spring boot 2
     '[@timestamp]': ${elasticsearch.elasticMappings.defaultDate}
     '[@version]': ${elasticsearch.elasticMappings.disabled}
