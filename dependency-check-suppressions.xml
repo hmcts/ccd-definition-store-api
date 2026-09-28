@@ -121,4 +121,12 @@
         <packageUrl regex="true">^pkg:maven/org\.springframework\.data/spring-data-jpa@3\.5\.13$</packageUrl>
         <cve>CVE-2026-47834</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+            CCD-8332: False positive. CVE-2025-7962 affects the Angus Mail SMTP
+            provider, not the Angus Activation implementation pulled in by JAXB.
+        ]]></notes>
+        <packageUrl>pkg:maven/org.eclipse.angus/angus-activation@2.0.3</packageUrl>
+        <cve>CVE-2025-7962</cve>
+    </suppress>
 </suppressions>
