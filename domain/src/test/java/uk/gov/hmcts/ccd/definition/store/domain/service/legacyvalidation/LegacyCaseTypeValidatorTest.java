@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation;
 
-
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -8,11 +8,10 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import org.junit.jupiter.api.BeforeEach;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -32,14 +31,7 @@ class LegacyCaseTypeValidatorTest {
 
         // When - Validating the Case Type
         // Then - Assert that the validation passes
-        // (fail the test if an exception is thrown)
-        try {
-            validator.validateCaseType(caseTypeEntity);
-        } catch (CaseTypeValidationException e) {
-            System.out.println(e);
-            e.printStackTrace();
-            fail("Unexpected exception thrown");
-        }
+        assertDoesNotThrow(() -> validator.validateCaseType(caseTypeEntity));
     }
 
     @Test
