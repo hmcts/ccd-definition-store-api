@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -140,6 +141,65 @@ class DraftDefinitionTest extends BaseTest {
             .delete("/api/draft/{jurisdiction}/{version}")
             .then()
             .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should reject creating a draft without a jurisdiction")
+    void shouldRejectDraftWithoutJurisdiction() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("{\"description\": \"Invalid draft\","
+                + " \"author\": \"functional-test\"}")
+            .when()
+            .post("/api/draft")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should reject retrieving a draft without a jurisdiction")
+    void shouldRejectDraftLookupWithoutJurisdiction() {
+        asUser.get()
+            .when()
+            .get("/api/draft")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should reject unauthenticated draft requests")
+    void shouldRejectUnauthenticatedDraftRequest() {
+        RestAssured.given()
+            .contentType(ContentType.JSON)
+            .body(definitionBody(DESCRIPTION))
+            .when()
+            .post("/api/draft")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .queryParam("jurisdiction", JURISDICTION)
+            .when()
+            .get("/api/drafts")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .queryParam("jurisdiction", JURISDICTION)
+            .queryParam("version", Integer.MAX_VALUE)
+            .when()
+            .get("/api/draft")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("jurisdiction", JURISDICTION)
+            .pathParam("version", Integer.MAX_VALUE)
+            .when()
+            .delete("/api/draft/{jurisdiction}/{version}")
+            .then()
+            .statusCode(401);
     }
 
     private Integer createDraft(String description) {

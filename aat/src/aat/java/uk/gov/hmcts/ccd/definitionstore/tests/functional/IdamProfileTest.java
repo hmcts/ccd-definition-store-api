@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
 import io.restassured.http.ContentType;
+import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -68,5 +69,21 @@ class IdamProfileTest extends BaseTest {
             .body("email", equalTo(aat.getCaseworkerAutoTestEmail()))
             .body("id", notNullValue())
             .body("roles", not(empty()));
+    }
+
+    @Test
+    @DisplayName("Should reject unauthenticated IDAM profile requests")
+    void shouldRejectUnauthenticatedIdamProfileRequests() {
+        RestAssured.given()
+            .when()
+            .get("/api/idam/profile")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .when()
+            .get("/api/idam/profile/roles")
+            .then()
+            .statusCode(401);
     }
 }

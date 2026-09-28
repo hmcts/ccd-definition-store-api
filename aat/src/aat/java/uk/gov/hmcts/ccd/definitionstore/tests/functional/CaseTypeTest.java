@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
@@ -45,6 +46,28 @@ class CaseTypeTest extends BaseTest {
                 empty())
             .body("findAll{case_fields->case_fields.label == \"A `AddressUK` field\"}[0].complexACLs",
                 empty());
+    }
+
+    @Test
+    @DisplayName("Should reject unauthenticated case role requests")
+    void shouldRejectUnauthenticatedCaseRoleRequests() {
+        RestAssured.given()
+            .pathParam("uid", "caseworker")
+            .pathParam("jid", JURISDICTION)
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/roles")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("uid", "caseworker")
+            .pathParam("jid", JURISDICTION)
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/access/profile/roles")
+            .then()
+            .statusCode(401);
     }
 
     //Removed @Test annotation to temporarily remove test

@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
@@ -160,6 +161,29 @@ class DisplayApiTest extends BaseTest {
             .statusCode(200)
             .body("case_type_id", equalTo(CASE_TYPE))
             .body("fields", notNullValue());
+    }
+
+    @Test
+    @DisplayName("Should reject unauthenticated display requests")
+    void shouldRejectUnauthenticatedDisplayRequests() {
+        RestAssured.given()
+            .when()
+            .get("/api/display/banners")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .when()
+            .get("/api/display/jurisdiction-ui-configs")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", "does-not-exist")
+            .when()
+            .get("/api/display/search-cases-result-fields/{ctid}")
+            .then()
+            .statusCode(401);
     }
 
 }

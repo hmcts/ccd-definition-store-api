@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
-import io.restassured.http.ContentType;
 import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
@@ -134,6 +134,19 @@ class UserRoleTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("Should reject creating a user role without a role")
+    void shouldRejectUserRoleWithoutRole() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("{\"security_classification\": \"PUBLIC\"}")
+            .when()
+            .post("/api/user-role")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
     @DisplayName("Should reject an invalid security classification")
     void shouldRejectInvalidSecurityClassification() {
         String role = "functional-invalid-classification-" + UUID.randomUUID();
@@ -145,6 +158,32 @@ class UserRoleTest extends BaseTest {
                 + " \"security_classification\": \"INVALID\"}")
             .when()
             .post("/api/user-role")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should reject updating a user role with an invalid security classification")
+    void shouldRejectInvalidSecurityClassificationOnUpdate() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body(userRoleBody(EXISTING_ROLE, "INVALID"))
+            .when()
+            .put("/api/user-role")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should reject updating a user role without a role")
+    void shouldRejectUpdateWithoutRole() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("{\"security_classification\": \"PUBLIC\"}")
+            .when()
+            .put("/api/user-role")
             .then()
             .statusCode(400);
     }
