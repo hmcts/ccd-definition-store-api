@@ -25,7 +25,7 @@ dependencies {
     implementation project(':elastic-search-support')
     implementation project(':repository')
     implementation project(':domain')
-    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: springBootVersion
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
 
     testImplementation project(":app-insights").sourceSets.main.output
