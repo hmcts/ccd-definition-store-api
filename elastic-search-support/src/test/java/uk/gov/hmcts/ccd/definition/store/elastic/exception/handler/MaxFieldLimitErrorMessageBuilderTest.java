@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.exception.handler;
 
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.rest.RestStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticsearchError;
@@ -11,6 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchExceptionFactory.elasticsearchException;
 
 class MaxFieldLimitErrorMessageBuilderTest {
 
@@ -25,9 +24,8 @@ class MaxFieldLimitErrorMessageBuilderTest {
 
     @Test
     void shouldBuildMessageWhenReasonMatchesPattern() {
-        ElasticsearchError error = new ElasticsearchError(new ElasticsearchStatusException(
-            "Elasticsearch exception [type=illegal_argument_exception, reason=Limit of total fields [5000] "
-                + "in index [casetypeid_cases-000001] has been exceeded]", RestStatus.BAD_REQUEST), caseType);
+        ElasticsearchError error = new ElasticsearchError(elasticsearchException("illegal_argument_exception",
+            "Limit of total fields [5000] in index [casetypeid_cases-000001] has been exceeded"), caseType);
 
         String result = messageBuilder.doBuildMessage(error);
 

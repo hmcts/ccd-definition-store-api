@@ -1,3 +1,5 @@
+import java.nio.charset.StandardCharsets
+
 plugins {
     id 'application'
     id 'jacoco'
@@ -31,7 +33,7 @@ tasks.register("printSuppressionFile") {
     doLast {
         def suppressionFile = dependencyCheck.getSuppressionFiles()
 
-        if (suppressionFile instanceof org.gradle.api.provider.Provider) {
+        if (suppressionFile instanceof Provider) {
         suppressionFile = suppressionFile.getOrNull()
         }
         if (suppressionFile instanceof Collection) {
@@ -50,7 +52,7 @@ tasks.register("printSuppressionFile") {
 
 ext {
     set('elasticsearch.version', '9.1.10')
-    set('spring-framework.version', '6.2.15')
+    set('spring-framework.version', '6.2.19')
     set('spring-security.version', '6.5.11')
     set('springCloudVersion', '2025.0.1')
     set('netty.version', '4.1.136.Final')
@@ -333,7 +335,6 @@ subprojects { subproject ->
         implementation group: 'org.apache.poi', name: 'poi', version: apachePoiVersion
         implementation group: 'org.apache.poi', name: 'poi-ooxml', version: apachePoiVersion
         implementation group: 'org.apache.poi', name: 'poi-scratchpad', version: apachePoiVersion
-        implementation group: 'org.elasticsearch', name: 'elasticsearch', version: elasticsearchVersion
         implementation group: 'co.elastic.clients', name: 'elasticsearch-java', version: elasticsearchVersion
         implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: elasticsearchVersion
         implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
@@ -345,7 +346,7 @@ subprojects { subproject ->
         testImplementation libraries.junit5
         testImplementation libs.mockito
         mockitoAgent(libs.mockito) {
-            transitive = false;
+            transitive = false
         }
 
         testCompileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
@@ -661,7 +662,7 @@ void loadEnvSecrets(String env) {
                 }
                 standardOutput = os
             }
-            project.file("./.${env}-remote-env").write(new String(os.toString().replace('\n', '').decodeBase64(), java.nio.charset.StandardCharsets.UTF_8))
+            project.file("./.${env}-remote-env").write(new String(os.toString().replace('\n', '').decodeBase64(), StandardCharsets.UTF_8))
         }
     }
 }

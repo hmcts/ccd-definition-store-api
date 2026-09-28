@@ -23,10 +23,11 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-            CCD-8332: Elasticsearch is upgraded to the latest patch shared by the server,
-            Java client and legacy REST client. A newer minor requires a coordinated server upgrade.
+            CCD-8332: False positive. These CVEs affect Elasticsearch server. This service
+            packages only the Java API client and low-level REST client; the server artifact
+            has been removed from the runtime classpath.
         ]]></notes>
-        <packageUrl regex="true">^pkg:maven/(?:org\.elasticsearch(?:\.client|\.plugin)?|co\.elastic\.clients)/[^@]+@9\.1\.10$</packageUrl>
+        <packageUrl regex="true">^pkg:maven/(?:co\.elastic\.clients/elasticsearch-java|org\.elasticsearch\.client/elasticsearch-rest-client)@9\.1\.10$</packageUrl>
         <cve>CVE-2026-56143</cve>
         <cve>CVE-2026-56144</cve>
         <cve>CVE-2026-56145</cve>
@@ -50,31 +51,10 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-            CCD-8332: Residual Spring Framework findings cannot be upgraded beyond the
-            Spring Boot 3 compatible 6.2 line without a Spring Boot 4 migration.
+            CCD-8332: These Spring Framework fixes are only available in the commercial
+            6.2.20 release. The latest public Spring Boot 3 compatible release is 6.2.19.
         ]]></notes>
-        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(?!security-)[^@]+@6\.2\.15$</packageUrl>
-        <cve>CVE-2026-22735</cve>
-        <cve>CVE-2026-22737</cve>
-        <cve>CVE-2026-22740</cve>
-        <cve>CVE-2026-22741</cve>
-        <cve>CVE-2026-22745</cve>
-        <cve>CVE-2026-41838</cve>
-        <cve>CVE-2026-41839</cve>
-        <cve>CVE-2026-41840</cve>
-        <cve>CVE-2026-41841</cve>
-        <cve>CVE-2026-41842</cve>
-        <cve>CVE-2026-41843</cve>
-        <cve>CVE-2026-41844</cve>
-        <cve>CVE-2026-41845</cve>
-        <cve>CVE-2026-41846</cve>
-        <cve>CVE-2026-41848</cve>
-        <cve>CVE-2026-41850</cve>
-        <cve>CVE-2026-41851</cve>
-        <cve>CVE-2026-41852</cve>
-        <cve>CVE-2026-41853</cve>
-        <cve>CVE-2026-41854</cve>
-        <cve>CVE-2026-41855</cve>
+        <packageUrl regex="true">^pkg:maven/org\.springframework/spring-(?!security-)[^@]+@6\.2\.19$</packageUrl>
         <cve>CVE-2026-47883</cve>
         <cve>CVE-2026-47884</cve>
         <cve>CVE-2026-47885</cve>
@@ -95,8 +75,9 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-            CCD-8332: Residual Spring Security findings require Spring Security 7,
-            which is outside the supported Spring Boot 3 dependency line.
+            CCD-8332: The Spring Security 6.5 fixes are only available in the commercial
+            6.5.12 release. This service does not use the affected DPoP, WebAuthn,
+            AesBytesEncryptor, embedded LDAP or timing-sensitive authentication APIs.
         ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework\.security/spring-security-[^@]+@6\.5\.11$</packageUrl>
         <cve>CVE-2026-41707</cve>
@@ -107,16 +88,17 @@
     </suppress>
     <suppress>
         <notes><![CDATA[
-            CCD-8332: Spring Cloud 5 is tied to Spring Boot 4; retain the current
-            Spring Cloud 4 release train while this service remains on Spring Boot 3.
+            CCD-8332: The Spring Cloud 4 fix is only available in the commercial 4.3.4
+            release. The vulnerable writable /actuator/env endpoint is not enabled.
         ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework\.cloud/spring-cloud-[^@]+@4\.3\.1$</packageUrl>
         <cve>CVE-2026-59284</cve>
     </suppress>
     <suppress>
         <notes><![CDATA[
-            CCD-8332: The patched Spring Data JPA 3.5 build is not available in the
-            public Spring Boot 3 dependency line; the public upgrade is Spring Data 4.
+            CCD-8332: The Spring Data JPA 3.5 fix is only available in the commercial
+            3.5.14 release. No native repository query accepts a Sort or Pageable
+            parameter from untrusted input, so the exploit preconditions are absent.
         ]]></notes>
         <packageUrl regex="true">^pkg:maven/org\.springframework\.data/spring-data-jpa@3\.5\.13$</packageUrl>
         <cve>CVE-2026-47834</cve>

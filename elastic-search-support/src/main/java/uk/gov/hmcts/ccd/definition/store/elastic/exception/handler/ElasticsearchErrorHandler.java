@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.exception.handler;
 
-import org.elasticsearch.ElasticsearchStatusException;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
@@ -23,7 +23,7 @@ public class ElasticsearchErrorHandler {
         this.errorMessageBuilders = errorMessageBuilders;
     }
 
-    public ElasticSearchInitialisationException createException(ElasticsearchStatusException exception, 
+    public ElasticSearchInitialisationException createException(ElasticsearchException exception,
                                                                 CaseTypeEntity caseType) {
         ElasticsearchError error = new ElasticsearchError(exception, caseType);
 
