@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchExceptionFactory.elasticsearchException;
@@ -50,5 +51,19 @@ class ElasticsearchErrorTest {
             () -> assertThat(result.getMessage(), is("Unsupported message pattern")),
             () -> assertThat(result.hasReason(), is(false))
         );
+    }
+
+    @Test
+    void shouldRejectNullException() {
+        CaseTypeEntity caseType = new CaseTypeBuilder().withReference("CaseTypeId").build();
+
+        assertThrows(NullPointerException.class, () -> new ElasticsearchError(null, caseType));
+    }
+
+    @Test
+    void shouldRejectNullCaseType() {
+        ElasticsearchException exception = elasticsearchException("TYPE", "REASON");
+
+        assertThrows(NullPointerException.class, () -> new ElasticsearchError(exception, null));
     }
 }
