@@ -120,6 +120,12 @@ dependencyManagement {
 allprojects {
     group 'uk.gov.hmcts.ccd.definition'
 
+    plugins.withId('checkstyle') {
+        checkstyle {
+            toolVersion = '10.12.7'
+        }
+    }
+
     repositories {
         mavenLocal()
         mavenCentral()
