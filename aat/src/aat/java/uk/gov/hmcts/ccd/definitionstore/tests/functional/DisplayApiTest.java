@@ -179,6 +179,49 @@ class DisplayApiTest extends BaseTest {
             .statusCode(401);
 
         RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/display/search-input-definition/{ctid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/display/search-result-definition/{ctid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/display/tab-structure/{ctid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .pathParam("etid", EVENT)
+            .when()
+            .get("/api/display/wizard-page-structure/case-types/{ctid}/event-triggers/{etid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/display/work-basket-input-definition/{ctid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/display/work-basket-definition/{ctid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
             .pathParam("ctid", "does-not-exist")
             .when()
             .get("/api/display/search-cases-result-fields/{ctid}")
