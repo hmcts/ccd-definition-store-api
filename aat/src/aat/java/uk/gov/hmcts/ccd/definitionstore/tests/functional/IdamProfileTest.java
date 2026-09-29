@@ -85,5 +85,11 @@ class IdamProfileTest extends BaseTest {
             .get("/api/idam/profile/roles")
             .then()
             .statusCode(401);
+
+        RestAssured.given()
+            .when()
+            .get("/api/idam/adminweb/authorization")
+            .then()
+            .statusCode(401);
     }
 }
