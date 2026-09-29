@@ -189,6 +189,59 @@ class UserRoleTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("Should reject malformed JSON when creating a user role")
+    void shouldRejectMalformedJsonWhenCreatingUserRole() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("{\"role\": \"functional-malformed-json\"")
+            .when()
+            .post("/api/user-role")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should reject an empty request body when creating a user role")
+    void shouldRejectEmptyUserRoleRequestBody() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("")
+            .when()
+            .post("/api/user-role")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should reject a non-JSON user role request")
+    void shouldRejectUnsupportedUserRoleContentType() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.TEXT)
+            .body(userRoleBody("functional-unsupported-content-type"))
+            .when()
+            .post("/api/user-role")
+            .then()
+            .statusCode(415);
+    }
+
+    @Test
+    @DisplayName("Should reject an invalid live-from date when creating a user role")
+    void shouldRejectInvalidLiveFromDate() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("{\"role\": \"functional-invalid-live-from-" + UUID.randomUUID()
+                + "\", \"security_classification\": \"PUBLIC\", \"live_from\": \"2026/01/01\"}")
+            .when()
+            .post("/api/user-role")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
     @DisplayName("Should reject an invalid Base64 role query parameter")
     void shouldRejectInvalidBase64Role() {
         asUser.get()
