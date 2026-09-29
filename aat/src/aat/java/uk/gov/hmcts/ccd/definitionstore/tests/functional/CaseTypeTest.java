@@ -70,6 +70,32 @@ class CaseTypeTest extends BaseTest {
             .statusCode(401);
     }
 
+    @Test
+    @DisplayName("Should return no roles for an unknown case type")
+    void shouldReturnNoRolesForUnknownCaseType() {
+        asUser.get()
+            .given()
+            .pathParam("uid", "caseworker-autotest1")
+            .pathParam("jid", JURISDICTION)
+            .pathParam("ctid", "case-type-does-not-exist")
+            .when()
+            .get("/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/roles")
+            .then()
+            .statusCode(200)
+            .body("", empty());
+
+        asUser.get()
+            .given()
+            .pathParam("uid", "caseworker-autotest1")
+            .pathParam("jid", JURISDICTION)
+            .pathParam("ctid", "case-type-does-not-exist")
+            .when()
+            .get("/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/access/profile/roles")
+            .then()
+            .statusCode(200)
+            .body("", empty());
+    }
+
     //Removed @Test annotation to temporarily remove test
     @DisplayName("Should return case types as a list with optional jurisdiction filter")
     void shouldReturnCaseTypesWithJurisdictionFilter() {
