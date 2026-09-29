@@ -158,6 +158,58 @@ class DraftDefinitionTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("Should reject malformed JSON when creating a draft")
+    void shouldRejectMalformedDraftJson() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("{\"jurisdiction\": {\"id\": \"AUTOTEST1\"")
+            .when()
+            .post("/api/draft")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should reject an empty draft request body")
+    void shouldRejectEmptyDraftRequestBody() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("")
+            .when()
+            .post("/api/draft")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should reject malformed JSON when saving a draft")
+    void shouldRejectMalformedDraftSaveJson() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("{\"jurisdiction\": {\"id\": \"AUTOTEST1\"")
+            .when()
+            .put("/api/draft/save")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should reject a non-numeric draft version")
+    void shouldRejectNonNumericDraftVersion() {
+        asUser.get()
+            .given()
+            .pathParam("jurisdiction", JURISDICTION)
+            .pathParam("version", "not-a-number")
+            .when()
+            .delete("/api/draft/{jurisdiction}/{version}")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
     @DisplayName("Should reject retrieving a draft without a jurisdiction")
     void shouldRejectDraftLookupWithoutJurisdiction() {
         asUser.get()
