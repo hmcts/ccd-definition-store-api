@@ -1,0 +1,7 @@
+{
+  "_guid_": "F-132_Create_User_Role_With_Invalid_Security_Classification",
+  "_extends_": "F-132_Post_JSON_Operation_Base_Data",
+  "operationName": "Create User Role With Invalid Security Classification",
+  "uri": "/api/user-role",
+  "request": { "body": { "role": "functional-invalid-classification", "security_classification": "INVALID" } }
+}

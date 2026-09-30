@@ -1,0 +1,6 @@
+{
+  "_guid_": "S-132.27",
+  "_extends_": "F-132_Create_User_Role_Without_Security_Classification",
+  "title": "Reject a user role without a security classification",
+  "expectedResponse": { "responseCode": 400, "body": {} }
+}

@@ -1,0 +1,6 @@
+{
+  "_guid_": "S-132.22",
+  "_extends_": "F-132_Get_Search_Cases_Result_Fields_For_Unknown_Case_Type",
+  "title": "Reject an unknown case type for search-case result fields",
+  "expectedResponse": { "responseCode": 404, "body": {} }
+}

@@ -171,3 +171,91 @@ Feature: F-132: Additional API endpoint coverage
     And it is submitted to call the [Create Draft Without Valid Authentication] operation of [CCD Definition Store]
     Then a negative response is received
     And the response has all other details as expected
+
+  @S-132.22
+  Scenario: Reject an unknown case type for search-case result fields
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And it is submitted to call the [Get Search Cases Result Fields For Unknown Case Type] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+
+  @S-132.23
+  Scenario: Reject deletion of an unknown draft version
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And it is submitted to call the [Delete Unknown Draft Version] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+
+  @S-132.24
+  Scenario: Reject malformed draft JSON
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And it is submitted to call the [Create Draft With Malformed JSON] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+
+  @S-132.25
+  Scenario: Reject creation of a duplicate user role
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And it is submitted to call the [Create Duplicate User Role] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+
+  @S-132.26
+  Scenario: Reject a user role without a role value
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And it is submitted to call the [Create User Role Without Role] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+
+  @S-132.27
+  Scenario: Reject a user role without a security classification
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And it is submitted to call the [Create User Role Without Security Classification] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+
+  @S-132.28
+  Scenario: Reject an invalid security classification
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And it is submitted to call the [Create User Role With Invalid Security Classification] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+
+  @S-132.29
+  Scenario: Reject invalid user-role live dates
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And it is submitted to call the [Create User Role With Invalid Live Dates] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+
+  @S-132.30
+  Scenario: Reject malformed user-role JSON
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And it is submitted to call the [Create User Role With Malformed JSON] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+
+  @S-132.31
+  Scenario: Reject an unsupported user-role content type
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And it is submitted to call the [Create User Role With Unsupported Content Type] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected
+
+  @S-132.32
+  Scenario: Reject a blank user role
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And it is submitted to call the [Create Blank User Role] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response has all other details as expected

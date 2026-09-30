@@ -1,0 +1,6 @@
+{
+  "_guid_": "S-132.25",
+  "_extends_": "F-132_Create_Duplicate_User_Role",
+  "title": "Reject creation of a duplicate user role",
+  "expectedResponse": { "responseCode": 400, "body": {} }
+}

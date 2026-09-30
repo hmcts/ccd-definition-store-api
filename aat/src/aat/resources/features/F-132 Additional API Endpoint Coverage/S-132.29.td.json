@@ -1,0 +1,6 @@
+{
+  "_guid_": "S-132.29",
+  "_extends_": "F-132_Create_User_Role_With_Invalid_Live_Dates",
+  "title": "Reject invalid user-role live dates",
+  "expectedResponse": { "responseCode": 400, "body": {} }
+}

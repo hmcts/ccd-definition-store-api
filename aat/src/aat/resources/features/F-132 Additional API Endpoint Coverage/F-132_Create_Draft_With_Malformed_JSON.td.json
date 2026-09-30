@@ -1,0 +1,7 @@
+{
+  "_guid_": "F-132_Create_Draft_With_Malformed_JSON",
+  "_extends_": "F-132_Post_JSON_Operation_Base_Data",
+  "operationName": "Create Draft With Malformed JSON",
+  "uri": "/api/draft",
+  "request": { "body": "{\"jurisdiction\": {\"id\": \"AUTOTEST1\"" }
+}

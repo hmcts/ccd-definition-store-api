@@ -1,0 +1,6 @@
+{
+  "_guid_": "S-132.26",
+  "_extends_": "F-132_Create_User_Role_Without_Role",
+  "title": "Reject a user role without a role value",
+  "expectedResponse": { "responseCode": 400, "body": {} }
+}

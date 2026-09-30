@@ -1,0 +1,6 @@
+{
+  "_guid_": "S-132.28",
+  "_extends_": "F-132_Create_User_Role_With_Invalid_Security_Classification",
+  "title": "Reject an invalid security classification",
+  "expectedResponse": { "responseCode": 400, "body": {} }
+}

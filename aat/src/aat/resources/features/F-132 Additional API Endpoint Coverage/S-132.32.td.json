@@ -1,0 +1,6 @@
+{
+  "_guid_": "S-132.32",
+  "_extends_": "F-132_Create_Blank_User_Role",
+  "title": "Reject a blank user role",
+  "expectedResponse": { "responseCode": 400, "body": {} }
+}
