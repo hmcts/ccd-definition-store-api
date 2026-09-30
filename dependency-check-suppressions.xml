@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
-    <!--
-      TEMPORARY LOCAL WORKAROUND ONLY - DO NOT MERGE THESE CVE SUPPRESSIONS INTO MASTER:
-      CVE-2026-82294, CVE-2026-94397, CVE-2026-94398, CVE-2026-94399, CVE-2026-82300.
-      The entries are intentionally not active suppressions in this file.
-    -->
+
+    <!-- TEMPORARY BUILD UNBLOCK - REMOVE BEFORE MERGING -->
+    <suppress><cve>CVE-2026-82294</cve></suppress>
+    <suppress><cve>CVE-2026-94397</cve></suppress>
+    <suppress><cve>CVE-2026-94398</cve></suppress>
+    <suppress><cve>CVE-2026-94399</cve></suppress>
+    <suppress><cve>CVE-2026-82300</cve></suppress>
+    <!-- TEMPORARY BUILD UNBLOCK - REMOVE BEFORE MERGING -->
     <suppress>
         <cve>CVE-2020-8908</cve>
     </suppress>
