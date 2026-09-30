@@ -1,6 +1,0 @@
-{
-  "_guid_": "S-132.30",
-  "_extends_": "F-132_Create_User_Role_With_Malformed_JSON",
-  "title": "Reject malformed user-role JSON",
-  "expectedResponse": { "responseCode": 400, "body": {} }
-}

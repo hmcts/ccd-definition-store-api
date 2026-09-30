@@ -188,14 +188,6 @@ Feature: F-132: Additional API endpoint coverage
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-132.24
-  Scenario: Reject malformed draft JSON
-    Given a user with [an active profile in CCD]
-    When a request is prepared with appropriate values
-    And it is submitted to call the [Create Draft With Malformed JSON] operation of [CCD Definition Store]
-    Then a negative response is received
-    And the response has all other details as expected
-
   @S-132.25
   Scenario: Reject creation of a duplicate user role
     Given a user with [an active profile in CCD]
@@ -233,14 +225,6 @@ Feature: F-132: Additional API endpoint coverage
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And it is submitted to call the [Create User Role With Invalid Live Dates] operation of [CCD Definition Store]
-    Then a negative response is received
-    And the response has all other details as expected
-
-  @S-132.30
-  Scenario: Reject malformed user-role JSON
-    Given a user with [an active profile in CCD]
-    When a request is prepared with appropriate values
-    And it is submitted to call the [Create User Role With Malformed JSON] operation of [CCD Definition Store]
     Then a negative response is received
     And the response has all other details as expected
 

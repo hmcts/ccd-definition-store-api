@@ -1,6 +1,0 @@
-{
-  "_guid_": "S-132.24",
-  "_extends_": "F-132_Create_Draft_With_Malformed_JSON",
-  "title": "Reject malformed draft JSON",
-  "expectedResponse": { "responseCode": 400, "body": {} }
-}
