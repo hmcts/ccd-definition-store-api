@@ -369,4 +369,29 @@
     <suppress>
         <cve>CVE-2026-41707</cve>
     </suppress>
+    <suppress until="2026-12-29Z">
+        <notes><![CDATA[
+        Reviewed 2026-09-30: Elasticsearch server CVEs incorrectly matched to the
+        Java API client and low-level HTTP REST client, version 9.1.2 only.
+        ElasticsearchClientFactory uses RestClientTransport to call an external
+        cluster; these two client artifacts do not implement the server's search
+        aggregation or index analysis execution. This does not suppress findings
+        against org.elasticsearch:elasticsearch or its server modules, and does
+        not establish that the separately deployed Elasticsearch cluster is safe.
+        Review again on dependency or architecture changes, or before expiry.
+
+        Client architecture: https://www.elastic.co/docs/reference/elasticsearch/clients/java
+        CVE-2026-82294: https://discuss.elastic.co/t/390681
+        CVE-2026-82300: https://discuss.elastic.co/t/390682
+        CVE-2026-94398: https://discuss.elastic.co/t/390683
+        CVE-2026-94399: https://discuss.elastic.co/t/390684
+        CVE-2026-94397: https://discuss.elastic.co/t/390687
+        ]]></notes>
+        <packageUrl regex="true">^pkg:maven/(co\.elastic\.clients/elasticsearch-java|org\.elasticsearch\.client/elasticsearch-rest-client)@9\.1\.2$</packageUrl>
+        <cve>CVE-2026-82294</cve>
+        <cve>CVE-2026-82300</cve>
+        <cve>CVE-2026-94397</cve>
+        <cve>CVE-2026-94398</cve>
+        <cve>CVE-2026-94399</cve>
+    </suppress>
 </suppressions>
