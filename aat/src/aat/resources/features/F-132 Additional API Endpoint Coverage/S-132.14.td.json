@@ -1,0 +1,6 @@
+{
+  "_guid_": "S-132.14",
+  "_extends_": "F-132_Create_Draft_Without_Jurisdiction",
+  "title": "Reject a draft request without a jurisdiction",
+  "expectedResponse": { "responseCode": 400, "body": {} }
+}

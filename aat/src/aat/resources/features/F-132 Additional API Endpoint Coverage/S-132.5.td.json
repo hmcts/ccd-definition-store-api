@@ -1,0 +1,9 @@
+{
+  "_guid_": "S-132.5",
+  "_extends_": "F-132_Get_Search_Cases_Result_Fields",
+  "title": "Return search cases result fields",
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "body": { "case_type_id": "AAT", "fields": "[[ANYTHING_PRESENT]]" }
+  }
+}

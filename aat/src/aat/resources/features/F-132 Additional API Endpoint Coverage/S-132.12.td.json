@@ -1,0 +1,6 @@
+{
+  "_guid_": "S-132.12",
+  "_extends_": "F-132_Get_User_Role_With_Invalid_Base64",
+  "title": "Reject an invalid Base64 user role query parameter",
+  "expectedResponse": { "responseCode": 400, "body": {} }
+}

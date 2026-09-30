@@ -1,0 +1,6 @@
+{
+  "_guid_": "S-132.16",
+  "_extends_": "F-132_Save_Draft_Without_Author",
+  "title": "Reject saving a draft without an author",
+  "expectedResponse": { "responseCode": 400, "body": {} }
+}

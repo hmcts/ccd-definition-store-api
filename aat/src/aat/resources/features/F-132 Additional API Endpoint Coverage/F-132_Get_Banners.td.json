@@ -1,0 +1,7 @@
+{
+  "_guid_": "F-132_Get_Banners",
+  "_extends_": "Get_Operation_Base_Data_on_Definition_Store",
+  "operationName": "Get Banners",
+  "uri": "/api/display/banners",
+  "request": { "queryParams": { "ids": "AUTOTEST1" } }
+}
