@@ -1,0 +1,27 @@
+{
+  "_guid_": "S-113.3",
+  "_extends_": "F-113_Get_Import_Job_Base_data",
+  "title": "must return 400 when retrieving an import job with a malformed id",
+
+  "specs": [
+    "an active profile in CCD",
+    "contains a non-UUID value as the job id"
+  ],
+
+  "request": {
+    "pathVariables": {
+      "id": "not-a-uuid"
+    }
+  },
+
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "Invalid import job ID: must be a valid UUID"
+    }
+  }
+}

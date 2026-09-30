@@ -3,21 +3,18 @@
   "role": {
     "name": "ccd-definition-store-api"
   },
-  "preview": {
-    "sampling": {
-      "overrides": [
-        {
-          "telemetryType": "request",
-          "attributes": [
-            {
-              "key": "http.url",
-              "value": "https?://[^/]+/health.*",
-              "matchType": "regexp"
-            }
-          ],
-          "percentage": 1
-        }
-      ]
+  "sampling": {
+    "percentage": 100,
+    "overrides": [
+      {
+        "telemetryType": "trace",
+        "percentage": 100
+      }
+    ]
+  },
+  "instrumentation": {
+    "logging": {
+      "level": "INFO"
     }
   }
 }

@@ -1,31 +1,25 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
-import co.elastic.clients.elasticsearch.core.ReindexResponse;
-import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.action.ActionListener;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
+
+import static uk.gov.hmcts.ccd.definition.store.elastic.VersionedCaseIndexHelper.firstVersionIndexName;
 import uk.gov.hmcts.ccd.definition.store.elastic.config.CcdElasticSearchProperties;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
 import uk.gov.hmcts.ccd.definition.store.elastic.mapping.CaseMappingGenerator;
+import uk.gov.hmcts.ccd.definition.store.elastic.service.ReindexService;
 import uk.gov.hmcts.ccd.definition.store.event.DefinitionImportedEvent;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.CompletionException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Slf4j
 public abstract class ElasticDefinitionImportListener {
-
-    private static final String FIRST_INDEX_SUFFIX = "-000001";
 
     private final CcdElasticSearchProperties config;
 
@@ -35,13 +29,17 @@ public abstract class ElasticDefinitionImportListener {
 
     private final ElasticsearchErrorHandler elasticsearchErrorHandler;
 
+    private final ReindexService reindexService;
+
     public ElasticDefinitionImportListener(CcdElasticSearchProperties config, CaseMappingGenerator mappingGenerator,
                                            ObjectFactory<HighLevelCCDElasticClient> clientFactory,
-                                           ElasticsearchErrorHandler elasticsearchErrorHandler) {
+                                           ElasticsearchErrorHandler elasticsearchErrorHandler,
+                                           ReindexService reindexService) {
         this.config = config;
         this.mappingGenerator = mappingGenerator;
         this.clientFactory = clientFactory;
         this.elasticsearchErrorHandler = elasticsearchErrorHandler;
+        this.reindexService = reindexService;
     }
 
     public abstract void onDefinitionImported(DefinitionImportedEvent event) throws IOException;
@@ -54,9 +52,6 @@ public abstract class ElasticDefinitionImportListener {
     @Transactional
     public void initialiseElasticSearch(DefinitionImportedEvent event) {
         List<CaseTypeEntity> caseTypes = event.getContent();
-        boolean reindex = event.isReindex();
-        boolean deleteOldIndex = event.isDeleteOldIndex();
-
         String caseMapping = null;
         CaseTypeEntity currentCaseType = null;
 
@@ -65,30 +60,15 @@ public abstract class ElasticDefinitionImportListener {
             for (CaseTypeEntity caseType : caseTypes) {
                 currentCaseType = caseType;
                 String baseIndexName = baseIndexName(caseType);
-                //if alias doesn't exist create index and alias
-                if (!elasticClient.aliasExists(baseIndexName)) {
-                    String actualIndexName = baseIndexName + FIRST_INDEX_SUFFIX;
-                    elasticClient.createIndex(actualIndexName, baseIndexName);
+                boolean hasExistingVersionedIndex =
+                    elasticClient.restoreAliasFromLatestVersionedIndex(baseIndexName);
+                if (!hasExistingVersionedIndex) {
+                    elasticClient.createIndex(firstVersionIndexName(baseIndexName), baseIndexName);
                 }
-                if (reindex) {
-                    //get current alias index
-                    GetAliasResponse aliasResponse = elasticClient.getAlias(baseIndexName);
-                    String caseTypeName = aliasResponse.aliases().keySet().iterator().next();
-
-                    //create new index with generated mapping and incremented case type name (no alias update yet)
-                    caseMapping = mappingGenerator.generateMapping(caseType);
-                    log.debug("case mapping: {}", caseMapping);
-                    String incrementedCaseTypeName = incrementIndexNumber(caseTypeName);
-                    elasticClient.setIndexReadOnly(baseIndexName, true);
-                    elasticClient.createIndexAndMapping(incrementedCaseTypeName, caseMapping);
-
-                    //initiate reindexing
-                    handleReindexing(baseIndexName, caseTypeName, incrementedCaseTypeName,
-                        deleteOldIndex);
-                    //dummy value for phase 1
-                    event.setTaskId("taskID");
-                    log.info("reindexing successful for case type: {}", caseType.getReference());
-                    log.info("task id returned from the import: {}", event.getTaskId());
+                // Reindex when enabled, requested on import, and a source index already exists.
+                // Skip on true first import — otherwise asyncReindex would create -000002.
+                if (config.isReindexEnabled() && event.isReindex() && hasExistingVersionedIndex) {
+                    reindexService.asyncReindex(event, baseIndexName, caseType);
                 } else {
                     caseMapping = mappingGenerator.generateMapping(caseType);
                     log.debug("case mapping: {}", caseMapping);
@@ -102,65 +82,6 @@ public abstract class ElasticDefinitionImportListener {
             logMapping(caseMapping);
             throw new ElasticSearchInitialisationException(exc);
         }
-    }
-
-    private void handleReindexing(String baseIndexName,
-                                  String oldIndex, String newIndex,
-                                  boolean deleteOldIndex) {
-        HighLevelCCDElasticClient elasticClient = clientFactory.getObject();
-        elasticClient.reindexData(oldIndex, newIndex, new ActionListener<>() {
-            @Override
-            public void onResponse(ReindexResponse reindexResponse) {
-                try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
-                    //if success set writable and update alias to new index
-                    log.info("updating alias from {} to {}", oldIndex, newIndex);
-                    asyncElasticClient.setIndexReadOnly(baseIndexName, false);
-                    asyncElasticClient.updateAlias(baseIndexName, oldIndex, newIndex);
-                    if (deleteOldIndex) {
-                        log.info("deleting old index {}", oldIndex);
-                        asyncElasticClient.removeIndex(oldIndex);
-                    }
-                } catch (IOException e) {
-                    log.error("failed to clean up after reindexing success", e);
-                    throw new CompletionException(e);
-                }
-            }
-
-            @Override
-            public void onFailure(Exception ex) {
-                try (elasticClient; HighLevelCCDElasticClient asyncElasticClient = clientFactory.getObject()) {
-                    //if failed delete new index, set old index writable
-                    log.error("reindexing failed", ex);
-                    asyncElasticClient.removeIndex(newIndex);
-                    log.info("{} deleted", newIndex);
-                    asyncElasticClient.setIndexReadOnly(oldIndex, false);
-                    log.info("{} set to writable", oldIndex);
-                } catch (IOException e) {
-                    log.error("failed to clean up after reindexing failure", e);
-                    throw new CompletionException(e);
-                }
-                throw new CompletionException(ex);
-            }
-        });
-    }
-
-    String incrementIndexNumber(String indexName) {
-        Pattern pattern = Pattern.compile("(.+_cases-)(\\d+)$");
-        Matcher matcher = pattern.matcher(indexName);
-
-        if (!matcher.matches() || matcher.groupCount() < 2) {
-            throw new IllegalArgumentException("invalid index name format: " + indexName);
-        }
-
-        String prefix = matcher.group(1);
-        String numberStr = matcher.group(2);
-
-        int incremented = Integer.parseInt(numberStr) + 1;
-        String formattedNumber = StringUtils.leftPad(String.valueOf(incremented), numberStr.length(), '0');
-
-        String incrementedIndexName = prefix + formattedNumber;
-        log.info("incremented index name: {}", incrementedIndexName);
-        return incrementedIndexName;
     }
 
     private String baseIndexName(CaseTypeEntity caseType) {

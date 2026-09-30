@@ -1,0 +1,1 @@
+ALTER TABLE public.reindex ADD COLUMN IF NOT EXISTS who_imported VARCHAR(200);

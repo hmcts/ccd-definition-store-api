@@ -20,6 +20,8 @@ locals {
 
   db_name = "${local.app_full_name}-postgres-db-v15"
 
+  azure_extensions = contains(["aat", "demo"], var.env) ? "pg_stat_statements,pg_buffercache,hypopg,pg_cron" : "pg_stat_statements,pg_buffercache,hypopg"
+
 }
 
 data "azurerm_key_vault" "ccd_shared_key_vault" {
@@ -54,7 +56,7 @@ data "azurerm_key_vault_secret" "definition_store_s2s_secret" {
 ///////////////////////
 
 module "postgresql_v15" {
-  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=master"
+  source = "git@github.com:hmcts/terraform-module-postgresql-flexible?ref=DTSPO-30107-additional-postgres-admins"
   providers = {
     azurerm.postgres_network = azurerm.postgres_network
   }
@@ -65,16 +67,18 @@ module "postgresql_v15" {
   component                      = var.component
   env                            = var.env
   subnet_suffix                  = var.subnet_suffix
-  force_user_permissions_trigger = "1"
+  force_user_permissions_trigger = "2"
+
   pgsql_databases = [
     {
       name = var.database_name
     }
   ]
+
   pgsql_server_configuration = [
     {
       name  = "azure.extensions"
-      value = "pg_stat_statements,pg_buffercache,hypopg"
+      value = local.azure_extensions
     }
   ]
   pgsql_version              = "15"

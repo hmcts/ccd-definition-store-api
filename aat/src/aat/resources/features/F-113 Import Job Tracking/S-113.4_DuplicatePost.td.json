@@ -1,0 +1,37 @@
+{
+  "_guid_": "S-113.4_DuplicatePost",
+  "_extends_": "F-113_Import_Base_data",
+  "title": "must return 409 when posting the same job id again",
+
+  "specs": [
+    "to import again with the same job id"
+  ],
+
+  "request": {
+    "headers": {
+      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+      "Content-Type": "multipart/form-data",
+      "X-Import-Job-Id": "${[scenarioContext][parentContext][testData][request][headers][X-Import-Job-Id]}"
+    },
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "localFilePath": "build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"
+        }
+      ]
+    }
+  },
+
+  "expectedResponse": {
+    "responseCode": 409,
+    "responseMessage": "Conflict",
+    "headers": {
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "An import job with this id already exists"
+    }
+  }
+}

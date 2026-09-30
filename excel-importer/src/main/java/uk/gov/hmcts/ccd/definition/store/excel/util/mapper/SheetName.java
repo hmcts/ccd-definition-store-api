@@ -34,7 +34,8 @@ public enum SheetName {
     ACCESS_TYPE_ROLE("AccessTypeRole"),
     SEARCH_PARTY("SearchParty"),
     SEARCH_CRITERIA("SearchCriteria"),
-    CATEGORY("Categories");
+    CATEGORY("Categories"),
+    SHELL_MAPPING("ShellMapping");
 
     private final String name;
 

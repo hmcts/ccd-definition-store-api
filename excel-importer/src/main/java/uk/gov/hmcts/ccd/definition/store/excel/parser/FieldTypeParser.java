@@ -29,7 +29,7 @@ public class FieldTypeParser {
         final String max = element.getString(ColumnName.MAX);
 
         final String actualTypeReference = FieldTypeUtils.isList(baseTypeReference)
-            ? ReferenceUtils.listReference(baseTypeReference, fieldTypeParameter) : baseTypeReference;
+            ? listTypeReference(baseTypeReference, fieldTypeParameter, element.getCaseTypeId()) : baseTypeReference;
 
         final Optional<FieldTypeEntity> baseFieldTypeOptional = parseContext.getType(actualTypeReference);
         final FieldTypeEntity baseFieldType = baseFieldTypeOptional.orElseThrow(() ->
@@ -64,6 +64,22 @@ public class FieldTypeParser {
         }
 
         return resultEntry;
+    }
+
+    /**
+     * A list declared on the FixedLists tab against a CaseTypeID is registered under a case type scoped reference,
+     * so look that up first for fields belonging to the same case type. Lists declared without a CaseTypeID remain
+     * shared across the jurisdiction, hence the fall back to the plain reference.
+     */
+    private String listTypeReference(String baseTypeReference, String fieldTypeParameter, String caseTypeId) {
+        if (StringUtils.isNotBlank(caseTypeId)) {
+            final String scopedReference = ReferenceUtils.listReference(
+                baseTypeReference, ReferenceUtils.caseTypeScopedListId(fieldTypeParameter, caseTypeId));
+            if (parseContext.getType(scopedReference).isPresent()) {
+                return scopedReference;
+            }
+        }
+        return ReferenceUtils.listReference(baseTypeReference, fieldTypeParameter);
     }
 
     private boolean anyDefined(String... args) {

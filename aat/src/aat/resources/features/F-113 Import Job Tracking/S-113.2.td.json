@@ -1,0 +1,27 @@
+{
+  "_guid_": "S-113.2",
+  "_extends_": "F-113_Get_Import_Job_Base_data",
+  "title": "must return 404 when retrieving an import job with a non-existent id",
+
+  "specs": [
+    "an active profile in CCD",
+    "contains a syntactically valid but non-existent UUID as the job id"
+  ],
+
+  "request": {
+    "pathVariables": {
+      "id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+    }
+  },
+
+  "expectedResponse": {
+    "responseCode": 404,
+    "responseMessage": "Not Found",
+    "headers": {
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "Import job not found"
+    }
+  }
+}

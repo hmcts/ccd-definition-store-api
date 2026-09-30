@@ -1,9 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
-import co.elastic.clients.elasticsearch.indices.GetIndexResponse;
 import co.elastic.clients.elasticsearch.indices.DeleteIndexResponse;
+import co.elastic.clients.elasticsearch.indices.GetIndexResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.mapstruct.factory.Mappers;
 import org.skyscreamer.jsonassert.Customization;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.skyscreamer.jsonassert.comparator.CustomComparator;
@@ -12,17 +13,20 @@ import org.springframework.boot.actuate.autoconfigure.endpoint.web.CorsEndpointP
 import org.springframework.boot.actuate.autoconfigure.endpoint.web.WebEndpointProperties;
 import org.springframework.boot.actuate.autoconfigure.web.server.ManagementPortType;
 import org.springframework.boot.actuate.endpoint.ExposableEndpoint;
+import org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver;
+import org.springframework.boot.actuate.endpoint.web.EndpointMapping;
 import org.springframework.boot.actuate.endpoint.web.EndpointMediaTypes;
 import org.springframework.boot.actuate.endpoint.web.WebEndpointsSupplier;
-import org.springframework.boot.actuate.endpoint.web.EndpointMapping;
-import org.springframework.boot.actuate.endpoint.web.EndpointLinksResolver;
 import org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping;
 import org.springframework.boot.autoconfigure.web.servlet.ServletWebServerFactoryAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.util.StringUtils;
+import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.ElasticsearchClientFactory;
 
 import java.io.IOException;
@@ -38,7 +42,8 @@ import java.util.stream.Collectors;
         ElasticsearchConfigurationIT.class
     }
 )
-@ContextConfiguration(initializers = ElasticsearchContainerInitializer.class)
+@ContextConfiguration(initializers = {ElasticsearchContainerInitializer.class})
+@TestPropertySource(locations = "classpath:application-test.properties")
 public abstract class ElasticsearchBaseTest implements TestUtils {
 
     protected static final String WILDCARD = "*";
@@ -48,6 +53,14 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
 
     @Autowired
     protected ObjectMapper objectMapper;
+
+    @TestConfiguration
+    static class MapperTestConfig {
+        @Bean
+        public EntityToResponseDTOMapper entityToResponseDTOMapper() {
+            return Mappers.getMapper(EntityToResponseDTOMapper.class);
+        }
+    }
 
     protected CustomComparator ignoreFieldsComparator(String... paths) {
         return new CustomComparator(JSONCompareMode.LENIENT, Arrays.stream(paths)
@@ -103,7 +116,8 @@ public abstract class ElasticsearchBaseTest implements TestUtils {
         );
     }
 
-    private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties, Environment environment,
+    private boolean shouldRegisterLinksMapping(WebEndpointProperties webEndpointProperties,
+                                               Environment environment,
                                                String basePath) {
         return webEndpointProperties.getDiscovery().isEnabled()
             && (StringUtils.hasText(basePath)

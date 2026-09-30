@@ -25,3 +25,7 @@ java:
   environment:
     DEFINITION_STORE_DB_NAME: ccd_definition_store
     DEFINITION_STORE_DB_HOST: ccd-definition-store-api-postgres-db-v15-aat.postgres.database.azure.com
+
+    # Testing support endpoints are unauthenticated and delete case type definitions.
+    # Enable in lower environments only - never in production.
+    TESTING_SUPPORT_ENDPOINTS_ENABLED: true

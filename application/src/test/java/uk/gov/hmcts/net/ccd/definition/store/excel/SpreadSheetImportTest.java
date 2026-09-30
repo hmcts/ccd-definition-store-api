@@ -89,7 +89,7 @@ class SpreadSheetImportTest extends BaseTest {
      */
     @Test
     @Transactional
-    public void importValidDefinitionFile() throws Exception {
+    void importValidDefinitionFile() throws Exception {
 
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
@@ -120,7 +120,7 @@ class SpreadSheetImportTest extends BaseTest {
 
     @Test
     @Transactional
-    public void importValidDefinitionFile_TranslationService_return4XX() throws Exception {
+    void importValidDefinitionFile_TranslationService_return4XX() throws Exception {
 
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
@@ -157,7 +157,7 @@ class SpreadSheetImportTest extends BaseTest {
      */
     @Test
     @Transactional
-    public void importValidDefinitionFileUsingLegacyAccessProfileColumnAlias() throws Exception {
+    void importValidDefinitionFileUsingLegacyAccessProfileColumnAlias() throws Exception {
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_WITH_ACCESS_PROFILE_ALIAS, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", inputStream);
@@ -190,7 +190,7 @@ class SpreadSheetImportTest extends BaseTest {
      */
     @Test
     @Transactional
-    public void importValidDefinitionFileUserProfileHas403Response() throws Exception {
+    void importValidDefinitionFileUserProfileHas403Response() throws Exception {
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
 
@@ -224,7 +224,7 @@ class SpreadSheetImportTest extends BaseTest {
      */
     @Test
     @Transactional
-    public void importInvalidDefinitionFile() throws Exception {
+    void importInvalidDefinitionFile() throws Exception {
         InputStream inputStream = new ClassPathResource("/CCD_TestDefinition_Invalid_Data.xlsx",
             getClass()).getInputStream();
         final MvcResult result = performAndGetMvcResult(inputStream);
@@ -271,7 +271,7 @@ class SpreadSheetImportTest extends BaseTest {
 
         InputStream inputStream = new ClassPathResource("/ccd-definition-wrong-complex-type.xlsx",
             getClass()).getInputStream();
-        final MvcResult result = performAndGetMvcResult(inputStream);
+        performAndGetMvcResult(inputStream);
 
         WireMock.verify(0, putRequestedFor(urlEqualTo("/user-profile/users")));
 
@@ -286,7 +286,7 @@ class SpreadSheetImportTest extends BaseTest {
 
     @Test
     @Transactional
-    public void importInvalidEventPostStateConditionWithNoDefaultState() throws Exception {
+    void importInvalidEventPostStateConditionWithNoDefaultState() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_EVENT_POST_STATE_NO_DEFAULT,
             getClass()).getInputStream();
         final MvcResult result = performAndGetMvcResult(inputStream,
@@ -301,7 +301,7 @@ class SpreadSheetImportTest extends BaseTest {
 
     @Test
     @Transactional
-    public void importInvalidEventPostStateConditionWithDuplicatePriorities() throws Exception {
+    void importInvalidEventPostStateConditionWithDuplicatePriorities() throws Exception {
         InputStream inputStream = new ClassPathResource(EXCEL_FILE_EVENT_POST_STATE_DUPLICATE_PRIORITIES,
             getClass()).getInputStream();
         final MvcResult result = performAndGetMvcResult(inputStream,
@@ -362,7 +362,7 @@ class SpreadSheetImportTest extends BaseTest {
         JSONAssert.assertEquals(removeGuids(expected), removeGuids(contentAsString), JSONCompareMode.LENIENT);
     }
 
-    private String removeGuids(String response) throws IOException {
+    private String removeGuids(String response) {
         String guidRegex = "[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}";
         Pattern idFieldWithGuid = Pattern.compile(String.format("\"id\"\\s*:\\s*\"[A-Za-z0-9]*-(%s)\"", guidRegex));
         java.util.regex.Matcher matcher = idFieldWithGuid.matcher(response);

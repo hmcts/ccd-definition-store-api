@@ -1,10 +1,10 @@
 package uk.gov.hmcts.ccd.definition.store.domain;
 
-import org.springframework.beans.factory.annotation.Value;
-
 import jakarta.annotation.PostConstruct;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.List;
 
 @Named
@@ -32,6 +32,11 @@ public class ApplicationParams {
     @Value("${azure.storage.import_audits.get-limit}")
     private String azureImportAuditsGetLimit;
 
+    @Value("${ccd.tx-timeout.default:30}")
+    private int txTimeoutDefault;
+
+    private static final int STALE_THRESHOLD_BUFFER_SECONDS = 30;
+
     @Value("${case.event.default.publish:false}")
     private boolean defaultPublish;
 
@@ -40,6 +45,9 @@ public class ApplicationParams {
 
     @Value("${enable-case-group-access-filtering:false}")
     private boolean caseGroupAccessFilteringEnabled;
+
+    @Value("${elasticsearch.delete-old-index.enabled:false}")
+    private boolean deleteOldIndexEnabled;
 
 
     public boolean isDefaultPublish() {
@@ -80,6 +88,15 @@ public class ApplicationParams {
 
     public Integer getAzureImportAuditsGetLimit() {
         return Integer.valueOf(azureImportAuditsGetLimit);
+    }
+
+    public boolean isDeleteOldIndexEnabled() {
+        return deleteOldIndexEnabled;
+    }
+
+
+    public int getImportJobStaleThresholdSeconds() {
+        return txTimeoutDefault + STALE_THRESHOLD_BUFFER_SECONDS;
     }
 
     @PostConstruct

@@ -125,7 +125,11 @@ public enum ColumnName {
     GROUP_ACCESS_ENABLED("GroupAccessEnabled"),
     CASE_GROUP_ID_TEMPLATE("CaseAccessGroupIDTemplate"),
     NULLIFY_BY_DEFAULT("NullifyByDefault"),
-    DEFAULT_FOCUS("DefaultFocus");
+    SHELL_CASE_TYPE_ID("ShellCaseTypeID"),
+    SHELL_CASE_FIELD_NAME("ShellCaseFieldName"),
+    ORIGINATING_CASE_TYPE_ID("OriginatingCaseTypeID"),
+    DEFAULT_FOCUS("DefaultFocus"),
+    ORIGINATING_CASE_FIELD_NAME("OriginatingCaseFieldName");
 
     private final String name;
     private final String[] aliases;
