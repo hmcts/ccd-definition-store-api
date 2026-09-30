@@ -394,4 +394,28 @@
         <cve>CVE-2026-94398</cve>
         <cve>CVE-2026-94399</cve>
     </suppress>
+    <suppress until="2026-12-29Z">
+        <notes><![CDATA[
+        Reviewed 2026-09-30 against elasticsearch-x-content-9.1.2-sources.jar:
+        this artifact contains the XContent serialization/parsing abstraction and
+        JSON, YAML, CBOR and Smile support, not the Elasticsearch server or its
+        search aggregation/index analysis execution. Dependency-check has matched
+        this library to the whole Elasticsearch server product for these CVEs.
+        Scope is this artifact/version only; server artifacts and the separately
+        deployed Elasticsearch cluster remain subject to vulnerability checks.
+        Reassess on version/architecture changes or before expiry.
+        Source: https://github.com/elastic/elasticsearch/tree/v9.1.2/libs/x-content
+        Advisories: https://discuss.elastic.co/t/390681
+        https://discuss.elastic.co/t/390682
+        https://discuss.elastic.co/t/390683
+        https://discuss.elastic.co/t/390684
+        https://discuss.elastic.co/t/390687
+        ]]></notes>
+        <packageUrl>pkg:maven/org.elasticsearch/elasticsearch-x-content@9.1.2</packageUrl>
+        <cve>CVE-2026-82294</cve>
+        <cve>CVE-2026-82300</cve>
+        <cve>CVE-2026-94397</cve>
+        <cve>CVE-2026-94398</cve>
+        <cve>CVE-2026-94399</cve>
+    </suppress>
 </suppressions>
