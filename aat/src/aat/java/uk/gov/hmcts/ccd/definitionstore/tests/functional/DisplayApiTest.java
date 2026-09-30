@@ -10,6 +10,7 @@ import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
 import java.util.function.Supplier;
 
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -148,6 +149,28 @@ class DisplayApiTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("Should return an empty banner list when jurisdiction IDs are omitted")
+    void shouldReturnEmptyBannersWhenIdsAreOmitted() {
+        asUser.get()
+            .when()
+            .get("/api/display/banners")
+            .then()
+            .statusCode(200)
+            .body("banners", empty());
+    }
+
+    @Test
+    @DisplayName("Should return an empty UI config list when jurisdiction IDs are omitted")
+    void shouldReturnEmptyUiConfigsWhenIdsAreOmitted() {
+        asUser.get()
+            .when()
+            .get("/api/display/jurisdiction-ui-configs")
+            .then()
+            .statusCode(200)
+            .body("configs", empty());
+    }
+
+    @Test
     @DisplayName("Should return search cases result fields for a given Case Type")
     void shouldReturnSearchCasesResultFields() {
 
@@ -161,6 +184,20 @@ class DisplayApiTest extends BaseTest {
             .statusCode(200)
             .body("case_type_id", equalTo(CASE_TYPE))
             .body("fields", notNullValue());
+    }
+
+    @Test
+    @DisplayName("Should return no challenge questions for unknown identifiers")
+    void shouldReturnNoChallengeQuestionsForUnknownIdentifiers() {
+        asUser.get()
+            .given()
+            .pathParam("ctid", "case-type-does-not-exist")
+            .pathParam("id", "question-group-does-not-exist")
+            .when()
+            .get("/api/display/challenge-questions/case-type/{ctid}/question-groups/{id}")
+            .then()
+            .statusCode(200)
+            .body("questions", empty());
     }
 
     @Test
@@ -225,6 +262,14 @@ class DisplayApiTest extends BaseTest {
             .pathParam("ctid", "does-not-exist")
             .when()
             .get("/api/display/search-cases-result-fields/{ctid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .pathParam("id", "question-group")
+            .when()
+            .get("/api/display/challenge-questions/case-type/{ctid}/question-groups/{id}")
             .then()
             .statusCode(401);
     }
