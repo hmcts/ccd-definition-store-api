@@ -197,6 +197,36 @@ class DraftDefinitionTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("Should reject saving a draft without a description")
+    void shouldRejectDraftSaveWithoutDescription() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("{\"jurisdiction\": {\"id\": \"AUTOTEST1\"},"
+                + " \"author\": \"definition-store-functional-tests\","
+                + " \"version\": 1}")
+            .when()
+            .put("/api/draft/save")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should reject saving a draft without an author")
+    void shouldRejectDraftSaveWithoutAuthor() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("{\"jurisdiction\": {\"id\": \"AUTOTEST1\"},"
+                + " \"description\": \"Invalid draft\","
+                + " \"version\": 1}")
+            .when()
+            .put("/api/draft/save")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
     @DisplayName("Should reject a non-numeric draft version")
     void shouldRejectNonNumericDraftVersion() {
         asUser.get()
