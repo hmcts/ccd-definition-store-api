@@ -242,6 +242,33 @@ class UserRoleTest extends BaseTest {
     }
 
     @Test
+    @DisplayName("Should reject an invalid live-to date when creating a user role")
+    void shouldRejectInvalidLiveToDate() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("{\"role\": \"functional-invalid-live-to-" + UUID.randomUUID()
+                + "\", \"security_classification\": \"PUBLIC\", \"live_to\": \"2026/12/31\"}")
+            .when()
+            .post("/api/user-role")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should reject a blank user role")
+    void shouldRejectBlankUserRole() {
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body("{\"role\": \"   \", \"security_classification\": \"PUBLIC\"}")
+            .when()
+            .post("/api/user-role")
+            .then()
+            .statusCode(400);
+    }
+
+    @Test
     @DisplayName("Should reject an invalid Base64 role query parameter")
     void shouldRejectInvalidBase64Role() {
         asUser.get()
