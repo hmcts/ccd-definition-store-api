@@ -11,6 +11,7 @@ import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 import java.util.function.Supplier;
 
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 
 class CaseTypeTest extends BaseTest {
@@ -71,8 +72,8 @@ class CaseTypeTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Should return no roles for an unknown case type")
-    void shouldReturnNoRolesForUnknownCaseType() {
+    @DisplayName("Should reject requests for an unknown case type")
+    void shouldRejectUnknownCaseTypeRoleRequests() {
         asUser.get()
             .given()
             .pathParam("uid", "caseworker-autotest1")
@@ -81,8 +82,8 @@ class CaseTypeTest extends BaseTest {
             .when()
             .get("/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/roles")
             .then()
-            .statusCode(200)
-            .body("", empty());
+            .statusCode(404)
+            .body("message", equalTo("Object Not Found for:case-type-does-not-exist"));
 
         asUser.get()
             .given()
@@ -92,8 +93,8 @@ class CaseTypeTest extends BaseTest {
             .when()
             .get("/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/access/profile/roles")
             .then()
-            .statusCode(200)
-            .body("", empty());
+            .statusCode(404)
+            .body("message", equalTo("Object Not Found for:case-type-does-not-exist"));
     }
 
     //Removed @Test annotation to temporarily remove test
