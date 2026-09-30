@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.util.ReflectionTestUtils;
+import org.springframework.transaction.PlatformTransactionManager;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeServiceImpl;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeSnapshotService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
@@ -272,6 +273,11 @@ class ServicesAutowiringTest {
         @Bean
         public CaseTypeSnapshotService caseTypeSnapshotService() {
             return mock(CaseTypeSnapshotService.class);
+        }
+
+        @Bean
+        public PlatformTransactionManager transactionManager() {
+            return mock(PlatformTransactionManager.class);
         }
 
         @Bean
