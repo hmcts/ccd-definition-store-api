@@ -1,6 +1,0 @@
-{
-  "_guid_": "S-132.31",
-  "_extends_": "F-132_Create_User_Role_With_Unsupported_Content_Type",
-  "title": "Reject an unsupported user-role content type",
-  "expectedResponse": { "responseCode": 415, "body": {} }
-}
