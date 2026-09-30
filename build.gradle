@@ -539,6 +539,10 @@ task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
     }
 }
 
+tasks.named('sonarqube') {
+    dependsOn codeCoverageReport
+}
+
 tasks.named('build') {
     finalizedBy(tasks.named('codeCoverageReport'))
 }
