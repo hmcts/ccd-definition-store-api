@@ -1,6 +1,8 @@
 package uk.gov.hmcts.ccd.definition.store.domain.service.casetype;
 
 import  uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.CaseTypeValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.rules.CaseTypeValidationResult;
@@ -57,7 +59,7 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
-import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
@@ -111,6 +113,9 @@ class CaseTypeServiceImplTest {
     private final Collection<CaseTypeEntity> caseTypeEntities = Arrays.asList(caseTypeEntity1, caseTypeEntity2,
         caseTypeEntity3);
 
+    @Mock
+    private PlatformTransactionManager transactionManager;
+
     private CaseTypeServiceImpl classUnderTest;
 
     @BeforeEach
@@ -127,7 +132,7 @@ class CaseTypeServiceImplTest {
             legacyCaseTypeValidator,
             Arrays.asList(caseTypeEntityValidator1, caseTypeEntityValidator2),
             metadataFieldService,
-            caseTypeSnapshotService);
+            caseTypeSnapshotService, transactionManager);
     }
 
     @Nested
@@ -510,6 +515,34 @@ class CaseTypeServiceImplTest {
         }
 
         @Test
+        void shouldCompleteReadTransactionBeforeWritingSnapshot() {
+            when(caseTypeRepository.findLastVersion(caseTypeId)).thenReturn(Optional.of(1));
+            when(caseTypeRepository.findByReferenceAndVersion(caseTypeId, 1))
+                .thenReturn(Optional.of(caseTypeEntity));
+
+            assertTrue(classUnderTest.findByCaseTypeId(caseTypeId).isPresent());
+
+            InOrder order = inOrder(transactionManager, caseTypeSnapshotService);
+            order.verify(transactionManager).commit(any());
+            order.verify(caseTypeSnapshotService).storeSnapshot(caseTypeId, 1, caseType);
+        }
+
+        @Test
+        void shouldSkipCacheWriteWhenCallerStillOwnsTransaction() {
+            when(caseTypeRepository.findLastVersion(caseTypeId)).thenReturn(Optional.of(1));
+            when(caseTypeRepository.findByReferenceAndVersion(caseTypeId, 1))
+                .thenReturn(Optional.of(caseTypeEntity));
+
+            TransactionSynchronizationManager.setActualTransactionActive(true);
+            try {
+                assertTrue(classUnderTest.findByCaseTypeId(caseTypeId).isPresent());
+                verify(caseTypeSnapshotService, never()).storeSnapshot(anyString(), anyInt(), any());
+            } finally {
+                TransactionSynchronizationManager.setActualTransactionActive(false);
+            }
+        }
+
+        @Test
         @DisplayName("Should call the mapper with the value returned from the repository and return the mapped value")
         void shouldCallMapperAndReturnResult_whenRepositoryReturnsAnEntity() {
             // Given: Repository returns entity with version 1
@@ -729,6 +762,7 @@ class CaseTypeServiceImplTest {
 
             // Then: Should fetch from repository, map, add metadata, and store snapshot
             assertTrue(result.isPresent());
+            assertThat(result.get(), is(caseType));
 
             verify(caseTypeRepository).findLastVersion(CASE_TYPE_ID);
             verify(caseTypeSnapshotService).getSnapshot(CASE_TYPE_ID, VERSION);
@@ -800,52 +834,6 @@ class CaseTypeServiceImplTest {
             verify(caseTypeSnapshotService).storeSnapshot(eq(CASE_TYPE_ID), eq(VERSION), any(CaseType.class));
         }
 
-        @Test
-        @DisplayName("Should fallback to repository when snapshot service returns empty due to error")
-        void shouldFallbackToRepository_whenSnapshotServiceReturnsEmptyDueToError() {
-            // Given: Snapshot service returns empty (simulating internal error handling)
-            when(caseTypeRepository.findLastVersion(CASE_TYPE_ID)).thenReturn(Optional.of(VERSION));
-            when(caseTypeSnapshotService.getSnapshot(CASE_TYPE_ID, VERSION))
-                .thenReturn(Optional.empty()); // Service handles errors internally and returns empty
-            when(caseTypeRepository.findByReferenceAndVersion(CASE_TYPE_ID, VERSION))
-                .thenReturn(Optional.of(caseTypeEntity));
 
-            // When: Find by case type id
-            Optional<CaseType> result = classUnderTest.findByCaseTypeId(CASE_TYPE_ID);
-
-            // Then: Should fallback to repository and return result
-            assertTrue(result.isPresent());
-            assertThat(result.get(), is(caseType));
-
-            verify(caseTypeRepository).findLastVersion(CASE_TYPE_ID);
-            verify(caseTypeSnapshotService).getSnapshot(CASE_TYPE_ID, VERSION);
-            verify(caseTypeRepository).findByReferenceAndVersion(CASE_TYPE_ID, VERSION);
-            verify(dtoMapper).map(caseTypeEntity);
-            verify(metadataFieldService).getCaseMetadataFields();
-            verify(caseTypeSnapshotService).storeSnapshot(eq(CASE_TYPE_ID), eq(VERSION), any(CaseType.class));
-        }
-
-        @Test
-        @DisplayName("Should continue successfully even when store snapshot fails")
-        void shouldContinueSuccessfully_whenStoreSnapshotFails() {
-            // Given: Snapshot doesn't exist, but storing fails
-            when(caseTypeRepository.findLastVersion(CASE_TYPE_ID)).thenReturn(Optional.of(VERSION));
-            when(caseTypeSnapshotService.getSnapshot(CASE_TYPE_ID, VERSION)).thenReturn(Optional.empty());
-            when(caseTypeRepository.findByReferenceAndVersion(CASE_TYPE_ID, VERSION))
-                .thenReturn(Optional.of(caseTypeEntity));
-
-            // Store snapshot is void and catches exceptions internally, so we just verify it was called
-            doNothing().when(caseTypeSnapshotService).storeSnapshot(eq(CASE_TYPE_ID), eq(VERSION), any());
-
-            // When: Find by case type id
-            Optional<CaseType> result = classUnderTest.findByCaseTypeId(CASE_TYPE_ID);
-
-            // Then: Should return result successfully
-            assertTrue(result.isPresent());
-            assertThat(result.get(), is(caseType));
-
-            // Verify store was attempted (even if it failed internally, it won't throw)
-            verify(caseTypeSnapshotService).storeSnapshot(eq(CASE_TYPE_ID), eq(VERSION), any(CaseType.class));
-        }
     }
 }

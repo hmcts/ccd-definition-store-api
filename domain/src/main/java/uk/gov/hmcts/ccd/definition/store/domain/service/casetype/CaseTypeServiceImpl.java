@@ -4,7 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.TransactionTemplate;
 import uk.gov.hmcts.ccd.definition.store.domain.service.EntityToResponseDTOMapper;
 import uk.gov.hmcts.ccd.definition.store.domain.service.legacyvalidation.LegacyCaseTypeValidator;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataFieldService;
@@ -43,6 +46,7 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     private final VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedRepository;
     private final MetadataFieldService metadataFieldService;
     private final CaseTypeSnapshotService snapshotService;
+    private final TransactionTemplate readTransaction;
 
     @Autowired
     public CaseTypeServiceImpl(CaseTypeRepository repository,
@@ -50,7 +54,8 @@ public class CaseTypeServiceImpl implements CaseTypeService {
                                LegacyCaseTypeValidator legacyCaseTypeValidator,
                                List<CaseTypeEntityValidator> caseTypeEntityValidators,
                                MetadataFieldService metadataFieldService,
-                               CaseTypeSnapshotService snapshotService
+                               CaseTypeSnapshotService snapshotService,
+                               PlatformTransactionManager transactionManager
     ) {
         this.repository = repository;
         this.dtoMapper = dtoMapper;
@@ -59,6 +64,8 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         this.versionedRepository = new VersionedDefinitionRepositoryDecorator<>(repository);
         this.metadataFieldService = metadataFieldService;
         this.snapshotService = snapshotService;
+        this.readTransaction = new TransactionTemplate(transactionManager);
+        this.readTransaction.setReadOnly(true);
     }
 
     @Override
@@ -94,23 +101,28 @@ public class CaseTypeServiceImpl implements CaseTypeService {
             .collect(toList());
     }
 
-    @Transactional(readOnly = true)
     @Override
     public Optional<CaseType> findByCaseTypeId(String caseTypeId) {
-        return getCurrentVersion(caseTypeId)
-            .flatMap(currentVersion -> {
-                Optional<CaseType> cachedResult = snapshotService.getSnapshot(caseTypeId, currentVersion);
+        Optional<CaseTypeLookup> result = readTransaction.execute(status -> getCurrentVersion(caseTypeId)
+            .flatMap(version -> {
+                Optional<CaseType> cached = snapshotService.getSnapshot(caseTypeId, version);
+                return cached.or(() -> repository.findByReferenceAndVersion(caseTypeId, version).map(dtoMapper::map))
+                    .map(caseType -> new CaseTypeLookup(caseType, version, cached.isEmpty(),
+                        metadataFieldService.getCaseMetadataFields()));
+            }));
 
-                return cachedResult.map(this::addMetadataFields).or(() ->
-                    repository.findByReferenceAndVersion(caseTypeId, currentVersion)
-                        .map(dtoMapper::map)
-                        .map(caseType -> {
-                            snapshotService.storeSnapshot(caseTypeId, currentVersion, caseType);
-                            return caseType;
-                        })
-                        .map(this::addMetadataFields)
-                );
-            });
+        return result.map(lookup -> {
+            // The read has released its connection. If a caller owns an enclosing transaction,
+            // skip this optional cache write rather than acquire a second connection.
+            if (lookup.cacheMiss() && !TransactionSynchronizationManager.isActualTransactionActive()) {
+                snapshotService.storeSnapshot(caseTypeId, lookup.version(), lookup.caseType());
+            }
+            return addMetadataFields(lookup.caseType(), lookup.metadataFields());
+        });
+    }
+
+    private record CaseTypeLookup(CaseType caseType, Integer version, boolean cacheMiss,
+                                  List<CaseField> metadataFields) {
     }
 
     @Transactional
@@ -167,6 +179,10 @@ public class CaseTypeServiceImpl implements CaseTypeService {
     }
 
     private CaseType addMetadataFields(CaseType caseType) {
+        return addMetadataFields(caseType, metadataFieldService.getCaseMetadataFields());
+    }
+
+    private CaseType addMetadataFields(CaseType caseType, List<CaseField> metadataFields) {
         List<CaseField> caseFields = caseType.getCaseFields();
         if (caseFields == null) {
             caseFields = new ArrayList<>();
@@ -175,7 +191,6 @@ public class CaseTypeServiceImpl implements CaseTypeService {
         }
         caseType.setCaseFields(caseFields);
 
-        List<CaseField> metadataFields = metadataFieldService.getCaseMetadataFields();
         Set<String> metadataFieldIds = metadataFields.stream()
             .map(CaseField::getId)
             .collect(toSet());

@@ -67,6 +67,16 @@ class SnapshotJdbcRepositoryTest {
     }
 
     @Test
+    void shouldRebuildReadableSnapshotFromPreviousFormat() throws Exception {
+        String json = objectMapper.writeValueAsString(createSampleCaseType(CASE_TYPE_REF_1, 1));
+        caseTypeSnapshotRepository.upsertSnapshot(CASE_TYPE_REF_1, 1, json, SnapshotFormat.REVISION - 1);
+        assertTrue(snapshotJdbcRepository.loadCaseTypeSnapshot(CASE_TYPE_REF_1, 1).isEmpty());
+
+        caseTypeSnapshotRepository.upsertSnapshot(CASE_TYPE_REF_1, 1, json);
+        assertTrue(snapshotJdbcRepository.loadCaseTypeSnapshot(CASE_TYPE_REF_1, 1).isPresent());
+    }
+
+    @Test
     void shouldLoadCaseTypeSnapshot_whenSnapshotExists() throws Exception {
         // Given: A snapshot exists in the database
         CaseType expectedCaseType = createSampleCaseType(CASE_TYPE_REF_1, 1);

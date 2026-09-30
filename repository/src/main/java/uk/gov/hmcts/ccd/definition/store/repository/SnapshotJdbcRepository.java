@@ -31,7 +31,7 @@ public class SnapshotJdbcRepository {
         try {
             return jdbcTemplate.query(
                 "SELECT precomputed_response FROM case_type_snapshot "
-                    + "WHERE case_type_reference = ? AND version_id = ?",
+                    + "WHERE case_type_reference = ? AND version_id = ? AND format_revision = ?",
                 rs -> {
                     if (!rs.next()) {
                         return Optional.empty();
@@ -51,7 +51,7 @@ public class SnapshotJdbcRepository {
                         return Optional.empty();
                     }
                 },
-                caseTypeReference, version);
+                caseTypeReference, version, SnapshotFormat.REVISION);
         } catch (Exception e) {
             log.error("Unexpected error retrieving snapshot [{}:{}]", caseTypeReference, version, e);
             return Optional.empty();

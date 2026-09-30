@@ -43,44 +43,7 @@ public class CaseTypeSnapshotService {
 
         log.debug("Looking for cached response for case type: {} version: {}", caseTypeReference, version);
 
-        Optional<CaseType> snapshot = snapshotJdbcRepository.loadCaseTypeSnapshot(caseTypeReference, version);
-
-        if (snapshot.isEmpty()) {
-            discardUnreadableSnapshot(caseTypeReference, version);
-        }
-
-        return snapshot;
-    }
-
-    /**
-     * Remove a snapshot row that exists for the requested version but could not be deserialized.
-     *
-     * <p>Such a row is broken: the read will keep failing, and {@link #storeSnapshot} would skip the
-     * write because a row already exists for that version, so the cache could never recover without
-     * a new import. Removing it restores the ordinary cache-miss path, and the store that follows
-     * this lookup recreates the snapshot from the database.
-     *
-     * <p>An empty read combined with an existing row is the signal: when no row exists at all this
-     * is just a normal cache miss and there is nothing to discard.
-     */
-    private void discardUnreadableSnapshot(String caseTypeReference, Integer version) {
-        if (caseTypeReference == null || version == null) {
-            return;
-        }
-
-        try {
-            if (!snapshotRepository.existsByCaseTypeReferenceAndVersionId(caseTypeReference, version)) {
-                return;
-            }
-
-            snapshotRepository.deleteSnapshot(caseTypeReference, version);
-
-            log.warn("Discarded unreadable caseType snapshot for case type: {} version: {}; "
-                + "it will be rebuilt from the database", caseTypeReference, version);
-        } catch (Exception e) {
-            log.warn("Failed to discard unreadable caseType snapshot for case type: {} version: {}",
-                caseTypeReference, version, e);
-        }
+        return snapshotJdbcRepository.loadCaseTypeSnapshot(caseTypeReference, version);
     }
 
     /**
@@ -98,15 +61,6 @@ public class CaseTypeSnapshotService {
         }
 
         try {
-            // Check if snapshot already exists to avoid duplicate work.
-            // Handles race condition where user queries immediately after import
-            // while async snapshot creation is still in progress.
-            if (snapshotRepository.existsByCaseTypeReferenceAndVersionId(caseTypeReference, version)) {
-                log.debug("Snapshot already exists for case type: {} version: {}, skipping",
-                    caseTypeReference, version);
-                return;
-            }
-
             log.debug("Storing the caseType snapshot for case type: {} version: {}", caseTypeReference, version);
 
             String serializedResponse = JsonUtils.toString(caseType);

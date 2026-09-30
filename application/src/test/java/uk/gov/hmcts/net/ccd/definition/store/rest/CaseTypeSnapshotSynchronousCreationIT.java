@@ -12,6 +12,7 @@ import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import uk.gov.hmcts.ccd.definition.store.repository.SnapshotFormat;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
@@ -42,9 +43,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
     locations = "classpath:test.properties",
     properties = {
         "case-type.snapshot.async-enabled=false",
-        "spring.datasource.hikari.maximum-pool-size=25",
-        "spring.datasource.hikari.minimum-idle=5",
-        "spring.datasource.hikari.connection-timeout=30000",
+        "spring.datasource.hikari.maximum-pool-size=1",
+        "spring.datasource.hikari.minimum-idle=1",
+        "spring.datasource.hikari.connection-timeout=2000",
         "spring.datasource.hikari.idle-timeout=600000"
     }
 )
@@ -147,6 +148,26 @@ class CaseTypeSnapshotSynchronousCreationIT extends BaseTest {
             secondGetResult.getResponse().getContentAsString(),
             "Second request should return same data from cached snapshot"
         );
+
+        // Readable old-format rows and unreadable current-format rows both rebuild at the same version.
+        for (int revision : List.of(SnapshotFormat.REVISION - 1, SnapshotFormat.REVISION)) {
+            String payload = revision == SnapshotFormat.REVISION ? "{\"events\":false}" : "{\"name\":\"stale\"}";
+            jdbcTemplate.update("UPDATE case_type_snapshot SET precomputed_response = CAST(? AS jsonb), "
+                + "format_revision = ?, format_write_count = format_write_count + 1 "
+                + "WHERE case_type_reference = ?", payload, revision, TEST_CASE_TYPE);
+
+            MvcResult rebuilt = mockMvc.perform(MockMvcRequestBuilders.get(caseTypeUrl)
+                    .header(AUTHORIZATION, "Bearer testUser"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+            assertEquals(getResult.getResponse().getContentAsString(), rebuilt.getResponse().getContentAsString());
+            assertEquals(SnapshotFormat.REVISION, jdbcTemplate.queryForObject(
+                "SELECT format_revision FROM case_type_snapshot WHERE case_type_reference = ?",
+                Integer.class, TEST_CASE_TYPE));
+            assertTrue(jdbcTemplate.queryForObject(
+                "SELECT precomputed_response FROM case_type_snapshot WHERE case_type_reference = ?",
+                String.class, TEST_CASE_TYPE).contains(TEST_CASE_TYPE));
+        }
 
         // STEP 7: Verify still only one snapshot exists (no duplicates from concurrent access)
         Integer finalSnapshotCount = getSnapshotCountByCaseType(TEST_CASE_TYPE);

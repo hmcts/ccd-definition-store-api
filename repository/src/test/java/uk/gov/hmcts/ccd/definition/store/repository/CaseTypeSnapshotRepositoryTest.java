@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeSnapshotEntity;
@@ -66,6 +67,12 @@ class CaseTypeSnapshotRepositoryTest {
     @Autowired
     private CaseTypeSnapshotRepository caseTypeSnapshotRepository;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private SnapshotJdbcRepository snapshotJdbcRepository;
+
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @BeforeEach
@@ -117,6 +124,7 @@ class CaseTypeSnapshotRepositoryTest {
 
                 assertThat("Snapshot ID should remain the same (upsert)", snapshot.getId(), is(initialId));
                 assertThat("Version should be updated", snapshot.getVersionId(), is(2));
+                assertEquals(SnapshotFormat.REVISION, snapshotRevision(CASE_TYPE_REF_1));
                 assertThat("Timestamp should have increased",
                     snapshot.getLastModified(), greaterThan(initialLastModified));
                 assertJsonEquals(SAMPLE_JSON_V2, snapshot.getPrecomputedResponse());
@@ -148,30 +156,66 @@ class CaseTypeSnapshotRepositoryTest {
     }
 
     @Test
-    void shouldNotUpdateExistingSnapshot_whenNewVersionIsEqual() throws Exception {
-        // Given: Existing snapshot with version 2
+    void shouldRepairSnapshotAtSameVersion() throws Exception {
         caseTypeSnapshotRepository.upsertSnapshot(CASE_TYPE_REF_1, 2, SAMPLE_JSON_V2);
+        caseTypeSnapshotRepository.upsertSnapshot(CASE_TYPE_REF_1, 2, SAMPLE_JSON_V3);
 
-        Optional<CaseTypeSnapshotEntity> initial = findByCaseTypeReference(CASE_TYPE_REF_1);
-        assertTrue(initial.isPresent());
+        assertJsonEquals(SAMPLE_JSON_V3, findByCaseTypeReference(CASE_TYPE_REF_1).orElseThrow()
+            .getPrecomputedResponse());
+    }
 
-        // When: Attempt to update with same version 2
-        String newJson = "{\"caseType\":\"TestCaseType1\",\"version\":2,\"fields\":[{\"id\":\"newField\"}]}";
-        caseTypeSnapshotRepository.upsertSnapshot(CASE_TYPE_REF_1, 2, newJson);
+    @Test
+    void shouldNotOverwriteNewerFormat() throws Exception {
+        caseTypeSnapshotRepository.upsertSnapshot(CASE_TYPE_REF_1, 2, SAMPLE_JSON_V2, SnapshotFormat.REVISION + 1);
+        caseTypeSnapshotRepository.upsertSnapshot(CASE_TYPE_REF_1, 2, SAMPLE_JSON_V3);
 
-        // Then: Snapshot should NOT be updated
-        Optional<CaseTypeSnapshotEntity> unchanged = findByCaseTypeReference(CASE_TYPE_REF_1);
+        assertJsonEquals(SAMPLE_JSON_V2, findByCaseTypeReference(CASE_TYPE_REF_1).orElseThrow()
+            .getPrecomputedResponse());
+    }
 
-        assertTrue(unchanged.isPresent());
-        CaseTypeSnapshotEntity snapshot = unchanged.get();
+    @Test
+    void shouldInvalidateLegacyUpsertAndRepairAtSameVersion() throws Exception {
+        caseTypeSnapshotRepository.upsertSnapshot(CASE_TYPE_REF_1, 1, SAMPLE_JSON_V1);
 
-        assertThat(snapshot.getVersionId(), is(2));
+        // The previous release omits the revision from both INSERT and UPDATE.
+        legacyUpsert(CASE_TYPE_REF_1, 2, SAMPLE_JSON_V2);
 
-        LocalDateTime initialLastModified = initial.get().getLastModified();
-        String initialJson = initial.get().getPrecomputedResponse();
+        assertEquals(0, snapshotRevision(CASE_TYPE_REF_1));
+        assertTrue(snapshotJdbcRepository.loadCaseTypeSnapshot(CASE_TYPE_REF_1, 2).isEmpty());
+        assertJsonEquals(SAMPLE_JSON_V2, findByCaseTypeReference(CASE_TYPE_REF_1).orElseThrow()
+            .getPrecomputedResponse());
 
-        assertJsonEquals(initialJson, snapshot.getPrecomputedResponse()); // Old JSON preserved
-        assertThat(snapshot.getLastModified(), is(initialLastModified)); // Timestamp unchanged
+        caseTypeSnapshotRepository.upsertSnapshot(CASE_TYPE_REF_1, 2, SAMPLE_JSON_V3);
+        assertEquals(SnapshotFormat.REVISION, snapshotRevision(CASE_TYPE_REF_1));
+        assertJsonEquals(SAMPLE_JSON_V3, findByCaseTypeReference(CASE_TYPE_REF_1).orElseThrow()
+            .getPrecomputedResponse());
+
+        legacyUpsert(CASE_TYPE_REF_1, 1, SAMPLE_JSON_V1);
+        assertEquals(SnapshotFormat.REVISION, snapshotRevision(CASE_TYPE_REF_1));
+    }
+
+    @Test
+    void shouldMarkLegacyInsertAsRevisionZero() {
+        legacyUpsert(CASE_TYPE_REF_1, 1, SAMPLE_JSON_V1);
+        assertEquals(0, snapshotRevision(CASE_TYPE_REF_1));
+    }
+
+    private int snapshotRevision(String reference) {
+        return jdbcTemplate.queryForObject(
+            "SELECT format_revision FROM case_type_snapshot WHERE case_type_reference = ?",
+            Integer.class, reference);
+    }
+
+    private void legacyUpsert(String reference, int version, String response) {
+        jdbcTemplate.update("""
+            INSERT INTO case_type_snapshot
+                (case_type_reference, version_id, precomputed_response, created_at, last_modified)
+            VALUES (?, ?, CAST(? AS jsonb), NOW(), NOW())
+            ON CONFLICT (case_type_reference)
+            DO UPDATE SET version_id = EXCLUDED.version_id,
+                precomputed_response = EXCLUDED.precomputed_response, last_modified = NOW()
+            WHERE case_type_snapshot.version_id < EXCLUDED.version_id
+            """, reference, version, response);
     }
 
     @Test
