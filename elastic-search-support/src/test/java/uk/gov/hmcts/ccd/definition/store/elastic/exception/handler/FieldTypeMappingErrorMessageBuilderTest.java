@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.exception.handler;
 
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.rest.RestStatus;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticsearchError;
@@ -66,9 +66,9 @@ class FieldTypeMappingErrorMessageBuilderTest {
 
     private ElasticsearchError createNativeEsError(String mapperName, String currentType, String mergedType) {
         return new ElasticsearchError(
-            new ElasticsearchStatusException(String.format("Elasticsearch exception [type=illegal_argument_exception, "
+            ElasticsearchTestUtils.exception(String.format("Elasticsearch exception [type=illegal_argument_exception, "
             + "reason=mapper [%s] of different type, current_type [%s], merged_type [%s]]",
-                mapperName, currentType, mergedType), RestStatus.BAD_REQUEST),
+                mapperName, currentType, mergedType), 400),
             caseType);
     }
 }

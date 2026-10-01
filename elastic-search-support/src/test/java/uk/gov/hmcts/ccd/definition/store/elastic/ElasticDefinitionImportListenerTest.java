@@ -3,8 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 import co.elastic.clients.elasticsearch.indices.AliasDefinition;
 import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
 import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.rest.RestStatus;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -210,7 +210,7 @@ class ElasticDefinitionImportListenerTest {
     }
 
     @Test
-    void shouldWrapElasticsearchStatusExceptionInInitialisationException() throws IOException {
+    void shouldWrapElasticsearchExceptionInInitialisationException() throws IOException {
         lenient().when(config.getCasesIndexNameFormat()).thenReturn("%s");
         lenient().when(ccdElasticClient.restoreAliasFromLatestVersionedIndex(anyString())).thenReturn(true);
 
@@ -225,9 +225,9 @@ class ElasticDefinitionImportListenerTest {
 
         lenient().when(caseMappingGenerator.generateMapping(any(CaseTypeEntity.class))).thenReturn("caseMapping");
 
-        // mock upsertMapping to throw ElasticsearchStatusException
+        // mock upsertMapping to throw ElasticsearchException
         when(ccdElasticClient.upsertMapping(anyString(), anyString()))
-            .thenThrow(new ElasticsearchStatusException("Simulated ES error", RestStatus.BAD_REQUEST));
+            .thenThrow(ElasticsearchTestUtils.exception("Simulated ES error", 400));
 
         ElasticSearchInitialisationException wrapped =
             new ElasticSearchInitialisationException(new RuntimeException("wrapped"));
@@ -239,7 +239,7 @@ class ElasticDefinitionImportListenerTest {
         );
 
         assertEquals(wrapped, thrown);
-        verify(elasticsearchErrorHandler).createException(any(ElasticsearchStatusException.class), eq(caseA));
+        verify(elasticsearchErrorHandler).createException(any(ElasticsearchException.class), eq(caseA));
         assertInstanceOf(RuntimeException.class, thrown.getCause());
         assertEquals("wrapped", thrown.getCause().getMessage());
 
