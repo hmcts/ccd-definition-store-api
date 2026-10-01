@@ -14,6 +14,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.ShellCaseFieldMapping;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellCaseState;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMapping;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMappingResponse;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Version;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -57,8 +58,11 @@ public class ShellMappingServiceImpl implements ShellMappingService {
                 new CaseTypeValidationResult("Case Type not found " + caseTypeId)
             ));
 
+        // Use the already-loaded case type version so states and mappings stay consistent
+        // if a newer definition is imported between the two lookups.
+        Integer caseTypeVersion = requireCaseTypeVersion(caseType, caseTypeId);
         List<ShellMappingEntity> shellMappingEntities = shellMappingRepository
-            .findByOriginatingCaseTypeIdReference(caseTypeId);
+            .findByOriginatingCaseTypeIdReferenceAndVersion(caseTypeId, caseTypeVersion);
         if (shellMappingEntities.isEmpty()) {
             throw new NotFoundException("No Shell case found for case type id " + caseTypeId);
         }
@@ -73,6 +77,16 @@ public class ShellMappingServiceImpl implements ShellMappingService {
         String shellCaseTypeID = shellMappingEntities.getFirst().getShellCaseTypeId().getReference();
         List<ShellCaseState> caseStates = getCaseStatesExcludingCategories(caseType, stateCategoriesToExclude);
         return new ShellMappingResponse(shellCaseTypeID, caseStates, fieldMappings);
+    }
+
+    private Integer requireCaseTypeVersion(CaseType caseType, String caseTypeId) {
+        Version version = caseType.getVersion();
+        if (version == null || version.getNumber() == null) {
+            throw new CaseTypeValidationException(
+                new CaseTypeValidationResult("Case Type version not found " + caseTypeId)
+            );
+        }
+        return version.getNumber();
     }
 
     /**

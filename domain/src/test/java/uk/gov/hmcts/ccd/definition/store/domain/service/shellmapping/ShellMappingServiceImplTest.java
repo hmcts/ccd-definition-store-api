@@ -22,6 +22,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellCaseState;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMapping;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMappingResponse;
+import uk.gov.hmcts.ccd.definition.store.repository.model.Version;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -36,9 +37,11 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -179,12 +182,11 @@ class ShellMappingServiceImplTest {
         void shouldCallCaseTypeServiceAndReturnResponseWhenCaseTypeExists() {
             // Given
             String caseTypeId = "ORIG_TYPE_1";
-            CaseType caseType = new CaseType();
-            caseType.setId(caseTypeId);
-            caseType.setStates(List.of(
+            Integer caseTypeVersion = 3;
+            CaseType caseType = createCaseType(caseTypeId, caseTypeVersion,
                 createCaseState("OPEN", "General"),
                 createCaseState("SUBMITTED", "Complex")
-            ));
+            );
 
             ShellMappingEntity entity1 = createShellMappingEntity("SHELL_TYPE_1", "shellField1",
                 "ORIG_TYPE_1", "origField1");
@@ -193,7 +195,8 @@ class ShellMappingServiceImplTest {
             List<ShellMappingEntity> entities = Lists.newArrayList(entity1, entity2);
 
             when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.of(caseType));
-            when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(entities);
+            when(repository.findByOriginatingCaseTypeIdReferenceAndVersion(caseTypeId, caseTypeVersion))
+                .thenReturn(entities);
 
             // When
             ShellMappingResponse result = sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList());
@@ -212,20 +215,50 @@ class ShellMappingServiceImplTest {
             assertThat(result.getShellCaseMappings().get(1).getShellCaseFieldName(), equalTo("shellField2"));
 
             verify(caseTypeService, times(1)).findByCaseTypeId(caseTypeId);
-            verify(repository, times(1)).findByOriginatingCaseTypeIdReference(caseTypeId);
+            verify(repository, times(1))
+                .findByOriginatingCaseTypeIdReferenceAndVersion(caseTypeId, caseTypeVersion);
+            verify(repository, never()).findByOriginatingCaseTypeIdReference(anyString());
+        }
+
+        @Test
+        @DisplayName("Should query mappings using the already-loaded case type version"
+            + " so an intervening import cannot mix versions")
+        void shouldQueryMappingsUsingLoadedCaseTypeVersionToAvoidMixingVersions() {
+            String caseTypeId = "ORIG_TYPE_1";
+            Integer loadedVersion = 1;
+            CaseType caseType = createCaseType(caseTypeId, loadedVersion,
+                createCaseState("OPEN_V1", "General")
+            );
+            ShellMappingEntity mappingForLoadedVersion = createShellMappingEntity(
+                "SHELL_TYPE_V1", "shellFieldV1", "ORIG_TYPE_1", "origFieldV1");
+
+            when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.of(caseType));
+            when(repository.findByOriginatingCaseTypeIdReferenceAndVersion(caseTypeId, loadedVersion))
+                .thenReturn(Lists.newArrayList(mappingForLoadedVersion));
+
+            ShellMappingResponse result = sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList());
+
+            assertThat(result.getCaseStates(), contains(new ShellCaseState("OPEN_V1", "General")));
+            assertThat(result.getShellCaseTypeID(), equalTo("SHELL_TYPE_V1"));
+            assertThat(result.getShellCaseMappings().get(0).getOriginatingCaseFieldName(), equalTo("origFieldV1"));
+            verify(repository).findByOriginatingCaseTypeIdReferenceAndVersion(caseTypeId, loadedVersion);
+            verify(repository, never()).findByOriginatingCaseTypeIdReference(anyString());
+            verify(repository, never())
+                .findByOriginatingCaseTypeIdReferenceAndVersion(eq(caseTypeId), eq(2));
         }
 
         @Test
         @DisplayName("Should return empty caseStates when originating case type has no states")
         void shouldReturnEmptyCaseStatesWhenCaseTypeHasNoStates() {
             String caseTypeId = "ORIG_TYPE_1";
-            CaseType caseType = new CaseType();
-            caseType.setId(caseTypeId);
+            Integer caseTypeVersion = 1;
+            CaseType caseType = createCaseType(caseTypeId, caseTypeVersion);
             ShellMappingEntity entity = createShellMappingEntity("SHELL_TYPE_1", "shellField1",
                 "ORIG_TYPE_1", "origField1");
 
             when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.of(caseType));
-            when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(Lists.newArrayList(entity));
+            when(repository.findByOriginatingCaseTypeIdReferenceAndVersion(caseTypeId, caseTypeVersion))
+                .thenReturn(Lists.newArrayList(entity));
 
             ShellMappingResponse result = sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList());
 
@@ -237,12 +270,13 @@ class ShellMappingServiceImplTest {
         class CaseStatesFilteringTests {
 
             private static final String CASE_TYPE_ID = "ORIG_TYPE_1";
+            private static final Integer CASE_TYPE_VERSION = 1;
 
             @BeforeEach
             void setUpShellMapping() {
                 ShellMappingEntity entity = createShellMappingEntity("SHELL_TYPE_1", "shellField1",
                     "ORIG_TYPE_1", "origField1");
-                when(repository.findByOriginatingCaseTypeIdReference(CASE_TYPE_ID))
+                when(repository.findByOriginatingCaseTypeIdReferenceAndVersion(CASE_TYPE_ID, CASE_TYPE_VERSION))
                     .thenReturn(Lists.newArrayList(entity));
             }
 
@@ -411,9 +445,7 @@ class ShellMappingServiceImplTest {
             }
 
             private void stubCaseTypeWithStates(CaseState... states) {
-                CaseType caseType = new CaseType();
-                caseType.setId(CASE_TYPE_ID);
-                caseType.setStates(List.of(states));
+                CaseType caseType = createCaseType(CASE_TYPE_ID, CASE_TYPE_VERSION, states);
                 when(caseTypeService.findByCaseTypeId(CASE_TYPE_ID)).thenReturn(Optional.of(caseType));
             }
         }
@@ -433,7 +465,8 @@ class ShellMappingServiceImplTest {
             assertThat(exception.getErrors().iterator().next(), equalTo("Case Type not found " + caseTypeId));
 
             verify(caseTypeService, times(1)).findByCaseTypeId(caseTypeId);
-            verify(repository, times(0)).findByOriginatingCaseTypeIdReference(any());
+            verify(repository, never()).findByOriginatingCaseTypeIdReferenceAndVersion(anyString(), anyInt());
+            verify(repository, never()).findByOriginatingCaseTypeIdReference(anyString());
         }
 
         @Test
@@ -441,12 +474,14 @@ class ShellMappingServiceImplTest {
         void shouldCallCaseTypeServiceWithCorrectParameter() {
             // Given
             String caseTypeId = "ORIG_TYPE_1";
-            CaseType caseType = new CaseType();
+            Integer caseTypeVersion = 1;
+            CaseType caseType = createCaseType(caseTypeId, caseTypeVersion);
             ShellMappingEntity entity = createShellMappingEntity("SHELL_TYPE_1", "shellField1",
                 "ORIG_TYPE_1", "origField1");
 
             when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.of(caseType));
-            when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(Lists.newArrayList(entity));
+            when(repository.findByOriginatingCaseTypeIdReferenceAndVersion(caseTypeId, caseTypeVersion))
+                .thenReturn(Lists.newArrayList(entity));
 
             // When
             sut.findByOriginatingCaseTypeId(caseTypeId, Collections.emptyList());
@@ -460,9 +495,11 @@ class ShellMappingServiceImplTest {
         void shouldThrowNotFoundExceptionWhenCaseTypeExistsButNoShellMappingsFound() {
             // Given
             String caseTypeId = "ORIG_TYPE_1";
-            CaseType caseType = new CaseType();
+            Integer caseTypeVersion = 1;
+            CaseType caseType = createCaseType(caseTypeId, caseTypeVersion);
             when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.of(caseType));
-            when(repository.findByOriginatingCaseTypeIdReference(caseTypeId)).thenReturn(new ArrayList<>());
+            when(repository.findByOriginatingCaseTypeIdReferenceAndVersion(caseTypeId, caseTypeVersion))
+                .thenReturn(new ArrayList<>());
 
             // When & Then
             NotFoundException exception = assertThrows(NotFoundException.class,
@@ -471,8 +508,21 @@ class ShellMappingServiceImplTest {
             assertThat(exception.getMessage(), equalTo("No Shell case found for case type id " + caseTypeId));
 
             verify(caseTypeService, times(1)).findByCaseTypeId(caseTypeId);
-            verify(repository, times(1)).findByOriginatingCaseTypeIdReference(caseTypeId);
+            verify(repository, times(1))
+                .findByOriginatingCaseTypeIdReferenceAndVersion(caseTypeId, caseTypeVersion);
         }
+    }
+
+    private CaseType createCaseType(String caseTypeId, Integer versionNumber, CaseState... states) {
+        CaseType caseType = new CaseType();
+        caseType.setId(caseTypeId);
+        Version version = new Version();
+        version.setNumber(versionNumber);
+        caseType.setVersion(version);
+        if (states != null && states.length > 0) {
+            caseType.setStates(List.of(states));
+        }
+        return caseType;
     }
 
     private CaseState createCaseState(String id, String stateCategory) {

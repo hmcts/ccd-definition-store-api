@@ -334,7 +334,7 @@ class ShellMappingControllerIT extends BaseTest {
         }
 
         @Test
-        @DisplayName("Should return only shell mappings for latest version when multiple versions exist")
+        @DisplayName("Should return shell mappings and states for the same latest case type version")
         void shouldReturnOnlyShellMappingsForLatestVersion() throws Exception {
             // Given - Create multiple versions of the same case type
             final VersionedDefinitionRepositoryDecorator<CaseTypeEntity, Integer> versionedCaseTypeRepository =
@@ -362,6 +362,7 @@ class ShellMappingControllerIT extends BaseTest {
             origCaseFieldV1Entity.setHidden(false);
             origCaseFieldV1Entity.setSecurityClassification(PUBLIC);
             origCaseTypeV1.addCaseField(origCaseFieldV1Entity);
+            origCaseTypeV1.addState(createState("STATE_V1", "State V1", "CategoryV1"));
             caseTypeRepository.save(origCaseTypeV1);
             entityManager.flush();
 
@@ -398,6 +399,7 @@ class ShellMappingControllerIT extends BaseTest {
             origCaseFieldV3Entity.setHidden(false);
             origCaseFieldV3Entity.setSecurityClassification(PUBLIC);
             origCaseTypeV3.addCaseField(origCaseFieldV3Entity);
+            origCaseTypeV3.addState(createState("STATE_V3", "State V3", "CategoryV3"));
             caseTypeRepository.save(origCaseTypeV3);
             entityManager.flush();
 
@@ -453,9 +455,11 @@ class ShellMappingControllerIT extends BaseTest {
                 ShellMappingResponse.class
             );
 
-            // Then - Should only return mapping for version 3 (latest)
+            // Then - Should only return mapping and states for version 3 (same version)
             assertAll(
                 () -> assertThat(response.getShellCaseTypeID(), equalTo("SHELL_VERSION_TEST")),
+                () -> assertThat(response.getCaseStates(),
+                    contains(new ShellCaseState("STATE_V3", "CategoryV3"))),
                 () -> assertThat(response.getShellCaseMappings(), hasSize(1)),
                 () -> assertThat(response.getShellCaseMappings().get(0).getOriginatingCaseFieldName(),
                     equalTo("origFieldV3")),
