@@ -1,0 +1,48 @@
+{
+  "_guid_": "S-127.1",
+  "_extends_": "F-127_Test_Base_Data",
+  "title": "must return the list of case roles for a given case type",
+
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid case type id",
+    "has the 200 OK code",
+    "contains the case roles defined for the case type"
+  ],
+
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "headers": {
+      "Content-Type": "[[ANYTHING_PRESENT]]",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+    },
+    "body": {
+      "arrayInMap": [
+        {
+          "__ordering__": "unordered",
+          "__elementId__": "id"
+        },
+        {
+          "id": "[CLAIMANT]",
+          "name": "Claimant",
+          "description": "The person created the case"
+        },
+        {
+          "id": "[DEFENDANT]",
+          "name": "Defendant",
+          "description": "The defending party"
+        },
+        {
+          "id": "[CLAIMANTSOLICITOR]",
+          "name": "Claimant solicitor",
+          "description": "The claiming solicitor"
+        },
+        {
+          "id": "[DEFENDANTSOLICITOR]",
+          "name": "Defendant solicitor",
+          "description": "The defending solicitor"
+        }
+      ]
+    }
+  }
+}

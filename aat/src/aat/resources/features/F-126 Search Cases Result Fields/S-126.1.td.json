@@ -1,0 +1,59 @@
+{
+  "_guid_": "S-126.1",
+  "_extends_": "F-126_Test_Base_Data",
+  "title": "must return the UI definition of search cases result fields for a given case type",
+
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid case type id",
+    "contains a valid use case",
+    "has the 200 OK code",
+    "has Search Cases Result Fields definition details"
+  ],
+
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "headers": {
+      "Content-Type": "[[ANYTHING_PRESENT]]",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+    },
+    "body": {
+      "case_type_id": "FT_MasterCaseType",
+      "fields": [
+        {
+          "__ordering__": "unordered",
+          "__elementId__": "case_field_id,case_field_element_path"
+        },
+        {
+          "_extends_": "ResultField",
+          "case_field_id": "TextField",
+          "label": "`Text` orgcases",
+          "order": 1,
+          "use_case": "ORGCASES",
+          "sort_order": {
+            "direction": "ASC",
+            "priority": 1
+          },
+          "case_type_id": "FT_MasterCaseType"
+        },
+        {
+          "_extends_": "ResultField",
+          "case_field_id": "EmailField",
+          "label": "`Email` orgcases",
+          "order": 2,
+          "use_case": "ORGCASES",
+          "case_type_id": "FT_MasterCaseType"
+        },
+        {
+          "_extends_": "ResultField",
+          "metadata": true,
+          "case_field_id": "[CASE_REFERENCE]",
+          "label": "`CaseReference` orgcases",
+          "order": 3,
+          "use_case": "ORGCASES",
+          "case_type_id": "FT_MasterCaseType"
+        }
+      ]
+    }
+  }
+}
