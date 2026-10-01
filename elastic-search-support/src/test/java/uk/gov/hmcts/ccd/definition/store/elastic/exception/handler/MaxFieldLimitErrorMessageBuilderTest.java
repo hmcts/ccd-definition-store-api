@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.exception.handler;
 
-import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

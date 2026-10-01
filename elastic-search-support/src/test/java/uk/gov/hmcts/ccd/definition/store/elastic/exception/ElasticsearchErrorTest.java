@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ElasticsearchErrorTest {
 
@@ -53,4 +54,16 @@ class ElasticsearchErrorTest {
             () -> assertThat(result.hasReason(), is(false))
         );
     }
+
+    @Test
+    void rejectsMissingExceptionOrCaseType() {
+        var exception = ElasticsearchTestUtils.exception("Mapping rejected", 400);
+        var caseType = new CaseTypeBuilder().withReference("CaseTypeId").build();
+
+        assertAll(
+            () -> assertThrows(NullPointerException.class, () -> new ElasticsearchError(null, caseType)),
+            () -> assertThrows(NullPointerException.class, () -> new ElasticsearchError(exception, null))
+        );
+    }
+
 }
