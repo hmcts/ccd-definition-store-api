@@ -6,12 +6,15 @@
 # Package Files #
 *.war
 *.ear
-# ide generated files
 .classpath
 .project
-**/.project
 .settings/
-**/.settings/
+target/
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# ide generated files
 *.sublime-project
 *.sublime-workspace
 
