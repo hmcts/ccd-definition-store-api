@@ -41,6 +41,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
     protected ColumnName displayGroupOrder;
     protected ColumnName displayGroupFieldDisplayOrder;
     protected ColumnName displayContextParameter = ColumnName.DISPLAY_CONTEXT_PARAMETER;
+    protected ColumnName displayGroupDefaultFocus = ColumnName.DEFAULT_FOCUS;
 
     protected SheetName sheetName;
     protected Optional<ColumnName> groupShowConditionColumn = Optional.empty();
@@ -90,6 +91,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
                 continue;
             }
 
+            validateDefaultFocus(displayGroupItems);
+
             final Map<String, List<DefinitionDataItem>> groupDefinitions = displayGroupItems.stream()
                 .collect(groupingBy(dataItem -> {
                     String caseEventId = dataItem.getString(ColumnName.CASE_EVENT_ID);
@@ -124,6 +127,19 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         return result;
     }
 
+    private void validateDefaultFocus(List<DefinitionDataItem> displayGroupItems) {
+        long defaultFocusCount = displayGroupItems.stream()
+            .filter(item ->  Boolean.TRUE.equals(item.getDefaultFocus()))
+            .map(DefinitionDataItem::getCaseTypeId)
+            .toList()
+            .size();
+
+        if (defaultFocusCount > 1) {
+            throw new MapperException(
+                "For each case type only one column should have the Default Focus set to true.");
+        }
+    }
+
     protected ParseResult.Entry<DisplayGroupEntity> parseGroup(
         CaseTypeEntity caseType,
         String groupId,
@@ -139,6 +155,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         group.setOrder(sample.getInteger(this.displayGroupOrder));
         group.setType(this.displayGroupType);
         group.setPurpose(this.displayGroupPurpose);
+        group.setDefaultFocus(sample.getBoolean(this.displayGroupDefaultFocus));
 
 
         group.setWebhookMidEvent(parseWebhook(getDataDefinitionWithValidMidEventURL(groupDefinition),

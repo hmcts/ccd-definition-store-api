@@ -1,0 +1,56 @@
+{
+  "_guid_": "S-126.3_Get_Tab_Structure",
+  "_extends_": "F-126.3_Test_Data_Base",
+  "title": "Verify defaultFocus values in tab structure for FT_MasterCaseType",
+  "operationName": "GET /api/display/tab-structure/{id}",
+  "specs": [
+    "get tabs for case type id which has defaultFocus value set"
+  ],
+  "method": "GET",
+  "uri": "/api/display/tab-structure/{ctid}",
+  "request": {
+    "headers": {
+      "_extends_": "Common_Request_Headers"
+    },
+    "pathVariables": {
+      "ctid": "FT_MasterCaseType"
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "body": {
+      "case_type_id": "FT_MasterCaseType",
+      "channels": "[[ANYTHING_PRESENT]]",
+      "tabs": [
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "NameTab",
+          "label": "Details",
+          "order": 2,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": true
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "CaseLinkTab",
+          "label": "Linked Cases",
+          "order": 3,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "History",
+          "label": "History",
+          "order": 1,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
+        }
+      ]
+    }
+  }
+}
+
