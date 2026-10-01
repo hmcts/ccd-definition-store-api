@@ -56,6 +56,9 @@ env.BEFTA_S2S_CLIENT_ID = "ccd_gw"
 env.CCD_CASEWORKER_AUTOTEST_EMAIL = "auto.test.cnp@gmail.com"
 env.BEFTA_RESPONSE_HEADER_CHECK_POLICY="JUST_WARN"
 env.CCD_STUB_SERVICE_URI_BASE="ccd-test-stubs-service-aat.aat.platform.hmcts.net"
+env.OAUTH2_ACCESS_TOKEN_TYPE = "OIDC" // use new OIDC authentication for BEFTA tests
+env.OAUTH2_SCOPE_VARIABLES = "profile openid roles"
+env.CCD_API_GATEWAY_OAUTH2_SCOPE = "openid profile roles"
 // BEFTA retry env variables
 env.BEFTA_RETRY_MAX_ATTEMPTS = "3"
 env.BEFTA_RETRY_STATUS_CODES = "500,502,503,504"
@@ -143,6 +146,15 @@ withPipeline(type, product, app) {
 
     }
 
+    // Set IDAM_API_URL_BASE post high-level data setup where it would have been overridden
+    before('smoketest:preview') {
+        env.IDAM_API_URL_BASE = "https://idam-web-public.aat.platform.hmcts.net"
+    }
+    
+    before('smoketest:aat') {
+        env.IDAM_API_URL_BASE = "https://idam-web-public.aat.platform.hmcts.net"
+    }
+    
     afterAlways('smoketest:preview') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Smoke Tests/**/*'
         publishHTML target: [
