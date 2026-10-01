@@ -2,5 +2,5 @@
   "_guid_": "S-132.3",
   "_extends_": "F-132_Get_Jurisdiction_UI_Configs",
   "title": "Return jurisdiction UI configs",
-  "expectedResponse": { "_extends_": "Common_200_Response" }
+  "expectedResponse": { "_extends_": "F-132_Common_200_Response" }
 }

@@ -2,5 +2,5 @@
   "_guid_": "S-132.9",
   "_extends_": "F-132_Get_Import_Audits",
   "title": "Return import audits",
-  "expectedResponse": { "_extends_": "Common_200_Response" }
+  "expectedResponse": { "_extends_": "F-132_Common_200_Response" }
 }
