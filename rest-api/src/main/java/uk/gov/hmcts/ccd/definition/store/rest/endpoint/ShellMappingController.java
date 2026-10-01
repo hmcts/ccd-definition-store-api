@@ -38,7 +38,11 @@ public class ShellMappingController {
 
     @GetMapping(value = RETRIEVE_SHELL_MAPPINGS, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Retrieve Shell Mappings for case type")
+    @ApiOperation(value = "Retrieve Shell Mappings for case type",
+        notes = "Returns shell case mappings and originating case states. "
+            + "Optional query parameter stateCategoriesToExclude removes any case state whose "
+            + "stateCategory contains any of the supplied values (comma-separated categories on a "
+            + "state are matched individually). When omitted, all originating case states are returned.")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Returns list of shell mappings for case type"),
         @ApiResponse(code = 404, message = "No Shell case found"),
@@ -48,8 +52,13 @@ public class ShellMappingController {
     })
     public ShellMappingResponse shellMappings(
         @PathVariable("originalCaseTypeId") @NotBlank String originalCaseTypeId,
-        @ApiParam(value = "State categories to exclude from the returned case states")
-        @RequestParam(value = "stateCategoriesToExclude", required = false) List<String> stateCategoriesToExclude) {
+        @ApiParam(value = "Optional. State category values to exclude from caseStates. "
+            + "A state is excluded if any of its stateCategory values (split by comma) matches "
+            + "any supplied value. Query parameter name: stateCategoriesToExclude.",
+            name = "stateCategoriesToExclude",
+            allowMultiple = true)
+        @RequestParam(value = "stateCategoriesToExclude", required = false)
+            List<String> stateCategoriesToExclude) {
         return shellMappingService.findByOriginatingCaseTypeId(
             originalCaseTypeId,
             stateCategoriesToExclude == null ? Collections.emptyList() : stateCategoriesToExclude

@@ -244,6 +244,26 @@ class ShellMappingControllerIT extends BaseTest {
         }
 
         @Test
+        @DisplayName("Should not exclude states when using undocumented stateCategory query param name")
+        void shouldNotExcludeStatesWhenUsingUndocumentedStateCategoryParam() throws Exception {
+            final String url = RETRIEVE_SHELL_MAPPINGS_URL + "/ORIG_CASE_TYPE_1?stateCategory=Complex";
+            final MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(url))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andReturn();
+
+            ShellMappingResponse response = mapper.readValue(
+                result.getResponse().getContentAsString(),
+                ShellMappingResponse.class
+            );
+
+            assertThat(response.getCaseStates(), contains(
+                new ShellCaseState("OPEN", "General"),
+                new ShellCaseState("SUBMITTED", "Complex"),
+                new ShellCaseState("CLOSED", "General,Archived")
+            ));
+        }
+
+        @Test
         @DisplayName("Should return all case states when stateCategoriesToExclude is not provided")
         void shouldReturnAllCaseStatesWhenStateCategoriesToExcludeNotProvided() throws Exception {
             final String url = RETRIEVE_SHELL_MAPPINGS_URL + "/ORIG_CASE_TYPE_1";

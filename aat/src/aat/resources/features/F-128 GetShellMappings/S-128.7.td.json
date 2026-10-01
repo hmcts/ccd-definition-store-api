@@ -1,12 +1,12 @@
 {
   "_guid_": "S-128.7",
   "_extends_": "F-128_Test_Base_Data",
-  "title": "Success response - Return 200 with caseStates filtered by stateCategoriesToExclude",
+  "title": "Success response - Return 200 with caseStates excluding matching stateCategoriesToExclude",
   "specs": [
     "an active profile in CCD",
     "contains an originalCaseTypeId that exists in CCD config",
     "contains stateCategoriesToExclude query param",
-    "contains filtered caseStates excluding matching state categories"
+    "contains caseStates with matching state categories excluded"
   ],
   "request": {
     "pathVariables": {

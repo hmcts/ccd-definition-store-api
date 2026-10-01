@@ -71,11 +71,17 @@ public class ShellMappingServiceImpl implements ShellMappingService {
             .toList();
 
         String shellCaseTypeID = shellMappingEntities.getFirst().getShellCaseTypeId().getReference();
-        List<ShellCaseState> caseStates = getFilteredCaseStates(caseType, stateCategoriesToExclude);
+        List<ShellCaseState> caseStates = getCaseStatesExcludingCategories(caseType, stateCategoriesToExclude);
         return new ShellMappingResponse(shellCaseTypeID, caseStates, fieldMappings);
     }
 
-    private List<ShellCaseState> getFilteredCaseStates(CaseType caseType, List<String> stateCategoriesToExclude) {
+    /**
+     * Returns originating case states, excluding any state whose stateCategory matches
+     * one of the supplied values. Matching is by any comma-separated category on the state
+     * (e.g. "Start,End" matches exclude value "End"). Null/blank state categories are kept.
+     */
+    private List<ShellCaseState> getCaseStatesExcludingCategories(CaseType caseType,
+                                                                  List<String> stateCategoriesToExclude) {
         List<CaseState> states = caseType.getStates();
         if (states == null || states.isEmpty()) {
             return Collections.emptyList();
