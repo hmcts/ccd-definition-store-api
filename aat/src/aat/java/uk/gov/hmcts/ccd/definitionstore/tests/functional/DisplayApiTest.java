@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
@@ -9,8 +10,13 @@ import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
 import java.util.function.Supplier;
 
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+
 class DisplayApiTest extends BaseTest {
 
+    private static final String JURISDICTION = "AUTOTEST1";
     private static final String CASE_TYPE = "AAT";
     private static final String EVENT = "START_PROGRESS";
 
@@ -110,6 +116,162 @@ class DisplayApiTest extends BaseTest {
                 "/api/display/work-basket-definition/{ctid}")
             .then()
             .statusCode(200);
+    }
+
+    @Test
+    @DisplayName("Should return banners for a list of jurisdictions")
+    void shouldReturnBanners() {
+
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .queryParam("ids", JURISDICTION)
+            .when()
+            .get("/api/display/banners")
+            .then()
+            .statusCode(200)
+            .body("banners", notNullValue());
+    }
+
+    @Test
+    @DisplayName("Should return UI configs for a list of jurisdictions")
+    void shouldReturnJurisdictionUiConfigs() {
+
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .queryParam("ids", JURISDICTION)
+            .when()
+            .get("/api/display/jurisdiction-ui-configs")
+            .then()
+            .statusCode(200)
+            .body("configs", notNullValue());
+    }
+
+    @Test
+    @DisplayName("Should return an empty banner list when jurisdiction IDs are omitted")
+    void shouldReturnEmptyBannersWhenIdsAreOmitted() {
+        asUser.get()
+            .when()
+            .get("/api/display/banners")
+            .then()
+            .statusCode(200)
+            .body("banners", empty());
+    }
+
+    @Test
+    @DisplayName("Should return an empty UI config list when jurisdiction IDs are omitted")
+    void shouldReturnEmptyUiConfigsWhenIdsAreOmitted() {
+        asUser.get()
+            .when()
+            .get("/api/display/jurisdiction-ui-configs")
+            .then()
+            .statusCode(200)
+            .body("configs", empty());
+    }
+
+    @Test
+    @DisplayName("Should return search cases result fields for a given Case Type")
+    void shouldReturnSearchCasesResultFields() {
+
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/display/search-cases-result-fields/{ctid}")
+            .then()
+            .statusCode(200)
+            .body("case_type_id", equalTo(CASE_TYPE))
+            .body("fields", notNullValue());
+    }
+
+    @Test
+    @DisplayName("Should return no challenge questions for unknown identifiers")
+    void shouldReturnNoChallengeQuestionsForUnknownIdentifiers() {
+        asUser.get()
+            .given()
+            .pathParam("ctid", "case-type-does-not-exist")
+            .pathParam("id", "question-group-does-not-exist")
+            .when()
+            .get("/api/display/challenge-questions/case-type/{ctid}/question-groups/{id}")
+            .then()
+            .statusCode(200)
+            .body("questions", empty());
+    }
+
+    @Test
+    @DisplayName("Should reject unauthenticated display requests")
+    void shouldRejectUnauthenticatedDisplayRequests() {
+        RestAssured.given()
+            .when()
+            .get("/api/display/banners")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .when()
+            .get("/api/display/jurisdiction-ui-configs")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/display/search-input-definition/{ctid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/display/search-result-definition/{ctid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/display/tab-structure/{ctid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .pathParam("etid", EVENT)
+            .when()
+            .get("/api/display/wizard-page-structure/case-types/{ctid}/event-triggers/{etid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/display/work-basket-input-definition/{ctid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/display/work-basket-definition/{ctid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", "does-not-exist")
+            .when()
+            .get("/api/display/search-cases-result-fields/{ctid}")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("ctid", CASE_TYPE)
+            .pathParam("id", "question-group")
+            .when()
+            .get("/api/display/challenge-questions/case-type/{ctid}/question-groups/{id}")
+            .then()
+            .statusCode(401);
     }
 
 }

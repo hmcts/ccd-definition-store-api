@@ -1,0 +1,9 @@
+{
+  "_guid_": "S-132.10",
+  "_extends_": "F-132_Get_User_Role",
+  "title": "Retrieve an existing user role",
+  "expectedResponse": {
+    "_extends_": "F-132_Common_200_Response",
+    "body": { "role": "caseworker-autotest1", "security_classification": "PUBLIC" }
+  }
+}

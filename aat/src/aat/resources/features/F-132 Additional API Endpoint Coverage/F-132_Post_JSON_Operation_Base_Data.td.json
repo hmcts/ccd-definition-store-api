@@ -1,0 +1,6 @@
+{
+  "_guid_": "F-132_Post_JSON_Operation_Base_Data",
+  "_extends_": "F-132_Operation_Base_Data",
+  "method": "POST",
+  "request": { "headers": { "Content-Type": "application/json" } }
+}

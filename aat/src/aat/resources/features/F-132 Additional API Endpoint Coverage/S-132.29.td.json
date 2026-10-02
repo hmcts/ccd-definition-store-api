@@ -1,0 +1,28 @@
+{
+  "_guid_": "S-132.29",
+  "_extends_": "F-132_Create_User_Role_With_Invalid_Live_Dates",
+  "title": "Reject invalid user-role live dates",
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "Content-Type": "application/problem+json",
+      "Date": "[[ANYTHING_PRESENT]]",
+      "Expires": "0",
+      "Pragma": "no-cache",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]",
+      "Transfer-Encoding": "chunked",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "0"
+    },
+    "body": {
+      "type": "about:blank",
+      "title": "Bad Request",
+      "status": 400,
+      "detail": "Validation failure",
+      "instance": "/api/user-role"
+    }
+  }
+}

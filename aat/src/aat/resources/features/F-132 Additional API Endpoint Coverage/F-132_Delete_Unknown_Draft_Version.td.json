@@ -1,0 +1,8 @@
+{
+  "_guid_": "F-132_Delete_Unknown_Draft_Version",
+  "_extends_": "F-132_Operation_Base_Data",
+  "operationName": "Delete Unknown Draft Version",
+  "method": "DELETE",
+  "uri": "/api/draft/{jurisdiction}/{version}",
+  "request": { "pathVariables": { "jurisdiction": "AUTOTEST1", "version": 2147483647 } }
+}

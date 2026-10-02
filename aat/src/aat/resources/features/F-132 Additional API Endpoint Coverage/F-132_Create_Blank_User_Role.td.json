@@ -1,0 +1,7 @@
+{
+  "_guid_": "F-132_Create_Blank_User_Role",
+  "_extends_": "F-132_Post_JSON_Operation_Base_Data",
+  "operationName": "Create Blank User Role",
+  "uri": "/api/user-role",
+  "request": { "body": { "role": "   ", "security_classification": "PUBLIC" } }
+}

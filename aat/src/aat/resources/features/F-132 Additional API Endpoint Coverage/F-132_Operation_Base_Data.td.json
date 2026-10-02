@@ -1,0 +1,14 @@
+{
+  "_guid_": "F-132_Operation_Base_Data",
+  "_extends_": "BeftaCaseworker3",
+  "productName": "CCD Definition Store",
+  "method": "GET",
+  "request": {
+    "headers": {
+      "Authorization": "[[DEFAULT_AUTO_VALUE]]",
+      "ServiceAuthorization": "[[DEFAULT_AUTO_VALUE]]",
+      "Content-Type": "application/json"
+    }
+  },
+  "specs": ["an active profile in CCD"]
+}

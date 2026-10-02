@@ -15,6 +15,7 @@ public abstract class BaseTest {
         this.aat = aat;
         RestAssured.baseURI = aat.getTestUrl();
         RestAssured.useRelaxedHTTPSValidation();
+        RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
     }
 
     protected Supplier<RequestSpecification> asAutoTestImporter() {

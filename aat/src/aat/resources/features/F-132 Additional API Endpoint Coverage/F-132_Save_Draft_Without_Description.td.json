@@ -1,0 +1,15 @@
+{
+  "_guid_": "F-132_Save_Draft_Without_Description",
+  "_extends_": "F-132_Put_Operation_Base_Data",
+  "operationName": "Save Draft Without Description",
+  "method": "PUT",
+  "uri": "/api/draft/save",
+  "request": {
+    "headers": { "Content-Type": "application/json" },
+    "body": {
+      "jurisdiction": { "id": "AUTOTEST1" },
+      "author": "definition-store-functional-tests",
+      "version": 1
+    }
+  }
+}

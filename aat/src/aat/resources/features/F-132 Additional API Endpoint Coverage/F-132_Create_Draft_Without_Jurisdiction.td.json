@@ -1,0 +1,17 @@
+{
+  "_guid_": "F-132_Create_Draft_Without_Jurisdiction",
+  "_extends_": "Post_Operation_Base_Data_on_Definition_Store",
+  "operationName": "Create Draft Without Jurisdiction",
+  "method": "POST",
+  "uri": "/api/draft",
+  "users": {
+    "invokingUser": {
+      "username": "befta.caseworker.3@gmail.com",
+      "password": "[[$CCD_BEFTA_CASEWORKER_3_PWD]]"
+    }
+  },
+  "request": {
+    "headers": { "Content-Type": "application/json" },
+    "body": { "description": "Invalid draft", "author": "functional-test" }
+  }
+}

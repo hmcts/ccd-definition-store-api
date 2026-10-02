@@ -1,0 +1,5 @@
+{
+  "_guid_": "F-132_Common_200_Response_Headers",
+  "_extends_": "Common_200_Response_Headers",
+  "X-XSS-Protection": "0"
+}

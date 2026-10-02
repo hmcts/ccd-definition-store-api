@@ -108,7 +108,7 @@ The application is structured as a multi-module project. The modules are:
 
 Data access layer.
 
-### domain
+### Domain
 
 Domain logic.
 

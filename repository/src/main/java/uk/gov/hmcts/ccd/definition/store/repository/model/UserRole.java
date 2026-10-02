@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
@@ -24,7 +25,7 @@ public class UserRole {
     @Pattern(regexp = REGEX_ISO_DATE, message = INVALID_ISO_DATE_FROMAT)
     private String liveTo;
 
-    @NotNull
+    @NotBlank
     private String role;
 
     @NotNull

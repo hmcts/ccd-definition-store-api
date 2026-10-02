@@ -1,0 +1,7 @@
+{
+  "_guid_": "F-132_Common_200_Response",
+  "_extends_": "Common_200_Response",
+  "headers": {
+    "_extends_": "F-132_Common_200_Response_Headers"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "_guid_": "S-132.17",
+  "_extends_": "F-132_Get_Banners_Without_Valid_Authentication",
+  "title": "Reject unauthenticated display requests",
+  "expectedResponse": {
+    "_extends_": "Common_401_Response",
+    "responseCode": 401,
+    "body": null
+  }
+}
