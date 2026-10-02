@@ -3,10 +3,24 @@
   "_extends_": "F-132_Get_User_Role_With_Invalid_Base64",
   "title": "Reject an invalid Base64 user role query parameter",
   "expectedResponse": {
-    "_extends_": "Common_400_Response",
     "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "Content-Encoding": "gzip",
+      "Content-Type": "application/json",
+      "Date": "[[ANYTHING_PRESENT]]",
+      "Expires": "0",
+      "Pragma": "no-cache",
+      "Strict-Transport-Security": "max-age=31536000 ; includeSubDomains",
+      "Transfer-Encoding": "chunked",
+      "Vary": "accept-encoding",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "0"
+    },
     "body": {
-      "message": "Illegal Input:[[ANY_STRING_NOT_NULLABLE]]"
+      "message": "Illegal Input:Illegal base64 character 25"
     }
   }
 }

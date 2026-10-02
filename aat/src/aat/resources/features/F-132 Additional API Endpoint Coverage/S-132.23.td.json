@@ -3,8 +3,20 @@
   "_extends_": "F-132_Delete_Unknown_Draft_Version",
   "title": "Reject deletion of an unknown draft version",
   "expectedResponse": {
-    "_extends_": "Common_400_Response",
     "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "Content-Length": "27",
+      "Content-Type": "text/plain;charset=UTF-8",
+      "Date": "[[ANYTHING_PRESENT]]",
+      "Expires": "0",
+      "Pragma": "no-cache",
+      "Strict-Transport-Security": "max-age=31536000 ; includeSubDomains",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "0"
+    },
     "body": {
       "__plainTextValue__": "Can't find draft definition"
     }
