@@ -8,8 +8,9 @@
     "headers": {
       "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
       "Content-Type": "application/problem+json",
+      "Date": "[[ANYTHING_PRESENT]]",
       "Expires": "0",
-      "Pragma": "0",
+      "Pragma": "no-cache",
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]",
       "Transfer-Encoding": "chunked",
       "X-Content-Type-Options": "nosniff",
