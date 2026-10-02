@@ -3,8 +3,19 @@
   "_extends_": "F-132_Create_User_Role_Without_Security_Classification",
   "title": "Reject a user role without a security classification",
   "expectedResponse": {
-    "_extends_": "Common_400_Response",
     "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "Content-Type": "application/problem+json",
+      "Expires": "0",
+      "Pragma": "0",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]",
+      "Transfer-Encoding": "chunked",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "0"
+    },
     "body": {
       "type": "about:blank",
       "title": "Bad Request",
