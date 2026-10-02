@@ -6,7 +6,7 @@
     "_extends_": "Common_400_Response",
     "responseCode": 400,
     "body": {
-      "message": "Illegal Input:Illegal base64 character 25"
+      "message": "Illegal Input:[[ANY_STRING_NOT_NULLABLE]]"
     }
   }
 }
