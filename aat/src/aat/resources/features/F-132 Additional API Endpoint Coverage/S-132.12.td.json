@@ -2,5 +2,11 @@
   "_guid_": "S-132.12",
   "_extends_": "F-132_Get_User_Role_With_Invalid_Base64",
   "title": "Reject an invalid Base64 user role query parameter",
-  "expectedResponse": { "responseCode": 400, "body": {} }
+  "expectedResponse": {
+    "_extends_": "Common_400_Response",
+    "responseCode": 400,
+    "body": {
+      "message": "Illegal Input:Illegal base64 character 25"
+    }
+  }
 }

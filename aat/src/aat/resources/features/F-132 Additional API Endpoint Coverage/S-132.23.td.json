@@ -2,5 +2,11 @@
   "_guid_": "S-132.23",
   "_extends_": "F-132_Delete_Unknown_Draft_Version",
   "title": "Reject deletion of an unknown draft version",
-  "expectedResponse": { "responseCode": 400, "body": {} }
+  "expectedResponse": {
+    "_extends_": "Common_400_Response",
+    "responseCode": 400,
+    "body": {
+      "__plainTextValue__": "Can't find draft definition"
+    }
+  }
 }

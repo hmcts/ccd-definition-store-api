@@ -2,5 +2,15 @@
   "_guid_": "S-132.25",
   "_extends_": "F-132_Create_Duplicate_User_Role",
   "title": "Reject creation of a duplicate user role",
-  "expectedResponse": { "responseCode": 400, "body": {} }
+  "expectedResponse": {
+    "_extends_": "Common_400_Response",
+    "responseCode": 400,
+    "body": {
+      "timestamp": "[[ANYTHING_PRESENT]]",
+      "status": 400,
+      "error": "Bad Request",
+      "message": "User role already exists",
+      "path": "/api/user-role"
+    }
+  }
 }

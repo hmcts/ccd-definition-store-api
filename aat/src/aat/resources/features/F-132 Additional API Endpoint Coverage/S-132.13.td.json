@@ -2,5 +2,15 @@
   "_guid_": "S-132.13",
   "_extends_": "F-132_Get_User_Role_Without_Role",
   "title": "Reject a missing user role query parameter",
-  "expectedResponse": { "responseCode": 400, "body": {} }
+  "expectedResponse": {
+    "_extends_": "Common_400_Response",
+    "responseCode": 400,
+    "body": {
+      "type": "about:blank",
+      "title": "Bad Request",
+      "status": 400,
+      "detail": "Required parameter 'role' is not present.",
+      "instance": "/api/user-role"
+    }
+  }
 }

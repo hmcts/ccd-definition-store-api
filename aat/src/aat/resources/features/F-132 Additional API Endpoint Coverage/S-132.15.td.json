@@ -2,5 +2,11 @@
   "_guid_": "S-132.15",
   "_extends_": "F-132_Save_Draft_Without_Description",
   "title": "Reject saving a draft without a description",
-  "expectedResponse": { "responseCode": 400, "body": {} }
+  "expectedResponse": {
+    "_extends_": "Common_400_Response",
+    "responseCode": 400,
+    "body": {
+      "__plainTextValue__": "Definition description cannot be null"
+    }
+  }
 }

@@ -2,5 +2,15 @@
   "_guid_": "S-132.27",
   "_extends_": "F-132_Create_User_Role_Without_Security_Classification",
   "title": "Reject a user role without a security classification",
-  "expectedResponse": { "responseCode": 400, "body": {} }
+  "expectedResponse": {
+    "_extends_": "Common_400_Response",
+    "responseCode": 400,
+    "body": {
+      "type": "about:blank",
+      "title": "Bad Request",
+      "status": 400,
+      "detail": "Validation failure",
+      "instance": "/api/user-role"
+    }
+  }
 }

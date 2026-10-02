@@ -2,5 +2,9 @@
   "_guid_": "S-132.18",
   "_extends_": "F-132_Get_IDAM_Profile_Without_Valid_Authentication",
   "title": "Reject unauthenticated IDAM requests",
-  "expectedResponse": { "responseCode": 401, "body": {} }
+  "expectedResponse": {
+    "_extends_": "Common_401_Response",
+    "responseCode": 401,
+    "body": null
+  }
 }

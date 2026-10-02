@@ -2,5 +2,11 @@
   "_guid_": "S-132.11",
   "_extends_": "F-132_Get_Unknown_User_Role",
   "title": "Return not found for an unknown user role",
-  "expectedResponse": { "responseCode": 404, "body": {} }
+  "expectedResponse": {
+    "_extends_": "Common_404_Response",
+    "responseCode": 404,
+    "body": {
+      "message": "Object Not Found for:Role 'functional-role-does-not-exist' is not found"
+    }
+  }
 }
