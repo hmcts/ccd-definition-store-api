@@ -9,9 +9,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.ObjectFactory;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.handler.ElasticsearchErrorHandler;
+import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticSearchInitialisationException;
 
 import java.io.IOException;
 
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -50,6 +53,29 @@ class ElasticGlobalSearchListenerTest {
         listener.initialiseElasticSearchForGlobalSearch();
 
         verify(ccdElasticClient, never()).createIndex(anyString(), anyString());
+    }
+
+    @Test
+    void wrapsClientErrorWhenInitialisingGlobalSearch() throws IOException {
+        var cause = ElasticsearchTestUtils.exception("Mapping rejected", 400);
+        when(ccdElasticClient.aliasExists(anyString())).thenThrow(cause);
+
+        var result = assertThrows(ElasticSearchInitialisationException.class,
+            () -> listener.initialiseElasticSearchForGlobalSearch());
+
+        assertSame(cause, result.getCause());
+        verify(ccdElasticClient, never()).createIndex(anyString(), anyString());
+    }
+
+    @Test
+    void wrapsTransportErrorWhenInitialisingGlobalSearch() throws IOException {
+        var cause = new IOException("Connection refused");
+        when(ccdElasticClient.aliasExists(anyString())).thenThrow(cause);
+
+        var result = assertThrows(ElasticSearchInitialisationException.class,
+            () -> listener.initialiseElasticSearchForGlobalSearch());
+
+        assertSame(cause, result.getCause());
     }
 
     private static class TestDefinitionImportListener extends ElasticGlobalSearchListener {

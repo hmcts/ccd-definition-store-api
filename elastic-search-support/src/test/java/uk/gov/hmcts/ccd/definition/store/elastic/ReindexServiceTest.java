@@ -3,8 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 import co.elastic.clients.elasticsearch.indices.AliasDefinition;
 import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
 import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.rest.RestStatus;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -263,11 +263,11 @@ class ReindexServiceTest {
     }
 
     @Test
-    void shouldPersistFailureElasticsearchStatusExceptionBeforeReindex() throws IOException {
+    void shouldPersistFailureElasticsearchExceptionBeforeReindex() throws IOException {
         mockAliasResponse();
 
         when(caseMappingGenerator.generateMapping(any()))
-            .thenThrow(new ElasticsearchStatusException("ES error", RestStatus.BAD_REQUEST));
+            .thenThrow(ElasticsearchTestUtils.exception("ES error", 400));
 
         ReindexEntity entity = new ReindexEntity();
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
@@ -276,7 +276,7 @@ class ReindexServiceTest {
             Collections.singletonList(caseA), true, true, TEST_USER_EMAIL
         );
 
-        assertThrows(ElasticsearchStatusException.class,
+        assertThrows(ElasticsearchException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
         verify(reindexRepository).saveAndFlush(entity);

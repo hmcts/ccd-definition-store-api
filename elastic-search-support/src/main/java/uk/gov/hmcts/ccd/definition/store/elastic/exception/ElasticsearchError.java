@@ -2,26 +2,20 @@ package uk.gov.hmcts.ccd.definition.store.elastic.exception;
 
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import lombok.Getter;
 import lombok.NonNull;
-import org.elasticsearch.ElasticsearchStatusException;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 
 @Getter
 public class ElasticsearchError {
 
-    private static final Pattern MESSAGE_PATTERN =
-        Pattern.compile("Elasticsearch exception \\[type=(.*), reason=(.*)\\.*]");
-
-    private ElasticsearchStatusException exception;
+    private ElasticsearchException exception;
     private CaseTypeEntity caseType;
     private String message;
     private String errorType;
     private String reason;
 
-    public ElasticsearchError(@NonNull ElasticsearchStatusException exception, @NonNull CaseTypeEntity caseType) {
+    public ElasticsearchError(@NonNull ElasticsearchException exception, @NonNull CaseTypeEntity caseType) {
         initValues(exception, caseType);
     }
 
@@ -33,14 +27,11 @@ public class ElasticsearchError {
         return reason != null;
     }
 
-    private void initValues(ElasticsearchStatusException exception, CaseTypeEntity caseType) {
+    private void initValues(ElasticsearchException exception, CaseTypeEntity caseType) {
         this.caseType = caseType;
         this.exception = exception;
         this.message = exception.getMessage();
-        Matcher matcher = MESSAGE_PATTERN.matcher(message);
-        if (matcher.matches()) {
-            this.errorType = matcher.group(1);
-            this.reason = matcher.group(2);
-        }
+        this.errorType = exception.error().type();
+        this.reason = exception.error().reason();
     }
 }
