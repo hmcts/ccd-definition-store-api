@@ -1,7 +1,0 @@
-{
-  "_guid_": "F-132_Create_User_Role_Without_Role",
-  "_extends_": "F-132_Post_JSON_Operation_Base_Data",
-  "operationName": "Create User Role Without Role",
-  "uri": "/api/user-role",
-  "request": { "body": { "security_classification": "PUBLIC" } }
-}

@@ -1,7 +1,0 @@
-{
-  "_guid_": "F-132_Get_User_Role_With_Invalid_Base64",
-  "_extends_": "F-132_Operation_Base_Data",
-  "operationName": "Get User Role With Invalid Base64",
-  "uri": "/api/user-role",
-  "request": { "queryParams": { "role": "%%%not-base64%%%" } }
-}

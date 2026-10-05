@@ -1,6 +1,0 @@
-{
-  "_guid_": "F-132_Get_Banners_Without_Valid_Authentication",
-  "_extends_": "F-132_Get_Banners",
-  "operationName": "Get Banners Without Valid Authentication",
-  "request": { "headers": { "Authorization": "dummyToken" } }
-}

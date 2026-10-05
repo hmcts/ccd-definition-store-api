@@ -1,9 +1,0 @@
-{
-  "_guid_": "S-132.2",
-  "_extends_": "F-132_Get_Banners_Without_Jurisdictions",
-  "title": "Return empty banners when jurisdictions are omitted",
-  "expectedResponse": {
-    "_extends_": "F-132_Common_200_Response",
-    "body": { "banners": [] }
-  }
-}

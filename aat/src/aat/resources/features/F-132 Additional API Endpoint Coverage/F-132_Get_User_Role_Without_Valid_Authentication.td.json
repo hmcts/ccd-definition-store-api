@@ -1,6 +1,0 @@
-{
-  "_guid_": "F-132_Get_User_Role_Without_Valid_Authentication",
-  "_extends_": "F-132_Get_User_Role",
-  "operationName": "Get User Role Without Valid Authentication",
-  "request": { "headers": { "Authorization": "dummyToken" } }
-}

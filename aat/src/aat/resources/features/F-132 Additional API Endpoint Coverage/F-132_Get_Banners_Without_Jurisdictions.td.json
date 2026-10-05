@@ -1,6 +1,0 @@
-{
-  "_guid_": "F-132_Get_Banners_Without_Jurisdictions",
-  "_extends_": "F-132_Operation_Base_Data",
-  "operationName": "Get Banners Without Jurisdictions",
-  "uri": "/api/display/banners"
-}

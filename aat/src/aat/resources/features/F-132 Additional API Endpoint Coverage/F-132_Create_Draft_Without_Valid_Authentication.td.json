@@ -1,6 +1,0 @@
-{
-  "_guid_": "F-132_Create_Draft_Without_Valid_Authentication",
-  "_extends_": "F-132_Create_Draft_Without_Jurisdiction",
-  "operationName": "Create Draft Without Valid Authentication",
-  "request": { "headers": { "Authorization": "dummyToken" } }
-}

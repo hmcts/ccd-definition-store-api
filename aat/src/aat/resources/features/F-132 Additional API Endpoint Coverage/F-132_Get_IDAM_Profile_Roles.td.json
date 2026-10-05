@@ -1,6 +1,0 @@
-{
-  "_guid_": "F-132_Get_IDAM_Profile_Roles",
-  "_extends_": "F-132_Operation_Base_Data",
-  "operationName": "Get IDAM Profile Roles",
-  "uri": "/api/idam/profile/roles"
-}

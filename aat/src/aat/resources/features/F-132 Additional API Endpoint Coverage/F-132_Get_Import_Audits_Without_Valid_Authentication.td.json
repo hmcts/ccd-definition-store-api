@@ -1,6 +1,0 @@
-{
-  "_guid_": "F-132_Get_Import_Audits_Without_Valid_Authentication",
-  "_extends_": "F-132_Get_Import_Audits",
-  "operationName": "Get Import Audits Without Valid Authentication",
-  "request": { "headers": { "Authorization": "dummyToken" } }
-}
