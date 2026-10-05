@@ -1,0 +1,16 @@
+{
+  "_guid_": "S-136.1",
+  "_extends_": "F-136_Get_Admin_Web_Authorisation",
+  "title": "Return admin web authorisation",
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "body": {
+      "canManageUserProfile": true,
+      "canImportDefinition": true,
+      "canManageUserRole": true,
+      "canManageDefinition": true,
+      "canManageWelshTranslation": true,
+      "canLoadWelshTranslation": true
+    }
+  }
+}
