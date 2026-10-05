@@ -9,7 +9,7 @@ properties([
     //pipelineTriggers([cron('H 07 * * 1-5')])
 ])
 
-@Library("Infrastructure@2.4.9")
+@Library("Infrastructure@cve-dashboard")
 
 def type = "java"
 def product = "ccd"
@@ -65,6 +65,7 @@ env.DEFAULT_COLLECTION_ASSERTION_MODE="UNORDERED"
 env.TESTCONTAINERS_HUB_IMAGE_NAME_PREFIX = "hmctsprod.azurecr.io/imported/"
 
 withNightlyPipeline(type, product, component) {
+    enableCveDashboardIngestion()
 
     stage('Wait for ccd-user-profile-api job') {
         script {
