@@ -33,7 +33,7 @@ Scenario: return search cases result fields
       And the response has all other details as expected
 
 #---------------------------------------------------------------------------------------------------------------------------------------
-@S-366
+@S-370
 Scenario: return empty search-case result fields for an unknown case type
 
     Given a user with [an active profile in CCD]
@@ -60,7 +60,7 @@ Scenario: must return 401 when request does not provide valid authentication cre
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 @S-362 @Ignore # Response code mismatch, expected: 403, actual: 200 CCD-4455
-Scenario: must return 403 when request provides authentic credentials without authorised access to the operation 
+Scenario: must return 403 when request provides authentic credentials without authorised access to the operation
 
     Given a user with [an active profile in CCD, and insufficient privilege to the case type]
 
