@@ -4,6 +4,13 @@
   "title": "Retrieve an existing user role",
   "expectedResponse": {
     "_extends_": "F-132_Common_200_Response",
-    "body": { "role": "caseworker-autotest1", "security_classification": "PUBLIC" }
+    "body": {
+      "id": "[[ANYTHING_PRESENT]]",
+      "created_at": "[[ANYTHING_PRESENT]]",
+      "live_from": null,
+      "live_to": null,
+      "role": "caseworker-autotest1",
+      "security_classification": "PUBLIC"
+    }
   }
 }

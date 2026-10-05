@@ -3,8 +3,20 @@
   "_extends_": "F-132_Get_IDAM_Profile_Without_Valid_Authentication",
   "title": "Reject unauthenticated IDAM requests",
   "expectedResponse": {
-    "_extends_": "Common_401_Response",
     "responseCode": 401,
+    "responseMessage": "Unauthorized",
+    "headers": {
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "Content-Length": "0",
+      "Date": "[[ANYTHING_PRESENT]]",
+      "Expires": "0",
+      "Pragma": "no-cache",
+      "Strict-Transport-Security": "max-age=31536000 ; includeSubDomains",
+      "Www-Authenticate": "Bearer",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "0"
+    },
     "body": null
   }
 }

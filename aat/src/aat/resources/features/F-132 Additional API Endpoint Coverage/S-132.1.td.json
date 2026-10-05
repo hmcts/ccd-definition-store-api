@@ -2,5 +2,18 @@
   "_guid_": "S-132.1",
   "_extends_": "F-132_Get_Banners",
   "title": "Return banners for a jurisdiction",
-  "expectedResponse": { "_extends_": "F-132_Common_200_Response" }
+  "expectedResponse": {
+    "_extends_": "F-132_Common_200_Response",
+    "body": {
+      "banners": [
+        {
+          "id": "[[ANYTHING_PRESENT]]",
+          "bannerEnabled": true,
+          "bannerDescription": "Test Jurisdiction Description",
+          "bannerUrl": "http://localhost:3451/testjurisdiction",
+          "bannerUrlText": "Click here to see it.>>>"
+        }
+      ]
+    }
+  }
 }

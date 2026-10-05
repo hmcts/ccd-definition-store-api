@@ -2,5 +2,15 @@
   "_guid_": "S-132.6",
   "_extends_": "F-132_Get_IDAM_Profile",
   "title": "Return the IDAM profile",
-  "expectedResponse": { "_extends_": "F-132_Common_200_Response" }
+  "expectedResponse": {
+    "_extends_": "F-132_Common_200_Response",
+    "body": {
+      "id": "[[ANY_STRING_NOT_NULLABLE]]",
+      "email": "befta.caseworker.3@gmail.com",
+      "forename": "Caseworker 3",
+      "surname": "Befta",
+      "roles": [ "caseworker-befta_jurisdiction_3" ],
+      "defaultService": null
+    }
+  }
 }

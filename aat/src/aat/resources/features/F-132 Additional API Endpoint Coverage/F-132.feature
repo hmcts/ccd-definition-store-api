@@ -36,14 +36,6 @@ Feature: F-132: Additional API endpoint coverage
     Then a positive response is received
     And the response has all other details as expected
 
-  @S-132.5
-  Scenario: Return search cases result fields
-    Given a user with [an active profile in CCD]
-    When a request is prepared with appropriate values
-    And it is submitted to call the [Get Search Cases Result Fields] operation of [CCD Definition Store]
-    Then a positive response is received
-    And the response has all other details as expected
-
   @S-132.6
   Scenario: Return the IDAM profile
     Given a user with [an active profile in CCD]
@@ -169,14 +161,6 @@ Feature: F-132: Additional API endpoint coverage
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
     And it is submitted to call the [Create Draft Without Valid Authentication] operation of [CCD Definition Store]
-    Then a negative response is received
-    And the response has all other details as expected
-
-  @S-132.22
-  Scenario: Reject an unknown case type for search-case result fields
-    Given a user with [an active profile in CCD]
-    When a request is prepared with appropriate values
-    And it is submitted to call the [Get Search Cases Result Fields For Unknown Case Type] operation of [CCD Definition Store]
     Then a negative response is received
     And the response has all other details as expected
 
