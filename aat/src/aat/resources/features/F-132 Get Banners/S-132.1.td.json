@@ -1,0 +1,9 @@
+{
+  "_guid_": "S-132.1",
+  "_extends_": "F-132_Get_Banners",
+  "title": "Return banners for a jurisdiction",
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "body": { "banners": "[[ANYTHING_PRESENT]]" }
+  }
+}
