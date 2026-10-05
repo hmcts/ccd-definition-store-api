@@ -1,0 +1,11 @@
+{
+  "_guid_": "S-137.1",
+  "_extends_": "F-137_Get_Import_Audits",
+  "title": "Return import audits",
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "body": {
+      "arrayInMap": []
+    }
+  }
+}
