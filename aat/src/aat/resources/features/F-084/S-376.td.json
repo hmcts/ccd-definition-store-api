@@ -1,5 +1,5 @@
 {
-  "_guid_": "S-370",
+  "_guid_": "S-376",
   "_extends_": "F-084_Get_Search_Cases_Result_Fields_For_Unknown_Case_Type",
   "title": "Return empty search-case result fields for an unknown case type",
   "expectedResponse": {

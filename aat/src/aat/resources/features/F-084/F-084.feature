@@ -33,7 +33,7 @@ Scenario: return search cases result fields
       And the response has all other details as expected
 
 #---------------------------------------------------------------------------------------------------------------------------------------
-@S-370
+@S-376
 Scenario: return empty search-case result fields for an unknown case type
 
     Given a user with [an active profile in CCD]
