@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.exception.handler;
 
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.rest.RestStatus;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -38,7 +38,7 @@ class ElasticsearchErrorHandlerTest {
 
     @Test
     void shouldCreateExceptionForKnownReason() {
-        ElasticsearchStatusException exception =
+        ElasticsearchException exception =
             elasticException("Elasticsearch exception [type=TYPE, reason=PATTERN TWO REASON]");
 
         ElasticSearchInitialisationException result = errorHandler.createException(exception, caseTypeEntity);
@@ -50,28 +50,28 @@ class ElasticsearchErrorHandlerTest {
 
     @Test
     void shouldCreateExceptionForUnhandledReasonMatchingErrorPattern() {
-        ElasticsearchStatusException exception =
+        ElasticsearchException exception =
             elasticException("Elasticsearch exception [type=TYPE, reason=UNHANDLED REASON]");
 
         ElasticSearchInitialisationException result = errorHandler.createException(exception, caseTypeEntity);
 
         assertAll(
-            () -> assertThat(result.getMessage(), is("Elasticsearch exception [type=TYPE, reason=UNHANDLED REASON]"))
+            () -> assertThat(result.getMessage(), is(exception.getMessage()))
         );
     }
 
     @Test
     void shouldCreateExceptionForErrorNotMatchingPattern() {
-        ElasticsearchStatusException exception = elasticException("UNHANDLED ERROR MESSAGE");
+        ElasticsearchException exception = elasticException("UNHANDLED ERROR MESSAGE");
 
         ElasticSearchInitialisationException result = errorHandler.createException(exception, caseTypeEntity);
 
         assertAll(
-            () -> assertThat(result.getCause().getMessage(), is("UNHANDLED ERROR MESSAGE"))
+            () -> assertThat(result.getCause().getMessage(), is(exception.getMessage()))
         );
     }
 
-    private ElasticsearchStatusException elasticException(String exceptionMessage) {
-        return new ElasticsearchStatusException(exceptionMessage, RestStatus.BAD_REQUEST);
+    private ElasticsearchException elasticException(String exceptionMessage) {
+        return ElasticsearchTestUtils.exception(exceptionMessage, 400);
     }
 }

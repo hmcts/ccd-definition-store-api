@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.exception.handler;
 
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.rest.RestStatus;
+import uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchTestUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticsearchError;
@@ -71,8 +70,8 @@ class ElasticsearchErrorMessageBuilderTest {
 
     private ElasticsearchError elasticsearchError(String reason) {
         return new ElasticsearchError(
-            new ElasticsearchStatusException("Elasticsearch exception [type=TYPE, reason=" + reason + "]",
-                RestStatus.BAD_REQUEST),
+            ElasticsearchTestUtils.exception("Elasticsearch exception [type=TYPE, reason=" + reason + "]",
+                400),
             caseTypeEntity);
     }
 }
