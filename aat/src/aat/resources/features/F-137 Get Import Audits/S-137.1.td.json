@@ -3,7 +3,7 @@
   "_extends_": "F-137_Get_Import_Audits",
   "title": "Return import audits",
   "expectedResponse": {
-    "_extends_": "Common_200_Response",
+    "_extends_": "CCD_Definition_Store_Common_200_Response",
     "body": {
       "arrayInMap": []
     }

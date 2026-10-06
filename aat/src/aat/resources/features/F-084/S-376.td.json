@@ -3,7 +3,7 @@
   "_extends_": "F-084_Get_Search_Cases_Result_Fields_For_Unknown_Case_Type",
   "title": "Return empty search-case result fields for an unknown case type",
   "expectedResponse": {
-    "_extends_": "Common_200_Response",
+    "_extends_": "CCD_Definition_Store_Common_200_Response",
     "responseCode": 200,
     "body": {
       "case_type_id": "[[ANY_STRING_NOT_NULLABLE]]",
