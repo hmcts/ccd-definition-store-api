@@ -120,7 +120,7 @@ Secured RESTful API giving access to part of the domain logic.
 
 Secured endpoint and specific logic for importing case definition as an Excel spreadsheet.
 
-### application
+### Application
 
 Spring application entry point and configuration.
 
