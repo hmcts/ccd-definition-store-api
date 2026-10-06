@@ -1,6 +1,5 @@
 {
   "_guid_": "Common_200_Response",
-  "_extends_": "Common_200_Response",
   "headers": {
     "_extends_": "Common_200_Response_Headers"
   }
