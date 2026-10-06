@@ -1,5 +1,5 @@
 {
-  "_guid_": "Common_200_Response_Headers",
+  "_guid_": "CCD_Definition_Store_Common_200_Response_Headers",
   "Content-Encoding": "gzip",
   "Transfer-Encoding": "chunked",
   "X-XSS-Protection": "0"
