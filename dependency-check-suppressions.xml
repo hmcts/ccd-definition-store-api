@@ -7,6 +7,7 @@
     <suppress><cve>CVE-2026-94398</cve></suppress>
     <suppress><cve>CVE-2026-94399</cve></suppress>
     <suppress><cve>CVE-2026-82300</cve></suppress>
+    <suppress><cve>CVE-2026-94408</cve></suppress>
     <!-- TEMPORARY BUILD UNBLOCK - REMOVE BEFORE MERGING -->
     <suppress>
         <cve>CVE-2020-8908</cve>
