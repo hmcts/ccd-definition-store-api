@@ -1,5 +1,6 @@
 {
   "_guid_": "CCD_Definition_Store_Common_200_Response",
+  "responseCode": 200,
   "headers": {
     "_extends_": "CCD_Definition_Store_Common_200_Response_Headers"
   }

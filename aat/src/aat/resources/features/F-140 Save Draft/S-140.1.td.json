@@ -1,5 +1,5 @@
 {
-  "_guid_": "S-140.2",
+  "_guid_": "S-140.1",
   "_extends_": "F-140_Save_Draft_Without_Description",
   "title": "Reject saving a draft without a description",
   "expectedResponse": {

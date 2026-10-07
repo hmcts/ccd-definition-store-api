@@ -1,5 +1,5 @@
 {
-  "_guid_": "S-141.5",
+  "_guid_": "S-141.1",
   "_extends_": "F-141_Delete_Unknown_Draft_Version",
   "title": "Reject deletion of an unknown draft version",
   "expectedResponse": {

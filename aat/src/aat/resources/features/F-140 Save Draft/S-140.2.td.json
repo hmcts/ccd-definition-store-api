@@ -1,5 +1,5 @@
 {
-  "_guid_": "S-140.3",
+  "_guid_": "S-140.2",
   "_extends_": "F-140_Save_Draft_Without_Author",
   "title": "Reject saving a draft without an author",
   "expectedResponse": {
