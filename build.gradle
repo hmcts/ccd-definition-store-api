@@ -59,7 +59,7 @@ ext {
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.24.3')
 
-    elasticsearchVersion = '9.1.2'
+    elasticsearchVersion = '9.5.3'
     junit = '5.14.4'
     junitPlatform = '1.14.4'
     junitJupiterVersion = '5.12.2'
