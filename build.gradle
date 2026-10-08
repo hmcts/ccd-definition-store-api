@@ -49,7 +49,7 @@ tasks.register("printSuppressionFile") {
 }
 
 ext {
-    set('elasticsearch.version', '9.5.3')
+    set('elasticsearch.version', '9.5.5')
     set('spring-framework.version', '6.2.14')
     set('spring-security.version', '6.5.7')
     set('springCloudVersion', '2025.0.1')
@@ -59,7 +59,7 @@ ext {
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.24.3')
 
-    elasticsearchVersion = '9.5.3'
+    elasticsearchVersion = '9.5.5'
     junit = '5.14.4'
     junitPlatform = '1.14.4'
     junitJupiterVersion = '5.12.2'
