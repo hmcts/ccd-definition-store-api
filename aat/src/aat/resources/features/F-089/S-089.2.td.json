@@ -1,24 +1,24 @@
 {
-	"_guid_": "S-089.2",
-	"_extends_": "F-089_Test_Complex_Organisation",
-	"title": "must return all details successfully for a case type containing some Organisation and OrganisationPolicy fields",
+  "_guid_": "S-089.2",
+  "_extends_": "F-089_Test_Complex_Organisation",
+  "title": "must return all details successfully for a case type containing some Organisation and OrganisationPolicy fields",
 
-	"specs": [
-		"an active profile in CCD",
-		"contains a valid jurisdiction id",
-		"contains id of a case type with some Organisation and OrganisationPolicy fields",
-		"contains all details of the case type requested"
-	],
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid jurisdiction id",
+    "contains id of a case type with some Organisation and OrganisationPolicy fields",
+    "contains all details of the case type requested"
+  ],
 
-	"expectedResponse": {
-		"_extends_": "Common_200_Response",
-		"headers": {
-			"Content-Encoding": "gzip",
-			"Content-Type": "[[ANYTHING_PRESENT]]",
-			"Transfer-Encoding": "[[ANYTHING_PRESENT]]",
-			"Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
-		},
-		"body": {
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "headers": {
+      "Content-Encoding": "gzip",
+      "Content-Type": "[[ANYTHING_PRESENT]]",
+      "Transfer-Encoding": "[[ANYTHING_PRESENT]]",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+    },
+    "body": {
       "id": "FT_ComplexOrganisation",
       "description": "CaseType for testing Organisation base complex type",
       "version": {
@@ -2030,5 +2030,5 @@
       "retries_get_case_url": [],
       "security_classification": "PUBLIC"
     }
-	}
+  }
 }
