@@ -393,4 +393,10 @@
     <suppress>
         <cve>CVE-2026-94399</cve>
     </suppress>
+    <suppress>
+        <notes><![CDATA[
+        file name: elasticsearch-9.1.2.jar
+        ]]></notes>
+        <cve>CVE-2026-94408</cve>
+    </suppress>
 </suppressions>
