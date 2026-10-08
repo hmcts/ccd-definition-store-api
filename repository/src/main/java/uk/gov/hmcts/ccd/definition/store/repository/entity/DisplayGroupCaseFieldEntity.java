@@ -35,6 +35,9 @@ public class DisplayGroupCaseFieldEntity implements Serializable {
     @JoinColumn(name = "case_field_id", referencedColumnName = "id")
     private CaseFieldEntity caseField;
 
+    @Column(name = "case_field_element_path")
+    private String caseFieldElementPath;
+
     @ManyToOne
     @JoinColumn(name = "display_group_id", referencedColumnName = "id")
     private DisplayGroupEntity displayGroup;
@@ -89,6 +92,14 @@ public class DisplayGroupCaseFieldEntity implements Serializable {
 
     public void setCaseField(@NotNull final CaseFieldEntity caseField) {
         this.caseField = caseField;
+    }
+
+    public String getCaseFieldElementPath() {
+        return caseFieldElementPath;
+    }
+
+    public void setCaseFieldElementPath(String caseFieldElementPath) {
+        this.caseFieldElementPath = caseFieldElementPath;
     }
 
     public Integer getOrder() {

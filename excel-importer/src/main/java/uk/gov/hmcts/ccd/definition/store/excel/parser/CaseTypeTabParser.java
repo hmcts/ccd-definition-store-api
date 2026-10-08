@@ -25,5 +25,6 @@ public class CaseTypeTabParser extends AbstractDisplayGroupParser {
         this.fieldShowConditionColumn = Optional.of(ColumnName.FIELD_SHOW_CONDITION);
         this.sheetName = SheetName.CASE_TYPE_TAB;
         this.accessProfileColumn = Optional.of(ColumnName.ACCESS_PROFILE);
+        this.caseFieldElementPathColumn = Optional.of(ColumnName.LIST_ELEMENT_CODE);
     }
 }
