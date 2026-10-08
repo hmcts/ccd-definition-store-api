@@ -61,16 +61,25 @@ class UserRoleTest extends BaseTest {
         String role = " functional-post-role-" + UUID.randomUUID() + " ";
         String trimmedRole = role.trim();
 
-        asUser.get()
-            .given()
-            .contentType(ContentType.JSON)
-            .body(userRoleBody(role))
-            .when()
-            .post("/api/user-role")
-            .then()
-            .statusCode(201)
-            .body("role", equalTo(trimmedRole))
-            .body("security_classification", equalTo("PUBLIC"));
+        boolean created = false;
+        try {
+            Response response = asUser.get()
+                .given()
+                .contentType(ContentType.JSON)
+                .body(userRoleBody(role))
+                .when()
+                .post("/api/user-role");
+
+            created = response.statusCode() == 201;
+            response.then()
+                .statusCode(201)
+                .body("role", equalTo(trimmedRole))
+                .body("security_classification", equalTo("PUBLIC"));
+        } finally {
+            if (created) {
+                cleanupUserRole(trimmedRole);
+            }
+        }
     }
 
     @Test
@@ -78,31 +87,40 @@ class UserRoleTest extends BaseTest {
     void shouldCreateAndUpdateUnknownUserRole() {
         String role = "functional-put-role-" + UUID.randomUUID();
 
-        asUser.get()
-            .given()
-            .contentType(ContentType.JSON)
-            .body(userRoleBody(role))
-            .when()
-            .put("/api/user-role")
-            .then()
-            .statusCode(201)
-            .body("role", equalTo(role))
-            .body("security_classification", equalTo("PUBLIC"));
+        boolean created = false;
+        try {
+            Response response = asUser.get()
+                .given()
+                .contentType(ContentType.JSON)
+                .body(userRoleBody(role))
+                .when()
+                .put("/api/user-role");
 
-        asUser.get()
-            .given()
-            .contentType(ContentType.JSON)
-            .body(userRoleBody(role, "PRIVATE"))
-            .when()
-            .put("/api/user-role")
-            .then()
-            .statusCode(205);
+            created = response.statusCode() == 201;
+            response.then()
+                .statusCode(201)
+                .body("role", equalTo(role))
+                .body("security_classification", equalTo("PUBLIC"));
 
-        getUserRole(role)
-            .then()
-            .statusCode(200)
-            .body("role", equalTo(role))
-            .body("security_classification", equalTo("PRIVATE"));
+            asUser.get()
+                .given()
+                .contentType(ContentType.JSON)
+                .body(userRoleBody(role, "PRIVATE"))
+                .when()
+                .put("/api/user-role")
+                .then()
+                .statusCode(205);
+
+            getUserRole(role)
+                .then()
+                .statusCode(200)
+                .body("role", equalTo(role))
+                .body("security_classification", equalTo("PRIVATE"));
+        } finally {
+            if (created) {
+                cleanupUserRole(role);
+            }
+        }
     }
 
     @Test
@@ -370,6 +388,15 @@ class UserRoleTest extends BaseTest {
             .queryParam("role", encodedRole)
             .when()
             .get("/api/user-role");
+    }
+
+    private void cleanupUserRole(String role) {
+        RestAssured.given()
+            .queryParam("role", role)
+            .when()
+            .delete("/api/testing-support/cleanup-user-role")
+            .then()
+            .statusCode(200);
     }
 
     private String userRoleBody(String role) {

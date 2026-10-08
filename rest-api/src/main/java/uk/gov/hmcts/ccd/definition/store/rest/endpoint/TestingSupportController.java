@@ -118,6 +118,36 @@ public class TestingSupportController {
         log.info("Deleted records for caseTypeIds {} ", caseTypeIds);
     }
 
+    @DeleteMapping(value = "/cleanup-user-role")
+    @ApiOperation(value = "Delete a user role for test cleanup", notes = "Test support endpoint only.\n")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Success"),
+        @ApiResponse(code = 404, message = "Unable to find user role"),
+        @ApiResponse(code = 500, message = "Unexpected error")
+    })
+    public void cleanupUserRole(
+        @ApiParam(value = "User role reference", required = true) @RequestParam("role") String role) {
+
+        log.info("Invoked for user role {}", role);
+
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        int deleted = session.createNativeMutationQuery(
+                "DELETE FROM role WHERE dtype = 'USERROLE' AND reference = :role")
+            .setParameter("role", role)
+            .executeUpdate();
+
+        session.getTransaction().commit();
+        session.close();
+
+        if (deleted == 0) {
+            throw new NotFoundException("Unable to find user role");
+        }
+
+        log.info("Deleted user role {}", role);
+    }
+
     private ArrayList<String> getDeleteSql() {
         return new ArrayList<>(
             Arrays.asList(

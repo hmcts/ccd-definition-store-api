@@ -133,4 +133,42 @@ class TestingSupportControllerTest {
             .createNativeMutationQuery(anyString());
 
     }
+
+    @Test
+    @DisplayName("Should delete a user role")
+    void shouldDeleteUserRole() throws Exception {
+        when(session.createNativeMutationQuery(anyString()))
+            .thenReturn(mutationQuery);
+        when(mutationQuery.setParameter(eq("role"), anyString()))
+            .thenReturn(mutationQuery);
+        when(mutationQuery.executeUpdate())
+            .thenReturn(1);
+        when(session.getTransaction())
+            .thenReturn(transaction);
+
+        mockMvc.perform(delete("/api/testing-support/cleanup-user-role")
+                .param("role", "functional-role"))
+            .andExpect(status().isOk());
+
+        verify(mutationQuery).executeUpdate();
+        verify(transaction).commit();
+    }
+
+    @Test
+    @DisplayName("Should return not found when user role does not exist")
+    void shouldReturnUserRoleNotFound() throws Exception {
+        when(session.createNativeMutationQuery(anyString()))
+            .thenReturn(mutationQuery);
+        when(mutationQuery.setParameter(eq("role"), anyString()))
+            .thenReturn(mutationQuery);
+        when(mutationQuery.executeUpdate())
+            .thenReturn(0);
+        when(session.getTransaction())
+            .thenReturn(transaction);
+
+        mockMvc.perform(delete("/api/testing-support/cleanup-user-role")
+                .param("role", "missing-role"))
+            .andExpect(status().isNotFound())
+            .andExpect(content().json("{\"message\":\"Object Not Found for:Unable to find user role\"}"));
+    }
 }
