@@ -49,7 +49,7 @@ tasks.register("printSuppressionFile") {
 }
 
 ext {
-    set('elasticsearch.version', '9.1.2')
+    set('elasticsearch.version', '9.5.5')
     set('spring-framework.version', '6.2.14')
     set('spring-security.version', '6.5.7')
     set('springCloudVersion', '2025.0.1')
@@ -59,7 +59,7 @@ ext {
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.24.3')
 
-    elasticsearchVersion = '9.1.2'
+    elasticsearchVersion = '9.5.5'
     junit = '5.14.4'
     junitPlatform = '1.14.4'
     junitJupiterVersion = '5.12.2'
@@ -454,6 +454,38 @@ sonarqube {
         property "sonar.projectName", "ccd-definition-store-api"
         property "sonar.projectKey", "ccd-definition-store-api"
     }
+}
+
+task verifyOidcIssuerPolicy {
+    description = 'Fails if OIDC issuer settings are derived from discovery configuration'
+    group = 'Verification'
+
+    doLast {
+        def policyFiles = [
+            'application/src/main/resources/application.properties',
+            'application/src/test/resources/test.properties'
+        ]
+
+        def violations = policyFiles.findAll { path ->
+            def configFile = file(path)
+            configFile.exists() && configFile.readLines().any { line ->
+                def normalized = line.replaceAll(/\s+/, '')
+                ((normalized.startsWith('oidc.issuer=') || normalized.startsWith('oidc.allowed-issuers='))
+                    && (normalized.contains('IDAM_OIDC_URL') || normalized.contains('idam.api.url')))
+            }
+        }
+
+        if (!violations.isEmpty()) {
+            throw new GradleException(
+                "OIDC issuer policy violation. Do not derive issuer settings from discovery config in: "
+                    + "${violations.join(', ')}"
+            )
+        }
+    }
+}
+
+tasks.named('check').configure {
+    dependsOn verifyOidcIssuerPolicy
 }
 
 compileJava {
