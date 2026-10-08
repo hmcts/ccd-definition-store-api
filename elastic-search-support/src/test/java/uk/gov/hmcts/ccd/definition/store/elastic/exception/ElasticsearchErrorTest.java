@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.exception;
 
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.rest.RestStatus;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.utils.CaseTypeBuilder;
@@ -10,14 +9,16 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchExceptionFactory.elasticsearchException;
 
 class ElasticsearchErrorTest {
 
     @Test
     void shouldCreateErrorObjectWithAllValues() {
-        ElasticsearchStatusException exception =
-            new ElasticsearchStatusException("Elasticsearch exception [type=TYPE, reason=REASON]",
-                RestStatus.BAD_REQUEST);
+        ElasticsearchException exception = elasticsearchException("TYPE", "REASON");
         CaseTypeEntity caseType = new CaseTypeBuilder().withReference("CaseTypeId").build();
 
         ElasticsearchError result = new ElasticsearchError(exception, caseType);
@@ -28,15 +29,15 @@ class ElasticsearchErrorTest {
             () -> assertThat(result.getErrorType(), is("TYPE")),
             () -> assertThat(result.getCaseTypeReference(), is("CaseTypeId")),
             () -> assertThat(result.getException(), is(exception)),
-            () -> assertThat(result.getMessage(), is("Elasticsearch exception [type=TYPE, reason=REASON]")),
+            () -> assertThat(result.getMessage(), is(exception.getMessage())),
             () -> assertThat(result.hasReason(), is(true))
         );
     }
 
     @Test
     void shouldCreateErrorObjectForMessageNotMatchingPattern() {
-        ElasticsearchStatusException exception =
-            new ElasticsearchStatusException("Unsupported message pattern", RestStatus.BAD_REQUEST);
+        ElasticsearchException exception = mock(ElasticsearchException.class);
+        when(exception.getMessage()).thenReturn("Unsupported message pattern");
         CaseTypeEntity caseType = new CaseTypeBuilder().withReference("CaseTypeId").build();
 
         ElasticsearchError result = new ElasticsearchError(exception, caseType);
@@ -50,5 +51,19 @@ class ElasticsearchErrorTest {
             () -> assertThat(result.getMessage(), is("Unsupported message pattern")),
             () -> assertThat(result.hasReason(), is(false))
         );
+    }
+
+    @Test
+    void shouldRejectNullException() {
+        CaseTypeEntity caseType = new CaseTypeBuilder().withReference("CaseTypeId").build();
+
+        assertThrows(NullPointerException.class, () -> new ElasticsearchError(null, caseType));
+    }
+
+    @Test
+    void shouldRejectNullCaseType() {
+        ElasticsearchException exception = elasticsearchException("TYPE", "REASON");
+
+        assertThrows(NullPointerException.class, () -> new ElasticsearchError(exception, null));
     }
 }
