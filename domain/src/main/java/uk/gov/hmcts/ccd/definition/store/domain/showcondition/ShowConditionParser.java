@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -90,12 +89,10 @@ public class ShowConditionParser {
         ShowCondition.Builder showConditionBuilder = new ShowCondition.Builder();
         String operator = "";
         String conditionalOperator = "";
-        for (String condition : conditions) {
-            if (!conditionalOperatorList.isEmpty()) {
-                int index = Arrays.asList(conditions).indexOf(condition);
-                if (index <= (conditionalOperatorList.size() - 1)) {
-                    conditionalOperator = conditionalOperatorList.get(Arrays.asList(conditions).indexOf(condition));
-                }
+        for (int i = 0; i < conditions.length; i++) {
+            String condition = conditions[i];
+            if (!conditionalOperatorList.isEmpty() && i <= (conditionalOperatorList.size() - 1)) {
+                conditionalOperator = conditionalOperatorList.get(i);
             }
             Matcher equalityMatcher = EQUALITY_CONDITION_PATTERN_WITH_TRAILING_BRACKET.matcher(condition);
             Matcher notEqualityMatcher = NOT_EQUAL_CONDITION_PATTERN.matcher(condition);
