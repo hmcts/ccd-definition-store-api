@@ -71,7 +71,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "OrganisationID",
             "hint" : null,
@@ -81,7 +82,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : true,
-            "publishAs" : "organisation_id"
+            "publishAs" : "organisation_id",
+            "displayContextParameter" : null
           } ]
         }, {
           "case_field_id" : "OrganisationPolicyField",
@@ -111,7 +113,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "OrgPolicyCaseAssignedRole",
             "hint" : null,
@@ -121,7 +124,8 @@
             "showCondition" : null,
             "defaultValue" : "[Claimant]",
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "Organisation.OrganisationName",
             "hint" : null,
@@ -131,7 +135,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "Organisation.OrganisationID",
             "hint" : null,
@@ -141,7 +146,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           } ]
         }, {
           "case_field_id" : "ChangeOrganisationRequestField",
@@ -171,7 +177,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "ApprovalRejectionTimestamp",
             "hint" : null,
@@ -181,7 +188,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "ApprovalStatus",
             "hint" : null,
@@ -191,7 +199,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "RequestTimestamp",
             "hint" : null,
@@ -201,7 +210,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "Reason",
             "hint" : null,
@@ -211,7 +221,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "CaseRoleId",
             "hint" : null,
@@ -221,7 +232,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "OrganisationToRemove.OrganisationName",
             "hint" : null,
@@ -231,7 +243,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "OrganisationToRemove.OrganisationID",
             "hint" : null,
@@ -241,7 +254,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "OrganisationToAdd.OrganisationName",
             "hint" : null,
@@ -251,7 +265,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "OrganisationToAdd.OrganisationID",
             "hint" : null,
@@ -261,7 +276,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           } ]
         } ],
         "pre_states" : [ ],
@@ -329,7 +345,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "OrganisationID",
             "hint" : null,
@@ -339,7 +356,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : true,
-            "publishAs" : "organisation_id"
+            "publishAs" : "organisation_id",
+            "displayContextParameter" : null
           } ]
         }, {
           "case_field_id" : "OrganisationPolicyField",
@@ -369,7 +387,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "OrgPolicyCaseAssignedRole",
             "hint" : null,
@@ -379,7 +398,8 @@
             "showCondition" : null,
             "defaultValue" : "[Defendant]",
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "Organisation.OrganisationName",
             "hint" : null,
@@ -389,7 +409,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "Organisation.OrganisationID",
             "hint" : null,
@@ -399,7 +420,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           } ]
         }, {
           "case_field_id" : "ChangeOrganisationRequestField",
@@ -429,7 +451,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "ApprovalRejectionTimestamp",
             "hint" : null,
@@ -439,7 +462,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "ApprovalStatus",
             "hint" : null,
@@ -449,7 +473,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "RequestTimestamp",
             "hint" : null,
@@ -459,7 +484,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "Reason",
             "hint" : null,
@@ -469,7 +495,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "CaseRoleId",
             "hint" : null,
@@ -479,7 +506,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "OrganisationToRemove.OrganisationName",
             "hint" : null,
@@ -489,7 +517,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "OrganisationToRemove.OrganisationID",
             "hint" : null,
@@ -499,7 +528,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "OrganisationToAdd.OrganisationName",
             "hint" : null,
@@ -509,7 +539,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           }, {
             "reference" : "OrganisationToAdd.OrganisationID",
             "hint" : null,
@@ -519,7 +550,8 @@
             "showCondition" : null,
             "defaultValue" : null,
             "publish" : false,
-            "publishAs" : null
+            "publishAs" : null,
+            "displayContextParameter" : null
           } ]
         } ],
         "pre_states" : [ "CaseCreated" ],
