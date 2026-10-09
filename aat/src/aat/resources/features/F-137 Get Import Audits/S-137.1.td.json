@@ -5,7 +5,12 @@
   "expectedResponse": {
     "_extends_": "CCD_Definition_Store_Common_200_Response",
     "body": {
-      "arrayInMap": []
+      "arrayInMap": [
+        {
+          "__operator__": "SUPERSET",
+          "__ordering__": "ORDERED"
+        }
+      ]
     }
   }
 }
