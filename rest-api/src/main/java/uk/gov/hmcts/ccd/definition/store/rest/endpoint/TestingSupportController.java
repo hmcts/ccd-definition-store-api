@@ -130,16 +130,26 @@ public class TestingSupportController {
 
         log.info("Invoked for user role {}", role);
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-
-        int deleted = session.createNativeMutationQuery(
-                "DELETE FROM role WHERE dtype = 'USERROLE' AND reference = :role")
-            .setParameter("role", role)
-            .executeUpdate();
-
-        session.getTransaction().commit();
-        session.close();
+        int deleted;
+        try (Session session = sessionFactory.openSession()) {
+            var transaction = session.beginTransaction();
+            try {
+                deleted = session.createNativeMutationQuery(
+                        "DELETE FROM role WHERE dtype = 'USERROLE' AND reference = :role")
+                    .setParameter("role", role)
+                    .executeUpdate();
+                transaction.commit();
+            } catch (RuntimeException exception) {
+                try {
+                    if (transaction.getStatus().canRollback()) {
+                        transaction.rollback();
+                    }
+                } catch (RuntimeException rollbackException) {
+                    exception.addSuppressed(rollbackException);
+                }
+                throw exception;
+            }
+        }
 
         if (deleted == 0) {
             throw new NotFoundException("Unable to find user role");

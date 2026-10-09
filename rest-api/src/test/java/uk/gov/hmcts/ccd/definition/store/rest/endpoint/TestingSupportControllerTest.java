@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.MutationQuery;
 import org.hibernate.query.NativeQuery;
+import org.hibernate.resource.transaction.spi.TransactionStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,12 +18,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static java.util.Collections.emptyList;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -137,14 +143,9 @@ class TestingSupportControllerTest {
     @Test
     @DisplayName("Should delete a user role")
     void shouldDeleteUserRole() throws Exception {
-        when(session.createNativeMutationQuery(anyString()))
-            .thenReturn(mutationQuery);
-        when(mutationQuery.setParameter(eq("role"), anyString()))
-            .thenReturn(mutationQuery);
+        setUpUserRoleDeletion();
         when(mutationQuery.executeUpdate())
             .thenReturn(1);
-        when(session.getTransaction())
-            .thenReturn(transaction);
 
         mockMvc.perform(delete("/api/testing-support/cleanup-user-role")
                 .param("role", "functional-role"))
@@ -152,23 +153,133 @@ class TestingSupportControllerTest {
 
         verify(mutationQuery).executeUpdate();
         verify(transaction).commit();
+        verify(transaction, never()).rollback();
+        verify(session).close();
     }
 
     @Test
     @DisplayName("Should return not found when user role does not exist")
     void shouldReturnUserRoleNotFound() throws Exception {
-        when(session.createNativeMutationQuery(anyString()))
-            .thenReturn(mutationQuery);
-        when(mutationQuery.setParameter(eq("role"), anyString()))
-            .thenReturn(mutationQuery);
+        setUpUserRoleDeletion();
         when(mutationQuery.executeUpdate())
             .thenReturn(0);
-        when(session.getTransaction())
-            .thenReturn(transaction);
 
         mockMvc.perform(delete("/api/testing-support/cleanup-user-role")
                 .param("role", "missing-role"))
             .andExpect(status().isNotFound())
             .andExpect(content().json("{\"message\":\"Object Not Found for:Unable to find user role\"}"));
+
+        verify(transaction).commit();
+        verify(transaction, never()).rollback();
+        verify(session).close();
+    }
+
+    @Test
+    @DisplayName("Should roll back and close the session when creating the user role deletion query fails")
+    void shouldCleanUpWhenUserRoleDeletionQueryFails() {
+        RuntimeException failure = new RuntimeException("Unable to create deletion query");
+        when(session.beginTransaction()).thenReturn(transaction);
+        when(transaction.getStatus()).thenReturn(TransactionStatus.ACTIVE);
+        when(session.createNativeMutationQuery(anyString())).thenThrow(failure);
+
+        RuntimeException thrown = assertThrows(RuntimeException.class,
+            () -> controller.cleanupUserRole("functional-role"));
+
+        assertSame(failure, thrown);
+        verify(transaction).rollback();
+        verify(transaction, never()).commit();
+        verify(session).close();
+    }
+
+    @Test
+    @DisplayName("Should roll back and close the session when deleting a user role fails")
+    void shouldCleanUpWhenUserRoleDeletionFails() {
+        setUpUserRoleDeletion();
+        RuntimeException failure = new RuntimeException("Role is referenced by a case ACL");
+        when(transaction.getStatus()).thenReturn(TransactionStatus.ACTIVE);
+        when(mutationQuery.executeUpdate()).thenThrow(failure);
+
+        RuntimeException thrown = assertThrows(RuntimeException.class,
+            () -> controller.cleanupUserRole("functional-role"));
+
+        assertSame(failure, thrown);
+        verify(transaction).rollback();
+        verify(transaction, never()).commit();
+        verify(session).close();
+    }
+
+    @Test
+    @DisplayName("Should roll back and close the session when committing a user role deletion fails")
+    void shouldCleanUpWhenUserRoleDeletionCommitFails() {
+        setUpUserRoleDeletion();
+        RuntimeException failure = new RuntimeException("Unable to commit deletion");
+        when(mutationQuery.executeUpdate()).thenReturn(1);
+        when(transaction.getStatus()).thenReturn(TransactionStatus.FAILED_COMMIT);
+        doThrow(failure).when(transaction).commit();
+
+        RuntimeException thrown = assertThrows(RuntimeException.class,
+            () -> controller.cleanupUserRole("functional-role"));
+
+        assertSame(failure, thrown);
+        verify(transaction).rollback();
+        verify(session).close();
+    }
+
+    @Test
+    @DisplayName("Should close the session without repeating a rollback after a failed commit")
+    void shouldNotRepeatRollbackWhenFailedCommitAlreadyRolledBack() {
+        setUpUserRoleDeletion();
+        RuntimeException failure = new RuntimeException("Deletion commit was rolled back");
+        when(mutationQuery.executeUpdate()).thenReturn(1);
+        when(transaction.getStatus()).thenReturn(TransactionStatus.ROLLED_BACK);
+        doThrow(failure).when(transaction).commit();
+
+        RuntimeException thrown = assertThrows(RuntimeException.class,
+            () -> controller.cleanupUserRole("functional-role"));
+
+        assertSame(failure, thrown);
+        verify(transaction, never()).rollback();
+        verify(session).close();
+    }
+
+    @Test
+    @DisplayName("Should close the session when starting the user role deletion transaction fails")
+    void shouldCloseSessionWhenUserRoleDeletionTransactionCannotStart() {
+        RuntimeException failure = new RuntimeException("Unable to start transaction");
+        when(session.beginTransaction()).thenThrow(failure);
+
+        RuntimeException thrown = assertThrows(RuntimeException.class,
+            () -> controller.cleanupUserRole("functional-role"));
+
+        assertSame(failure, thrown);
+        verify(session).close();
+        verify(session, never()).createNativeMutationQuery(anyString());
+        verifyNoInteractions(transaction);
+    }
+
+    @Test
+    @DisplayName("Should preserve the deletion failure and close the session when rollback also fails")
+    void shouldPreserveUserRoleDeletionFailureWhenRollbackFails() {
+        setUpUserRoleDeletion();
+        RuntimeException deletionFailure = new RuntimeException("Role is referenced by a case ACL");
+        RuntimeException rollbackFailure = new RuntimeException("Unable to roll back deletion");
+        when(transaction.getStatus()).thenReturn(TransactionStatus.ACTIVE);
+        when(mutationQuery.executeUpdate()).thenThrow(deletionFailure);
+        doThrow(rollbackFailure).when(transaction).rollback();
+
+        RuntimeException thrown = assertThrows(RuntimeException.class,
+            () -> controller.cleanupUserRole("functional-role"));
+
+        assertSame(deletionFailure, thrown);
+        assertArrayEquals(new Throwable[]{rollbackFailure}, thrown.getSuppressed());
+        verify(transaction).rollback();
+        verify(transaction, never()).commit();
+        verify(session).close();
+    }
+
+    private void setUpUserRoleDeletion() {
+        when(session.beginTransaction()).thenReturn(transaction);
+        when(session.createNativeMutationQuery(anyString())).thenReturn(mutationQuery);
+        when(mutationQuery.setParameter(eq("role"), anyString())).thenReturn(mutationQuery);
     }
 }
