@@ -78,3 +78,23 @@ Feature: F-097: Role To Access Profiles
     Then a positive response is received
     And the response has all other details as expected
     And the response [contains the newly defined field - CaseAccessCategories]
+
+  @S-097.9
+  Scenario: Return case roles for a case type
+    Given a user with [an active profile in CCD]
+    And a call [to import definition file] will get the expected response as in [Import_BEFTA_Master_Definition]
+    When a request is prepared with appropriate values
+    And it is submitted to call the [Get Case Roles] operation of [CCD Definition Store]
+    Then a positive response is received
+    And the response [has the 200 OK code]
+    And the response has all other details as expected
+
+  @S-097.10
+  Scenario: Return role assignments for a case type
+    Given a user with [an active profile in CCD]
+    And a call [to import definition file] will get the expected response as in [Import_BEFTA_Master_Definition]
+    When a request is prepared with appropriate values
+    And it is submitted to call the [Get Role Assignments] operation of [CCD Definition Store]
+    Then a positive response is received
+    And the response [has the 200 OK code]
+    And the response has all other details as expected

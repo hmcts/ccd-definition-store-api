@@ -1,0 +1,17 @@
+{
+  "_guid_": "S-133.1",
+  "_extends_": "F-133_Get_Jurisdiction_UI_Configs",
+  "title": "Return jurisdiction UI configs",
+  "expectedResponse": {
+    "_extends_": "CCD_Definition_Store_Common_200_Response",
+    "body": {
+      "configs": [
+        {
+          "id": "AUTOTEST1",
+          "name": "Auto Test 1",
+          "shuttered": false
+        }
+      ]
+    }
+  }
+}

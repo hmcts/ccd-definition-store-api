@@ -1,0 +1,9 @@
+{
+  "_guid_": "S-133.2",
+  "_extends_": "F-133_Get_Jurisdiction_UI_Configs_Without_Jurisdictions",
+  "title": "Return empty jurisdiction UI configs when jurisdictions are omitted",
+  "expectedResponse": {
+    "_extends_": "CCD_Definition_Store_Common_200_Response",
+    "body": { "configs": [] }
+  }
+}

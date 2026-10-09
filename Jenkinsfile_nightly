@@ -238,6 +238,15 @@ withNightlyPipeline(type, product, component) {
 
     afterAlways('fullFunctionalTest') {
         steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/BEFTA Report for Functional Tests/**/*'
+        steps.archiveArtifacts allowEmptyArchive: true, artifacts: '**/build/test-results/functional/*.xml'
+        publishHTML target: [
+            allowMissing         : true,
+            alwaysLinkToLastBuild: true,
+            keepAll              : true,
+            reportDir            : 'aat/build/reports/tests/functional',
+            reportFiles          : "index.html",
+            reportName           : "JUnit Functional Test Report"
+        ]
     }
     enableSlackNotifications('#ccd-nightly-builds')
 }

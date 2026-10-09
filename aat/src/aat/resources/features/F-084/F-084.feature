@@ -20,6 +20,30 @@ Scenario: must return the UI definition of search results for a given case type
       And the response [has Search Results definition details]
       And the response has all other details as expected
 
+#---------------------------------------------------------------------------------------------------------------------------------------
+@S-365
+Scenario: return search cases result fields
+
+    Given a user with [an active profile in CCD]
+
+     When a request is prepared with appropriate values
+      And it is submitted to call the [Get Search Cases Result Fields] operation of [CCD Definition Store]
+
+     Then a positive response is received
+      And the response has all other details as expected
+
+#---------------------------------------------------------------------------------------------------------------------------------------
+@S-376
+Scenario: return empty search-case result fields for an unknown case type
+
+    Given a user with [an active profile in CCD]
+
+     When a request is prepared with appropriate values
+      And it is submitted to call the [Get Search Cases Result Fields For Unknown Case Type] operation of [CCD Definition Store]
+
+     Then a positive response is received
+      And the response has all other details as expected
+
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 @S-361
 Scenario: must return 401 when request does not provide valid authentication credentials
@@ -36,7 +60,7 @@ Scenario: must return 401 when request does not provide valid authentication cre
 
 #-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 @S-362 @Ignore # Response code mismatch, expected: 403, actual: 200 CCD-4455
-Scenario: must return 403 when request provides authentic credentials without authorised access to the operation 
+Scenario: must return 403 when request provides authentic credentials without authorised access to the operation
 
     Given a user with [an active profile in CCD, and insufficient privilege to the case type]
 

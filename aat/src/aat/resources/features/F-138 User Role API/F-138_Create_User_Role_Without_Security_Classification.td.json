@@ -1,0 +1,7 @@
+{
+  "_guid_": "F-138_Create_User_Role_Without_Security_Classification",
+  "_extends_": "Post_JSON_Operation_Base_Data",
+  "operationName": "Create User Role Without Security Classification",
+  "uri": "/api/user-role",
+  "request": { "body": { "role": "functional-invalid-role" } }
+}

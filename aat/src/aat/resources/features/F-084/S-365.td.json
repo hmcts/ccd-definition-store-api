@@ -1,0 +1,9 @@
+{
+  "_guid_": "S-365",
+  "_extends_": "F-084_Get_Search_Cases_Result_Fields",
+  "title": "Return search cases result fields",
+  "expectedResponse": {
+    "_extends_": "CCD_Definition_Store_Common_200_Response",
+    "body": { "case_type_id": "AAT", "fields": "[[ANYTHING_PRESENT]]" }
+  }
+}

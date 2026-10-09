@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-097.10",
+  "_extends_": "F-097_Get_Role_Assignments_Base_Data",
+  "title": "Return role assignments for a case type",
+  "specs": [
+    "an active profile in CCD",
+    "has the 200 OK code"
+  ],
+  "expectedResponse": {
+    "responseCode": 200,
+    "body": {
+      "arrayInMap": [
+        {
+          "__ordering__": "ORDERED"
+        },
+        {
+          "id": "FT_CaseAccessCategories",
+          "name": "Role1"
+        },
+        {
+          "id": "FT_CaseAccessCategories",
+          "name": "Role1"
+        },
+        {
+          "id": "FT_CaseAccessCategories",
+          "name": "idam:caseworker-befta_master"
+        }
+      ]
+    }
+  }
+}
