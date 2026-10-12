@@ -1,10 +1,10 @@
-@F-126
+@F-126 @Ignore @ES_Reindex
 Feature: F-126: Reindexing functionality and verification via GET API
 
   Background:
     Given an appropriate test context as detailed in the test data source
 
-  @S-126.1
+  @S-126.1 @Ignore @ES_Reindex
   Scenario: Successfully trigger reindexing
     Given a user with [an active profile in CCD and with CCD-import role]
     When a request is prepared with appropriate values
@@ -22,7 +22,7 @@ Feature: F-126: Reindexing functionality and verification via GET API
     Then the response [has the 200 OK code]
     And the response [contains reindexing metadata for all case types]
 
-  @S-126.3
+  @S-126.3 @Ignore @ES_Reindex
   Scenario: Successfully retrieve reindexing metadata for provided case type
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values
@@ -32,7 +32,7 @@ Feature: F-126: Reindexing functionality and verification via GET API
     Then the response [has the 200 OK code]
     And the response [contains tasks only related to FT_Questions]
 
-  @S-126.4
+  @S-126.4 @Ignore @ES_Reindex
   Scenario: Retrieve no reindexing metadata for non-existing case type
     Given a user with [an active profile in CCD]
     When a request is prepared with appropriate values

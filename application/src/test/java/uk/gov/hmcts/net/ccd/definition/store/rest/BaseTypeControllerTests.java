@@ -4,6 +4,7 @@ package uk.gov.hmcts.net.ccd.definition.store.rest;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
 
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -43,7 +44,7 @@ class BaseTypeControllerTests extends BaseTest {
 
         assertThat(baseTypes)
             .as("Unexpected number of Base Types")
-            .hasSize(32);
+            .hasSize(33);
         assertContainsFieldType(baseTypes, "Text", "Text");
         assertContainsFieldType(baseTypes, "Number", "Number");
         assertContainsFieldType(baseTypes, "Email", "Email");
@@ -76,6 +77,7 @@ class BaseTypeControllerTests extends BaseTest {
         assertContainsFieldType(baseTypes, "HearingsLauncher", "HearingsLauncher");
         assertContainsFieldType(baseTypes, "TaskLauncher", "TaskLauncher");
         assertContainsFieldType(baseTypes, "ComponentLauncher", "ComponentLauncher");
+        assertContainsFieldType(baseTypes, "StaffUser_old", "StaffUser_old");
     }
 
     private void assertContainsFieldType(FieldType[] baseTypes, String id, String type) {
@@ -85,10 +87,11 @@ class BaseTypeControllerTests extends BaseTest {
     }
 
     private void assertContainsFieldType(FieldType[] baseTypes, String id, String type, String regex) {
-        assertTrue(Stream.of(baseTypes)
+        assertThat(Stream.of(baseTypes)
             .anyMatch(baseType -> baseType.getType().equals(type)
                 && baseType.getId().equals(id)
-                && baseType.getRegularExpression().equals(regex)),
-            "Base Type not found: " + id + " with Type: " + type + " and Regex: " + regex);
+                && Objects.equals(baseType.getRegularExpression(), regex)))
+            .as("Base Type not found: %s with Type: %s and Regex: %s", id, type, regex)
+            .isTrue();
     }
 }

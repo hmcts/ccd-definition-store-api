@@ -1791,7 +1791,7 @@ class  EntityToResponseDTOMapperTest {
             final RoleToAccessProfiles actualRoleToAccessProfiles = classUnderTest.map(roleToAccessProfilesEntity);
 
             assertNotNull(actualRoleToAccessProfiles);
-            
+
             assertEquals("CaseTypeReference", actualRoleToAccessProfiles.getCaseTypeId());
             assertEquals("judge", actualRoleToAccessProfiles.getRoleName());
             assertEquals(liveFrom, actualRoleToAccessProfiles.getLiveFrom());
@@ -1799,7 +1799,7 @@ class  EntityToResponseDTOMapperTest {
             assertTrue(actualRoleToAccessProfiles.getReadOnly());
             assertTrue(actualRoleToAccessProfiles.getDisabled());
             assertEquals("auth1,auth2", actualRoleToAccessProfiles.getAuthorisations());
-            assertEquals("caseworker-befta_master,caseworker-befta_master-solicitor", 
+            assertEquals("caseworker-befta_master,caseworker-befta_master-solicitor",
                 actualRoleToAccessProfiles.getAccessProfiles());
             assertEquals("Cat1,Cat2", actualRoleToAccessProfiles.getCaseAccessCategories());
         }
