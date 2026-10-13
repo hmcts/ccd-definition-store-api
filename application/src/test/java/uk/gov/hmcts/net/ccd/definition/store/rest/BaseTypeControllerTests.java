@@ -44,7 +44,7 @@ class BaseTypeControllerTests extends BaseTest {
 
         assertThat(baseTypes)
             .as("Unexpected number of Base Types")
-            .hasSize(29);
+            .hasSize(33);
         assertContainsFieldType(baseTypes, "Text", "Text");
         assertContainsFieldType(baseTypes, "Number", "Number");
         assertContainsFieldType(baseTypes, "Email", "Email");
@@ -72,6 +72,10 @@ class BaseTypeControllerTests extends BaseTest {
         assertContainsFieldType(baseTypes, "DynamicMultiSelectList", "DynamicMultiSelectList");
         assertContainsFieldType(baseTypes, "WaysToPay", "WaysToPay");
         assertContainsFieldType(baseTypes, "FlagLauncher", "FlagLauncher");
+        assertContainsFieldType(baseTypes, "SummaryLauncher", "SummaryLauncher");
+        assertContainsFieldType(baseTypes, "RolesLauncher", "RolesLauncher");
+        assertContainsFieldType(baseTypes, "HearingsLauncher", "HearingsLauncher");
+        assertContainsFieldType(baseTypes, "TaskLauncher", "TaskLauncher");
         assertContainsFieldType(baseTypes, "ComponentLauncher", "ComponentLauncher");
         assertContainsFieldType(baseTypes, "StaffUser_old", "StaffUser_old");
     }
