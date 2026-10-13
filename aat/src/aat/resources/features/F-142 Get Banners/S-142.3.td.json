@@ -1,6 +1,6 @@
 {
-  "_guid_": "S-132.3",
-  "_extends_": "F-132_Get_Banners_Without_Valid_Authentication",
+  "_guid_": "S-142.3",
+  "_extends_": "F-142_Get_Banners_Without_Valid_Authentication",
   "title": "Reject unauthenticated display requests",
   "expectedResponse": {
     "responseCode": 401,
