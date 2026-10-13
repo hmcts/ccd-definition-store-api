@@ -58,6 +58,9 @@ public class EventComplexTypeEntity implements Serializable {
     @JoinColumn(name = "event_case_field_id", nullable = false)
     private EventCaseFieldEntity complexFieldType;
 
+    @Column(name = "display_context_parameter")
+    private String displayContextParameter;
+
     @Column(name = "publish")
     private Boolean publish;
 
@@ -169,5 +172,13 @@ public class EventComplexTypeEntity implements Serializable {
 
     public void setRetainHiddenValue(Boolean retainHiddenValue) {
         this.retainHiddenValue = retainHiddenValue;
+    }
+
+    public String getDisplayContextParameter() {
+        return displayContextParameter;
+    }
+
+    public void setDisplayContextParameter(String displayContextParameter) {
+        this.displayContextParameter = displayContextParameter;
     }
 }
