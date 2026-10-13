@@ -1,0 +1,7 @@
+{
+  "_guid_": "BaseHearingsLauncherFieldType",
+  "_extends_": "CommonFieldType",
+
+  "id": "HearingsLauncher",
+  "type": "HearingsLauncher"
+}
