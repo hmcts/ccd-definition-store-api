@@ -90,6 +90,7 @@ dependencyManagement {
     }
     dependencies {
         dependency 'org.apache.commons:commons-lang3:3.20.0'
+        dependency 'org.eclipse.angus:angus-activation:2.1.0-M1'
         dependency "tools.jackson.core:jackson-core:${jackson3Version}"
         dependency "tools.jackson.core:jackson-databind:${jackson3Version}"
     }
@@ -250,6 +251,7 @@ subprojects { subproject ->
         }
         dependencies {
             dependency 'org.apache.commons:commons-lang3:3.20.0'
+            dependency 'org.eclipse.angus:angus-activation:2.1.0-M1'
             dependency "tools.jackson.core:jackson-core:${jackson3Version}"
             dependency "tools.jackson.core:jackson-databind:${jackson3Version}"
         }
