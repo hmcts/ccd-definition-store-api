@@ -27,27 +27,6 @@ dependencyCheck {
 
 apply from: "$rootDir/gradle/suppress.gradle"
 
-tasks.register("printSuppressionFile") {
-    doLast {
-        def suppressionFile = dependencyCheck.getSuppressionFiles()
-
-        if (suppressionFile instanceof org.gradle.api.provider.Provider) {
-        suppressionFile = suppressionFile.getOrNull()
-        }
-        if (suppressionFile instanceof Collection) {
-        suppressionFile = suppressionFile.find { it }?.toString()
-        } else if (suppressionFile != null) {
-        suppressionFile = suppressionFile.toString()
-        }
-
-        if (!suppressionFile) {
-        throw new GradleException("No dependency-check suppression file configured")
-        }
-
-        println "SUPPRESSION_FILE=${suppressionFile}"
-    }
-}
-
 ext {
     set('elasticsearch.version', '9.1.2')
     set('spring-framework.version', '6.2.14')
@@ -327,7 +306,7 @@ subprojects { subproject ->
         testImplementation group: 'org.hamcrest', name: 'hamcrest-core', version: hamcrestVersion
         testImplementation group: 'org.hamcrest', name: 'hamcrest-library', version: hamcrestVersion
 
-        testImplementation group: 'com.google.guava', name: 'guava', version: '33.6.0-jre'
+        testImplementation group: 'com.google.guava', name: 'guava', version: '33.7.2-jre'
         testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: ccdTestDefinitionVersion
         testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
