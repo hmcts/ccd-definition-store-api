@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.ElasticsearchStatusException;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -45,7 +45,7 @@ public class ElasticGlobalSearchListener {
             log.debug("case mapping: {}", mapping);
             elasticClient.upsertMapping(GLOBAL_SEARCH, mapping);
 
-        } catch (IOException | ElasticsearchStatusException e) {
+        } catch (IOException | ElasticsearchException e) {
             throw new ElasticSearchInitialisationException(e);
         }
     }
