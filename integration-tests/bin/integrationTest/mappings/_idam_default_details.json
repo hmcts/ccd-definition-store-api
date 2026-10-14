@@ -1,0 +1,21 @@
+{
+  "priority": 10,
+  "request": {
+    "method": "GET",
+    "url": "/idam/details"
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "id": "123",
+      "email" : "Kuraudo.Sutoraifu@test.com",
+      "forename" : "Kuraudo",
+      "surname": "Sutoraifu",
+      "roles" : [ "ccd-import" ],
+      "defaultService" : "ccd"
+    }
+  }
+}
