@@ -1,6 +1,8 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
 import com.github.tomakehurst.wiremock.client.WireMock;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
@@ -81,6 +83,9 @@ class SpreadSheetImportTest extends BaseTest {
 
     private Map<Object, Object> caseTypesId;
     private Map<Object, Object> fieldTypesId;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * API test for successful import of a valid Case Definition spreadsheet.
@@ -373,6 +378,8 @@ class SpreadSheetImportTest extends BaseTest {
     }
 
     private void assertDatabaseIsCorrect() {
+        // JDBC assertions must see Hibernate writes still queued in the test transaction.
+        entityManager.flush();
         assertJurisdiction();
         caseTypesId = getIdsByReference("SELECT reference, id FROM case_type");
         fieldTypesId = getIdsByReference("SELECT reference, id FROM field_type");
