@@ -49,6 +49,12 @@ public class ApplicationParams {
     @Value("${elasticsearch.delete-old-index.enabled:false}")
     private boolean deleteOldIndexEnabled;
 
+    @Value("#{'${decentralised-events.case-types.pcs}'.split(',')}")
+    private List<String> decentralisedEventsCaseTypesPCS;
+
+    @Value("#{'${decentralised-events.case-types.othercasetype}'.split(',')}")
+    private List<String> decentralisedEventsCaseTypesOtherCaseType;
+
 
     public boolean isDefaultPublish() {
         return defaultPublish;
