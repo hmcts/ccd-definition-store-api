@@ -177,9 +177,9 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
         implementation 'org.springframework.cloud:spring-cloud-starter'
 
-        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.13'
+        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.14'
         implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.58.Final'
-        implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.6.4'
+        implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.6.5'
         implementation group: 'org.apache.httpcomponents.core5', name: 'httpcore5', version: '5.4.4'
         implementation group: 'org.apache.httpcomponents.core5', name: 'httpcore5-h2', version: '5.4.4'
 
@@ -349,7 +349,7 @@ subprojects { subproject ->
         testImplementation group: 'com.github.hmcts', name: 'befta-fw', version: beftaFwVersion
         testImplementation group: 'com.github.hmcts', name: 'ccd-test-definitions', version: ccdTestDefinitionVersion
         testImplementation group: 'com.github.npathai', name: 'hamcrest-optional', version: '2.0.0'
-        testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.15.0'
+        testImplementation group: 'info.solidsoft.gradle.pitest', name: 'gradle-pitest-plugin', version: '1.19.0'
         testImplementation group: 'io.github.openfeign', name: 'feign-jackson', version: feignJackson
         testImplementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
         testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.8'
