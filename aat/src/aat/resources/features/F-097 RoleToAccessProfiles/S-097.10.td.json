@@ -11,7 +11,8 @@
     "body": {
       "arrayInMap": [
         {
-          "__ordering__": "UNORDERED"
+          "__ordering__": "UNORDERED",
+          "__elementId__": "id,name"
         },
         {
           "id": "FT_CaseAccessCategories",
