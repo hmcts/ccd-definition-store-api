@@ -8,9 +8,11 @@ import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
+import java.io.File;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.instanceOf;
 
 class ImportAuditTest extends BaseTest {
@@ -24,6 +26,14 @@ class ImportAuditTest extends BaseTest {
     @Test
     @DisplayName("Should return import audits")
     void shouldReturnImportAudits() {
+        asAutoTestImporter().get()
+            .given()
+            .multiPart(new File("build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"))
+            .when()
+            .post("/import")
+            .then()
+            .statusCode(201);
+
         asUser.get()
             .given()
             .contentType(ContentType.JSON)
@@ -31,7 +41,8 @@ class ImportAuditTest extends BaseTest {
             .get("/api/import-audits")
             .then()
             .statusCode(200)
-            .body("", instanceOf(List.class));
+            .body("", instanceOf(List.class))
+            .body("findAll { audit -> audit.filename.endsWith('BEFTA_MASTER.xlsx') }.size()", greaterThan(0));
     }
 
     @Test

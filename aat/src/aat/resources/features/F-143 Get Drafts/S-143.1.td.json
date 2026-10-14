@@ -1,0 +1,9 @@
+{
+  "_guid_": "S-143.1",
+  "_extends_": "F-143_Get_Drafts",
+  "title": "Return an empty list when no drafts exist for a jurisdiction",
+  "expectedResponse": {
+    "_extends_": "CCD_Definition_Store_Common_200_Response",
+    "body": []
+  }
+}

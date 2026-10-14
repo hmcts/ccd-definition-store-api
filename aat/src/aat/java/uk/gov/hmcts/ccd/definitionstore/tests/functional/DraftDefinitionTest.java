@@ -39,13 +39,13 @@ class DraftDefinitionTest extends BaseTest {
                 .when()
                 .post("/api/draft");
 
+            version = createdDraft.path("version");
+
             createdDraft.then()
                 .statusCode(201)
                 .body("jurisdiction.id", equalTo(JURISDICTION))
                 .body("description", equalTo(DESCRIPTION))
                 .body("version", notNullValue());
-
-            version = createdDraft.path("version");
         } finally {
             deleteDraft(version);
         }
@@ -292,12 +292,18 @@ class DraftDefinitionTest extends BaseTest {
             .when()
             .post("/api/draft");
 
-        createdDraft.then()
-            .statusCode(201)
-            .body("jurisdiction.id", equalTo(JURISDICTION))
-            .body("version", notNullValue());
+        Integer version = createdDraft.path("version");
+        try {
+            createdDraft.then()
+                .statusCode(201)
+                .body("jurisdiction.id", equalTo(JURISDICTION))
+                .body("version", notNullValue());
 
-        return createdDraft.path("version");
+            return version;
+        } catch (AssertionError | RuntimeException exception) {
+            deleteDraft(version);
+            throw exception;
+        }
     }
 
     private void deleteDraft(Integer version) {
