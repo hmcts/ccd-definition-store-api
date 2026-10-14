@@ -1,7 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.exception.handler;
 
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.rest.RestStatus;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -15,6 +14,7 @@ import java.util.List;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchExceptionFactory.elasticsearchException;
 
 class ElasticsearchErrorHandlerTest {
 
@@ -38,8 +38,7 @@ class ElasticsearchErrorHandlerTest {
 
     @Test
     void shouldCreateExceptionForKnownReason() {
-        ElasticsearchStatusException exception =
-            elasticException("Elasticsearch exception [type=TYPE, reason=PATTERN TWO REASON]");
+        ElasticsearchException exception = elasticsearchException("TYPE", "PATTERN TWO REASON");
 
         ElasticSearchInitialisationException result = errorHandler.createException(exception, caseTypeEntity);
 
@@ -50,19 +49,19 @@ class ElasticsearchErrorHandlerTest {
 
     @Test
     void shouldCreateExceptionForUnhandledReasonMatchingErrorPattern() {
-        ElasticsearchStatusException exception =
-            elasticException("Elasticsearch exception [type=TYPE, reason=UNHANDLED REASON]");
+        ElasticsearchException exception = elasticsearchException("TYPE", "UNHANDLED REASON");
 
         ElasticSearchInitialisationException result = errorHandler.createException(exception, caseTypeEntity);
 
         assertAll(
-            () -> assertThat(result.getMessage(), is("Elasticsearch exception [type=TYPE, reason=UNHANDLED REASON]"))
+            () -> assertThat(result.getMessage(), is(exception.getMessage()))
         );
     }
 
     @Test
     void shouldCreateExceptionForErrorNotMatchingPattern() {
-        ElasticsearchStatusException exception = elasticException("UNHANDLED ERROR MESSAGE");
+        ElasticsearchException exception = org.mockito.Mockito.mock(ElasticsearchException.class);
+        org.mockito.Mockito.when(exception.getMessage()).thenReturn("UNHANDLED ERROR MESSAGE");
 
         ElasticSearchInitialisationException result = errorHandler.createException(exception, caseTypeEntity);
 
@@ -71,7 +70,4 @@ class ElasticsearchErrorHandlerTest {
         );
     }
 
-    private ElasticsearchStatusException elasticException(String exceptionMessage) {
-        return new ElasticsearchStatusException(exceptionMessage, RestStatus.BAD_REQUEST);
-    }
 }
