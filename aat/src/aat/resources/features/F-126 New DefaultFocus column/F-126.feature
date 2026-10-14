@@ -41,3 +41,10 @@ Feature: F-126: New DefaultFocus Column
     And the response has all other details as expected
     And a call [get tabs for case type id without newly added default_focus value] will get the expected response as in [S-126.4_Get_Tab_Structure]
 
+  @S-126.5
+  Scenario: Import a definition file containing new column DefaultFocus and having invalid DefaultFocus
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And the request [contains DefaultFocus set to true for more than one tab for same CaseType excluding first row]
+    And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
+    Then a negative response is received

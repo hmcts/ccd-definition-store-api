@@ -129,10 +129,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
 
     private void validateDefaultFocus(List<DefinitionDataItem> displayGroupItems) {
         long defaultFocusCount = displayGroupItems.stream()
-            .filter(item ->  Boolean.TRUE.equals(item.getDefaultFocus()))
-            .map(DefinitionDataItem::getCaseTypeId)
-            .toList()
-            .size();
+            .filter(item -> Boolean.TRUE.equals(item.getDefaultFocus()))
+            .count();
 
         if (defaultFocusCount > 1) {
             throw new MapperException(

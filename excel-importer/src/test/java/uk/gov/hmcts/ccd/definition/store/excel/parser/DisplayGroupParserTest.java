@@ -3,6 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -306,9 +308,11 @@ class DisplayGroupParserTest extends ParserTestBase {
     }
 
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
     @DisplayName("CaseTypeTabParser - should fail when multiple defaultFocus condition defined for caseType")
-    void shouldFailIfTwoDefaultFocusValuesSetForSameCaseType() throws InvalidShowConditionException {
+    void shouldFailIfTwoDefaultFocusValuesSetForSameCaseType(boolean firstItemHasDefaultFocus)
+        throws InvalidShowConditionException {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Collections.singleton(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
@@ -323,23 +327,32 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.TAB_ID.toString(), "Name");
         item.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "fieldShowCondition");
-        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "Y");
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), firstItemHasDefaultFocus);
 
         final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "Age");
         item2.addAttribute(ColumnName.TAB_ID.toString(), "Details");
         item2.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
-        item2.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), true);
+        item2.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), !firstItemHasDefaultFocus);
+
+        final DefinitionDataItem item3 = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item3.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item3.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "Age");
+        item3.addAttribute(ColumnName.TAB_ID.toString(), "Details");
+        item3.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
+        item3.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), true);
 
         definitionSheet.addDataItem(item);
         definitionSheet.addDataItem(item2);
+        definitionSheet.addDataItem(item3);
 
         MapperException result = assertThrows(MapperException.class,
             () -> caseTypeTabParser.parseAll(definitionSheets));
         assertThat(result.getMessage(),
             equalTo("For each case type only one column should have the Default Focus set to true."));
     }
+
 
     @Test
     @DisplayName("WizardPageParser - should parse with data on any row")
