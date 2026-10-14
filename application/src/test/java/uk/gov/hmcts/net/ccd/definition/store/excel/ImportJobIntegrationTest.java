@@ -181,7 +181,7 @@ class ImportJobIntegrationTest extends BaseTest {
             assertNotNull(jobIdHeader, "X-Import-Job-Id must be present on error responses");
 
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-                "SELECT * FROM import_jobs");
+                "SELECT * FROM import_jobs WHERE id = ?", UUID.fromString(jobIdHeader));
             assertThat("Server must have created an import_jobs row", rows, hasSize(1));
             String dbId = rows.getFirst().get("id").toString();
             assertDoesNotThrow(() -> UUID.fromString(dbId), "DB row id must be a valid UUID");

@@ -12,6 +12,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationResult;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.casetype.CaseTypeEntityValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseTypeRepository;
+import uk.gov.hmcts.ccd.definition.store.repository.VersionedDefinitionRepository.ReferenceVersion;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.JurisdictionEntity;
@@ -125,7 +126,9 @@ class CaseTypeServiceImplTest {
 
         @BeforeEach
         void setUp() {
-            when(caseTypeRepository.findLastVersion(any())).thenReturn(Optional.of(DEFAULT_VERSION));
+            when(caseTypeRepository.findLastVersions(any())).thenReturn(caseTypeEntities.stream()
+                .<ReferenceVersion>map(entity -> new ExistingVersion(entity.getReference(), DEFAULT_VERSION))
+                .toList());
             when(caseTypeEntityValidator1.validate(any())).thenReturn(new ValidationResult());
             when(caseTypeEntityValidator2.validate(any())).thenReturn(new ValidationResult());
             when(caseTypeRepository.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(CASE_TYPE_REFERENCE_1))
@@ -319,6 +322,8 @@ class CaseTypeServiceImplTest {
             }
 
             if (shouldSave) {
+                inOrder.verify(caseTypeRepository).findLastVersions(new HashSet<>(List.of(
+                    CASE_TYPE_REFERENCE_1, CASE_TYPE_REFERENCE_2, CASE_TYPE_REFERENCE_3)));
                 inOrder.verify(caseTypeRepository).saveAll(captor.capture());
                 Collection<CaseTypeEntity> savedCaseTypeEntities = captor.getValue();
                 assertEquals(caseTypeEntities.size(), savedCaseTypeEntities.size());
@@ -335,6 +340,18 @@ class CaseTypeServiceImplTest {
 
         }
 
+    }
+
+    private record ExistingVersion(String reference, Integer version) implements ReferenceVersion {
+        @Override
+        public String getReference() {
+            return reference;
+        }
+
+        @Override
+        public Integer getVersion() {
+            return version;
+        }
     }
 
     @Nested
