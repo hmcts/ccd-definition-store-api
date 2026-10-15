@@ -23,6 +23,19 @@
       "channels": "[[ANYTHING_PRESENT]]",
       "tabs": [
         {
+          "__ordering__": "UNORDERED",
+          "__elementId__": "id"
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "History",
+          "label": "History",
+          "order": 1,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
+        },
+        {
           "role": "[[ANY_STRING_NULLABLE]]",
           "id": "NameTab",
           "label": "Details",
@@ -42,9 +55,36 @@
         },
         {
           "role": "[[ANY_STRING_NULLABLE]]",
-          "id": "History",
-          "label": "History",
-          "order": 1,
+          "id": "Summary",
+          "label": "Summary",
+          "order": 4,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "Roles",
+          "label": "Roles",
+          "order": 5,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "Hearings",
+          "label": "Hearings",
+          "order": 6,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "Task",
+          "label": "Task",
+          "order": 7,
           "tab_fields": "[[ANYTHING_PRESENT]]",
           "show_condition": "[[ANY_STRING_NULLABLE]]",
           "defaultFocus": false
@@ -53,4 +93,3 @@
     }
   }
 }
-
