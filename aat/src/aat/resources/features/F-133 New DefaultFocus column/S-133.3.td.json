@@ -1,17 +1,17 @@
 {
-  "_guid_": "S-126.4",
-  "_extends_": "F-126_Test_Base_data",
+  "_guid_": "S-133.3",
+  "_extends_": "F-133_Test_Base_data",
   "title": "Successful response for case type id with defaultFocus set on tab",
   "specs": [
     "an active profile in CCD",
-    "contains a definition file with no new column DefaultFocus"
+    "contains a definition file with new column DefaultFocus"
   ],
   "request": {
     "body": {
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/defaultFocus/BEFTA_Master_Definition_NoNew_DefaultFocus_Column.xlsx"
+          "localFilePath": "build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"
         }
       ]
     }

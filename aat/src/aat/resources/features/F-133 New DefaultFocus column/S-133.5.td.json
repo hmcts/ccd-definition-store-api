@@ -1,5 +1,5 @@
 {
-	"_guid_": "S-126.5",
+	"_guid_": "S-133.5",
 	"_extends_": "F-101_Test_Base_data",
 	"title": "Import Definition file with invalid true value in multiple DefaultFocus column of the CaseTypeTab",
 	"specs": [
