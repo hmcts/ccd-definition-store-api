@@ -20,6 +20,7 @@ Feature: F-144: New DefaultFocus Column
     And the request [contains DefaultFocus set to true for more than one tab for same CaseType]
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a negative response is received
+    And the response has all other details as expected
 
   @S-144.3
   Scenario: Successful response for case type id with defaultFocus set on tab
@@ -48,3 +49,4 @@ Feature: F-144: New DefaultFocus Column
     And the request [contains DefaultFocus set to true for more than one tab for same CaseType excluding first row]
     And it is submitted to call the [Import definition file] operation of [CCD Definition Store]
     Then a negative response is received
+    And the response has all other details as expected
