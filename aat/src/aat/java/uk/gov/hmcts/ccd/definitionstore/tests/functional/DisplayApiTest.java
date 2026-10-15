@@ -12,6 +12,7 @@ import java.util.function.Supplier;
 
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.notNullValue;
 
 class DisplayApiTest extends BaseTest {
@@ -183,7 +184,8 @@ class DisplayApiTest extends BaseTest {
             .then()
             .statusCode(200)
             .body("case_type_id", equalTo(CASE_TYPE))
-            .body("fields", notNullValue());
+            .body("fields", notNullValue())
+            .body("fields.case_field_id", hasItem("CaseReference"));
     }
 
     @Test

@@ -10,9 +10,10 @@ import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 
 import java.io.File;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Supplier;
 
-import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
 class ImportAuditTest extends BaseTest {
@@ -26,9 +27,13 @@ class ImportAuditTest extends BaseTest {
     @Test
     @DisplayName("Should return import audits")
     void shouldReturnImportAudits() {
+        File definitionFile = new File("build/tmp/definition_files_copy/BEFTA_MASTER.xlsx");
+        String uploadedFilename = "BEFTA_MASTER_" + UUID.randomUUID() + ".xlsx";
+
         asAutoTestImporter().get()
             .given()
-            .multiPart(new File("build/tmp/definition_files_copy/BEFTA_MASTER.xlsx"))
+            .multiPart("file", uploadedFilename, definitionFile,
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
             .when()
             .post("/import")
             .then()
@@ -42,7 +47,7 @@ class ImportAuditTest extends BaseTest {
             .then()
             .statusCode(200)
             .body("", instanceOf(List.class))
-            .body("findAll { audit -> audit.filename.endsWith('BEFTA_MASTER.xlsx') }.size()", greaterThan(0));
+            .body("findAll { audit -> audit.filename.endsWith('" + uploadedFilename + "') }.size()", equalTo(1));
     }
 
     @Test
