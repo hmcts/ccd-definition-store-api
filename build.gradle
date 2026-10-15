@@ -33,7 +33,7 @@ ext {
     set('elasticsearch.version', '9.1.10')
     set('spring-framework.version', '6.2.19')
     set('spring-security.version', '6.5.11')
-    set('springCloudVersion', '2025.0.1')
+    set('springCloudVersion', '2025.1.3')
     set('netty.version', '4.1.136.Final')
     set('tomcat.version', '10.1.60')
 
