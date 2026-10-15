@@ -350,7 +350,8 @@ class DisplayGroupParserTest extends ParserTestBase {
         MapperException result = assertThrows(MapperException.class,
             () -> caseTypeTabParser.parseAll(definitionSheets));
         assertThat(result.getMessage(),
-            equalTo("For each case type only one column should have the Default Focus set to true."));
+            equalTo("Only one row per case type can have DefaultFocus set to true in worksheet CaseTypeTab; "
+                + "found 2 for case type " + CASE_TYPE_UNDER_TEST));
     }
 
 
@@ -539,7 +540,8 @@ class DisplayGroupParserTest extends ParserTestBase {
         MapperException thrown = assertThrows(MapperException.class,
             () -> caseTypeTabParser.parseAll(definitionSheets));
         assertThat(thrown.getMessage(),
-            is("For each case type only one column should have the Default Focus set to true."));
+            is("Only one row per case type can have DefaultFocus set to true in worksheet CaseTypeTab; "
+                + "found 2 for case type " + CASE_TYPE_UNDER_TEST));
     }
 
     @Test
