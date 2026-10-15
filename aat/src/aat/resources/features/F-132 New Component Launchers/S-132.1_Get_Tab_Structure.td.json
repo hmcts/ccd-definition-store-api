@@ -28,7 +28,8 @@
           "label": "Details",
           "order": 2,
           "tab_fields": "[[ANYTHING_PRESENT]]",
-          "show_condition": "[[ANY_STRING_NULLABLE]]"
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
         },
         {
           "role": "[[ANY_STRING_NULLABLE]]",
@@ -61,7 +62,8 @@
               "display_context_parameter": "[[ANY_STRING_NULLABLE]]"
             }
           ],
-          "show_condition": "[[ANY_STRING_NULLABLE]]"
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
         },
         {
           "role": "[[ANY_STRING_NULLABLE]]",
@@ -69,7 +71,8 @@
           "label": "Linked Cases",
           "order": 3,
           "tab_fields": "[[ANYTHING_PRESENT]]",
-          "show_condition": "[[ANY_STRING_NULLABLE]]"
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
         },
         {
           "role": "[[ANY_STRING_NULLABLE]]",
@@ -102,7 +105,8 @@
               "display_context_parameter": "[[ANY_STRING_NULLABLE]]"
             }
           ],
-          "show_condition": "[[ANY_STRING_NULLABLE]]"
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
         },
         {
           "role": "[[ANY_STRING_NULLABLE]]",
@@ -135,7 +139,8 @@
               "display_context_parameter": "[[ANY_STRING_NULLABLE]]"
             }
           ],
-          "show_condition": "[[ANY_STRING_NULLABLE]]"
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
         },
         {
           "role": "[[ANY_STRING_NULLABLE]]",
@@ -168,7 +173,8 @@
               "display_context_parameter": "[[ANY_STRING_NULLABLE]]"
             }
           ],
-          "show_condition": "[[ANY_STRING_NULLABLE]]"
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
         },
         {
           "role": "[[ANY_STRING_NULLABLE]]",
@@ -176,7 +182,8 @@
           "label": "History",
           "order": 1,
           "tab_fields": "[[ANYTHING_PRESENT]]",
-          "show_condition": "[[ANY_STRING_NULLABLE]]"
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
         }
       ]
     }
