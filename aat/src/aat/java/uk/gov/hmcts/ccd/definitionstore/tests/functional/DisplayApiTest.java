@@ -19,6 +19,7 @@ class DisplayApiTest extends BaseTest {
 
     private static final String JURISDICTION = "AUTOTEST1";
     private static final String CASE_TYPE = "AAT";
+    private static final String SEARCH_CASES_RESULT_CASE_TYPE = "FT_MasterCaseType";
     private static final String EVENT = "START_PROGRESS";
 
 
@@ -178,14 +179,14 @@ class DisplayApiTest extends BaseTest {
         asUser.get()
             .given()
             .contentType(ContentType.JSON)
-            .pathParam("ctid", CASE_TYPE)
+            .pathParam("ctid", SEARCH_CASES_RESULT_CASE_TYPE)
             .when()
             .get("/api/display/search-cases-result-fields/{ctid}")
             .then()
             .statusCode(200)
-            .body("case_type_id", equalTo(CASE_TYPE))
+            .body("case_type_id", equalTo(SEARCH_CASES_RESULT_CASE_TYPE))
             .body("fields", notNullValue())
-            .body("fields.case_field_id", hasItem("CaseReference"));
+            .body("fields.case_field_id", hasItem("TextField"));
     }
 
     @Test
