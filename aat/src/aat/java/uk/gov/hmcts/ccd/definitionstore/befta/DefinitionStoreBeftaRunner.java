@@ -13,7 +13,7 @@ import uk.gov.hmcts.befta.BeftaMain;
     plugin = { "json:target/cucumber.json", "pretty" },
     glue = { "uk.gov.hmcts.befta.player", "uk.gov.hmcts.ccd.definitionstore.befta" },
     features = { "classpath:features" },
-    tags = "(not @Ignore) or (not @groupaccess)"
+    tags = "not @Ignore and not @groupaccess"
 )
 public class DefinitionStoreBeftaRunner {
 

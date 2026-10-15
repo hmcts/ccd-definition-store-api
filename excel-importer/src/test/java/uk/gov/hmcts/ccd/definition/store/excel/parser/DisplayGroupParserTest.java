@@ -48,7 +48,7 @@ class DisplayGroupParserTest extends ParserTestBase {
     private static final String ACCESS_PROFILE = "AccessProfile1";
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws InvalidShowConditionException {
 
         init();
 
@@ -56,6 +56,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         caseType = mock(CaseTypeEntity.class);
         mockShowConditionParser = mock(ShowConditionParser.class);
         mockEntityToDefinitionRegistry = mock(EntityToDefinitionDataItemRegistry.class);
+        given(mockShowConditionParser.parseShowCondition(any())).willReturn(new ShowCondition.Builder().build());
 
         caseTypeTabParser = new CaseTypeTabParser(
             parseContext, mockShowConditionParser, mockEntityToDefinitionRegistry);
@@ -393,6 +394,69 @@ class DisplayGroupParserTest extends ParserTestBase {
         assertThat(fetched.getOrder(), is(1));
         assertThat(fetched.getCaseType(), is(caseType));
         assertThat(fetched.getAccessProfile(), is(accessProfileEntity));
+        DisplayGroupCaseFieldEntity field = fetched.getDisplayGroupCaseFields().iterator().next();
+        assertThat(field.getCaseFieldElementPath(), is(nullValue()));
+    }
+
+    @Test
+    @DisplayName("CaseTypeTabParser - should parse ListElementCode")
+    void shouldParseCaseTypeTabListElementCode() {
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
+        given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+
+        final DefinitionDataItem item = caseTypeTabItem("Applicant", "Address.PostCode");
+        definitionSheet.addDataItem(item);
+
+        final ParseResult<DisplayGroupEntity> parseResult = caseTypeTabParser.parseAll(definitionSheets);
+
+        final DisplayGroupEntity fetched = parseResult.getAllResults().get(0);
+        DisplayGroupCaseFieldEntity field = fetched.getDisplayGroupCaseFields().iterator().next();
+        assertThat(field.getCaseFieldElementPath(), is("Address.PostCode"));
+    }
+
+    @Test
+    @DisplayName("CaseTypeTabParser - should allow same CaseFieldID with different ListElementCode values")
+    void shouldParseCaseTypeTabWithMultipleListElementCodesForSameCaseField() {
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
+        given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+
+        definitionSheet.addDataItem(caseTypeTabItem("Applicant", "Address"));
+        definitionSheet.addDataItem(caseTypeTabItem("Applicant", "PostCode"));
+
+        final ParseResult<DisplayGroupEntity> parseResult = caseTypeTabParser.parseAll(definitionSheets);
+
+        final DisplayGroupEntity fetched = parseResult.getAllResults().get(0);
+        assertThat(fetched.getDisplayGroupCaseFields(), hasSize(2));
+    }
+
+    @Test
+    @DisplayName("CaseTypeTabParser - should fail for duplicate ListElementCode rows")
+    void shouldFailWhenDuplicateCaseTypeTabListElementCodeRowsExist() {
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
+        given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+
+        definitionSheet.addDataItem(caseTypeTabItem("Applicant", "Address"));
+        definitionSheet.addDataItem(caseTypeTabItem("Applicant", "Address"));
+
+        MapperException thrown = assertThrows(MapperException.class,
+            () -> caseTypeTabParser.parseAll(definitionSheets));
+        assertThat(thrown.getMessage(), is("Please make sure each row in worksheet CaseTypeTab is unique "
+            + "for case type Some Case Type and tab NameTab"));
+    }
+
+    @Test
+    @DisplayName("CaseTypeTabParser - should fail for duplicate whole-field rows")
+    void shouldFailWhenDuplicateCaseTypeTabWholeFieldRowsExist() {
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
+        given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+
+        definitionSheet.addDataItem(caseTypeTabItem("Applicant", null));
+        definitionSheet.addDataItem(caseTypeTabItem("Applicant", null));
+
+        MapperException thrown = assertThrows(MapperException.class,
+            () -> caseTypeTabParser.parseAll(definitionSheets));
+        assertThat(thrown.getMessage(), is("Please make sure each row in worksheet CaseTypeTab is unique "
+            + "for case type Some Case Type and tab NameTab"));
     }
 
     @Test
@@ -506,5 +570,19 @@ class DisplayGroupParserTest extends ParserTestBase {
 
         final DisplayGroupEntity fetched = parseResult.getAllResults().get(0);
         assertThat(fetched.getAccessProfile(), is(caseRoleEntity));
+    }
+
+    private DefinitionDataItem caseTypeTabItem(String caseFieldId, String listElementCode) {
+        final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
+        item.addAttribute(ColumnName.TAB_ID.toString(), "NameTab");
+        item.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
+        item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
+        item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), caseFieldId);
+        if (listElementCode != null) {
+            item.addAttribute(ColumnName.LIST_ELEMENT_CODE.toString(), listElementCode);
+        }
+        return item;
     }
 }

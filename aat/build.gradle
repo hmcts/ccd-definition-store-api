@@ -91,7 +91,7 @@ task smoke(type: Test) {
     outputs.upToDateWhen { false }
 }
 
-def tags = (findProperty('tags') == null) ? 'not @Ignore' : '(' + findProperty('tags') + ') and not @Ignore'
+def tags = (findProperty('tags') == null) ? 'not @Ignore and not @groupaccess' : '(' + findProperty('tags') + ') and not @Ignore'
 
 task functional(type: Test) {
     description = 'Executes functional tests against the CCD Definition Store Instance just deployed'
