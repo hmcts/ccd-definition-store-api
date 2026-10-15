@@ -153,7 +153,12 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         group.setOrder(sample.getInteger(this.displayGroupOrder));
         group.setType(this.displayGroupType);
         group.setPurpose(this.displayGroupPurpose);
-        group.setDefaultFocus(sample.getBoolean(this.displayGroupDefaultFocus));
+        // DefaultFocus is a tab-level setting but can be ticked on any field row of the tab
+        group.setDefaultFocus(groupDefinition.getValue().stream()
+            .map(item -> item.getBoolean(this.displayGroupDefaultFocus))
+            .filter(Boolean.TRUE::equals)
+            .findFirst()
+            .orElse(sample.getBoolean(this.displayGroupDefaultFocus)));
 
 
         group.setWebhookMidEvent(parseWebhook(getDataDefinitionWithValidMidEventURL(groupDefinition),
