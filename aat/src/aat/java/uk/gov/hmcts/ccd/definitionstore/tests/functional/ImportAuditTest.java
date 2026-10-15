@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
 import io.restassured.RestAssured;
+import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
@@ -32,8 +33,11 @@ class ImportAuditTest extends BaseTest {
 
         asAutoTestImporter().get()
             .given()
-            .multiPart("file", uploadedFilename, definitionFile,
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            .multiPart(new MultiPartSpecBuilder(definitionFile)
+                .controlName("file")
+                .fileName(uploadedFilename)
+                .mimeType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                .build())
             .when()
             .post("/import")
             .then()
