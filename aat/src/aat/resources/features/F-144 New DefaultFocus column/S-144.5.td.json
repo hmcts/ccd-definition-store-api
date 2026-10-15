@@ -1,17 +1,17 @@
 {
-	"_guid_": "S-126.2",
+	"_guid_": "S-144.5",
 	"_extends_": "F-101_Test_Base_data",
 	"title": "Import Definition file with invalid true value in multiple DefaultFocus column of the CaseTypeTab",
 	"specs": [
 		"an active profile in CCD",
-		"contains DefaultFocus set to true for more than one tab for same CaseType"
+		"contains DefaultFocus set to true for more than one tab for same CaseType excluding first row"
 	],
   "request": {
     "body": {
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/defaultFocus/BEFTA_Master_Definition_Invalid_DefaultFocus_Column.xlsx"
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/defaultFocus/BEFTA_Master_Definition_Invalid_DefaultFocus_Column2.xlsx"
         }
       ]
     }
