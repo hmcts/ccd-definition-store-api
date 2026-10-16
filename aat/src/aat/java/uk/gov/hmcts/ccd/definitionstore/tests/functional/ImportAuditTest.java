@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.awaitility.Awaitility.with;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
 
@@ -44,16 +46,20 @@ class ImportAuditTest extends BaseTest {
                 .then()
                 .statusCode(201);
 
-            asUser.get()
-                .given()
-                .contentType(ContentType.JSON)
-                .when()
-                .get("/api/import-audits")
-                .then()
-                .statusCode(200)
-                .body("", instanceOf(List.class))
-                .body("findAll { audit -> audit.filename.endsWith('" + uploadedFilename + "') }.size()",
-                    equalTo(1));
+            with()
+                .pollInterval(1, SECONDS)
+                .await()
+                .atMost(15, SECONDS)
+                .untilAsserted(() -> asUser.get()
+                    .given()
+                    .contentType(ContentType.JSON)
+                    .when()
+                    .get("/api/import-audits")
+                    .then()
+                    .statusCode(200)
+                    .body("", instanceOf(List.class))
+                    .body("findAll { audit -> audit.filename.endsWith('" + uploadedFilename + "') }.size()",
+                        equalTo(1)));
         } finally {
             Files.deleteIfExists(uploadedDefinitionFile.toPath());
         }
