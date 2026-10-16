@@ -83,7 +83,7 @@ class EventParserTest extends ParserTestBase {
             eventCaseFieldComplexTypeParser,
             entityToDefinitionDataItemRegistry,
             showConditionParser,
-            true);
+            true, java.util.Collections.emptyMap());
 
         caseType = new CaseTypeEntity();
         caseType.setReference(CASE_TYPE_UNDER_TEST);
