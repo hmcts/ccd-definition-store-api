@@ -4,6 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definitionstore.tests.AATHelper;
 import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
@@ -29,6 +30,7 @@ class ImportAuditTest extends BaseTest {
     private final Supplier<RequestSpecification> asUser = asAutoTestCaseworker();
 
     @Test
+    @Tag("notPreview")
     @DisplayName("Should return import audits")
     void shouldReturnImportAudits() throws IOException {
         File definitionFile = new File("build/tmp/definition_files_copy/BEFTA_MASTER.xlsx");

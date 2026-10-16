@@ -173,6 +173,7 @@ withPipeline(type, product, app) {
 
     before('functionalTest:preview') {
         env.GROUP_ACCESS_ENABLED = "true"
+        env.FUNCTIONAL_TEST_ENVIRONMENT = "preview"
     }
 
     afterAlways('functionalTest:preview') {
@@ -198,6 +199,7 @@ withPipeline(type, product, app) {
 
     before('functionalTest:aat') {
         env.GROUP_ACCESS_ENABLED = "true"
+        env.FUNCTIONAL_TEST_ENVIRONMENT = "aat"
     }
 
     afterAlways('functionalTest:aat') {
