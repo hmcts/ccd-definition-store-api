@@ -23,6 +23,7 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasProperty;
@@ -138,6 +139,7 @@ class MultipleControllersEndpointIT extends BaseTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
             .andExpect(jsonPath("$.tabs").isArray())
+            .andExpect(jsonPath("$.tabs[*].defaultFocus", everyItem(is(false))))
             .andReturn();
 
         CaseTabCollection caseTabCollection = mapper.readValue(result.getResponse().getContentAsString(),
