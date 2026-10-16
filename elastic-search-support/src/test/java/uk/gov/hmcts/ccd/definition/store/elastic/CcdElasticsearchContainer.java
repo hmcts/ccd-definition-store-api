@@ -5,7 +5,7 @@ import org.testcontainers.elasticsearch.ElasticsearchContainer;
 
 public class CcdElasticsearchContainer extends ElasticsearchContainer {
 
-    private static final String VERSION = "9.2.3";
+    private static final String VERSION = "9.5.5";
 
     private static CcdElasticsearchContainer container;
 

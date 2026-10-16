@@ -15,6 +15,7 @@ import org.elasticsearch.client.Node;
 import org.elasticsearch.client.NodeSelector;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
+import org.elasticsearch.common.logging.LogConfigurator;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -39,6 +40,8 @@ public class ElasticSearchConfiguration {
     private CcdElasticSearchProperties config;
 
     public ElasticSearchConfiguration(CcdElasticSearchProperties config) {
+        // Server-side exception classes require Elasticsearch's logging provider.
+        LogConfigurator.configureESLogging();
         this.config = config;
     }
 
