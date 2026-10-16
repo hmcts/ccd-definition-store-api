@@ -30,6 +30,7 @@ public class EventParser {
     private static final Logger logger = LoggerFactory.getLogger(EventParser.class);
     private static final String WILDCARD = "*";
     private static final String PRE_STATE_SEPARATOR = ";";
+    private static final String EXT = "ext:";
 
     private final ParseContext parseContext;
     private final EventCaseFieldParser eventCaseFieldParser;
@@ -96,7 +97,7 @@ public class EventParser {
     }
 
     private void validateDecentralisedEvent(String eventId, DefinitionDataItem eventDefinition) {
-        if (eventId.startsWith("ext:")) {
+        if (eventId.startsWith(EXT)) {
             final String caseTypeId = eventDefinition.getString(ColumnName.CASE_TYPE_ID);
             final List<String> whitelist = decentralisedEventsCaseTypes.get(caseTypeId.toLowerCase(Locale.ROOT));
             if (whitelist == null || !whitelist.contains(eventId)) {
