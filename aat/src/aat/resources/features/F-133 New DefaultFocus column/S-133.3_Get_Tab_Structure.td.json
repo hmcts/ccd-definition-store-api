@@ -1,10 +1,10 @@
 {
-  "_guid_": "S-144.4_Get_Tab_Structure",
-  "_extends_": "F-144.3_Test_Data_Base",
+  "_guid_": "S-133.3_Get_Tab_Structure",
+  "_extends_": "F-133.3_Test_Data_Base",
   "title": "Verify defaultFocus values in tab structure for FT_MasterCaseType",
   "operationName": "GET /api/display/tab-structure/{id}",
   "specs": [
-    "get tabs for case type id without newly added default_focus value"
+    "get tabs for case type id which has defaultFocus value set"
   ],
   "method": "GET",
   "uri": "/api/display/tab-structure/{ctid}",
@@ -29,6 +29,15 @@
           "order": 2,
           "tab_fields": "[[ANYTHING_PRESENT]]",
           "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": true
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "Task",
+          "label": "Task",
+          "order": 7,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
           "defaultFocus": false
         },
         {
@@ -36,6 +45,33 @@
           "id": "CaseLinkTab",
           "label": "Linked Cases",
           "order": 3,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "Hearings",
+          "label": "Hearings",
+          "order": 6,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "Summary",
+          "label": "Summary",
+          "order": 4,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": "[[ANY_STRING_NULLABLE]]",
+          "defaultFocus": false
+        },
+        {
+          "role": "[[ANY_STRING_NULLABLE]]",
+          "id": "Roles",
+          "label": "Roles",
+          "order": 5,
           "tab_fields": "[[ANYTHING_PRESENT]]",
           "show_condition": "[[ANY_STRING_NULLABLE]]",
           "defaultFocus": false
