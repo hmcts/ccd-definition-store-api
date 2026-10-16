@@ -1,0 +1,24 @@
+{
+  "_guid_": "S-139.1",
+  "_extends_": "F-139_Create_Draft_Without_Jurisdiction",
+  "title": "Reject a draft request without a jurisdiction",
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "Content-Length": "37",
+      "Content-Type": "text/plain;charset=UTF-8",
+      "Date": "[[ANYTHING_PRESENT]]",
+      "Expires": "0",
+      "Pragma": "no-cache",
+      "Strict-Transport-Security": "max-age=31536000 ; includeSubDomains",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "0"
+    },
+    "body": {
+      "__plainTextValue__": "No Jurisdiction present in Definition"
+    }
+  }
+}

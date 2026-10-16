@@ -1,0 +1,12 @@
+{
+  "_guid_": "F-143_Get_Drafts",
+  "_extends_": "Operation_Base_Data",
+  "operationName": "Get Drafts",
+  "method": "GET",
+  "uri": "/api/drafts",
+  "request": {
+    "queryParams": {
+      "jurisdiction": "NON_EXISTING_BEFTA_JURISDICTION"
+    }
+  }
+}
