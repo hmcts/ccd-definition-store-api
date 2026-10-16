@@ -350,7 +350,8 @@ class DisplayGroupParserTest extends ParserTestBase {
         MapperException result = assertThrows(MapperException.class,
             () -> caseTypeTabParser.parseAll(definitionSheets));
         assertThat(result.getMessage(),
-            equalTo("For each case type only one column should have the Default Focus set to true."));
+            equalTo("Only one row per case type can have DefaultFocus set to true in worksheet CaseTypeTab; "
+                + "found 2 for case type " + CASE_TYPE_UNDER_TEST));
     }
 
 
@@ -451,6 +452,58 @@ class DisplayGroupParserTest extends ParserTestBase {
     }
 
     @Test
+    @DisplayName("CaseTypeTabParser - should set defaultFocus when it is set on a row other than the first")
+    void shouldParseDefaultFocusSetOnNonFirstRowOfTab() throws InvalidShowConditionException {
+        givenCaseTypeTabContext();
+        definitionSheet.addDataItem(caseTypeTabItem("PersonFirstName", null));
+        definitionSheet.addDataItem(caseTypeTabItem("PersonLastName", "Y"));
+
+        final ParseResult<DisplayGroupEntity> parseResult = caseTypeTabParser.parseAll(definitionSheets);
+
+        assertThat(parseResult.getAllResults().size(), is(1));
+        assertThat(parseResult.getAllResults().get(0).getDefaultFocus(), is(true));
+    }
+
+    @Test
+    @DisplayName("CaseTypeTabParser - should leave defaultFocus null when the DefaultFocus column is absent")
+    void shouldLeaveDefaultFocusNullWhenColumnAbsent() throws InvalidShowConditionException {
+        givenCaseTypeTabContext();
+        definitionSheet.addDataItem(caseTypeTabItem("PersonFirstName", null));
+        definitionSheet.addDataItem(caseTypeTabItem("PersonLastName", null));
+
+        final ParseResult<DisplayGroupEntity> parseResult = caseTypeTabParser.parseAll(definitionSheets);
+
+        assertThat(parseResult.getAllResults().get(0).getDefaultFocus(), is(nullValue()));
+    }
+
+    private void givenCaseTypeTabContext() throws InvalidShowConditionException {
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
+        given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+        given(mockShowConditionParser.parseShowCondition(anyString())).willReturn(new ShowCondition.Builder().build());
+        given(parseContext.getAccessProfile(CASE_TYPE_UNDER_TEST, ACCESS_PROFILE))
+            .willReturn(Optional.of(new AccessProfileEntity()));
+    }
+
+    private DefinitionDataItem caseTypeTabItem(String caseFieldId, String defaultFocus) {
+        final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
+        item.addAttribute(ColumnName.TAB_ID.toString(), "NameTab");
+        item.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
+        if (definitionSheet.getDataItems().isEmpty()) {
+            // only one row per tab may carry the access profile
+            item.addAttribute(ColumnName.ACCESS_PROFILE.toString(), ACCESS_PROFILE);
+        }
+        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
+        item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), caseFieldId);
+        if (defaultFocus != null) {
+            item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), defaultFocus);
+        }
+        return item;
+    }
+
+    @Test
     @DisplayName("CaseTypeTabParser - should parse CaseTypeTab fail with two defaultFocus for same caseType")
     void shouldFailParseCaseTypeTabTwoDefaultFocus() throws InvalidShowConditionException {
         AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
@@ -487,7 +540,8 @@ class DisplayGroupParserTest extends ParserTestBase {
         MapperException thrown = assertThrows(MapperException.class,
             () -> caseTypeTabParser.parseAll(definitionSheets));
         assertThat(thrown.getMessage(),
-            is("For each case type only one column should have the Default Focus set to true."));
+            is("Only one row per case type can have DefaultFocus set to true in worksheet CaseTypeTab; "
+                + "found 2 for case type " + CASE_TYPE_UNDER_TEST));
     }
 
     @Test

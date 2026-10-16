@@ -91,7 +91,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
                 continue;
             }
 
-            validateDefaultFocus(displayGroupItems);
+            validateDefaultFocus(caseTypeId, displayGroupItems);
 
             final Map<String, List<DefinitionDataItem>> groupDefinitions = displayGroupItems.stream()
                 .collect(groupingBy(dataItem -> {
@@ -127,14 +127,16 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         return result;
     }
 
-    private void validateDefaultFocus(List<DefinitionDataItem> displayGroupItems) {
+    private void validateDefaultFocus(String caseTypeId, List<DefinitionDataItem> displayGroupItems) {
         long defaultFocusCount = displayGroupItems.stream()
             .filter(item -> Boolean.TRUE.equals(item.getDefaultFocus()))
             .count();
 
         if (defaultFocusCount > 1) {
-            throw new MapperException(
-                "For each case type only one column should have the Default Focus set to true.");
+            throw new MapperException(String.format(
+                "Only one row per case type can have DefaultFocus set to true in worksheet %s; "
+                    + "found %d for case type %s",
+                displayGroupItems.get(0).getSheetName(), defaultFocusCount, caseTypeId));
         }
     }
 
@@ -153,7 +155,12 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         group.setOrder(sample.getInteger(this.displayGroupOrder));
         group.setType(this.displayGroupType);
         group.setPurpose(this.displayGroupPurpose);
-        group.setDefaultFocus(sample.getBoolean(this.displayGroupDefaultFocus));
+        // DefaultFocus is a tab-level setting but can be ticked on any field row of the tab
+        group.setDefaultFocus(groupDefinition.getValue().stream()
+            .map(item -> item.getBoolean(this.displayGroupDefaultFocus))
+            .filter(Boolean.TRUE::equals)
+            .findFirst()
+            .orElse(sample.getBoolean(this.displayGroupDefaultFocus)));
 
 
         group.setWebhookMidEvent(parseWebhook(getDataDefinitionWithValidMidEventURL(groupDefinition),

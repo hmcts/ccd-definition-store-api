@@ -1,6 +1,6 @@
 {
-	"_guid_": "S-133.1",
-	"_extends_": "F-133_Test_Base_data",
+	"_guid_": "S-144.1",
+	"_extends_": "F-144_Test_Base_data",
 	"title": "Import Definition file with true value in DefaultFocus column of the CaseTypeTab",
 	"specs": [
     "an active profile in CCD",

@@ -1,23 +1,23 @@
 {
-	"_guid_": "S-133.2",
+	"_guid_": "S-144.5",
 	"_extends_": "F-101_Test_Base_data",
 	"title": "Import Definition file with invalid true value in multiple DefaultFocus column of the CaseTypeTab",
 	"specs": [
 		"an active profile in CCD",
-		"contains DefaultFocus set to true for more than one tab for same CaseType"
+		"contains DefaultFocus set to true for more than one tab for same CaseType excluding first row"
 	],
   "request": {
     "body": {
       "arrayInMap": [
         {
           "key": "file",
-          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/defaultFocus/BEFTA_Master_Definition_Invalid_DefaultFocus_Column.xlsx"
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/defaultFocus/BEFTA_Master_Definition_Invalid_DefaultFocus_Column2.xlsx"
         }
       ]
     }
   },
   "expectedResponse": {
-    "responseCode": 500,
+    "responseCode": 400,
     "responseMessage": "Bad Request",
     "headers": {
       "Content-Encoding": "[[ANYTHING_PRESENT]]",
@@ -25,7 +25,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__" : "For each case type only one column should have the Default Focus set to true."
+      "__plainTextValue__" : "Only one row per case type can have DefaultFocus set to true in worksheet CaseTypeTab; found 2 for case type FT_MasterCaseType"
     }
   }
 }
