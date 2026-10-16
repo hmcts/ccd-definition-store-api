@@ -1,5 +1,6 @@
 package uk.gov.hmcts.ccd.definitionstore.tests.functional;
 
+import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.DisplayName;
@@ -10,6 +11,7 @@ import uk.gov.hmcts.ccd.definitionstore.tests.BaseTest;
 import java.util.function.Supplier;
 
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 
 class CaseTypeTest extends BaseTest {
@@ -45,6 +47,54 @@ class CaseTypeTest extends BaseTest {
                 empty())
             .body("findAll{case_fields->case_fields.label == \"A `AddressUK` field\"}[0].complexACLs",
                 empty());
+    }
+
+    @Test
+    @DisplayName("Should reject unauthenticated case role requests")
+    void shouldRejectUnauthenticatedCaseRoleRequests() {
+        RestAssured.given()
+            .pathParam("uid", "caseworker")
+            .pathParam("jid", JURISDICTION)
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/roles")
+            .then()
+            .statusCode(401);
+
+        RestAssured.given()
+            .pathParam("uid", "caseworker")
+            .pathParam("jid", JURISDICTION)
+            .pathParam("ctid", CASE_TYPE)
+            .when()
+            .get("/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/access/profile/roles")
+            .then()
+            .statusCode(401);
+    }
+
+    @Test
+    @DisplayName("Should reject requests for an unknown case type")
+    void shouldRejectUnknownCaseTypeRoleRequests() {
+        asUser.get()
+            .given()
+            .pathParam("uid", "caseworker-autotest1")
+            .pathParam("jid", JURISDICTION)
+            .pathParam("ctid", "case-type-does-not-exist")
+            .when()
+            .get("/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/roles")
+            .then()
+            .statusCode(404)
+            .body("message", equalTo("Object Not Found for:case-type-does-not-exist"));
+
+        asUser.get()
+            .given()
+            .pathParam("uid", "caseworker-autotest1")
+            .pathParam("jid", JURISDICTION)
+            .pathParam("ctid", "case-type-does-not-exist")
+            .when()
+            .get("/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/access/profile/roles")
+            .then()
+            .statusCode(404)
+            .body("message", equalTo("Object Not Found for:case-type-does-not-exist"));
     }
 
     //Removed @Test annotation to temporarily remove test
