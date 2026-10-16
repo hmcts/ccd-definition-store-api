@@ -88,8 +88,6 @@ public class ImportController {
         }
 
         ProcessUploadResult result;
-        System.out.println("ImportController.processUpload: file=" + file.getOriginalFilename() + ", reindex=" + reindex
-            + ", deleteOldIndex=" + deleteOldIndex + ", providedJobId=" + providedJobId);
         try {
             result = processUploadServiceImpl.processUpload(file, reindex, deleteOldIndex, providedJobId);
         } catch (DataIntegrityViolationException ex) {
