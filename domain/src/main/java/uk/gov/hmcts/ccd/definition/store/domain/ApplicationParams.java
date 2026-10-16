@@ -49,6 +49,7 @@ public class ApplicationParams {
     @Value("${elasticsearch.delete-old-index.enabled:false}")
     private boolean deleteOldIndexEnabled;
 
+
     public boolean isDefaultPublish() {
         return defaultPublish;
     }
