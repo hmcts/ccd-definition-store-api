@@ -77,7 +77,7 @@ public class CaseTypeTab {
 
     @JsonProperty("defaultFocus")
     public Boolean getDefaultFocus() {
-        return defaultFocus != null ? defaultFocus : Boolean.FALSE;
+        return defaultFocus;
     }
 
     public void setDefaultFocus(Boolean defaultFocus) {
