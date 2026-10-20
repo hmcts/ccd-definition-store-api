@@ -1,17 +1,14 @@
 {
   "_guid_": "S-100.2_Get_InvalidCaseType",
   "_extends_": "Get_CaseType",
-
   "specs": [
     "to fetch incorrect caseTypeId schema"
   ],
-
   "request": {
     "pathVariables": {
       "id": "InvalidCaseType"
     }
   },
-
   "expectedResponse": {
     "responseCode": 404,
     "responseMessage": "Not Found",
@@ -21,7 +18,9 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "message": "Object Not Found for:InvalidCaseType"
-    }
+      "message": "Not Found",
+      "code": "RESOURCE_NOT_FOUND"
+    },
+    "_extends_": "CCD_Safe_Definition_404_Response"
   }
 }

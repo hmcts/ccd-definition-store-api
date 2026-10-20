@@ -25,6 +25,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
+import org.springframework.http.HttpStatusCode;
+import uk.gov.hmcts.ccd.error.ErrorCode;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -39,7 +42,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @ControllerAdvice
 class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final Integer MAX_DEPTH = 5;
     private static Logger log = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
 
     private SpreadsheetValidationErrorMessageCreator spreadsheetValidationErrorMessageCreator;
@@ -51,9 +53,9 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(value = {InvalidImportException.class, MapperException.class})
     ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
-        log.error("Exception thrown '{}'", ex.getMessage(), ex);
+        log.debug("Exception thrown '{}'", ex.getMessage(), ex);
         return handleExceptionInternal(
-            ex, flattenExceptionMessages(ex), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+            ex, HttpStatus.BAD_REQUEST.getReasonPhrase(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value = MissingAccessProfilesException.class)
@@ -93,14 +95,14 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
     String caseTypeValidation(CaseTypeValidationException e) {
-        log.error("Exception thrown {}", e.getMessage(), e);
+        log.debug("Exception thrown {}", e.getMessage(), e);
         return getMessagesAsString(e.getErrors());
     }
 
     @ExceptionHandler(FileStorageException.class)
     public void handleFileStorageException(HttpServletResponse response,
                                            FileStorageException fileStorageException) throws IOException {
-        log.error("Exception thrown: {}", fileStorageException.getMessage(), fileStorageException);
+        log.debug("Exception thrown: {}", fileStorageException.getMessage(), fileStorageException);
         response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
@@ -108,14 +110,14 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public ResponseEntity<Object> handleFeignClientException(FeignException.FeignClientException exception,
                                                              WebRequest request) {
-        log.error(exception.getMessage(), exception);
+        log.debug(exception.getMessage(), exception);
 
         int status = exception.status();
         if (status != HttpStatus.UNAUTHORIZED.value()) {
             status = HttpStatus.INTERNAL_SERVER_ERROR.value();
         }
 
-        return handleExceptionInternal(exception, flattenExceptionMessages(exception), new HttpHeaders(),
+        return handleExceptionInternal(exception, HttpStatus.valueOf(status).getReasonPhrase(), new HttpHeaders(),
             HttpStatus.valueOf(status), request);
     }
 
@@ -123,7 +125,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public void handleFeignServerException(FeignException.FeignServerException exception, HttpServletResponse response)
         throws IOException {
-        log.error(exception.getMessage(), exception);
+        log.debug(exception.getMessage(), exception);
 
         int status = exception.status();
         if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
@@ -137,7 +139,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public void handleHttpServerErrorException(HttpServerErrorException exception, HttpServletResponse response)
         throws IOException {
-        log.error(exception.getMessage(), exception);
+        log.debug(exception.getMessage(), exception);
 
         int status = exception.getRawStatusCode();
         if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
@@ -151,28 +153,29 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public ResponseEntity<Object> handleHttpClientErrorException(HttpClientErrorException exception,
                                                                  WebRequest request) {
-        log.error(exception.getMessage(), exception);
+        log.debug(exception.getMessage(), exception);
 
         int status = exception.getRawStatusCode();
         if (status != HttpStatus.UNAUTHORIZED.value()) {
             status = HttpStatus.INTERNAL_SERVER_ERROR.value();
         }
 
-        return handleExceptionInternal(exception, flattenExceptionMessages(exception), new HttpHeaders(),
+        return handleExceptionInternal(exception, HttpStatus.valueOf(status).getReasonPhrase(), new HttpHeaders(),
             HttpStatus.valueOf(status), request);
     }
 
-    private String flattenExceptionMessages(RuntimeException ex) {
-        final StringBuilder sb = new StringBuilder(ex.getMessage());
-
-        Integer remaining = MAX_DEPTH;
-        Throwable inner = ex;
-        while ((inner = inner.getCause()) != null && 0 < --remaining) {
-            log.debug("Remaining '{}' out of '{}'", remaining, MAX_DEPTH);
-            sb.append("\n").append(inner.getMessage());
-        }
-
-        return sb.toString();
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception exception, Object body,
+                                                              HttpHeaders headers, HttpStatusCode status,
+                                                              WebRequest request) {
+        log.error("Request failed: code={} status={}", ErrorCode.fromStatus(status.value()), status.value());
+        log.debug("Original request failure", exception);
+        Object safeBody = exception instanceof ValidationException
+            || exception instanceof MissingAccessProfilesException
+            ? body : Map.of("message", exception instanceof ImportValidationException validation
+                ? validation.getPublicMessage() : HttpStatus.valueOf(status.value()).getReasonPhrase(),
+                "code", ErrorCode.fromStatus(status.value()));
+        return super.handleExceptionInternal(exception, safeBody, headers, status, request);
     }
 
     private String getMessagesAsString(Set<String> messages) {

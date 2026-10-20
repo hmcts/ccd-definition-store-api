@@ -41,12 +41,26 @@ class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
+    void approvedValidationRemainsActionableButMapperDiagnosticsStayPrivate() {
+        for (ImportValidationException.Reason reason : ImportValidationException.Reason.values()) {
+            ImportValidationException exception = new ImportValidationException(reason);
+            ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
+            assertEquals(400, response.getStatusCode().value());
+            assertEquals(exception.getPublicMessage(), ((Map<?, ?>) response.getBody()).get("message"));
+        }
+        MapperException diagnostic = new MapperException("SECRET internal-host",
+            new IllegalStateException("SECRET database cause"));
+        ResponseEntity<Object> response = exceptionHandler.handleBadRequest(diagnostic, mock(WebRequest.class));
+        assertEquals("Bad Request", ((Map<?, ?>) response.getBody()).get("message"));
+    }
+
+    @Test
     void handleBadRequest_shouldAggregateInnerMessages() throws Exception {
         final RuntimeException exception = new RuntimeException("Outer message", new Exception("Inner message"));
 
         final ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
 
-        assertThat(response.getBody().toString(), equalTo("Outer message\nInner message"));
+        assertThat(((Map<?, ?>) response.getBody()).get("message"), equalTo("Bad Request"));
         assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
 
@@ -91,7 +105,7 @@ class RestResponseEntityExceptionHandlerTest {
 
         final ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
 
-        assertThat(response.getBody().toString(), equalTo("Depth 1\nDepth 2\nDepth 3\nDepth 4\nDepth 5"));
+        assertThat(((Map<?, ?>) response.getBody()).get("message"), equalTo("Bad Request"));
         assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
 

@@ -111,8 +111,8 @@ class GenericLayoutParserTest {
         sheet.addDataItem(item);
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
-        assertEquals(String.format("At least one layout case field must be defined for case type %s and layout %s",
-            CASE_TYPE_ID2, classUnderTest.getLayoutName()), thrown.getMessage());
+        assertEquals("At least one layout case field must be defined for the case type and layout.",
+            thrown.getMessage());
     }
 
     @Test

@@ -1,26 +1,24 @@
 {
-	"_guid_": "S-368",
-	"_extends_": "F-085_Test_Base_Data",
-	"title": "must return 404 when request provides a non-existing case type id",
-
-	"specs": [
-	 "an active profile in CCD",
-	 "contains a non-existing case type id",
-	 "contains 404 not found code"
-	],
-
-	"request": {
-	 "pathVariables": {
-		"id": "NON_EXISTING_BEFTA_CASETYPE"
-	 }
-	},
-
-	"expectedResponse": {
-	 "_extends_": "Common_404_Response_Headers",
-	 "responseCode": 404,
-	 "responseMessage": "Not Found",
-	 "body": {
-		"message": "Object Not Found for:NON_EXISTING_BEFTA_CASETYPE"
-	 }
-	}
+  "_guid_": "S-368",
+  "_extends_": "F-085_Test_Base_Data",
+  "title": "must return 404 when request provides a non-existing case type id",
+  "specs": [
+    "an active profile in CCD",
+    "contains a non-existing case type id",
+    "contains 404 not found code"
+  ],
+  "request": {
+    "pathVariables": {
+      "id": "NON_EXISTING_BEFTA_CASETYPE"
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "CCD_Safe_Definition_404_Response",
+    "responseCode": 404,
+    "responseMessage": "Not Found",
+    "body": {
+      "message": "Not Found",
+      "code": "RESOURCE_NOT_FOUND"
+    }
+  }
 }

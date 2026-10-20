@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -132,7 +133,7 @@ class CategoryValidatorTest {
     // Example 4 - Invalid definition - Non Unique Display Order in the sub-categories
     @Test
     void failNonUniqueDisplayOrderForSubCategories() {
-        val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
+        val invalidPropertyException = assertThrows(ImportValidationException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
 
@@ -150,7 +151,7 @@ class CategoryValidatorTest {
     // Example 3 - Invalid definition - Non Unique Display Order on the main categories
     @Test
     void failNonUniqueDisplayOrderMainCategories() {
-        val invalidPropertyException = assertThrows(InvalidImportException.class, () ->
+        val invalidPropertyException = assertThrows(ImportValidationException.class, () ->
             categoryValidator.validate(parseContext, Lists.newArrayList(
                 definitionDataItem,
 
