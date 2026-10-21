@@ -53,7 +53,6 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(value = {InvalidImportException.class, MapperException.class})
     ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
-        log.debug("Exception thrown '{}'", ex.getMessage(), ex);
         return handleExceptionInternal(
             ex, HttpStatus.BAD_REQUEST.getReasonPhrase(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
@@ -64,7 +63,6 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
             .append(ex.getMissingAccessProfiles()
                 .stream()
                 .collect(Collectors.joining("\n"))).toString();
-        log.warn(missingAccessProfiles);
 
         String validationErrors = getValidationErrorMessage(
             "\n\nValidation errors occurred importing the spreadsheet.\n\n", ex.getValidationErrors());
@@ -95,14 +93,14 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
     String caseTypeValidation(CaseTypeValidationException e) {
-        log.debug("Exception thrown {}", e.getMessage(), e);
+        log.warn("Case type validation failed", e);
         return getMessagesAsString(e.getErrors());
     }
 
     @ExceptionHandler(FileStorageException.class)
     public void handleFileStorageException(HttpServletResponse response,
                                            FileStorageException fileStorageException) throws IOException {
-        log.debug("Exception thrown: {}", fileStorageException.getMessage(), fileStorageException);
+        log.error("File storage request failed", fileStorageException);
         response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
@@ -110,7 +108,6 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public ResponseEntity<Object> handleFeignClientException(FeignException.FeignClientException exception,
                                                              WebRequest request) {
-        log.debug(exception.getMessage(), exception);
 
         int status = exception.status();
         if (status != HttpStatus.UNAUTHORIZED.value()) {
@@ -125,7 +122,8 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public void handleFeignServerException(FeignException.FeignServerException exception, HttpServletResponse response)
         throws IOException {
-        log.debug(exception.getMessage(), exception);
+
+        log.error("Upstream request failed", exception);
 
         int status = exception.status();
         if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
@@ -139,7 +137,8 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public void handleHttpServerErrorException(HttpServerErrorException exception, HttpServletResponse response)
         throws IOException {
-        log.debug(exception.getMessage(), exception);
+
+        log.error("Upstream request failed", exception);
 
         int status = exception.getRawStatusCode();
         if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
@@ -153,7 +152,6 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public ResponseEntity<Object> handleHttpClientErrorException(HttpClientErrorException exception,
                                                                  WebRequest request) {
-        log.debug(exception.getMessage(), exception);
 
         int status = exception.getRawStatusCode();
         if (status != HttpStatus.UNAUTHORIZED.value()) {
@@ -168,8 +166,13 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     protected ResponseEntity<Object> handleExceptionInternal(Exception exception, Object body,
                                                               HttpHeaders headers, HttpStatusCode status,
                                                               WebRequest request) {
-        log.error("Request failed: code={} status={}", ErrorCode.fromStatus(status.value()), status.value());
-        log.debug("Original request failure", exception);
+        if (status.is5xxServerError()) {
+            log.error("Request failed: code={} status={}",
+                ErrorCode.fromStatus(status.value()), status.value(), exception);
+        } else {
+            log.warn("Request failed: code={} status={}",
+                ErrorCode.fromStatus(status.value()), status.value(), exception);
+        }
         Object safeBody = exception instanceof ValidationException
             || exception instanceof MissingAccessProfilesException
             ? body : Map.of("message", exception instanceof ImportValidationException validation

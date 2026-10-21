@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
 import org.springframework.stereotype.Component;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -21,8 +22,7 @@ public class SpreadsheetValidator {
 
         }
         if (headings.isEmpty()) {
-            throw new InvalidImportException("Error processing sheet \"" + sheetName
-                + "\": Invalid Case Definition sheet - no Definition data attribute headers found");
+            throw new ImportValidationException(ImportValidationException.Reason.MISSING_ATTRIBUTE_HEADERS);
         }
     }
 

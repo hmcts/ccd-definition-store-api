@@ -1,5 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import org.slf4j.LoggerFactory;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
@@ -203,6 +209,27 @@ class RestResponseEntityExceptionHandlerTest {
             .handleFeignClientException(ex, mock(WebRequest.class));
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    void retainsOriginalExceptionAtInfoWithoutLeakingItInTheResponse() {
+        Logger logger = (Logger) LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
+        Level previousLevel = logger.getLevel();
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        try {
+            logger.setLevel(Level.INFO);
+            RuntimeException original = new RuntimeException("PRIVATE support diagnostic");
+            ResponseEntity<Object> result = exceptionHandler.handleBadRequest(original, mock(WebRequest.class));
+            assertEquals(400, result.getStatusCode().value());
+            assertEquals("PRIVATE support diagnostic", appender.list.get(0).getThrowableProxy().getMessage());
+            assertEquals(false, result.getBody().toString().contains("PRIVATE"));
+        } finally {
+            logger.setLevel(previousLevel);
+            logger.detachAppender(appender);
+            appender.stop();
+        }
     }
 
 }

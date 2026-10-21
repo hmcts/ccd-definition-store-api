@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -84,12 +85,11 @@ class SpreadsheetValidatorTest {
         final DefinitionSheet definitionSheet = new DefinitionSheet();
         definitionSheet.setName("name");
 
-        InvalidImportException ex = assertThrows(InvalidImportException.class, () -> {
+        ImportValidationException ex = assertThrows(ImportValidationException.class, () -> {
             validator.validate("sheet", definitionSheet, Collections.emptyList());
         });
-        assertThat(ex.getMessage(), is(
-                "Error processing sheet \"sheet\": Invalid Case Definition sheet - "
-                + "no Definition data attribute headers found"));
+        assertThat(ex.getPublicMessage(), is(
+            "Invalid Case Definition sheet - no Definition data attribute headers found"));
     }
 
     @Test

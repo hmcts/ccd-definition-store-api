@@ -38,33 +38,28 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RestControllerAdvice
 class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final String EXCEPTION_THROWN = "Exception thrown ";
     private static final Logger LOG = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     @ExceptionHandler(value = {PersistenceException.class})
     public ResponseEntity<Object> handleException(RuntimeException ex, WebRequest request) {
-        log(ex);
         return handleExceptionInternal(ex, null, new HttpHeaders(),
             INTERNAL_SERVER_ERROR, request);
     }
 
     @ExceptionHandler(value = {OptimisticLockException.class})
     public ResponseEntity<Object> handleConflict(PersistenceException ex, WebRequest request) {
-        log(ex);
         return handleExceptionInternal(ex, null, new HttpHeaders(),
             HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(value = {ConcurrencyFailureException.class})
     public ResponseEntity<Object> handleConcurrencyFailure(ConcurrencyFailureException ex, WebRequest request) {
-        log(ex);
         return handleExceptionInternal(ex, null, new HttpHeaders(),
             HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(value = {ConstraintViolationException.class})
     public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex, WebRequest request) {
-        log(ex);
         return handleExceptionInternal(ex, null, new HttpHeaders(),
             HttpStatus.CONFLICT, request);
     }
@@ -73,7 +68,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
     public Map<String, String> handleMethodConstraintViolation(jakarta.validation.ConstraintViolationException ex) {
-        log(ex);
+        log(ex, BAD_REQUEST);
         String message = ex.getConstraintViolations().stream()
             .map(ConstraintViolation::getMessage)
             .collect(Collectors.joining(", "));
@@ -82,7 +77,6 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {BadRequestException.class})
     public ResponseEntity<Object> handleBadRequest(BadRequestException ex, WebRequest request) {
-        log(ex);
         return handleExceptionInternal(ex, null, new HttpHeaders(),
             HttpStatus.BAD_REQUEST, request);
     }
@@ -91,7 +85,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(code = NOT_FOUND)
     @ResponseBody
     Map<String, String> objectNotFound(NotFoundException e) {
-        log(e);
+        log(e, NOT_FOUND);
         return safeMessage(NOT_FOUND);
     }
 
@@ -99,7 +93,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(code = CONFLICT)
     @ResponseBody
     Map<String, String> objectFound(DuplicateFoundException e) {
-        log(e);
+        log(e, CONFLICT);
         return safeMessage(CONFLICT);
     }
 
@@ -107,7 +101,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
     Map<String, String> generalIllegal(IllegalArgumentException e) {
-        log(e);
+        log(e, BAD_REQUEST);
         return safeMessage(BAD_REQUEST);
     }
 
@@ -115,7 +109,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(code = INTERNAL_SERVER_ERROR)
     @ResponseBody
     Map<String, String> handleIOException(IOException e) {
-        log(e);
+        log(e, INTERNAL_SERVER_ERROR);
         return safeMessage(INTERNAL_SERVER_ERROR);
     }
 
@@ -123,7 +117,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
     String caseTypeValidation(CaseTypeValidationException e) {
-        log(e);
+        log(e, BAD_REQUEST);
         return getMessagesAstring(e.getErrors());
     }
 
@@ -131,7 +125,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
     Map<String, String> elasticSearchInitialisationException(ElasticSearchInitialisationException e) {
-        log(e);
+        log(e, BAD_REQUEST);
         return safeMessage(BAD_REQUEST);
     }
 
@@ -143,8 +137,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleExceptionInternal(Exception exception, Object body,
                                                               HttpHeaders headers, HttpStatusCode status,
                                                               WebRequest request) {
-        LOG.error("Request failed: code={} status={}", ErrorCode.fromStatus(status.value()), status.value());
-        LOG.debug("Original request failure", exception);
+        log(exception, HttpStatus.valueOf(status.value()));
         return super.handleExceptionInternal(exception, safeMessage(HttpStatus.valueOf(status.value())),
             headers, status, request);
     }
@@ -157,8 +150,14 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
         return result.toString();
     }
 
-    private void log(final Exception e) {
-        LOG.debug(EXCEPTION_THROWN + "{}", e.getMessage(), e);
+    private void log(Exception exception, HttpStatus status) {
+        if (status.is5xxServerError()) {
+            LOG.error("Request failed: code={} status={}",
+                ErrorCode.fromStatus(status.value()), status.value(), exception);
+        } else {
+            LOG.warn("Request failed: code={} status={}",
+                ErrorCode.fromStatus(status.value()), status.value(), exception);
+        }
     }
 
 }
