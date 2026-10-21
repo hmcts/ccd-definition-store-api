@@ -48,7 +48,7 @@ ext {
     junitJupiterVersion = '5.12.2'
     springDocVersion = '2.9.1'
     hamcrestVersion = '3.0'
-    flywayVersion = '12.5.0'
+    flywayVersion = '12.11.0'
     reformLogging = '6.1.9'
     apachePoiVersion = '5.4.1'
     appInsightsVersion = '2.6.4'
