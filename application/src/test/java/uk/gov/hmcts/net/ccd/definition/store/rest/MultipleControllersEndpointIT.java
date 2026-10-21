@@ -139,7 +139,7 @@ class MultipleControllersEndpointIT extends BaseTest {
             .andExpect(MockMvcResultMatchers.status().isOk())
             .andExpect(jsonPath("$.case_type_id").value(CASE_TYPE))
             .andExpect(jsonPath("$.tabs").isArray())
-            .andExpect(jsonPath("$.tabs[*].defaultFocus", everyItem(is(false))))
+            .andExpect(jsonPath("$.tabs[*].defaultFocus", everyItem(is(nullValue()))))
             .andReturn();
 
         CaseTabCollection caseTabCollection = mapper.readValue(result.getResponse().getContentAsString(),
