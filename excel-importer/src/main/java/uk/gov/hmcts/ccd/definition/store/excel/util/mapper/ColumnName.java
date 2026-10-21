@@ -18,6 +18,7 @@ public enum ColumnName {
     CASE_EVENT_FIELD_HINT("CaseEventFieldHint"),
     CASE_FIELD_ID("CaseFieldID"),
     CASE_TYPE_ID("CaseTypeID"),
+    CASE_TYPES_ORDER("CaseTypesOrder"),
     CHANNEL("Channel"),
     CRUD("CRUD"),
     DEFAULT_HIDDEN("DefaultHidden"),

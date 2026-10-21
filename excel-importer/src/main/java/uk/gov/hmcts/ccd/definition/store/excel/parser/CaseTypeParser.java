@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.SecurityClassificationColumn;
@@ -15,6 +16,7 @@ import uk.gov.hmcts.ccd.definition.store.repository.entity.StateACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.StateEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.WebhookEntity;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -78,10 +80,10 @@ public class CaseTypeParser {
             logger.debug("Case types parsing: Parsing case type {}...", caseTypeId);
 
             if (1 != caseTypeItem.getValue().size()) {
-                throw new SpreadsheetParsingException("Multiple case type definitions for ID: " + caseTypeId);
+                throw new MapperException("Multiple case type definitions for ID: " + caseTypeId);
             }
 
-            final DefinitionDataItem caseTypeDefinition = caseTypeItem.getValue().get(0);
+            final DefinitionDataItem caseTypeDefinition = caseTypeItem.getValue().getFirst();
 
             final CaseTypeEntity caseType = parseCaseType(caseTypeItem, caseTypeDefinition);
             Collection<CaseRoleEntity> caseRoleEntities = caseRoleParser.parseAll(definitionSheets, caseType);
@@ -123,6 +125,7 @@ public class CaseTypeParser {
         caseType.setJurisdiction(parseContext.getJurisdiction());
         caseType.setReference(caseTypeItem.getKey());
         caseType.setName(caseTypeDefinition.getString(ColumnName.NAME));
+        caseType.setCaseTypesOrder(parseCaseTypesOrder(caseTypeDefinition));
         caseType.setDescription(caseTypeDefinition.getString(ColumnName.DESCRIPTION));
         caseType.setLiveFrom(caseTypeDefinition.getLocalDate(ColumnName.LIVE_FROM));
         caseType.setLiveTo(caseTypeDefinition.getLocalDate(ColumnName.LIVE_TO));
@@ -133,6 +136,27 @@ public class CaseTypeParser {
         caseType.setSecurityClassification(securityClassificationColumn.getSecurityClassification());
 
         return caseType;
+    }
+
+    private Integer parseCaseTypesOrder(DefinitionDataItem caseTypeDefinition) {
+        String value = caseTypeDefinition.getString(ColumnName.CASE_TYPES_ORDER);
+        if (StringUtils.isBlank(value)) {
+            return null;
+        }
+
+        String error = String.format(
+            "Invalid value '%s' in column '%s' in sheet '%s' for case type '%s': expected a whole number from 0 to 99",
+            value, ColumnName.CASE_TYPES_ORDER, SheetName.CASE_TYPE.getName(), caseTypeDefinition.getId());
+        final int order;
+        try {
+            order = new BigDecimal(value).intValueExact();
+        } catch (NumberFormatException | ArithmeticException exception) {
+            throw new MapperException(error, exception);
+        }
+        if (order < 0 || order > 99) {
+            throw new MapperException(error);
+        }
+        return order;
     }
 
     private WebhookEntity parsePrintWebhook(DefinitionDataItem caseTypeDefinition) {
@@ -152,7 +176,7 @@ public class CaseTypeParser {
     private WebhookEntity parseGetCaseWebhook(DefinitionDataItem caseTypeDefinition) {
 
         return WebhookParser.parseWebhook(caseTypeDefinition, ColumnName.CALLBACK_GET_CASE_URL,
-                                            ColumnName.RETRIES_GET_CASE_URL);
+            ColumnName.RETRIES_GET_CASE_URL);
 
     }
 }

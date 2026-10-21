@@ -169,6 +169,8 @@ class ImportJobIntegrationTest extends BaseTest {
     @Test
     @Transactional(propagation = Propagation.NOT_SUPPORTED)
     void postWithNoJobIdHeader_serverGeneratesId() throws Exception {
+        importJobRepository.save(buildPendingEntity(UUID.randomUUID(), LocalDateTime.now()));
+
         try (InputStream in = new ClassPathResource(INVALID_XLSX, getClass()).getInputStream()) {
             MockMultipartFile file = new MockMultipartFile("file", in);
 
@@ -180,11 +182,12 @@ class ImportJobIntegrationTest extends BaseTest {
             String jobIdHeader = result.getResponse().getHeader(ImportController.IMPORT_JOB_ID_HEADER);
             assertNotNull(jobIdHeader, "X-Import-Job-Id must be present on error responses");
 
+            UUID generatedJobId = assertDoesNotThrow(() -> UUID.fromString(jobIdHeader),
+                "Generated job id must be a valid UUID");
             List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-                "SELECT * FROM import_jobs");
+                "SELECT * FROM import_jobs WHERE id = ?", generatedJobId);
             assertThat("Server must have created an import_jobs row", rows, hasSize(1));
             String dbId = rows.getFirst().get("id").toString();
-            assertDoesNotThrow(() -> UUID.fromString(dbId), "DB row id must be a valid UUID");
             assertThat("Header job id must match DB row id", jobIdHeader, is(dbId));
         }
     }
