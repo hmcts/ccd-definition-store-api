@@ -9,6 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -56,6 +57,9 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     @Column(name = "live_to")
     private LocalDate liveTo;
+
+    @Column(name = "case_types_order")
+    private Integer caseTypesOrder;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -220,6 +224,14 @@ public class CaseTypeEntity implements Serializable, Versionable {
 
     public void setLiveTo(final LocalDate liveTo) {
         this.liveTo = liveTo;
+    }
+
+    public Integer getCaseTypesOrder() {
+        return caseTypesOrder;
+    }
+
+    public void setCaseTypesOrder(final Integer caseTypesOrder) {
+        this.caseTypesOrder = caseTypesOrder;
     }
 
     public String getName() {

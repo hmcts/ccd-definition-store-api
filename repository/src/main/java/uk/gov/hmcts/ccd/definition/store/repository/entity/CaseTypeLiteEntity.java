@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -43,6 +44,9 @@ public class CaseTypeLiteEntity implements Serializable, Versionable {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Column(name = "case_types_order")
+    private Integer caseTypesOrder;
 
     @Column(name = "description")
     private String description;
@@ -91,6 +95,14 @@ public class CaseTypeLiteEntity implements Serializable, Versionable {
     @Override
     public void setVersion(final Integer version) {
         this.version = version;
+    }
+
+    public Integer getCaseTypesOrder() {
+        return caseTypesOrder;
+    }
+
+    public void setCaseTypesOrder(final Integer caseTypesOrder) {
+        this.caseTypesOrder = caseTypesOrder;
     }
 
     public String getName() {
@@ -145,7 +157,7 @@ public class CaseTypeLiteEntity implements Serializable, Versionable {
     }
 
     public CaseTypeLiteEntity addCaseTypeACLs(final Collection<CaseTypeLiteACLEntity> caseTypeLiteACLEntities) {
-        caseTypeLiteACLEntities.forEach(e -> addCaseTypeACL(e));
+        caseTypeLiteACLEntities.forEach(this::addCaseTypeACL);
         return this;
     }
 
@@ -154,6 +166,7 @@ public class CaseTypeLiteEntity implements Serializable, Versionable {
         caseTypeLiteEntity.setId(caseTypeEntity.getId());
         caseTypeLiteEntity.setReference(caseTypeEntity.getReference());
         caseTypeLiteEntity.setName(caseTypeEntity.getName());
+        caseTypeLiteEntity.setCaseTypesOrder(caseTypeEntity.getCaseTypesOrder());
         caseTypeLiteEntity.setVersion(caseTypeEntity.getVersion());
         caseTypeLiteEntity.setDescription(caseTypeEntity.getDescription());
         caseTypeLiteEntity.setJurisdiction(caseTypeEntity.getJurisdiction());
