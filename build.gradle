@@ -30,7 +30,7 @@ dependencyCheck {
 apply from: "$rootDir/gradle/suppress.gradle"
 
 ext {
-    set('elasticsearch.version', '9.1.10')
+    set('elasticsearch.version', '9.4.8')
     set('spring-framework.version', '6.2.19')
     set('spring-security.version', '6.5.11')
     set('springCloudVersion', '2025.0.1')
@@ -42,7 +42,7 @@ ext {
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.26.1')
 
-    elasticsearchVersion = '9.1.10'
+    elasticsearchVersion = '9.4.8'
     junit = '5.14.4'
     junitPlatform = '1.14.4'
     junitJupiterVersion = '5.12.2'
