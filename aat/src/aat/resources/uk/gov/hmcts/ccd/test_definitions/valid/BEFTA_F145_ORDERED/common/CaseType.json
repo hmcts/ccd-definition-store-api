@@ -1,6 +1,33 @@
 [
   {
-    "LiveFrom": "01/01/2017",
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_QMatch",
+    "Name": "Hotel",
+    "Description": "F-145 Hotel",
+    "JurisdictionID": "BEFTA_F145_ORDERED",
+    "SecurityClassification": "PUBLIC",
+    "CaseTypesOrder": 42
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_Unset",
+    "Name": "Unset",
+    "Description": "F-145 Unset",
+    "JurisdictionID": "BEFTA_F145_ORDERED",
+    "SecurityClassification": "PUBLIC",
+    "CaseTypesOrder": ""
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_LastExtra",
+    "Name": "Omega last",
+    "Description": "F-145 Omega last",
+    "JurisdictionID": "BEFTA_F145_ORDERED",
+    "SecurityClassification": "PUBLIC",
+    "CaseTypesOrder": 99
+  },
+  {
+    "LiveFrom": "01/01/2026",
     "ID": "F145_AMatch",
     "Name": "Zulu",
     "Description": "F-145 Zulu",
@@ -9,16 +36,7 @@
     "CaseTypesOrder": 42
   },
   {
-    "LiveFrom": "01/01/2017",
-    "ID": "F145_ZMatch",
-    "Name": "Alpha",
-    "Description": "F-145 Alpha",
-    "JurisdictionID": "BEFTA_F145_ORDERED",
-    "SecurityClassification": "PUBLIC",
-    "CaseTypesOrder": 42
-  },
-  {
-    "LiveFrom": "01/01/2017",
+    "LiveFrom": "01/01/2026",
     "ID": "F145_Other",
     "Name": "Other",
     "Description": "F-145 Other",
@@ -27,16 +45,61 @@
     "CaseTypesOrder": 7
   },
   {
-    "LiveFrom": "01/01/2017",
-    "ID": "F145_First",
-    "Name": "First",
-    "Description": "F-145 First",
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_TMatch",
+    "Name": "Delta",
+    "Description": "F-145 Delta",
+    "JurisdictionID": "BEFTA_F145_ORDERED",
+    "SecurityClassification": "PUBLIC",
+    "CaseTypesOrder": 42
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_FirstExtra",
+    "Name": "Omega first",
+    "Description": "F-145 Omega first",
     "JurisdictionID": "BEFTA_F145_ORDERED",
     "SecurityClassification": "PUBLIC",
     "CaseTypesOrder": 1
   },
   {
-    "LiveFrom": "01/01/2017",
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_ZMatch",
+    "Name": "Alpha",
+    "Description": "F-145 Alpha",
+    "JurisdictionID": "BEFTA_F145_ORDERED",
+    "SecurityClassification": "PUBLIC",
+    "CaseTypesOrder": 42
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_UnsetSecond",
+    "Name": "Blank second",
+    "Description": "F-145 Blank second",
+    "JurisdictionID": "BEFTA_F145_ORDERED",
+    "SecurityClassification": "PUBLIC",
+    "CaseTypesOrder": ""
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_DMatch",
+    "Name": "Sierra",
+    "Description": "F-145 Sierra",
+    "JurisdictionID": "BEFTA_F145_ORDERED",
+    "SecurityClassification": "PUBLIC",
+    "CaseTypesOrder": 42
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_OtherThird",
+    "Name": "Other third",
+    "Description": "F-145 Other third",
+    "JurisdictionID": "BEFTA_F145_ORDERED",
+    "SecurityClassification": "PUBLIC",
+    "CaseTypesOrder": 7
+  },
+  {
+    "LiveFrom": "01/01/2026",
     "ID": "F145_Last",
     "Name": "Last",
     "Description": "F-145 Last",
@@ -45,12 +108,57 @@
     "CaseTypesOrder": 99
   },
   {
-    "LiveFrom": "01/01/2017",
-    "ID": "F145_Unset",
-    "Name": "Unset",
-    "Description": "F-145 Unset",
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_MMatch",
+    "Name": "Kilo",
+    "Description": "F-145 Kilo",
+    "JurisdictionID": "BEFTA_F145_ORDERED",
+    "SecurityClassification": "PUBLIC",
+    "CaseTypesOrder": 42
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_First",
+    "Name": "First",
+    "Description": "F-145 First",
+    "JurisdictionID": "BEFTA_F145_ORDERED",
+    "SecurityClassification": "PUBLIC",
+    "CaseTypesOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_BMatch",
+    "Name": "Tango",
+    "Description": "F-145 Tango",
+    "JurisdictionID": "BEFTA_F145_ORDERED",
+    "SecurityClassification": "PUBLIC",
+    "CaseTypesOrder": 42
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_UnsetThird",
+    "Name": "Blank third",
+    "Description": "F-145 Blank third",
     "JurisdictionID": "BEFTA_F145_ORDERED",
     "SecurityClassification": "PUBLIC",
     "CaseTypesOrder": ""
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_HMatch",
+    "Name": "Papa",
+    "Description": "F-145 Papa",
+    "JurisdictionID": "BEFTA_F145_ORDERED",
+    "SecurityClassification": "PUBLIC",
+    "CaseTypesOrder": 42
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_OtherSecond",
+    "Name": "Other second",
+    "Description": "F-145 Other second",
+    "JurisdictionID": "BEFTA_F145_ORDERED",
+    "SecurityClassification": "PUBLIC",
+    "CaseTypesOrder": 7
   }
 ]

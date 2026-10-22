@@ -1,13 +1,27 @@
 [
   {
-    "CaseTypeID": "F145_AMatch",
+    "CaseTypeID": "F145_QMatch",
     "CaseEventID": "Create",
     "CaseFieldID": "TextField",
     "PageID": "1",
     "DisplayContext": "OPTIONAL"
   },
   {
-    "CaseTypeID": "F145_ZMatch",
+    "CaseTypeID": "F145_Unset",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_LastExtra",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_AMatch",
     "CaseEventID": "Create",
     "CaseFieldID": "TextField",
     "PageID": "1",
@@ -21,7 +35,42 @@
     "DisplayContext": "OPTIONAL"
   },
   {
-    "CaseTypeID": "F145_First",
+    "CaseTypeID": "F145_TMatch",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_FirstExtra",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_ZMatch",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_UnsetSecond",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_DMatch",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_OtherThird",
     "CaseEventID": "Create",
     "CaseFieldID": "TextField",
     "PageID": "1",
@@ -35,7 +84,42 @@
     "DisplayContext": "OPTIONAL"
   },
   {
-    "CaseTypeID": "F145_Unset",
+    "CaseTypeID": "F145_MMatch",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_First",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_BMatch",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_UnsetThird",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_HMatch",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_OtherSecond",
     "CaseEventID": "Create",
     "CaseFieldID": "TextField",
     "PageID": "1",

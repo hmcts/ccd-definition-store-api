@@ -2,7 +2,7 @@
 Feature: F-145: Filter jurisdiction case types by CaseTypesOrder
 
   # CCD-7772: the agreed behaviour filters by caseTypeOrder and sorts matches by ID.
-  # With no filter the response has no specified case-type order.
+  # With no filter/caseTypeOrder the response should have no specified case-type order.
   Background:
     Given an appropriate test context as detailed in the test data source
 

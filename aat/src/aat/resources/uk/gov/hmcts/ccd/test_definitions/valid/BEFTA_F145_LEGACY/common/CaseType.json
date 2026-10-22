@@ -1,6 +1,14 @@
 [
   {
-    "LiveFrom": "01/01/2017",
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_HotelLegacy",
+    "Name": "Bravo legacy",
+    "Description": "F-145 Bravo legacy",
+    "JurisdictionID": "BEFTA_F145_LEGACY",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
     "ID": "F145_ZuluLegacy",
     "Name": "ZuluLegacy",
     "Description": "F-145 ZuluLegacy",
@@ -8,10 +16,66 @@
     "SecurityClassification": "PUBLIC"
   },
   {
-    "LiveFrom": "01/01/2017",
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_DeltaLegacy",
+    "Name": "India legacy",
+    "Description": "F-145 India legacy",
+    "JurisdictionID": "BEFTA_F145_LEGACY",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
     "ID": "F145_AlphaLegacy",
     "Name": "AlphaLegacy",
     "Description": "F-145 AlphaLegacy",
+    "JurisdictionID": "BEFTA_F145_LEGACY",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_JulietLegacy",
+    "Name": "Charlie legacy",
+    "Description": "F-145 Charlie legacy",
+    "JurisdictionID": "BEFTA_F145_LEGACY",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_BravoLegacy",
+    "Name": "Hotel legacy",
+    "Description": "F-145 Hotel legacy",
+    "JurisdictionID": "BEFTA_F145_LEGACY",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_GolfLegacy",
+    "Name": "Delta legacy",
+    "Description": "F-145 Delta legacy",
+    "JurisdictionID": "BEFTA_F145_LEGACY",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_CharlieLegacy",
+    "Name": "Juliet legacy",
+    "Description": "F-145 Juliet legacy",
+    "JurisdictionID": "BEFTA_F145_LEGACY",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_IndiaLegacy",
+    "Name": "Echo legacy",
+    "Description": "F-145 Echo legacy",
+    "JurisdictionID": "BEFTA_F145_LEGACY",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "ID": "F145_EchoLegacy",
+    "Name": "Golf legacy",
+    "Description": "F-145 Golf legacy",
     "JurisdictionID": "BEFTA_F145_LEGACY",
     "SecurityClassification": "PUBLIC"
   }

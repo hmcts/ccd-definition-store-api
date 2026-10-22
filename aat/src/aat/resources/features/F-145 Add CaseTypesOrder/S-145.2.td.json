@@ -25,13 +25,77 @@
           "id": "BEFTA_F145_LEGACY",
           "name": "BEFTA_F145_LEGACY",
           "description": "F-145 jurisdiction",
-          "live_from": "2017-01-01T00:00:00.000+0000",
+          "live_from": "2026-01-01T00:00:00.000+0000",
           "live_until": null,
           "case_types": [
             {
               "__operator__": "EQUIVALENT",
               "__ordering__": "UNORDERED",
               "__elementId__": "id"
+            },
+            {
+              "id": "F145_EchoLegacy",
+              "description": "F-145 Golf legacy",
+              "name": "Golf legacy",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": []
+            },
+            {
+              "id": "F145_IndiaLegacy",
+              "description": "F-145 Echo legacy",
+              "name": "Echo legacy",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": []
+            },
+            {
+              "id": "F145_CharlieLegacy",
+              "description": "F-145 Juliet legacy",
+              "name": "Juliet legacy",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": []
+            },
+            {
+              "id": "F145_GolfLegacy",
+              "description": "F-145 Delta legacy",
+              "name": "Delta legacy",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": []
+            },
+            {
+              "id": "F145_BravoLegacy",
+              "description": "F-145 Hotel legacy",
+              "name": "Hotel legacy",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": []
+            },
+            {
+              "id": "F145_JulietLegacy",
+              "description": "F-145 Charlie legacy",
+              "name": "Charlie legacy",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": []
+            },
+            {
+              "id": "F145_AlphaLegacy",
+              "description": "F-145 AlphaLegacy",
+              "name": "AlphaLegacy",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": []
+            },
+            {
+              "id": "F145_DeltaLegacy",
+              "description": "F-145 India legacy",
+              "name": "India legacy",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": []
             },
             {
               "id": "F145_ZuluLegacy",
@@ -42,9 +106,9 @@
               "acls": []
             },
             {
-              "id": "F145_AlphaLegacy",
-              "description": "F-145 AlphaLegacy",
-              "name": "AlphaLegacy",
+              "id": "F145_HotelLegacy",
+              "description": "F-145 Bravo legacy",
+              "name": "Bravo legacy",
               "states": "[[ANYTHING_PRESENT]]",
               "events": "[[ANYTHING_PRESENT]]",
               "acls": []

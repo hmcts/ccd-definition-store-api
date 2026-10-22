@@ -27,7 +27,7 @@
           "id": "BEFTA_F145_ORDERED",
           "name": "BEFTA_F145_ORDERED",
           "description": "F-145 jurisdiction",
-          "live_from": "2017-01-01T00:00:00.000+0000",
+          "live_from": "2026-01-01T00:00:00.000+0000",
           "live_until": null,
           "case_types": [
             {
@@ -39,6 +39,60 @@
               "id": "F145_AMatch",
               "description": "F-145 Zulu",
               "name": "Zulu",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": [],
+              "caseTypesOrder": 42
+            },
+            {
+              "id": "F145_BMatch",
+              "description": "F-145 Tango",
+              "name": "Tango",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": [],
+              "caseTypesOrder": 42
+            },
+            {
+              "id": "F145_DMatch",
+              "description": "F-145 Sierra",
+              "name": "Sierra",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": [],
+              "caseTypesOrder": 42
+            },
+            {
+              "id": "F145_HMatch",
+              "description": "F-145 Papa",
+              "name": "Papa",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": [],
+              "caseTypesOrder": 42
+            },
+            {
+              "id": "F145_MMatch",
+              "description": "F-145 Kilo",
+              "name": "Kilo",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": [],
+              "caseTypesOrder": 42
+            },
+            {
+              "id": "F145_QMatch",
+              "description": "F-145 Hotel",
+              "name": "Hotel",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": [],
+              "caseTypesOrder": 42
+            },
+            {
+              "id": "F145_TMatch",
+              "description": "F-145 Delta",
+              "name": "Delta",
               "states": "[[ANYTHING_PRESENT]]",
               "events": "[[ANYTHING_PRESENT]]",
               "acls": [],

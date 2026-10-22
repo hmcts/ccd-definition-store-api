@@ -27,7 +27,7 @@
           "id": "BEFTA_F145_ORDERED",
           "name": "BEFTA_F145_ORDERED",
           "description": "F-145 jurisdiction",
-          "live_from": "2017-01-01T00:00:00.000+0000",
+          "live_from": "2026-01-01T00:00:00.000+0000",
           "live_until": null,
           "case_types": []
         }

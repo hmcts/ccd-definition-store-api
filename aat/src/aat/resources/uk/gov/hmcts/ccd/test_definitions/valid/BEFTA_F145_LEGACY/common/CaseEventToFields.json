@@ -1,5 +1,12 @@
 [
   {
+    "CaseTypeID": "F145_HotelLegacy",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
     "CaseTypeID": "F145_ZuluLegacy",
     "CaseEventID": "Create",
     "CaseFieldID": "TextField",
@@ -7,7 +14,56 @@
     "DisplayContext": "OPTIONAL"
   },
   {
+    "CaseTypeID": "F145_DeltaLegacy",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
     "CaseTypeID": "F145_AlphaLegacy",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_JulietLegacy",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_BravoLegacy",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_GolfLegacy",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_CharlieLegacy",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_IndiaLegacy",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_EchoLegacy",
     "CaseEventID": "Create",
     "CaseFieldID": "TextField",
     "PageID": "1",

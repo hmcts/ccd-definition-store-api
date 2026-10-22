@@ -1,6 +1,15 @@
 [
   {
-    "LiveFrom": "01/01/2017",
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_HotelLegacy",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
     "CaseTypeID": "F145_ZuluLegacy",
     "ID": "TextField",
     "Name": "Text field",
@@ -9,8 +18,71 @@
     "SecurityClassification": "PUBLIC"
   },
   {
-    "LiveFrom": "01/01/2017",
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_DeltaLegacy",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
     "CaseTypeID": "F145_AlphaLegacy",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_JulietLegacy",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_BravoLegacy",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_GolfLegacy",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_CharlieLegacy",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_IndiaLegacy",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_EchoLegacy",
     "ID": "TextField",
     "Name": "Text field",
     "Label": "Text field",
