@@ -1,6 +1,9 @@
 {
   "_guid_": "F-145_Import_BEFTA_F145_ORDERED",
   "_extends_": "Import_Base_data",
+  "specs": [
+    "As a prerequisite"
+  ],
   "request": {
     "body": {
       "arrayInMap": [
