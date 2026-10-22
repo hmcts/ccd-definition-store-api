@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import uk.gov.hmcts.ccd.definition.store.domain.DecentralisedEventsConfiguration;
 import uk.gov.hmcts.ccd.definition.store.domain.service.metadata.MetadataField;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.CategoryIdValidator;
@@ -34,6 +35,7 @@ public class ParserFactory {
     private final ApplicationParams applicationParams;
     private final Executor executor;
     private final ShellMappingParser shellMappingParser;
+    private final DecentralisedEventsConfiguration decentralisedEventsConfiguration;
 
     @Autowired
     public ParserFactory(ShowConditionParser showConditionParser,
@@ -50,7 +52,8 @@ public class ParserFactory {
                          CategoryIdValidator categoryIdValidator,
                          ApplicationParams applicationParams,
                          @Qualifier("validateExecutor") Executor executor,
-                         ShellMappingParser shellMappingParser) {
+                         ShellMappingParser shellMappingParser,
+                         DecentralisedEventsConfiguration decentralisedEventsConfiguration) {
         this.showConditionParser = showConditionParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.metadataCaseFieldEntityFactoryRegistry = metadataCaseFieldEntityFactoryRegistry;
@@ -66,6 +69,7 @@ public class ParserFactory {
         this.applicationParams = applicationParams;
         this.executor = executor;
         this.shellMappingParser = shellMappingParser;
+        this.decentralisedEventsConfiguration = decentralisedEventsConfiguration;
     }
 
     public JurisdictionParser createJurisdictionParser() {
@@ -103,7 +107,8 @@ public class ParserFactory {
                 new EventCaseFieldComplexTypeParser(showConditionParser, hiddenFieldsValidator),
                 entityToDefinitionDataItemRegistry,
                 showConditionParser,
-                applicationParams.isDefaultPublish()),
+                applicationParams.isDefaultPublish(),
+                decentralisedEventsConfiguration.getCaseTypes()),
             new AuthorisationCaseTypeParser(context, entityToDefinitionDataItemRegistry),
             new AuthorisationCaseFieldParser(context, entityToDefinitionDataItemRegistry),
             new AuthorisationComplexTypeParser(context, entityToDefinitionDataItemRegistry),

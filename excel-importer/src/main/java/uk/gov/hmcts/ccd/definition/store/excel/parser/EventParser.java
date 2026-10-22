@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import com.google.common.collect.Lists;
 import java.util.Collection;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -29,6 +30,7 @@ public class EventParser {
     private static final Logger logger = LoggerFactory.getLogger(EventParser.class);
     private static final String WILDCARD = "*";
     private static final String PRE_STATE_SEPARATOR = ";";
+    private static final String EXT = "ext:";
 
     private final ParseContext parseContext;
     private final EventCaseFieldParser eventCaseFieldParser;
@@ -36,19 +38,22 @@ public class EventParser {
     private final EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry;
     private ShowConditionParser showConditionParser;
     private final boolean defaultPublish;
+    private final Map<String, List<String>> decentralisedEventsCaseTypes;
 
     public EventParser(ParseContext parseContext,
                        EventCaseFieldParser eventCaseFieldParser,
                        EventCaseFieldComplexTypeParser eventCaseFieldComplexTypeParser,
                        EntityToDefinitionDataItemRegistry entityToDefinitionDataItemRegistry,
                        ShowConditionParser showConditionParser,
-                       boolean defaultPublish) {
+                       boolean defaultPublish,
+                       Map<String, List<String>> decentralisedEventsCaseTypes) {
         this.parseContext = parseContext;
         this.eventCaseFieldParser = eventCaseFieldParser;
         this.eventCaseFieldComplexTypeParser = eventCaseFieldComplexTypeParser;
         this.entityToDefinitionDataItemRegistry = entityToDefinitionDataItemRegistry;
         this.showConditionParser = showConditionParser;
         this.defaultPublish = defaultPublish;
+        this.decentralisedEventsCaseTypes = decentralisedEventsCaseTypes;
     }
 
     public Collection<EventEntity> parseAll(Map<String, DefinitionSheet> definitionSheets, CaseTypeEntity caseType) {
@@ -71,6 +76,7 @@ public class EventParser {
 
         for (DefinitionDataItem eventDefinition : eventItems) {
             final String eventId = eventDefinition.getId();
+            validateDecentralisedEvent(eventId, eventDefinition);
             logger.debug("Parsing events for case type {}: Parsing event {}...", caseTypeId, eventId);
 
             final EventEntity event = parseEvent(caseTypeId, eventId, eventDefinition);
@@ -88,6 +94,17 @@ public class EventParser {
         logger.info("Parsing events for case type {}: OK: {} case fields parsed", caseTypeId, events.size());
 
         return events;
+    }
+
+    private void validateDecentralisedEvent(String eventId, DefinitionDataItem eventDefinition) {
+        if (eventId.startsWith(EXT)) {
+            final String caseTypeId = eventDefinition.getString(ColumnName.CASE_TYPE_ID);
+            final List<String> whitelist = decentralisedEventsCaseTypes.get(caseTypeId.toLowerCase(Locale.ROOT));
+            if (whitelist == null || !whitelist.contains(eventId)) {
+                throw new SpreadsheetParsingException(String.format(
+                    "Decentralised event '%s' is not whitelisted for case type '%s'", eventId, caseTypeId));
+            }
+        }
     }
 
     private EventEntity parseEvent(String caseTypeId, String eventId, DefinitionDataItem eventDefinition) {
