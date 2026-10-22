@@ -75,18 +75,18 @@ class CaseTypeParserTest extends ParserTestBase {
 
         parseContext = mock(ParseContext.class);
         caseTypeParser = new CaseTypeParser(
-                parseContext,
-                caseFieldParser,
-                stateParser,
-                eventParser,
-                authorisationCaseTypeParser,
-                authorisationCaseFieldParser,
-                authorisationComplexTypeParser,
-                authorisationCaseEventParser,
-                authorisationCaseStateParser,
-                metadataCaseFieldParser,
-                caseRoleParser,
-                searchAliasFieldParser);
+            parseContext,
+            caseFieldParser,
+            stateParser,
+            eventParser,
+            authorisationCaseTypeParser,
+            authorisationCaseFieldParser,
+            authorisationComplexTypeParser,
+            authorisationCaseEventParser,
+            authorisationCaseStateParser,
+            metadataCaseFieldParser,
+            caseRoleParser,
+            searchAliasFieldParser);
         lenient().doReturn(jurisdiction).when(parseContext).getJurisdiction();
     }
 
@@ -115,7 +115,7 @@ class CaseTypeParserTest extends ParserTestBase {
     }
 
     @ParameterizedTest
-    @CsvSource({"0, 0", "42, 42", "99, 99", "' 42 ', 42", "42.0, 42"})
+    @CsvSource({"1, 1", "42, 42", "99, 99", "' 42 ', 42", "42.0, 42"})
     void shouldParseWholeNumberCaseTypesOrder(String value, int expected) {
         addCaseTypeWithOrder(CASE_TYPE_UNDER_TEST, value);
 
@@ -125,7 +125,7 @@ class CaseTypeParserTest extends ParserTestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"text", "-1", "100", "1.5", "2147483648", "NaN", "Infinity"})
+    @ValueSource(strings = {"text", "-1", "0", "100", "1.5", "2147483648", "NaN", "Infinity"})
     void shouldRejectInvalidCaseTypesOrder(String value) {
         addCaseTypeWithOrder(CASE_TYPE_UNDER_TEST, value);
 
@@ -172,11 +172,11 @@ class CaseTypeParserTest extends ParserTestBase {
         final CaseTypeEntity caseTypeEntity = parseResult.getAllResults().getFirst();
 
         InOrder inOrder = inOrder(caseFieldParser,
-                stateParser,
-                metadataCaseFieldParser,
-                eventParser,
-                searchAliasFieldParser,
-                authorisationCaseTypeParser);
+            stateParser,
+            metadataCaseFieldParser,
+            eventParser,
+            searchAliasFieldParser,
+            authorisationCaseTypeParser);
 
         assertThat(caseTypeEntity.getId()).isNull();
         assertThat(caseTypeEntity.getJurisdiction()).isEqualTo(jurisdiction);

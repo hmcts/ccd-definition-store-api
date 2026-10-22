@@ -28,10 +28,10 @@ import static uk.gov.hmcts.ccd.definition.store.utils.CaseFieldBuilder.newTextFi
 @MockitoSettings(strictness = Strictness.LENIENT)
 class CaseMappingGeneratorTest extends AbstractMapperTest implements TestUtils {
 
+    private final CaseTypeBuilder caseType = new CaseTypeBuilder().withJurisdiction("jur").withReference("caseTypeA");
+
     @InjectMocks
     private CaseMappingGenerator mappingGenerator;
-
-    private final CaseTypeBuilder caseType = new CaseTypeBuilder().withJurisdiction("jur").withReference("caseTypeA");
 
     @BeforeEach
     void setUp() {

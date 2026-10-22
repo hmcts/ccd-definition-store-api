@@ -145,7 +145,7 @@ public class CaseTypeParser {
         }
 
         String error = String.format(
-            "Invalid value '%s' in column '%s' in sheet '%s' for case type '%s': expected a whole number from 0 to 99",
+            "Invalid value '%s' in column '%s' in sheet '%s' for case type '%s': expected a whole number from 1 to 99",
             value, ColumnName.CASE_TYPES_ORDER, SheetName.CASE_TYPE.getName(), caseTypeDefinition.getId());
         final int order;
         try {
@@ -153,7 +153,7 @@ public class CaseTypeParser {
         } catch (NumberFormatException | ArithmeticException exception) {
             throw new MapperException(error, exception);
         }
-        if (order < 0 || order > 99) {
+        if (order < 1 || order > 99) {
             throw new MapperException(error);
         }
         return order;

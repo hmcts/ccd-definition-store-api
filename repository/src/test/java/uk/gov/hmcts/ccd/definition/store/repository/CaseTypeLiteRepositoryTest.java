@@ -75,7 +75,7 @@ class CaseTypeLiteRepositoryTest {
 
     @ParameterizedTest
     @NullSource
-    @ValueSource(ints = {0, 42, 99})
+    @ValueSource(ints = {1, 42, 99})
     void shouldRetrieveOptionalCaseTypesOrderFromLatestVersion(Integer order) {
         caseTypeRepository.findAll().stream()
             .filter(caseType -> "id".equals(caseType.getReference()))

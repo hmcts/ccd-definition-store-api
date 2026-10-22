@@ -77,7 +77,9 @@ public class JurisdictionServiceImpl implements JurisdictionService {
     private Jurisdiction attachCaseTypes(Jurisdiction jurisdiction) {
         List<CaseTypeLiteEntity> caseTypeLiteEntities =
             caseTypeLiteRepository.findByJurisdictionId(jurisdiction.getId());
-        jurisdiction.setCaseTypes(caseTypeLiteEntities.stream().map(entityToResponseDTOMapper::map).collect(toList()));
+        jurisdiction.setCaseTypes(caseTypeLiteEntities.stream()
+            .map(entityToResponseDTOMapper::map)
+            .collect(toList()));
         return jurisdiction;
     }
 }

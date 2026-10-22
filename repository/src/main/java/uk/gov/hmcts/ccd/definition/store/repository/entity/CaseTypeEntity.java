@@ -37,104 +37,80 @@ import static jakarta.persistence.GenerationType.SEQUENCE;
 @Entity
 public class CaseTypeEntity implements Serializable, Versionable {
 
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = SEQUENCE, generator = "case_type_id_seq")
-    private Integer id;
-
-    @Column(name = "created_at")
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @Column(name = "reference", nullable = false)
-    private String reference;
-
-    @Column(name = "version", nullable = false)
-    private Integer version;
-
-    @Column(name = "live_from")
-    private LocalDate liveFrom;
-
-    @Column(name = "live_to")
-    private LocalDate liveTo;
-
-    @Column(name = "case_types_order")
-    private Integer caseTypesOrder;
-
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "security_classification")
-    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
-    private SecurityClassification securityClassification;
-
-    @ManyToOne(fetch = LAZY, cascade = ALL)
-    @JoinColumn(name = "print_webhook_id", nullable = true)
-    private WebhookEntity printWebhook;
-
-    @ManyToOne(fetch = EAGER, cascade = ALL)
-    @JoinColumn(name = "get_case_webhook_id", nullable = true)
-    private WebhookEntity getCaseWebhook;
-
-    @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "jurisdiction_id", nullable = false)
-    private JurisdictionEntity jurisdiction;
-
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true, mappedBy = "caseType")
     private final List<EventEntity> events = new ArrayList<>();
-
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @JoinColumn(name = "case_type_id")
     private final List<StateEntity> states = new ArrayList<>();
-
     @OneToMany(fetch = EAGER, cascade = ALL, orphanRemoval = true, mappedBy = "caseType")
     @Fetch(value = FetchMode.JOIN)
     @OrderBy("id")
     private final Set<CaseFieldEntity> caseFields = new LinkedHashSet<>();
-
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @JoinColumn(name = "case_type_id")
     private final List<CaseTypeACLEntity> caseTypeACLEntities = new ArrayList<>();
-
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @JoinColumn(name = "case_type_id")
     private final List<CaseRoleEntity> caseRoles = new ArrayList<>();
-
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @JoinColumn(name = "case_type_id")
     private final List<SearchAliasFieldEntity> searchAliasFields = new ArrayList<>();
-
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @JoinColumn(name = "case_type_id")
     private final List<RoleToAccessProfilesEntity> roleToAccessProfiles = new ArrayList<>();
-
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<SearchCriteriaEntity> searchCriterias = new ArrayList<>();
-
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<SearchPartyEntity> searchParties = new ArrayList<>();
-
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<CategoryEntity> categories = new ArrayList<>();
-
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<AccessTypeEntity> accessTypes = new ArrayList<>();
-
     @OneToMany(fetch = LAZY, cascade = ALL, orphanRemoval = true)
     @Fetch(value = FetchMode.SUBSELECT)
     @JoinColumn(name = "case_type_id")
     private final List<AccessTypeRoleEntity> accessTypeRoles = new ArrayList<>();
+    @Id
+    @Column(name = "id")
+    @GeneratedValue(strategy = SEQUENCE, generator = "case_type_id_seq")
+    private Integer id;
+    @Column(name = "created_at")
+    @CreationTimestamp
+    private LocalDateTime createdAt;
+    @Column(name = "reference", nullable = false)
+    private String reference;
+    @Column(name = "version", nullable = false)
+    private Integer version;
+    @Column(name = "live_from")
+    private LocalDate liveFrom;
+    @Column(name = "live_to")
+    private LocalDate liveTo;
+    @Column(name = "case_types_order")
+    private Integer caseTypesOrder;
+    @Column(name = "name", nullable = false)
+    private String name;
+    @Column(name = "description")
+    private String description;
+    @Column(name = "security_classification")
+    @JdbcTypeCode(SqlTypes.NAMED_ENUM)
+    private SecurityClassification securityClassification;
+    @ManyToOne(fetch = LAZY, cascade = ALL)
+    @JoinColumn(name = "print_webhook_id", nullable = true)
+    private WebhookEntity printWebhook;
+    @ManyToOne(fetch = EAGER, cascade = ALL)
+    @JoinColumn(name = "get_case_webhook_id", nullable = true)
+    private WebhookEntity getCaseWebhook;
+    @ManyToOne(fetch = LAZY)
+    @JoinColumn(name = "jurisdiction_id", nullable = false)
+    private JurisdictionEntity jurisdiction;
 
     public Integer getId() {
         return id;

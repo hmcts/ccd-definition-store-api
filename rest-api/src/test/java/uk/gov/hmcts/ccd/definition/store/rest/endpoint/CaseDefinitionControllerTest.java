@@ -5,10 +5,13 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -16,6 +19,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.accessprofiles.RoleToAcc
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersionInformation;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeLite;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Version;
 
@@ -23,11 +27,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsIterableContaining.hasItems;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
@@ -35,17 +36,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class CaseDefinitionControllerTest {
 
-    private CaseTypeService caseTypeService = mock(CaseTypeService.class);
-    private JurisdictionService jurisdictionService = mock(JurisdictionService.class);
-    private CaseRoleService caseRoleService = mock(CaseRoleService.class);
+    private final CaseTypeService caseTypeService = mock(CaseTypeService.class);
+    private final JurisdictionService jurisdictionService = mock(JurisdictionService.class);
+    private final CaseRoleService caseRoleService = mock(CaseRoleService.class);
+    private final RoleToAccessProfileService roleToAccessProfilesService = mock(RoleToAccessProfileService.class);
     private CaseDefinitionController subject;
-    private RoleToAccessProfileService roleToAccessProfilesService = mock(RoleToAccessProfileService.class);
     private MockMvc mockMvc;
 
     @BeforeEach
@@ -111,7 +113,6 @@ class CaseDefinitionControllerTest {
         }
     }
 
-
     @Nested
     @DisplayName("Test the getRoleToAccessProfiles   method")
     class GetCaseRoleForRATests {
@@ -143,7 +144,8 @@ class CaseDefinitionControllerTest {
 
             when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.of(caseType));
 
-            assertEquals(caseType, subject.dataCaseworkerIdAndJurisdictionIdCaseTypeGet(null, null, caseTypeId));
+            assertThat(subject.dataCaseworkerIdAndJurisdictionIdCaseTypeGet(null, null, caseTypeId))
+                .isEqualTo(caseType);
             verify(caseTypeService).findByCaseTypeId(caseTypeId);
         }
 
@@ -154,11 +156,9 @@ class CaseDefinitionControllerTest {
 
             when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.empty());
 
-            NotFoundException notFoundException = assertThrows(NotFoundException.class,
-                () -> subject.dataCaseworkerIdAndJurisdictionIdCaseTypeGet(null, null, caseTypeId)
-            );
-
-            assertEquals(caseTypeId, notFoundException.getMessage());
+            assertThatThrownBy(() -> subject.dataCaseworkerIdAndJurisdictionIdCaseTypeGet(null, null, caseTypeId))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(caseTypeId);
         }
     }
 
@@ -173,7 +173,7 @@ class CaseDefinitionControllerTest {
             CaseType caseTypeReturned = createCaseType(itemName, itemName);
             when(caseTypeService.findByCaseTypeId(any())).thenReturn(Optional.of(caseTypeReturned));
             CaseType result = subject.dataCaseTypeIdGet(itemName);
-            assertEquals(itemName, result.getId());
+            assertThat(result.getId()).isEqualTo(itemName);
             verify(caseTypeService).findByCaseTypeId(itemName);
         }
 
@@ -184,10 +184,9 @@ class CaseDefinitionControllerTest {
 
             when(caseTypeService.findByCaseTypeId(caseTypeId)).thenReturn(Optional.empty());
 
-            NotFoundException notFoundException = assertThrows(NotFoundException.class,
-                () -> subject.dataCaseTypeIdGet(caseTypeId));
-
-            assertEquals(caseTypeId, notFoundException.getMessage());
+            assertThatThrownBy(() -> subject.dataCaseTypeIdGet(caseTypeId))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessage(caseTypeId);
         }
     }
 
@@ -195,18 +194,58 @@ class CaseDefinitionControllerTest {
     @DisplayName("Test retrieval of jurisdiction definition")
     class JurisdictionTests {
 
+        @ParameterizedTest
+        @ValueSource(ints = {0, -1, Integer.MIN_VALUE})
+        void shouldRejectOrderBelowOneBeforeRetrievingJurisdictions(int order) {
+            assertThatThrownBy(() -> subject.findJurisdictions(Optional.empty(), Optional.of(order)))
+                .isInstanceOf(BadRequestException.class)
+                .hasMessage("caseTypeOrder must be greater than or equal to 1");
+            verifyNoInteractions(jurisdictionService);
+        }
+
+        @ParameterizedTest
+        @ValueSource(booleans = {false, true})
+        void shouldFilterAndSortOnlyWhenOrderIsPresent(boolean filterPresent) {
+            CaseTypeLite zulu = caseTypeLite("AId", "Zulu", 42);
+            CaseTypeLite alpha = caseTypeLite("ZId", "alpha", 42);
+            CaseTypeLite other = caseTypeLite("Other", "Beta", 7);
+            Jurisdiction jurisdiction = new Jurisdiction();
+            jurisdiction.setCaseTypes(List.of(zulu, other, alpha));
+            when(jurisdictionService.getAll()).thenReturn(List.of(jurisdiction));
+
+            List<Jurisdiction> result = subject.findJurisdictions(Optional.empty(),
+                filterPresent ? Optional.of(42) : Optional.empty());
+
+            assertThat(result).singleElement().satisfies(item -> {
+                if (filterPresent) {
+                    assertThat(item.getCaseTypes()).extracting(CaseTypeLite::getId).containsExactly("ZId", "AId");
+                } else {
+                    assertThat(item.getCaseTypes()).extracting(CaseTypeLite::getId)
+                        .containsExactly("AId", "Other", "ZId");
+                }
+            });
+        }
+
+        private CaseTypeLite caseTypeLite(String id, String name, Integer order) {
+            CaseTypeLite caseType = new CaseTypeLite();
+            caseType.setId(id);
+            caseType.setName(name);
+            caseType.setCaseTypesOrder(order);
+            return caseType;
+        }
+
         @Test
         void shouldCallJurisdictionGetAllWithListOfIds() {
-            subject.findJurisdictions(Optional.of(newArrayList("J1", "J2")));
+            subject.findJurisdictions(Optional.of(newArrayList("J1", "J2")), Optional.empty());
             ArgumentCaptor<List> argument = ArgumentCaptor.forClass(List.class);
             verify(jurisdictionService, times(1)).getAll((List<String>) argument.capture());
             List<String> value = argument.getValue();
-            assertThat(value, hasItems("J1", "J2"));
+            assertThat(value).contains("J1", "J2");
         }
 
         @Test
         void shouldCallJurisdictionGetAllWhenNoIds() {
-            subject.findJurisdictions(Optional.empty());
+            subject.findJurisdictions(Optional.empty(), Optional.empty());
             verify(jurisdictionService, never()).getAll(anyList());
             verify(jurisdictionService, times(1)).getAll();
         }
@@ -229,7 +268,7 @@ class CaseDefinitionControllerTest {
                 mockMvc.perform(get("/api/data/case-type/" + CASE_TYPE_REFERENCE + "/version"))
                     .andExpect(status().isOk())
                     .andReturn();
-            assertThat(mvcResult.getResponse().getContentAsString(), is("{\"version\":9087}"));
+            assertThat(mvcResult.getResponse().getContentAsString()).isEqualTo("{\"version\":9087}");
         }
 
         @Test

@@ -67,7 +67,7 @@ class CaseTypesOrderImportTest extends BaseTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, 42, 99})
+    @ValueSource(ints = {1, 42, 99})
     void shouldPersistNumericCaseTypesOrder(int order) throws Exception {
         assertSuccessfulImport(workbookWithOrder(order));
 
@@ -94,7 +94,7 @@ class CaseTypesOrderImportTest extends BaseTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"text", "-1", "100", "1.5", "2147483648"})
+    @ValueSource(strings = {"text", "-1", "0", "100", "1.5", "2147483648"})
     void shouldRejectInvalidOrderWithoutCreatingCaseTypeVersion(String order) throws Exception {
         assertInvalidOrderDoesNotCreateVersion(order);
     }

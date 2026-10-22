@@ -170,7 +170,7 @@ class CaseTypeRepositoryTest {
 
     @ParameterizedTest
     @NullSource
-    @ValueSource(ints = {0, 42, 99})
+    @ValueSource(ints = {1, 42, 99})
     void shouldPersistOptionalCaseTypesOrder(Integer order) {
         CaseTypeEntity caseType = classUnderTest.findCurrentVersionForReference(CASE_TYPE_REFERENCE).orElseThrow();
         caseType.setCaseTypesOrder(order);
@@ -182,7 +182,7 @@ class CaseTypeRepositoryTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {-1, 100})
+    @ValueSource(ints = {-1, 0, 100})
     void shouldRejectCaseTypesOrderOutsideTwoDigitRange(int order) {
         CaseTypeEntity caseType = classUnderTest.findCurrentVersionForReference(CASE_TYPE_REFERENCE).orElseThrow();
         caseType.setCaseTypesOrder(order);
