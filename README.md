@@ -151,8 +151,60 @@ Will run only S-110.1:
 ./gradlew functional -P tags="@S-110.1"
 ```
 
+
+### Case type snapshot updates
+
+Snapshots are cached copies of case type responses. The application continues to use the existing
+`case_type_snapshot` table after this update. You can import and read definitions as usual;
+there is no need to move data or re-import definitions.
+
+#### What happens when you deploy?
+
+With the default configuration, Flyway automatically runs migration `V20260930_01` during startup,
+before the application serves requests. No manual migration step or new Docker/Flux environment
+variables are needed.
+
+The migration adds two columns and a database function and trigger to the existing table.
+It keeps existing definitions and cached responses. Older cached responses are marked for rebuilding
+the next time they are requested.
+
+During deployment:
+
+- The database account running Flyway needs permission to add the columns, function and trigger.
+- Updating the table requires an exclusive lock. Long-running transactions can delay startup,
+  and requests using the snapshot table may wait. Prefer a quieter deployment period and monitor locks.
+- Rebuilding older snapshots temporarily adds database work. Monitor connection usage, response times
+  and snapshot-write errors until the cache has warmed up.
+- If this migration has already been applied in an environment, make further schema changes in a
+  new migration file rather than editing the applied file.
+
+#### Running old and new application versions together
+
+The database trigger marks snapshots written by older applications for rebuilding, so newer
+applications do not mistake them for responses in the new format.
+
+Older applications do not check the snapshot format. If a release introduces responses they cannot
+read correctly, set `CASE_TYPE_SNAPSHOT_ENABLED=false` on those older instances before running the
+versions together. They will read definitions directly instead.
+
+#### Rolling back the application
+
+Keep the added columns, function and trigger when rolling back. If the older application cannot read
+the newer cached responses correctly, disable its snapshot cache with `CASE_TYPE_SNAPSHOT_ENABLED=false`.
+Follow the existing Flyway version-validation process; do not remove columns while newer instances
+are still running.
+
+#### Notes for developers
+
+- Increase `SnapshotFormat.REVISION` when mapping or response-model changes make existing snapshots
+  obsolete, even if no definition has been re-imported. Revision 0 identifies older snapshots.
+- Writers that set a format revision must also advance `format_write_count`. Otherwise, the trigger
+  resets the revision to 0 so the response can be rebuilt safely.
+- The new upsert prevents overwriting a higher definition version or format revision. It can repair
+  an unreadable snapshot without changing the definition version. A cache miss does not delete rows.
+- Snapshot writes happen after the read transaction releases its database connection. If the caller
+  still has an active transaction, the optional cache write is skipped to avoid needing a second connection.
+
 ## LICENSE
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
-
-
