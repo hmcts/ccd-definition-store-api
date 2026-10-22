@@ -36,7 +36,7 @@ Import failure summaries are now generic when stored and when returned by Import
 so legacy persisted diagnostics cannot bypass the response handlers. Original import failures remain
 available in server logs at the HTTP boundary without requiring DEBUG. Regression tests exercise both the DTO and the job-status HTTP response.
 
-Reviewed missing-case-field, missing-layout-field and duplicate-category-display-order rules use
+Reviewed missing-case-field and missing-layout-field rules use
 ImportValidationException with an enum of approved public messages. Technical MapperException messages
 and causes remain private. Existing structured spreadsheet validation remains available. Other
 unapproved exception messages remain generic; definition administrators must sign off the resulting
@@ -97,7 +97,7 @@ test logging only. Administrator-only access and deployed collection remain envi
 
 ## Validation compatibility — 22 October 2026
 
-The original F-092 and F-099 functional fixtures are unchanged. Existing
+The F-092 and F-099 import validation fixtures used by the regression test are unchanged. Existing
 InvalidImportException and SpreadsheetParsingException types now expose approved
 validation feedback through fixed-message factories. Arbitrary exception messages
 and technical causes remain private. No additional exception types were introduced.
@@ -127,3 +127,53 @@ this cleanup, the 33 cases left rows that broke the import-job integration test'
 single-row assertion when both classes ran together. Production code is unaffected.
 After the fix, the full Docker-backed application suite passed: 89 passed, five
 skipped, zero failures/errors. Application test Checkstyle passed.
+
+
+## Additional validation compatibility — 22 October 2026
+
+Approved retainHiddenValue messages use fixed factories on the existing
+ImportValidationException, including safe aggregation of complex-field errors.
+Duplicate category display order uses the original InvalidImportException path so
+CategoryParser retains HTTP 422 and the original validation text. The redundant
+DUPLICATE_DISPLAY_ORDER reason was removed from ImportValidationException.
+
+Invalid spreadsheet values and missing columns use approved templates rather than
+arbitrary MapperException messages. This covers Publish, ReadOnly, Disabled,
+AccessProfile, TTLIncrement, GroupAccessEnabled and AccessType boolean columns.
+CategoryID checks use fixed-message factories on the existing InvalidImportException.
+Technical errors remain generic; mixed validation/technical batches remain generic
+and retain original failures for support logging.
+
+The existing workbook regression test seeds the BEFTA access profiles and enables
+the existing group-access feature in its own test context. Production feature flags
+and permissions are unchanged. It also reads the unchanged negative fixtures
+for F-093, F-095 Publish, F-097, F-098, F-104, F-105, F-106, F-109, F-111 and F-127.
+F-127's preview HTTP 500 must be investigated separately using the original server
+exception. Its parser and validator are unchanged against master. S-127.1 uses a
+pipeline-generated local workbook and is not covered by this negative-fixture runner.
+
+
+Latest verification used Docker PostgreSQL via Testcontainers with the application
+running in the Spring integration-test JVM. At INFO, the full application suite
+passed: 152 passed, five skipped, zero failures/errors, including all 96 negative
+workbook fixtures. The 86 focused importer tests passed; main/test importer
+Checkstyle and application test Checkstyle passed.
+
+The DEBUG repeat passed all 13 spreadsheet/fallback tests. The captured spreadsheet
+suite contained zero DEBUG lines at INFO and 1873 at DEBUG. The upstream-403
+regression asserts one original ERROR event, its original message and stack frames,
+and identical sanitised HTTP 500 JSON in both modes. No DEBUG-only setting is needed
+to retain the original exception. This verifies local developer tracing, not deployed
+log access/retention or dynamic production logger reconfiguration.
+
+Example developer DEBUG event from the local run:
+
+```text
+DEBUG CaseFieldParser: Parsing case fields for case type TestAddressBookCase...
+```
+
+The public response in both runs remained:
+
+```json
+{"message":"Internal Server Error","code":"INTERNAL_ERROR"}
+```

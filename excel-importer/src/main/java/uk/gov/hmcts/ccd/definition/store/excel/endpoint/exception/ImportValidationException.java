@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 
 /** Explicitly approved validation text; arbitrary mapper exception messages stay private. */
 public class ImportValidationException extends MapperException {
@@ -49,9 +50,14 @@ public class ImportValidationException extends MapperException {
             complex ? " on CaseEventToComplexTypes" : "", field));
     }
 
-    public static ImportValidationException invalidRetainHiddenValue(Object value, String sheet) {
+    public static ImportValidationException invalidValue(Object value, ColumnName column, String sheet) {
         return new ImportValidationException(String.format(
-            "Invalid value '%s' is found in column 'RetainHiddenValue' in the sheet '%s'", value, sheet));
+            "Invalid value '%s' is found in column '%s' in the sheet '%s'", value, column, sheet));
+    }
+
+    public static ImportValidationException missingColumn(ColumnName column, String sheet) {
+        return new ImportValidationException(String.format("Couldn't find the column %s in the sheet %s",
+            column, sheet));
     }
 
     public static ImportValidationException combine(List<ImportValidationException> failures) {

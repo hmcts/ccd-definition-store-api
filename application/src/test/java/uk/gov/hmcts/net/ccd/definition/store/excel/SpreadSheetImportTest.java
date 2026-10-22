@@ -230,6 +230,14 @@ class SpreadSheetImportTest extends BaseTest {
             assertEquals(1, failures.size(), "The original failure must be logged exactly once");
             assertEquals(Level.ERROR, failures.get(0).getLevel());
             assertThat(failures.get(0).getThrowableProxy().getMessage(), containsString("403 Forbidden"));
+            assertThat(failures.get(0).getThrowableProxy().getStackTraceElementProxyArray().length,
+                org.hamcrest.Matchers.greaterThan(0));
+            long debugEvents = appender.list.stream()
+                .filter(event -> event.getLevel() == Level.DEBUG)
+                .filter(event -> event.getLoggerName().startsWith("uk.gov.hmcts.ccd."))
+                .count();
+            assertEquals(LoggerFactory.getLogger("uk.gov.hmcts.ccd").isDebugEnabled(), debugEvents > 0,
+                "DEBUG adds developer tracing while the original exception remains available at ERROR");
         } finally {
             rootLogger.detachAppender(appender);
             appender.stop();

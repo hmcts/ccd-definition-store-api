@@ -36,6 +36,12 @@ public class InvalidImportException extends RuntimeException {
         return new InvalidImportException(String.format(COLLECTION_MESSAGE, expression), null);
     }
 
+    public static InvalidImportException invalidCategory(SheetName sheet, String category, boolean invalidFieldType) {
+        return new InvalidImportException(String.format("%sTab Invalid value '%s' is not a valid CategoryID value. %s",
+            sheet, category, invalidFieldType ? "Category not permitted for this field type."
+                : "Category cannot be found."), null);
+    }
+
     public final String getPublicMessage() {
         return publicMessage;
     }

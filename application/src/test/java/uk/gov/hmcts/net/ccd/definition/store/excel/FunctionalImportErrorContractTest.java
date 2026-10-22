@@ -29,7 +29,7 @@ import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 
 /** Reuses the functional fixtures and their real workbooks to guard the public import contract. */
-@TestPropertySource(properties = {"ccd.authorised.services=ccd_data"})
+@TestPropertySource(properties = {"ccd.authorised.services=ccd_data", "enable-case-group-access-filtering=true"})
 // Import jobs use REQUIRES_NEW and survive the test transaction's rollback.
 @Sql(statements = "DELETE FROM import_jobs", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD,
     config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED))
@@ -39,7 +39,8 @@ class FunctionalImportErrorContractTest extends BaseTest {
     void seedFunctionalAccessProfiles() {
         for (String role : List.of("citizen", "caseworker-approver", "caseworker-befta_master-junior",
             "caseworker-befta_master", "caseworker-caa", "caseworker-befta_master-solicitor",
-            "caseworker-befta_master-manager")) {
+            "caseworker-befta_master-manager", "caseworker-befta_jurisdiction_1",
+            "ft_accessprofile_1", "ft_accessprofile_3", "GS_profile", "next-hearing-date-admin")) {
             jdbcTemplate.update("insert into role(reference, name, security_classification, dtype) "
                 + "values (?, ?, 'PUBLIC', 'USERROLE')", role, role);
         }
@@ -79,12 +80,18 @@ class FunctionalImportErrorContractTest extends BaseTest {
         }
         List<Arguments> cases = new ArrayList<>();
         for (String folder : List.of("F-092 Conditional Event Post State", "F-093",
-            "F-099 SearchParty (GlobalSearch)", "F-104 Categories")) {
+            "F-095 Publish Flag in Case Event", "F-097 RoleToAccessProfiles",
+            "F-098 rename of UserRole to AccessProfile", "F-099 SearchParty (GlobalSearch)", "F-104 Categories",
+            "F-105 TTL Increment in Case Event", "F-106 New CategoryID Column", "F-109 AccessTypeRoles",
+            "F-111 AccessTypes", "F-127 ShellMapping")) {
             try (var files = Files.list(root.resolve("aat/src/aat/resources/features").resolve(folder))) {
                 for (Path fixture : files.filter(path -> path.getFileName().toString().startsWith("S-"))
                     .filter(path -> path.toString().endsWith(".json")).sorted().toList()) {
                     JSONObject data = new JSONObject(Files.readString(fixture));
-                    JSONObject response = data.getJSONObject("expectedResponse");
+                    JSONObject response = data.optJSONObject("expectedResponse");
+                    if (response == null) {
+                        continue; // Successful fixtures can inherit their response from a shared base.
+                    }
                     int status = response.optInt("responseCode");
                     if (status == 400 || status == 422) {
                         String resource = data.getJSONObject("request").getJSONObject("body")

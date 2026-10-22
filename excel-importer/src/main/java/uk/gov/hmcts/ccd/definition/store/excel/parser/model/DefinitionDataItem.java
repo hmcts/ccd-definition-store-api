@@ -26,8 +26,6 @@ public class DefinitionDataItem {
     private final String sheetName;
     private final List<Pair<String, Object>> attributes;
 
-    private static final String NO_COLUMN = "Couldn't find the column %s in the sheet %s";
-    private static final String INVALID_VALUE_COLUMN = "Invalid value '%s' is found in column '%s' in the sheet '%s'";
     private static final String
         INVALID_OR_BLANK_COLUMN =
         "There's a missing value in the column '%s' or invalid value in the sheet '%s'";
@@ -57,7 +55,7 @@ public class DefinitionDataItem {
 
         if (ColumnName.isRequired(SheetName.forName(sheetName), columnName)) {
             if (result == null) {
-                throw new MapperException(String.format(NO_COLUMN, name, sheetName));
+                throw ImportValidationException.missingColumn(columnName, sheetName);
             }
             if (isBlank(result.toString())) {
                 throw new MapperException(String.format(INVALID_OR_BLANK_COLUMN, name, sheetName));
@@ -83,7 +81,7 @@ public class DefinitionDataItem {
             if (NumberUtils.isCreatable(attribute)) {
                 return NumberUtils.createDouble(attribute).intValue();
             } else {
-                throw new MapperException(String.format(INVALID_VALUE_COLUMN, attribute, columnName, sheetName));
+                throw ImportValidationException.invalidValue(attribute, columnName, sheetName);
             }
         }
     }
@@ -96,7 +94,7 @@ public class DefinitionDataItem {
             if (NumberUtils.isCreatable(attribute)) {
                 return BigDecimal.valueOf(NumberUtils.createDouble(attribute));
             } else {
-                throw new MapperException(String.format(INVALID_VALUE_COLUMN, attribute, columnName, sheetName));
+                throw ImportValidationException.invalidValue(attribute, columnName, sheetName);
             }
         }
     }
@@ -109,7 +107,7 @@ public class DefinitionDataItem {
             if (attribute instanceof Date) {
                 return (Date) attribute;
             } else {
-                throw new MapperException(String.format(INVALID_VALUE_COLUMN, attribute, columnName, sheetName));
+                throw ImportValidationException.invalidValue(attribute, columnName, sheetName);
             }
         }
     }
@@ -141,10 +139,7 @@ public class DefinitionDataItem {
                 case "f":
                     return false;
                 default:
-                    if (columnName == ColumnName.RETAIN_HIDDEN_VALUE) {
-                        throw ImportValidationException.invalidRetainHiddenValue(attribute, sheetName);
-                    }
-                    throw new MapperException(String.format(INVALID_VALUE_COLUMN, attribute, columnName, sheetName));
+                    throw ImportValidationException.invalidValue(attribute, columnName, sheetName);
             }
         }
     }
