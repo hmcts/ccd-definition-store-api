@@ -33,7 +33,7 @@ public class DefinitionModelMapper {
         }
         definitionEntity.setAuthor(definition.getAuthor());
         definitionEntity.setLastModified(definition.getLastModified());
-        definitionEntity.setDeleted(definition.isDeleted());
+        definitionEntity.setDeleted(Boolean.TRUE.equals(definition.isDeleted()));
 
         return definitionEntity;
     }
@@ -48,14 +48,16 @@ public class DefinitionModelMapper {
                          @NotNull final DefinitionEntity definitionEntity) {
         definitionEntity.setCaseTypes(definition.getCaseTypes());
         definitionEntity.setDescription(definition.getDescription());
-        definitionEntity.setStatus(definition.getStatus());
+        if (definition.getStatus() != null) {
+            definitionEntity.setStatus(definition.getStatus());
+        }
         if (definition.getData() == null) {
             definitionEntity.setData(new ObjectMapper().createObjectNode());
         } else {
             definitionEntity.setData(JacksonUtils.convertValueJsonNode(definition.getData()));
         }
         definitionEntity.setAuthor(definition.getAuthor());
-        definitionEntity.setDeleted(definition.isDeleted());
+        definitionEntity.setDeleted(Boolean.TRUE.equals(definition.isDeleted()));
         definitionEntity.setLastModified(definition.getLastModified());
     }
 
