@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.DisplayContext;
@@ -140,6 +141,9 @@ public class DefinitionDataItem {
                 case "f":
                     return false;
                 default:
+                    if (columnName == ColumnName.RETAIN_HIDDEN_VALUE) {
+                        throw ImportValidationException.invalidRetainHiddenValue(attribute, sheetName);
+                    }
                     throw new MapperException(String.format(INVALID_VALUE_COLUMN, attribute, columnName, sheetName));
             }
         }

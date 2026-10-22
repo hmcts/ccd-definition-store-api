@@ -78,7 +78,8 @@ class FunctionalImportErrorContractTest extends BaseTest {
             throw new IllegalStateException("Repository root not found for functional fixtures");
         }
         List<Arguments> cases = new ArrayList<>();
-        for (String folder : List.of("F-092 Conditional Event Post State", "F-099 SearchParty (GlobalSearch)")) {
+        for (String folder : List.of("F-092 Conditional Event Post State", "F-093",
+            "F-099 SearchParty (GlobalSearch)", "F-104 Categories")) {
             try (var files = Files.list(root.resolve("aat/src/aat/resources/features").resolve(folder))) {
                 for (Path fixture : files.filter(path -> path.getFileName().toString().startsWith("S-"))
                     .filter(path -> path.toString().endsWith(".json")).sorted().toList()) {

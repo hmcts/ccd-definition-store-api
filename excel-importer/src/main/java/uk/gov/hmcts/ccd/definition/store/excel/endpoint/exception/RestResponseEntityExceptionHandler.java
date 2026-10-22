@@ -55,6 +55,10 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(value = {InvalidImportException.class, MapperException.class})
     ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
+        if (ex instanceof ImportValidationException validation && validation.isPlainText()) {
+            return handleExceptionInternal(
+                ex, validation.getPublicMessage(), responseContentType(), BAD_REQUEST, request);
+        }
         if (ex instanceof InvalidImportException validation && validation.getPublicMessage() != null) {
             return handleExceptionInternal(
                 ex, validation.getPublicMessage(), responseContentType(), BAD_REQUEST, request);
@@ -191,6 +195,7 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
         }
         Object safeBody = exception instanceof ValidationException
             || exception instanceof MissingAccessProfilesException
+            || (exception instanceof ImportValidationException approved && approved.isPlainText())
             || (exception instanceof InvalidImportException invalid && invalid.getPublicMessage() != null)
             || exception instanceof SpreadsheetParsingException
             ? body : Map.of("message", exception instanceof ImportValidationException validation

@@ -6,7 +6,6 @@ import com.microsoft.applicationinsights.boot.dependencies.apachecommons.lang3.t
 import lombok.val;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -123,7 +122,8 @@ public class CategoryValidator {
         categoriesDisplayOrder.keySet()
             .forEach(triple -> {
                 if (categoriesDisplayOrder.get(triple).size() > 1) {
-                    throw new ImportValidationException(ImportValidationException.Reason.DUPLICATE_DISPLAY_ORDER);
+                    throw new InvalidImportException("DisplayOrder cannot be duplicated within case type category"
+                        + " and parent category in Category tab");
                 }
             });
     }

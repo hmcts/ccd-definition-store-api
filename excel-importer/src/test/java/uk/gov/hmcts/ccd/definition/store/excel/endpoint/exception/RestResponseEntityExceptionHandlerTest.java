@@ -67,6 +67,20 @@ class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
+    void approvedHiddenFieldErrorsRetainPlainTextWithoutPrivateDiagnostics() {
+        ImportValidationException first = ImportValidationException.invalidHiddenField("CollectionField");
+        ImportValidationException second = new ImportValidationException(
+            ImportValidationException.Reason.MISSING_CASE_FIELDS, "SECRET diagnostic");
+        ImportValidationException combined = ImportValidationException.combine(List.of(first, second));
+        ResponseEntity<Object> response = exceptionHandler.handleBadRequest(combined, mock(WebRequest.class));
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(MediaType.TEXT_PLAIN, response.getHeaders().getContentType());
+        assertEquals(first.getPublicMessage() + "\n" + second.getPublicMessage(), response.getBody());
+        assertFalse(response.getBody().toString().contains("SECRET"));
+        assertEquals("SECRET diagnostic", combined.getSuppressed()[1].getMessage());
+    }
+
+    @Test
     void publicFieldValidationDoesNotExposeItsTechnicalCause() {
         InvalidImportException exception = InvalidImportException.invalidReference(
             SheetName.SEARCH_PARTY,
