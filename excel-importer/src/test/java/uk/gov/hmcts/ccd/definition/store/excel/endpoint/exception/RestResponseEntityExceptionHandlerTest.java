@@ -1,5 +1,9 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
+import org.springframework.http.MediaType;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -34,6 +38,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -49,14 +54,46 @@ class RestResponseEntityExceptionHandlerTest {
     @Test
     void approvedValidationRemainsActionableButMapperDiagnosticsStayPrivate() {
         for (ImportValidationException.Reason reason : ImportValidationException.Reason.values()) {
-            ImportValidationException exception = new ImportValidationException(reason);
+            ImportValidationException exception = new ImportValidationException(reason, "PRIVATE context");
             ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
             assertEquals(400, response.getStatusCode().value());
             assertEquals(exception.getPublicMessage(), ((Map<?, ?>) response.getBody()).get("message"));
+            assertFalse(response.getBody().toString().contains("PRIVATE"));
         }
         MapperException diagnostic = new MapperException("SECRET internal-host",
             new IllegalStateException("SECRET database cause"));
         ResponseEntity<Object> response = exceptionHandler.handleBadRequest(diagnostic, mock(WebRequest.class));
+        assertEquals("Bad Request", ((Map<?, ?>) response.getBody()).get("message"));
+    }
+
+    @Test
+    void publicFieldValidationDoesNotExposeItsTechnicalCause() {
+        InvalidImportException exception = InvalidImportException.invalidReference(
+            SheetName.SEARCH_PARTY,
+            ColumnName.SEARCH_PARTY_NAME,
+            "InvalidName", new IllegalStateException("SECRET jdbc internal-host"));
+        ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(MediaType.TEXT_PLAIN, response.getHeaders().getContentType());
+        assertEquals(exception.getPublicMessage(), response.getBody());
+        assertFalse(response.getBody().toString().contains("SECRET"));
+        response = exceptionHandler.handleBadRequest(new InvalidImportException("SECRET diagnostic"),
+            mock(WebRequest.class));
+        assertEquals("Bad Request", ((Map<?, ?>) response.getBody()).get("message"));
+    }
+
+    @Test
+    void publicPostStateValidationAndTechnicalParsingFailuresStaySeparate() {
+        var exception = SpreadsheetParsingException
+            .invalidCondition("CaseCreated(InvalidCondition)", new IllegalStateException("SECRET cause"));
+        ResponseEntity<Object> response = exceptionHandler.handleSpreadsheetParsing(exception, mock(WebRequest.class));
+        assertEquals("Invalid Post State Condition CaseCreated(InvalidCondition)",
+            ((Map<?, ?>) response.getBody()).get("message"));
+        assertEquals("/import", ((Map<?, ?>) response.getBody()).get("path"));
+        assertFalse(response.getBody().toString().contains("SECRET"));
+        response = exceptionHandler.handleSpreadsheetParsing(
+            new SpreadsheetParsingException("SECRET diagnostic"),
+            mock(WebRequest.class));
         assertEquals("Bad Request", ((Map<?, ?>) response.getBody()).get("message"));
     }
 
@@ -220,10 +257,14 @@ class RestResponseEntityExceptionHandlerTest {
         logger.addAppender(appender);
         try {
             logger.setLevel(Level.INFO);
-            RuntimeException original = new RuntimeException("PRIVATE support diagnostic");
+            ImportValidationException original = new ImportValidationException(
+                ImportValidationException.Reason.MISSING_LAYOUT_FIELDS, "PRIVATE support diagnostic");
             ResponseEntity<Object> result = exceptionHandler.handleBadRequest(original, mock(WebRequest.class));
             assertEquals(400, result.getStatusCode().value());
             assertEquals("PRIVATE support diagnostic", appender.list.get(0).getThrowableProxy().getMessage());
+            assertEquals(1, appender.list.size());
+            assertEquals(Level.WARN, appender.list.get(0).getLevel());
+            assertEquals(original.getPublicMessage(), ((Map<?, ?>) result.getBody()).get("message"));
             assertEquals(false, result.getBody().toString().contains("PRIVATE"));
         } finally {
             logger.setLevel(previousLevel);

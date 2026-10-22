@@ -69,7 +69,9 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
 
             if ((CollectionUtils.isEmpty(layoutItems)
                 && !WORK_BASKET_INPUT_FIELD.getName().equalsIgnoreCase(this.getLayoutName()))) {
-                throw new ImportValidationException(ImportValidationException.Reason.MISSING_LAYOUT_FIELDS);
+                throw new ImportValidationException(ImportValidationException.Reason.MISSING_LAYOUT_FIELDS,
+                    String.format("At least one layout case field must be defined for case type %s and layout %s",
+                        caseTypeId, getLayoutName()));
             } else {
                 addParseLayoutCaseField(result, caseType, caseTypeId, layoutItems);
             }

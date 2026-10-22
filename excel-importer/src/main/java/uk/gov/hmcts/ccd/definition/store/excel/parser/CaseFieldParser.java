@@ -41,7 +41,8 @@ public class CaseFieldParser {
             SheetName.CASE_FIELD.getName()).groupDataItemsByCaseType();
 
         if (!caseFieldItemsByCaseTypes.containsKey(caseTypeId)) {
-            throw new ImportValidationException(ImportValidationException.Reason.MISSING_CASE_FIELDS);
+            throw new ImportValidationException(ImportValidationException.Reason.MISSING_CASE_FIELDS,
+                "At least one case field must be defined for case type: " + caseTypeId);
         }
 
         final List<DefinitionDataItem> caseFieldItems = caseFieldItemsByCaseTypes.get(caseTypeId);

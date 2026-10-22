@@ -1,22 +1,42 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
-/**
- * Exception thrown if import of a Case Definition sheet fails due to missing data.
- *
- * @author Daniel Lam (A533913)
- */
+/** Import diagnostics stay private unless created through a fixed validation-message factory. */
 public class InvalidImportException extends RuntimeException {
-    private static final Logger logger = LoggerFactory.getLogger(InvalidImportException.class);
+    public static final String FIELD_REFERENCE_MESSAGE = "%sTab Invalid value '%s' is not a valid %s value. "
+        + "The expression dot notation values should be valid caseTypes fields.";
+    public static final String COLLECTION_MESSAGE = "SearchPartyTab Invalid value '%s' "
+        + "is not a valid SearchPartyCollectionFieldName value "
+        + "as it does not reference a collection of a complex type.";
+
+    private final String publicMessage;
 
     public InvalidImportException() {
-        // default constructor
+        publicMessage = null;
     }
 
-    public InvalidImportException(final String message) {
+    public InvalidImportException(String message) {
         super(message);
-        logger.error(message);
+        publicMessage = null;
+    }
+
+    private InvalidImportException(String message, Throwable cause) {
+        super(message, cause);
+        publicMessage = message;
+    }
+
+    public static InvalidImportException invalidReference(SheetName sheet, ColumnName column,
+                                                         String expression, Throwable cause) {
+        return new InvalidImportException(String.format(FIELD_REFERENCE_MESSAGE, sheet, expression, column), cause);
+    }
+
+    public static InvalidImportException invalidCollection(String expression) {
+        return new InvalidImportException(String.format(COLLECTION_MESSAGE, expression), null);
+    }
+
+    public final String getPublicMessage() {
+        return publicMessage;
     }
 }

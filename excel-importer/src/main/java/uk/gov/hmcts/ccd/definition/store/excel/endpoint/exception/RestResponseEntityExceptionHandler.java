@@ -23,6 +23,8 @@ import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorag
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Instant;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import java.util.List;
 import java.util.Set;
 import java.util.Map;
@@ -53,8 +55,22 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(value = {InvalidImportException.class, MapperException.class})
     ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
+        if (ex instanceof InvalidImportException validation && validation.getPublicMessage() != null) {
+            return handleExceptionInternal(
+                ex, validation.getPublicMessage(), responseContentType(), BAD_REQUEST, request);
+        }
         return handleExceptionInternal(
             ex, HttpStatus.BAD_REQUEST.getReasonPhrase(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(SpreadsheetParsingException.class)
+    ResponseEntity<Object> handleSpreadsheetParsing(SpreadsheetParsingException ex, WebRequest request) {
+        return handleExceptionInternal(ex, Map.of(
+            "timestamp", Instant.now().toString(),
+            "status", BAD_REQUEST.value(),
+            "error", BAD_REQUEST.getReasonPhrase(),
+            "message", ex.getPublicMessage() == null ? BAD_REQUEST.getReasonPhrase() : ex.getPublicMessage(),
+            "path", "/import"), new HttpHeaders(), BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value = MissingAccessProfilesException.class)
@@ -175,6 +191,8 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
         }
         Object safeBody = exception instanceof ValidationException
             || exception instanceof MissingAccessProfilesException
+            || (exception instanceof InvalidImportException invalid && invalid.getPublicMessage() != null)
+            || exception instanceof SpreadsheetParsingException
             ? body : Map.of("message", exception instanceof ImportValidationException validation
                 ? validation.getPublicMessage() : HttpStatus.valueOf(status.value()).getReasonPhrase(),
                 "code", ErrorCode.fromStatus(status.value()));

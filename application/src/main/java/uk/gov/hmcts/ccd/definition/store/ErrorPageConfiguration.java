@@ -2,6 +2,8 @@ package uk.gov.hmcts.ccd.definition.store;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.RequestDispatcher;
+import org.springframework.http.HttpStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.boot.web.servlet.error.DefaultErrorAttributes;
@@ -22,9 +24,11 @@ public class ErrorPageConfiguration {
             @Override
             public Map<String, Object> getErrorAttributes(WebRequest request, ErrorAttributeOptions options) {
                 Map<String, Object> attributes = super.getErrorAttributes(request, options);
-                attributes.remove("path");
+                attributes.put("path", "/import".equals(request.getAttribute(
+                    RequestDispatcher.ERROR_REQUEST_URI, WebRequest.SCOPE_REQUEST)) ? "/import" : "/");
                 attributes.remove("exception");
-                attributes.remove("message");
+                HttpStatus status = HttpStatus.resolve((Integer) attributes.get("status"));
+                attributes.put("message", status == null ? "Request failed" : status.getReasonPhrase());
                 attributes.remove("trace");
                 attributes.remove("errors");
 

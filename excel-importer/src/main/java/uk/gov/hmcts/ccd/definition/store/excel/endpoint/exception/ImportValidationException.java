@@ -20,7 +20,12 @@ public class ImportValidationException extends MapperException {
     private final Reason reason;
 
     public ImportValidationException(Reason reason) {
-        super(reason.message);
+        this(reason, reason.message);
+    }
+
+    /** Diagnostic context is logged; only the approved reason is returned publicly. */
+    public ImportValidationException(Reason reason, String diagnosticMessage) {
+        super(diagnosticMessage);
         this.reason = reason;
     }
 
