@@ -119,3 +119,11 @@ Missing-case-field and missing-layout-field failures retain their original case 
 and layout context in the private exception message for WARN logging. The existing
 ImportValidationException carries this diagnostic separately from its approved public
 reason; HTTP responses remain unchanged. No new exception class or logger was added.
+
+The functional import contract tests clean up committed import_jobs rows after each
+case using Spring's isolated SQL test cleanup. Job transactions use REQUIRES_NEW,
+so rolling back the workbook test transaction alone does not remove them. Without
+this cleanup, the 33 cases left rows that broke the import-job integration test's
+single-row assertion when both classes ran together. Production code is unaffected.
+After the fix, the full Docker-backed application suite passed: 89 passed, five
+skipped, zero failures/errors. Application test Checkstyle passed.

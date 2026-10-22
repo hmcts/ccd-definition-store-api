@@ -10,6 +10,8 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.net.ccd.definition.store.BaseTest;
@@ -28,6 +30,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 /** Reuses the functional fixtures and their real workbooks to guard the public import contract. */
 @TestPropertySource(properties = {"ccd.authorised.services=ccd_data"})
+// Import jobs use REQUIRES_NEW and survive the test transaction's rollback.
+@Sql(statements = "DELETE FROM import_jobs", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD,
+    config = @SqlConfig(transactionMode = SqlConfig.TransactionMode.ISOLATED))
 class FunctionalImportErrorContractTest extends BaseTest {
 
     @BeforeEach
