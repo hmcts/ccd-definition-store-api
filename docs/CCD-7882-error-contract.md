@@ -177,3 +177,29 @@ The public response in both runs remained:
 ```json
 {"message":"Internal Server Error","code":"INTERNAL_ERROR"}
 ```
+
+## Paired application-container verification — 22 October 2026
+
+Malformed bearer challenges no longer disclose decoder descriptions or URIs. Existing authentication statuses and issuer/timestamp validation were preserved. SafeAuthenticationErrors tests and application main/test Checkstyle passed; the application explicitly depends on commons for the shared code enum.
+
+Both INFO (DEBUG off) and DEBUG runs passed all six checks: anonymous JSON/HTML,
+invalid user bearer or invalid service credentials as appropriate, authenticated dependency failure,
+health-detail redaction and retained original server diagnostics. This is 12 checks for this service.
+Different services retain their existing HTTP status and validation contracts; diagnostic redaction
+is consistent. Support logging is the policy; authentication logging is one covered failure category.
+Neither requires enabling DEBUG to retain original failures.
+
+The shared local driver is review-reports/CCD-7882/verify_docker.py in the parent workspace.
+Run from the workspace root with --repo ccd-definition-store-api (both modes are the default).
+Fresh Java bootJars or the current Node application source/dependencies were used, with synthetic
+OIDC/S2S/services and PostgreSQL where applicable. Some database fixtures deliberately omit tables
+for controlled infrastructure errors; definition-store uses its migrations for startup.
+Java used the cached HMCTS Java 21 runtime; Node used public node:22-alpine as non-root node.
+These are substitute runtimes, not builds of each exact production Dockerfile.
+Artifact hashes and per-check results are in review-reports/CCD-7882/docker-results.json.
+Scripts allow repeat runs and results identify what was checked; retaining them is evidence,
+not an extra production runtime dependency. Synthetic raw logs are local diagnostics.
+
+Production image/ingress verification, deployed BEFTA/ITHC, actual Azure ingestion, retention
+and administrator-only access remain release gates. The local telemetry collector proves the
+specific agent/SDK path tested, not production collection settings.
