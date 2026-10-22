@@ -15,6 +15,7 @@ ext {
 }
 
 dependencies {
+    implementation project(':commons')
     implementation project(':domain')
     implementation project(':elastic-search-support')
     implementation project(':repository')

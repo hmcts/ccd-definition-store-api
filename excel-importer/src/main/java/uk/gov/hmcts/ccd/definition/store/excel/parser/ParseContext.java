@@ -200,8 +200,7 @@ public class ParseContext {
         final StateEntity state = caseTypeStates.get(stateId);
 
         if (null == state) {
-            throw new SpreadsheetParsingException(
-                String.format("No state registered for state ID: %s/%s", caseTypeId, stateId));
+            throw SpreadsheetParsingException.missingState(caseTypeId, stateId);
         }
 
         return state;

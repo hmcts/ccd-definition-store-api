@@ -9,6 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditi
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -110,9 +111,13 @@ class GenericLayoutParserTest {
         item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
         sheet.addDataItem(item);
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
+        ImportValidationException thrown = assertThrows(ImportValidationException.class,
+            () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("At least one layout case field must be defined for case type %s and layout %s",
-            CASE_TYPE_ID2, classUnderTest.getLayoutName()), thrown.getMessage());
+            CASE_TYPE_ID2, classUnderTest.getLayoutName()),
+            thrown.getMessage());
+        assertEquals("At least one layout case field must be defined for the case type and layout.",
+            thrown.getPublicMessage());
     }
 
     @Test

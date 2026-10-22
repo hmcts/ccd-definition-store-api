@@ -1,5 +1,11 @@
 package uk.gov.hmcts.net.ccd.definition.store.excel;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import org.slf4j.LoggerFactory;
+
 import com.github.tomakehurst.wiremock.client.WireMock;
 import org.apache.http.HttpStatus;
 import org.hamcrest.Matcher;
@@ -191,6 +197,10 @@ class SpreadSheetImportTest extends BaseTest {
     @Test
     @Transactional
     void importValidDefinitionFileUserProfileHas403Response() throws Exception {
+        Logger rootLogger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        rootLogger.addAppender(appender);
         try (final InputStream inputStream =
                  new ClassPathResource(EXCEL_FILE_CCD_DEFINITION, getClass()).getInputStream()) {
 
@@ -210,9 +220,27 @@ class SpreadSheetImportTest extends BaseTest {
             assertResponseCode(result, HttpStatus.SC_INTERNAL_SERVER_ERROR);
 
             // Check the error response message.
-            assertThat("Incorrect HTTP response",
-                result.getResponse().getContentAsString(),
-                containsString("403 Forbidden"));
+            JSONAssert.assertEquals(
+                "{\"message\":\"Internal Server Error\",\"code\":\"INTERNAL_ERROR\"}",
+                result.getResponse().getContentAsString(), JSONCompareMode.STRICT);
+            List<ILoggingEvent> failures = appender.list.stream()
+                .filter(event -> event.getThrowableProxy() != null)
+                .filter(event -> event.getThrowableProxy().getClassName().endsWith("$Forbidden"))
+                .toList();
+            assertEquals(1, failures.size(), "The original failure must be logged exactly once");
+            assertEquals(Level.ERROR, failures.get(0).getLevel());
+            assertThat(failures.get(0).getThrowableProxy().getMessage(), containsString("403 Forbidden"));
+            assertThat(failures.get(0).getThrowableProxy().getStackTraceElementProxyArray().length,
+                org.hamcrest.Matchers.greaterThan(0));
+            long debugEvents = appender.list.stream()
+                .filter(event -> event.getLevel() == Level.DEBUG)
+                .filter(event -> event.getLoggerName().startsWith("uk.gov.hmcts.ccd."))
+                .count();
+            assertEquals(LoggerFactory.getLogger("uk.gov.hmcts.ccd").isDebugEnabled(), debugEvents > 0,
+                "DEBUG adds developer tracing while the original exception remains available at ERROR");
+        } finally {
+            rootLogger.detachAppender(appender);
+            appender.stop();
         }
     }
 

@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.util.mapper;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
@@ -38,7 +39,6 @@ public class MapperUtil {
     private static final String INCORRECT_INTEGER_LIST_FORMAT =
         "Found '%s' whilst expecting a comma separated list of numbers in the column '%s' of sheet '%s'";
     private static final String FIELD_SEPARATOR = ",";
-    private static final String INVALID_VALUE_COLUMN = "Invalid value '%s' is found in column '%s' in the sheet '%s'";
     private static final String INVALID_OR_BLANK_COLUMN
         = "Couldn't find the column '%s' or invalid value in the sheet '%s'";
 
@@ -193,7 +193,7 @@ public class MapperUtil {
             case "no", "n", "false", "f" -> {
                 return false;
             }
-            default -> throw new MapperException(String.format(INVALID_VALUE_COLUMN, attribute, columnName, sheetName));
+            default -> throw ImportValidationException.invalidValue(attribute, columnName, sheetName.toString());
         }
     }
 

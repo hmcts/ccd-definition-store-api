@@ -67,7 +67,7 @@ public class EventPostStateParser {
             setPostStateReference(postStateEntity, postSate.substring(0, postSate.indexOf("(")));
             return postStateEntity;
         }
-        throw new SpreadsheetParsingException("Invalid Post State " + entry);
+        throw SpreadsheetParsingException.invalidPostState(entry);
     }
 
     private void setPostStateReference(EventPostStateEntity entity, String reference) {
@@ -92,7 +92,7 @@ public class EventPostStateParser {
             ShowCondition condition = this.conditionParser.parseShowCondition(postStateCondition);
             return condition.getShowConditionExpression();
         } catch (InvalidShowConditionException e) {
-            throw new SpreadsheetParsingException("Invalid Post State Condition " + postSate);
+            throw SpreadsheetParsingException.invalidCondition(postSate, e);
         }
     }
 

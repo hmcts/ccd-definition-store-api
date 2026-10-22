@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -68,9 +69,9 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
 
             if ((CollectionUtils.isEmpty(layoutItems)
                 && !WORK_BASKET_INPUT_FIELD.getName().equalsIgnoreCase(this.getLayoutName()))) {
-                throw new MapperException(String.format(
-                    "At least one layout case field must be defined for case type %s and layout %s",
-                    caseTypeId, getLayoutName()));
+                throw new ImportValidationException(ImportValidationException.Reason.MISSING_LAYOUT_FIELDS,
+                    String.format("At least one layout case field must be defined for case type %s and layout %s",
+                        caseTypeId, getLayoutName()));
             } else {
                 addParseLayoutCaseField(result, caseType, caseTypeId, layoutItems);
             }
