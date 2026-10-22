@@ -133,10 +133,10 @@ class JurisdictionsEndpointIT extends BaseTest {
 
     @ParameterizedTest
     @ValueSource(booleans = {false, true})
-    void shouldSelectOnlyCaseTypesWithTheRequestedOrder(boolean filtered) throws Exception {
+    void shouldSelectOnlyCaseTypesWithTheRequestedOrderAndSortById(boolean filtered) throws Exception {
         JurisdictionEntity primary = jurisdiction(PRIMARY);
-        caseType(primary, "ZuluMatch", 1, 42);
-        caseType(primary, "AlphaMatch", 1, 42);
+        caseType(primary, "ZuluMatch", 1, 42).setName("Alpha name");
+        caseType(primary, "AlphaMatch", 1, 42).setName("Zulu name");
         caseType(primary, "OtherOrder", 1, 7);
         caseType(primary, "WithoutOrder", 1, null);
         caseType(primary, "ChangedOrder", 1, 42);
@@ -243,7 +243,7 @@ class JurisdictionsEndpointIT extends BaseTest {
         return jurisdictionRepository.save(entity);
     }
 
-    private void caseType(JurisdictionEntity jurisdiction, String reference, int version, Integer order) {
+    private CaseTypeEntity caseType(JurisdictionEntity jurisdiction, String reference, int version, Integer order) {
         CaseTypeEntity entity = new CaseTypeEntity();
         entity.setJurisdiction(jurisdiction);
         entity.setReference(reference);
@@ -252,6 +252,6 @@ class JurisdictionsEndpointIT extends BaseTest {
         entity.setDescription("Case description");
         entity.setSecurityClassification(PUBLIC);
         entity.setCaseTypesOrder(order);
-        caseTypeRepository.save(entity);
+        return caseTypeRepository.save(entity);
     }
 }

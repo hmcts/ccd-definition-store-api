@@ -137,7 +137,7 @@ public class CaseDefinitionController {
     })
     public List<Jurisdiction> findJurisdictions(
         @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> idsOptional,
-        @ApiParam(value = "Filter by CaseTypesOrder (minimum 1) and sort matches by case type name")
+        @ApiParam(value = "Filter by CaseTypesOrder (minimum 1) and sort matches by case type ID")
         @RequestParam("caseTypeOrder") Optional<Integer> caseTypeOrder) {
 
         LOG.debug("received find jurisdictions request with ids: {} and caseTypeOrder: {}", idsOptional, caseTypeOrder);
@@ -150,7 +150,7 @@ public class CaseDefinitionController {
         caseTypeOrder.ifPresent(order -> jurisdictions.forEach(jurisdiction -> jurisdiction.setCaseTypes(
             jurisdiction.getCaseTypes().stream()
                 .filter(caseType -> order.equals(caseType.getCaseTypesOrder()))
-                .sorted(Comparator.comparing(CaseTypeLite::getName,
+                .sorted(Comparator.comparing(CaseTypeLite::getId,
                     Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)))
                 .collect(Collectors.toList()))));
         return jurisdictions;

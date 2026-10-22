@@ -205,12 +205,12 @@ class CaseDefinitionControllerTest {
 
         @ParameterizedTest
         @ValueSource(booleans = {false, true})
-        void shouldFilterAndSortOnlyWhenOrderIsPresent(boolean filterPresent) {
+        void shouldFilterAndSortByIdOnlyWhenOrderIsPresent(boolean filterPresent) {
             CaseTypeLite zulu = caseTypeLite("AId", "Zulu", 42);
             CaseTypeLite alpha = caseTypeLite("ZId", "alpha", 42);
             CaseTypeLite other = caseTypeLite("Other", "Beta", 7);
             Jurisdiction jurisdiction = new Jurisdiction();
-            jurisdiction.setCaseTypes(List.of(zulu, other, alpha));
+            jurisdiction.setCaseTypes(List.of(alpha, other, zulu));
             when(jurisdictionService.getAll()).thenReturn(List.of(jurisdiction));
 
             List<Jurisdiction> result = subject.findJurisdictions(Optional.empty(),
@@ -218,10 +218,10 @@ class CaseDefinitionControllerTest {
 
             assertThat(result).singleElement().satisfies(item -> {
                 if (filterPresent) {
-                    assertThat(item.getCaseTypes()).extracting(CaseTypeLite::getId).containsExactly("ZId", "AId");
+                    assertThat(item.getCaseTypes()).extracting(CaseTypeLite::getId).containsExactly("AId", "ZId");
                 } else {
                     assertThat(item.getCaseTypes()).extracting(CaseTypeLite::getId)
-                        .containsExactly("AId", "Other", "ZId");
+                        .containsExactly("ZId", "Other", "AId");
                 }
             });
         }
