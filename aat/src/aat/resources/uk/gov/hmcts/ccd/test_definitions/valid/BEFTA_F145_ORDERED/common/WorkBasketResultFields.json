@@ -1,0 +1,38 @@
+[
+  {
+    "CaseTypeID": "F145_AMatch",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_ZMatch",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_Other",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_First",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_Last",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_Unset",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  }
+]

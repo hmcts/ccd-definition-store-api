@@ -1,0 +1,14 @@
+[
+  {
+    "CaseTypeID": "F145_ZuluLegacy",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_AlphaLegacy",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  }
+]

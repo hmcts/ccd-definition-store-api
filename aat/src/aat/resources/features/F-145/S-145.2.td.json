@@ -1,0 +1,57 @@
+{
+  "_guid_": "S-145.2",
+  "_extends_": "F-145_Test_Base_Data",
+  "title": "AC02: return legacy case types without requiring an order",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid jurisdiction id",
+    "has the 200 OK code",
+    "contains the expected case types and optional caseTypesOrder values"
+  ],
+  "prerequisites": [
+    {
+      "importDefinition": "F-145_Import_BEFTA_F145_LEGACY"
+    }
+  ],
+  "request": {
+    "queryParams": {
+      "ids": "BEFTA_F145_LEGACY"
+    }
+  },
+  "expectedResponse": {
+    "body": {
+      "arrayInMap": [
+        {
+          "id": "BEFTA_F145_LEGACY",
+          "name": "BEFTA_F145_LEGACY",
+          "description": "F-145 jurisdiction",
+          "live_from": "2017-01-01T00:00:00.000+0000",
+          "live_until": null,
+          "case_types": [
+            {
+              "__operator__": "EQUIVALENT",
+              "__ordering__": "UNORDERED",
+              "__elementId__": "id"
+            },
+            {
+              "id": "F145_ZuluLegacy",
+              "description": "F-145 ZuluLegacy",
+              "name": "ZuluLegacy",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": []
+            },
+            {
+              "id": "F145_AlphaLegacy",
+              "description": "F-145 AlphaLegacy",
+              "name": "AlphaLegacy",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

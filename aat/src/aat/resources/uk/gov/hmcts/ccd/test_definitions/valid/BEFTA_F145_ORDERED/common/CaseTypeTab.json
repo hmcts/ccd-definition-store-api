@@ -1,0 +1,50 @@
+[
+  {
+    "CaseTypeID": "F145_AMatch",
+    "TabID": "Details",
+    "TabLabel": "Details",
+    "TabDisplayOrder": 1,
+    "CaseFieldID": "TextField",
+    "TabFieldDisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_ZMatch",
+    "TabID": "Details",
+    "TabLabel": "Details",
+    "TabDisplayOrder": 1,
+    "CaseFieldID": "TextField",
+    "TabFieldDisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_Other",
+    "TabID": "Details",
+    "TabLabel": "Details",
+    "TabDisplayOrder": 1,
+    "CaseFieldID": "TextField",
+    "TabFieldDisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_First",
+    "TabID": "Details",
+    "TabLabel": "Details",
+    "TabDisplayOrder": 1,
+    "CaseFieldID": "TextField",
+    "TabFieldDisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_Last",
+    "TabID": "Details",
+    "TabLabel": "Details",
+    "TabDisplayOrder": 1,
+    "CaseFieldID": "TextField",
+    "TabFieldDisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_Unset",
+    "TabID": "Details",
+    "TabLabel": "Details",
+    "TabDisplayOrder": 1,
+    "CaseFieldID": "TextField",
+    "TabFieldDisplayOrder": 1
+  }
+]

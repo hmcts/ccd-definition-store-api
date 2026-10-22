@@ -1,0 +1,18 @@
+[
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_ZuluLegacy",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_AlphaLegacy",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  }
+]

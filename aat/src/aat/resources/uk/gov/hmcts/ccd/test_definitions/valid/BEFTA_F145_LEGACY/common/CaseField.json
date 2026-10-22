@@ -1,0 +1,20 @@
+[
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_ZuluLegacy",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_AlphaLegacy",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  }
+]

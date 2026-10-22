@@ -1,0 +1,20 @@
+{
+  "_guid_": "F-145_Import_BEFTA_F145_LEGACY",
+  "_extends_": "Import_Base_data",
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "localFilePath": "build/tmp/definition_files_copy/BEFTA_F145_LEGACY.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Case_Definition_Data_Import_Success",
+    "headers": {
+      "X-Import-Job-Id": "[[ANY_STRING_NOT_NULLABLE]]"
+    }
+  }
+}

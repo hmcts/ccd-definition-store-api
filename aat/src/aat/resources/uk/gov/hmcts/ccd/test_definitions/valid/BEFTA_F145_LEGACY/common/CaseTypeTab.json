@@ -1,0 +1,18 @@
+[
+  {
+    "CaseTypeID": "F145_ZuluLegacy",
+    "TabID": "Details",
+    "TabLabel": "Details",
+    "TabDisplayOrder": 1,
+    "CaseFieldID": "TextField",
+    "TabFieldDisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_AlphaLegacy",
+    "TabID": "Details",
+    "TabLabel": "Details",
+    "TabDisplayOrder": 1,
+    "CaseFieldID": "TextField",
+    "TabFieldDisplayOrder": 1
+  }
+]

@@ -1,0 +1,37 @@
+{
+  "_guid_": "S-145.6",
+  "_extends_": "F-145_Test_Base_Data",
+  "title": "retain the jurisdiction with no case types when the filter has no matches",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid jurisdiction id",
+    "has the 200 OK code",
+    "contains the expected case types and optional caseTypesOrder values",
+    "contains a caseTypeOrder filter"
+  ],
+  "prerequisites": [
+    {
+      "importDefinition": "F-145_Import_BEFTA_F145_ORDERED"
+    }
+  ],
+  "request": {
+    "queryParams": {
+      "ids": "BEFTA_F145_ORDERED",
+      "caseTypeOrder": "77"
+    }
+  },
+  "expectedResponse": {
+    "body": {
+      "arrayInMap": [
+        {
+          "id": "BEFTA_F145_ORDERED",
+          "name": "BEFTA_F145_ORDERED",
+          "description": "F-145 jurisdiction",
+          "live_from": "2017-01-01T00:00:00.000+0000",
+          "live_until": null,
+          "case_types": []
+        }
+      ]
+    }
+  }
+}

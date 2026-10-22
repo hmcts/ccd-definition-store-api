@@ -1,0 +1,44 @@
+[
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_AMatch",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_ZMatch",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_Other",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_First",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_Last",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_Unset",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  }
+]

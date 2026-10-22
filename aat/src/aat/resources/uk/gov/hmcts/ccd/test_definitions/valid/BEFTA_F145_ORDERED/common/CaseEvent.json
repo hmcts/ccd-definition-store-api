@@ -1,0 +1,50 @@
+[
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_AMatch",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_ZMatch",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_Other",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_First",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_Last",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_Unset",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  }
+]

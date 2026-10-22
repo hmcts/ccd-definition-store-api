@@ -1,0 +1,16 @@
+[
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_ZuluLegacy",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_AlphaLegacy",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  }
+]

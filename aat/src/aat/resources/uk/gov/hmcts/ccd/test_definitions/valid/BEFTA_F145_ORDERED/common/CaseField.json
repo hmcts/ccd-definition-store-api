@@ -1,0 +1,56 @@
+[
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_AMatch",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_ZMatch",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_Other",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_First",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_Last",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2017",
+    "CaseTypeID": "F145_Unset",
+    "ID": "TextField",
+    "Name": "Text field",
+    "Label": "Text field",
+    "FieldType": "Text",
+    "SecurityClassification": "PUBLIC"
+  }
+]

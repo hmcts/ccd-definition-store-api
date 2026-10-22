@@ -1,0 +1,16 @@
+[
+  {
+    "CaseTypeID": "F145_ZuluLegacy",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  },
+  {
+    "CaseTypeID": "F145_AlphaLegacy",
+    "CaseEventID": "Create",
+    "CaseFieldID": "TextField",
+    "PageID": "1",
+    "DisplayContext": "OPTIONAL"
+  }
+]

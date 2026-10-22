@@ -1,0 +1,94 @@
+{
+  "_guid_": "S-145.3",
+  "_extends_": "F-145_Test_Base_Data",
+  "title": "return numbered and unnumbered case types when the filter is absent",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid jurisdiction id",
+    "has the 200 OK code",
+    "contains the expected case types and optional caseTypesOrder values"
+  ],
+  "prerequisites": [
+    {
+      "importDefinition": "F-145_Import_BEFTA_F145_ORDERED"
+    }
+  ],
+  "request": {
+    "queryParams": {
+      "ids": "BEFTA_F145_ORDERED"
+    }
+  },
+  "expectedResponse": {
+    "body": {
+      "arrayInMap": [
+        {
+          "id": "BEFTA_F145_ORDERED",
+          "name": "BEFTA_F145_ORDERED",
+          "description": "F-145 jurisdiction",
+          "live_from": "2017-01-01T00:00:00.000+0000",
+          "live_until": null,
+          "case_types": [
+            {
+              "__operator__": "EQUIVALENT",
+              "__ordering__": "UNORDERED",
+              "__elementId__": "id"
+            },
+            {
+              "id": "F145_AMatch",
+              "description": "F-145 Zulu",
+              "name": "Zulu",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": [],
+              "caseTypesOrder": 42
+            },
+            {
+              "id": "F145_ZMatch",
+              "description": "F-145 Alpha",
+              "name": "Alpha",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": [],
+              "caseTypesOrder": 42
+            },
+            {
+              "id": "F145_Other",
+              "description": "F-145 Other",
+              "name": "Other",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": [],
+              "caseTypesOrder": 7
+            },
+            {
+              "id": "F145_First",
+              "description": "F-145 First",
+              "name": "First",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": [],
+              "caseTypesOrder": 1
+            },
+            {
+              "id": "F145_Last",
+              "description": "F-145 Last",
+              "name": "Last",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": [],
+              "caseTypesOrder": 99
+            },
+            {
+              "id": "F145_Unset",
+              "description": "F-145 Unset",
+              "name": "Unset",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": []
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

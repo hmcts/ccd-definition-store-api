@@ -1,0 +1,61 @@
+{
+  "_guid_": "S-145.1",
+  "_extends_": "F-145_Test_Base_Data",
+  "title": "AC01: filter by CaseTypesOrder and sort matching case types by ID",
+  "specs": [
+    "an active profile in CCD",
+    "contains a valid jurisdiction id",
+    "has the 200 OK code",
+    "contains the expected case types and optional caseTypesOrder values",
+    "contains a caseTypeOrder filter"
+  ],
+  "prerequisites": [
+    {
+      "importDefinition": "F-145_Import_BEFTA_F145_ORDERED"
+    }
+  ],
+  "request": {
+    "queryParams": {
+      "ids": "BEFTA_F145_ORDERED",
+      "caseTypeOrder": "42"
+    }
+  },
+  "expectedResponse": {
+    "body": {
+      "arrayInMap": [
+        {
+          "id": "BEFTA_F145_ORDERED",
+          "name": "BEFTA_F145_ORDERED",
+          "description": "F-145 jurisdiction",
+          "live_from": "2017-01-01T00:00:00.000+0000",
+          "live_until": null,
+          "case_types": [
+            {
+              "__operator__": "EQUIVALENT",
+              "__ordering__": "ORDERED",
+              "__elementId__": "id"
+            },
+            {
+              "id": "F145_AMatch",
+              "description": "F-145 Zulu",
+              "name": "Zulu",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": [],
+              "caseTypesOrder": 42
+            },
+            {
+              "id": "F145_ZMatch",
+              "description": "F-145 Alpha",
+              "name": "Alpha",
+              "states": "[[ANYTHING_PRESENT]]",
+              "events": "[[ANYTHING_PRESENT]]",
+              "acls": [],
+              "caseTypesOrder": 42
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
