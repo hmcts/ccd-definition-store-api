@@ -79,7 +79,7 @@ public class JurisdictionServiceImpl implements JurisdictionService {
             caseTypeLiteRepository.findByJurisdictionId(jurisdiction.getId());
         jurisdiction.setCaseTypes(caseTypeLiteEntities.stream()
             .map(entityToResponseDTOMapper::map)
-            .collect(toList()));
+            .toList());
         return jurisdiction;
     }
 }

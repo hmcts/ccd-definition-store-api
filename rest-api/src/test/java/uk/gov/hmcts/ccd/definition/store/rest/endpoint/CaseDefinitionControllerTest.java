@@ -197,7 +197,10 @@ class CaseDefinitionControllerTest {
         @ParameterizedTest
         @ValueSource(ints = {0, -1, Integer.MIN_VALUE})
         void shouldRejectOrderBelowOneBeforeRetrievingJurisdictions(int order) {
-            assertThatThrownBy(() -> subject.findJurisdictions(Optional.empty(), Optional.of(order)))
+            Optional<List<String>> jurisdictionIds = Optional.empty();
+            Optional<Integer> caseTypeOrder = Optional.of(order);
+
+            assertThatThrownBy(() -> subject.findJurisdictions(jurisdictionIds, caseTypeOrder))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessage("caseTypeOrder must be greater than or equal to 1");
             verifyNoInteractions(jurisdictionService);

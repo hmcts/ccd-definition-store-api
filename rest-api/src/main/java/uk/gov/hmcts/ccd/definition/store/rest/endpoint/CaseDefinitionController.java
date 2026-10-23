@@ -29,7 +29,6 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @Api(value = "/api/data")
@@ -112,7 +111,7 @@ public class CaseDefinitionController {
      * Find by jurisdiction id.
      *
      * @deprecated This endpoint is deprecated due to performance issues and is no longer used by any service from the
-     *             data store.
+     * data store.
      */
     @Deprecated(forRemoval = true)
     @SuppressWarnings("squid:S1133")
@@ -152,7 +151,7 @@ public class CaseDefinitionController {
                 .filter(caseType -> order.equals(caseType.getCaseTypesOrder()))
                 .sorted(Comparator.comparing(CaseTypeLite::getId,
                     Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)))
-                .collect(Collectors.toList()))));
+                .toList())));
         return jurisdictions;
     }
 

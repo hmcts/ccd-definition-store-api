@@ -232,7 +232,7 @@ class CaseTypeRepositoryTest {
     void shouldReturnZeroCountIfCaseTypeIsOfExcludedJurisdiction() {
         Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(
             CASE_TYPE_REFERENCE, testJurisdiction.getReference());
-        assertThat(result).isEqualTo(0);
+        assertThat(result).isZero();
     }
 
     @Test
