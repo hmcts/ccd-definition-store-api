@@ -6,7 +6,7 @@
     "Description": "F-145 Hotel",
     "JurisdictionID": "BEFTA_F145_ORDERED",
     "SecurityClassification": "PUBLIC",
-    "CaseTypesOrder": 42
+    "CaseTypesOrder": 63
   },
   {
     "LiveFrom": "01/01/2026",
@@ -33,7 +33,7 @@
     "Description": "F-145 Zulu",
     "JurisdictionID": "BEFTA_F145_ORDERED",
     "SecurityClassification": "PUBLIC",
-    "CaseTypesOrder": 42
+    "CaseTypesOrder": 63
   },
   {
     "LiveFrom": "01/01/2026",
@@ -51,7 +51,7 @@
     "Description": "F-145 Delta",
     "JurisdictionID": "BEFTA_F145_ORDERED",
     "SecurityClassification": "PUBLIC",
-    "CaseTypesOrder": 42
+    "CaseTypesOrder": 63
   },
   {
     "LiveFrom": "01/01/2026",
@@ -69,7 +69,7 @@
     "Description": "F-145 Alpha",
     "JurisdictionID": "BEFTA_F145_ORDERED",
     "SecurityClassification": "PUBLIC",
-    "CaseTypesOrder": 42
+    "CaseTypesOrder": 63
   },
   {
     "LiveFrom": "01/01/2026",
@@ -87,7 +87,7 @@
     "Description": "F-145 Sierra",
     "JurisdictionID": "BEFTA_F145_ORDERED",
     "SecurityClassification": "PUBLIC",
-    "CaseTypesOrder": 42
+    "CaseTypesOrder": 63
   },
   {
     "LiveFrom": "01/01/2026",
@@ -114,7 +114,7 @@
     "Description": "F-145 Kilo",
     "JurisdictionID": "BEFTA_F145_ORDERED",
     "SecurityClassification": "PUBLIC",
-    "CaseTypesOrder": 42
+    "CaseTypesOrder": 63
   },
   {
     "LiveFrom": "01/01/2026",
@@ -132,7 +132,7 @@
     "Description": "F-145 Tango",
     "JurisdictionID": "BEFTA_F145_ORDERED",
     "SecurityClassification": "PUBLIC",
-    "CaseTypesOrder": 42
+    "CaseTypesOrder": 63
   },
   {
     "LiveFrom": "01/01/2026",
@@ -150,7 +150,7 @@
     "Description": "F-145 Papa",
     "JurisdictionID": "BEFTA_F145_ORDERED",
     "SecurityClassification": "PUBLIC",
-    "CaseTypesOrder": 42
+    "CaseTypesOrder": 63
   },
   {
     "LiveFrom": "01/01/2026",

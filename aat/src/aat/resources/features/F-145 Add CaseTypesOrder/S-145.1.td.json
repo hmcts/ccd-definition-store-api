@@ -17,7 +17,7 @@
   "request": {
     "queryParams": {
       "ids": "BEFTA_F145_ORDERED",
-      "caseTypeOrder": "42"
+      "caseTypeOrder": "63"
     }
   },
   "expectedResponse": {
@@ -42,7 +42,7 @@
               "states": "[[ANYTHING_PRESENT]]",
               "events": "[[ANYTHING_PRESENT]]",
               "acls": [],
-              "caseTypesOrder": 42
+              "caseTypesOrder": 63
             },
             {
               "id": "F145_BMatch",
@@ -51,7 +51,7 @@
               "states": "[[ANYTHING_PRESENT]]",
               "events": "[[ANYTHING_PRESENT]]",
               "acls": [],
-              "caseTypesOrder": 42
+              "caseTypesOrder": 63
             },
             {
               "id": "F145_DMatch",
@@ -60,7 +60,7 @@
               "states": "[[ANYTHING_PRESENT]]",
               "events": "[[ANYTHING_PRESENT]]",
               "acls": [],
-              "caseTypesOrder": 42
+              "caseTypesOrder": 63
             },
             {
               "id": "F145_HMatch",
@@ -69,7 +69,7 @@
               "states": "[[ANYTHING_PRESENT]]",
               "events": "[[ANYTHING_PRESENT]]",
               "acls": [],
-              "caseTypesOrder": 42
+              "caseTypesOrder": 63
             },
             {
               "id": "F145_MMatch",
@@ -78,7 +78,7 @@
               "states": "[[ANYTHING_PRESENT]]",
               "events": "[[ANYTHING_PRESENT]]",
               "acls": [],
-              "caseTypesOrder": 42
+              "caseTypesOrder": 63
             },
             {
               "id": "F145_QMatch",
@@ -87,7 +87,7 @@
               "states": "[[ANYTHING_PRESENT]]",
               "events": "[[ANYTHING_PRESENT]]",
               "acls": [],
-              "caseTypesOrder": 42
+              "caseTypesOrder": 63
             },
             {
               "id": "F145_TMatch",
@@ -96,7 +96,7 @@
               "states": "[[ANYTHING_PRESENT]]",
               "events": "[[ANYTHING_PRESENT]]",
               "acls": [],
-              "caseTypesOrder": 42
+              "caseTypesOrder": 63
             },
             {
               "id": "F145_ZMatch",
@@ -105,7 +105,7 @@
               "states": "[[ANYTHING_PRESENT]]",
               "events": "[[ANYTHING_PRESENT]]",
               "acls": [],
-              "caseTypesOrder": 42
+              "caseTypesOrder": 63
             }
           ]
         }

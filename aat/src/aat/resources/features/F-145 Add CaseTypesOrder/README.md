@@ -7,14 +7,14 @@ AC01 wording about ascending numeric sorting.
 
 | Scenario | Evidence |
 | --- | --- |
-| S-145.1 | HTTP 200; filter 42 returns exactly eight matches in ascending ID order, each with numeric `caseTypesOrder: 42`. |
+| S-145.1 | HTTP 200; filter 63 returns exactly eight matches in ascending ID order, each with numeric `caseTypesOrder: 63`. |
 | S-145.2 | HTTP 200; legacy definition without the column returns all 10 case types, omits `caseTypesOrder`, and allows any sequence (AC02). |
 | S-145.3 | HTTP 200; absent filter returns all 18 configured and unconfigured case types in any sequence. |
 | S-145.4 | HTTP 200; filter 1 returns both case types with order 1, sorted by ID. |
 | S-145.5 | HTTP 200; filter 99 returns both case types with order 99, sorted by ID. |
 | S-145.6 | HTTP 200; no matching order returns the jurisdiction with an empty case-type list. |
 
-The mixed fixture contains 18 case types: eight with order 42, three with order 7,
+The mixed fixture contains 18 case types: eight with order 63, three with order 7,
 two each with orders 1 and 99, and three with blank order values. The legacy fixture
 contains 10 case types and has no CaseTypesOrder heading. Every case type includes
 a state, event, field and the required layouts.

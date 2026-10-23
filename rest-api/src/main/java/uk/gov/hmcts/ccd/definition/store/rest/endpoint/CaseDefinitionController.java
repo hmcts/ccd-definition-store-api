@@ -111,7 +111,7 @@ public class CaseDefinitionController {
      * Find by jurisdiction id.
      *
      * @deprecated This endpoint is deprecated due to performance issues and is no longer used by any service from the
-     * data store.
+     *     data store.
      */
     @Deprecated(forRemoval = true)
     @SuppressWarnings("squid:S1133")
