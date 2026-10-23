@@ -48,7 +48,7 @@ ext {
     junitJupiterVersion = '5.12.2'
     springDocVersion = '2.9.1'
     hamcrestVersion = '3.0'
-    flywayVersion = '12.5.0'
+    flywayVersion = '12.11.0'
     reformLogging = '6.1.9'
     apachePoiVersion = '5.4.1'
     appInsightsVersion = '2.6.4'
@@ -354,7 +354,7 @@ subprojects { subproject ->
         testImplementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
         testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.8'
         testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
-        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.23.0'
+        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.24.0'
     }
 
     task integration(type: Test) {
