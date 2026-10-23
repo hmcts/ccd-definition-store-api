@@ -63,6 +63,7 @@ Feature: F-128 Get Shell Mappings for Originating Case Type Id
     And it is submitted to call the [Get Shell Case Type Details] operation of [CCD Definition Store]
     Then a positive response is received
     And the response [contains caseStates with matching state categories excluded]
+    And the response has all other details as expected
 
   @S-128.8
   Scenario: Success response - Return 200 with caseStates excluding multiple stateCategoriesToExclude values
@@ -74,3 +75,4 @@ Feature: F-128 Get Shell Mappings for Originating Case Type Id
     And it is submitted to call the [Get Shell Case Type Details] operation of [CCD Definition Store]
     Then a positive response is received
     And the response [contains empty caseStates when all states are excluded]
+    And the response has all other details as expected
