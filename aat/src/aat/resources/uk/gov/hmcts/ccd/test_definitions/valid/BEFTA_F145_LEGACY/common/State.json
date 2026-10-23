@@ -1,0 +1,72 @@
+[
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_HotelLegacy",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_ZuluLegacy",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_DeltaLegacy",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_AlphaLegacy",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_JulietLegacy",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_BravoLegacy",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_GolfLegacy",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_CharlieLegacy",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_IndiaLegacy",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_EchoLegacy",
+    "ID": "Created",
+    "Name": "Created",
+    "DisplayOrder": 1
+  }
+]
