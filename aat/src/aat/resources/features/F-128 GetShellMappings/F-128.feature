@@ -13,6 +13,7 @@ Feature: F-128 Get Shell Mappings for Originating Case Type Id
     And it is submitted to call the [Get Shell Case Type Details] operation of [CCD Definition Store]
     Then a positive response is received
     And the response [contains all shellCaseMapping for originalCaseTypeId is present in the response]
+    And the response has all other details as expected
 
   @S-128.3
   Scenario: Negative response - Return 404 if no shell case mappings are present for the originalCaseTypeId
