@@ -1,0 +1,28 @@
+{
+  "_guid_": "Import_BEFTA_Master_With_StateCategory",
+  "_extends_": "Import_Base_data",
+  "specs": [
+    "to import definition file with state categories"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/shellmapping/BEFTA_Master_Definition_With_StateCategory.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_201_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]"
+    },
+    "body": {
+      "__plainTextValue__": "Case Definition data successfully imported"
+    }
+  }
+}

@@ -15,4 +15,10 @@ public interface ShellMappingRepository extends JpaRepository<ShellMappingEntity
     List<ShellMappingEntity> findByOriginatingCaseTypeIdReference(@Param("caseTypeReference")
                                                                   String caseTypeReference);
 
+    @Query("select sm from ShellMappingEntity sm where sm.originatingCaseTypeId.reference = :caseTypeReference "
+        + "and sm.originatingCaseTypeId.version = :version")
+    List<ShellMappingEntity> findByOriginatingCaseTypeIdReferenceAndVersion(
+        @Param("caseTypeReference") String caseTypeReference,
+        @Param("version") Integer version);
+
 }
