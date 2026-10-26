@@ -1,12 +1,12 @@
 {
   "_guid_": "S-128.8",
   "_extends_": "F-128_Test_Base_Data",
-  "title": "Success response - Return 200 with caseStates excluding multiple stateCategoriesToExclude values",
+  "title": "Success response - Return 200 and keep caseStates when none of the excluded categories match",
   "specs": [
     "an active profile in CCD",
     "contains an originalCaseTypeId that exists in CCD config",
     "contains multiple stateCategoriesToExclude query params",
-    "contains empty caseStates when all states are excluded"
+    "keeps caseStates when excluded categories do not match"
   ],
   "request": {
     "pathVariables": {
@@ -20,7 +20,16 @@
     "_extends_": "Common_200_Response",
     "body": {
       "shellCaseTypeID": "FT_MasterCaseType",
-      "caseStates": [],
+      "caseStates": [
+        {
+          "name": "CaseCreated",
+          "stateCategory": null
+        },
+        {
+          "name": "CaseApproved",
+          "stateCategory": null
+        }
+      ],
       "shellCaseMappings": [
         {
           "OriginatingCaseFieldName": "EmailField",

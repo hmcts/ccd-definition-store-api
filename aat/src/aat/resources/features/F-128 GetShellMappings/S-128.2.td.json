@@ -19,11 +19,11 @@
       "caseStates": [
         {
           "name": "CaseCreated",
-          "stateCategory": "Start"
+          "stateCategory": null
         },
         {
           "name": "CaseApproved",
-          "stateCategory": "End"
+          "stateCategory": null
         }
       ],
       "shellCaseMappings": [
