@@ -76,3 +76,14 @@ Feature: F-128 Get Shell Mappings for Originating Case Type Id
     Then a positive response is received
     And the response [keeps caseStates when excluded categories do not match]
     And the response has all other details as expected
+
+  @S-128.9
+  Scenario: Success response - Return 200 with caseStates including stateCategory values
+    Given a user with [an active profile in CCD]
+    And a call [to import definition file with state categories] will get the expected response as in [Import_BEFTA_Master_With_StateCategory]
+    When a request is prepared with appropriate values
+    And the request [contains an originalCaseTypeId that exists in CCD config]
+    And it is submitted to call the [Get Shell Case Type Details] operation of [CCD Definition Store]
+    Then a positive response is received
+    And the response [contains caseStates with stateCategory values]
+    And the response has all other details as expected
