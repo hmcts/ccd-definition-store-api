@@ -3,41 +3,41 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-# Package Files #
+# Package Files
 *.war
 *.ear
+
+# Virtual machine crash logs
+hs_err_pid*
+
+# IDE / editor files
 .classpath
 .project
 .settings/
-target/
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-
-# ide generated files
+.vscode/
+.idea/
+*.iml
 *.sublime-project
 *.sublime-workspace
 
-# IntelliJ IDEA files
-.idea/
-*.iml
-/core-case-data/case-definition-api/target
-/core-case-data/case-definition-api-client/target
-
+# OS files
 .DS_Store
 
+# Logs and local overrides
+*.log
 application/src/test/resources/test-local-override.properties
 applicationinsights-agent-*.jar
-*.log
 
+# Gradle / build outputs
 .gradle/
-build/
-**/out/
 **/build/
-/bin/
+**/out/
+**/bin/
+**/target/
 
+# Functional / smoke test reports
 /BEFTA Report for Smoke Tests/
 /BEFTA Report for Functional Tests/
 
-### Remote run configs
+# Remote run configs
 .*-remote-env

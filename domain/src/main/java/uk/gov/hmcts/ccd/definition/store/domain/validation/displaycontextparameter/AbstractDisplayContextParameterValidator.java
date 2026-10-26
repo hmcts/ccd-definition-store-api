@@ -122,7 +122,7 @@ public abstract class AbstractDisplayContextParameterValidator<T extends Seriali
             .size();
     }
 
-    private String getFieldType(T entity) {
+    protected String getFieldType(T entity) {
         FieldTypeEntity baseFieldType = getFieldTypeEntity(entity).getBaseFieldType();
         if (baseFieldType != null) {
             return baseFieldType.getReference();

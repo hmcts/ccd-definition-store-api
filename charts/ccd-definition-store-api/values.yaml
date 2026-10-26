@@ -1,4 +1,4 @@
-ccd:
+ccd-core:
   enabled: false
 
 ts:
