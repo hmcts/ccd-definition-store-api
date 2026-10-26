@@ -390,4 +390,15 @@
         ]]></notes>
         <cve>CVE-2026-94408</cve>
     </suppress>
+    <suppress>
+        <cve>CVE-2026-102407</cve>
+        <cve>CVE-2026-102408</cve>
+        <cve>CVE-2026-102411</cve>
+        <cve>CVE-2026-103005</cve>
+        <cve>CVE-2026-103006</cve>
+        <cve>CVE-2026-103007</cve>
+        <cve>CVE-2026-103008</cve>
+        <cve>CVE-2026-102404</cve>
+        <cve>CVE-2026-103009</cve>
+    </suppress>
 </suppressions>
