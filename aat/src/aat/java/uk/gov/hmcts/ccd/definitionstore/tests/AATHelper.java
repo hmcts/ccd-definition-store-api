@@ -12,6 +12,11 @@ public enum AATHelper {
     private final S2SHelper s2SHelper;
 
     AATHelper() {
+        System.err.println(
+            "AATHelper env check: CCD_API_GATEWAY_S2S_ID=" + getGatewayServiceName()
+                + ", S2S_URL_BASE=" + getS2SURL()
+                + ", CCD_API_GATEWAY_S2S_KEY present=" + (Env.require("CCD_API_GATEWAY_S2S_KEY") != null)
+        );
         idamHelper = new IdamHelper(getIdamURL(), OAuth2.INSTANCE);
         s2SHelper = new S2SHelper(getS2SURL(), getGatewayServiceSecret(), getGatewayServiceName());
     }
