@@ -35,7 +35,7 @@ ext {
     set('spring-security.version', '6.5.11')
     set('springCloudVersion', '2025.0.1')
     set('netty.version', '4.1.136.Final')
-    set('tomcat.version', '10.1.60')
+    set('tomcat.version', '10.1.61')
 
     set('jackson.version', '2.21.5')
     jackson3Version = '3.1.4'
