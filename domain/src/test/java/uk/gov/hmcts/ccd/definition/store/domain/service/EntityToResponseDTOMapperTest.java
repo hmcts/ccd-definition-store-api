@@ -1306,6 +1306,7 @@ class  EntityToResponseDTOMapperTest {
             displayGroupEntity.setLabel("Label");
             displayGroupEntity.setAccessProfile(accessProfileEntity);
             displayGroupEntity.setOrder(69);
+            displayGroupEntity.setDefaultFocus(true);
 
             DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity1 = new DisplayGroupCaseFieldEntity();
             displayGroupCaseFieldEntity1.setId(1);
@@ -1335,6 +1336,7 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(displayGroupEntity.getReference(), caseTypeTab.getId());
             assertEquals(displayGroupEntity.getLabel(), caseTypeTab.getLabel());
             assertEquals(displayGroupEntity.getOrder(), caseTypeTab.getOrder());
+            assertEquals(displayGroupEntity.getDefaultFocus(), caseTypeTab.getDefaultFocus());
 
             assertEquals(displayGroupEntity.getDisplayGroupCaseFields().size(), caseTypeTab.getTabFields().size());
             assertThat(caseTypeTab.getTabFields(), hasItems(caseTypeTabField1, caseTypeTabField2, caseTypeTabField3));
