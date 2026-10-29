@@ -42,13 +42,13 @@ ext {
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.26.1')
 
-    elasticsearchVersion = '9.1.10'
+    elasticsearchVersion = '9.5.5'
     junit = '5.14.4'
     junitPlatform = '1.14.4'
     junitJupiterVersion = '5.12.2'
-    springDocVersion = '2.8.17'
+    springDocVersion = '2.9.1'
     hamcrestVersion = '3.0'
-    flywayVersion = '12.5.0'
+    flywayVersion = '12.11.0'
     reformLogging = '6.1.9'
     apachePoiVersion = '5.4.1'
     appInsightsVersion = '2.6.4'
@@ -59,7 +59,7 @@ ext {
     feignJackson = '13.9'
     gsonVersion = '2.13.2'
     testcontainersVersion = '1.21.4'
-    ccdTestDefinitionVersion = '7.26.14'
+    ccdTestDefinitionVersion = '7.26.15_CCD-7027'
     beftaFwVersion = '9.2.12_CCD-8388'
     limits = [
             'instruction': 99,
@@ -89,7 +89,7 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
     dependencies {
-        dependency 'org.apache.commons:commons-lang3:3.20.0'
+        dependency 'org.apache.commons:commons-lang3:3.21.0'
         dependency "tools.jackson.core:jackson-core:${jackson3Version}"
         dependency "tools.jackson.core:jackson-databind:${jackson3Version}"
     }
@@ -127,8 +127,8 @@ allprojects {
     configurations.all {
         resolutionStrategy {
             force 'commons-fileupload:commons-fileupload:1.6.0',
-                'org.apache.commons:commons-lang3:3.20.0',
-                'com.google.guava:guava:33.7.1-jre'
+                'org.apache.commons:commons-lang3:3.21.0',
+                'com.google.guava:guava:33.7.2-jre'
 
             eachDependency { DependencyResolveDetails details ->
                 if (details.requested.group == 'org.elasticsearch') {
@@ -178,7 +178,7 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter'
 
         implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.14'
-        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.58.Final'
+        implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.59.Final'
         implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.6.5'
         implementation group: 'org.apache.httpcomponents.core5', name: 'httpcore5', version: '5.4.4'
         implementation group: 'org.apache.httpcomponents.core5', name: 'httpcore5-h2', version: '5.4.4'
@@ -249,7 +249,7 @@ subprojects { subproject ->
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         }
         dependencies {
-            dependency 'org.apache.commons:commons-lang3:3.20.0'
+            dependency 'org.apache.commons:commons-lang3:3.21.0'
             dependency "tools.jackson.core:jackson-core:${jackson3Version}"
             dependency "tools.jackson.core:jackson-databind:${jackson3Version}"
         }
@@ -354,7 +354,7 @@ subprojects { subproject ->
         testImplementation group: 'io.github.openfeign.form', name: 'feign-form', version: '3.8.0'
         testImplementation group: 'org.exparity', name: 'hamcrest-date', version: '2.0.8'
         testImplementation group: 'org.hamcrest', name: 'hamcrest-junit', version: '2.0.0.0'
-        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.23.0'
+        testImplementation group: 'org.mockito', name: 'mockito-junit-jupiter', version: '5.24.0'
     }
 
     task integration(type: Test) {
