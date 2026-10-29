@@ -1,17 +1,11 @@
 {
   "_guid_": "S-125.2",
-  "title": "Must return a positive appropriate response when Swagger JSON URL is accessed",
+  "title": "Must return a positive appropriate response when the service OpenAPI JSON URL is accessed",
   "_extends_": "F-125_Test_Swagger_JSON_Base_Data",
 
   "specs": [
     "to observe the swagger json content"
   ],
-
-  "request" :{
-    "pathVariables" : {
-      "ccd-definition-store-api-version": "ccd-definition-store-api.json"
-    }
-  },
 
   "expectedResponse": {
     "responseCode" : 200,

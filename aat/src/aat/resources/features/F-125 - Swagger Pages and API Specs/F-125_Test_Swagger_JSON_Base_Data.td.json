@@ -1,22 +1,16 @@
 {
   "_guid_": "F-125_Test_Swagger_JSON_Base_Data",
-  "title": "Verify swagger JSON Content",
+  "title": "Verify service OpenAPI JSON content",
 
   "productName": "CCD Definition Store",
   "operationName": "Get Swagger Json API",
 
   "method": "GET",
-  "uri": "https://hmcts.github.io/cnp-api-docs/specs/{ccd-definition-store-api-version}",
+  "uri": "/v3/api-docs",
 
   "expectedResponse": {
     "headers" : {
-      "Content-Encoding" : "gzip",
-      "Content-Length" : "${[scenarioContext][customValues][approximately 5838]}",
-      "Content-Type" : "application/json; charset=utf-8",
-      "Date" : "[[ANYTHING_PRESENT]]",
-      "Expires" : "[[ANYTHING_PRESENT]]",
-      "Last-Modified" : "[[ANYTHING_PRESENT]]",
-      "Server" : "GitHub.com"
+      "Content-Type" : "application/json"
     }
   }
 }
