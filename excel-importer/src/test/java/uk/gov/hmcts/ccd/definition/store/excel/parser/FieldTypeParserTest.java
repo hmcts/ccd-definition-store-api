@@ -23,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ValidationResponseAssertions.assertImportValidationResponse;
 
 class FieldTypeParserTest {
 
@@ -125,7 +126,16 @@ class FieldTypeParserTest {
         SpreadsheetParsingException exception = assertThrows(SpreadsheetParsingException.class, () ->
             classUnderTest.parse("CourtField", caseFieldWithListType("FixedList", "coCourtList", "AAT")));
 
-        assertEquals("Missing field type: FixedList-coCourtList", exception.getMessage());
+        assertImportValidationResponse(exception, "Missing field type: FixedList-coCourtList");
+    }
+
+    @Test
+    void missingCollectionTypeRetainsValidationFeedback() {
+        when(parseContext.getType("Collection")).thenReturn(Optional.of(new FieldTypeEntity()));
+        when(parseContext.getType("MissingComplex")).thenReturn(Optional.empty());
+        var failure = assertThrows(SpreadsheetParsingException.class, () -> classUnderTest.parse(
+            "CollectionField", caseFieldWithListType("Collection", "MissingComplex", "AAT")));
+        assertImportValidationResponse(failure, "No type found for collection of: MissingComplex");
     }
 
     private DefinitionDataItem caseFieldWithListType(String fieldType, String fieldTypeParameter, String caseTypeId) {

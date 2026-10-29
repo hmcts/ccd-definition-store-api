@@ -32,10 +32,8 @@ public class DisplayContextParameterValidator {
                         DisplayContextParameter.DisplayContextParameterValues.LIST)
                         || isDisplayContextParameter(item.getDisplayContextParameter(),
                         DisplayContextParameter.DisplayContextParameterValues.TABLE))) {
-                        throw new InvalidImportException("Display context parameter "
-                            + item.getDisplayContextParameter()
-                            + " has been incorrectly configured or is invalid for field "
-                            + item.getCaseFieldId() + " on tab " + definitionSheet.getName());
+                        throw InvalidImportException.invalidDisplayContextParameter(
+                            item.getDisplayContextParameter(), item.getCaseFieldId(), definitionSheet.getName());
                     }
                 });
             }

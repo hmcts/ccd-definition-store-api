@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ValidationResponseAssertions.assertValidationResponse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class MapperUtilTest {
@@ -111,8 +112,9 @@ class MapperUtilTest {
 
     @Test
     void getBooleanNoValueButMandatory() {
-        assertThrows(MapperException.class, () -> 
+        var failure = assertThrows(MapperException.class, () ->
             MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.PAGE_ID));
+        assertValidationResponse(failure);
     }
 
     @Test
@@ -123,12 +125,13 @@ class MapperUtilTest {
     @Test
     void getBooleanBlankValueButMandatory() {
         item.addAttribute(ColumnName.DISPLAY_CONTEXT.toString(), "   ");
-        MapperException ex = assertThrows(MapperException.class, () -> 
+        MapperException ex = assertThrows(MapperException.class, () ->
             MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.PAGE_ID));
         assertEquals(String.format("Couldn't find the column '%s' or invalid value in the sheet '%s'",
             ColumnName.PAGE_ID,
             SheetName.CASE_EVENT_TO_FIELDS),
             ex.getMessage());
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -140,12 +143,13 @@ class MapperUtilTest {
     @Test
     void getBooleanValueNotPredefined() {
         item.addAttribute(ColumnName.DISPLAY_CONTEXT.toString(), "Dog");
-        MapperException ex = assertThrows(MapperException.class, () -> 
+        MapperException ex = assertThrows(MapperException.class, () ->
             MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DISPLAY_CONTEXT));
         assertEquals(String.format("Invalid value 'Dog' is found in column '%s' in the sheet '%s'",
             ColumnName.DISPLAY_CONTEXT,
             SheetName.CASE_EVENT_TO_FIELDS),
             ex.getMessage());
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -178,8 +182,9 @@ class MapperUtilTest {
     void missingMandatoryStringAttribute() {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(SheetName.CASE_TYPE.getName());
-        assertThrows(MapperException.class, () -> 
+        var failure = assertThrows(MapperException.class, () ->
             MapperUtil.getString(item, SheetName.CASE_TYPE, ColumnName.ID));
+        assertValidationResponse(failure);
     }
 
     @Test
@@ -218,8 +223,9 @@ class MapperUtilTest {
         sheet.setName(SheetName.CASE_TYPE.getName());
         item.addAttribute(ColumnName.DISPLAY_CONTEXT, "3,a,8");
         sheet.addDataItem(item);
-        assertThrows(MapperException.class, () -> 
+        var failure = assertThrows(MapperException.class, () ->
             MapperUtil.getIntegerList(item, SheetName.CASE_TYPE, ColumnName.DISPLAY_CONTEXT));
+        assertValidationResponse(failure);
     }
 
     @Test

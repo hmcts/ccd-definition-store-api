@@ -1,5 +1,44 @@
 # CCD-7882: controlled error responses
 
+## Reference validation compatibility — 29 October 2026
+
+Fixed templates now preserve unknown field/case-role references, missing case field
+types/states/roles, undefined field and collection types, and missing required states.
+The existing HTTP 400 import JSON format is retained. Arbitrary parsing exceptions
+remain private. Tests check real parser failures through Spring MVC, including a
+correctly seeded unknown-field case and assertions of the actual response messages.
+The complete importer suite passed: 744 tests, zero failures/errors/skips. Main/test
+Checkstyle and diff checks passed. The application workbook suite was not rerun.
+
+## Remaining validation compatibility fixes — 29 October 2026
+
+Approved fixed templates now retain tab access-profile and show-condition feedback,
+duplicate case-field/type/state/category/event definitions, shared mapper required-value
+and integer-list errors, missing mapper worksheets, and invalid display-context parameters.
+Existing exception families, status codes and response formats are preserved. Integer-list
+parse causes remain attached for server logging but are excluded from public text.
+
+Regression tests send real parser/validator exceptions through Spring MVC and check the
+existing plain-text or import JSON response. Duplicate-definition tests now verify actual
+messages rather than passing the expected text as JUnit's assertion-failure description.
+The full importer suite passed: 740 tests, zero failures/errors/skips. Importer main/test
+Checkstyle and diff checks passed. The application workbook suite was not rerun for this
+follow-up; its earlier 99-contract result predates these changes.
+
+## Response policy consolidation — 29 October 2026
+
+Importer validation exceptions now implement one PublicValidationMessage contract for
+approved text and the existing response format. The importer chooses the public body
+in one place; individual exception handlers no longer repeat the approval rules.
+The existing exception inheritance and public JSON/plain-text formats are preserved.
+Both controller advices share generic response construction and severity-based logging
+through SafeErrorResponse, retaining their own logger names and original exceptions.
+
+Verification: the 118 focused importer tests and 10 REST handler tests passed. All 99
+workbook HTTP contracts and nine spreadsheet integration tests passed, including
+F-112/F-144 and upstream-error diagnostic redaction. Main Checkstyle passed for
+commons, excel-importer and rest-api.
+
 ## Validation compatibility review — 29 October 2026
 
 The review found that generic MapperException handling also removed useful spreadsheet

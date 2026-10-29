@@ -11,7 +11,7 @@ import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-import uk.gov.hmcts.ccd.error.ErrorCode;
+import uk.gov.hmcts.ccd.error.SafeErrorResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -68,7 +68,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
     public Map<String, String> handleMethodConstraintViolation(jakarta.validation.ConstraintViolationException ex) {
-        log(ex, BAD_REQUEST);
+        SafeErrorResponse.log(LOG, BAD_REQUEST, ex);
         String message = ex.getConstraintViolations().stream()
             .map(ConstraintViolation::getMessage)
             .collect(Collectors.joining(", "));
@@ -85,39 +85,39 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(code = NOT_FOUND)
     @ResponseBody
     Map<String, String> objectNotFound(NotFoundException e) {
-        log(e, NOT_FOUND);
-        return safeMessage(NOT_FOUND);
+        SafeErrorResponse.log(LOG, NOT_FOUND, e);
+        return SafeErrorResponse.body(NOT_FOUND);
     }
 
     @ExceptionHandler(DuplicateFoundException.class)
     @ResponseStatus(code = CONFLICT)
     @ResponseBody
     Map<String, String> objectFound(DuplicateFoundException e) {
-        log(e, CONFLICT);
-        return safeMessage(CONFLICT);
+        SafeErrorResponse.log(LOG, CONFLICT, e);
+        return SafeErrorResponse.body(CONFLICT);
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
     Map<String, String> generalIllegal(IllegalArgumentException e) {
-        log(e, BAD_REQUEST);
-        return safeMessage(BAD_REQUEST);
+        SafeErrorResponse.log(LOG, BAD_REQUEST, e);
+        return SafeErrorResponse.body(BAD_REQUEST);
     }
 
     @ExceptionHandler(IOException.class)
     @ResponseStatus(code = INTERNAL_SERVER_ERROR)
     @ResponseBody
     Map<String, String> handleIOException(IOException e) {
-        log(e, INTERNAL_SERVER_ERROR);
-        return safeMessage(INTERNAL_SERVER_ERROR);
+        SafeErrorResponse.log(LOG, INTERNAL_SERVER_ERROR, e);
+        return SafeErrorResponse.body(INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(CaseTypeValidationException.class)
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
     String caseTypeValidation(CaseTypeValidationException e) {
-        log(e, BAD_REQUEST);
+        SafeErrorResponse.log(LOG, BAD_REQUEST, e);
         return getMessagesAstring(e.getErrors());
     }
 
@@ -125,20 +125,16 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
     Map<String, String> elasticSearchInitialisationException(ElasticSearchInitialisationException e) {
-        log(e, BAD_REQUEST);
-        return safeMessage(BAD_REQUEST);
-    }
-
-    private Map<String, String> safeMessage(HttpStatus status) {
-        return Map.of("message", status.getReasonPhrase(), "code", ErrorCode.fromStatus(status.value()).name());
+        SafeErrorResponse.log(LOG, BAD_REQUEST, e);
+        return SafeErrorResponse.body(BAD_REQUEST);
     }
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception exception, Object body,
                                                               HttpHeaders headers, HttpStatusCode status,
                                                               WebRequest request) {
-        log(exception, HttpStatus.valueOf(status.value()));
-        return super.handleExceptionInternal(exception, safeMessage(HttpStatus.valueOf(status.value())),
+        SafeErrorResponse.log(LOG, status, exception);
+        return super.handleExceptionInternal(exception, SafeErrorResponse.body(status),
             headers, status, request);
     }
 
@@ -148,16 +144,6 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
             result.append(message).append(". ");
         }
         return result.toString();
-    }
-
-    private void log(Exception exception, HttpStatus status) {
-        if (status.is5xxServerError()) {
-            LOG.error("Request failed: code={} status={}",
-                ErrorCode.fromStatus(status.value()), status.value(), exception);
-        } else {
-            LOG.warn("Request failed: code={} status={}",
-                ErrorCode.fromStatus(status.value()), status.value(), exception);
-        }
     }
 
 }

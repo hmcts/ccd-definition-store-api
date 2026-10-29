@@ -4,7 +4,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
 /** Import diagnostics stay private unless created through a fixed validation-message factory. */
-public class InvalidImportException extends RuntimeException {
+public class InvalidImportException extends RuntimeException implements PublicValidationMessage {
     public static final String FIELD_REFERENCE_MESSAGE = "%sTab Invalid value '%s' is not a valid %s value. "
         + "The expression dot notation values should be valid caseTypes fields.";
     public static final String COLLECTION_MESSAGE = "SearchPartyTab Invalid value '%s' "
@@ -32,6 +32,11 @@ public class InvalidImportException extends RuntimeException {
     public static InvalidImportException missingDefinitionName(String sheet) {
         return new InvalidImportException("Error processing sheet \"" + sheet
             + "\": Invalid Case Definition sheet - no Definition name found in Cell A1", null);
+    }
+
+    public static InvalidImportException invalidDisplayContextParameter(String parameter, String field, String sheet) {
+        return new InvalidImportException("Display context parameter " + parameter
+            + " has been incorrectly configured or is invalid for field " + field + " on tab " + sheet, null);
     }
 
     public static InvalidImportException columnTooLong(String sheet, String column, int maximum, String rowInfo) {

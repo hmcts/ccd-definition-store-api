@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Map;
 import org.springframework.http.HttpStatusCode;
-import uk.gov.hmcts.ccd.error.ErrorCode;
+import uk.gov.hmcts.ccd.error.SafeErrorResponse;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -55,26 +55,12 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(value = {InvalidImportException.class, MapperException.class})
     ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
-        if (ex instanceof ImportValidationException validation && validation.isPlainText()) {
-            return handleExceptionInternal(
-                ex, validation.getPublicMessage(), responseContentType(), BAD_REQUEST, request);
-        }
-        if (ex instanceof InvalidImportException validation && validation.getPublicMessage() != null) {
-            return handleExceptionInternal(
-                ex, validation.getPublicMessage(), responseContentType(), BAD_REQUEST, request);
-        }
-        return handleExceptionInternal(
-            ex, HttpStatus.BAD_REQUEST.getReasonPhrase(), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(ex, null, new HttpHeaders(), BAD_REQUEST, request);
     }
 
     @ExceptionHandler(SpreadsheetParsingException.class)
     ResponseEntity<Object> handleSpreadsheetParsing(SpreadsheetParsingException ex, WebRequest request) {
-        return handleExceptionInternal(ex, Map.of(
-            "timestamp", Instant.now().toString(),
-            "status", BAD_REQUEST.value(),
-            "error", BAD_REQUEST.getReasonPhrase(),
-            "message", ex.getPublicMessage() == null ? BAD_REQUEST.getReasonPhrase() : ex.getPublicMessage(),
-            "path", "/import"), new HttpHeaders(), BAD_REQUEST, request);
+        return handleExceptionInternal(ex, null, new HttpHeaders(), BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value = MissingAccessProfilesException.class)
@@ -186,22 +172,32 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     protected ResponseEntity<Object> handleExceptionInternal(Exception exception, Object body,
                                                               HttpHeaders headers, HttpStatusCode status,
                                                               WebRequest request) {
-        if (status.is5xxServerError()) {
-            log.error("Request failed: code={} status={}",
-                ErrorCode.fromStatus(status.value()), status.value(), exception);
-        } else {
-            log.warn("Request failed: code={} status={}",
-                ErrorCode.fromStatus(status.value()), status.value(), exception);
+        SafeErrorResponse.log(log, status, exception);
+        return super.handleExceptionInternal(exception, safeResponseBody(exception, body, headers, status),
+            headers, status, request);
+    }
+
+    private Object safeResponseBody(Exception exception, Object body, HttpHeaders headers, HttpStatusCode status) {
+        if (exception instanceof ValidationException || exception instanceof MissingAccessProfilesException) {
+            return body;
         }
-        Object safeBody = exception instanceof ValidationException
-            || exception instanceof MissingAccessProfilesException
-            || (exception instanceof ImportValidationException approved && approved.isPlainText())
-            || (exception instanceof InvalidImportException invalid && invalid.getPublicMessage() != null)
-            || exception instanceof SpreadsheetParsingException
-            ? body : Map.of("message", exception instanceof ImportValidationException validation
-                ? validation.getPublicMessage() : HttpStatus.valueOf(status.value()).getReasonPhrase(),
-                "code", ErrorCode.fromStatus(status.value()));
-        return super.handleExceptionInternal(exception, safeBody, headers, status, request);
+        if (exception instanceof PublicValidationMessage validation) {
+            String message = validation.getPublicMessage();
+            if (validation.getResponseFormat() == PublicValidationMessage.Format.IMPORT_JSON) {
+                return Map.of("timestamp", Instant.now().toString(), "status", status.value(),
+                    "error", HttpStatus.valueOf(status.value()).getReasonPhrase(),
+                    "message", message == null ? HttpStatus.valueOf(status.value()).getReasonPhrase() : message,
+                    "path", "/import");
+            }
+            if (message != null) {
+                if (validation.getResponseFormat() == PublicValidationMessage.Format.PLAIN_TEXT) {
+                    headers.setContentType(MediaType.TEXT_PLAIN);
+                    return message;
+                }
+                return SafeErrorResponse.body(status, message);
+            }
+        }
+        return SafeErrorResponse.body(status);
     }
 
     private String getMessagesAsString(Set<String> messages) {

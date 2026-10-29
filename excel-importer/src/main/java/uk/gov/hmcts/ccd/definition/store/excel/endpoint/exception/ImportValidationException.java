@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 
 /** Explicitly approved validation text; arbitrary mapper exception messages stay private. */
-public class ImportValidationException extends MapperException {
+public class ImportValidationException extends MapperException implements PublicValidationMessage {
     public enum Reason {
         MISSING_ATTRIBUTE_HEADERS("Invalid Case Definition sheet - no Definition data attribute headers found"),
         MISSING_WORKBASKET_RESULT_FIELDS("A definition must contain a WorkBasketResultFields sheet"),
@@ -20,7 +20,7 @@ public class ImportValidationException extends MapperException {
     }
 
     private final String publicMessage;
-    private final boolean plainText;
+    private final Format responseFormat;
 
     /** Fixed templates for actionable spreadsheet rules; never accept exception diagnostics here. */
     public enum Rule {
@@ -40,7 +40,14 @@ public class ImportValidationException extends MapperException {
         INVALID_RESULTS_ORDERING("Invalid results ordering pattern '%s' in worksheet '%s' "
             + "for caseType '%s' for caseField '%s'"),
         MISSING_SORT_PRIORITY("Missing sort order priority in worksheet '%s' for caseType '%s'"),
-        DUPLICATE_SORT_PRIORITY("Duplicate sort order priority in worksheet '%s' for caseType '%s'");
+        DUPLICATE_SORT_PRIORITY("Duplicate sort order priority in worksheet '%s' for caseType '%s'"),
+        MULTIPLE_TAB_ACCESS_PROFILES("Please provide one access profile row per tab in worksheet %s "
+            + "on column ACCESS_PROFILE for the tab %s"),
+        INVALID_TAB_ACCESS_PROFILE("- Invalid access profile or case role '%s' in '%s' tab for TabId '%s'"),
+        MULTIPLE_TAB_CONDITIONS("Please provide single condition in %s column in %s for the tab %s"),
+        MISSING_MAPPER_VALUE("There's a missing value in column %s in the sheet %s"),
+        BLANK_MAPPER_VALUE("Couldn't find the column '%s' or invalid value in the sheet '%s'"),
+        DUPLICATE_EVENT("Event already registered for ID: %s");
 
         private final String template;
 
@@ -61,13 +68,24 @@ public class ImportValidationException extends MapperException {
     public ImportValidationException(Reason reason, String diagnosticMessage) {
         super(diagnosticMessage);
         publicMessage = reason.message;
-        plainText = false;
+        responseFormat = Format.CODED_JSON;
     }
 
     private ImportValidationException(String message) {
-        super(message);
+        this(message, null);
+    }
+
+    private ImportValidationException(String message, Throwable cause) {
+        super(message, cause);
         publicMessage = message;
-        plainText = true;
+        responseFormat = Format.PLAIN_TEXT;
+    }
+
+    public static ImportValidationException invalidIntegerList(String value, ColumnName column,
+                                                                String sheet, NumberFormatException cause) {
+        return new ImportValidationException(String.format(
+            "Found '%s' whilst expecting a comma separated list of numbers in the column '%s' of sheet '%s'",
+            value, column, sheet), cause);
     }
 
     public static ImportValidationException multipleDefaultFocus(String sheet, long count, String caseType) {
@@ -104,8 +122,9 @@ public class ImportValidationException extends MapperException {
         return combined;
     }
 
-    public boolean isPlainText() {
-        return plainText;
+    @Override
+    public Format getResponseFormat() {
+        return responseFormat;
     }
 
     public String getPublicMessage() {

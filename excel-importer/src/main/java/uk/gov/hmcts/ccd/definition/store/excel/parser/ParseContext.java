@@ -3,7 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import org.apache.commons.collections4.map.MultiKeyMap;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
@@ -121,7 +121,8 @@ public class ParseContext {
         final Map<String, FieldTypeEntity> caseTypeFields = caseFieldTypes.get(caseTypeId);
 
         if (caseTypeFields.containsKey(fieldId)) {
-            throw new SpreadsheetParsingException("Type already registered for field: " + fieldId);
+            throw SpreadsheetParsingException.duplicate(
+                SpreadsheetParsingException.DuplicateDefinition.FIELD_TYPE, fieldId);
         }
 
         caseTypeFields.put(fieldId, fieldType);
@@ -133,14 +134,15 @@ public class ParseContext {
         final Map<String, FieldTypeEntity> caseType = caseFieldTypes.get(caseTypeId);
 
         if (null == caseType) {
-            throw new SpreadsheetParsingException("No types registered for case type: " + caseTypeId);
+            throw SpreadsheetParsingException.reference(
+                SpreadsheetParsingException.ReferenceValidation.MISSING_CASE_TYPES, caseTypeId);
         }
 
         final FieldTypeEntity fieldType = caseType.get(caseFieldId);
 
         if (null == fieldType) {
-            throw new SpreadsheetParsingException(
-                String.format("No types registered for case field ID: %s/%s", caseTypeId, caseFieldId));
+            throw SpreadsheetParsingException.reference(
+                SpreadsheetParsingException.ReferenceValidation.MISSING_FIELD_TYPE, caseTypeId, caseFieldId);
         }
 
         return fieldType;
@@ -152,7 +154,8 @@ public class ParseContext {
         final Map<String, StateEntity> caseTypeStates = statesByCaseTypes.get(caseTypeId);
 
         if (caseTypeStates.containsKey(state.getReference())) {
-            throw new SpreadsheetParsingException("State already registered for ID: " + state.getReference());
+            throw SpreadsheetParsingException.duplicate(
+                SpreadsheetParsingException.DuplicateDefinition.STATE, state.getReference());
         }
 
         caseTypeStates.put(state.getReference(), state);
@@ -183,8 +186,8 @@ public class ParseContext {
         final Map<String, CategoryEntity> categoryStates = categoryByCaseTypes.get(caseTypeId);
 
         if (categoryStates.containsKey(categoryEntity.getCategoryId())) {
-            throw new SpreadsheetParsingException("Category already registered for ID: "
-                + categoryEntity.getCategoryId());
+            throw SpreadsheetParsingException.duplicate(
+                SpreadsheetParsingException.DuplicateDefinition.CATEGORY, categoryEntity.getCategoryId());
         }
 
         categoryStates.put(categoryEntity.getCategoryId(), categoryEntity);
@@ -194,7 +197,8 @@ public class ParseContext {
         final Map<String, StateEntity> caseTypeStates = statesByCaseTypes.get(caseTypeId);
 
         if (null == caseTypeStates) {
-            throw new SpreadsheetParsingException("No states registered for case type: " + caseTypeId);
+            throw SpreadsheetParsingException.reference(
+                SpreadsheetParsingException.ReferenceValidation.MISSING_STATES, caseTypeId);
         }
 
         final StateEntity state = caseTypeStates.get(stateId);
@@ -218,14 +222,15 @@ public class ParseContext {
         final Map<String, CaseRoleEntity> caseTypeCaseRoles = caseRolesByCaseTypes.get(caseTypeId);
 
         if (null == caseTypeCaseRoles) {
-            throw new SpreadsheetParsingException("No case roles registered for case type: " + caseTypeId);
+            throw SpreadsheetParsingException.reference(
+                SpreadsheetParsingException.ReferenceValidation.MISSING_CASE_ROLES, caseTypeId);
         }
 
         final CaseRoleEntity caseRole = caseTypeCaseRoles.get(caseRoleId);
 
         if (null == caseRole) {
-            throw new SpreadsheetParsingException(
-                String.format("No case role registered for case role ID: %s/%s", caseTypeId, caseRoleId));
+            throw SpreadsheetParsingException.reference(
+                SpreadsheetParsingException.ReferenceValidation.UNKNOWN_CASE_ROLE, caseTypeId, caseRoleId);
         }
 
         return caseRole;
@@ -237,7 +242,8 @@ public class ParseContext {
         final Map<String, CaseFieldEntity> caseTypeFields = caseFieldByCaseTypes.get(caseTypeId);
 
         if (caseTypeFields.containsKey(caseField.getReference())) {
-            throw new SpreadsheetParsingException("Case field already registered for ID: " + caseField.getReference());
+            throw SpreadsheetParsingException.duplicate(
+                SpreadsheetParsingException.DuplicateDefinition.CASE_FIELD, caseField.getReference());
         }
 
         caseTypeFields.put(caseField.getReference(), caseField);
@@ -249,14 +255,15 @@ public class ParseContext {
         final Map<String, CaseFieldEntity> caseTypeFields = caseFieldByCaseTypes.get(caseTypeId);
 
         if (null == caseTypeFields) {
-            throw new SpreadsheetParsingException("No case fields registered for case type: " + caseTypeId);
+            throw SpreadsheetParsingException.reference(
+                SpreadsheetParsingException.ReferenceValidation.MISSING_CASE_FIELDS, caseTypeId);
         }
 
         final CaseFieldEntity caseField = caseTypeFields.getOrDefault(caseFieldId, metadataFields.get(caseFieldId));
 
         if (null == caseField) {
-            throw new SpreadsheetParsingException(
-                String.format("Unknown field %s for case type %s", caseFieldId, caseTypeId));
+            throw SpreadsheetParsingException.reference(
+                SpreadsheetParsingException.ReferenceValidation.UNKNOWN_FIELD, caseFieldId, caseTypeId);
         }
 
         return caseField;
@@ -307,7 +314,7 @@ public class ParseContext {
         final Map<String, EventEntity> caseTypeEvents = eventsByCaseTypes.get(caseTypeId);
 
         if (caseTypeEvents.containsKey(event.getReference())) {
-            throw new MapperException("Event already registered for ID: " + event.getReference());
+            throw ImportValidationException.rule(ImportValidationException.Rule.DUPLICATE_EVENT, event.getReference());
         }
 
         caseTypeEvents.put(event.getReference(), event);
