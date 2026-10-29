@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -66,9 +67,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         DefinitionSheet definitionSheet = definitionSheets.get(this.sheetName.getName());
 
         if (definitionSheet == null) {
-            throw new MapperException(
-                String.format("A definition must contain a %s sheet with at least one entry", this.sheetName.getName())
-            );
+            throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_DISPLAY_GROUP_SHEET,
+                this.sheetName.getName());
         }
 
         final Map<String, List<DefinitionDataItem>> displayGroupsByCaseTypes = definitionSheets.get(
@@ -83,10 +83,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
 
             // For a TAB at least one DG Item is required, for WIZARD, DG Item is not mandatory
             if (CollectionUtils.isEmpty(displayGroupItems) && this.displayGroupItemMandatory) {
-                throw new MapperException(
-                    String.format(
-                        "At least one CaseField must be defined in the CaseTypeTab for case type %s",
-                        caseTypeId));
+                throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_TAB_FIELDS, caseTypeId);
             } else if (CollectionUtils.isEmpty(displayGroupItems)) {
                 continue;
             }
@@ -133,10 +130,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
             .count();
 
         if (defaultFocusCount > 1) {
-            throw new MapperException(String.format(
-                "Only one row per case type can have DefaultFocus set to true in worksheet %s; "
-                    + "found %d for case type %s",
-                displayGroupItems.get(0).getSheetName(), defaultFocusCount, caseTypeId));
+            throw ImportValidationException.multipleDefaultFocus(
+                displayGroupItems.get(0).getSheetName(), defaultFocusCount, caseTypeId);
         }
     }
 

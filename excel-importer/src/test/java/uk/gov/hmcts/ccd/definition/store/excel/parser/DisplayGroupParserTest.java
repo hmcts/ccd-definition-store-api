@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -347,7 +348,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         definitionSheet.addDataItem(item2);
         definitionSheet.addDataItem(item3);
 
-        MapperException result = assertThrows(MapperException.class,
+        ImportValidationException result = assertThrows(ImportValidationException.class,
             () -> caseTypeTabParser.parseAll(definitionSheets));
         assertThat(result.getMessage(),
             equalTo("Only one row per case type can have DefaultFocus set to true in worksheet CaseTypeTab; "

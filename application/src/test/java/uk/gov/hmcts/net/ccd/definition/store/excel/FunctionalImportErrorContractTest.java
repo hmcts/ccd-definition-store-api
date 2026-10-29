@@ -26,6 +26,8 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
+import static org.springframework.http.MediaType.TEXT_PLAIN;
+import static org.springframework.http.MediaType.parseMediaType;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 
 /** Reuses the functional fixtures and their real workbooks to guard the public import contract. */
@@ -59,6 +61,7 @@ class FunctionalImportErrorContractTest extends BaseTest {
             assertEquals(status, result.getResponse().getStatus(), id + ": " + actual);
             JSONObject expected = new JSONObject(expectedBody);
             if (expected.has("__plainTextValue__")) {
+                assertEquals(TEXT_PLAIN, parseMediaType(result.getResponse().getContentType()), id);
                 assertEquals(expected.getString("__plainTextValue__"),
                     actual.replace("\r", "").replace("\n", ""), id);
             } else {
@@ -83,7 +86,8 @@ class FunctionalImportErrorContractTest extends BaseTest {
             "F-095 Publish Flag in Case Event", "F-097 RoleToAccessProfiles",
             "F-098 rename of UserRole to AccessProfile", "F-099 SearchParty (GlobalSearch)", "F-104 Categories",
             "F-105 TTL Increment in Case Event", "F-106 New CategoryID Column", "F-109 AccessTypeRoles",
-            "F-111 AccessTypes", "F-127 ShellMapping")) {
+            "F-111 AccessTypes", "F-112 New NullifyByDefault Column", "F-127 ShellMapping",
+            "F-144 New DefaultFocus column")) {
             try (var files = Files.list(root.resolve("aat/src/aat/resources/features").resolve(folder))) {
                 for (Path fixture : files.filter(path -> path.getFileName().toString().startsWith("S-"))
                     .filter(path -> path.toString().endsWith(".json")).sorted().toList()) {

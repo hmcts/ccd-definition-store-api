@@ -158,9 +158,8 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
             getLogger().debug("Layout parsing: Case type {}: {} fields detected", caseTypeId, layoutItems.size());
 
             if (hasDuplicateRows(layoutItems)) {
-                throw new MapperException(
-                    String.format("Please make sure each row in worksheet %s is unique for case type %s",
-                        layoutItems.get(0).getSheetName(), caseType.getReference()));
+                throw ImportValidationException.rule(ImportValidationException.Rule.DUPLICATE_LAYOUT_ROW,
+                    layoutItems.get(0).getSheetName(), caseType.getReference());
             }
 
             validateSortOrders(layoutItems, caseType);
@@ -258,9 +257,9 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
                                                        String sheetName,
                                                        String accessProfile) {
         return parseContext.getAccessProfile(accessProfile)
-            .orElseThrow(() -> new MapperException(String.format(
-                "- Unknown access profile '%s' in worksheet '%s' for caseField '%s'",
-                accessProfile, sheetName, layoutEntity.getCaseField().getReference())));
+            .orElseThrow(() -> ImportValidationException.rule(
+                ImportValidationException.Rule.UNKNOWN_LAYOUT_ACCESS_PROFILE,
+                accessProfile, sheetName, layoutEntity.getCaseField().getReference()));
     }
 
     private void validateSortOrders(List<DefinitionDataItem> layoutItems, CaseTypeEntity caseType) {
@@ -278,10 +277,9 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
 
     private void validateSortOrderPatternString(DefinitionDataItem dataItem, String caseTyeReference) {
         if (!SORT_ORDER_PATTERN.matcher(dataItem.getString(RESULTS_ORDERING)).matches()) {
-            throw new MapperException(String.format(
-                "Invalid results ordering pattern '%s' in worksheet '%s' for caseType '%s' for caseField '%s'",
+            throw ImportValidationException.rule(ImportValidationException.Rule.INVALID_RESULTS_ORDERING,
                 dataItem.getString(RESULTS_ORDERING), dataItem.getSheetName(), caseTyeReference,
-                dataItem.getString(CASE_FIELD_ID)));
+                dataItem.getString(CASE_FIELD_ID));
         }
     }
 
@@ -299,16 +297,16 @@ public abstract class GenericLayoutParser implements FieldShowConditionParser {
         boolean noGaps = items.stream().allMatch(e -> items
             .containsAll(IntStream.range(1, e).boxed().collect(Collectors.toList())));
         if (!noGaps) {
-            throw new MapperException(String.format(
-                "Missing sort order priority in worksheet '%s' for caseType '%s'", sheetName, caseType));
+            throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_SORT_PRIORITY,
+                sheetName, caseType);
         }
     }
 
     private void checkDuplicateSortOrders(List<Integer> items, String sheetName, String caseType) {
         boolean isUnique = items.stream().allMatch(new HashSet<>()::add);
         if (!isUnique) {
-            throw new MapperException(String.format(
-                "Duplicate sort order priority in worksheet '%s' for caseType '%s'", sheetName, caseType));
+            throw ImportValidationException.rule(ImportValidationException.Rule.DUPLICATE_SORT_PRIORITY,
+                sheetName, caseType);
         }
     }
 

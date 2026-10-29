@@ -3,7 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.validation;
 import org.springframework.stereotype.Component;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException.Rule;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 
@@ -17,8 +17,7 @@ public class SpreadsheetValidator {
 
     public void validate(String sheetName, DefinitionSheet definitionSheet, List<String> headings) {
         if (definitionSheet.getName() == null) {
-            throw new InvalidImportException("Error processing sheet \"" + sheetName
-                + "\": Invalid Case Definition sheet - no Definition name found in Cell A1");
+            throw InvalidImportException.missingDefinitionName(sheetName);
 
         }
         if (headings.isEmpty()) {
@@ -54,9 +53,7 @@ public class SpreadsheetValidator {
         if (columnNameEnum != null) {
             Integer columnMaxLength = columnNameEnum.getMaxLength();
             if (columnMaxLength != null && cellValue.length() > columnMaxLength) {
-                String invalidImportMessage = getImportValidationFailureMessage(sheetName, columnName,
-                    columnMaxLength, rowNumberInfo);
-                throw new InvalidImportException(invalidImportMessage);
+                throw InvalidImportException.columnTooLong(sheetName, columnName, columnMaxLength, rowNumberInfo);
             }
         }
     }
@@ -64,42 +61,41 @@ public class SpreadsheetValidator {
     private void validateOnlyOneJurisdictionPresent(Map<String, DefinitionSheet> sheets) {
         DefinitionSheet jurisdictionSheet = sheets.get(SheetName.JURISDICTION.getName());
         if (jurisdictionSheet == null || jurisdictionSheet.getDataItems().size() != 1) {
-            throw new MapperException("A definition must contain exactly one Jurisdiction");
+            throw ImportValidationException.rule(Rule.JURISDICTION_COUNT);
         }
     }
 
     private void validateAtLeastOnCaseTypePresent(Map<String, DefinitionSheet> sheets) {
         DefinitionSheet caseTypeSheet = sheets.get(SheetName.CASE_TYPE.getName());
         if (caseTypeSheet == null || caseTypeSheet.getDataItems().isEmpty()) {
-            throw new MapperException("A definition must contain at least one Case Type");
+            throw ImportValidationException.rule(Rule.MISSING_CASE_TYPE);
         }
     }
 
     private void validateCaseFieldWorkSheetIsPresent(Map<String, DefinitionSheet> sheets) {
         DefinitionSheet caseFieldSheet = sheets.get(SheetName.CASE_FIELD.getName());
         if (caseFieldSheet == null) {
-            throw new MapperException("A definition must contain a Case Field worksheet");
+            throw ImportValidationException.rule(Rule.MISSING_CASE_FIELD_SHEET);
         }
     }
 
     private void validateComplexTypesWorkSheetIsPresent(Map<String, DefinitionSheet> sheets) {
         DefinitionSheet complexTypesSheet = sheets.get(SheetName.COMPLEX_TYPES.getName());
         if (complexTypesSheet == null) {
-            throw new MapperException("A definition must contain a Complex Types worksheet");
+            throw ImportValidationException.rule(Rule.MISSING_COMPLEX_TYPES_SHEET);
         }
     }
 
     private void validateFixedListWorkSheetIsPresent(Map<String, DefinitionSheet> definitionSheets) {
         DefinitionSheet fixedListSheet = definitionSheets.get(SheetName.FIXED_LISTS.getName());
         if (fixedListSheet == null) {
-            throw new MapperException("A definition must contain a Fixed List worksheet");
+            throw ImportValidationException.rule(Rule.MISSING_FIXED_LIST_SHEET);
         }
     }
 
     public String getImportValidationFailureMessage(String sheetName, String columnName, Integer columnMaxLength,
                                                     String rowNumberInfo) {
-        return String.format("Invalid Case Definition sheet - In sheet '%s' the column '%s' value should not"
-                + " be more than '%s' characters length %s", sheetName,
+        return String.format(InvalidImportException.COLUMN_LENGTH_MESSAGE, sheetName,
             columnName, columnMaxLength, rowNumberInfo);
     }
 }

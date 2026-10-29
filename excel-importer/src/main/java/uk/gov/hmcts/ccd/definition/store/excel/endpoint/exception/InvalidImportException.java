@@ -10,6 +10,8 @@ public class InvalidImportException extends RuntimeException {
     public static final String COLLECTION_MESSAGE = "SearchPartyTab Invalid value '%s' "
         + "is not a valid SearchPartyCollectionFieldName value "
         + "as it does not reference a collection of a complex type.";
+    public static final String COLUMN_LENGTH_MESSAGE = "Invalid Case Definition sheet - In sheet '%s' "
+        + "the column '%s' value should not be more than '%s' characters length %s";
 
     private final String publicMessage;
 
@@ -25,6 +27,16 @@ public class InvalidImportException extends RuntimeException {
     private InvalidImportException(String message, Throwable cause) {
         super(message, cause);
         publicMessage = message;
+    }
+
+    public static InvalidImportException missingDefinitionName(String sheet) {
+        return new InvalidImportException("Error processing sheet \"" + sheet
+            + "\": Invalid Case Definition sheet - no Definition name found in Cell A1", null);
+    }
+
+    public static InvalidImportException columnTooLong(String sheet, String column, int maximum, String rowInfo) {
+        return new InvalidImportException(String.format(COLUMN_LENGTH_MESSAGE,
+            sheet, column, maximum, rowInfo), null);
     }
 
     public static InvalidImportException invalidReference(SheetName sheet, ColumnName column,

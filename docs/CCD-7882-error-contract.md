@@ -1,5 +1,28 @@
 # CCD-7882: controlled error responses
 
+## Validation compatibility review — 29 October 2026
+
+The review found that generic MapperException handling also removed useful spreadsheet
+validation feedback. Fixed public templates now preserve duplicate DefaultFocus,
+NullifyByDefault combined with DefaultValue, Publish on a COMPLEX field, required
+worksheet/case-type/jurisdiction rules, missing tab fields and duplicate layout rows.
+Arbitrary MapperException messages and nested technical causes remain private.
+The workbook contract runner now includes F-112 and F-144 and checks text/plain for
+plain-text validation bodies. Existing functional fixture expectations were retained.
+
+Verification: all 99 workbook contract cases passed, including S-112.3, S-144.2
+and S-144.5. All 69 focused parser/validator/handler tests and the inherited layout
+parser tests passed. Importer main/test and application test Checkstyle passed.
+
+The follow-up review also preserves blank required-cell feedback, unknown layout
+access profiles, invalid ordering patterns, duplicate/missing sort priorities,
+missing workbook definition names and excessive column lengths. The original
+validation exception families and message text are retained. Real parser/validator
+failures are now checked through Spring MVC for HTTP 400, text/plain and the exact
+validation message; suppressed technical diagnostics must not appear in that body.
+All 118 focused tests passed. Importer main/test Checkstyle passed. The earlier
+99-workbook run was not repeated for this follow-up.
+
 ## Current support logging policy
 
 Public error responses remain generic. Detailed request failures, including exception causes
@@ -185,17 +208,14 @@ Malformed bearer challenges no longer disclose decoder descriptions or URIs. Exi
 Both INFO (DEBUG off) and DEBUG runs passed all six checks: anonymous JSON/HTML,
 invalid user bearer or invalid service credentials as appropriate, authenticated dependency failure,
 health-detail redaction and retained original server diagnostics. This is 12 checks for this service.
-Different services retain their existing HTTP status and validation contracts; diagnostic redaction
-is consistent. Support logging is the policy; authentication logging is one covered failure category.
+Support logging is the policy; authentication logging is one covered failure category.
 Neither requires enabling DEBUG to retain original failures.
 
-The shared local driver is review-reports/CCD-7882/verify_docker.py in the parent workspace.
+The local verification driver is review-reports/CCD-7882/verify_docker.py in the parent workspace.
 Run from the workspace root with --repo ccd-definition-store-api (both modes are the default).
-Fresh Java bootJars or the current Node application source/dependencies were used, with synthetic
-OIDC/S2S/services and PostgreSQL where applicable. Some database fixtures deliberately omit tables
-for controlled infrastructure errors; definition-store uses its migrations for startup.
-Java used the cached HMCTS Java 21 runtime; Node used public node:22-alpine as non-root node.
-These are substitute runtimes, not builds of each exact production Dockerfile.
+The definition-store Java bootJar was used with synthetic OIDC/S2S/services and PostgreSQL.
+Database migrations were used for startup. Java used the cached HMCTS Java 21 runtime;
+this is a substitute runtime, not a build of the production Dockerfile.
 Artifact hashes and per-check results are in review-reports/CCD-7882/docker-results.json.
 Scripts allow repeat runs and results identify what was checked; retaining them is evidence,
 not an extra production runtime dependency. Synthetic raw logs are local diagnostics.

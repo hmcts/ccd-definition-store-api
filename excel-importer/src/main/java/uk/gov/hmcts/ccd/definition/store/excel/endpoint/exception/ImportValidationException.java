@@ -22,6 +22,37 @@ public class ImportValidationException extends MapperException {
     private final String publicMessage;
     private final boolean plainText;
 
+    /** Fixed templates for actionable spreadsheet rules; never accept exception diagnostics here. */
+    public enum Rule {
+        NULLIFY_WITH_DEFAULT("NullifyByDefault cannot be set to Yes if DefaultValue has a value in CaseEventToFields"),
+        PUBLISH_ON_COMPLEX("Publish column must not be set for case field '%s', event '%s' in CaseEventToFields "
+            + "when DisplayContext is COMPLEX. Please only use the Publish overrides in EventToComplexTypes."),
+        JURISDICTION_COUNT("A definition must contain exactly one Jurisdiction"),
+        MISSING_CASE_TYPE("A definition must contain at least one Case Type"),
+        MISSING_CASE_FIELD_SHEET("A definition must contain a Case Field worksheet"),
+        MISSING_COMPLEX_TYPES_SHEET("A definition must contain a Complex Types worksheet"),
+        MISSING_FIXED_LIST_SHEET("A definition must contain a Fixed List worksheet"),
+        MISSING_DISPLAY_GROUP_SHEET("A definition must contain a %s sheet with at least one entry"),
+        MISSING_TAB_FIELDS("At least one CaseField must be defined in the CaseTypeTab for case type %s"),
+        DUPLICATE_LAYOUT_ROW("Please make sure each row in worksheet %s is unique for case type %s"),
+        BLANK_REQUIRED_COLUMN("There's a missing value in the column '%s' or invalid value in the sheet '%s'"),
+        UNKNOWN_LAYOUT_ACCESS_PROFILE("- Unknown access profile '%s' in worksheet '%s' for caseField '%s'"),
+        INVALID_RESULTS_ORDERING("Invalid results ordering pattern '%s' in worksheet '%s' "
+            + "for caseType '%s' for caseField '%s'"),
+        MISSING_SORT_PRIORITY("Missing sort order priority in worksheet '%s' for caseType '%s'"),
+        DUPLICATE_SORT_PRIORITY("Duplicate sort order priority in worksheet '%s' for caseType '%s'");
+
+        private final String template;
+
+        Rule(String template) {
+            this.template = template;
+        }
+    }
+
+    public static ImportValidationException rule(Rule rule, String... values) {
+        return new ImportValidationException(String.format(rule.template, (Object[]) values));
+    }
+
     public ImportValidationException(Reason reason) {
         this(reason, reason.message);
     }
@@ -37,6 +68,12 @@ public class ImportValidationException extends MapperException {
         super(message);
         publicMessage = message;
         plainText = true;
+    }
+
+    public static ImportValidationException multipleDefaultFocus(String sheet, long count, String caseType) {
+        return new ImportValidationException(String.format(
+            "Only one row per case type can have DefaultFocus set to true in worksheet %s; "
+                + "found %d for case type %s", sheet, count, caseType));
     }
 
     public static ImportValidationException invalidHiddenField(String field) {

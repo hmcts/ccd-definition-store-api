@@ -27,6 +27,8 @@ import feign.FeignException;
 import feign.Request;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -64,6 +66,37 @@ class RestResponseEntityExceptionHandlerTest {
             new IllegalStateException("SECRET database cause"));
         ResponseEntity<Object> response = exceptionHandler.handleBadRequest(diagnostic, mock(WebRequest.class));
         assertEquals("Bad Request", ((Map<?, ?>) response.getBody()).get("message"));
+    }
+
+    @Test
+    void duplicateDefaultFocusRetainsPlainTextValidationResponse() {
+        ResponseEntity<Object> response = exceptionHandler.handleBadRequest(
+            ImportValidationException.multipleDefaultFocus("CaseTypeTab", 2, "FT_MasterCaseType"),
+            mock(WebRequest.class));
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(MediaType.TEXT_PLAIN, response.getHeaders().getContentType());
+        assertEquals("Only one row per case type can have DefaultFocus set to true in worksheet CaseTypeTab; "
+            + "found 2 for case type FT_MasterCaseType", response.getBody());
+    }
+
+    @ParameterizedTest
+    @CsvSource(delimiter = '|', value = {
+        "NULLIFY_WITH_DEFAULT|NullifyByDefault cannot be set to Yes if DefaultValue has a value in CaseEventToFields",
+        "JURISDICTION_COUNT|A definition must contain exactly one Jurisdiction",
+        "MISSING_CASE_TYPE|A definition must contain at least one Case Type",
+        "MISSING_CASE_FIELD_SHEET|A definition must contain a Case Field worksheet",
+        "MISSING_COMPLEX_TYPES_SHEET|A definition must contain a Complex Types worksheet",
+        "MISSING_FIXED_LIST_SHEET|A definition must contain a Fixed List worksheet",
+        "MISSING_DISPLAY_GROUP_SHEET|A definition must contain a CaseTypeTab sheet with at least one entry",
+        "MISSING_TAB_FIELDS|At least one CaseField must be defined in the CaseTypeTab for case type CaseTypeTab",
+        "DUPLICATE_LAYOUT_ROW|Please make sure each row in worksheet CaseTypeTab is unique for case type TestCase"
+    })
+    void approvedSpreadsheetRulesRetainPlainText(ImportValidationException.Rule rule, String expectedMessage) {
+        ResponseEntity<Object> response = exceptionHandler.handleBadRequest(
+            ImportValidationException.rule(rule, "CaseTypeTab", "TestCase"), mock(WebRequest.class));
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(MediaType.TEXT_PLAIN, response.getHeaders().getContentType());
+        assertEquals(expectedMessage, response.getBody());
     }
 
     @Test
