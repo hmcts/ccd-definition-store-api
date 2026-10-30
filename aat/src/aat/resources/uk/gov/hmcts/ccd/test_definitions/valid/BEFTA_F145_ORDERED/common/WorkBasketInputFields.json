@@ -1,0 +1,110 @@
+[
+  {
+    "CaseTypeID": "F145_QMatch",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_Unset",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_LastExtra",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_AMatch",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_Other",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_TMatch",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_FirstExtra",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_ZMatch",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_UnsetSecond",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_DMatch",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_OtherThird",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_Last",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_MMatch",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_First",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_BMatch",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_UnsetThird",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_HMatch",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_OtherSecond",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  }
+]
