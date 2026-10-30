@@ -33,7 +33,8 @@ public class FieldTypeParser {
 
         final Optional<FieldTypeEntity> baseFieldTypeOptional = parseContext.getType(actualTypeReference);
         final FieldTypeEntity baseFieldType = baseFieldTypeOptional.orElseThrow(() ->
-            new SpreadsheetParsingException("Missing field type: " + actualTypeReference));
+            SpreadsheetParsingException.reference(
+                SpreadsheetParsingException.ReferenceValidation.UNDEFINED_FIELD_TYPE, actualTypeReference));
 
         final FieldTypeEntity fieldType;
         if (anyDefined(regularExpression, min, max)
@@ -52,7 +53,8 @@ public class FieldTypeParser {
 
             if ("Collection".equals(baseTypeReference)) {
                 final FieldTypeEntity collectionFieldType = parseContext.getType(fieldTypeParameter).orElseThrow(() ->
-                    new SpreadsheetParsingException("No type found for collection of: " + fieldTypeParameter));
+                    SpreadsheetParsingException.reference(
+                        SpreadsheetParsingException.ReferenceValidation.UNDEFINED_COLLECTION_TYPE, fieldTypeParameter));
                 fieldType.setCollectionFieldType(collectionFieldType);
             }
 

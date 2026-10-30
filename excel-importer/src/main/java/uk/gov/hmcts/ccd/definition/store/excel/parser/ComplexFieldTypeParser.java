@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -109,9 +110,15 @@ public class ComplexFieldTypeParser implements FieldShowConditionParser {
             .join();
 
         if (collectedExceptions.size() > 0) {
-            throw new MapperException(collectedExceptions.stream()
-                .map(s -> s.getCause().getMessage())
-                .collect(Collectors.joining("\n")));
+            List<Throwable> failures = collectedExceptions.stream().map(Throwable::getCause).collect(toList());
+            if (failures.stream().allMatch(failure -> failure instanceof ImportValidationException)) {
+                throw ImportValidationException.combine(failures.stream()
+                    .map(ImportValidationException.class::cast).collect(toList()));
+            }
+            MapperException diagnostic = new MapperException(failures.stream()
+                .map(Throwable::getMessage).collect(Collectors.joining("\n")));
+            failures.forEach(diagnostic::addSuppressed);
+            throw diagnostic;
         }
     }
 

@@ -3,6 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.util.mapper;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.domain.definition.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseField;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FieldType;
 import uk.gov.hmcts.ccd.definition.store.repository.model.FixedListItem;
@@ -34,13 +35,7 @@ public class MapperUtil {
     public static final String TEXT = "Text";
     public static final String MULTI_SELECT_LIST = "MultiSelectList";
     private static final String DATE = "Date";
-    private static final String NO_COLUMN = "There's a missing value in column %s in the sheet %s";
-    private static final String INCORRECT_INTEGER_LIST_FORMAT =
-        "Found '%s' whilst expecting a comma separated list of numbers in the column '%s' of sheet '%s'";
     private static final String FIELD_SEPARATOR = ",";
-    private static final String INVALID_VALUE_COLUMN = "Invalid value '%s' is found in column '%s' in the sheet '%s'";
-    private static final String INVALID_OR_BLANK_COLUMN
-        = "Couldn't find the column '%s' or invalid value in the sheet '%s'";
 
     private static final Logger LOG = LoggerFactory.getLogger(MapperUtil.class);
 
@@ -79,7 +74,8 @@ public class MapperUtil {
         Object attribute = definitionDataItem.findAttribute(columnName.toString());
         if (attribute == null) {
             if (ColumnName.isRequired(sheetName, columnName)) {
-                throw new MapperException(String.format(NO_COLUMN, columnName.toString(), sheetName.toString()));
+                throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_MAPPER_VALUE,
+                    columnName.toString(), sheetName.toString());
             }
             return null;
         }
@@ -101,7 +97,8 @@ public class MapperUtil {
         Object attribute = definitionDataItem.findAttribute(columnName.toString());
         if (attribute == null) {
             if (ColumnName.isRequired(sheetName, columnName)) {
-                throw new MapperException(String.format(NO_COLUMN, columnName.toString(), sheetName.toString()));
+                throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_MAPPER_VALUE,
+                    columnName.toString(), sheetName.toString());
             }
             return null;
         }
@@ -123,7 +120,8 @@ public class MapperUtil {
         Object attribute = definitionDataItem.findAttribute(columnName.toString());
         if (attribute == null) {
             if (ColumnName.isRequired(sheetName, columnName)) {
-                throw new MapperException(String.format(NO_COLUMN, columnName.toString(), sheetName.toString()));
+                throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_MAPPER_VALUE,
+                    columnName.toString(), sheetName.toString());
             }
             return null;
         }
@@ -145,7 +143,8 @@ public class MapperUtil {
         Object attribute = definitionDataItem.findAttribute(columnName.toString());
         if (attribute == null) {
             if (ColumnName.isRequired(sheetName, columnName)) {
-                throw new MapperException(String.format(NO_COLUMN, columnName.toString(), sheetName.toString()));
+                throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_MAPPER_VALUE,
+                    columnName.toString(), sheetName.toString());
             }
             return null;
         }
@@ -172,7 +171,8 @@ public class MapperUtil {
         final String attribute = (String) obj;
         if (isBlank(attribute)) {
             if (ColumnName.isRequired(sheetName, columnName)) {
-                throw new MapperException(String.format(INVALID_OR_BLANK_COLUMN, columnName, sheetName));
+                throw ImportValidationException.rule(ImportValidationException.Rule.BLANK_MAPPER_VALUE,
+                    columnName.toString(), sheetName.toString());
             }
             return null;
         }
@@ -193,7 +193,7 @@ public class MapperUtil {
             case "no", "n", "false", "f" -> {
                 return false;
             }
-            default -> throw new MapperException(String.format(INVALID_VALUE_COLUMN, attribute, columnName, sheetName));
+            default -> throw ImportValidationException.invalidValue(attribute, columnName, sheetName.toString());
         }
     }
 
@@ -214,7 +214,8 @@ public class MapperUtil {
         final String numbersString = getString(definitionDataItem, sheetName, columnName);
         if (isBlank(numbersString)) {
             if (ColumnName.isRequired(sheetName, columnName)) {
-                throw new MapperException(String.format(NO_COLUMN, columnName, sheetName));
+                throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_MAPPER_VALUE,
+                    columnName.toString(), sheetName.toString());
             }
             return Collections.emptyList();
         }
@@ -227,8 +228,7 @@ public class MapperUtil {
         } catch (NumberFormatException ex) {
             LOG.error("Found '{}' whilst expecting a comma separated list of numbers in Sheet {}, column name {}",
                 numbersString, sheetName, columnName, ex);
-            throw new MapperException(String.format(INCORRECT_INTEGER_LIST_FORMAT,
-                numbersString, columnName, sheetName), ex);
+            throw ImportValidationException.invalidIntegerList(numbersString, columnName, sheetName.toString(), ex);
         }
     }
 
@@ -304,7 +304,7 @@ public class MapperUtil {
         DefinitionSheet complexTypesSheet = findSheet(sheets, SheetName.COMPLEX_TYPES);
         // If there is no Case Field sheet then fail the import
         if (complexTypesSheet == null) {
-            throw new MapperException("A definition must contain a Complex Types worksheet");
+            throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_COMPLEX_TYPES_SHEET);
         }
         Map<String, List<FixedListItem>> fixedListsByCode = createFixedListFields(sheets);
         Map<String, List<CaseField>> complexTypeFieldsById = new HashMap<>();
@@ -375,7 +375,7 @@ public class MapperUtil {
         DefinitionSheet fixedListSheet = findSheet(sheets, SheetName.FIXED_LISTS);
         // If there is no Fixed List sheet then fail the import
         if (fixedListSheet == null) {
-            throw new MapperException("A definition must contain a Fixed List worksheet");
+            throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_FIXED_LIST_SHEET);
         }
         // Create a List of FixedListsField's mapped by their FixedListCode
         Map<String, List<FixedListItem>> fixedListsByCode = new HashMap<>();
@@ -403,7 +403,7 @@ public class MapperUtil {
         DefinitionSheet complexTypesSheet = findSheet(sheets, SheetName.COMPLEX_TYPES);
         // If there is no Case Field sheet then fail the import
         if (complexTypesSheet == null) {
-            throw new MapperException("A definition must contain a Complex Types worksheet");
+            throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_COMPLEX_TYPES_SHEET);
         }
         Set<String> complexTypes = new HashSet<>();
         for (DefinitionDataItem complexTypeItem : complexTypesSheet.getDataItems()) {

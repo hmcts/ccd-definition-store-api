@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.InvalidImportException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ValidationResponseAssertions.assertValidationResponse;
 
 class SpreadsheetValidatorTest {
 
@@ -43,6 +45,7 @@ class SpreadsheetValidatorTest {
         assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(
                 sheetName, columnName, 70, rowNumberInfo)));
 
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -77,6 +80,7 @@ class SpreadsheetValidatorTest {
         assertThat(ex.getMessage(), is(
                 "Error processing sheet \"sheet\": Invalid Case Definition sheet - "
                 + "no Definition name found in Cell A1"));
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -84,12 +88,11 @@ class SpreadsheetValidatorTest {
         final DefinitionSheet definitionSheet = new DefinitionSheet();
         definitionSheet.setName("name");
 
-        InvalidImportException ex = assertThrows(InvalidImportException.class, () -> {
+        ImportValidationException ex = assertThrows(ImportValidationException.class, () -> {
             validator.validate("sheet", definitionSheet, Collections.emptyList());
         });
-        assertThat(ex.getMessage(), is(
-                "Error processing sheet \"sheet\": Invalid Case Definition sheet - "
-                + "no Definition data attribute headers found"));
+        assertThat(ex.getPublicMessage(), is(
+            "Invalid Case Definition sheet - no Definition data attribute headers found"));
     }
 
     @Test
@@ -109,6 +112,7 @@ class SpreadsheetValidatorTest {
             validator.validate(definitionSheets);
         });
         assertThat(ex.getMessage(), is("A definition must contain exactly one Jurisdiction"));
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -120,6 +124,7 @@ class SpreadsheetValidatorTest {
             validator.validate(definitionSheets);
         });
         assertThat(ex.getMessage(), is("A definition must contain exactly one Jurisdiction"));
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -132,6 +137,7 @@ class SpreadsheetValidatorTest {
             validator.validate(definitionSheets);
         });
         assertThat(ex.getMessage(), is("A definition must contain at least one Case Type"));
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -146,6 +152,7 @@ class SpreadsheetValidatorTest {
             validator.validate(definitionSheets);
         });
         assertThat(ex.getMessage(), is("A definition must contain at least one Case Type"));
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -161,6 +168,7 @@ class SpreadsheetValidatorTest {
             validator.validate(definitionSheets);
         });
         assertThat(ex.getMessage(), is("A definition must contain a Case Field worksheet"));
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -178,6 +186,7 @@ class SpreadsheetValidatorTest {
             validator.validate(definitionSheets);
         });
         assertThat(ex.getMessage(), is("A definition must contain a Complex Types worksheet"));
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -196,6 +205,7 @@ class SpreadsheetValidatorTest {
             validator.validate(definitionSheets);
         });
         assertThat(ex.getMessage(), is("A definition must contain a Fixed List worksheet"));
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -235,6 +245,7 @@ class SpreadsheetValidatorTest {
         String rowNumberInfo = " at row number '" + rowNumber + "'";
         assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(
             sheetName, columnName, 70, rowNumberInfo)));
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -249,6 +260,7 @@ class SpreadsheetValidatorTest {
         String rowNumberInfo = " at row number '" + rowNumber + "'";
         assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(
             sheetName, columnName, 70, rowNumberInfo)));
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -263,6 +275,7 @@ class SpreadsheetValidatorTest {
         String rowNumberInfo = " at row number '" + rowNumber + "'";
         assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(
             sheetName, columnName, 70, rowNumberInfo)));
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -277,6 +290,7 @@ class SpreadsheetValidatorTest {
         String rowNumberInfo = " at row number '" + rowNumber + "'";
         assertThat(ex.getMessage(), is(validator.getImportValidationFailureMessage(
             sheetName, columnName, 70, rowNumberInfo)));
+        assertValidationResponse(ex);
     }
 
     private DefinitionSheet addDefinitionSheet(SheetName sheetName) {

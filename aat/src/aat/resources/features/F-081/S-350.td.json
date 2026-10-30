@@ -1,31 +1,28 @@
 {
-	"_guid_": "S-350",
-	"_extends_": "F-081_Test_Base_Data",
-	"title": "must return 404 when user provide non-existing JID {jurisdiction references} within the request",
-
-	"specs": [
-	 "an active profile in CCD",
-	 "contains a non-existing jurisdiction id",
-	 "contains 404 not found code"
-	],
-
-	"user": {
-	 "invokingUser": {
-		"username": "befta.citizen.2@gmail.com",
-		"password": "[[$CCD_BEFTA_CITIZEN_2_PWD]]"
-	 }
-	},
-
-	"request": {
-	 "queryParams": {
-		"ids": "NON_EXISTING_BEFTA_JURISDICTION"
-	 }
-	},
-
-	"expectedResponse": {
-	 "_extends_": "Common_404_Response",
-	 "body": {
-		"message": "Object Not Found for:NON_EXISTING_BEFTA_JURISDICTION"
-	 }
-	}
+  "_guid_": "S-350",
+  "_extends_": "F-081_Test_Base_Data",
+  "title": "must return 404 when user provide non-existing JID {jurisdiction references} within the request",
+  "specs": [
+    "an active profile in CCD",
+    "contains a non-existing jurisdiction id",
+    "contains 404 not found code"
+  ],
+  "user": {
+    "invokingUser": {
+      "username": "befta.citizen.2@gmail.com",
+      "password": "[[$CCD_BEFTA_CITIZEN_2_PWD]]"
+    }
+  },
+  "request": {
+    "queryParams": {
+      "ids": "NON_EXISTING_BEFTA_JURISDICTION"
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "CCD_Safe_Definition_404_Response",
+    "body": {
+      "message": "Not Found",
+      "code": "RESOURCE_NOT_FOUND"
+    }
+  }
 }

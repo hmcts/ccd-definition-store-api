@@ -23,6 +23,7 @@ import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ValidationResponseAssertions.assertValidationResponse;
 
 class DefinitionDataItemTest {
 
@@ -40,6 +41,7 @@ class DefinitionDataItemTest {
         });
         assertThat(ex.getMessage(), containsString(
             "Couldn't find the column ID in the sheet CaseEvent"));
+        assertValidationResponse(ex);
     }
 
     @Test
@@ -52,6 +54,7 @@ class DefinitionDataItemTest {
         
         assertThat(ex.getMessage(), containsString(
             "There's a missing value in the column 'ID' or invalid value in the sheet 'CaseEvent'"));
+        assertValidationResponse(ex);
     }
 
     @Test

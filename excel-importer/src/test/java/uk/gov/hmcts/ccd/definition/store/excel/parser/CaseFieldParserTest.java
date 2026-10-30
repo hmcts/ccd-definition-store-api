@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
+
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
@@ -44,10 +46,12 @@ class CaseFieldParserTest extends ParserTestBase {
 
     @Test
     void shouldFail_whenNoFieldsAreDefinedForCaseType() {
-        SpreadsheetParsingException ex = assertThrows(SpreadsheetParsingException.class, () ->
+        ImportValidationException ex = assertThrows(ImportValidationException.class, () ->
             caseFieldParser.parseAll(definitionSheets, caseType));
         assertThat(ex.getMessage(), containsString(
-                "At least one case field must be defined for case type: Some Case Type"));
+                "At least one case field must be defined for case type: " + CASE_TYPE_UNDER_TEST));
+        assertThat(ex.getPublicMessage(), is(
+                "At least one case field must be defined for case type."));
     }
 
     @Test

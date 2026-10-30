@@ -31,9 +31,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
-import static uk.gov.hmcts.ccd.definition.store.excel.common.TestLoggerUtils.assertLogged;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_COMPLEX;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.BASE_TEXT;
 
@@ -152,10 +152,9 @@ class DotNotationValidatorTest {
 
         assertEquals(expectedFullErrorMessage, invalidImportException.getMessage());
 
-        // verify issue logged identifying the problematic field ....
-        assertLogged(listAppender, getExpectedErrorMessage(badField));
-        // ...  and also identifying full expression (if different)
-        assertLogged(listAppender, expectedFullErrorMessage);
+        assertCauseContainsMessage(invalidImportException, getExpectedErrorMessage(badField));
+        assertEquals(expectedFullErrorMessage, invalidImportException.getPublicMessage());
+        assertTrue(listAppender.list.isEmpty(), "The HTTP boundary owns exception logging");
     }
 
     @ParameterizedTest(
@@ -180,10 +179,9 @@ class DotNotationValidatorTest {
 
         assertEquals(expectedFullErrorMessage, invalidImportException.getMessage());
 
-        // verify issue logged identifying the problematic field ....
-        assertLogged(listAppender, getExpectedErrorMessage(badField));
-        // ...  and also identifying full expression (if different)
-        assertLogged(listAppender, expectedFullErrorMessage);
+        assertCauseContainsMessage(invalidImportException, getExpectedErrorMessage(badField));
+        assertEquals(expectedFullErrorMessage, invalidImportException.getPublicMessage());
+        assertTrue(listAppender.list.isEmpty(), "The HTTP boundary owns exception logging");
     }
 
     @ParameterizedTest(name = "throws exception if expression field does not exist in ComplexType - #{index} - `{0}`")
@@ -206,10 +204,18 @@ class DotNotationValidatorTest {
 
         assertEquals(expectedFullErrorMessage, invalidImportException.getMessage());
 
-        // verify issue logged identifying the problematic field ....
-        assertLogged(listAppender, getExpectedErrorMessage(badField));
-        // ...  and also identifying full expression (if different)
-        assertLogged(listAppender, expectedFullErrorMessage);
+        assertCauseContainsMessage(invalidImportException, getExpectedErrorMessage(badField));
+        assertEquals(expectedFullErrorMessage, invalidImportException.getPublicMessage());
+        assertTrue(listAppender.list.isEmpty(), "The HTTP boundary owns exception logging");
+    }
+
+    private static void assertCauseContainsMessage(Throwable failure, String expected) {
+        for (Throwable current = failure; current != null; current = current.getCause()) {
+            if (expected.equals(current.getMessage())) {
+                return;
+            }
+        }
+        fail("Missing validation detail in exception chain: " + expected);
     }
 
     private static String getExpectedErrorMessage(String expression) {
