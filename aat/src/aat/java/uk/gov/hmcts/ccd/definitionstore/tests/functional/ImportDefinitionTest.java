@@ -208,8 +208,6 @@ class ImportDefinitionTest extends BaseTest {
     @Test
     @DisplayName("Should return the correct security classification for each case type.")
     void shouldReturnCorrectSecurityClassificationForCaseType() {
-        long matchingACLRecords = 0;
-
         Set<String> caseTypeACLKeySet = new HashSet<>();
         caseTypeACLKeySet.add("id");
         caseTypeACLKeySet.add("name");
@@ -241,6 +239,7 @@ class ImportDefinitionTest extends BaseTest {
 
         caseTypeACL.forEach(map -> map.keySet().retainAll(caseTypeACLKeySet));
 
+        long matchingACLRecords = 0;
         for (Map<String, String> map : caseTypeACL) {
             matchingACLRecords = ImportDefinitonDataSetup.populateDefinitionCaseTypeData()
                 .stream()
