@@ -1,6 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.repository;
 
-
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeACLEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -16,22 +15,19 @@ import java.util.stream.Collectors;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification.PUBLIC;
 
 @ExtendWith(SpringExtension.class)
@@ -43,20 +39,18 @@ import static uk.gov.hmcts.ccd.definition.store.repository.SecurityClassificatio
 @Transactional
 class CaseTypeRepositoryTest {
 
-    @Autowired
-    private CaseTypeRepository classUnderTest;
-
-    @Autowired
-    private EntityManager entityManager;
-
-    @Autowired
-    private TestHelper testHelper;
-
     private static final String CASE_TYPE_REFERENCE = "id";
     private static final String TEST_CASE_TYPE_REFERENCE = "TestCase";
     private static final String DEFINITIVE_CASE_TYPE_REFERENCE = "TESTCASE";
     private static final String ANOTHER_CASE_TYPE_REFERENCE = "ANOTHERCASE";
     private static final String DEFINITIVE_CASE_TYPE_REFERENCE_2 = "AnotherCase";
+
+    @Autowired
+    private CaseTypeRepository classUnderTest;
+    @Autowired
+    private EntityManager entityManager;
+    @Autowired
+    private TestHelper testHelper;
 
     private JurisdictionEntity testJurisdiction;
     private JurisdictionEntity testJurisdictionWithCaseTypeACL;
@@ -174,22 +168,47 @@ class CaseTypeRepositoryTest {
         createCaseTypeEntity(DEFINITIVE_CASE_TYPE_REFERENCE_2, name, version, jurisdiction);
     }
 
+    @ParameterizedTest
+    @NullSource
+    @ValueSource(ints = {1, 42, 99})
+    void shouldPersistOptionalCaseTypesOrder(Integer order) {
+        CaseTypeEntity caseType = classUnderTest.findCurrentVersionForReference(CASE_TYPE_REFERENCE).orElseThrow();
+        caseType.setCaseTypesOrder(order);
+        saveCaseTypeClearAndFlushSession(caseType);
+
+        CaseTypeEntity reloaded = classUnderTest.findCurrentVersionForReference(CASE_TYPE_REFERENCE).orElseThrow();
+        assertThat(reloaded.getCaseTypesOrder()).isEqualTo(order);
+        assertThat(reloaded.getVersion()).isEqualTo(3);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 0, 100})
+    void shouldRejectCaseTypesOrderOutsideTwoDigitRange(int order) {
+        CaseTypeEntity caseType = classUnderTest.findCurrentVersionForReference(CASE_TYPE_REFERENCE).orElseThrow();
+        caseType.setCaseTypesOrder(order);
+
+        assertThatThrownBy(() -> classUnderTest.saveAndFlush(caseType))
+            .isInstanceOf(DataIntegrityViolationException.class)
+            .rootCause()
+            .hasMessageContaining("chk_case_type_case_types_order");
+    }
+
     @Test
     void severalVersionsOfCaseTypeExistForReference_findCurrentCaseTypeReturnsCurrentVersionOfCaseType() {
         List<CaseTypeEntity> caseTypeEntities = classUnderTest.findAll().stream()
             .filter(c -> c.getReference().equals(CASE_TYPE_REFERENCE)).collect(Collectors.toList());
-        assertEquals(3, caseTypeEntities.size());
+        assertThat(caseTypeEntities).hasSize(3);
         Optional<CaseTypeEntity> caseTypeEntityOptional
             = classUnderTest.findCurrentVersionForReference(CASE_TYPE_REFERENCE);
-        assertTrue(caseTypeEntityOptional.isPresent());
-        assertEquals(3, caseTypeEntityOptional.get().getVersion().intValue());
+        assertThat(caseTypeEntityOptional).isPresent();
+        assertThat(caseTypeEntityOptional.get().getVersion()).isEqualTo(3);
     }
 
     @Test
     void caseTypeDoesNotExistForReference_emptyOptionalReturned() {
         Optional<CaseTypeEntity> caseTypeEntityOptional
             = classUnderTest.findCurrentVersionForReference("Non Existing Reference");
-        assertFalse(caseTypeEntityOptional.isPresent());
+        assertThat(caseTypeEntityOptional).isEmpty();
     }
 
     @Test
@@ -197,8 +216,8 @@ class CaseTypeRepositoryTest {
     void findByJurisdictionIdReturnsCurrentVersionForJurisdiction() {
         List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId(testJurisdiction.getReference());
-        assertEquals(7, caseTypeEntities.size());
-        assertEquals(1, caseTypeEntities.get(0).getVersion().intValue());
+        assertThat(caseTypeEntities).hasSize(7);
+        assertThat(caseTypeEntities.getFirst().getVersion()).isEqualTo(1);
     }
 
     @Test
@@ -206,44 +225,44 @@ class CaseTypeRepositoryTest {
     void caseTypeDoesNotExistForJurisdiction_emptyListReturned() {
         List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId("Non Existing Jurisdiction");
-        assertTrue(caseTypeEntities.isEmpty());
+        assertThat(caseTypeEntities).isEmpty();
     }
 
     @Test
     void shouldReturnZeroCountIfCaseTypeIsOfExcludedJurisdiction() {
         Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(
             CASE_TYPE_REFERENCE, testJurisdiction.getReference());
-        assertEquals(0, result.intValue());
+        assertThat(result).isZero();
     }
 
     @Test
     void shouldReturnAPositiveCountIfCaseTypeIsNotOfExcludedJurisdiction() {
         Integer result = classUnderTest.caseTypeExistsInAnyJurisdiction(
             CASE_TYPE_REFERENCE, "OtherJurisdiction");
-        assertEquals(3, result.intValue());
+        assertThat(result).isEqualTo(3);
     }
 
     @Test
     void caseTypeReferenceHasSeveralSpellings_findDefinitiveReferenceReturnsLatestCreated() {
         Optional<CaseTypeEntity> definitiveCaseTypeOptional =
             classUnderTest.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(TEST_CASE_TYPE_REFERENCE);
-        assertTrue(definitiveCaseTypeOptional.isPresent());
-        assertEquals(DEFINITIVE_CASE_TYPE_REFERENCE, definitiveCaseTypeOptional.get().getReference());
+        assertThat(definitiveCaseTypeOptional).isPresent();
+        assertThat(definitiveCaseTypeOptional.get().getReference()).isEqualTo(DEFINITIVE_CASE_TYPE_REFERENCE);
     }
 
     @Test
     void caseTypeReferenceHasSeveralSpellingsAndSameTimestamp_findDefinitiveReferenceReturnsLatestCreated() {
         Optional<CaseTypeEntity> definitiveCaseTypeOptional =
             classUnderTest.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc(ANOTHER_CASE_TYPE_REFERENCE);
-        assertTrue(definitiveCaseTypeOptional.isPresent());
-        assertEquals(DEFINITIVE_CASE_TYPE_REFERENCE_2, definitiveCaseTypeOptional.get().getReference());
+        assertThat(definitiveCaseTypeOptional).isPresent();
+        assertThat(definitiveCaseTypeOptional.get().getReference()).isEqualTo(DEFINITIVE_CASE_TYPE_REFERENCE_2);
     }
 
     @Test
     void definitiveCaseTypeReferenceDoesNotExistForReference_emptyOptionalReturned() {
         Optional<CaseTypeEntity> definitiveCaseTypeOptional =
             classUnderTest.findFirstByReferenceIgnoreCaseOrderByCreatedAtDescIdDesc("Dummy");
-        assertFalse(definitiveCaseTypeOptional.isPresent());
+        assertThat(definitiveCaseTypeOptional).isEmpty();
     }
 
     private void saveCaseTypeClearAndFlushSession(CaseTypeEntity caseType) {
@@ -260,62 +279,64 @@ class CaseTypeRepositoryTest {
             testJurisdictionWithCaseTypeACL, createCaseTypeACL());
         List<CaseTypeEntity> caseTypeEntities
             = classUnderTest.findByJurisdictionId(testJurisdictionWithCaseTypeACL.getReference());
-        CaseTypeEntity caseTypeEntityVersionOneWithMultiACLFromDB = caseTypeEntities.get(0);
-        Optional<Integer> caseTypeVersion = classUnderTest.findLastVersion(caseTypeEntities.get(0).getReference());
-        assertEquals(caseTypeEntityVersionOneWithMultiACL.getReference(),
-            caseTypeEntityVersionOneWithMultiACLFromDB.getReference());
-        assertTrue(caseTypeVersion.isPresent());
-        assertEquals(caseTypeEntityVersionOneWithMultiACL.getVersion().intValue(), caseTypeVersion.get().intValue());
+        CaseTypeEntity caseTypeEntityVersionOneWithMultiACLFromDB = caseTypeEntities.getFirst();
+        Optional<Integer> caseTypeVersion = classUnderTest.findLastVersion(caseTypeEntities.getFirst().getReference());
+        assertThat(caseTypeEntityVersionOneWithMultiACLFromDB.getReference())
+            .isEqualTo(caseTypeEntityVersionOneWithMultiACL.getReference());
+        assertThat(caseTypeVersion).contains(caseTypeEntityVersionOneWithMultiACL.getVersion());
         List<CaseTypeACLEntity> caseTypeACLEntitiesWithRestrictedAccess = caseTypeEntityVersionOneWithMultiACL
             .getCaseTypeACLEntities();
-        assertEquals(1, caseTypeEntities.size());
+        assertThat(caseTypeEntities).hasSize(1);
         List<CaseTypeACLEntity> caseTypeACLEntitiesWithRestrictedAccessFromDB
             = caseTypeEntityVersionOneWithMultiACLFromDB.getCaseTypeACLEntities();
-        assertEquals(caseTypeACLEntitiesWithRestrictedAccess.size(),
-            caseTypeACLEntitiesWithRestrictedAccessFromDB.size());
-        CaseTypeACLEntity caseTypeACLEntityWithRestrictedAccess = caseTypeACLEntitiesWithRestrictedAccess.get(0);
+        assertThat(caseTypeACLEntitiesWithRestrictedAccessFromDB)
+            .hasSameSizeAs(caseTypeACLEntitiesWithRestrictedAccess);
+        CaseTypeACLEntity caseTypeACLEntityWithRestrictedAccess = caseTypeACLEntitiesWithRestrictedAccess.getFirst();
         CaseTypeACLEntity caseTypeACLEntityWithRestrictedAccessFromDB
-            = caseTypeACLEntitiesWithRestrictedAccessFromDB.get(0);
-        assertEquals(caseTypeACLEntityWithRestrictedAccess.getCaseType().getVersion().intValue(),
-            caseTypeACLEntityWithRestrictedAccessFromDB.getCaseType().getVersion().intValue());
-        assertEquals(caseTypeACLEntityWithRestrictedAccess.getAccessProfile().getName(),
-            caseTypeACLEntityWithRestrictedAccessFromDB.getAccessProfile().getName());
-        assertEquals(caseTypeACLEntityWithRestrictedAccess.getAccessProfile().getSecurityClassification(),
-            caseTypeACLEntityWithRestrictedAccessFromDB.getAccessProfile().getSecurityClassification());
-        assertEquals(
-            caseTypeACLEntityWithRestrictedAccess.getCreate(), caseTypeACLEntityWithRestrictedAccessFromDB.getCreate());
-        assertEquals(
-            caseTypeACLEntityWithRestrictedAccess.getRead(), caseTypeACLEntityWithRestrictedAccessFromDB.getRead());
-        assertEquals(
-            caseTypeACLEntityWithRestrictedAccess.getDelete(), caseTypeACLEntityWithRestrictedAccessFromDB.getDelete());
-        assertEquals(
-            caseTypeACLEntityWithRestrictedAccess.getUpdate(), caseTypeACLEntityWithRestrictedAccessFromDB.getUpdate());
+            = caseTypeACLEntitiesWithRestrictedAccessFromDB.getFirst();
+        assertThat(caseTypeACLEntityWithRestrictedAccessFromDB.getCaseType().getVersion())
+            .isEqualTo(caseTypeACLEntityWithRestrictedAccess.getCaseType().getVersion());
+        assertThat(caseTypeACLEntityWithRestrictedAccessFromDB.getAccessProfile().getName())
+            .isEqualTo(caseTypeACLEntityWithRestrictedAccess.getAccessProfile().getName());
+        assertThat(caseTypeACLEntityWithRestrictedAccessFromDB.getAccessProfile().getSecurityClassification())
+            .isEqualTo(caseTypeACLEntityWithRestrictedAccess.getAccessProfile().getSecurityClassification());
+        assertThat(caseTypeACLEntityWithRestrictedAccessFromDB.getCreate())
+            .isEqualTo(caseTypeACLEntityWithRestrictedAccess.getCreate());
+        assertThat(caseTypeACLEntityWithRestrictedAccessFromDB.getRead())
+            .isEqualTo(caseTypeACLEntityWithRestrictedAccess.getRead());
+        assertThat(caseTypeACLEntityWithRestrictedAccessFromDB.getDelete())
+            .isEqualTo(caseTypeACLEntityWithRestrictedAccess.getDelete());
+        assertThat(caseTypeACLEntityWithRestrictedAccessFromDB.getUpdate())
+            .isEqualTo(caseTypeACLEntityWithRestrictedAccess.getUpdate());
 
         CaseTypeEntity caseTypeEntityVersionTwoWithSingleACL = createCaseTypeEntityWithCaseTypeACL(
             "CaseTypeWithACL", "CaseTypeWithACL",
             2, testJurisdictionWithCaseTypeACL, createCaseTypeACLWithFullAccess());
-        caseTypeVersion = classUnderTest.findLastVersion(caseTypeEntities.get(0).getReference());
-        assertTrue(caseTypeVersion.isPresent());
-        assertEquals(caseTypeEntityVersionTwoWithSingleACL.getVersion().intValue(), caseTypeVersion.get().intValue());
+        caseTypeVersion = classUnderTest.findLastVersion(caseTypeEntities.getFirst().getReference());
+        assertThat(caseTypeVersion).contains(caseTypeEntityVersionTwoWithSingleACL.getVersion());
         Optional<CaseTypeEntity> caseTypeEntity = classUnderTest.findCurrentVersionForReference(
-            caseTypeEntities.get(0).getReference());
-        assertTrue(caseTypeEntity.isPresent());
+            caseTypeEntities.getFirst().getReference());
+        assertThat(caseTypeEntity).isPresent();
         List<CaseTypeACLEntity> caseTypeACLEntitiesWithFullAccessFromDB = caseTypeEntity.get().getCaseTypeACLEntities();
         List<CaseTypeACLEntity> caseTypeACLEntitiesWithFullAccess
             = caseTypeEntityVersionTwoWithSingleACL.getCaseTypeACLEntities();
-        CaseTypeACLEntity caseTypeACLEntityWithFullAccess = caseTypeACLEntitiesWithFullAccess.get(0);
-        CaseTypeACLEntity caseTypeACLEntityWithFullAccessFromDB = caseTypeACLEntitiesWithFullAccessFromDB.get(0);
-        assertEquals(caseTypeACLEntitiesWithFullAccess.size(), caseTypeACLEntitiesWithFullAccessFromDB.size());
-        assertEquals(caseTypeACLEntityWithFullAccess.getCaseType().getVersion().intValue(),
-            caseTypeACLEntityWithFullAccessFromDB.getCaseType().getVersion().intValue());
-        assertEquals(caseTypeACLEntityWithFullAccess.getAccessProfile().getName(),
-            caseTypeACLEntityWithFullAccessFromDB.getAccessProfile().getName());
-        assertEquals(caseTypeACLEntityWithFullAccess.getAccessProfile().getSecurityClassification(),
-            caseTypeACLEntityWithFullAccessFromDB.getAccessProfile().getSecurityClassification());
-        assertEquals(caseTypeACLEntityWithFullAccess.getCreate(), caseTypeACLEntityWithFullAccessFromDB.getCreate());
-        assertEquals(caseTypeACLEntityWithFullAccess.getUpdate(), caseTypeACLEntityWithFullAccessFromDB.getUpdate());
-        assertEquals(caseTypeACLEntityWithFullAccess.getDelete(), caseTypeACLEntityWithFullAccessFromDB.getDelete());
-        assertEquals(caseTypeACLEntityWithFullAccess.getRead(), caseTypeACLEntityWithFullAccessFromDB.getRead());
+        CaseTypeACLEntity caseTypeACLEntityWithFullAccess = caseTypeACLEntitiesWithFullAccess.getFirst();
+        CaseTypeACLEntity caseTypeACLEntityWithFullAccessFromDB = caseTypeACLEntitiesWithFullAccessFromDB.getFirst();
+        assertThat(caseTypeACLEntitiesWithFullAccessFromDB).hasSameSizeAs(caseTypeACLEntitiesWithFullAccess);
+        assertThat(caseTypeACLEntityWithFullAccessFromDB.getCaseType().getVersion())
+            .isEqualTo(caseTypeACLEntityWithFullAccess.getCaseType().getVersion());
+        assertThat(caseTypeACLEntityWithFullAccessFromDB.getAccessProfile().getName())
+            .isEqualTo(caseTypeACLEntityWithFullAccess.getAccessProfile().getName());
+        assertThat(caseTypeACLEntityWithFullAccessFromDB.getAccessProfile().getSecurityClassification())
+            .isEqualTo(caseTypeACLEntityWithFullAccess.getAccessProfile().getSecurityClassification());
+        assertThat(caseTypeACLEntityWithFullAccessFromDB.getCreate())
+            .isEqualTo(caseTypeACLEntityWithFullAccess.getCreate());
+        assertThat(caseTypeACLEntityWithFullAccessFromDB.getUpdate())
+            .isEqualTo(caseTypeACLEntityWithFullAccess.getUpdate());
+        assertThat(caseTypeACLEntityWithFullAccessFromDB.getDelete())
+            .isEqualTo(caseTypeACLEntityWithFullAccess.getDelete());
+        assertThat(caseTypeACLEntityWithFullAccessFromDB.getRead())
+            .isEqualTo(caseTypeACLEntityWithFullAccess.getRead());
     }
 
     @Test
@@ -331,32 +352,17 @@ class CaseTypeRepositoryTest {
 
         List<CaseTypeEntity> result = classUnderTest.findAllLatestVersions();
 
-        assertAll(
-            () -> assertThat(result, hasItem(hasProperty("name", is("name1.1")))),
-            () -> assertThat(result, hasItem(hasProperty("name", is("name2.2")))),
-            () -> assertThat(result, hasItem(hasProperty("name", is("name3.1")))),
-            () -> assertThat(result, hasItem(hasProperty("name", is("name4.4")))),
-            () -> assertThat(result, not(hasItem(hasProperty("name", is("name2.1"))))),
-            () -> assertThat(result, not(hasItem(hasProperty("name", is("name4.1"))))),
-            () -> assertThat(result, not(hasItem(hasProperty("name", is("name4.2"))))),
-            () -> assertThat(result, not(hasItem(hasProperty("name", is("name4.3")))))
-        );
+        assertThat(result).extracting(CaseTypeEntity::getName)
+            .contains("name1.1", "name2.2", "name3.1", "name4.4")
+            .doesNotContain("name2.1", "name4.1", "name4.2", "name4.3");
     }
 
     @Test
     void shouldFindAllUniqueCaseTypeIds() {
         List<String> result = classUnderTest.findAllCaseTypeIds();
 
-        assertAll(
-            () -> assertEquals(7, result.size()),
-            () -> assertTrue(result.contains("TESTCASE")),
-            () -> assertTrue(result.contains("AnotherCase")),
-            () -> assertTrue(result.contains("anothercase")),
-            () -> assertTrue(result.contains("TestCase")),
-            () -> assertTrue(result.contains("testcase")),
-            () -> assertTrue(result.contains("id")),
-            () -> assertTrue(result.contains("ANOTHERCASE"))
-        );
+        assertThat(result).containsExactlyInAnyOrder(
+            "TESTCASE", "AnotherCase", "anothercase", "TestCase", "testcase", "id", "ANOTHERCASE");
     }
 
     @Test
@@ -374,11 +380,7 @@ class CaseTypeRepositoryTest {
             "ref1", "ref2", "ref4"
         ));
 
-        assertAll(
-            () -> assertEquals(3, result.size()),
-            () -> assertThat(result, hasItem(hasProperty("name", is("name1.1")))),
-            () -> assertThat(result, hasItem(hasProperty("name", is("name2.2")))),
-            () -> assertThat(result, hasItem(hasProperty("name", is("name4.4"))))
-        );
+        assertThat(result).extracting(CaseTypeEntity::getName)
+            .containsExactlyInAnyOrder("name1.1", "name2.2", "name4.4");
     }
 }
