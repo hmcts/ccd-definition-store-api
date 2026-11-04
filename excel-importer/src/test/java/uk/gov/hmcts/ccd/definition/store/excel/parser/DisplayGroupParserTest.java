@@ -3,6 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
@@ -46,6 +48,7 @@ class DisplayGroupParserTest extends ParserTestBase {
     private static final ShowCondition PARSED_SHOW_CONDITION = new ShowCondition.Builder()
         .showConditionExpression("parsedShowCondition2").build();
     private static final String ACCESS_PROFILE = "AccessProfile1";
+    public static final String SOME_SHOW_CONDITION = "someShowCondition";
 
     @BeforeEach
     void setUp() throws InvalidShowConditionException {
@@ -107,6 +110,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.PAGE_LABEL.toString(), "Name");
         item.addAttribute(ColumnName.PAGE_DISPLAY_ORDER.toString(), 1.0);
         item.addAttribute(ColumnName.PAGE_FIELD_DISPLAY_ORDER.toString(), 1.0);
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), false);
 
         caseEventToFieldsSheet.addDataItem(item);
         MapperException thrown = assertThrows(MapperException.class, () -> wizardPageParser.parseAll(definitionSheets));
@@ -119,7 +123,7 @@ class DisplayGroupParserTest extends ParserTestBase {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
-        given(mockShowConditionParser.parseShowCondition("someShowCondition"))
+        given(mockShowConditionParser.parseShowCondition(SOME_SHOW_CONDITION))
             .willReturn(PARSED_SHOW_CONDITION);
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
@@ -131,7 +135,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.PAGE_LABEL.toString(), "Name");
         item.addAttribute(ColumnName.PAGE_DISPLAY_ORDER.toString(), 1.0);
         item.addAttribute(ColumnName.PAGE_FIELD_DISPLAY_ORDER.toString(), 1.0);
-        item.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), "someShowCondition");
+        item.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
 
         caseEventToFieldsSheet.addDataItem(item);
         final ParseResult<DisplayGroupEntity> parseResult = wizardPageParser.parseAll(definitionSheets);
@@ -154,7 +158,7 @@ class DisplayGroupParserTest extends ParserTestBase {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
-        given(mockShowConditionParser.parseShowCondition("someShowCondition"))
+        given(mockShowConditionParser.parseShowCondition(SOME_SHOW_CONDITION))
             .willReturn(PARSED_SHOW_CONDITION);
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
@@ -166,7 +170,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.PAGE_LABEL.toString(), "Name");
         item.addAttribute(ColumnName.PAGE_DISPLAY_ORDER.toString(), 1.0);
         item.addAttribute(ColumnName.PAGE_FIELD_DISPLAY_ORDER.toString(), 1.0);
-        item.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), "someShowCondition");
+        item.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
 
         caseEventToFieldsSheet.addDataItem(item);
         final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
@@ -205,7 +209,7 @@ class DisplayGroupParserTest extends ParserTestBase {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
-        given(mockShowConditionParser.parseShowCondition("someShowCondition"))
+        given(mockShowConditionParser.parseShowCondition(SOME_SHOW_CONDITION))
             .willReturn(PARSED_SHOW_CONDITION);
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
@@ -217,7 +221,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.PAGE_LABEL.toString(), "Name");
         item.addAttribute(ColumnName.PAGE_DISPLAY_ORDER.toString(), 1.0);
         item.addAttribute(ColumnName.PAGE_FIELD_DISPLAY_ORDER.toString(), 1.0);
-        item.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), "someShowCondition");
+        item.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
 
         final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
@@ -228,7 +232,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item2.addAttribute(ColumnName.PAGE_LABEL.toString(), "Name");
         item2.addAttribute(ColumnName.PAGE_DISPLAY_ORDER.toString(), 1.0);
         item2.addAttribute(ColumnName.PAGE_FIELD_DISPLAY_ORDER.toString(), 1.0);
-        item2.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), "someShowCondition");
+        item2.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
 
         caseEventToFieldsSheet.addDataItem(item);
         caseEventToFieldsSheet.addDataItem(item2);
@@ -243,7 +247,7 @@ class DisplayGroupParserTest extends ParserTestBase {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
-        given(mockShowConditionParser.parseShowCondition("someShowCondition"))
+        given(mockShowConditionParser.parseShowCondition(SOME_SHOW_CONDITION))
             .willReturn(PARSED_SHOW_CONDITION);
 
         final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
@@ -251,14 +255,14 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.CASE_EVENT_ID.toString(), "SomeEvent");
         item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         item.addAttribute(ColumnName.PAGE_ID.toString(), "Name");
-        item.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), "someShowCondition");
+        item.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
 
         final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item2.addAttribute(ColumnName.CASE_EVENT_ID.toString(), "SomeEvent");
         item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonLastName");
         item2.addAttribute(ColumnName.PAGE_ID.toString(), "Name");
-        item2.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), "someShowCondition");
+        item2.addAttribute(ColumnName.PAGE_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
 
         caseEventToFieldsSheet.addDataItem(item);
         caseEventToFieldsSheet.addDataItem(item2);
@@ -274,7 +278,7 @@ class DisplayGroupParserTest extends ParserTestBase {
 
         given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Collections.singleton(caseType)));
         given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
-        given(mockShowConditionParser.parseShowCondition("someShowCondition"))
+        given(mockShowConditionParser.parseShowCondition(SOME_SHOW_CONDITION))
             .willReturn(PARSED_SHOW_CONDITION);
         given(mockShowConditionParser.parseShowCondition("fieldShowCondition"))
             .willReturn(new ShowCondition.Builder().build());
@@ -283,15 +287,17 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         item.addAttribute(ColumnName.TAB_ID.toString(), "Name");
-        item.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), "someShowCondition");
+        item.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "fieldShowCondition");
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "Y");
 
         final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
         item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
         item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonLastName");
         item2.addAttribute(ColumnName.TAB_ID.toString(), "Name");
-        item2.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), "someShowCondition");
+        item2.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
         item2.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "fieldShowCondition");
+        item2.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "N");
 
         definitionSheet.addDataItem(item);
         definitionSheet.addDataItem(item2);
@@ -301,6 +307,54 @@ class DisplayGroupParserTest extends ParserTestBase {
         assertThat(result.getMessage(), equalTo("Please provide single condition in TabShowCondition column "
             + "in CaseTypeTab for the tab Name"));
     }
+
+
+    @ParameterizedTest
+    @ValueSource(booleans = {false, true})
+    @DisplayName("CaseTypeTabParser - should fail when multiple defaultFocus condition defined for caseType")
+    void shouldFailIfTwoDefaultFocusValuesSetForSameCaseType(boolean firstItemHasDefaultFocus)
+        throws InvalidShowConditionException {
+
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Collections.singleton(caseType)));
+        given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+        given(mockShowConditionParser.parseShowCondition(SOME_SHOW_CONDITION))
+            .willReturn(PARSED_SHOW_CONDITION);
+        given(mockShowConditionParser.parseShowCondition("fieldShowCondition"))
+            .willReturn(new ShowCondition.Builder().build());
+
+        final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
+        item.addAttribute(ColumnName.TAB_ID.toString(), "Name");
+        item.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
+        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "fieldShowCondition");
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), firstItemHasDefaultFocus);
+
+        final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "Age");
+        item2.addAttribute(ColumnName.TAB_ID.toString(), "Details");
+        item2.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
+        item2.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), !firstItemHasDefaultFocus);
+
+        final DefinitionDataItem item3 = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item3.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item3.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "Age");
+        item3.addAttribute(ColumnName.TAB_ID.toString(), "Details");
+        item3.addAttribute(ColumnName.TAB_SHOW_CONDITION.toString(), SOME_SHOW_CONDITION);
+        item3.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), true);
+
+        definitionSheet.addDataItem(item);
+        definitionSheet.addDataItem(item2);
+        definitionSheet.addDataItem(item3);
+
+        MapperException result = assertThrows(MapperException.class,
+            () -> caseTypeTabParser.parseAll(definitionSheets));
+        assertThat(result.getMessage(),
+            equalTo("Only one row per case type can have DefaultFocus set to true in worksheet CaseTypeTab; "
+                + "found 2 for case type " + CASE_TYPE_UNDER_TEST));
+    }
+
 
     @Test
     @DisplayName("WizardPageParser - should parse with data on any row")
@@ -373,6 +427,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
         item.addAttribute(ColumnName.ACCESS_PROFILE.toString(), ACCESS_PROFILE);
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "Y");
 
         // Excel parses an integer into a decimal number
         item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
@@ -457,6 +512,100 @@ class DisplayGroupParserTest extends ParserTestBase {
             () -> caseTypeTabParser.parseAll(definitionSheets));
         assertThat(thrown.getMessage(), is("Please make sure each row in worksheet CaseTypeTab is unique "
             + "for case type Some Case Type and tab NameTab"));
+        assertThat(fetched.getDefaultFocus(), is(true));
+    }
+
+    @Test
+    @DisplayName("CaseTypeTabParser - should set defaultFocus when it is set on a row other than the first")
+    void shouldParseDefaultFocusSetOnNonFirstRowOfTab() throws InvalidShowConditionException {
+        givenCaseTypeTabContext();
+        definitionSheet.addDataItem(caseTypeTabItem("PersonFirstName", null));
+        definitionSheet.addDataItem(caseTypeTabItem("PersonLastName", "Y"));
+
+        final ParseResult<DisplayGroupEntity> parseResult = caseTypeTabParser.parseAll(definitionSheets);
+
+        assertThat(parseResult.getAllResults().size(), is(1));
+        assertThat(parseResult.getAllResults().get(0).getDefaultFocus(), is(true));
+    }
+
+    @Test
+    @DisplayName("CaseTypeTabParser - should leave defaultFocus null when the DefaultFocus column is absent")
+    void shouldLeaveDefaultFocusNullWhenColumnAbsent() throws InvalidShowConditionException {
+        givenCaseTypeTabContext();
+        definitionSheet.addDataItem(caseTypeTabItem("PersonFirstName", null));
+        definitionSheet.addDataItem(caseTypeTabItem("PersonLastName", null));
+
+        final ParseResult<DisplayGroupEntity> parseResult = caseTypeTabParser.parseAll(definitionSheets);
+
+        assertThat(parseResult.getAllResults().get(0).getDefaultFocus(), is(nullValue()));
+    }
+
+    private void givenCaseTypeTabContext() throws InvalidShowConditionException {
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
+        given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+        given(mockShowConditionParser.parseShowCondition(anyString())).willReturn(new ShowCondition.Builder().build());
+        given(parseContext.getAccessProfile(CASE_TYPE_UNDER_TEST, ACCESS_PROFILE))
+            .willReturn(Optional.of(new AccessProfileEntity()));
+    }
+
+    private DefinitionDataItem caseTypeTabItem(String caseFieldId, String defaultFocus) {
+        final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
+        item.addAttribute(ColumnName.TAB_ID.toString(), "NameTab");
+        item.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
+        if (definitionSheet.getDataItems().isEmpty()) {
+            // only one row per tab may carry the access profile
+            item.addAttribute(ColumnName.ACCESS_PROFILE.toString(), ACCESS_PROFILE);
+        }
+        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
+        item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), caseFieldId);
+        if (defaultFocus != null) {
+            item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), defaultFocus);
+        }
+        return item;
+    }
+
+    @Test
+    @DisplayName("CaseTypeTabParser - should parse CaseTypeTab fail with two defaultFocus for same caseType")
+    void shouldFailParseCaseTypeTabTwoDefaultFocus() throws InvalidShowConditionException {
+        AccessProfileEntity accessProfileEntity = new AccessProfileEntity();
+        given(parseContext.getCaseTypes()).willReturn(new HashSet<>(Arrays.asList(caseType)));
+        given(caseType.getReference()).willReturn(CASE_TYPE_UNDER_TEST);
+        given(mockShowConditionParser.parseShowCondition(anyString())).willReturn(new ShowCondition.Builder().build());
+        given(parseContext.getAccessProfile(CASE_TYPE_UNDER_TEST, ACCESS_PROFILE))
+            .willReturn(Optional.of(accessProfileEntity));
+
+        final DefinitionDataItem item = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
+        item.addAttribute(ColumnName.TAB_ID.toString(), "NameTab");
+        item.addAttribute(ColumnName.TAB_LABEL.toString(), "Name");
+        item.addAttribute(ColumnName.ACCESS_PROFILE.toString(), ACCESS_PROFILE);
+        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "Y");
+        item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
+        item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
+
+        final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
+        item2.addAttribute(ColumnName.CASE_TYPE_ID.toString(), CASE_TYPE_UNDER_TEST);
+        item2.addAttribute(ColumnName.CHANNEL.toString(), "CaseWorker");
+        item2.addAttribute(ColumnName.TAB_ID.toString(), "Details");
+        item2.addAttribute(ColumnName.TAB_LABEL.toString(), "Details");
+        item2.addAttribute(ColumnName.ACCESS_PROFILE.toString(), ACCESS_PROFILE);
+        item2.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), true);
+        item2.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 2.0);
+        item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "Age");
+
+        definitionSheet.addDataItem(item);
+        definitionSheet.addDataItem(item2);
+
+        MapperException thrown = assertThrows(MapperException.class,
+            () -> caseTypeTabParser.parseAll(definitionSheets));
+        assertThat(thrown.getMessage(),
+            is("Only one row per case type can have DefaultFocus set to true in worksheet CaseTypeTab; "
+                + "found 2 for case type " + CASE_TYPE_UNDER_TEST));
     }
 
     @Test
@@ -476,6 +625,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "Y");
         definitionSheet.addDataItem(item);
 
         final DefinitionDataItem item2 = new DefinitionDataItem(SheetName.CASE_TYPE_TAB.getName());
@@ -487,6 +637,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item2.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item2.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonLastName");
         item2.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "yes");
         definitionSheet.addDataItem(item2);
 
         MapperException thrown = assertThrows(MapperException.class,
@@ -512,6 +663,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
         item.addAttribute(ColumnName.FIELD_SHOW_CONDITION.toString(), "show condition");
+        item.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "yes");
         definitionSheet.addDataItem(item);
 
         MapperException thrown = assertThrows(MapperException.class,
@@ -537,6 +689,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item1.addAttribute(ColumnName.ACCESS_PROFILE.toString(), caseRole);
         item1.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item1.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
+        item1.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "yes");
         definitionSheet.addDataItem(item1);
         MapperException thrown = assertThrows(MapperException.class,
             () -> caseTypeTabParser.parseAll(definitionSheets));
@@ -563,6 +716,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         item1.addAttribute(ColumnName.ACCESS_PROFILE.toString(), caseRole);
         item1.addAttribute(ColumnName.TAB_DISPLAY_ORDER.toString(), 1.0);
         item1.addAttribute(ColumnName.CASE_FIELD_ID.toString(), "PersonFirstName");
+        item1.addAttribute(ColumnName.DEFAULT_FOCUS.toString(), "yes");
         definitionSheet.addDataItem(item1);
         final ParseResult<DisplayGroupEntity> parseResult = caseTypeTabParser.parseAll(definitionSheets);
 

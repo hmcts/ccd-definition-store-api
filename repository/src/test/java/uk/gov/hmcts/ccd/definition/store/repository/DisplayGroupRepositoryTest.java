@@ -109,7 +109,8 @@ class DisplayGroupRepositoryTest {
             hasProperty("type", equalTo(TAB)),
             hasProperty("purpose", equalTo(VIEW)),
             hasProperty("showCondition", equalTo(SHOW_CONDITION)),
-            hasProperty("caseType", is(caseTypeV3))
+            hasProperty("caseType", is(caseTypeV3)),
+            hasProperty("defaultFocus", is(false))
         ));
 
 
@@ -248,7 +249,8 @@ class DisplayGroupRepositoryTest {
                                                   final int order,
                                                   final DisplayGroupType type,
                                                   final DisplayGroupPurpose purpose,
-                                                  final String showCondition) {
+                                                  final String showCondition,
+                                                  final Boolean defaultFocus) {
         final DisplayGroupEntity dg = new DisplayGroupEntity();
         dg.setCaseType(caseType);
         dg.setReference(reference);

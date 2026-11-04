@@ -192,6 +192,8 @@ class LayoutParserTest {
         item.addAttribute(ColumnName.TAB_LABEL, "Overview");
         item.addAttribute(ColumnName.TAB_DISPLAY_ORDER, 1.0);
         item.addAttribute(ColumnName.TAB_FIELD_DISPLAY_ORDER, 5.0);
+        item.addAttribute(ColumnName.TAB_FIELD_DISPLAY_ORDER, 5.0);
+        item.addAttribute(ColumnName.DEFAULT_FOCUS, true);
         sheet.addDataItem(item);
         return sheet;
     }
