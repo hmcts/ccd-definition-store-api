@@ -128,6 +128,7 @@ public enum ColumnName {
     SHELL_CASE_TYPE_ID("ShellCaseTypeID"),
     SHELL_CASE_FIELD_NAME("ShellCaseFieldName"),
     ORIGINATING_CASE_TYPE_ID("OriginatingCaseTypeID"),
+    DEFAULT_FOCUS("DefaultFocus"),
     ORIGINATING_CASE_FIELD_NAME("OriginatingCaseFieldName");
 
     private final String name;

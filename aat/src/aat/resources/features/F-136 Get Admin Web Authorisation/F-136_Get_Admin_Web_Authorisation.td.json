@@ -1,0 +1,6 @@
+{
+  "_guid_": "F-136_Get_Admin_Web_Authorisation",
+  "_extends_": "Operation_Base_Data",
+  "operationName": "Get Admin Web Authorisation",
+  "uri": "/api/idam/adminweb/authorization"
+}
