@@ -193,16 +193,16 @@ class DisplayGroupRepositoryTest {
     private void createDisplayGroupsForCase(CaseTypeEntity caseType) {
         displayGroupRepository.save(createDisplayGroup(
             caseType, "ref dg page edit", DISPLAY_GROUP_LABEL, DISPLAY_GROUP_CHANNEL, DISPLAY_GROUP_ORDER, PAGE, EDIT,
-            SHOW_CONDITION));
+            SHOW_CONDITION, true));
         displayGroupRepository.save(createDisplayGroup(
             caseType, "ref dg page view", DISPLAY_GROUP_LABEL, DISPLAY_GROUP_CHANNEL, DISPLAY_GROUP_ORDER, PAGE, VIEW,
-            SHOW_CONDITION));
+            SHOW_CONDITION, false));
         displayGroupRepository.save(createDisplayGroup(
             caseType, "ref dg tab edit", DISPLAY_GROUP_LABEL, DISPLAY_GROUP_CHANNEL, DISPLAY_GROUP_ORDER, TAB, EDIT,
-            SHOW_CONDITION));
+            SHOW_CONDITION, false));
         displayGroupRepository.save(createDisplayGroup(
             caseType, TAB_VIEW_DISPLAY_GROUP_REFERENCE, DISPLAY_GROUP_LABEL, DISPLAY_GROUP_CHANNEL, DISPLAY_GROUP_ORDER,
-            TAB, VIEW, SHOW_CONDITION));
+            TAB, VIEW, SHOW_CONDITION, false));
     }
 
     private void addDisplayGroupField(final CaseFieldEntity cf,
@@ -261,6 +261,7 @@ class DisplayGroupRepositoryTest {
         dg.setPurpose(purpose);
         dg.setShowCondition(showCondition);
         dg.setAccessProfile(createAccessProfile());
+        dg.setDefaultFocus(defaultFocus);
         addDisplayGroupField(getCaseField(caseType, PRIMARY_CASE_FIELD_REFERENCE), dg, 1, null);
         addDisplayGroupField(getCaseField(caseType, SECONDARY_CASE_FIELD_REFERENCE), dg, 2, 2);
         return dg;
