@@ -1,0 +1,16 @@
+{
+  "_guid_": "S-138.1",
+  "_extends_": "F-138_Get_User_Role",
+  "title": "Retrieve an existing user role",
+  "expectedResponse": {
+    "_extends_": "CCD_Definition_Store_Common_200_Response",
+    "body": {
+      "id": "[[ANYTHING_PRESENT]]",
+      "created_at": "[[ANYTHING_PRESENT]]",
+      "live_from": null,
+      "live_to": null,
+      "role": "caseworker-autotest1",
+      "security_classification": "PUBLIC"
+    }
+  }
+}
