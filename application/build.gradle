@@ -25,6 +25,7 @@ dependencies {
     implementation project(':elastic-search-support')
     implementation project(':repository')
     implementation project(':domain')
+    implementation project(':commons')
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'
     implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: springDocVersion
 
