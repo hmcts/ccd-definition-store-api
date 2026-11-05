@@ -33,7 +33,8 @@
           "order": 1,
           "tab_fields": "[[ANYTHING_PRESENT]]",
           "show_condition": null,
-          "role": null
+          "role": null,
+          "defaultFocus": null
         },
         {
           "id": "CollectionOfComplex",
@@ -41,7 +42,8 @@
           "order": 2,
           "tab_fields": "[[ANYTHING_PRESENT]]",
           "show_condition": null,
-          "role": null
+          "role": null,
+          "defaultFocus": null
         },
         {
           "id": "FamilyAddressDetails",
@@ -79,7 +81,8 @@
             }
           ],
           "show_condition": null,
-          "role": null
+          "role": null,
+          "defaultFocus": null
         },
         {
           "id": "FamilyTab",
@@ -87,7 +90,8 @@
           "order": 2,
           "tab_fields": "[[ANYTHING_PRESENT]]",
           "show_condition": null,
-          "role": null
+          "role": null,
+          "defaultFocus": null
         },
         {
           "id": "History",
@@ -95,7 +99,8 @@
           "order": 1,
           "tab_fields": "[[ANYTHING_PRESENT]]",
           "show_condition": null,
-          "role": null
+          "role": null,
+          "defaultFocus": null
         }
       ]
     }
