@@ -1,0 +1,6 @@
+{
+  "_guid_": "F-134_Get_IDAM_Profile_Without_Valid_Authentication",
+  "_extends_": "F-134_Get_IDAM_Profile",
+  "operationName": "Get IDAM Profile Without Valid Authentication",
+  "request": { "headers": { "Authorization": "dummyToken" } }
+}
