@@ -1,0 +1,26 @@
+{
+  "_guid_": "S-138.2",
+  "_extends_": "F-138_Get_Unknown_User_Role",
+  "title": "Return not found for an unknown user role",
+  "expectedResponse": {
+    "responseCode": 404,
+    "responseMessage": "Not Found",
+    "headers": {
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "Content-Encoding": "gzip",
+      "Content-Type": "application/json",
+      "Date": "[[ANYTHING_PRESENT]]",
+      "Expires": "0",
+      "Pragma": "no-cache",
+      "Strict-Transport-Security": "max-age=31536000 ; includeSubDomains",
+      "Transfer-Encoding": "chunked",
+      "Vary": "accept-encoding",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "0"
+    },
+    "body": {
+      "message": "Object Not Found for:Role 'functional-role-does-not-exist' is not found"
+    }
+  }
+}

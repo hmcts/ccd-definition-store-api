@@ -1,0 +1,16 @@
+{
+  "_guid_": "S-135.1",
+  "_extends_": "F-135_Get_IDAM_Profile_Roles",
+  "title": "Return the IDAM profile roles",
+  "expectedResponse": {
+    "_extends_": "CCD_Definition_Store_Common_200_Response",
+    "body": {
+      "id": "[[ANY_STRING_NOT_NULLABLE]]",
+      "email": "befta.caseworker.3@gmail.com",
+      "forename": "Caseworker 3",
+      "surname": "Befta",
+      "roles": [ "caseworker-befta_jurisdiction_3" ],
+      "defaultService": null
+    }
+  }
+}
