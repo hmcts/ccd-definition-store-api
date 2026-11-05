@@ -94,9 +94,20 @@ class DefinitionModelMapperTest {
     }
 
     @Test
+    @DisplayName("Should map an omitted deleted value to false")
+    void shouldMapOmittedDeletedValueToFalse() {
+        definition.setDeleted(null);
+
+        final DefinitionEntity entity = classUnderTest.toEntity(definition);
+
+        assertThat(entity.isDeleted(), is(false));
+    }
+
+    @Test
     @DisplayName("Should copy model to an existent entity")
     void shouldCopyModelToExistentEntity() {
         final DefinitionEntity entity = new DefinitionEntity();
+        entity.setStatus(DefinitionStatus.PUBLISHED);
         classUnderTest.toEntity(definition, entity);
         assertAll(
             () -> assertThat(entity.getId(), is(nullValue())),
@@ -110,6 +121,18 @@ class DefinitionModelMapperTest {
             () -> assertThat(entity.getCreatedAt(), is(nullValue())),
             () -> assertThat(entity.getLastModified(), is(definition.getLastModified())),
             () -> assertThat(entity.isDeleted(), is(definition.isDeleted())));
+    }
+
+    @Test
+    @DisplayName("Should preserve status when copying a model with no status")
+    void shouldPreserveStatusWhenModelHasNoStatus() {
+        final DefinitionEntity entity = new DefinitionEntity();
+        entity.setStatus(DefinitionStatus.DRAFT);
+        definition.setStatus(null);
+
+        classUnderTest.toEntity(definition, entity);
+
+        assertThat(entity.getStatus(), is(DefinitionStatus.DRAFT));
     }
 
     @Test
