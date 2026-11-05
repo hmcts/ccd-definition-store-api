@@ -167,7 +167,7 @@ class TestingSupportControllerTest {
         mockMvc.perform(delete("/api/testing-support/cleanup-user-role")
                 .param("role", "missing-role"))
             .andExpect(status().isNotFound())
-            .andExpect(content().json("{\"message\":\"Object Not Found for:Unable to find user role\"}"));
+            .andExpect(content().json("{\"message\":\"Not Found\"}"));
 
         verify(transaction).commit();
         verify(transaction, never()).rollback();

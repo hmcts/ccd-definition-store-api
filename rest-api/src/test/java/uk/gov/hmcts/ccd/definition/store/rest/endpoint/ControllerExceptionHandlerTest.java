@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.WebRequest;
@@ -24,6 +25,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 class ControllerExceptionHandlerTest {
@@ -36,29 +38,17 @@ class ControllerExceptionHandlerTest {
         handler = new ControllerExceptionHandler();
     }
 
-    @Test
-    void handleExceptionShouldAggregateInnerMessages() {
-        final RuntimeException exception = new RuntimeException("Outer message", new Exception("Inner message"));
-
+    @ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(ints = {1, 6})
+    void hidesExceptionDiagnosticsAtAnyCauseDepth(int depth) {
+        Exception cause = new Exception("PRIVATE root cause");
+        for (int index = 1; index < depth; index++) {
+            cause = new Exception("PRIVATE nested cause", cause);
+        }
+        final RuntimeException exception = new RuntimeException("PRIVATE outer message", cause);
         final ResponseEntity<Object> response = handler.handleException(exception, mock(WebRequest.class));
-
-        assertThat(((Map<?, ?>) response.getBody()).get("message"), equalTo("Internal Server Error"));
-        assertThat(response.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
-    }
-
-    @Test
-    void handleExceptionShouldStopMessageAggregationAtDepth5() {
-        final RuntimeException exception = new RuntimeException("Depth 1",
-            new Exception("Depth 2",
-                new Exception("Depth 3",
-                    new Exception("Depth 4",
-                        new Exception("Depth 5",
-                            new Exception("Depth 6"))))));
-
-        final ResponseEntity<Object> response = handler.handleException(exception, mock(WebRequest.class));
-
-        assertThat(((Map<?, ?>) response.getBody()).get("message"), equalTo("Internal Server Error"));
-        assertThat(response.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertEquals(Map.of("message", "Internal Server Error", "code", "INTERNAL_ERROR"), response.getBody());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test

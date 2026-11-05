@@ -15,6 +15,7 @@ public class SpreadsheetParsingException extends RuntimeException implements Pub
     private final String publicMessage;
 
     public enum DuplicateDefinition {
+        CASE_TYPE("Multiple case type definitions for ID: "),
         FIELD_TYPE("Type already registered for field: "),
         STATE("State already registered for ID: "),
         CATEGORY("Category already registered for ID: "),
@@ -41,7 +42,8 @@ public class SpreadsheetParsingException extends RuntimeException implements Pub
         UNKNOWN_FIELD("Unknown field %s for case type %s"),
         UNDEFINED_FIELD_TYPE("Missing field type: %s"),
         UNDEFINED_COLLECTION_TYPE("No type found for collection of: %s"),
-        REQUIRED_STATE("At least one state must be defined for case type: %s");
+        REQUIRED_STATE("At least one state must be defined for case type: %s"),
+        REQUIRED_EVENT("At least one event must be defined for case type: %s");
 
         private final String template;
 
@@ -70,6 +72,10 @@ public class SpreadsheetParsingException extends RuntimeException implements Pub
 
     public static SpreadsheetParsingException invalidCondition(String entry, Throwable cause) {
         return new SpreadsheetParsingException("Invalid Post State Condition " + entry, cause);
+    }
+
+    public static SpreadsheetParsingException invalidEventCondition(String entry, Throwable cause) {
+        return new SpreadsheetParsingException("Invalid Event enabling Condition " + entry, cause);
     }
 
     public static SpreadsheetParsingException missingState(String caseType, String state) {

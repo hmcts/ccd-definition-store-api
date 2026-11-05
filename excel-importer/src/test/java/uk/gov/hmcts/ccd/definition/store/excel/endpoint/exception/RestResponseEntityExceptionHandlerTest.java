@@ -144,14 +144,17 @@ class RestResponseEntityExceptionHandlerTest {
         assertEquals("Bad Request", ((Map<?, ?>) response.getBody()).get("message"));
     }
 
-    @Test
-    void handleBadRequest_shouldAggregateInnerMessages() throws Exception {
-        final RuntimeException exception = new RuntimeException("Outer message", new Exception("Inner message"));
-
+    @ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(ints = {1, 6})
+    void hidesExceptionDiagnosticsAtAnyCauseDepth(int depth) {
+        Exception cause = new Exception("PRIVATE root cause");
+        for (int index = 1; index < depth; index++) {
+            cause = new Exception("PRIVATE nested cause", cause);
+        }
+        final RuntimeException exception = new RuntimeException("PRIVATE outer message", cause);
         final ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
-
-        assertThat(((Map<?, ?>) response.getBody()).get("message"), equalTo("Bad Request"));
-        assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertEquals(Map.of("message", "Bad Request", "code", "INVALID_REQUEST"), response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -182,21 +185,6 @@ class RestResponseEntityExceptionHandlerTest {
         assertThat(response.getBody().toString(),
             containsString("Validation errors occurred importing the spreadsheet."));
         assertThat(response.getStatusCode(), equalTo(HttpStatus.UNPROCESSABLE_ENTITY));
-    }
-
-    @Test
-    void handleBadRequest_shouldStopMessageAggregationAtDepth5() throws Exception {
-        final RuntimeException exception = new RuntimeException("Depth 1",
-            new Exception("Depth 2",
-                new Exception("Depth 3",
-                    new Exception("Depth 4",
-                        new Exception("Depth 5",
-                            new Exception("Depth 6"))))));
-
-        final ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
-
-        assertThat(((Map<?, ?>) response.getBody()).get("message"), equalTo("Bad Request"));
-        assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
 
     @Test

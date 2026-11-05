@@ -64,11 +64,24 @@ All 118 focused tests passed. Importer main/test Checkstyle passed. The earlier
 
 ## Current support logging policy
 
-Public error responses remain generic. Detailed request failures, including exception causes
+Technical error responses remain generic; approved workbook validation messages remain actionable
+in the import response, for example duplicate case types, invalid conditions and missing worksheets.
+Detailed request failures, including exception causes
 and stack traces, are retained at normal WARN/ERROR levels in server logs; DEBUG is optional
 additional troubleshooting. Dependency and health diagnostics retain their originating severity
 and respect the source logger threshold. Support must not need to enable DEBUG and reproduce
 an incident to obtain its original failure details.
+
+To diagnose a failure, support should check the definition-store application pod logs, or
+Application Insights if application logs are collected there, in the affected environment
+around the reported failure time. Use the endpoint and available request details to locate
+the WARN/ERROR entry and inspect its exception, causes and stack trace. Log collection and
+access must be verified for that deployment; this repository does not establish them.
+
+CCD-7882 does not add a correlation ID to error responses. Category codes such as
+INTERNAL_ERROR identify a class of failure, not a particular incident. Without an available
+request/trace ID, support must locate the entry using the failure time and request context;
+generic responses alone are insufficient to diagnose technical failures.
 
 This policy supersedes the DEBUG-only descriptions and test expectations in earlier verification
 entries below. Those entries describe historical checks. Deployment acceptance still requires

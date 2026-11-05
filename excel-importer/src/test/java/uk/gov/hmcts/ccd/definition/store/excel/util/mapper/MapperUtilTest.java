@@ -88,7 +88,7 @@ class MapperUtilTest {
 
     @Test
     void getBooleanLowerCaseF() {
-        item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "F");
+        item.addAttribute(ColumnName.DEFAULT_HIDDEN.toString(), "f");
         assertFalse(MapperUtil.getBoolean(item, SheetName.CASE_EVENT_TO_FIELDS, ColumnName.DEFAULT_HIDDEN));
     }
 

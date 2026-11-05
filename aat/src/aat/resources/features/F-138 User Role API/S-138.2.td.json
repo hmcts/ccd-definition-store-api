@@ -20,7 +20,8 @@
       "X-XSS-Protection": "0"
     },
     "body": {
-      "message": "Object Not Found for:Role 'functional-role-does-not-exist' is not found"
+      "message": "Not Found",
+      "code": "RESOURCE_NOT_FOUND"
     }
   }
 }

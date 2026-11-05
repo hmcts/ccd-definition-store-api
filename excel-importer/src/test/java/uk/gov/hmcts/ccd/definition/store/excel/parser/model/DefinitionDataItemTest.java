@@ -98,7 +98,7 @@ class DefinitionDataItemTest {
     void shouldFail_whenInvalidInteger() {
         item.addAttribute(ColumnName.DISPLAY_ORDER, "Wonderful train journey");
         MapperException ex = assertThrows(MapperException.class, () -> {
-            item.getBigDecimal(ColumnName.DISPLAY_ORDER);
+            item.getInteger(ColumnName.DISPLAY_ORDER);
         });
     }
 

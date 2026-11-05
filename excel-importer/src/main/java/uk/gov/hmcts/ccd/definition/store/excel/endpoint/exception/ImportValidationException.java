@@ -33,6 +33,7 @@ public class ImportValidationException extends MapperException implements Public
         MISSING_COMPLEX_TYPES_SHEET("A definition must contain a Complex Types worksheet"),
         MISSING_FIXED_LIST_SHEET("A definition must contain a Fixed List worksheet"),
         MISSING_DISPLAY_GROUP_SHEET("A definition must contain a %s sheet with at least one entry"),
+        MISSING_LAYOUT_SHEET("A definition must contain a %s sheet"),
         MISSING_TAB_FIELDS("At least one CaseField must be defined in the CaseTypeTab for case type %s"),
         DUPLICATE_LAYOUT_ROW("Please make sure each row in worksheet %s is unique for case type %s"),
         BLANK_REQUIRED_COLUMN("There's a missing value in the column '%s' or invalid value in the sheet '%s'"),
