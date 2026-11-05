@@ -1,0 +1,9 @@
+{
+  "_guid_": "S-142.2",
+  "_extends_": "F-142_Get_Banners_Without_Jurisdictions",
+  "title": "Return empty banners when jurisdictions are omitted",
+  "expectedResponse": {
+    "_extends_": "CCD_Definition_Store_Common_200_Response",
+    "body": { "banners": [] }
+  }
+}
