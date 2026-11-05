@@ -1,0 +1,31 @@
+{
+  "_guid_": "S-131.3",
+  "_extends_": "F-131_Test_Base_data",
+  "title": "Import definition file with differing value for DCP in complex type from EventToComplexTypes",
+  "specs": [
+    "an active profile in CCD",
+    "contains differing value for DCP in complex type from EventToComplexTypes"
+  ],
+  "request": {
+    "body": {
+      "arrayInMap": [
+        {
+          "key": "file",
+          "filePath": "uk/gov/hmcts/ccd/test_definitions/invalid/BEFTA_Master_Definition_override_ComplexType.xlsx"
+        }
+      ]
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "Common_201_Response",
+    "headers": {
+      "Content-Encoding": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Content-Length": "[[ANYTHING_PRESENT]]",
+      "X-Import-Job-Id": "[[ANY_STRING_NOT_NULLABLE]]"
+    },
+    "body": {
+      "__plainTextValue__": "Case Definition data successfully imported"
+    }
+  }
+}
