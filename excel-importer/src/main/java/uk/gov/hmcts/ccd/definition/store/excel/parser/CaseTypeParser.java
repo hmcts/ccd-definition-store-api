@@ -78,7 +78,8 @@ public class CaseTypeParser {
             logger.debug("Case types parsing: Parsing case type {}...", caseTypeId);
 
             if (1 != caseTypeItem.getValue().size()) {
-                throw new SpreadsheetParsingException("Multiple case type definitions for ID: " + caseTypeId);
+                throw SpreadsheetParsingException.duplicate(
+                    SpreadsheetParsingException.DuplicateDefinition.CASE_TYPE, caseTypeId);
             }
 
             final DefinitionDataItem caseTypeDefinition = caseTypeItem.getValue().get(0);

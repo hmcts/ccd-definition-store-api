@@ -15,16 +15,17 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.context.request.WebRequest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.mock;
 
 class ControllerExceptionHandlerTest {
@@ -37,29 +38,17 @@ class ControllerExceptionHandlerTest {
         handler = new ControllerExceptionHandler();
     }
 
-    @Test
-    void handleExceptionShouldAggregateInnerMessages() {
-        final RuntimeException exception = new RuntimeException("Outer message", new Exception("Inner message"));
-
+    @ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(ints = {1, 6})
+    void hidesExceptionDiagnosticsAtAnyCauseDepth(int depth) {
+        Exception cause = new Exception("PRIVATE root cause");
+        for (int index = 1; index < depth; index++) {
+            cause = new Exception("PRIVATE nested cause", cause);
+        }
+        final RuntimeException exception = new RuntimeException("PRIVATE outer message", cause);
         final ResponseEntity<Object> response = handler.handleException(exception, mock(WebRequest.class));
-
-        assertThat(response.getBody().toString(), equalTo("Outer message\nInner message"));
-        assertThat(response.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
-    }
-
-    @Test
-    void handleExceptionShouldStopMessageAggregationAtDepth5() {
-        final RuntimeException exception = new RuntimeException("Depth 1",
-            new Exception("Depth 2",
-                new Exception("Depth 3",
-                    new Exception("Depth 4",
-                        new Exception("Depth 5",
-                            new Exception("Depth 6"))))));
-
-        final ResponseEntity<Object> response = handler.handleException(exception, mock(WebRequest.class));
-
-        assertThat(response.getBody().toString(), equalTo("Depth 1\nDepth 2\nDepth 3\nDepth 4\nDepth 5"));
-        assertThat(response.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
+        assertEquals(Map.of("message", "Internal Server Error", "code", "INTERNAL_ERROR"), response.getBody());
+        assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
     @Test
@@ -70,7 +59,7 @@ class ControllerExceptionHandlerTest {
         final ResponseEntity<Object> response = handler.handleConflict(exception, mock(WebRequest.class));
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.CONFLICT));
-        assertThat(response.getBody().toString(), equalTo("Outer message\nInner message"));
+        assertThat(((Map<?, ?>) response.getBody()).get("message"), equalTo("Conflict"));
     }
 
     @Test
@@ -80,7 +69,7 @@ class ControllerExceptionHandlerTest {
         final ResponseEntity<Object> response = handler.handleBadRequest(exception, mock(WebRequest.class));
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
-        assertThat(response.getBody().toString(), equalTo("Invalid request"));
+        assertThat(((Map<?, ?>) response.getBody()).get("message"), equalTo("Bad Request"));
     }
 
     @Nested
@@ -93,7 +82,7 @@ class ControllerExceptionHandlerTest {
 
             assertAll(
                 () -> assertThat(details, is(notNullValue())),
-                () -> assertThat(details.get("message"), equalTo("Object Not Found for:" + INNER_MESSAGE))
+                () -> assertThat(details.get("message"), equalTo("Not Found"))
             );
         }
     }
@@ -108,7 +97,7 @@ class ControllerExceptionHandlerTest {
 
             assertAll(
                 () -> assertThat(details, is(notNullValue())),
-                () -> assertThat(details.get("message"), equalTo("Object already exists for:" + INNER_MESSAGE))
+                () -> assertThat(details.get("message"), equalTo("Conflict"))
             );
         }
     }
@@ -123,7 +112,7 @@ class ControllerExceptionHandlerTest {
 
             assertAll(
                 () -> assertThat(details, is(notNullValue())),
-                () -> assertThat(details.get("message"), equalTo("Illegal Input:" + INNER_MESSAGE))
+                () -> assertThat(details.get("message"), equalTo("Bad Request"))
             );
         }
     }
@@ -138,7 +127,7 @@ class ControllerExceptionHandlerTest {
 
             assertAll(
                 () -> assertThat(details, is(notNullValue())),
-                () -> assertThat(details.get("message"), equalTo("Unexpected Error: " + INNER_MESSAGE))
+                () -> assertThat(details.get("message"), equalTo("Internal Server Error"))
             );
         }
     }
@@ -165,7 +154,7 @@ class ControllerExceptionHandlerTest {
 
         assertAll(
             () -> assertThat(details, is(notNullValue())),
-            () -> assertThat(details.get("message"), containsString("ElasticSearch initialisation exception"))
+            () -> assertThat(details.get("message"), equalTo("Bad Request"))
         );
     }
 

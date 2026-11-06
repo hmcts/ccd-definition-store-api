@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ValidationResponseAssertions.assertValidationResponse;
 
 class DisplayContextParameterValidatorTest {
 
@@ -50,6 +51,7 @@ class DisplayContextParameterValidatorTest {
         assertThat(exception.getMessage(), is(
                 "Display context parameter #TABLE() has been incorrectly configured or "
                         + "is invalid for field fieldId on tab ComplexTypes"));
+        assertValidationResponse(exception);
     }
 
     @Test
@@ -99,6 +101,7 @@ class DisplayContextParameterValidatorTest {
         assertThat(exception.getMessage(), is(
                 "Display context parameter #LIST() has been incorrectly configured "
                         + "or is invalid for field fieldId on tab ComplexTypes"));
+        assertValidationResponse(exception);
     }
 
     private DefinitionSheet addDefinitionSheet(SheetName sheetName) {

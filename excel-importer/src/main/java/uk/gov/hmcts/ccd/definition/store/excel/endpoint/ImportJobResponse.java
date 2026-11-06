@@ -36,7 +36,7 @@ public record ImportJobResponse(
             entity.getSubmittedAt(),
             entity.getStartedAt(),
             entity.getCompletedAt(),
-            entity.getErrorSummary(),
+            entity.getErrorSummary() == null ? null : "Unable to complete the import.",
             warningsList,
             entity.getReindexTaskId()
         );

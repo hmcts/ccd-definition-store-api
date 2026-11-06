@@ -54,17 +54,11 @@ public class WorkBasketUserDefaultService {
     }
 
     private void putUserProfiles(final List<WorkBasketUserDefault> workBasketUserDefaults, final String actionedBy) {
-        try {
-            final HttpHeaders headers = securityUtils.authorizationHeaders();
-            headers.add("actionedBy", actionedBy);
-            final HttpEntity<List<WorkBasketUserDefault>> requestEntity = new HttpEntity<>(workBasketUserDefaults,
-                headers);
-            LOG.info("Updating user profile- URL {}", applicationParams.userProfilePutURL());
-            restTemplate.exchange(applicationParams.userProfilePutURL(), HttpMethod.PUT, requestEntity, String.class);
-
-        } catch (Exception e) {
-            LOG.error("Problem updating user profile: {} because of ", workBasketUserDefaults, e);
-            throw e;
-        }
+        final HttpHeaders headers = securityUtils.authorizationHeaders();
+        headers.add("actionedBy", actionedBy);
+        final HttpEntity<List<WorkBasketUserDefault>> requestEntity = new HttpEntity<>(workBasketUserDefaults,
+            headers);
+        LOG.info("Updating user profile- URL {}", applicationParams.userProfilePutURL());
+        restTemplate.exchange(applicationParams.userProfilePutURL(), HttpMethod.PUT, requestEntity, String.class);
     }
 }

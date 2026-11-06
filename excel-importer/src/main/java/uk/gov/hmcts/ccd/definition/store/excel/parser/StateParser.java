@@ -35,7 +35,8 @@ public class StateParser {
             .groupDataItemsByCaseType();
 
         if (!stateItemsByCaseTypes.containsKey(caseTypeId)) {
-            throw new SpreadsheetParsingException("At least one state must be defined for case type: " + caseTypeId);
+            throw SpreadsheetParsingException.reference(
+                SpreadsheetParsingException.ReferenceValidation.REQUIRED_STATE, caseTypeId);
         }
 
         final List<DefinitionDataItem> stateItems = stateItemsByCaseTypes.get(caseTypeId);

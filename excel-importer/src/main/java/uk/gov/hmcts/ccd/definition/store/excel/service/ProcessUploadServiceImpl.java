@@ -67,7 +67,7 @@ public class ProcessUploadServiceImpl implements ProcessUploadService {
             workResult = importWorkService.doImport(bytes, file, reindex, deleteOldIndex, jobId);
         } catch (RuntimeException | IOException ex) {
             try {
-                importJobService.markFailed(jobId, ex.getMessage());
+                importJobService.markFailed(jobId, "Unable to complete the import.");
             } catch (Exception markFailedEx) {
                 log.error("markFailed failed for job {}. Propagating original exception", jobId, markFailedEx);
             }

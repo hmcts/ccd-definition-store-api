@@ -23,8 +23,13 @@ import uk.gov.hmcts.ccd.definition.store.excel.azurestorage.exception.FileStorag
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.Instant;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
+import org.springframework.http.HttpStatusCode;
+import uk.gov.hmcts.ccd.error.SafeErrorResponse;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
@@ -39,7 +44,6 @@ import static org.springframework.http.HttpStatus.BAD_REQUEST;
 @ControllerAdvice
 class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final Integer MAX_DEPTH = 5;
     private static Logger log = LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
 
     private SpreadsheetValidationErrorMessageCreator spreadsheetValidationErrorMessageCreator;
@@ -51,9 +55,12 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
 
     @ExceptionHandler(value = {InvalidImportException.class, MapperException.class})
     ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
-        log.error("Exception thrown '{}'", ex.getMessage(), ex);
-        return handleExceptionInternal(
-            ex, flattenExceptionMessages(ex), new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return handleExceptionInternal(ex, null, new HttpHeaders(), BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(SpreadsheetParsingException.class)
+    ResponseEntity<Object> handleSpreadsheetParsing(SpreadsheetParsingException ex, WebRequest request) {
+        return handleExceptionInternal(ex, null, new HttpHeaders(), BAD_REQUEST, request);
     }
 
     @ExceptionHandler(value = MissingAccessProfilesException.class)
@@ -62,7 +69,6 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
             .append(ex.getMissingAccessProfiles()
                 .stream()
                 .collect(Collectors.joining("\n"))).toString();
-        log.warn(missingAccessProfiles);
 
         String validationErrors = getValidationErrorMessage(
             "\n\nValidation errors occurred importing the spreadsheet.\n\n", ex.getValidationErrors());
@@ -93,14 +99,14 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseStatus(code = BAD_REQUEST)
     @ResponseBody
     String caseTypeValidation(CaseTypeValidationException e) {
-        log.error("Exception thrown {}", e.getMessage(), e);
+        log.warn("Case type validation failed", e);
         return getMessagesAsString(e.getErrors());
     }
 
     @ExceptionHandler(FileStorageException.class)
     public void handleFileStorageException(HttpServletResponse response,
                                            FileStorageException fileStorageException) throws IOException {
-        log.error("Exception thrown: {}", fileStorageException.getMessage(), fileStorageException);
+        log.error("File storage request failed", fileStorageException);
         response.sendError(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 
@@ -108,14 +114,13 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public ResponseEntity<Object> handleFeignClientException(FeignException.FeignClientException exception,
                                                              WebRequest request) {
-        log.error(exception.getMessage(), exception);
 
         int status = exception.status();
         if (status != HttpStatus.UNAUTHORIZED.value()) {
             status = HttpStatus.INTERNAL_SERVER_ERROR.value();
         }
 
-        return handleExceptionInternal(exception, flattenExceptionMessages(exception), new HttpHeaders(),
+        return handleExceptionInternal(exception, HttpStatus.valueOf(status).getReasonPhrase(), new HttpHeaders(),
             HttpStatus.valueOf(status), request);
     }
 
@@ -123,7 +128,8 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public void handleFeignServerException(FeignException.FeignServerException exception, HttpServletResponse response)
         throws IOException {
-        log.error(exception.getMessage(), exception);
+
+        log.error("Upstream request failed", exception);
 
         int status = exception.status();
         if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
@@ -137,7 +143,8 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public void handleHttpServerErrorException(HttpServerErrorException exception, HttpServletResponse response)
         throws IOException {
-        log.error(exception.getMessage(), exception);
+
+        log.error("Upstream request failed", exception);
 
         int status = exception.getRawStatusCode();
         if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
@@ -151,28 +158,46 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     @ResponseBody
     public ResponseEntity<Object> handleHttpClientErrorException(HttpClientErrorException exception,
                                                                  WebRequest request) {
-        log.error(exception.getMessage(), exception);
 
         int status = exception.getRawStatusCode();
         if (status != HttpStatus.UNAUTHORIZED.value()) {
             status = HttpStatus.INTERNAL_SERVER_ERROR.value();
         }
 
-        return handleExceptionInternal(exception, flattenExceptionMessages(exception), new HttpHeaders(),
+        return handleExceptionInternal(exception, HttpStatus.valueOf(status).getReasonPhrase(), new HttpHeaders(),
             HttpStatus.valueOf(status), request);
     }
 
-    private String flattenExceptionMessages(RuntimeException ex) {
-        final StringBuilder sb = new StringBuilder(ex.getMessage());
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception exception, Object body,
+                                                              HttpHeaders headers, HttpStatusCode status,
+                                                              WebRequest request) {
+        SafeErrorResponse.log(log, status, exception);
+        return super.handleExceptionInternal(exception, safeResponseBody(exception, body, headers, status),
+            headers, status, request);
+    }
 
-        Integer remaining = MAX_DEPTH;
-        Throwable inner = ex;
-        while ((inner = inner.getCause()) != null && 0 < --remaining) {
-            log.debug("Remaining '{}' out of '{}'", remaining, MAX_DEPTH);
-            sb.append("\n").append(inner.getMessage());
+    private Object safeResponseBody(Exception exception, Object body, HttpHeaders headers, HttpStatusCode status) {
+        if (exception instanceof ValidationException || exception instanceof MissingAccessProfilesException) {
+            return body;
         }
-
-        return sb.toString();
+        if (exception instanceof PublicValidationMessage validation) {
+            String message = validation.getPublicMessage();
+            if (validation.getResponseFormat() == PublicValidationMessage.Format.IMPORT_JSON) {
+                return Map.of("timestamp", Instant.now().toString(), "status", status.value(),
+                    "error", HttpStatus.valueOf(status.value()).getReasonPhrase(),
+                    "message", message == null ? HttpStatus.valueOf(status.value()).getReasonPhrase() : message,
+                    "path", "/import");
+            }
+            if (message != null) {
+                if (validation.getResponseFormat() == PublicValidationMessage.Format.PLAIN_TEXT) {
+                    headers.setContentType(MediaType.TEXT_PLAIN);
+                    return message;
+                }
+                return SafeErrorResponse.body(status, message);
+            }
+        }
+        return SafeErrorResponse.body(status);
     }
 
     private String getMessagesAsString(Set<String> messages) {

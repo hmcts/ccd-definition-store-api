@@ -291,8 +291,10 @@ class EventParserTest extends ParserTestBase {
         final String validEventEnablingCondition = "aaa. x.bbb=\"some-value\"";
         item.addAttribute(ColumnName.EVENT_ENABLING_CONDITION.toString(), validEventEnablingCondition);
         definitionSheet.addDataItem(item);
-        assertThrows(SpreadsheetParsingException.class, () -> 
+        SpreadsheetParsingException failure = assertThrows(SpreadsheetParsingException.class, () ->
             eventParser.parseAll(definitionSheets, caseType));
+        uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ValidationResponseAssertions
+            .assertImportValidationResponse(failure, "Invalid Event enabling Condition " + validEventEnablingCondition);
     }
 
     @Test

@@ -1,27 +1,23 @@
 {
-	"_guid_": "S-082.4",
-	"_extends_": "F-082_Test_Base_Data",
-	"title": "must return 404 when user provide non-existing JID {jurisdiction references} within the request",
-
-	"specs": [
-	 "an active profile in CCD",
-	 "contains a non-existing jurisdiction id",
-	 "contains 404 not found code"
-	],
-
-	"request": {
-	 "pathVariables": {
-		"jid": "NON_EXISTING_BEFTA_JURISDICTION",
-		"uid": "[[DEFAULT_AUTO_VALUE]]"
-	 }
-	},
-
+  "_guid_": "S-082.4",
   "_extends_": "BeftaCaseworker3",
-
-	"expectedResponse": {
-	 "_extends_": "Common_404_Response",
-	 "body": {
-		"message": "Object Not Found for:NON_EXISTING_BEFTA_JURISDICTION"
-	 }
-	}
+  "title": "must return 404 when user provide non-existing JID {jurisdiction references} within the request",
+  "specs": [
+    "an active profile in CCD",
+    "contains a non-existing jurisdiction id",
+    "contains 404 not found code"
+  ],
+  "request": {
+    "pathVariables": {
+      "jid": "NON_EXISTING_BEFTA_JURISDICTION",
+      "uid": "[[DEFAULT_AUTO_VALUE]]"
+    }
+  },
+  "expectedResponse": {
+    "_extends_": "CCD_Safe_Definition_404_Response",
+    "body": {
+      "message": "Not Found",
+      "code": "RESOURCE_NOT_FOUND"
+    }
+  }
 }

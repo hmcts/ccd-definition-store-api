@@ -1,0 +1,12 @@
+{
+  "_guid_": "CCD_Safe_Definition_404_Response",
+  "responseCode": 404,
+  "responseMessage": "Not Found",
+  "headers": {
+    "_extends_": "Common_404_Response_Headers"
+  },
+  "body": {
+    "message": "Not Found",
+    "code": "RESOURCE_NOT_FOUND"
+  }
+}

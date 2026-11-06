@@ -1,6 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import com.google.common.collect.Lists;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
@@ -40,7 +41,7 @@ public class CaseFieldParser {
             SheetName.CASE_FIELD.getName()).groupDataItemsByCaseType();
 
         if (!caseFieldItemsByCaseTypes.containsKey(caseTypeId)) {
-            throw new SpreadsheetParsingException(
+            throw new ImportValidationException(ImportValidationException.Reason.MISSING_CASE_FIELDS,
                 "At least one case field must be defined for case type: " + caseTypeId);
         }
 

@@ -1,5 +1,15 @@
 package uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception;
 
+import org.springframework.http.MediaType;
+import uk.gov.hmcts.ccd.definition.store.excel.parser.SpreadsheetParsingException;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
+import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.read.ListAppender;
+import org.slf4j.LoggerFactory;
+
 import uk.gov.hmcts.ccd.definition.store.domain.validation.MissingAccessProfilesException;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationError;
 import uk.gov.hmcts.ccd.definition.store.domain.validation.ValidationException;
@@ -17,6 +27,8 @@ import feign.FeignException;
 import feign.Request;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -28,6 +40,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -41,13 +54,107 @@ class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
-    void handleBadRequest_shouldAggregateInnerMessages() throws Exception {
-        final RuntimeException exception = new RuntimeException("Outer message", new Exception("Inner message"));
+    void approvedValidationRemainsActionableButMapperDiagnosticsStayPrivate() {
+        for (ImportValidationException.Reason reason : ImportValidationException.Reason.values()) {
+            ImportValidationException exception = new ImportValidationException(reason, "PRIVATE context");
+            ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
+            assertEquals(400, response.getStatusCode().value());
+            assertEquals(exception.getPublicMessage(), ((Map<?, ?>) response.getBody()).get("message"));
+            assertFalse(response.getBody().toString().contains("PRIVATE"));
+        }
+        MapperException diagnostic = new MapperException("SECRET internal-host",
+            new IllegalStateException("SECRET database cause"));
+        ResponseEntity<Object> response = exceptionHandler.handleBadRequest(diagnostic, mock(WebRequest.class));
+        assertEquals("Bad Request", ((Map<?, ?>) response.getBody()).get("message"));
+    }
 
+    @Test
+    void duplicateDefaultFocusRetainsPlainTextValidationResponse() {
+        ResponseEntity<Object> response = exceptionHandler.handleBadRequest(
+            ImportValidationException.multipleDefaultFocus("CaseTypeTab", 2, "FT_MasterCaseType"),
+            mock(WebRequest.class));
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(MediaType.TEXT_PLAIN, response.getHeaders().getContentType());
+        assertEquals("Only one row per case type can have DefaultFocus set to true in worksheet CaseTypeTab; "
+            + "found 2 for case type FT_MasterCaseType", response.getBody());
+    }
+
+    @ParameterizedTest
+    @CsvSource(delimiter = '|', value = {
+        "NULLIFY_WITH_DEFAULT|NullifyByDefault cannot be set to Yes if DefaultValue has a value in CaseEventToFields",
+        "JURISDICTION_COUNT|A definition must contain exactly one Jurisdiction",
+        "MISSING_CASE_TYPE|A definition must contain at least one Case Type",
+        "MISSING_CASE_FIELD_SHEET|A definition must contain a Case Field worksheet",
+        "MISSING_COMPLEX_TYPES_SHEET|A definition must contain a Complex Types worksheet",
+        "MISSING_FIXED_LIST_SHEET|A definition must contain a Fixed List worksheet",
+        "MISSING_DISPLAY_GROUP_SHEET|A definition must contain a CaseTypeTab sheet with at least one entry",
+        "MISSING_TAB_FIELDS|At least one CaseField must be defined in the CaseTypeTab for case type CaseTypeTab",
+        "DUPLICATE_LAYOUT_ROW|Please make sure each row in worksheet CaseTypeTab is unique for case type TestCase"
+    })
+    void approvedSpreadsheetRulesRetainPlainText(ImportValidationException.Rule rule, String expectedMessage) {
+        ResponseEntity<Object> response = exceptionHandler.handleBadRequest(
+            ImportValidationException.rule(rule, "CaseTypeTab", "TestCase"), mock(WebRequest.class));
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(MediaType.TEXT_PLAIN, response.getHeaders().getContentType());
+        assertEquals(expectedMessage, response.getBody());
+    }
+
+    @Test
+    void approvedHiddenFieldErrorsRetainPlainTextWithoutPrivateDiagnostics() {
+        ImportValidationException first = ImportValidationException.invalidHiddenField("CollectionField");
+        ImportValidationException second = new ImportValidationException(
+            ImportValidationException.Reason.MISSING_CASE_FIELDS, "SECRET diagnostic");
+        ImportValidationException combined = ImportValidationException.combine(List.of(first, second));
+        ResponseEntity<Object> response = exceptionHandler.handleBadRequest(combined, mock(WebRequest.class));
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(MediaType.TEXT_PLAIN, response.getHeaders().getContentType());
+        assertEquals(first.getPublicMessage() + "\n" + second.getPublicMessage(), response.getBody());
+        assertFalse(response.getBody().toString().contains("SECRET"));
+        assertEquals("SECRET diagnostic", combined.getSuppressed()[1].getMessage());
+    }
+
+    @Test
+    void publicFieldValidationDoesNotExposeItsTechnicalCause() {
+        InvalidImportException exception = InvalidImportException.invalidReference(
+            SheetName.SEARCH_PARTY,
+            ColumnName.SEARCH_PARTY_NAME,
+            "InvalidName", new IllegalStateException("SECRET jdbc internal-host"));
+        ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        assertEquals(MediaType.TEXT_PLAIN, response.getHeaders().getContentType());
+        assertEquals(exception.getPublicMessage(), response.getBody());
+        assertFalse(response.getBody().toString().contains("SECRET"));
+        response = exceptionHandler.handleBadRequest(new InvalidImportException("SECRET diagnostic"),
+            mock(WebRequest.class));
+        assertEquals("Bad Request", ((Map<?, ?>) response.getBody()).get("message"));
+    }
+
+    @Test
+    void publicPostStateValidationAndTechnicalParsingFailuresStaySeparate() {
+        var exception = SpreadsheetParsingException
+            .invalidCondition("CaseCreated(InvalidCondition)", new IllegalStateException("SECRET cause"));
+        ResponseEntity<Object> response = exceptionHandler.handleSpreadsheetParsing(exception, mock(WebRequest.class));
+        assertEquals("Invalid Post State Condition CaseCreated(InvalidCondition)",
+            ((Map<?, ?>) response.getBody()).get("message"));
+        assertEquals("/import", ((Map<?, ?>) response.getBody()).get("path"));
+        assertFalse(response.getBody().toString().contains("SECRET"));
+        response = exceptionHandler.handleSpreadsheetParsing(
+            new SpreadsheetParsingException("SECRET diagnostic"),
+            mock(WebRequest.class));
+        assertEquals("Bad Request", ((Map<?, ?>) response.getBody()).get("message"));
+    }
+
+    @ParameterizedTest
+    @org.junit.jupiter.params.provider.ValueSource(ints = {1, 6})
+    void hidesExceptionDiagnosticsAtAnyCauseDepth(int depth) {
+        Exception cause = new Exception("PRIVATE root cause");
+        for (int index = 1; index < depth; index++) {
+            cause = new Exception("PRIVATE nested cause", cause);
+        }
+        final RuntimeException exception = new RuntimeException("PRIVATE outer message", cause);
         final ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
-
-        assertThat(response.getBody().toString(), equalTo("Outer message\nInner message"));
-        assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
+        assertEquals(Map.of("message", "Bad Request", "code", "INVALID_REQUEST"), response.getBody());
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
     @Test
@@ -78,21 +185,6 @@ class RestResponseEntityExceptionHandlerTest {
         assertThat(response.getBody().toString(),
             containsString("Validation errors occurred importing the spreadsheet."));
         assertThat(response.getStatusCode(), equalTo(HttpStatus.UNPROCESSABLE_ENTITY));
-    }
-
-    @Test
-    void handleBadRequest_shouldStopMessageAggregationAtDepth5() throws Exception {
-        final RuntimeException exception = new RuntimeException("Depth 1",
-            new Exception("Depth 2",
-                new Exception("Depth 3",
-                    new Exception("Depth 4",
-                        new Exception("Depth 5",
-                            new Exception("Depth 6"))))));
-
-        final ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
-
-        assertThat(response.getBody().toString(), equalTo("Depth 1\nDepth 2\nDepth 3\nDepth 4\nDepth 5"));
-        assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
     }
 
     @Test
@@ -189,6 +281,31 @@ class RestResponseEntityExceptionHandlerTest {
             .handleFeignClientException(ex, mock(WebRequest.class));
 
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
+    }
+
+    @Test
+    void retainsOriginalExceptionAtInfoWithoutLeakingItInTheResponse() {
+        Logger logger = (Logger) LoggerFactory.getLogger(RestResponseEntityExceptionHandler.class);
+        Level previousLevel = logger.getLevel();
+        ListAppender<ILoggingEvent> appender = new ListAppender<>();
+        appender.start();
+        logger.addAppender(appender);
+        try {
+            logger.setLevel(Level.INFO);
+            ImportValidationException original = new ImportValidationException(
+                ImportValidationException.Reason.MISSING_LAYOUT_FIELDS, "PRIVATE support diagnostic");
+            ResponseEntity<Object> result = exceptionHandler.handleBadRequest(original, mock(WebRequest.class));
+            assertEquals(400, result.getStatusCode().value());
+            assertEquals("PRIVATE support diagnostic", appender.list.get(0).getThrowableProxy().getMessage());
+            assertEquals(1, appender.list.size());
+            assertEquals(Level.WARN, appender.list.get(0).getLevel());
+            assertEquals(original.getPublicMessage(), ((Map<?, ?>) result.getBody()).get("message"));
+            assertEquals(false, result.getBody().toString().contains("PRIVATE"));
+        } finally {
+            logger.setLevel(previousLevel);
+            logger.detachAppender(appender);
+            appender.stop();
+        }
     }
 
 }

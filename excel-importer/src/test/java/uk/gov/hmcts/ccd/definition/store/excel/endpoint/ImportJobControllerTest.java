@@ -60,6 +60,20 @@ class ImportJobControllerTest {
         closeable.close();
     }
 
+    @Test
+    void failedJobDoesNotExposeStoredInfrastructureDiagnostics() throws Exception {
+        UUID id = UUID.randomUUID();
+        ImportJobEntity entity = new ImportJobEntity();
+        entity.setId(id);
+        entity.setStatus(ImportJobStatus.FAILED);
+        entity.setErrorSummary("SECRET jdbc://internal-host SQL failure");
+        when(importJobService.findById(id)).thenReturn(Optional.of(entity));
+        mockMvc.perform(get("/import-jobs/" + id).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.status").value("FAILED"))
+            .andExpect(jsonPath("$.errorSummary").value("Unable to complete the import."));
+    }
+
     @DisplayName("Valid id → 200 with response body, expireStaleJobs called before findById")
     @Test
     void validId_returns200() throws Exception {

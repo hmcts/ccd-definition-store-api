@@ -7,22 +7,21 @@
     "responseMessage": "Bad Request",
     "headers": {
       "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
-      "Content-Type": "application/problem+json",
+      "Content-Encoding": "gzip",
+      "Content-Type": "application/json",
       "Date": "[[ANYTHING_PRESENT]]",
       "Expires": "0",
       "Pragma": "no-cache",
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]",
       "Transfer-Encoding": "chunked",
+      "Vary": "accept-encoding",
       "X-Content-Type-Options": "nosniff",
       "X-Frame-Options": "DENY",
       "X-XSS-Protection": "0"
     },
     "body": {
-      "type": "about:blank",
-      "title": "Bad Request",
-      "status": 400,
-      "detail": "Failed to read request",
-      "instance": "/api/user-role"
+      "message": "Bad Request",
+      "code": "INVALID_REQUEST"
     }
   }
 }

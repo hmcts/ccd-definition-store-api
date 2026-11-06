@@ -83,7 +83,8 @@ class CaseTypeTest extends BaseTest {
             .get("/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/roles")
             .then()
             .statusCode(404)
-            .body("message", equalTo("Object Not Found for:case-type-does-not-exist"));
+            .body("message", equalTo("Not Found"))
+            .body("code", equalTo("RESOURCE_NOT_FOUND"));
 
         asUser.get()
             .given()
@@ -94,7 +95,8 @@ class CaseTypeTest extends BaseTest {
             .get("/api/data/caseworkers/{uid}/jurisdictions/{jid}/case-types/{ctid}/access/profile/roles")
             .then()
             .statusCode(404)
-            .body("message", equalTo("Object Not Found for:case-type-does-not-exist"));
+            .body("message", equalTo("Not Found"))
+            .body("code", equalTo("RESOURCE_NOT_FOUND"));
     }
 
     //Removed @Test annotation to temporarily remove test
