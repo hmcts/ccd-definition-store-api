@@ -7,7 +7,7 @@ plugins {
     id 'eclipse'
     id 'org.springframework.boot' version '3.5.16'
     id 'io.spring.dependency-management' version '1.1.7'
-    id 'com.github.ben-manes.versions' version '0.54.0'
+    id 'com.github.ben-manes.versions' version '0.67.0'
     id 'org.sonarqube' version '6.3.1.5724'
     id 'com.github.kt3k.coveralls' version "2.12.2"
     id 'com.github.spacialcircumstances.gradle-cucumber-reporting' version '0.1.25'
@@ -464,8 +464,8 @@ sonarqube {
     properties {
         property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**"
         property "sonar.exclusions", "**/AppInsightsConfiguration**"
-        property "sonar.junit.reportPaths", 'build/test-results/junit-platform'
-        property "sonar.jacoco.reportPaths", "${buildDir}/jacoco/junitPlatformTest.exec"
+        property "sonar.junit.reportPaths", "${buildDir}/test-results/test"
+        property "sonar.coverage.jacoco.xmlReportPaths", "${buildDir}/reports/jacoco/jacocoTestReport.xml"
         property "sonar.cpd.exclusions", "**/entity/*.java,**/model/*.java"
         property "sonar.jacoco.excludes", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/TestingSupportController.java"
         property "sonar.coverage.exclusions", "**/AppInsightsConfiguration**,**/entity/*.java,**/model/*.java,**/AbstractDefinitionRepositoryDecorator.java,**/data/*Data.java,**/*Controller.java,**/WorkBasketUserDefaultService.java,**/*Exception.java,**/ControllerExceptionHandler.java,**/GenericLayoutEntityValidatorImpl.java,**/JurisdictionServiceImpl.java,**/TestingSupportController.java"
@@ -555,6 +555,10 @@ task codeCoverageReport(type: JacocoReport, dependsOn: allprojects*.test) {
             logger.lifecycle("Aggregated JaCoCo HTML report not found at: ${htmlIndex.absolutePath}")
         }
     }
+}
+
+tasks.named('sonarqube') {
+    dependsOn codeCoverageReport
 }
 
 tasks.named('build') {
