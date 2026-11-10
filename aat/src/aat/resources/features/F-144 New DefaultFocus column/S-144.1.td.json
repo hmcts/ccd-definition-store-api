@@ -1,11 +1,11 @@
 {
-  "_guid_": "S-132.2",
-  "_extends_": "Import_Base_data",
-  "title": "Import Definition file containing new column StateCategory with comma separated State Categories",
-  "specs": [
-    "an active profile in CCD and with CCD-import role",
-    "contains a definition file with new column StateCategory with comma separated State Categories"
-  ],
+	"_guid_": "S-144.1",
+	"_extends_": "F-144_Test_Base_data",
+	"title": "Import Definition file with true value in DefaultFocus column of the CaseTypeTab",
+	"specs": [
+    "an active profile in CCD",
+    "contains a definition file with new column DefaultFocus"
+	],
   "request": {
     "body": {
       "arrayInMap": [
@@ -24,7 +24,7 @@
       "Content-Length": "[[ANYTHING_PRESENT]]"
     },
     "body": {
-      "__plainTextValue__": "Case Definition data successfully imported"
+      "__plainTextValue__" : "Case Definition data successfully imported"
     }
   }
 }

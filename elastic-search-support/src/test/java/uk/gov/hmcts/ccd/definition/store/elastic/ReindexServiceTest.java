@@ -3,8 +3,7 @@ package uk.gov.hmcts.ccd.definition.store.elastic;
 import co.elastic.clients.elasticsearch.indices.AliasDefinition;
 import co.elastic.clients.elasticsearch.indices.GetAliasResponse;
 import co.elastic.clients.elasticsearch.indices.get_alias.IndexAliases;
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.rest.RestStatus;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -60,6 +59,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchExceptionFactory.elasticsearchException;
 
 @ExtendWith(MockitoExtension.class)
 class ReindexServiceTest {
@@ -263,11 +263,11 @@ class ReindexServiceTest {
     }
 
     @Test
-    void shouldPersistFailureElasticsearchStatusExceptionBeforeReindex() throws IOException {
+    void shouldPersistFailureElasticsearchExceptionBeforeReindex() throws IOException {
         mockAliasResponse();
 
         when(caseMappingGenerator.generateMapping(any()))
-            .thenThrow(new ElasticsearchStatusException("ES error", RestStatus.BAD_REQUEST));
+            .thenThrow(elasticsearchException("test_exception", "ES error"));
 
         ReindexEntity entity = new ReindexEntity();
         when(reindexRepository.findByIndexName(newIndexName)).thenReturn(Optional.of(entity));
@@ -276,7 +276,7 @@ class ReindexServiceTest {
             Collections.singletonList(caseA), true, true, TEST_USER_EMAIL
         );
 
-        assertThrows(ElasticsearchStatusException.class,
+        assertThrows(ElasticsearchException.class,
             () -> reindexService.asyncReindex(event, baseIndexName, caseA));
 
         verify(reindexRepository).saveAndFlush(entity);
@@ -394,10 +394,10 @@ class ReindexServiceTest {
         List<ReindexTask> result = reindexService.getAll();
 
         assertThat(result.size(), is(1));
-        assertThat(result.get(0), sameInstance(mappedTask));
-        assertThat(result.get(0).getStartTime(), is(equalTo(start)));
-        assertThat(result.get(0).getEndTime(), is(equalTo(end)));
-        assertThat(result.get(0).getDuration(), is(930L));
+        assertThat(result.getFirst(), sameInstance(mappedTask));
+        assertThat(result.getFirst().getStartTime(), is(equalTo(start)));
+        assertThat(result.getFirst().getEndTime(), is(equalTo(end)));
+        assertThat(result.getFirst().getDuration(), is(930L));
     }
 
     @Test
@@ -415,8 +415,8 @@ class ReindexServiceTest {
         List<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA");
 
         assertThat(result.size(), is(1));
-        assertThat(result.get(0), sameInstance(mappedTask));
-        assertThat(result.get(0).getDuration(), is(65L));
+        assertThat(result.getFirst(), sameInstance(mappedTask));
+        assertThat(result.getFirst().getDuration(), is(65L));
     }
 
     @Test
@@ -434,9 +434,9 @@ class ReindexServiceTest {
         List<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA");
 
         assertThat(result.size(), is(1));
-        assertThat(result.get(0), sameInstance(mappedTask));
-        assertThat(result.get(0).getDuration(), is(703_830L));
-        assertThat(result.get(0).getDuration(), greaterThan(86_400L));
+        assertThat(result.getFirst(), sameInstance(mappedTask));
+        assertThat(result.getFirst().getDuration(), is(703_830L));
+        assertThat(result.getFirst().getDuration(), greaterThan(86_400L));
     }
 
     @Test
@@ -452,7 +452,7 @@ class ReindexServiceTest {
         Page<ReindexTask> result = reindexService.getTasksByCaseType("", pageable);
 
         assertThat(result.getTotalElements(), is(1L));
-        assertThat(result.getContent().get(0), sameInstance(mappedTask));
+        assertThat(result.getContent().getFirst(), sameInstance(mappedTask));
     }
 
     @Test
@@ -468,7 +468,7 @@ class ReindexServiceTest {
         Page<ReindexTask> result = reindexService.getTasksByCaseType("caseTypeA", pageable);
 
         assertThat(result.getTotalElements(), is(6L));
-        assertThat(result.getContent().get(0), sameInstance(mappedTask));
+        assertThat(result.getContent().getFirst(), sameInstance(mappedTask));
     }
 
     @Test

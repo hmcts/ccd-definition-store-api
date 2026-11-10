@@ -1,7 +1,5 @@
 package uk.gov.hmcts.ccd.definition.store.elastic.exception.handler;
 
-import org.elasticsearch.ElasticsearchStatusException;
-import org.elasticsearch.rest.RestStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.elastic.exception.ElasticsearchError;
@@ -11,6 +9,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.hmcts.ccd.definition.store.elastic.ElasticsearchExceptionFactory.elasticsearchException;
 
 class ElasticsearchErrorMessageBuilderTest {
 
@@ -71,8 +70,7 @@ class ElasticsearchErrorMessageBuilderTest {
 
     private ElasticsearchError elasticsearchError(String reason) {
         return new ElasticsearchError(
-            new ElasticsearchStatusException("Elasticsearch exception [type=TYPE, reason=" + reason + "]",
-                RestStatus.BAD_REQUEST),
+            elasticsearchException("TYPE", reason),
             caseTypeEntity);
     }
 }

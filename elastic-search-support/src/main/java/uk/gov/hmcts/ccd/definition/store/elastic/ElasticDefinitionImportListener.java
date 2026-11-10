@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.elastic;
 
 import lombok.extern.slf4j.Slf4j;
-import org.elasticsearch.ElasticsearchStatusException;
+import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.elastic.client.HighLevelCCDElasticClient;
@@ -75,7 +75,7 @@ public abstract class ElasticDefinitionImportListener {
                     elasticClient.upsertMapping(baseIndexName, caseMapping);
                 }
             }
-        } catch (ElasticsearchStatusException exc) {
+        } catch (ElasticsearchException exc) {
             logMapping(caseMapping);
             throw elasticsearchErrorHandler.createException(exc, currentCaseType);
         } catch (Exception exc) {

@@ -1,0 +1,7 @@
+{
+  "_guid_": "BaseRolesLauncherFieldType",
+  "_extends_": "CommonFieldType",
+
+  "id": "RolesLauncher",
+  "type": "RolesLauncher"
+}
