@@ -59,7 +59,8 @@
               },
               "order": 1,
               "show_condition": "[[ANY_STRING_NULLABLE]]",
-              "display_context_parameter": "[[ANY_STRING_NULLABLE]]"
+              "display_context_parameter": "[[ANY_STRING_NULLABLE]]",
+              "caseFieldSubfieldCode": null
             }
           ],
           "show_condition": "[[ANY_STRING_NULLABLE]]",
@@ -102,7 +103,8 @@
               },
               "order": 1,
               "show_condition": "[[ANY_STRING_NULLABLE]]",
-              "display_context_parameter": "[[ANY_STRING_NULLABLE]]"
+              "display_context_parameter": "[[ANY_STRING_NULLABLE]]",
+              "caseFieldSubfieldCode": null
             }
           ],
           "show_condition": "[[ANY_STRING_NULLABLE]]",
@@ -136,7 +138,8 @@
               },
               "order": 1,
               "show_condition": "[[ANY_STRING_NULLABLE]]",
-              "display_context_parameter": "[[ANY_STRING_NULLABLE]]"
+              "display_context_parameter": "[[ANY_STRING_NULLABLE]]",
+              "caseFieldSubfieldCode": null
             }
           ],
           "show_condition": "[[ANY_STRING_NULLABLE]]",
@@ -170,7 +173,8 @@
               },
               "order": 1,
               "show_condition": "[[ANY_STRING_NULLABLE]]",
-              "display_context_parameter": "[[ANY_STRING_NULLABLE]]"
+              "display_context_parameter": "[[ANY_STRING_NULLABLE]]",
+              "caseFieldSubfieldCode": null
             }
           ],
           "show_condition": "[[ANY_STRING_NULLABLE]]",
