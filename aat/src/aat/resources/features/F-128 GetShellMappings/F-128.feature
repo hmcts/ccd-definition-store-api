@@ -55,7 +55,7 @@ Feature: F-128 Get Shell Mappings for Originating Case Type Id
     And the response [contains 401 Unauthorised]
 
   @S-128.7
-  Scenario: Success response - Return 200 and keep caseStates when stateCategory is null
+  Scenario: Success response - Return 200 and exclude caseStates matching stateCategoriesToExclude
     Given a user with [an active profile in CCD]
     And a call [to import definition file] will get the expected response as in [Import_BEFTA_Master_Definition]
     When a request is prepared with appropriate values
@@ -63,7 +63,7 @@ Feature: F-128 Get Shell Mappings for Originating Case Type Id
     And the request [contains stateCategoriesToExclude query param]
     And it is submitted to call the [Get Shell Case Type Details] operation of [CCD Definition Store]
     Then a positive response is received
-    And the response [keeps caseStates whose stateCategory is null]
+    And the response [excludes caseStates whose stateCategory matches stateCategoriesToExclude]
     And the response has all other details as expected
 
   @S-128.8
@@ -81,7 +81,7 @@ Feature: F-128 Get Shell Mappings for Originating Case Type Id
   @S-128.9
   Scenario: Success response - Return 200 with caseStates including stateCategory values
     Given a user with [an active profile in CCD]
-    And a call [to import definition file with state categories] will get the expected response as in [Import_BEFTA_Master_With_StateCategory]
+    And a call [to import definition file] will get the expected response as in [Import_BEFTA_Master_Definition]
     When a request is prepared with appropriate values
     And the request [contains an originalCaseTypeId that exists in CCD config]
     And it is submitted to call the [Get Shell Case Type Details] operation of [CCD Definition Store]
