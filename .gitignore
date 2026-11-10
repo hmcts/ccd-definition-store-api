@@ -19,6 +19,7 @@ hs_err_pid*
 *.iml
 *.sublime-project
 *.sublime-workspace
+.tool-versions
 
 # OS files
 .DS_Store

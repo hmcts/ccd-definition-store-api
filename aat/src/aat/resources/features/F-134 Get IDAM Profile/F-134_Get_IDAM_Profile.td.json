@@ -1,0 +1,6 @@
+{
+  "_guid_": "F-134_Get_IDAM_Profile",
+  "_extends_": "Operation_Base_Data",
+  "operationName": "Get IDAM Profile",
+  "uri": "/api/idam/profile"
+}
