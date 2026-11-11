@@ -964,6 +964,7 @@ class  EntityToResponseDTOMapperTest {
             stateEntity.setName("name");
             stateEntity.setDescription("description");
             stateEntity.setOrder(69);
+            stateEntity.setStateCategory("General,Complex");
             StateACLEntity aclWithCreateOnly = stateACLEntity("acl-with-create-only", true, false, false, false);
             StateACLEntity aclWithReadOnly = stateACLEntity("acl-with-read-only", false, true, false, false);
             StateACLEntity aclWithUpdateOnly = stateACLEntity("acl-with-update-only", false, false, true, false);
@@ -977,6 +978,7 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(stateEntity.getName(), caseState.getName());
             assertEquals(stateEntity.getDescription(), caseState.getDescription());
             assertEquals(stateEntity.getOrder(), caseState.getOrder());
+            assertEquals(stateEntity.getStateCategory(), caseState.getStateCategory());
             assertAcls(stateEntity.getStateACLEntities(), caseState.getAcls());
         }
 
@@ -989,6 +991,7 @@ class  EntityToResponseDTOMapperTest {
             assertNull(caseState.getName());
             assertNull(caseState.getDescription());
             assertNull(caseState.getOrder());
+            assertNull(caseState.getStateCategory());
             assertTrue(caseState.getAcls().isEmpty());
         }
 
@@ -1303,6 +1306,7 @@ class  EntityToResponseDTOMapperTest {
             displayGroupEntity.setLabel("Label");
             displayGroupEntity.setAccessProfile(accessProfileEntity);
             displayGroupEntity.setOrder(69);
+            displayGroupEntity.setDefaultFocus(true);
 
             DisplayGroupCaseFieldEntity displayGroupCaseFieldEntity1 = new DisplayGroupCaseFieldEntity();
             displayGroupCaseFieldEntity1.setId(1);
@@ -1332,6 +1336,7 @@ class  EntityToResponseDTOMapperTest {
             assertEquals(displayGroupEntity.getReference(), caseTypeTab.getId());
             assertEquals(displayGroupEntity.getLabel(), caseTypeTab.getLabel());
             assertEquals(displayGroupEntity.getOrder(), caseTypeTab.getOrder());
+            assertEquals(displayGroupEntity.getDefaultFocus(), caseTypeTab.getDefaultFocus());
 
             assertEquals(displayGroupEntity.getDisplayGroupCaseFields().size(), caseTypeTab.getTabFields().size());
             assertThat(caseTypeTab.getTabFields(), hasItems(caseTypeTabField1, caseTypeTabField2, caseTypeTabField3));

@@ -1,0 +1,15 @@
+{
+  "_guid_": "F-140_Save_Draft_Without_Author",
+  "_extends_": "Put_Operation_Base_Data",
+  "operationName": "Save Draft Without Author",
+  "method": "PUT",
+  "uri": "/api/draft/save",
+  "request": {
+    "headers": { "Content-Type": "application/json" },
+    "body": {
+      "jurisdiction": { "id": "AUTOTEST1" },
+      "description": "Invalid draft",
+      "version": 1
+    }
+  }
+}

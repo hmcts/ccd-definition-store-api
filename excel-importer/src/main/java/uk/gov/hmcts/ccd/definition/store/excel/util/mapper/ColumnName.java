@@ -69,6 +69,7 @@ public enum ColumnName {
     SHOW_EVENT_NOTES("ShowEventNotes"),
     SHOW_SUMMARY_CHANGE_OPTION("ShowSummaryChangeOption"),
     SHOW_SUMMARY_CONTENT_OPTION("ShowSummaryContentOption"),
+    STATE_CATEGORY("StateCategory"),
     STATE_ID("CaseStateID"),
     TAB_ID("TabID"),
     TAB_LABEL("TabLabel"),
@@ -128,6 +129,7 @@ public enum ColumnName {
     SHELL_CASE_TYPE_ID("ShellCaseTypeID"),
     SHELL_CASE_FIELD_NAME("ShellCaseFieldName"),
     ORIGINATING_CASE_TYPE_ID("OriginatingCaseTypeID"),
+    DEFAULT_FOCUS("DefaultFocus"),
     ORIGINATING_CASE_FIELD_NAME("OriginatingCaseFieldName");
 
     private final String name;

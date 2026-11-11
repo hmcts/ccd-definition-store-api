@@ -1,0 +1,24 @@
+{
+  "_guid_": "S-140.2",
+  "_extends_": "F-140_Save_Draft_Without_Author",
+  "title": "Reject saving a draft without an author",
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+      "Content-Length": "32",
+      "Content-Type": "text/plain;charset=UTF-8",
+      "Date": "[[ANYTHING_PRESENT]]",
+      "Expires": "0",
+      "Pragma": "no-cache",
+      "Strict-Transport-Security": "max-age=31536000 ; includeSubDomains",
+      "X-Content-Type-Options": "nosniff",
+      "X-Frame-Options": "DENY",
+      "X-XSS-Protection": "0"
+    },
+    "body": {
+      "__plainTextValue__": "Definition author cannot be null"
+    }
+  }
+}
