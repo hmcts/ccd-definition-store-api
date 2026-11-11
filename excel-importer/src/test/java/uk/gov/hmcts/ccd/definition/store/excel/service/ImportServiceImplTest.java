@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import org.springframework.context.ApplicationEventPublisher;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
+import uk.gov.hmcts.ccd.definition.store.domain.DecentralisedEventsConfiguration;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionUiConfigService;
@@ -280,7 +281,8 @@ public class ImportServiceImplTest {
         final ParserFactory parserFactory = new ParserFactory(new ShowConditionParser(),
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator, hiddenFieldsValidator,
             challengeQuestionParser, categoryParser, accessTypesParser, accessTypeRolesParser, searchPartyValidator,
-            searchCriteriaValidator, categoryIdValidator, applicationParams, executor, shellMappingParser);
+            searchCriteriaValidator, categoryIdValidator, applicationParams, executor, shellMappingParser,
+            new DecentralisedEventsConfiguration());
 
         final SpreadsheetParser spreadsheetParser = new SpreadsheetParser(spreadsheetValidator);
 
@@ -568,7 +570,8 @@ public class ImportServiceImplTest {
             new EntityToDefinitionDataItemRegistry(), registry, spreadsheetValidator,
             hiddenFieldsValidator,challengeQuestionParser,
             categoryParser, accessTypesParser, accessTypeRolesParser, searchPartyValidator, searchCriteriaValidator,
-            categoryIdValidator, applicationParams, executor, shellMappingParser);
+            categoryIdValidator, applicationParams, executor, shellMappingParser,
+            new DecentralisedEventsConfiguration());
 
         final SpreadsheetParser spreadsheetParser = mock(SpreadsheetParser.class);
 
