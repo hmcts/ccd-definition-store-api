@@ -4,6 +4,7 @@ import uk.gov.hmcts.ccd.definition.store.excel.parser.ParseContext;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.ComplexFieldEntity;
@@ -48,6 +49,10 @@ public abstract class BaseChallengeQuestionTest {
         caseRoleEntities.add(caseRoleEntity1);
         caseRoleEntities.add(caseRoleEntity2);
         parseContext.registerCaseRoles(caseRoleEntities);
+
+        AccessProfileEntity defendantSolicitorProfile = new AccessProfileEntity();
+        defendantSolicitorProfile.setReference("defendant-solicitor");
+        parseContext.registerAccessProfiles(List.of(defendantSolicitorProfile));
 
         // OrganisationField
         FieldTypeEntity fieldTypeEntityOrganisationFiled = new FieldTypeEntity();
