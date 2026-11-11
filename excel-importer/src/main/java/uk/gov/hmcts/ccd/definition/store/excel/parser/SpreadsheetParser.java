@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.NumberToTextConverter;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.CASE_TYPES_ORDER;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName.DEFAULT_HIDDEN;
 
 @Component
@@ -33,7 +35,7 @@ public class SpreadsheetParser {
     private static final Logger logger = LoggerFactory.getLogger(SpreadsheetParser.class);
 
     private final SpreadsheetValidator spreadsheetValidator;
-    private DataFormatter cellFormatter;
+    private final DataFormatter cellFormatter;
     private List<String> importWarnings;
 
     @Autowired
@@ -41,7 +43,6 @@ public class SpreadsheetParser {
         this.spreadsheetValidator = spreadsheetValidator;
         this.cellFormatter = new DataFormatter();
     }
-
 
     public Map<String, DefinitionSheet> parse(InputStream inputStream) throws IOException {
         final Map<String, DefinitionSheet> definitionSheets = new HashMap<>();
@@ -108,8 +109,13 @@ public class SpreadsheetParser {
                                         cellValue = cell.getBooleanCellValue();
                                         break;
                                     case NUMERIC:
-                                        cellValue = DateUtil.isCellDateFormatted(cell)
-                                            ? cell.getDateCellValue() : formatNumberAsString(cell);
+                                        if (CASE_TYPES_ORDER.equalsColumnNameOrAlias(
+                                            headings.get(cell.getColumnIndex()))) {
+                                            cellValue = NumberToTextConverter.toText(cell.getNumericCellValue());
+                                        } else {
+                                            cellValue = DateUtil.isCellDateFormatted(cell)
+                                                ? cell.getDateCellValue() : formatNumberAsString(cell);
+                                        }
                                         break;
                                     case STRING:
                                         cellValue = cell.getStringCellValue();

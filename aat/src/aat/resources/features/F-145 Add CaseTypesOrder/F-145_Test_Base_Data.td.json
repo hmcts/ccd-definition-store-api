@@ -1,0 +1,15 @@
+{
+  "_guid_": "F-145_Test_Base_Data",
+  "_extends_": "Get_Operation_Base_Data_on_Definition_Store",
+  "operationName": "Get Jurisdiction Details",
+  "uri": "/api/data/jurisdictions",
+  "expectedResponse": {
+    "_extends_": "Common_200_Response",
+    "headers": {
+      "Content-Encoding": "gzip",
+      "Content-Length": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "application/json",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+    }
+  }
+}
