@@ -19,7 +19,7 @@ public interface CaseTypeService {
 
     List<CaseType> findByJurisdictionId(String jurisdictionId);
 
-    Optional<CaseType> findByCaseTypeId(String id);
+    Optional<CaseType> findByCaseTypeId(String caseTypeId);
 
     Optional<CaseTypeVersionInformation> findVersionInfoByCaseTypeId(String id);
 
