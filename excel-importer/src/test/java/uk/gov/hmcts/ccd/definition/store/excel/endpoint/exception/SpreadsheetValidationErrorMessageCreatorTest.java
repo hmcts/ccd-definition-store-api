@@ -399,7 +399,7 @@ class SpreadsheetValidationErrorMessageCreatorTest {
 
         CreateEventDoesNotHavePostStateValidationError createEventDoesNotHavePostStateValidationError
             = new CreateEventDoesNotHavePostStateValidationError(
-            eventEntity
+                eventEntity
         );
 
         assertEquals(
@@ -416,7 +416,7 @@ class SpreadsheetValidationErrorMessageCreatorTest {
 
         final CaseTypeEntityInvalidAccessProfileValidationError error
                 = new CaseTypeEntityInvalidAccessProfileValidationError(
-            caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
+                    caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(caseTypeACLEntity))
             .thenReturn(
@@ -438,7 +438,7 @@ class SpreadsheetValidationErrorMessageCreatorTest {
 
         final CaseTypeEntityInvalidAccessProfileValidationError error
                 = new CaseTypeEntityInvalidAccessProfileValidationError(
-            caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
+                    caseTypeACLEntity, new AuthorisationValidationContext(caseTypeEntity));
 
         when(entityToDefinitionDataItemRegistry.getForEntity(caseTypeACLEntity))
             .thenReturn(
@@ -614,7 +614,7 @@ class SpreadsheetValidationErrorMessageCreatorTest {
 
         final CaseFieldEntityInvalidComplexCrudValidationError error
             = new CaseFieldEntityInvalidComplexCrudValidationError(
-            entity,
+                entity,
                 new AuthorisationCaseFieldValidationContext(caseFieldEntity,
                     new CaseFieldEntityValidationContext(caseTypeEntity)));
 
@@ -709,7 +709,7 @@ class SpreadsheetValidationErrorMessageCreatorTest {
         CaseFieldEntityInvalidMetadataFieldValidationError error
             = new CaseFieldEntityInvalidMetadataFieldValidationError(
                 "Invalid metadata field 'case field' declaration for case type 'case type'",
-            caseFieldEntity,
+                caseFieldEntity,
                 new CaseFieldEntityValidationContext(caseTypeEntity));
 
         assertEquals("Invalid metadata field 'case field' declaration for case type 'case type'",
@@ -730,7 +730,7 @@ class SpreadsheetValidationErrorMessageCreatorTest {
 
         CaseFieldEntityCORValidationError error
             = new CaseFieldEntityCORValidationError(
-            caseField1);
+                caseField1);
 
         assertEquals("Change Organisation Request is defined more than once for case type 'case type'",
             classUnderTest.createErrorMessage(error));
@@ -757,7 +757,7 @@ class SpreadsheetValidationErrorMessageCreatorTest {
 
         EventEntityCaseTypeAccessProfileValidationError error
             = new EventEntityCaseTypeAccessProfileValidationError(
-            eventACLEntity2);
+                eventACLEntity2);
 
         assertEquals("AccessProfile 'Caseworker-caa' is defined more than once for case type 'CaseType'",
             classUnderTest.createErrorMessage(error));
@@ -903,9 +903,9 @@ class SpreadsheetValidationErrorMessageCreatorTest {
 
         EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError eventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError
             = new EventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError(
-            "SHOW CONDITION FIELD",
-            eventCaseFieldEntityValidationContext("EVENT ID"),
-            eventCaseFieldEntity
+                "SHOW CONDITION FIELD",
+                eventCaseFieldEntityValidationContext("EVENT ID"),
+                eventCaseFieldEntity
         );
 
         assertEquals(
@@ -1015,8 +1015,8 @@ class SpreadsheetValidationErrorMessageCreatorTest {
 
         EventCaseFieldEntityInvalidShowConditionError eventCaseFieldEntityWithShowConditionReferencesInvalidCaseFieldError
             = new EventCaseFieldEntityInvalidShowConditionError(
-            eventCaseFieldEntity,
-            eventCaseFieldEntityValidationContext("EVENT ID")
+                eventCaseFieldEntity,
+                eventCaseFieldEntityValidationContext("EVENT ID")
         );
 
         assertEquals(
@@ -1597,7 +1597,7 @@ class SpreadsheetValidationErrorMessageCreatorTest {
         caseFieldEntity.setReference("select * from tab1");
         final CaseFieldEntityInvalidIdValidationError error
             = new CaseFieldEntityInvalidIdValidationError(
-            caseFieldEntity,
+                caseFieldEntity,
                 new AuthorisationCaseFieldValidationContext(caseFieldEntity,
                     new CaseFieldEntityValidationContext(caseTypeEntity)));
 

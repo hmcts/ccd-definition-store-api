@@ -40,7 +40,7 @@ class AuthorisationCaseStateParser implements AuthorisationParser {
     public Collection<StateACLEntity> parseAll(Map<String, DefinitionSheet> definitionSheets,
                                                CaseTypeEntity caseTypeEntity,
                                                StateEntity stateEntity) {
-        Collection<StateACLEntity> parseResults = Lists.newArrayList();
+        final Collection<StateACLEntity> parseResults = Lists.newArrayList();
 
         final String caseTypeReference = caseTypeEntity.getReference();
         final String stateReference = stateEntity.getReference();
