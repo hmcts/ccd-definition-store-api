@@ -15,7 +15,7 @@ jobs:
           app_id: ${{ secrets.HMCTS_GITHUB_CCD_APP_ID }}
           private_key: ${{ secrets.HMCTS_GITHUB_CCD_PRIVATE_KEY }}
 
-      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           token: ${{ steps.generate-token.outputs.token }}
           ref: develop
