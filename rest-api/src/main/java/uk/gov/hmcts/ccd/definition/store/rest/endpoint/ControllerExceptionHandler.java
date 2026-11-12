@@ -135,7 +135,8 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                                                               WebRequest request) {
         SafeErrorResponse.log(LOG, status, exception);
         Object safeBody = HttpStatus.valueOf(status.value()).getReasonPhrase();
-        if (exception instanceof org.springframework.web.ErrorResponse) {
+        if (body instanceof org.springframework.http.ProblemDetail
+            || exception instanceof org.springframework.web.ErrorResponse) {
             var problem = org.springframework.http.ProblemDetail.forStatusAndDetail(status, (String) safeBody);
             problem.setInstance(java.net.URI.create("/"));
             safeBody = problem;

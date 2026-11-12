@@ -54,6 +54,21 @@ class RestResponseEntityExceptionHandlerTest {
     }
 
     @Test
+    void unreadableJsonRetainsProblemDetailWithoutPrivateDiagnostics() throws Exception {
+        var exception = new org.springframework.http.converter.HttpMessageNotReadableException(
+            "PRIVATE invalid enum value", new org.springframework.mock.http.MockHttpInputMessage(new byte[0]));
+        var request = new org.springframework.web.context.request.ServletWebRequest(
+            new org.springframework.mock.web.MockHttpServletRequest());
+        ResponseEntity<Object> response = exceptionHandler.handleException(exception, request);
+        assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+        var problem = org.junit.jupiter.api.Assertions.assertInstanceOf(
+            org.springframework.http.ProblemDetail.class, response.getBody());
+        assertEquals("Bad Request", problem.getDetail());
+        assertEquals(java.net.URI.create("/"), problem.getInstance());
+        assertFalse(problem.toString().contains("PRIVATE"));
+    }
+
+    @Test
     void approvedValidationRemainsActionableButMapperDiagnosticsStayPrivate() {
         for (ImportValidationException.Reason reason : ImportValidationException.Reason.values()) {
             ImportValidationException exception = new ImportValidationException(reason, "PRIVATE context");

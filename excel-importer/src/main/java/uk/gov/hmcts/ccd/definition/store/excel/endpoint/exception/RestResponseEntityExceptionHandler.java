@@ -199,7 +199,8 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
             }
         }
         String message = HttpStatus.valueOf(status.value()).getReasonPhrase();
-        if (exception instanceof org.springframework.web.ErrorResponse) {
+        if (body instanceof org.springframework.http.ProblemDetail
+            || exception instanceof org.springframework.web.ErrorResponse) {
             var problem = org.springframework.http.ProblemDetail.forStatusAndDetail(status, message);
             problem.setInstance(java.net.URI.create("/"));
             return problem;

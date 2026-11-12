@@ -3,7 +3,8 @@ package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,16 +18,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 class FrameworkErrorFixtureContractTest {
-    @Test
-    void frameworkValidationMatchesFunctionalFixtureWithoutExtraFields() throws Exception {
+    @ParameterizedTest
+    @CsvSource(delimiter = '|', value = {"8|{}", "9|{\"name\":\"example\",\"classification\":\"INVALID\"}"})
+    void frameworkValidationMatchesFunctionalFixtureWithoutExtraFields(int scenario, String request) throws Exception {
         var mvc = standaloneSetup(new Probe()).setControllerAdvice(new ControllerExceptionHandler()).build();
-        var result = mvc.perform(post("/validation-probe").contentType("application/json").content("{}"))
+        var result = mvc.perform(post("/validation-probe").contentType("application/json").content(request))
             .andExpect(status().isBadRequest()).andReturn();
         var root = Path.of("").toAbsolutePath();
         while (!Files.exists(root.resolve("settings.gradle"))) {
             root = root.getParent();
         }
-        var fixture = root.resolve("aat/src/aat/resources/features/F-138 User Role API/S-138.8.td.json");
+        var fixture = root.resolve("aat/src/aat/resources/features/F-138 User Role API/S-138." + scenario + ".td.json");
         var mapper = new ObjectMapper();
         var expected = mapper.readTree(fixture.toFile()).get("expectedResponse");
         assertThat(mapper.readTree(result.getResponse().getContentAsString())).isEqualTo(expected.get("body"));
@@ -41,6 +43,7 @@ class FrameworkErrorFixtureContractTest {
         }
     }
 
-    record Input(@NotBlank String name) {
+    record Input(@NotBlank String name,
+                 uk.gov.hmcts.ccd.definition.store.repository.SecurityClassification classification) {
     }
 }
