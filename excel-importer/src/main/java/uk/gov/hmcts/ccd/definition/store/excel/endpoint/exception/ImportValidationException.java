@@ -69,7 +69,7 @@ public class ImportValidationException extends MapperException implements Public
     public ImportValidationException(Reason reason, String diagnosticMessage) {
         super(diagnosticMessage);
         publicMessage = reason.message;
-        responseFormat = Format.CODED_JSON;
+        responseFormat = Format.PLAIN_TEXT;
     }
 
     private ImportValidationException(String message) {

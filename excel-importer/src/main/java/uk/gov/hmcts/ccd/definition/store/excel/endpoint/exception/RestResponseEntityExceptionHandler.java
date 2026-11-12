@@ -129,13 +129,15 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     public void handleFeignServerException(FeignException.FeignServerException exception, HttpServletResponse response)
         throws IOException {
 
-        log.error("Upstream request failed", exception);
 
         int status = exception.status();
         if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
             status = HttpStatus.BAD_GATEWAY.value();
         }
 
+        try (var diagnostics = uk.gov.hmcts.ccd.error.FailureDiagnostics.open(exception, status)) {
+            log.error("Upstream request failed", exception);
+        }
         response.sendError(status);
     }
 
@@ -144,13 +146,15 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
     public void handleHttpServerErrorException(HttpServerErrorException exception, HttpServletResponse response)
         throws IOException {
 
-        log.error("Upstream request failed", exception);
 
         int status = exception.getRawStatusCode();
         if (status == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
             status = HttpStatus.BAD_GATEWAY.value();
         }
 
+        try (var diagnostics = uk.gov.hmcts.ccd.error.FailureDiagnostics.open(exception, status)) {
+            log.error("Upstream request failed", exception);
+        }
         response.sendError(status);
     }
 
@@ -190,14 +194,17 @@ class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler 
                     "path", "/import");
             }
             if (message != null) {
-                if (validation.getResponseFormat() == PublicValidationMessage.Format.PLAIN_TEXT) {
-                    headers.setContentType(MediaType.TEXT_PLAIN);
-                    return message;
-                }
-                return SafeErrorResponse.body(status, message);
+                headers.setContentType(MediaType.TEXT_PLAIN);
+                return message;
             }
         }
-        return SafeErrorResponse.body(status);
+        String message = HttpStatus.valueOf(status.value()).getReasonPhrase();
+        if (exception instanceof org.springframework.web.ErrorResponse) {
+            var problem = org.springframework.http.ProblemDetail.forStatusAndDetail(status, message);
+            problem.setInstance(java.net.URI.create("/"));
+            return problem;
+        }
+        return message;
     }
 
     private String getMessagesAsString(Set<String> messages) {

@@ -17,8 +17,6 @@
     "responseCode": 404,
     "responseMessage": "Not Found",
     "body": {
-      "message": "Not Found",
-      "code": "RESOURCE_NOT_FOUND"
-    }
+      "message": "Not Found"}
   }
 }

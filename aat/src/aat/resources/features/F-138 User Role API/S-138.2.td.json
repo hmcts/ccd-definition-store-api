@@ -20,8 +20,6 @@
       "X-XSS-Protection": "0"
     },
     "body": {
-      "message": "Not Found",
-      "code": "RESOURCE_NOT_FOUND"
-    }
+      "message": "Not Found"}
   }
 }

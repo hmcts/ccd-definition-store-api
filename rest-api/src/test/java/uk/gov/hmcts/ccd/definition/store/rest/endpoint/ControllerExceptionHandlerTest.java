@@ -47,7 +47,7 @@ class ControllerExceptionHandlerTest {
         }
         final RuntimeException exception = new RuntimeException("PRIVATE outer message", cause);
         final ResponseEntity<Object> response = handler.handleException(exception, mock(WebRequest.class));
-        assertEquals(Map.of("message", "Internal Server Error", "code", "INTERNAL_ERROR"), response.getBody());
+        assertEquals("Internal Server Error", response.getBody());
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
     }
 
@@ -59,7 +59,7 @@ class ControllerExceptionHandlerTest {
         final ResponseEntity<Object> response = handler.handleConflict(exception, mock(WebRequest.class));
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.CONFLICT));
-        assertThat(((Map<?, ?>) response.getBody()).get("message"), equalTo("Conflict"));
+        assertThat(response.getBody(), equalTo("Conflict"));
     }
 
     @Test
@@ -69,7 +69,7 @@ class ControllerExceptionHandlerTest {
         final ResponseEntity<Object> response = handler.handleBadRequest(exception, mock(WebRequest.class));
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.BAD_REQUEST));
-        assertThat(((Map<?, ?>) response.getBody()).get("message"), equalTo("Bad Request"));
+        assertThat(response.getBody(), equalTo("Bad Request"));
     }
 
     @Nested

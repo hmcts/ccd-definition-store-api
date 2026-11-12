@@ -20,8 +20,6 @@
       "X-XSS-Protection": "0"
     },
     "body": {
-      "message": "Bad Request",
-      "code": "INVALID_REQUEST"
-    }
+      "message": "Bad Request"}
   }
 }

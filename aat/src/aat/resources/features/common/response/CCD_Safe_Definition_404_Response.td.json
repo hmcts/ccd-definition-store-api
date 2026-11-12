@@ -6,7 +6,5 @@
     "_extends_": "Common_404_Response_Headers"
   },
   "body": {
-    "message": "Not Found",
-    "code": "RESOURCE_NOT_FOUND"
-  }
+    "message": "Not Found"}
 }

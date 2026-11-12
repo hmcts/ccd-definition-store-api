@@ -16,16 +16,18 @@ public final class SafeErrorResponse {
     }
 
     public static Map<String, String> body(HttpStatusCode status, String approvedMessage) {
-        return Map.of("message", approvedMessage, "code", ErrorCode.fromStatus(status.value()).name());
+        return Map.of("message", approvedMessage);
     }
 
     public static void log(Logger logger, HttpStatusCode status, Exception exception) {
-        if (status.is5xxServerError()) {
-            logger.error("Request failed: code={} status={}",
-                ErrorCode.fromStatus(status.value()), status.value(), exception);
-        } else {
-            logger.warn("Request failed: code={} status={}",
-                ErrorCode.fromStatus(status.value()), status.value(), exception);
+        try (var diagnostics = FailureDiagnostics.open(exception, status.value())) {
+            if (status.is5xxServerError()) {
+                logger.error("Request failed: code={} status={}",
+                    ErrorCode.fromStatus(status.value()), status.value(), exception);
+            } else {
+                logger.warn("Request failed: code={} status={}",
+                    ErrorCode.fromStatus(status.value()), status.value(), exception);
+            }
         }
     }
 }

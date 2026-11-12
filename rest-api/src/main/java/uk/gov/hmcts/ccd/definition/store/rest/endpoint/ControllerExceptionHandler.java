@@ -134,8 +134,13 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
                                                               HttpHeaders headers, HttpStatusCode status,
                                                               WebRequest request) {
         SafeErrorResponse.log(LOG, status, exception);
-        return super.handleExceptionInternal(exception, SafeErrorResponse.body(status),
-            headers, status, request);
+        Object safeBody = HttpStatus.valueOf(status.value()).getReasonPhrase();
+        if (exception instanceof org.springframework.web.ErrorResponse) {
+            var problem = org.springframework.http.ProblemDetail.forStatusAndDetail(status, (String) safeBody);
+            problem.setInstance(java.net.URI.create("/"));
+            safeBody = problem;
+        }
+        return super.handleExceptionInternal(exception, safeBody, headers, status, request);
     }
 
     private String getMessagesAstring(Set<String> messages) {

@@ -56,4 +56,20 @@ public class ErrorPageConfiguration {
             }
         };
     }
+
+    /** Native parser errors can occur before servlet dispatch and bypass /error. */
+    @Bean
+    public org.springframework.boot.web.server.WebServerFactoryCustomizer<
+        org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory> safeNativeErrorReports() {
+        return factory -> factory.addContextCustomizers(context -> context.addLifecycleListener(event -> {
+            if (org.apache.catalina.Lifecycle.BEFORE_START_EVENT.equals(event.getType())) {
+                for (var valve : context.getParent().getPipeline().getValves()) {
+                    if (valve instanceof org.apache.catalina.valves.ErrorReportValve reports) {
+                        reports.setShowReport(false);
+                        reports.setShowServerInfo(false);
+                    }
+                }
+            }
+        }));
+    }
 }

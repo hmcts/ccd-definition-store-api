@@ -16,8 +16,6 @@
   "expectedResponse": {
     "_extends_": "CCD_Safe_Definition_404_Response",
     "body": {
-      "message": "Not Found",
-      "code": "RESOURCE_NOT_FOUND"
-    }
+      "message": "Not Found"}
   }
 }

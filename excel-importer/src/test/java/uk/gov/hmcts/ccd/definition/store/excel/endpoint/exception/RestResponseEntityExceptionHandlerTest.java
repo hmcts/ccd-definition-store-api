@@ -59,13 +59,13 @@ class RestResponseEntityExceptionHandlerTest {
             ImportValidationException exception = new ImportValidationException(reason, "PRIVATE context");
             ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
             assertEquals(400, response.getStatusCode().value());
-            assertEquals(exception.getPublicMessage(), ((Map<?, ?>) response.getBody()).get("message"));
+            assertEquals(exception.getPublicMessage(), response.getBody());
             assertFalse(response.getBody().toString().contains("PRIVATE"));
         }
         MapperException diagnostic = new MapperException("SECRET internal-host",
             new IllegalStateException("SECRET database cause"));
         ResponseEntity<Object> response = exceptionHandler.handleBadRequest(diagnostic, mock(WebRequest.class));
-        assertEquals("Bad Request", ((Map<?, ?>) response.getBody()).get("message"));
+        assertEquals("Bad Request", response.getBody());
     }
 
     @Test
@@ -126,7 +126,7 @@ class RestResponseEntityExceptionHandlerTest {
         assertFalse(response.getBody().toString().contains("SECRET"));
         response = exceptionHandler.handleBadRequest(new InvalidImportException("SECRET diagnostic"),
             mock(WebRequest.class));
-        assertEquals("Bad Request", ((Map<?, ?>) response.getBody()).get("message"));
+        assertEquals("Bad Request", response.getBody());
     }
 
     @Test
@@ -153,7 +153,7 @@ class RestResponseEntityExceptionHandlerTest {
         }
         final RuntimeException exception = new RuntimeException("PRIVATE outer message", cause);
         final ResponseEntity<Object> response = exceptionHandler.handleBadRequest(exception, mock(WebRequest.class));
-        assertEquals(Map.of("message", "Bad Request", "code", "INVALID_REQUEST"), response.getBody());
+        assertEquals("Bad Request", response.getBody());
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
     }
 
@@ -299,7 +299,7 @@ class RestResponseEntityExceptionHandlerTest {
             assertEquals("PRIVATE support diagnostic", appender.list.get(0).getThrowableProxy().getMessage());
             assertEquals(1, appender.list.size());
             assertEquals(Level.WARN, appender.list.get(0).getLevel());
-            assertEquals(original.getPublicMessage(), ((Map<?, ?>) result.getBody()).get("message"));
+            assertEquals(original.getPublicMessage(), result.getBody());
             assertEquals(false, result.getBody().toString().contains("PRIVATE"));
         } finally {
             logger.setLevel(previousLevel);

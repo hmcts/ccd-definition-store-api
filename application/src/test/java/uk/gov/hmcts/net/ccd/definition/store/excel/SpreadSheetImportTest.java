@@ -220,9 +220,7 @@ class SpreadSheetImportTest extends BaseTest {
             assertResponseCode(result, HttpStatus.SC_INTERNAL_SERVER_ERROR);
 
             // Check the error response message.
-            JSONAssert.assertEquals(
-                "{\"message\":\"Internal Server Error\",\"code\":\"INTERNAL_ERROR\"}",
-                result.getResponse().getContentAsString(), JSONCompareMode.STRICT);
+            assertEquals("Internal Server Error", result.getResponse().getContentAsString());
             List<ILoggingEvent> failures = appender.list.stream()
                 .filter(event -> event.getThrowableProxy() != null)
                 .filter(event -> event.getThrowableProxy().getClassName().endsWith("$Forbidden"))

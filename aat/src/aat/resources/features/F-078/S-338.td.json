@@ -21,8 +21,6 @@
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body": {
-      "message": "Not Found",
-      "code": "RESOURCE_NOT_FOUND"
-    }
+      "message": "Not Found"}
   }
 }
