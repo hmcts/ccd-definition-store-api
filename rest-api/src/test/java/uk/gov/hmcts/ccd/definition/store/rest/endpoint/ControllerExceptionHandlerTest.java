@@ -38,17 +38,17 @@ class ControllerExceptionHandlerTest {
     }
 
     @Test
-    void handleExceptionShouldAggregateInnerMessages() {
+    void handleExceptionShouldReturnGenericMessage() {
         final RuntimeException exception = new RuntimeException("Outer message", new Exception("Inner message"));
 
         final ResponseEntity<Object> response = handler.handleException(exception, mock(WebRequest.class));
 
-        assertThat(response.getBody().toString(), equalTo("Outer message\nInner message"));
+        assertThat(response.getBody().toString(), equalTo("An internal server error occurred"));
         assertThat(response.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
     @Test
-    void handleExceptionShouldStopMessageAggregationAtDepth5() {
+    void handleExceptionShouldNotExposeNestedMessages() {
         final RuntimeException exception = new RuntimeException("Depth 1",
             new Exception("Depth 2",
                 new Exception("Depth 3",
@@ -58,7 +58,7 @@ class ControllerExceptionHandlerTest {
 
         final ResponseEntity<Object> response = handler.handleException(exception, mock(WebRequest.class));
 
-        assertThat(response.getBody().toString(), equalTo("Depth 1\nDepth 2\nDepth 3\nDepth 4\nDepth 5"));
+        assertThat(response.getBody().toString(), equalTo("An internal server error occurred"));
         assertThat(response.getStatusCode(), equalTo(HttpStatus.INTERNAL_SERVER_ERROR));
     }
 
@@ -70,7 +70,7 @@ class ControllerExceptionHandlerTest {
         final ResponseEntity<Object> response = handler.handleConflict(exception, mock(WebRequest.class));
 
         assertThat(response.getStatusCode(), equalTo(HttpStatus.CONFLICT));
-        assertThat(response.getBody().toString(), equalTo("Outer message\nInner message"));
+        assertThat(response.getBody().toString(), equalTo("A conflict error occurred"));
     }
 
     @Test
@@ -117,13 +117,13 @@ class ControllerExceptionHandlerTest {
     @DisplayName("generalIllegal()")
     class GeneralIllegal {
         @Test
-        @DisplayName("should return error details as map")
+        @DisplayName("should return generic error message")
         void shouldReturnErrorDetailsAsMap() {
             final Map<String, String> details = handler.generalIllegal(new IllegalArgumentException(INNER_MESSAGE));
 
             assertAll(
                 () -> assertThat(details, is(notNullValue())),
-                () -> assertThat(details.get("message"), equalTo("Illegal Input:" + INNER_MESSAGE))
+                () -> assertThat(details.get("message"), equalTo("Illegal input"))
             );
         }
     }
@@ -132,13 +132,13 @@ class ControllerExceptionHandlerTest {
     @DisplayName("handleIOException()")
     class HandleIOException {
         @Test
-        @DisplayName("should return error details as map")
+        @DisplayName("should return generic error message")
         void shouldReturnErrorDetailsAsMap() {
             final Map<String, String> details = handler.handleIOException(new IOException(INNER_MESSAGE));
 
             assertAll(
                 () -> assertThat(details, is(notNullValue())),
-                () -> assertThat(details.get("message"), equalTo("Unexpected Error: " + INNER_MESSAGE))
+                () -> assertThat(details.get("message"), equalTo("An unexpected error occurred"))
             );
         }
     }
