@@ -19,6 +19,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ValidationResponseAssertions.assertImportValidationResponse;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
@@ -193,5 +194,6 @@ class CaseTypeParserTest extends ParserTestBase {
         });
         
         assertThat(ex.getMessage(), is("Multiple case type definitions for ID: Some Case Type"));
+        assertImportValidationResponse(ex, "Multiple case type definitions for ID: Some Case Type");
     }
 }

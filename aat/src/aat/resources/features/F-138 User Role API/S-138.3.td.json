@@ -20,7 +20,6 @@
       "X-XSS-Protection": "0"
     },
     "body": {
-      "message": "Illegal Input:Illegal base64 character 25"
-    }
+      "message": "Bad Request"}
   }
 }

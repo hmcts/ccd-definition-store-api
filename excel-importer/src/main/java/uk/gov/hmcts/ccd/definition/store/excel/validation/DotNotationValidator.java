@@ -22,8 +22,7 @@ public class DotNotationValidator {
     protected static final String DOT_SEPARATOR = ".";
 
     // format: "{SheetName}Tab Invalid value '{expression}' is not a valid {ColumnName} value.... "
-    protected static final String ERROR_MESSAGE = "%sTab Invalid value '%s' is not a valid %s value. "
-        + "The expression dot notation values should be valid caseTypes fields.";
+    protected static final String ERROR_MESSAGE = InvalidImportException.FIELD_REFERENCE_MESSAGE;
 
     protected static final BiFunction<String, String, String[]> SPLIT_FUNCTION =
         (expression, separator) -> Optional.ofNullable(expression)
@@ -53,8 +52,7 @@ public class DotNotationValidator {
             findDotNotationFieldType(parentComplexType, splitDotNotationExpression, sheetName, columnName);
 
         } catch (InvalidImportException invalidImportException) {
-            // throw a new Exception using original full expression (nb: previous exception already logged)
-            throw new InvalidImportException(String.format(ERROR_MESSAGE, sheetName, expression, columnName));
+            throw InvalidImportException.invalidReference(sheetName, columnName, expression, invalidImportException);
         }
     }
 
@@ -78,10 +76,7 @@ public class DotNotationValidator {
         return complexFieldEntities.stream()
             .filter(complexFieldEntity -> complexFieldEntity.getReference().equals(attribute))
             .findAny()
-            .orElseThrow(() -> new InvalidImportException(
-                    String.format(ERROR_MESSAGE, sheetName, attribute, columnName)
-                )
-            );
+            .orElseThrow(() -> InvalidImportException.invalidReference(sheetName, columnName, attribute, null));
     }
 
     private FieldTypeEntity getTopLevelField(ParseContext parseContext,
@@ -93,7 +88,7 @@ public class DotNotationValidator {
             return parseContext.getCaseFieldType(caseType, expression);
 
         } catch (Exception e) {
-            throw new InvalidImportException(String.format(ERROR_MESSAGE, sheetName, expression, columnName));
+            throw InvalidImportException.invalidReference(sheetName, columnName, expression, e);
         }
     }
 
@@ -119,8 +114,7 @@ public class DotNotationValidator {
                 columnName
             );
         } catch (InvalidImportException invalidImportException) {
-            // throw a new Exception using original full expression (nb: previous exception already logged)
-            throw new InvalidImportException(String.format(ERROR_MESSAGE, sheetName, expression, columnName));
+            throw InvalidImportException.invalidReference(sheetName, columnName, expression, invalidImportException);
         }
     }
 
