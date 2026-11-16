@@ -37,7 +37,8 @@ ext {
     set('netty.version', '4.1.136.Final')
     set('tomcat.version', '10.1.60')
 
-    set('jackson.version', '2.21.5')
+    jacksonVersion = '2.21.5'
+    set('jackson.version', jacksonVersion)
     jackson3Version = '3.3.0'
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.26.1')
@@ -90,6 +91,7 @@ dependencyManagement {
     }
     dependencies {
         dependency 'org.apache.commons:commons-lang3:3.21.0'
+        dependency "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
         dependency "tools.jackson.core:jackson-core:${jackson3Version}"
         dependency "tools.jackson.core:jackson-databind:${jackson3Version}"
     }
@@ -250,6 +252,7 @@ subprojects { subproject ->
         }
         dependencies {
             dependency 'org.apache.commons:commons-lang3:3.21.0'
+            dependency "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
             dependency "tools.jackson.core:jackson-core:${jackson3Version}"
             dependency "tools.jackson.core:jackson-databind:${jackson3Version}"
         }
