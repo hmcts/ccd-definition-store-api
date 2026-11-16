@@ -1,0 +1,6 @@
+{
+  "_guid_": "F-133_Get_Jurisdiction_UI_Configs_Without_Jurisdictions",
+  "_extends_": "Operation_Base_Data",
+  "operationName": "Get Jurisdiction UI Configs Without Jurisdictions",
+  "uri": "/api/display/jurisdiction-ui-configs"
+}

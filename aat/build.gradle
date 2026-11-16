@@ -98,7 +98,11 @@ task functional(type: Test) {
     setTestClassesDirs(sourceSets.aat.output.classesDirs)
     setClasspath(sourceSets.aat.runtimeClasspath)
     include "uk/gov/hmcts/ccd/definitionstore/tests/functional/**"
-    useJUnitPlatform()
+    useJUnitPlatform {
+        if (System.getenv('FUNCTIONAL_TEST_ENVIRONMENT') == 'preview') {
+            excludeTags 'notPreview'
+        }
+    }
 
     dependsOn aatClasses
 

@@ -1,0 +1,6 @@
+{
+  "_guid_": "F-137_Get_Import_Audits",
+  "_extends_": "Operation_Base_Data",
+  "operationName": "Get Import Audits",
+  "uri": "/api/import-audits"
+}
