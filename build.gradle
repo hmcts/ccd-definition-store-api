@@ -292,6 +292,7 @@ subprojects { subproject ->
 
 
         // Spring
+        implementation group: 'com.fasterxml.jackson.core', name: 'jackson-annotations'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-cache'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa'
         implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client'
