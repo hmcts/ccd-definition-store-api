@@ -151,6 +151,12 @@ Will run only S-110.1:
 ./gradlew functional -P tags="@S-110.1"
 ```
 
+## Support investigation
+
+For failure investigation, see the
+[support investigation guide](docs/CCD-7882-error-contract.md#support) for Application Insights
+Logs, KQL examples, correlation and local/production verification limits.
+
 ## LICENSE
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE.md) file for details.
