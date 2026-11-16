@@ -38,6 +38,7 @@ ext {
     set('tomcat.version', '10.1.60')
 
     jacksonVersion = '2.21.5'
+    jacksonAnnotationsVersion = '2.21'
     set('jackson.version', jacksonVersion)
     jackson3Version = '3.3.0'
     set('snakeyaml.version', '2.3')
@@ -91,7 +92,7 @@ dependencyManagement {
     }
     dependencies {
         dependency 'org.apache.commons:commons-lang3:3.21.0'
-        dependency "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+        dependency "com.fasterxml.jackson.core:jackson-annotations:${jacksonAnnotationsVersion}"
         dependency "tools.jackson.core:jackson-core:${jackson3Version}"
         dependency "tools.jackson.core:jackson-databind:${jackson3Version}"
     }
@@ -252,7 +253,7 @@ subprojects { subproject ->
         }
         dependencies {
             dependency 'org.apache.commons:commons-lang3:3.21.0'
-            dependency "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}"
+            dependency "com.fasterxml.jackson.core:jackson-annotations:${jacksonAnnotationsVersion}"
             dependency "tools.jackson.core:jackson-core:${jackson3Version}"
             dependency "tools.jackson.core:jackson-databind:${jackson3Version}"
         }
