@@ -68,6 +68,7 @@ public class StateParser {
         state.setLiveFrom(stateDefinition.getLocalDate(ColumnName.LIVE_FROM));
         state.setLiveTo(stateDefinition.getLocalDate(ColumnName.LIVE_TO));
         state.setTitleDisplay(stateDefinition.getString(ColumnName.TITLE_DISPLAY));
+        state.setStateCategory(stateDefinition.getString(ColumnName.STATE_CATEGORY));
 
         return state;
     }
