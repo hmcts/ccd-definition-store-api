@@ -101,7 +101,7 @@ allprojects {
 
     plugins.withId('checkstyle') {
         checkstyle {
-            toolVersion = '10.12.7'
+            toolVersion = '10.26.1'
         }
     }
 
@@ -183,7 +183,7 @@ allprojects {
         implementation group: 'org.apache.httpcomponents.core5', name: 'httpcore5', version: '5.4.4'
         implementation group: 'org.apache.httpcomponents.core5', name: 'httpcore5-h2', version: '5.4.4'
 
-        implementation group: 'net.minidev', name: 'json-smart', version: '2.6.0'
+        implementation group: 'net.minidev', name: 'json-smart', version: '2.6.1'
 
         testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test'
 
@@ -324,7 +324,7 @@ subprojects { subproject ->
         implementation group: 'org.elasticsearch.client', name: 'elasticsearch-rest-client', version: elasticsearchVersion
         implementation group: 'org.flywaydb', name: 'flyway-core', version: flywayVersion
         implementation group: 'org.flywaydb', name: 'flyway-database-postgresql', version: flywayVersion
-        implementation group: 'org.jooq', name: 'jool-java-8', version: '0.9.15'
+        implementation group: 'org.jooq', name: 'jool-java-8', version: '0.9.16'
         compileOnly group: 'org.projectlombok', name: 'lombok', version: lombokVersion
         annotationProcessor group: 'org.projectlombok', name: 'lombok', version: lombokVersion
 
