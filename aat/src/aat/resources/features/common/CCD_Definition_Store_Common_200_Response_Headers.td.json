@@ -1,0 +1,15 @@
+{
+  "_guid_": "CCD_Definition_Store_Common_200_Response_Headers",
+  "Cache-Control": "no-cache, no-store, max-age=0, must-revalidate",
+  "Content-Type": "application/json",
+  "Content-Encoding": "gzip",
+  "Date": "[[ANYTHING_PRESENT]]",
+  "Expires": "0",
+  "Pragma": "no-cache",
+  "Strict-Transport-Security": "max-age=31536000 ; includeSubDomains",
+  "Transfer-Encoding": "chunked",
+  "Vary": "accept-encoding",
+  "X-Content-Type-Options": "nosniff",
+  "X-Frame-Options": "DENY",
+  "X-XSS-Protection": "0"
+}

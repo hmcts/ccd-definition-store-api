@@ -1,0 +1,6 @@
+{
+  "_guid_": "F-084_Get_Search_Cases_Result_Fields_For_Unknown_Case_Type",
+  "_extends_": "F-084_Get_Search_Cases_Result_Fields",
+  "operationName": "Get Search Cases Result Fields For Unknown Case Type",
+  "request": { "pathVariables": { "ctid": "case-type-does-not-exist" } }
+}

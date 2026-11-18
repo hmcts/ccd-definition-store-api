@@ -1,0 +1,5 @@
+{
+  "_guid_": "Put_Operation_Base_Data",
+  "_extends_": "Operation_Base_Data",
+  "method": "PUT"
+}
