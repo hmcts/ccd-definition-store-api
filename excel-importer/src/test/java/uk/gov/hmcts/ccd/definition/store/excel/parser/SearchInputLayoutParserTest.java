@@ -53,18 +53,12 @@ class SearchInputLayoutParserTest {
 
     @Test
     @DisplayName("Should Fail when no worksheet provided")
-    public void shouldThrowExceptionWhenWorkbasketInputWorksheetIsNotProvided() {
+    public void shouldThrowExceptionWhenSearchInputWorksheetIsNotProvided() {
         MapperException thrown = assertThrows(
             MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
         assertEquals("A definition must contain a SearchInputFields sheet", thrown.getMessage());
-    }
-
-    @Test
-    @DisplayName("Should fail when no values provided in SearchInputFields worksheet")
-    public void shouldFailWhenNoDataInWorksheet() {
-        MapperException thrown = assertThrows(
-            MapperException.class, () -> classUnderTest.getDefinitionSheet(definitionSheets));
-        assertEquals("A definition must contain a SearchInputFields sheet", thrown.getMessage());
+        uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ValidationResponseAssertions
+            .assertValidationResponse(thrown);
     }
 
     @Test

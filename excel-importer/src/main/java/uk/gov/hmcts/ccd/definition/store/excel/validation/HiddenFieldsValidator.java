@@ -1,6 +1,6 @@
 package uk.gov.hmcts.ccd.definition.store.excel.validation;
 
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -61,9 +61,7 @@ public class HiddenFieldsValidator {
             }
         }
         if (valid) {
-            throw new MapperException(String.format("'retainHiddenValue' has been incorrectly configured or "
-                    + "is invalid for fieldID ['%s'] on ['%s']",
-                caseFieldId, SheetName.CASE_EVENT_TO_FIELDS.getName()));
+            throw ImportValidationException.invalidHiddenField(caseFieldId);
         }
     }
 
@@ -115,9 +113,7 @@ public class HiddenFieldsValidator {
                 }
             }
             if (!valid && invalidMatch) {
-                throw new MapperException(String.format("'retainHiddenValue' has been incorrectly configured or "
-                        + "is invalid for fieldID ['%s'] on ['%s']",
-                    caseFieldId, SheetName.CASE_EVENT_TO_FIELDS.getName()));
+                throw ImportValidationException.invalidHiddenField(caseFieldId);
             }
         }
     }
@@ -145,10 +141,8 @@ public class HiddenFieldsValidator {
             ddi.getFieldShowCondition() == null);
 
         if (!showConditionConfigured) {
-            throw new MapperException(String.format("'retainHiddenValue' on CaseEventToComplexTypes can only be "
-                    + "configured for a field that uses a showCondition. Field ['%s'] on ['%s'] "
-                    + "does not use a showCondition",
-                definitionDataItem.getCaseFieldId(), SheetName.CASE_EVENT_TO_FIELDS.getName()));
+            throw ImportValidationException.hiddenFieldWithoutShowCondition(
+                definitionDataItem.getCaseFieldId(), true);
         }
     }
 
@@ -205,10 +199,8 @@ public class HiddenFieldsValidator {
 
     public Boolean parseHiddenFields(DefinitionDataItem definitionDataItem) {
         if (isShowConditionNull(definitionDataItem.getString(ColumnName.FIELD_SHOW_CONDITION), definitionDataItem)) {
-            throw new MapperException(String.format(
-                "'retainHiddenValue' can only be configured for a field that uses a "
-                    + "showCondition. Field ['%s'] on ['%s'] does not use a showCondition",
-                definitionDataItem.getString(ColumnName.CASE_FIELD_ID), SheetName.CASE_EVENT_TO_FIELDS.getName()));
+            throw ImportValidationException.hiddenFieldWithoutShowCondition(
+                definitionDataItem.getString(ColumnName.CASE_FIELD_ID), false);
         }
         return definitionDataItem.getRetainHiddenValue();
     }

@@ -12,6 +12,7 @@ evaluationDependsOn(':domain')
 compileTestJava.dependsOn tasks.getByPath(':domain:testClasses')
 
 dependencies {
+    implementation project(':commons')
     implementation project(':domain')
     implementation project(':rest-api')
     implementation project(':repository')

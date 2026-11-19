@@ -96,6 +96,11 @@ withPipeline(type, product, app) {
     disableLegacyDeployment()
     enableHighLevelDataSetup()
 
+    before('test') {
+        steps.sh 'java -version'
+        builder.gradle('--version')
+    }
+
     afterAlways('test') {
 
         builder.gradle(':integration-tests:integration')

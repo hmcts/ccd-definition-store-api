@@ -9,6 +9,7 @@ import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditi
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -28,6 +29,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ValidationResponseAssertions.assertValidationResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.SEARCH_CASES_RESULT_FIELDS;
@@ -110,9 +112,13 @@ class GenericLayoutParserTest {
         item.addAttribute(ColumnName.DISPLAY_ORDER, 3.0);
         sheet.addDataItem(item);
         definitionSheets.put(WORK_BASKET_RESULT_FIELDS.getName(), sheet);
-        MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
+        ImportValidationException thrown = assertThrows(ImportValidationException.class,
+            () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("At least one layout case field must be defined for case type %s and layout %s",
-            CASE_TYPE_ID2, classUnderTest.getLayoutName()), thrown.getMessage());
+            CASE_TYPE_ID2, classUnderTest.getLayoutName()),
+            thrown.getMessage());
+        assertEquals("At least one layout case field must be defined for the case type and layout.",
+            thrown.getPublicMessage());
     }
 
     @Test
@@ -135,6 +141,7 @@ class GenericLayoutParserTest {
         assertEquals(String.format("- Unknown access profile '%s' in worksheet '%s' for caseField '%s'",
             INVALID_ACCESS_PROFILE, item2.getSheetName(), item2.getString(ColumnName.CASE_FIELD_ID)),
             thrown.getMessage());
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -168,6 +175,7 @@ class GenericLayoutParserTest {
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
         context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -201,6 +209,7 @@ class GenericLayoutParserTest {
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
         context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -236,6 +245,7 @@ class GenericLayoutParserTest {
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
         context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -263,6 +273,7 @@ class GenericLayoutParserTest {
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
         context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -283,6 +294,7 @@ class GenericLayoutParserTest {
             "Invalid results ordering pattern '%s' in worksheet '%s' for caseType '%s' for caseField '%s'",
             invalidSortOrder, item.getSheetName(), CASE_TYPE_ID,
             item.getString(ColumnName.CASE_FIELD_ID)), thrown.getMessage());
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -306,6 +318,7 @@ class GenericLayoutParserTest {
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Duplicate sort order priority in worksheet '%s' for caseType '%s'",
             item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -331,6 +344,7 @@ class GenericLayoutParserTest {
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Duplicate sort order priority in worksheet '%s' for caseType '%s'",
             item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -355,6 +369,7 @@ class GenericLayoutParserTest {
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Duplicate sort order priority in worksheet '%s' for caseType '%s'",
             item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -377,6 +392,7 @@ class GenericLayoutParserTest {
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Missing sort order priority in worksheet '%s' for caseType '%s'",
             item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -401,6 +417,7 @@ class GenericLayoutParserTest {
         MapperException thrown = assertThrows(MapperException.class, () -> classUnderTest.parseAll(definitionSheets));
         assertEquals(String.format("Missing sort order priority in worksheet '%s' for caseType '%s'",
             item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -660,6 +677,7 @@ class GenericLayoutParserTest {
             () -> classUnderTest.parseAllForSearchCases(definitionSheets));
         assertEquals(String.format("Duplicate sort order priority in worksheet '%s' for caseType '%s'",
             item.getSheetName(), CASE_TYPE_ID), thrown.getMessage());
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -739,6 +757,7 @@ class GenericLayoutParserTest {
             item3.getSheetName(), item3.getString(ColumnName.CASE_TYPE_ID)), thrown.getMessage());
 
         context.registerAccessProfiles(Arrays.asList(new AccessProfileEntity()));
+        assertValidationResponse(thrown);
     }
 
     private void addCaseType2Field(DefinitionSheet sheet) {

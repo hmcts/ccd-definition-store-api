@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -14,6 +16,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.util.UriTemplate;
 import uk.gov.hmcts.ccd.definition.store.domain.service.DefinitionService;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.response.ServiceResponse;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Definition;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
@@ -21,6 +24,8 @@ import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,11 +36,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.CREATE;
 import static uk.gov.hmcts.ccd.definition.store.domain.service.response.SaveOperationEnum.UPDATE;
 
@@ -79,6 +86,49 @@ class DraftDefinitionControllerTest {
         def3 = createDefinition();
         uriVariables = new HashMap<>();
 
+    }
+
+    @ParameterizedTest
+    @CsvSource(delimiter = '|', value = {
+        "F-139 Create Draft|S-139.1|create",
+        "F-140 Save Draft|S-140.1|description",
+        "F-140 Save Draft|S-140.2|author",
+        "F-141 Delete Draft|S-141.1|delete"
+    })
+    void draftErrorsMatchFunctionalFixtures(String folder, String scenario, String operation) throws Exception {
+        var failure = new BadRequestException("PRIVATE draft diagnostics");
+        var request = post(URL_API_DRAFT);
+        switch (operation) {
+            case "create" -> {
+                definition.setJurisdiction(null);
+                when(definitionService.createDraftDefinition(any(Definition.class))).thenThrow(failure);
+            }
+            case "description", "author" -> {
+                if (operation.equals("description")) {
+                    definition.setDescription(null);
+                } else {
+                    definition.setAuthor(null);
+                }
+                when(definitionService.saveDraftDefinition(any(Definition.class))).thenThrow(failure);
+                request = put(URL_SAVE_API_DRAFT);
+            }
+            case "delete" -> {
+                doThrow(failure).when(definitionService).deleteDraftDefinition("AUTOTEST1", Integer.MAX_VALUE);
+                request = delete("/api/draft/AUTOTEST1/" + Integer.MAX_VALUE);
+            }
+            default -> throw new IllegalArgumentException(operation);
+        }
+        var root = Path.of("").toAbsolutePath();
+        while (!Files.exists(root.resolve("settings.gradle"))) {
+            root = root.getParent();
+        }
+        var fixture = root.resolve("aat/src/aat/resources/features/" + folder + "/" + scenario + ".td.json");
+        var expected = MAPPER.readTree(fixture.toFile()).get("expectedResponse");
+        mockMvc.perform(request.contentType(CONTENT_TYPE).content(MAPPER.writeValueAsBytes(definition)))
+            .andExpect(status().is(expected.get("responseCode").asInt()))
+            .andExpect(content().contentTypeCompatibleWith(
+                MediaType.parseMediaType(expected.get("headers").get("Content-Type").asText())))
+            .andExpect(content().string(expected.get("body").get("__plainTextValue__").asText()));
     }
 
     @DisplayName("Should return 201 when creating a draft Definition")

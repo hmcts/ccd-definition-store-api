@@ -33,9 +33,7 @@ import static uk.gov.hmcts.ccd.definition.store.excel.validation.DotNotationVali
 public class SearchPartyValidator {
     protected static final String COMMA_SEPARATOR = ",";
 
-    protected static final String COLLECTION_ERROR_MESSAGE = "SearchPartyTab Invalid value '%s' "
-        + "is not a valid SearchPartyCollectionFieldName value "
-        + "as it does not reference a collection of a complex type.";
+    protected static final String COLLECTION_ERROR_MESSAGE = InvalidImportException.COLLECTION_MESSAGE;
 
     private static final Function<String, String[]> COMMA_SEPARATOR_SPLIT_FUNCTION =
         expression -> SPLIT_FUNCTION.apply(expression, COMMA_SEPARATOR);
@@ -93,7 +91,7 @@ public class SearchPartyValidator {
 
         // validate collection and of type complex
         if (!FieldTypeUtils.BASE_COLLECTION.equals(dataType) || complexFields.isEmpty()) {
-            throw new InvalidImportException(String.format(COLLECTION_ERROR_MESSAGE, expression));
+            throw InvalidImportException.invalidCollection(expression);
         }
 
         return collectionFieldType;

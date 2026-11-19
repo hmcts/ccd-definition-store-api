@@ -19,6 +19,7 @@ bootJar {
 }
 
 dependencies {
+    implementation project(':commons')
     implementation project(':app-insights')
     implementation project(':rest-api')
     implementation project(':excel-importer')

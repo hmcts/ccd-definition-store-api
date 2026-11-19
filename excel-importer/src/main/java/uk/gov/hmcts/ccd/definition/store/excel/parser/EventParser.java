@@ -62,7 +62,8 @@ public class EventParser {
             SheetName.CASE_EVENT.getName()).groupDataItemsByCaseType();
 
         if (!eventItemsByCaseTypes.containsKey(caseTypeId)) {
-            throw new SpreadsheetParsingException("At least one event must be defined for case type: " + caseTypeId);
+            throw SpreadsheetParsingException.reference(
+                SpreadsheetParsingException.ReferenceValidation.REQUIRED_EVENT, caseTypeId);
         }
 
         final List<DefinitionDataItem> eventItems = eventItemsByCaseTypes.get(caseTypeId);
@@ -154,7 +155,7 @@ public class EventParser {
                 ShowCondition condition = this.showConditionParser.parseShowCondition(eventEnablingCondition);
                 return condition.getShowConditionExpression();
             } catch (InvalidShowConditionException e) {
-                throw new SpreadsheetParsingException("Invalid Event enabling Condition " + eventEnablingCondition);
+                throw SpreadsheetParsingException.invalidEventCondition(eventEnablingCondition, e);
             }
         }
         return eventEnablingCondition;
