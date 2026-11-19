@@ -364,6 +364,28 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "roleToAccessProfilesEntity.roleName", target = "name")
     RoleAssignment roleToAccessProfilesEntityToRoleAssignment(RoleToAccessProfilesEntity roleToAccessProfilesEntity);
 
+    class EventComplexTypeEntityToCaseEventFieldComplexListMapper {
+
+        private EventComplexTypeEntityToCaseEventFieldComplexListMapper() {
+            // Default constructor
+        }
+
+        static List<CaseEventFieldComplex> map(List<? extends EventComplexTypeEntity> eventComplexTypeEntity) {
+            return eventComplexTypeEntity.stream()
+                .map(complexTypeEntity -> new CaseEventFieldComplex(complexTypeEntity.getReference(),
+                                                                    complexTypeEntity.getHint(),
+                                                                    complexTypeEntity.getLabel(),
+                                                                    complexTypeEntity.getOrder(),
+                                                                    complexTypeEntity.getDisplayContext(),
+                                                                    complexTypeEntity.getShowCondition(),
+                                                                    complexTypeEntity.getDefaultValue(),
+                                                                    complexTypeEntity.getPublish(),
+                                                                    complexTypeEntity.getPublishAs()
+                ))
+                .collect(Collectors.toList());
+        }
+    }
+
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)
     // but this does not play nicely with Mockito v1
