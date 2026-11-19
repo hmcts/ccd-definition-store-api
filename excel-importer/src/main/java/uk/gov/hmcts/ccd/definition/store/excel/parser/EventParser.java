@@ -221,7 +221,6 @@ public class EventParser {
                             eventCaseFieldEntity.getCaseField().getReference()));
 
                     if (eventCaseFieldEntity.getDisplayContext() == DisplayContext.COMPLEX) {
-                        logger.info("JEN - EventParser - : {}", definitionDataItems);
                         eventCaseFieldEntity.addComplexFields(eventCaseFieldComplexTypeParser
                             .parseEventCaseFieldComplexType(definitionDataItems, definitionSheets));
                     }

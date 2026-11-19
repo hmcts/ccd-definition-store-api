@@ -295,29 +295,6 @@ public interface EntityToResponseDTOMapper {
     @Mapping(expression = "java(searchCasesResultFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     SearchCasesResultField map(SearchCasesResultFieldEntity searchCasesResultFieldEntity);
 
-    class EventComplexTypeEntityToCaseEventFieldComplexListMapper {
-
-        private EventComplexTypeEntityToCaseEventFieldComplexListMapper() {
-            // Default constructor
-        }
-
-        static List<CaseEventFieldComplex> map(List<? extends EventComplexTypeEntity> eventComplexTypeEntity) {
-            return eventComplexTypeEntity.stream()
-                .map(complexTypeEntity -> new CaseEventFieldComplex(complexTypeEntity.getReference(),
-                                                                    complexTypeEntity.getHint(),
-                                                                    complexTypeEntity.getLabel(),
-                                                                    complexTypeEntity.getOrder(),
-                                                                    complexTypeEntity.getDisplayContext(),
-                                                                    complexTypeEntity.getShowCondition(),
-                                                                    complexTypeEntity.getDefaultValue(),
-                                                                    complexTypeEntity.getPublish(),
-                                                                    complexTypeEntity.getPublishAs(),
-                                                                    complexTypeEntity.getDisplayContextParameter()
-                ))
-                .collect(Collectors.toList());
-        }
-    }
-
     @Mapping(source = "searchAliasFieldEntity.reference", target = "id")
     @Mapping(source = "searchAliasFieldEntity.caseType.reference", target = "caseTypeId")
     SearchAliasField map(SearchAliasFieldEntity searchAliasFieldEntity);
@@ -380,7 +357,8 @@ public interface EntityToResponseDTOMapper {
                                                                     complexTypeEntity.getShowCondition(),
                                                                     complexTypeEntity.getDefaultValue(),
                                                                     complexTypeEntity.getPublish(),
-                                                                    complexTypeEntity.getPublishAs()
+                                                                    complexTypeEntity.getPublishAs(),
+                                                                    complexTypeEntity.getDisplayContextParameter()
                 ))
                 .collect(Collectors.toList());
         }
