@@ -1,0 +1,62 @@
+[
+  {
+    "CaseTypeID": "F145_HotelLegacy",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_ZuluLegacy",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_DeltaLegacy",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_AlphaLegacy",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_JulietLegacy",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_BravoLegacy",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_GolfLegacy",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_CharlieLegacy",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_IndiaLegacy",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  },
+  {
+    "CaseTypeID": "F145_EchoLegacy",
+    "CaseFieldID": "TextField",
+    "Label": "Text field",
+    "DisplayOrder": 1
+  }
+]

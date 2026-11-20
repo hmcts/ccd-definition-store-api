@@ -10,7 +10,8 @@ import java.util.Optional;
 public interface CaseTypeLiteRepository extends DefinitionRepository<CaseTypeLiteEntity, Integer> {
 
     @Query(value = "SELECT "
-        + "ct.id, ct.description, ct.jurisdiction_id, ct.name, ct.reference AS reference, ct.version "
+        + "ct.id, ct.description, ct.jurisdiction_id, ct.name, ct.reference AS reference, ct.version, "
+        + "ct.case_types_order "
         + "FROM case_type ct "
         + "INNER JOIN ("
         + "    SELECT ct.reference, MAX(ct.version) AS max_version "
