@@ -121,7 +121,7 @@ elastic:
 
 elasticsearch:
   image: hmctsprod.azurecr.io/imported/elastic/elasticsearch
-  imageTag: 9.2.3
+  imageTag: 9.3.4
   nameOverride: ${SERVICE_NAME}-es
   clusterName: "es"
   createCert: false
