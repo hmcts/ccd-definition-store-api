@@ -94,11 +94,38 @@ As a result the following containers will get created and started:
 
 #### Handling database
 
-Database will get initiated when you run `docker-compose up` for the first time by execute all scripts from `database` directory.
+On the first `docker-compose up`, `docker/database/init-db.sh` creates the database and its user.
+Flyway creates the tables and applies subsequent migrations during API startup.
 
-You don't need to migrate database manually since migrations are executed every time `docker-compose up` is executed.
+Automatic baselining is disabled. An empty database runs `V0001__Base_version.sql`, which creates
+`public.role` and the rest of the initial schema. A database with Flyway history applies pending migrations
+as usual. A non-empty database without Flyway history requires an explicit baseline before startup.
+For a legacy database, enable `SPRING_FLYWAY_BASELINE_ON_MIGRATE=true` only after verifying that
+the complete schema from `V0001` already exists: baselining at `0001` skips that migration.
 
-You can connect to the database at `http://localhost:5451` with the username and password set in the environment variables.
+Connect with a PostgreSQL client at `localhost:5451`, using the username and password set in the
+environment variables.
+
+If a request fails with `ERROR: relation "role" does not exist`, run these queries against the database
+used by the service that logs the SQL error:
+
+```sql
+SELECT current_database(), current_schema();
+SHOW search_path;
+SELECT to_regclass('public.role'), to_regclass('role');
+SELECT installed_rank, version, description, type, success
+FROM public.flyway_schema_history
+ORDER BY installed_rank;
+```
+
+Check the API's `DEFINITION_STORE_DB_HOST`, `DEFINITION_STORE_DB_PORT`, and
+`DEFINITION_STORE_DB_NAME`, along with its Flyway startup logs. If `public.role` exists but `role`
+does not resolve, check the connection's schema search path. If Flyway history is absent, check why
+migrations have not run. A `BASELINE` entry at version `0001` with no `role` table can indicate an
+incomplete schema was baselined. Disabling automatic baselining does not repair an existing baseline.
+For a disposable local database, recreate an empty database and restart the API to run all migrations.
+For a database containing needed data, restore or reconcile the complete schema with a reviewed
+database repair; creating only `role` leaves its related tables, sequences, and constraints unresolved.
 
 ## Modules
 
