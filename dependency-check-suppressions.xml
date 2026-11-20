@@ -111,21 +111,6 @@
     <cve>CVE-2025-7962</cve>
   </suppress>
   <suppress>
-    <cve>CVE-2026-82294</cve>
-  </suppress>
-  <suppress>
-    <cve>CVE-2026-82300</cve>
-  </suppress>
-  <suppress>
-    <cve>CVE-2026-94397</cve>
-  </suppress>
-  <suppress>
-    <cve>CVE-2026-94398</cve>
-  </suppress>
-  <suppress>
-    <cve>CVE-2026-94399</cve>
-  </suppress>
-  <suppress>
     <notes>
         file name: elasticsearch-9.1.2.jar
         </notes>
@@ -514,21 +499,6 @@
   </suppress>
   <suppress>
     <cve>CVE-2026-78607</cve>
-  </suppress>
-  <suppress>
-    <cve>CVE-2026-82294</cve>
-  </suppress>
-  <suppress>
-    <cve>CVE-2026-82300</cve>
-  </suppress>
-  <suppress>
-    <cve>CVE-2026-94397</cve>
-  </suppress>
-  <suppress>
-    <cve>CVE-2026-94398</cve>
-  </suppress>
-  <suppress>
-    <cve>CVE-2026-94399</cve>
   </suppress>
   <suppress>
     <cve>CVE-2026-94408</cve>
