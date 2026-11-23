@@ -107,6 +107,7 @@ CaseState.description
 CaseState.id
 CaseState.name
 CaseState.order
+CaseState.state_category
 CaseState.title_display
 CaseType.accessTypeRoles
 CaseType.accessTypes
