@@ -854,6 +854,61 @@ class HiddenFieldsValidatorTest {
 
     }
 
+    @Test
+    void shouldValidateToNull_whenRetainHiddenValueIsNotSetForComplexType() {
+        final DefinitionDataItem complexType = complexTypesRow(null);
+        addSheetsWithOneCaseField(complexType, "abc=123");
+
+        assertNull(validator.parseComplexTypesHiddenFields(complexType, definitionSheets));
+    }
+
+    @Test
+    void shouldValidateToFalse_whenRetainHiddenValueIsFalseForComplexTypeWithNoShowConditionInCaseEvent() {
+        final DefinitionDataItem complexType = complexTypesRow(Boolean.FALSE);
+        addSheetsWithOneCaseField(complexType, null);
+
+        assertFalse(validator.parseComplexTypesHiddenFields(complexType, definitionSheets));
+    }
+
+    @Test
+    void shouldValidateToFalse_whenRetainHiddenValueIsFalseForComplexTypeAndCaseFieldSheetIsMissing() {
+        final DefinitionDataItem complexType = complexTypesRow(Boolean.FALSE);
+        definitionSheets.put(SheetName.COMPLEX_TYPES.getName(), new DefinitionSheet());
+
+        assertFalse(validator.parseComplexTypesHiddenFields(complexType, definitionSheets));
+    }
+
+    private DefinitionDataItem complexTypesRow(Boolean retainHiddenValue) {
+        DefinitionDataItem item = new DefinitionDataItem(SheetName.COMPLEX_TYPES.getName());
+        if (retainHiddenValue != null) {
+            item.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, retainHiddenValue);
+        }
+        item.addAttribute(ColumnName.FIELD_SHOW_CONDITION, null);
+        item.addAttribute(ColumnName.CASE_FIELD_ID, "ComplexTypeFieldId");
+        item.addAttribute(ColumnName.LIST_ELEMENT_CODE, "");
+        item.addAttribute(ColumnName.ID, "ComplexType");
+        item.addAttribute(ColumnName.FIELD_TYPE, "Text");
+        return item;
+    }
+
+    private void addSheetsWithOneCaseField(DefinitionDataItem complexType,
+                                           String cetfShowCondition) {
+        addDefinitionSheet(SheetName.COMPLEX_TYPES).addDataItem(complexType);
+
+        DefinitionDataItem cetf = new DefinitionDataItem(SheetName.CASE_EVENT_TO_FIELDS.getName());
+        cetf.addAttribute(ColumnName.CASE_FIELD_ID, "fieldId");
+        cetf.addAttribute(ColumnName.FIELD_SHOW_CONDITION, cetfShowCondition);
+        cetf.addAttribute(ColumnName.RETAIN_HIDDEN_VALUE, null);
+        addDefinitionSheet(SheetName.CASE_EVENT_TO_FIELDS).addDataItem(cetf);
+
+        DefinitionDataItem cf = new DefinitionDataItem(SheetName.CASE_FIELD.getName());
+        cf.addAttribute(ColumnName.ID, "fieldId");
+        cf.addAttribute(ColumnName.FIELD_TYPE, "ComplexType");
+        addDefinitionSheet(SheetName.CASE_FIELD).addDataItem(cf);
+
+        addDefinitionSheet(SheetName.FIXED_LISTS);
+    }
+
     private DefinitionSheet addDefinitionSheet(SheetName sheetName) {
         final DefinitionSheet sheet = new DefinitionSheet();
         sheet.setName(sheetName.toString());
