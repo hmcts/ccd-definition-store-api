@@ -16,6 +16,16 @@
     "_extends_": "Common_200_Response",
     "body": {
       "shellCaseTypeID": "FT_MasterCaseType",
+      "caseStates": [
+        {
+          "name": "CaseCreated",
+          "stateCategory": "Start"
+        },
+        {
+          "name": "CaseApproved",
+          "stateCategory": "End"
+        }
+      ],
       "shellCaseMappings": [
         {
           "OriginatingCaseFieldName": "EmailField",
