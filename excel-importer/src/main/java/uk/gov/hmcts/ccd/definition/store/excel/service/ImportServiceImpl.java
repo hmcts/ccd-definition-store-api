@@ -7,7 +7,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 import uk.gov.hmcts.ccd.definition.store.domain.ApplicationParams;
 import uk.gov.hmcts.ccd.definition.store.domain.service.FieldTypeService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -53,7 +52,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.ImportLockRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessTypeRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.BannerEntity;
@@ -109,7 +107,6 @@ public class ImportServiceImpl implements ImportService {
     private final AccessTypeRolesService accessTypeRolesService;
     private final ShellMappingService shellMappingService;
     private final ApplicationParams applicationParams;
-    private final ImportLockRepository importLockRepository;
 
     @Autowired
     public ImportServiceImpl(SpreadsheetValidator spreadsheetValidator,
@@ -134,8 +131,7 @@ public class ImportServiceImpl implements ImportService {
                              AccessTypesService accessTypesService,
                              AccessTypeRolesService accessTypeRolesService,
                              ShellMappingService shellMappingService,
-                             ApplicationParams applicationParams,
-                             ImportLockRepository importLockRepository) {
+                             ApplicationParams applicationParams) {
 
         this.spreadsheetValidator = spreadsheetValidator;
         this.spreadsheetParser = spreadsheetParser;
@@ -161,7 +157,6 @@ public class ImportServiceImpl implements ImportService {
         this.accessTypeRolesService = accessTypeRolesService;
         this.shellMappingService = shellMappingService;
         this.applicationParams = applicationParams;
-        this.importLockRepository = importLockRepository;
     }
 
     /**
@@ -176,7 +171,6 @@ public class ImportServiceImpl implements ImportService {
      *                                of attribute headers
      */
     @Override
-    @Transactional(rollbackFor = IOException.class)
     public DefinitionFileUploadMetadata importFormDefinitions(InputStream inputStream, Boolean reindex,
                                                               Boolean deleteOldIndex) throws IOException {
         logger.debug("Importing spreadsheet...");
@@ -185,6 +179,9 @@ public class ImportServiceImpl implements ImportService {
 
         spreadsheetValidator.validate(definitionSheets);
 
+        final ParseContext parseContext = new ParseContext();
+        parseContext.registerAccessProfiles(accessProfileRepository.findAll());
+
         /*
             1 - Jurisdiction
          */
@@ -192,12 +189,7 @@ public class ImportServiceImpl implements ImportService {
 
         final JurisdictionParser jurisdictionParser = parserFactory.createJurisdictionParser();
         JurisdictionEntity parsedJurisdiction = jurisdictionParser.parse(definitionSheets);
-        // Lock before looking up the jurisdiction: it might be created by another import while we wait.
-        // The outer import transaction holds this lock through flush and commit.
-        importLockRepository.lockJurisdiction(parsedJurisdiction.getReference());
         JurisdictionEntity jurisdiction = importJurisdiction(parsedJurisdiction);
-        final ParseContext parseContext = new ParseContext();
-        parseContext.registerAccessProfiles(accessProfileRepository.findAll());
         parseContext.setJurisdiction(jurisdiction);
 
         logger.info("Importing spreadsheet: Jurisdiction {} : OK ", jurisdiction.getReference());

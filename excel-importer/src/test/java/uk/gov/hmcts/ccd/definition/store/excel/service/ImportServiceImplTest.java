@@ -54,7 +54,6 @@ import uk.gov.hmcts.ccd.definition.store.excel.validation.SearchPartyValidator;
 import uk.gov.hmcts.ccd.definition.store.excel.validation.SpreadsheetValidator;
 import uk.gov.hmcts.ccd.definition.store.repository.AccessProfileRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.CaseFieldRepository;
-import uk.gov.hmcts.ccd.definition.store.repository.ImportLockRepository;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.AccessProfileEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
@@ -90,7 +89,6 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -183,9 +181,6 @@ public class ImportServiceImplTest {
 
     @Mock
     private JurisdictionService jurisdictionService;
-
-    @Mock
-    private ImportLockRepository importLockRepository;
 
     @Mock
     private CaseTypeService caseTypeService;
@@ -311,7 +306,7 @@ public class ImportServiceImplTest {
             accessTypesService,
             accessTypeRolesService,
             shellMappingService,
-            applicationParams, importLockRepository);
+            applicationParams);
 
         lenient().doReturn(JURISDICTION_NAME).when(jurisdiction).getReference();
 
@@ -378,13 +373,10 @@ public class ImportServiceImplTest {
         );
     }
 
-    @ParameterizedTest
-    @ValueSource(booleans = {false, true})
-    void shouldImportDefinitionWhenMissingAccessTypeAndAccessTypeRoleTab(boolean existingJurisdiction)
-        throws Exception {
+    @Test
+    void shouldImportDefinitionWhenMissingAccessTypeAndAccessTypeRoleTab() throws Exception {
 
-        given(jurisdictionService.get(JURISDICTION_NAME))
-            .willReturn(existingJurisdiction ? Optional.of(jurisdiction) : Optional.empty());
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
 
         given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
         given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
@@ -404,13 +396,6 @@ public class ImportServiceImplTest {
             .getResourceAsStream(GOOD_FILE_MISSING_ACCESS_TYPES_ROLES_TAB);
 
         final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
-        var importOrder = inOrder(importLockRepository, jurisdictionService, fieldTypeService);
-        importOrder.verify(importLockRepository).lockJurisdiction(JURISDICTION_NAME);
-        importOrder.verify(jurisdictionService).get(JURISDICTION_NAME);
-        if (!existingJurisdiction) {
-            importOrder.verify(jurisdictionService).create(any(JurisdictionEntity.class));
-        }
-        importOrder.verify(fieldTypeService).getBaseTypes();
         assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
         assertEquals(2, metadata.getCaseTypes().size());
         assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
@@ -608,7 +593,7 @@ public class ImportServiceImplTest {
             translationService, accessTypesService,
             accessTypeRolesService,
             shellMappingService,
-            applicationParams, importLockRepository);
+            applicationParams);
 
 
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
