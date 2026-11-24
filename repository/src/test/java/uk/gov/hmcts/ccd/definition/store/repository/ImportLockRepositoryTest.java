@@ -68,7 +68,11 @@ class ImportLockRepositoryTest {
                 }
                 return version;
             }));
-            assertTrue(firstSaved.await(10, TimeUnit.SECONDS), "First transaction must flush its insert");
+            if (!firstSaved.await(10, TimeUnit.SECONDS)) {
+                // Report a failed insert from the worker instead of hiding it behind a latch timeout.
+                first.get(1, TimeUnit.SECONDS);
+                throw new AssertionError("First transaction must flush its insert");
+            }
 
             Future<Integer> second = executor.submit(() -> transaction().execute(status -> {
                 secondStarted.countDown();
@@ -144,7 +148,7 @@ class ImportLockRepositoryTest {
         return jurisdictionRepository.findFirstByReferenceOrderByVersionDesc(reference).orElseGet(() -> {
             JurisdictionEntity created = new JurisdictionEntity();
             created.setReference(reference);
-            created.setName(reference);
+            created.setName("Import lock test");
             return new VersionedDefinitionRepositoryDecorator<>(jurisdictionRepository).save(created);
         });
     }
