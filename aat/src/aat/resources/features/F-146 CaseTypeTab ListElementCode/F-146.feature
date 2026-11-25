@@ -1,10 +1,10 @@
-@F-145
-Feature: F-145 Import validations for CCD Definition with CaseTypeTab ListElementCode
+@F-146
+Feature: F-146 Import validations for CCD Definition with CaseTypeTab ListElementCode
 
   Background:
     Given an appropriate test context as detailed in the test data source,
 
-  @S-145.1
+  @S-146.1
   @AC-1 @AC-API
   Scenario: CaseTypeTab ListElementCode is returned as caseFieldSubfieldCode for a direct complex subfield
     Given a user with [an active profile in CCD]
@@ -14,7 +14,7 @@ Feature: F-145 Import validations for CCD Definition with CaseTypeTab ListElemen
     Then a positive response is received
     And the response has all other details as expected
 
-  @S-145.2
+  @S-146.2
   @AC-3 @AC-API
   Scenario: Blank CaseTypeTab ListElementCode is returned as null caseFieldSubfieldCode for a whole field
     Given a user with [an active profile in CCD]
@@ -24,7 +24,7 @@ Feature: F-145 Import validations for CCD Definition with CaseTypeTab ListElemen
     Then a positive response is received
     And the response has all other details as expected
 
-  @S-145.3
+  @S-146.3
   @AC-5 @AC-API
   Scenario: CaseTypeTab ListElementCode is returned as caseFieldSubfieldCode for a nested complex subfield
     Given a user with [an active profile in CCD]
@@ -34,7 +34,7 @@ Feature: F-145 Import validations for CCD Definition with CaseTypeTab ListElemen
     Then a positive response is received
     And the response has all other details as expected
 
-  @S-145.4
+  @S-146.4
   @AC-API
   Scenario: Multiple CaseTypeTab ListElementCode values are returned as caseFieldSubfieldCode values
     Given a user with [an active profile in CCD]
@@ -44,7 +44,7 @@ Feature: F-145 Import validations for CCD Definition with CaseTypeTab ListElemen
     Then a positive response is received
     And the response has all other details as expected
 
-  @S-145.5
+  @S-146.5
   @AC-2
   Scenario: Import definition file with invalid CaseTypeTab ListElementCode path
     Given a user with [an active profile in CCD]
@@ -54,7 +54,7 @@ Feature: F-145 Import validations for CCD Definition with CaseTypeTab ListElemen
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-145.6
+  @S-146.6
   @AC-4
   Scenario: Import definition file with CaseTypeTab ListElementCode on a simple field
     Given a user with [an active profile in CCD]
@@ -64,7 +64,7 @@ Feature: F-145 Import validations for CCD Definition with CaseTypeTab ListElemen
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-145.7
+  @S-146.7
   @AC-6
   Scenario: Import definition file with CaseTypeTab ListElementCode on a collection field
     Given a user with [an active profile in CCD]
@@ -74,7 +74,7 @@ Feature: F-145 Import validations for CCD Definition with CaseTypeTab ListElemen
     Then a negative response is received
     And the response has all other details as expected
 
-  @S-145.8
+  @S-146.8
   @AC-7
   Scenario: Import definition file with CaseTypeTab ListElementCode on a collection complex field
     Given a user with [an active profile in CCD]

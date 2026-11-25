@@ -170,12 +170,12 @@ uk/gov/hmcts/ccd/test_definitions/invalid/CCD_BEFTA_CTT_LISTELEMENCODE_invalid.x
 Expected result: `422 Unprocessable Entity` with validation text proving AC2, AC4, AC6 and AC7 are covered.
 
 The valid workbook is expected to be available as setup data before API assertions run.
-F-127 API response scenarios should call Tab Structure By CaseType directly and must not post
+F-146 API response scenarios should call Tab Structure By CaseType directly and must not post
 `build/tmp/definition_files_copy/CCD_BEFTA_CTT_LISTELEMENCODE.xlsx`.
 
 ## Functional Tests
 
-BEFTA coverage lives under `aat/src/aat/resources/features/F-127 CaseTypeTab ListElementCode`.
+BEFTA coverage lives under `aat/src/aat/resources/features/F-146 CaseTypeTab ListElementCode`.
 
 <table>
   <thead>
@@ -186,23 +186,23 @@ BEFTA coverage lives under `aat/src/aat/resources/features/F-127 CaseTypeTab Lis
   </thead>
   <tbody>
     <tr>
-      <td><code>aat/src/aat/resources/features/F-127 CaseTypeTab ListElementCode/F-127.feature</code></td>
+      <td><code>aat/src/aat/resources/features/F-146 CaseTypeTab ListElementCode/F-146.feature</code></td>
       <td>Feature and scenario definitions</td>
     </tr>
     <tr>
-      <td><code>aat/src/aat/resources/features/F-127 CaseTypeTab ListElementCode/F-127_Definition_Import_Test_Base_data.td.json</code></td>
+      <td><code>aat/src/aat/resources/features/F-146 CaseTypeTab ListElementCode/F-146_Definition_Import_Test_Base_data.td.json</code></td>
       <td>Shared <code>/import</code> request base, same pattern as <code>F-094_Definition_Import_Test_Base_data.td.json</code></td>
     </tr>
     <tr>
-      <td><code>aat/src/aat/resources/features/F-127 CaseTypeTab ListElementCode/S-127.1.td.json</code></td>
+      <td><code>aat/src/aat/resources/features/F-146 CaseTypeTab ListElementCode/S-146.1.td.json</code></td>
       <td>Tab structure API response check for direct CaseTypeTab subfield path</td>
     </tr>
     <tr>
-      <td><code>aat/src/aat/resources/features/F-127 CaseTypeTab ListElementCode/S-127.2.td.json</code> to <code>S-127.4.td.json</code></td>
+      <td><code>aat/src/aat/resources/features/F-146 CaseTypeTab ListElementCode/S-146.2.td.json</code> to <code>S-146.4.td.json</code></td>
       <td>Tab structure API response checks for blank, nested and multiple CaseTypeTab subfield paths</td>
     </tr>
     <tr>
-      <td><code>aat/src/aat/resources/features/F-127 CaseTypeTab ListElementCode/S-127.5.td.json</code> to <code>S-127.8.td.json</code></td>
+      <td><code>aat/src/aat/resources/features/F-146 CaseTypeTab ListElementCode/S-146.5.td.json</code> to <code>S-146.8.td.json</code></td>
       <td>Invalid workbook imports</td>
     </tr>
   </tbody>
@@ -226,7 +226,7 @@ Current scenarios:
       <td>CaseTypeTab <code>ListElementCode</code> is returned as <code>caseFieldSubfieldCode</code> for a direct complex subfield</td>
       <td>AC1, API response</td>
       <td><code>FT_CTT_Subfield_Valid</code></td>
-      <td><code>S-127.1.td.json</code></td>
+      <td><code>S-146.1.td.json</code></td>
       <td>Uses tab structure endpoint against prepared setup data; no generated workbook path</td>
       <td><code>case_field.id</code> is <code>MySchool</code> and <code>caseFieldSubfieldCode</code> is <code>Name</code></td>
     </tr>
@@ -234,7 +234,7 @@ Current scenarios:
       <td>Blank CaseTypeTab <code>ListElementCode</code> is returned as null <code>caseFieldSubfieldCode</code> for a whole field</td>
       <td>AC3, API response</td>
       <td><code>FT_CTT_Subfield_Blank</code></td>
-      <td><code>S-127.2.td.json</code></td>
+      <td><code>S-146.2.td.json</code></td>
       <td>Uses tab structure endpoint against prepared setup data; no generated workbook path</td>
       <td><code>case_field.id</code> is <code>MySchool</code> and <code>caseFieldSubfieldCode</code> is <code>null</code></td>
     </tr>
@@ -242,7 +242,7 @@ Current scenarios:
       <td>CaseTypeTab <code>ListElementCode</code> is returned as <code>caseFieldSubfieldCode</code> for a nested complex subfield</td>
       <td>AC5, API response</td>
       <td><code>FT_CTT_Subfield_Nested</code></td>
-      <td><code>S-127.3.td.json</code></td>
+      <td><code>S-146.3.td.json</code></td>
       <td>Uses tab structure endpoint against prepared setup data; no generated workbook path</td>
       <td><code>case_field.id</code> is <code>FamilyDetails</code> and <code>caseFieldSubfieldCode</code> is <code>FamilyAddress.Country</code></td>
     </tr>
@@ -250,7 +250,7 @@ Current scenarios:
       <td>Multiple CaseTypeTab <code>ListElementCode</code> values are returned as <code>caseFieldSubfieldCode</code> values</td>
       <td>API response</td>
       <td><code>FT_CTT_Subfield_Multiple</code></td>
-      <td><code>S-127.4.td.json</code></td>
+      <td><code>S-146.4.td.json</code></td>
       <td>Uses tab structure endpoint against prepared setup data; no generated workbook path</td>
       <td><code>case_field.id</code> is <code>MySchool</code> and <code>caseFieldSubfieldCode</code> values are <code>Name</code> and <code>Number</code></td>
     </tr>
@@ -258,7 +258,7 @@ Current scenarios:
       <td>Invalid CaseTypeTab subfield path fails validation</td>
       <td>AC2</td>
       <td><code>FT_CTT_Subfield_BadPath</code></td>
-      <td><code>S-127.5.td.json</code></td>
+      <td><code>S-146.5.td.json</code></td>
       <td><code>filePath: uk/gov/hmcts/ccd/test_definitions/invalid/CCD_BEFTA_CTT_LISTELEMENCODE_invalid.xlsx</code></td>
       <td><code>422 Unprocessable Entity</code>, validation message contains <code>Invalid ListElementCode 'DoesNotExist' for case type 'FT_CTT_Subfield_BadPath', case field 'MySchool'</code></td>
     </tr>
@@ -266,7 +266,7 @@ Current scenarios:
       <td>CaseTypeTab <code>ListElementCode</code> on a simple field fails validation</td>
       <td>AC4</td>
       <td><code>FT_CTT_Subfield_Simple</code></td>
-      <td><code>S-127.6.td.json</code></td>
+      <td><code>S-146.6.td.json</code></td>
       <td><code>filePath: uk/gov/hmcts/ccd/test_definitions/invalid/CCD_BEFTA_CTT_LISTELEMENCODE_invalid.xlsx</code></td>
       <td><code>422 Unprocessable Entity</code>, validation message contains <code>ListElementCode 'Name' can be only defined for complex fields. Case Field 'Homeless', case type 'FT_CTT_Subfield_Simple'</code></td>
     </tr>
@@ -274,7 +274,7 @@ Current scenarios:
       <td>CaseTypeTab <code>ListElementCode</code> on a collection field fails validation</td>
       <td>AC6</td>
       <td><code>FT_CTT_Subfield_Collection</code></td>
-      <td><code>S-127.7.td.json</code></td>
+      <td><code>S-146.7.td.json</code></td>
       <td><code>filePath: uk/gov/hmcts/ccd/test_definitions/invalid/CCD_BEFTA_CTT_LISTELEMENCODE_invalid.xlsx</code></td>
       <td><code>422 Unprocessable Entity</code>, validation message contains <code>ListElementCode 'Name' is not supported for collection fields. Case Field 'MyCompany', case type 'FT_CTT_Subfield_Collection'</code></td>
     </tr>
@@ -282,7 +282,7 @@ Current scenarios:
       <td>CaseTypeTab <code>ListElementCode</code> on a collection complex field fails validation</td>
       <td>AC7</td>
       <td><code>FT_CTT_Subfield_Collection</code></td>
-      <td><code>S-127.8.td.json</code></td>
+      <td><code>S-146.8.td.json</code></td>
       <td><code>filePath: uk/gov/hmcts/ccd/test_definitions/invalid/CCD_BEFTA_CTT_LISTELEMENCODE_invalid.xlsx</code></td>
       <td><code>422 Unprocessable Entity</code>, validation message contains <code>ListElementCode 'AddressLine1' is not supported for collection fields. Case Field 'CollectionComplexField', case type 'FT_CTT_Subfield_Collection'</code></td>
     </tr>

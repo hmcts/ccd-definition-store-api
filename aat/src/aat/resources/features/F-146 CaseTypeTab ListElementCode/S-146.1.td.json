@@ -1,14 +1,14 @@
 {
-  "_guid_": "S-145.3",
+  "_guid_": "S-146.1",
   "_extends_": "F-085_Test_Base_Data",
-  "title": "CaseTypeTab ListElementCode is returned as caseFieldSubfieldCode for a nested complex subfield",
+  "title": "CaseTypeTab ListElementCode is returned as caseFieldSubfieldCode for a direct complex subfield",
   "specs": [
     "an active profile in CCD",
-    "contains a case type id with a nested CaseTypeTab ListElementCode value"
+    "contains a case type id with a direct CaseTypeTab ListElementCode value"
   ],
   "request": {
     "pathVariables": {
-      "id": "FT_CTT_Subfield_Nested"
+      "id": "FT_CTT_Subfield_Valid"
     }
   },
   "expectedResponse": {
@@ -20,7 +20,7 @@
       "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
     },
     "body": {
-      "case_type_id": "FT_CTT_Subfield_Nested",
+      "case_type_id": "FT_CTT_Subfield_Valid",
       "channels": "[[ANYTHING_PRESENT]]",
       "tabs": [
         {
@@ -46,8 +46,26 @@
           "defaultFocus": null
         },
         {
-          "id": "FamilyAddressDetails",
-          "label": "Family Address Details",
+          "id": "FamilyTab",
+          "label": "Family Details",
+          "order": 2,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": null,
+          "role": null,
+          "defaultFocus": null
+        },
+        {
+          "id": "History",
+          "label": "History",
+          "order": 1,
+          "tab_fields": "[[ANYTHING_PRESENT]]",
+          "show_condition": null,
+          "role": null,
+          "defaultFocus": null
+        },
+        {
+          "id": "MySchoolDetails",
+          "label": "My School Details",
           "order": 3,
           "tab_fields": [
             {
@@ -57,9 +75,9 @@
             {
               "case_field": {
                 "metadata": false,
-                "id": "FamilyDetails",
-                "case_type_id": "FT_CTT_Subfield_Nested",
-                "label": "Family Details",
+                "id": "MySchool",
+                "case_type_id": "FT_CTT_Subfield_Valid",
+                "label": "My School",
                 "hint_text": null,
                 "field_type": "[[ANYTHING_PRESENT]]",
                 "hidden": false,
@@ -77,27 +95,9 @@
               "order": 1,
               "show_condition": null,
               "display_context_parameter": null,
-              "caseFieldSubfieldCode": "FamilyAddress.Country"
+              "caseFieldSubfieldCode": "Name"
             }
           ],
-          "show_condition": null,
-          "role": null,
-          "defaultFocus": null
-        },
-        {
-          "id": "FamilyTab",
-          "label": "Family Details",
-          "order": 2,
-          "tab_fields": "[[ANYTHING_PRESENT]]",
-          "show_condition": null,
-          "role": null,
-          "defaultFocus": null
-        },
-        {
-          "id": "History",
-          "label": "History",
-          "order": 1,
-          "tab_fields": "[[ANYTHING_PRESENT]]",
           "show_condition": null,
           "role": null,
           "defaultFocus": null
