@@ -77,6 +77,7 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -372,7 +373,7 @@ public class ImportServiceImplTest {
             .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        assertThrows(MissingAccessProfilesException.class, 
+        assertThrows(MissingAccessProfilesException.class,
             () -> service.importFormDefinitions(inputStream, false, false)
         );
     }
@@ -461,8 +462,8 @@ public class ImportServiceImplTest {
             .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        assertThrows(MissingAccessProfilesException.class,
-            () -> service.importFormDefinitions(inputStream, false, false));
+        assertThatThrownBy(() -> service.importFormDefinitions(inputStream, false, false))
+            .isInstanceOf(MissingAccessProfilesException.class);
 
         verify(caseFieldRepository, never()).flush();
     }

@@ -12,6 +12,7 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -859,7 +860,7 @@ class HiddenFieldsValidatorTest {
         final DefinitionDataItem complexType = complexTypesRow(null);
         addSheetsWithOneCaseField(complexType, "abc=123");
 
-        assertNull(validator.parseComplexTypesHiddenFields(complexType, definitionSheets));
+        assertThat(validator.parseComplexTypesHiddenFields(complexType, definitionSheets)).isNull();
     }
 
     @Test
@@ -867,7 +868,7 @@ class HiddenFieldsValidatorTest {
         final DefinitionDataItem complexType = complexTypesRow(Boolean.FALSE);
         addSheetsWithOneCaseField(complexType, null);
 
-        assertFalse(validator.parseComplexTypesHiddenFields(complexType, definitionSheets));
+        assertThat(validator.parseComplexTypesHiddenFields(complexType, definitionSheets)).isFalse();
     }
 
     @Test
@@ -875,7 +876,7 @@ class HiddenFieldsValidatorTest {
         final DefinitionDataItem complexType = complexTypesRow(Boolean.FALSE);
         definitionSheets.put(SheetName.COMPLEX_TYPES.getName(), new DefinitionSheet());
 
-        assertFalse(validator.parseComplexTypesHiddenFields(complexType, definitionSheets));
+        assertThat(validator.parseComplexTypesHiddenFields(complexType, definitionSheets)).isFalse();
     }
 
     private DefinitionDataItem complexTypesRow(Boolean retainHiddenValue) {
