@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 
 class UserRoleTest extends BaseTest {
@@ -340,12 +341,26 @@ class UserRoleTest extends BaseTest {
     @Test
     @DisplayName("Should retrieve all user roles")
     void shouldRetrieveAllUserRoles() {
+        String additionalRole = "functional-list-role-" + UUID.randomUUID();
         asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body(userRoleBody(additionalRole))
             .when()
-            .get("/api/user-roles")
+            .post("/api/user-role")
             .then()
-            .statusCode(200)
-            .body("role", hasItem(EXISTING_ROLE));
+            .statusCode(201);
+
+        try {
+            asUser.get()
+                .when()
+                .get("/api/user-roles")
+                .then()
+                .statusCode(200)
+                .body("role", hasItems(EXISTING_ROLE, additionalRole));
+        } finally {
+            cleanupUserRole(additionalRole);
+        }
     }
 
     @Test
