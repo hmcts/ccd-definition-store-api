@@ -537,9 +537,11 @@
     <notes>Temporary Suppression
         CVE-2026-102404 refer [Ticket]
         CVE-2026-102407 refer [Ticket]
-        CVE-2026-102408 refer [Ticket]</notes>
+        CVE-2026-102408 refer [Ticket]
+        CVE-2026-133981 refer [Ticket]</notes>
     <cve>CVE-2026-102404</cve>
     <cve>CVE-2026-102407</cve>
     <cve>CVE-2026-102408</cve>
+    <cve>CVE-2026-133981</cve>
   </suppress>
 </suppressions>
