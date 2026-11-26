@@ -18,6 +18,11 @@ import static java.util.stream.Collectors.toList;
 public class HiddenFieldsValidator {
     public Boolean parseComplexTypesHiddenFields(DefinitionDataItem definitionDataItem,
                                                  Map<String, DefinitionSheet> definitionSheets) {
+        final Boolean retainHiddenValue = definitionDataItem.getRetainHiddenValue();
+        if (!Boolean.TRUE.equals(retainHiddenValue)) {
+            return retainHiddenValue;
+        }
+
         final DefinitionSheet caseEventToFields = definitionSheets.get(SheetName.CASE_EVENT_TO_FIELDS.getName());
         final DefinitionSheet caseFields = definitionSheets.get(SheetName.CASE_FIELD.getName());
         final String definitionItemId = definitionDataItem.getId();
@@ -41,7 +46,7 @@ public class HiddenFieldsValidator {
         validateCaseEventToFields(definitionDataItem, definitionSheets, caseFieldList, caseEventToFieldListFiltered);
         validateSubFieldConfiguration(caseFieldList, definitionDataItem, caseEventToFields);
 
-        return definitionDataItem.getRetainHiddenValue();
+        return true;
     }
 
     private void validateSubFieldConfiguration(List<DefinitionDataItem> caseField,
