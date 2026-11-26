@@ -79,7 +79,6 @@ class CaseDefinitionControllerTest {
 
         @Test
         @DisplayName("Should call the CaseTypeService with the jurisdictionId when jurisdictionId is not null")
-        @SuppressWarnings({"deprecation", "removal"})
         public void shouldCallCaseTypeService_whenJurisdictionIdIsNotNull() {
             subject.dataJurisdictionsJurisdictionIdCaseTypeGet("SAMPLE-ID");
             verify(caseTypeService, times(1)).findByJurisdictionId(eq("SAMPLE-ID"));
@@ -87,7 +86,6 @@ class CaseDefinitionControllerTest {
 
         @Test
         @DisplayName("Should call the CaseTypeService with null when jurisdictionId is null")
-        @SuppressWarnings({"deprecation", "removal"})
         public void shouldCallCaseTypeService_whenJurisdictionIdIsNull() {
             subject.dataJurisdictionsJurisdictionIdCaseTypeGet(null);
             verify(caseTypeService, times(1)).findByJurisdictionId(null);
@@ -195,29 +193,39 @@ class CaseDefinitionControllerTest {
     class JurisdictionTests {
 
         @ParameterizedTest
-        @ValueSource(ints = {0, -1, Integer.MIN_VALUE})
-        void shouldRejectOrderBelowOneBeforeRetrievingJurisdictions(int order) {
+        @ValueSource(ints = {Integer.MIN_VALUE, -1, 0, 100, Integer.MAX_VALUE})
+        void shouldRejectOutOfRangeOrderBeforeRetrievingJurisdictions(int order) {
             Optional<List<String>> jurisdictionIds = Optional.empty();
             Optional<Integer> caseTypeOrder = Optional.of(order);
 
             assertThatThrownBy(() -> subject.findJurisdictions(jurisdictionIds, caseTypeOrder))
                 .isInstanceOf(BadRequestException.class)
-                .hasMessage("caseTypeOrder must be greater than or equal to 1");
+                .hasMessage("caseTypeOrder must be between 1 and 99");
             verifyNoInteractions(jurisdictionService);
+        }
+
+        @ParameterizedTest
+        @ValueSource(ints = {1, 99})
+        void shouldAcceptBoundaryOrderFilters(int order) {
+            when(jurisdictionService.getAll()).thenReturn(List.of());
+
+            assertThat(subject.findJurisdictions(Optional.empty(), Optional.of(order))).isEmpty();
+
+            verify(jurisdictionService).getAll();
         }
 
         @ParameterizedTest
         @ValueSource(booleans = {false, true})
         void shouldFilterAndSortByIdOnlyWhenOrderIsPresent(boolean filterPresent) {
-            CaseTypeLite zulu = caseTypeLite("AId", "Zulu", 42);
-            CaseTypeLite alpha = caseTypeLite("ZId", "alpha", 42);
+            CaseTypeLite zulu = caseTypeLite("AId", "Zulu", 51);
+            CaseTypeLite alpha = caseTypeLite("ZId", "alpha", 51);
             CaseTypeLite other = caseTypeLite("Other", "Beta", 7);
             Jurisdiction jurisdiction = new Jurisdiction();
             jurisdiction.setCaseTypes(List.of(alpha, other, zulu));
             when(jurisdictionService.getAll()).thenReturn(List.of(jurisdiction));
 
             List<Jurisdiction> result = subject.findJurisdictions(Optional.empty(),
-                filterPresent ? Optional.of(42) : Optional.empty());
+                filterPresent ? Optional.of(51) : Optional.empty());
 
             assertThat(result).singleElement().satisfies(item -> {
                 if (filterPresent) {

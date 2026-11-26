@@ -2,8 +2,9 @@
 
 These scenarios test CCD-7772 using the clarified requirement: `caseTypeOrder` selects
 case types with that exact value, with matches sorted by case-type ID. With no
-query parameter, no case-type sequence is required. This differs from the original
-AC01 wording about ascending numeric sorting.
+query parameter, no case-type sequence is required. The optional query parameter
+accepts values from 1 to 99 inclusive; out-of-range values return HTTP 400.
+This differs from the original AC01 wording about ascending numeric sorting.
 
 | Scenario | Evidence |
 | --- | --- |
@@ -13,6 +14,7 @@ AC01 wording about ascending numeric sorting.
 | S-145.4 | HTTP 200; filter 1 returns both case types with order 1, sorted by ID. |
 | S-145.5 | HTTP 200; filter 99 returns both case types with order 99, sorted by ID. |
 | S-145.6 | HTTP 200; no matching order returns the jurisdiction with an empty case-type list. |
+| S-145.7 | HTTP 400; filter 100 is rejected with `caseTypeOrder must be between 1 and 99`. |
 
 The mixed fixture contains 18 case types: eight with order 63, three with order 7,
 two each with orders 1 and 99, and three with blank order values. The legacy fixture
@@ -25,8 +27,9 @@ use EQUIVALENT/UNORDERED comparisons by ID, checking complete membership, numeri
 values and omission for blank values without requiring random or unsorted output.
 Their expected lists deliberately differ from fixture import order.
 
-Each scenario imports its dedicated definition as a prerequisite. The existing BEFTA
-loader generates `BEFTA_F145_ORDERED.xlsx` and `BEFTA_F145_LEGACY.xlsx` from the JSON
+Scenarios S-145.1 to S-145.6 import their dedicated definition as a prerequisite.
+S-145.7 requires no import because range validation rejects the request before
+jurisdiction retrieval. The existing BEFTA loader generates `BEFTA_F145_ORDERED.xlsx` and `BEFTA_F145_LEGACY.xlsx` from the JSON
 fixtures under `uk/gov/hmcts/ccd/test_definitions/valid`. Blank template rows provide
 headings for required empty sheets. The fixtures do not change user profiles or ACLs.
 

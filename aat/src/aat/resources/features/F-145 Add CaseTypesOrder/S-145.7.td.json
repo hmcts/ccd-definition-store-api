@@ -1,0 +1,32 @@
+{
+  "_guid_": "S-145.7",
+  "_extends_": "Get_Operation_Base_Data_on_Definition_Store",
+  "title": "reject a caseTypeOrder filter above the maximum of 99",
+  "operationName": "Get Jurisdiction Details",
+  "uri": "/api/data/jurisdictions",
+  "specs": [
+    "an active profile in CCD",
+    "contains a caseTypeOrder filter of 100",
+    "has the 400 Bad Request code",
+    "contains the caseTypeOrder range validation message"
+  ],
+  "request": {
+    "queryParams": {
+      "ids": "BEFTA_F145_ORDERED",
+      "caseTypeOrder": "100"
+    }
+  },
+  "expectedResponse": {
+    "responseCode": 400,
+    "responseMessage": "Bad Request",
+    "headers": {
+      "Content-Encoding": "[[ANY_STRING_NULLABLE]]",
+      "Content-Length": "[[ANYTHING_PRESENT]]",
+      "Content-Type": "text/plain;charset=UTF-8",
+      "Strict-Transport-Security": "[[ANY_STRING_NULLABLE]]"
+    },
+    "body": {
+      "__plainTextValue__": "caseTypeOrder must be between 1 and 99"
+    }
+  }
+}

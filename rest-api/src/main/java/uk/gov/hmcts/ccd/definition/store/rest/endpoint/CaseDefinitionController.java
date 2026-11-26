@@ -132,16 +132,17 @@ public class CaseDefinitionController {
     @GetMapping(value = "/data/jurisdictions", produces = {"application/json"})
     @ApiOperation(value = "Get jurisdiction details", response = Jurisdiction.class, responseContainer = "List")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "List of jurisdictions")
+        @ApiResponse(code = 200, message = "List of jurisdictions"),
+        @ApiResponse(code = 400, message = "Invalid caseTypeOrder")
     })
     public List<Jurisdiction> findJurisdictions(
         @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> idsOptional,
-        @ApiParam(value = "Filter by CaseTypesOrder (minimum 1) and sort matches by case type ID")
+        @ApiParam(value = "Filter by CaseTypesOrder (1 to 99 inclusive) and sort matches by case type ID")
         @RequestParam("caseTypeOrder") Optional<Integer> caseTypeOrder) {
 
         LOG.debug("received find jurisdictions request with ids: {} and caseTypeOrder: {}", idsOptional, caseTypeOrder);
-        if (caseTypeOrder.isPresent() && caseTypeOrder.get() < 1) {
-            throw new BadRequestException("caseTypeOrder must be greater than or equal to 1");
+        if (caseTypeOrder.isPresent() && (caseTypeOrder.get() < 1 || caseTypeOrder.get() > 99)) {
+            throw new BadRequestException("caseTypeOrder must be between 1 and 99");
         }
 
         List<Jurisdiction> jurisdictions = idsOptional.map(jurisdictionService::getAll)

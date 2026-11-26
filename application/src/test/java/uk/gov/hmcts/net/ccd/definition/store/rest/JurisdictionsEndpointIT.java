@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
@@ -42,7 +43,7 @@ class JurisdictionsEndpointIT extends BaseTest {
         JurisdictionEntity primary = jurisdiction(PRIMARY);
         caseType(primary, "Late", 1, 1);
         caseType(primary, "Late", 2, 99);
-        caseType(primary, "Middle", 1, 42);
+        caseType(primary, "Middle", 1, 51);
         caseType(primary, "Zulu", 1, 1);
         JurisdictionEntity secondary = jurisdiction(SECONDARY);
         caseType(secondary, "SecondaryLater", 1, 30);
@@ -54,7 +55,7 @@ class JurisdictionsEndpointIT extends BaseTest {
         JsonNode primaryTypes = findJurisdiction(response, PRIMARY).get("case_types");
         assertThat(primaryTypes).extracting(item ->
             tuple(item.get("id").asText(), item.get("caseTypesOrder").intValue()))
-            .containsExactlyInAnyOrder(tuple("Late", 99), tuple("Middle", 42), tuple("Zulu", 1));
+            .containsExactlyInAnyOrder(tuple("Late", 99), tuple("Middle", 51), tuple("Zulu", 1));
         assertThat(primaryTypes).allSatisfy(item -> {
             assertThat(item.get("caseTypesOrder").isIntegralNumber()).isTrue();
             assertThat(item.has("case_types_order")).isFalse();
@@ -71,7 +72,7 @@ class JurisdictionsEndpointIT extends BaseTest {
     void shouldIncludeNumberedAndUnnumberedCaseTypesWithoutFilter(boolean filtered) throws Exception {
         JurisdictionEntity primary = jurisdiction(PRIMARY);
         caseType(primary, "AlphaWithoutOrder", 1, null);
-        caseType(primary, "ZuluNumbered", 1, 42);
+        caseType(primary, "ZuluNumbered", 1, 51);
         jurisdiction(SECONDARY);
 
         JsonNode response = requestJurisdictions(filtered);
@@ -83,7 +84,7 @@ class JurisdictionsEndpointIT extends BaseTest {
             if ("AlphaWithoutOrder".equals(item.get("id").asText())) {
                 assertThat(item.has("caseTypesOrder")).isFalse();
             } else {
-                assertThat(item.get("caseTypesOrder").intValue()).isEqualTo(42);
+                assertThat(item.get("caseTypesOrder").intValue()).isEqualTo(51);
             }
         });
         assertThat(findJurisdiction(response, SECONDARY).get("case_types")).isEmpty();
@@ -118,15 +119,15 @@ class JurisdictionsEndpointIT extends BaseTest {
     @ValueSource(booleans = {false, true})
     void shouldIncludeAllCaseTypesWhenOrderValuesAreDuplicated(boolean filtered) throws Exception {
         JurisdictionEntity primary = jurisdiction(PRIMARY);
-        caseType(primary, "FirstTie", 1, 42);
+        caseType(primary, "FirstTie", 1, 51);
         caseType(primary, "Earlier", 1, 7);
-        caseType(primary, "SecondTie", 1, 42);
+        caseType(primary, "SecondTie", 1, 51);
         jurisdiction(SECONDARY);
 
         JsonNode types = findJurisdiction(requestJurisdictions(filtered), PRIMARY).get("case_types");
 
         assertThat(types).extracting(item -> item.get("caseTypesOrder").intValue())
-            .containsExactlyInAnyOrder(7, 42, 42);
+            .containsExactlyInAnyOrder(7, 51, 51);
         assertThat(types).extracting(item -> item.get("id").asText())
             .containsExactlyInAnyOrder("Earlier", "FirstTie", "SecondTie");
     }
@@ -135,40 +136,42 @@ class JurisdictionsEndpointIT extends BaseTest {
     @ValueSource(booleans = {false, true})
     void shouldSelectOnlyCaseTypesWithTheRequestedOrderAndSortById(boolean filtered) throws Exception {
         JurisdictionEntity primary = jurisdiction(PRIMARY);
-        caseType(primary, "ZuluMatch", 1, 42).setName("Alpha name");
-        caseType(primary, "AlphaMatch", 1, 42).setName("Zulu name");
+        caseType(primary, "ZuluMatch", 1, 51).setName("Alpha name");
+        caseType(primary, "AlphaMatch", 1, 51).setName("Zulu name");
         caseType(primary, "OtherOrder", 1, 7);
         caseType(primary, "WithoutOrder", 1, null);
-        caseType(primary, "ChangedOrder", 1, 42);
+        caseType(primary, "ChangedOrder", 1, 51);
         caseType(primary, "ChangedOrder", 2, 7);
         JurisdictionEntity secondary = jurisdiction(SECONDARY);
-        caseType(secondary, "SecondaryMatch", 1, 42);
+        caseType(secondary, "SecondaryMatch", 1, 51);
         caseType(secondary, "SecondaryOther", 1, 1);
 
-        JsonNode response = requestJurisdictions(filtered, 42);
+        JsonNode response = requestJurisdictions(filtered, 51);
 
         JsonNode primaryTypes = findJurisdiction(response, PRIMARY).get("case_types");
         assertThat(primaryTypes).extracting(item -> item.get("id").asText())
             .containsExactly("AlphaMatch", "ZuluMatch");
         assertThat(primaryTypes).allSatisfy(item ->
-            assertThat(item.get("caseTypesOrder").intValue()).isEqualTo(42));
+            assertThat(item.get("caseTypesOrder").intValue()).isEqualTo(51));
         assertThat(findJurisdiction(response, SECONDARY).get("case_types"))
             .extracting(item -> item.get("id").asText()).containsExactly("SecondaryMatch");
     }
 
     @ParameterizedTest
-    @ValueSource(booleans = {false, true})
-    void shouldAcceptOneAsTheMinimumExplicitFilter(boolean filtered) throws Exception {
+    @CsvSource({"false, 1", "true, 1", "false, 99", "true, 99"})
+    void shouldAcceptBoundaryOrderFilters(boolean filtered, int order) throws Exception {
         JurisdictionEntity primary = jurisdiction(PRIMARY);
-        caseType(primary, "One", 1, 1);
-        caseType(primary, "Other", 1, 42);
+        caseType(primary, "Boundary", 1, order);
+        caseType(primary, "Other", 1, 63);
         caseType(primary, "WithoutOrder", 1, null);
         jurisdiction(SECONDARY);
 
-        JsonNode response = requestJurisdictions(filtered, 1);
+        JsonNode response = requestJurisdictions(filtered, order);
 
         assertThat(findJurisdiction(response, PRIMARY).get("case_types"))
-            .extracting(item -> item.get("id").asText()).containsExactly("One");
+            .extracting(item -> item.get("id").asText()).containsExactly("Boundary");
+        assertThat(findJurisdiction(response, PRIMARY).get("case_types").get(0).get("caseTypesOrder").intValue())
+            .isEqualTo(order);
         assertThat(findJurisdiction(response, SECONDARY).get("case_types")).isEmpty();
     }
 
@@ -188,14 +191,14 @@ class JurisdictionsEndpointIT extends BaseTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {0, -1})
-    void shouldRejectNonPositiveOrderFilter(int order) throws Exception {
+    @ValueSource(ints = {Integer.MIN_VALUE, -1, 0, 100, Integer.MAX_VALUE})
+    void shouldRejectOutOfRangeOrderFilter(int order) throws Exception {
         String body = mockMvc.perform(get("/api/data/jurisdictions").param("caseTypeOrder", Integer.toString(order))
             .header(AUTHORIZATION, "Bearer testUser"))
             .andExpect(status().isBadRequest())
             .andReturn().getResponse().getContentAsString();
 
-        assertThat(body).contains("caseTypeOrder must be greater than or equal to 1");
+        assertThat(body).isEqualTo("caseTypeOrder must be between 1 and 99");
     }
 
     @Test

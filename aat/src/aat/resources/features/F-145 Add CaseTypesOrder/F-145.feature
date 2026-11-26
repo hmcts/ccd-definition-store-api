@@ -69,3 +69,14 @@ Feature: F-145: Filter jurisdiction case types by CaseTypesOrder
     Then the response [has the 200 OK code]
     And the response [contains the expected case types and optional caseTypesOrder values]
     And the response has all other details as expected
+
+  @S-145.7
+  Scenario: reject a caseTypeOrder filter above the maximum of 99
+    Given a user with [an active profile in CCD]
+    When a request is prepared with appropriate values
+    And the request [contains a caseTypeOrder filter of 100]
+    And it is submitted to call the [Get Jurisdiction Details] operation of [CCD Definition Store]
+    Then a negative response is received
+    And the response [has the 400 Bad Request code]
+    And the response [contains the caseTypeOrder range validation message]
+    And the response has all other details as expected
