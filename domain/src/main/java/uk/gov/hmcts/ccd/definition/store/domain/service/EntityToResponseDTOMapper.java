@@ -295,28 +295,6 @@ public interface EntityToResponseDTOMapper {
     @Mapping(expression = "java(searchCasesResultFieldEntity.getCaseField().isMetadataField())", target = "metadata")
     SearchCasesResultField map(SearchCasesResultFieldEntity searchCasesResultFieldEntity);
 
-    class EventComplexTypeEntityToCaseEventFieldComplexListMapper {
-
-        private EventComplexTypeEntityToCaseEventFieldComplexListMapper() {
-            // Default constructor
-        }
-
-        static List<CaseEventFieldComplex> map(List<? extends EventComplexTypeEntity> eventComplexTypeEntity) {
-            return eventComplexTypeEntity.stream()
-                .map(complexTypeEntity -> new CaseEventFieldComplex(complexTypeEntity.getReference(),
-                                                                    complexTypeEntity.getHint(),
-                                                                    complexTypeEntity.getLabel(),
-                                                                    complexTypeEntity.getOrder(),
-                                                                    complexTypeEntity.getDisplayContext(),
-                                                                    complexTypeEntity.getShowCondition(),
-                                                                    complexTypeEntity.getDefaultValue(),
-                                                                    complexTypeEntity.getPublish(),
-                                                                    complexTypeEntity.getPublishAs()
-                ))
-                .collect(Collectors.toList());
-        }
-    }
-
     @Mapping(source = "searchAliasFieldEntity.reference", target = "id")
     @Mapping(source = "searchAliasFieldEntity.caseType.reference", target = "caseTypeId")
     SearchAliasField map(SearchAliasFieldEntity searchAliasFieldEntity);
@@ -362,6 +340,28 @@ public interface EntityToResponseDTOMapper {
     @Mapping(source = "caseType.reference", target = "id")
     @Mapping(source = "roleToAccessProfilesEntity.roleName", target = "name")
     RoleAssignment roleToAccessProfilesEntityToRoleAssignment(RoleToAccessProfilesEntity roleToAccessProfilesEntity);
+
+    class EventComplexTypeEntityToCaseEventFieldComplexListMapper {
+
+        private EventComplexTypeEntityToCaseEventFieldComplexListMapper() {
+            // Default constructor
+        }
+
+        static List<CaseEventFieldComplex> map(List<? extends EventComplexTypeEntity> eventComplexTypeEntity) {
+            return eventComplexTypeEntity.stream()
+                .map(complexTypeEntity -> new CaseEventFieldComplex(complexTypeEntity.getReference(),
+                                                                    complexTypeEntity.getHint(),
+                                                                    complexTypeEntity.getLabel(),
+                                                                    complexTypeEntity.getOrder(),
+                                                                    complexTypeEntity.getDisplayContext(),
+                                                                    complexTypeEntity.getShowCondition(),
+                                                                    complexTypeEntity.getDefaultValue(),
+                                                                    complexTypeEntity.getPublish(),
+                                                                    complexTypeEntity.getPublishAs()
+                ))
+                .collect(Collectors.toList());
+        }
+    }
 
     // Would be conventional to use a Default method like
     // default AccessControlList map(Authorisation authorisation)
