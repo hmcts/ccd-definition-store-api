@@ -2,6 +2,7 @@ package uk.gov.hmcts.ccd.definition.store.rest.endpoint;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import jakarta.validation.constraints.NotBlank;
@@ -11,10 +12,14 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import uk.gov.hmcts.ccd.definition.store.domain.service.shellmapping.ShellMappingService;
 import uk.gov.hmcts.ccd.definition.store.repository.model.ShellMappingResponse;
+
+import java.util.Collections;
+import java.util.List;
 
 @RestController
 @Validated
@@ -33,7 +38,11 @@ public class ShellMappingController {
 
     @GetMapping(value = RETRIEVE_SHELL_MAPPINGS, produces = {"application/json"})
     @ResponseStatus(HttpStatus.OK)
-    @ApiOperation(value = "Retrieve Shell Mappings for case type")
+    @ApiOperation(value = "Retrieve Shell Mappings for case type",
+        notes = "Returns shell case mappings and originating case states. "
+            + "Optional query parameter stateCategoriesToExclude removes any case state whose "
+            + "stateCategory contains any of the supplied values (comma-separated categories on a "
+            + "state are matched individually). When omitted, all originating case states are returned.")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Returns list of shell mappings for case type"),
         @ApiResponse(code = 404, message = "No Shell case found"),
@@ -41,7 +50,18 @@ public class ShellMappingController {
         @ApiResponse(code = 401, message = "Unauthorised"),
         @ApiResponse(code = 400, message = "Bad Request")
     })
-    public ShellMappingResponse shellMappings(@PathVariable("originalCaseTypeId") @NotBlank String originalCaseTypeId) {
-        return shellMappingService.findByOriginatingCaseTypeId(originalCaseTypeId);
+    public ShellMappingResponse shellMappings(
+        @PathVariable("originalCaseTypeId") @NotBlank String originalCaseTypeId,
+        @ApiParam(value = "Optional. State category values to exclude from caseStates. "
+            + "A state is excluded if any of its stateCategory values (split by comma) matches "
+            + "any supplied value. Query parameter name: stateCategoriesToExclude.",
+            name = "stateCategoriesToExclude",
+            allowMultiple = true)
+        @RequestParam(value = "stateCategoriesToExclude", required = false)
+            List<String> stateCategoriesToExclude) {
+        return shellMappingService.findByOriginatingCaseTypeId(
+            originalCaseTypeId,
+            stateCategoriesToExclude == null ? Collections.emptyList() : stateCategoriesToExclude
+        );
     }
 }
