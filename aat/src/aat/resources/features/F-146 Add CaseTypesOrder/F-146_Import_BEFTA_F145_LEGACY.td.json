@@ -1,5 +1,5 @@
 {
-  "_guid_": "F-145_Import_BEFTA_F145_ORDERED",
+  "_guid_": "F-146_Import_BEFTA_F145_LEGACY",
   "_extends_": "Import_Base_data",
   "specs": [
     "As a prerequisite"
@@ -9,7 +9,7 @@
       "arrayInMap": [
         {
           "key": "file",
-          "localFilePath": "build/tmp/definition_files_copy/BEFTA_F145_ORDERED.xlsx"
+          "localFilePath": "build/tmp/definition_files_copy/BEFTA_F145_LEGACY.xlsx"
         }
       ]
     }

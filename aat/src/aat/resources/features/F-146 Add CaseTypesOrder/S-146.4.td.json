@@ -1,7 +1,7 @@
 {
-  "_guid_": "S-145.5",
-  "_extends_": "F-145_Test_Base_Data",
-  "title": "return the maximum configured order value of 99",
+  "_guid_": "S-146.4",
+  "_extends_": "F-146_Test_Base_Data",
+  "title": "accept the minimum configured order value of 1",
   "specs": [
     "an active profile in CCD",
     "contains a valid jurisdiction id",
@@ -11,13 +11,13 @@
   ],
   "prerequisites": [
     {
-      "importDefinition": "F-145_Import_BEFTA_F145_ORDERED"
+      "importDefinition": "F-146_Import_BEFTA_F145_ORDERED"
     }
   ],
   "request": {
     "queryParams": {
       "ids": "BEFTA_F145_ORDERED",
-      "caseTypeOrder": "99"
+      "caseTypeOrder": "1"
     }
   },
   "expectedResponse": {
@@ -36,22 +36,22 @@
               "__elementId__": "id"
             },
             {
-              "id": "F145_Last",
-              "description": "F-145 Last",
-              "name": "Last",
+              "id": "F145_First",
+              "description": "F-145 First",
+              "name": "First",
               "states": "[[ANYTHING_PRESENT]]",
               "events": "[[ANYTHING_PRESENT]]",
               "acls": [],
-              "caseTypesOrder": 99
+              "caseTypesOrder": 1
             },
             {
-              "id": "F145_LastExtra",
-              "description": "F-145 Omega last",
-              "name": "Omega last",
+              "id": "F145_FirstExtra",
+              "description": "F-145 Omega first",
+              "name": "Omega first",
               "states": "[[ANYTHING_PRESENT]]",
               "events": "[[ANYTHING_PRESENT]]",
               "acls": [],
-              "caseTypesOrder": 99
+              "caseTypesOrder": 1
             }
           ]
         }

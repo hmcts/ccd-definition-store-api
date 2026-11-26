@@ -1,6 +1,6 @@
 {
-  "_guid_": "S-145.1",
-  "_extends_": "F-145_Test_Base_Data",
+  "_guid_": "S-146.1",
+  "_extends_": "F-146_Test_Base_Data",
   "title": "AC01: filter by CaseTypesOrder and sort matching case types by ID",
   "specs": [
     "an active profile in CCD",
@@ -11,7 +11,7 @@
   ],
   "prerequisites": [
     {
-      "importDefinition": "F-145_Import_BEFTA_F145_ORDERED"
+      "importDefinition": "F-146_Import_BEFTA_F145_ORDERED"
     }
   ],
   "request": {
