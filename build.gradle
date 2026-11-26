@@ -101,7 +101,7 @@ allprojects {
 
     plugins.withId('checkstyle') {
         checkstyle {
-            toolVersion = '10.26.1'
+            toolVersion = '14.4.0'
         }
     }
 
