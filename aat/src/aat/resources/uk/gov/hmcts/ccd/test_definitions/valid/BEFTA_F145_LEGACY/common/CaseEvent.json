@@ -1,0 +1,82 @@
+[
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_HotelLegacy",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_ZuluLegacy",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_DeltaLegacy",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_AlphaLegacy",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_JulietLegacy",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_BravoLegacy",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_GolfLegacy",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_CharlieLegacy",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_IndiaLegacy",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  },
+  {
+    "LiveFrom": "01/01/2026",
+    "CaseTypeID": "F145_EchoLegacy",
+    "ID": "Create",
+    "Name": "Create",
+    "PostConditionState": "Created",
+    "SecurityClassification": "PUBLIC"
+  }
+]

@@ -1,5 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.repository.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,8 @@ public class CaseTypeLite implements HasAcls {
     private String id = null;
     private String description = null;
     private String name;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Integer caseTypesOrder;
     private List<CaseState> states = new ArrayList<>();
     private List<CaseEventLite> events = new ArrayList<>();
     private List<AccessControlList> acls = new ArrayList<>();
@@ -37,6 +41,14 @@ public class CaseTypeLite implements HasAcls {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getCaseTypesOrder() {
+        return caseTypesOrder;
+    }
+
+    public void setCaseTypesOrder(Integer caseTypesOrder) {
+        this.caseTypesOrder = caseTypesOrder;
     }
 
     public List<CaseState> getStates() {

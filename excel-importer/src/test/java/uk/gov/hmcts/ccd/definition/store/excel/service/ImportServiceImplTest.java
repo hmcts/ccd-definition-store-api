@@ -77,14 +77,8 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
@@ -152,7 +146,6 @@ import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEF
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_SEARCH_PARTY;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_STAFF_USER;
 import static uk.gov.hmcts.ccd.definition.store.repository.FieldTypeUtils.PREDEFINED_COMPLEX_TTL;
-
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -348,7 +341,8 @@ public class ImportServiceImplTest {
         given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
 
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(BAD_FILE);
-        assertThrows(InvalidImportException.class, () -> service.importFormDefinitions(inputStream, false, false));
+        assertThatThrownBy(() -> service.importFormDefinitions(inputStream, false, false))
+            .isInstanceOf(InvalidImportException.class);
     }
 
     @Test
@@ -373,9 +367,8 @@ public class ImportServiceImplTest {
             .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        assertThrows(MissingAccessProfilesException.class,
-            () -> service.importFormDefinitions(inputStream, false, false)
-        );
+        assertThatThrownBy(() -> service.importFormDefinitions(inputStream, false, false))
+            .isInstanceOf(MissingAccessProfilesException.class);
     }
 
     @Test
@@ -401,23 +394,21 @@ public class ImportServiceImplTest {
             .getResourceAsStream(GOOD_FILE_MISSING_ACCESS_TYPES_ROLES_TAB);
 
         final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
-        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
-        assertEquals(2, metadata.getCaseTypes().size());
-        assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
-        assertEquals(TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(1));
-        assertEquals("user@hmcts.net", metadata.getUserId());
-        assertEquals(
-            TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE,
-            metadata.getCaseTypesAsString());
+        assertThat(metadata.getJurisdiction()).isEqualTo(JURISDICTION_NAME);
+        assertThat(metadata.getCaseTypes()).containsExactly(
+            TEST_ADDRESS_BOOK_CASE_TYPE, TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE);
+        assertThat(metadata.getUserId()).isEqualTo("user@hmcts.net");
+        assertThat(metadata.getCaseTypesAsString())
+            .isEqualTo(TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE);
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
         verify(translationService).processDefinitionSheets(anyMap());
         verify(categoryIdValidator).validate(any(ParseContext.class));
-        assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
-        assertEquals("user@hmcts.net", eventCaptor.getValue().getUserEmailId());
-        assertEquals(false, eventCaptor.getValue().isReindex());
-        assertEquals(false, eventCaptor.getValue().isDeleteOldIndex());
+        assertThat(eventCaptor.getValue().getContent()).hasSize(2);
+        assertThat(eventCaptor.getValue().getUserEmailId()).isEqualTo("user@hmcts.net");
+        assertThat(eventCaptor.getValue().isReindex()).isFalse();
+        assertThat(eventCaptor.getValue().isDeleteOldIndex()).isFalse();
     }
 
     private void stubHappyPathDependencies() {
@@ -490,23 +481,21 @@ public class ImportServiceImplTest {
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
         final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
-        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
-        assertEquals(2, metadata.getCaseTypes().size());
-        assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
-        assertEquals(TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(1));
-        assertEquals("user@hmcts.net", metadata.getUserId());
-        assertEquals(
-            TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE,
-            metadata.getCaseTypesAsString());
+        assertThat(metadata.getJurisdiction()).isEqualTo(JURISDICTION_NAME);
+        assertThat(metadata.getCaseTypes()).containsExactly(
+            TEST_ADDRESS_BOOK_CASE_TYPE, TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE);
+        assertThat(metadata.getUserId()).isEqualTo("user@hmcts.net");
+        assertThat(metadata.getCaseTypesAsString())
+            .isEqualTo(TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE);
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
         verify(translationService).processDefinitionSheets(anyMap());
         verify(categoryIdValidator).validate(any(ParseContext.class));
-        assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
-        assertEquals("user@hmcts.net", eventCaptor.getValue().getUserEmailId());
-        assertEquals(false, eventCaptor.getValue().isReindex());
-        assertEquals(false, eventCaptor.getValue().isDeleteOldIndex());
+        assertThat(eventCaptor.getValue().getContent()).hasSize(2);
+        assertThat(eventCaptor.getValue().getUserEmailId()).isEqualTo("user@hmcts.net");
+        assertThat(eventCaptor.getValue().isReindex()).isFalse();
+        assertThat(eventCaptor.getValue().isDeleteOldIndex()).isFalse();
     }
 
     /**
@@ -538,15 +527,15 @@ public class ImportServiceImplTest {
 
         final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
 
-        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
-        assertFalse(metadata.getCaseTypes().isEmpty());
-        assertEquals("user@hmcts.net", metadata.getUserId());
+        assertThat(metadata.getJurisdiction()).isEqualTo(JURISDICTION_NAME);
+        assertThat(metadata.getCaseTypes()).isNotEmpty();
+        assertThat(metadata.getUserId()).isEqualTo("user@hmcts.net");
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
         verify(translationService).processDefinitionSheets(anyMap());
         verify(categoryIdValidator).validate(any(ParseContext.class));
-        assertThat(eventCaptor.getValue().getContent().size(), equalTo(metadata.getCaseTypes().size()));
+        assertThat(eventCaptor.getValue().getContent()).hasSameSizeAs(metadata.getCaseTypes());
     }
 
     @Test
@@ -568,22 +557,20 @@ public class ImportServiceImplTest {
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
         final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
-        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
-        assertEquals(2, metadata.getCaseTypes().size());
-        assertEquals(TEST_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(0));
-        assertEquals(TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE, metadata.getCaseTypes().get(1));
-        assertEquals("user@hmcts.net", metadata.getUserId());
-        assertEquals(
-            TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE,
-            metadata.getCaseTypesAsString());
+        assertThat(metadata.getJurisdiction()).isEqualTo(JURISDICTION_NAME);
+        assertThat(metadata.getCaseTypes()).containsExactly(
+            TEST_ADDRESS_BOOK_CASE_TYPE, TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE);
+        assertThat(metadata.getUserId()).isEqualTo("user@hmcts.net");
+        assertThat(metadata.getCaseTypesAsString())
+            .isEqualTo(TEST_ADDRESS_BOOK_CASE_TYPE + "," + TEST_COMPLEX_ADDRESS_BOOK_CASE_TYPE);
 
         verify(caseFieldRepository).findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA);
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
         verifyNoMoreInteractions(translationService);
-        assertThat(eventCaptor.getValue().getContent().size(), equalTo(2));
-        assertEquals("user@hmcts.net", eventCaptor.getValue().getUserEmailId());
-        assertEquals(false, eventCaptor.getValue().isReindex());
-        assertEquals(false, eventCaptor.getValue().isDeleteOldIndex());
+        assertThat(eventCaptor.getValue().getContent()).hasSize(2);
+        assertThat(eventCaptor.getValue().getUserEmailId()).isEqualTo("user@hmcts.net");
+        assertThat(eventCaptor.getValue().isReindex()).isFalse();
+        assertThat(eventCaptor.getValue().isDeleteOldIndex()).isFalse();
     }
 
     @Test
@@ -606,11 +593,10 @@ public class ImportServiceImplTest {
         service.importFormDefinitions(inputStream, true, true);
 
         verify(applicationEventPublisher).publishEvent(eventCaptor.capture());
-        assertEquals(true, eventCaptor.getValue().isReindex());
-        assertEquals(true, eventCaptor.getValue().isDeleteOldIndex());
-        assertEquals("user@hmcts.net", eventCaptor.getValue().getUserEmailId());
+        assertThat(eventCaptor.getValue().isReindex()).isTrue();
+        assertThat(eventCaptor.getValue().isDeleteOldIndex()).isTrue();
+        assertThat(eventCaptor.getValue().getUserEmailId()).isEqualTo("user@hmcts.net");
     }
-
 
     @Test
     void shouldReturnImportWarnings() {
@@ -648,14 +634,13 @@ public class ImportServiceImplTest {
             shellMappingService,
             applicationParams);
 
-
         final List<String> importWarnings = Arrays.asList("Warning1", "Warning2");
 
         given(spreadsheetParser.getImportWarnings()).willReturn(importWarnings);
 
         final List<String> warnings = service.getImportWarnings();
-        assertThat(warnings.size(), equalTo(2));
-        assertThat(importWarnings, containsInAnyOrder("Warning1", "Warning2"));
+        assertThat(warnings).hasSize(2);
+        assertThat(importWarnings).containsExactlyInAnyOrder("Warning1", "Warning2");
         verify(spreadsheetParser).getImportWarnings();
     }
 
@@ -695,7 +680,8 @@ public class ImportServiceImplTest {
         state.setDataFieldType(DataFieldType.METADATA);
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        assertThrows(MapperException.class, () -> service.importFormDefinitions(inputStream, false, false));
+        assertThatThrownBy(() -> service.importFormDefinitions(inputStream, false, false))
+            .isInstanceOf(MapperException.class);
     }
 
     @Test
@@ -720,8 +706,8 @@ public class ImportServiceImplTest {
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
         final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
-        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
-        assertEquals(2, metadata.getCaseTypes().size());
+        assertThat(metadata.getJurisdiction()).isEqualTo(JURISDICTION_NAME);
+        assertThat(metadata.getCaseTypes()).hasSize(2);
 
         // Verify shell mapping service is not called when sheet doesn't exist
         verify(shellMappingService, never()).saveAll(any(List.class));
@@ -747,8 +733,8 @@ public class ImportServiceImplTest {
             .getResourceAsStream(GOOD_FILE_MISSING_ACCESS_TYPES_ROLES_TAB);
 
         final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
-        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
-        assertEquals(2, metadata.getCaseTypes().size());
+        assertThat(metadata.getJurisdiction()).isEqualTo(JURISDICTION_NAME);
+        assertThat(metadata.getCaseTypes()).hasSize(2);
 
         verify(shellMappingParser, never()).parse(anyMap(), any(ParseContext.class));
         verify(shellMappingService, never()).saveAll(any(List.class));
@@ -777,7 +763,7 @@ public class ImportServiceImplTest {
             .getResourceAsStream(GOOD_FILE_WITH_SHELL_MAPPING);
 
         final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
-        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
+        assertThat(metadata.getJurisdiction()).isEqualTo(JURISDICTION_NAME);
 
         // Verify shell mapping parser was called
         verify(shellMappingParser).parse(anyMap(), any(ParseContext.class));
@@ -785,7 +771,7 @@ public class ImportServiceImplTest {
         verify(shellMappingService).saveAll(shellMappingCaptor.capture());
         // Verify that entities list was passed to the service (may be empty if no data in sheet)
         List<ShellMappingEntity> capturedEntities = shellMappingCaptor.getValue();
-        assertNotNull(capturedEntities, "Shell mapping entities list should not be null");
+        assertThat(capturedEntities).as("Shell mapping entities list should not be null").isNotNull();
     }
 
     @Test
@@ -808,7 +794,7 @@ public class ImportServiceImplTest {
             .getResourceAsStream(GOOD_FILE_WITH_SHELL_MAPPING);
 
         final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
-        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
+        assertThat(metadata.getJurisdiction()).isEqualTo(JURISDICTION_NAME);
 
         // Verify shell mapping parser was called
         verify(shellMappingParser).parse(anyMap(), any(ParseContext.class));
@@ -844,7 +830,8 @@ public class ImportServiceImplTest {
         final InputStream inputStream = getClass().getClassLoader()
             .getResourceAsStream(GOOD_FILE_WITH_SHELL_MAPPING);
 
-        assertThrows(InvalidImportException.class, () -> service.importFormDefinitions(inputStream, false, false));
+        assertThatThrownBy(() -> service.importFormDefinitions(inputStream, false, false))
+            .isInstanceOf(InvalidImportException.class);
         verify(shellMappingParser).parse(anyMap(), any(ParseContext.class));
         verify(shellMappingService, never()).saveAll(any(List.class));
     }
@@ -877,7 +864,8 @@ public class ImportServiceImplTest {
         final InputStream inputStream = getClass().getClassLoader()
             .getResourceAsStream(GOOD_FILE_WITH_SHELL_MAPPING);
 
-        assertThrows(RuntimeException.class, () -> service.importFormDefinitions(inputStream, false, false));
+        assertThatThrownBy(() -> service.importFormDefinitions(inputStream, false, false))
+            .isInstanceOf(RuntimeException.class);
         verify(shellMappingParser).parse(anyMap(), any(ParseContext.class));
         verify(shellMappingService).saveAll(shellMappingEntities);
     }
@@ -903,7 +891,7 @@ public class ImportServiceImplTest {
             .getResourceAsStream(GOOD_FILE_WITH_SHELL_MAPPING);
 
         final DefinitionFileUploadMetadata metadata = service.importFormDefinitions(inputStream, false, false);
-        assertEquals(JURISDICTION_NAME, metadata.getJurisdiction());
+        assertThat(metadata.getJurisdiction()).isEqualTo(JURISDICTION_NAME);
 
         // Verify shell mapping was processed
         verify(shellMappingParser).parse(anyMap(), any(ParseContext.class));
@@ -947,7 +935,8 @@ public class ImportServiceImplTest {
             .getResourceAsStream(INVALID_FILE_WITH_SHELL_MAPPING_LENGTH);
 
         // Validation should fail during spreadsheet parsing phase when {fieldName} length > 70
-        assertThrows(RuntimeException.class, () -> service.importFormDefinitions(inputStream, false, false));
+        assertThatThrownBy(() -> service.importFormDefinitions(inputStream, false, false))
+            .isInstanceOf(RuntimeException.class);
     }
 
     @Test
@@ -980,15 +969,14 @@ public class ImportServiceImplTest {
 
         // Validation should fail during spreadsheet parsing phase when field length > 70
         // The exception should be thrown before shell mapping parser is called
-        assertThrows(RuntimeException.class,
-            () -> service.importFormDefinitions(inputStream, false, false));
+        assertThatThrownBy(() -> service.importFormDefinitions(inputStream, false, false))
+            .isInstanceOf(RuntimeException.class);
 
         // Verify shell mapping parser was not called due to validation failure
         verify(shellMappingParser, never()).parse(anyMap(), any(ParseContext.class));
         // Verify shell mapping service was not called
         verify(shellMappingService, never()).saveAll(any(List.class));
     }
-
 
     private FieldTypeEntity buildBaseType(final String reference) {
         FieldTypeEntity fieldTypeEntity = new FieldTypeEntity();

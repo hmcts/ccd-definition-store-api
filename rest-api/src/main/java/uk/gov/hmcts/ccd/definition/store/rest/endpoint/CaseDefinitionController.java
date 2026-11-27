@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import uk.gov.hmcts.ccd.definition.store.domain.exception.BadRequestException;
 import uk.gov.hmcts.ccd.definition.store.domain.exception.NotFoundException;
 import uk.gov.hmcts.ccd.definition.store.domain.service.CaseRoleService;
 import uk.gov.hmcts.ccd.definition.store.domain.service.JurisdictionService;
@@ -21,9 +22,11 @@ import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeService
 import uk.gov.hmcts.ccd.definition.store.domain.service.casetype.CaseTypeVersionInformation;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseRole;
 import uk.gov.hmcts.ccd.definition.store.repository.model.CaseType;
+import uk.gov.hmcts.ccd.definition.store.repository.model.CaseTypeLite;
 import uk.gov.hmcts.ccd.definition.store.repository.model.Jurisdiction;
 import uk.gov.hmcts.ccd.definition.store.repository.model.RoleAssignment;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,10 +35,11 @@ import java.util.Optional;
 @RequestMapping(value = "/api")
 public class CaseDefinitionController {
 
-    private CaseTypeService caseTypeService;
-    private JurisdictionService jurisdictionService;
+    private static final Logger LOG = LoggerFactory.getLogger(CaseDefinitionController.class);
     private final CaseRoleService caseRoleService;
     private final RoleToAccessProfileService roleToAccessProfilesService;
+    private final CaseTypeService caseTypeService;
+    private final JurisdictionService jurisdictionService;
 
     @Autowired
     public CaseDefinitionController(CaseTypeService caseTypeService, JurisdictionService jurisdictionService,
@@ -46,8 +50,6 @@ public class CaseDefinitionController {
         this.caseRoleService = caseRoleService;
         this.roleToAccessProfilesService = roleToAccessProfilesService;
     }
-
-    private static final Logger LOG = LoggerFactory.getLogger(CaseDefinitionController.class);
 
     @GetMapping(value = "/data/case-type/{id}", produces = {"application/json"})
     @ApiOperation(value = "Fetch a Case Type Schema", notes = "Returns the schema of a single case type.\n",
@@ -109,7 +111,7 @@ public class CaseDefinitionController {
      * Find by jurisdiction id.
      *
      * @deprecated This endpoint is deprecated due to performance issues and is no longer used by any service from the
-     *             data store.
+     *     data store.
      */
     @Deprecated(forRemoval = true)
     @SuppressWarnings("squid:S1133")
@@ -130,14 +132,28 @@ public class CaseDefinitionController {
     @GetMapping(value = "/data/jurisdictions", produces = {"application/json"})
     @ApiOperation(value = "Get jurisdiction details", response = Jurisdiction.class, responseContainer = "List")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "List of jurisdictions")
+        @ApiResponse(code = 200, message = "List of jurisdictions"),
+        @ApiResponse(code = 400, message = "Invalid caseTypeOrder")
     })
     public List<Jurisdiction> findJurisdictions(
-        @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> idsOptional) {
+        @ApiParam(value = "list of jurisdiction references") @RequestParam("ids") Optional<List<String>> idsOptional,
+        @ApiParam(value = "Filter by CaseTypesOrder (1 to 99 inclusive) and sort matches by case type ID")
+        @RequestParam("caseTypeOrder") Optional<Integer> caseTypeOrder) {
 
-        LOG.debug("received find jurisdictions request with ids: {}", idsOptional);
+        LOG.debug("received find jurisdictions request with ids: {} and caseTypeOrder: {}", idsOptional, caseTypeOrder);
+        if (caseTypeOrder.isPresent() && (caseTypeOrder.get() < 1 || caseTypeOrder.get() > 99)) {
+            throw new BadRequestException("caseTypeOrder must be between 1 and 99");
+        }
 
-        return idsOptional.map(ids -> jurisdictionService.getAll(ids)).orElseGet(jurisdictionService::getAll);
+        List<Jurisdiction> jurisdictions = idsOptional.map(jurisdictionService::getAll)
+            .orElseGet(jurisdictionService::getAll);
+        caseTypeOrder.ifPresent(order -> jurisdictions.forEach(jurisdiction -> jurisdiction.setCaseTypes(
+            jurisdiction.getCaseTypes().stream()
+                .filter(caseType -> order.equals(caseType.getCaseTypesOrder()))
+                .sorted(Comparator.comparing(CaseTypeLite::getId,
+                    Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)))
+                .toList())));
+        return jurisdictions;
     }
 
     @GetMapping(value = "/data/case-type/{ctid}/version", produces = {"application/json"})
@@ -147,7 +163,7 @@ public class CaseDefinitionController {
         @ApiResponse(code = 404, message = "Not Found")})
     public CaseTypeVersionInformation dataCaseTypeVersionGet(@ApiParam(value = "Case Type ID",
         required = true) @PathVariable("ctid")
-                                                                 String id) {
+                                                             String id) {
         return caseTypeService.findVersionInfoByCaseTypeId(id).orElseThrow(() -> new NotFoundException(id));
     }
 }
