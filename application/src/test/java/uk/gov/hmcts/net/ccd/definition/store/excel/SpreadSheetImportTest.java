@@ -8,6 +8,8 @@ import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -56,6 +58,14 @@ import static uk.gov.hmcts.net.ccd.definition.store.util.WiremockFixtures.stubFo
  * @author Daniel Lam (A533913)
  */
 @TestPropertySource(properties = {"ccd.authorised.services=ccd_data"})
+@Sql(
+    statements = "DELETE FROM case_type_snapshot",
+    executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD,
+    config = @SqlConfig(
+        transactionMode = SqlConfig.TransactionMode.ISOLATED,
+        transactionManager = "transactionManager"
+    )
+)
 class SpreadSheetImportTest extends BaseTest {
     private static final String TEST_CASE_TYPE = "TestAddressBookCase";
     private static final String CASE_TYPE_DEF_URL = "/api/data/caseworkers/cid/jurisdictions/jid/case-types/"
