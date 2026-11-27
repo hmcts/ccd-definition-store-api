@@ -1,8 +1,11 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.EventEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseFieldEntity;
+import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseRoleEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CaseTypeEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.CategoryEntity;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.FieldTypeEntity;
@@ -22,6 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ValidationResponseAssertions.assertImportValidationResponse;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ValidationResponseAssertions.assertValidationResponse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -36,6 +41,35 @@ class ParseContextTest {
     }
 
     @Test
+    void missingCaseRolesRetainValidationFeedback() {
+        var failure = assertThrows(SpreadsheetParsingException.class,
+            () -> parseContext.getCaseRoleForCaseType("TestCase", "[MissingRole]"));
+        assertImportValidationResponse(failure, "No case roles registered for case type: TestCase");
+    }
+
+    @Test
+    void unknownCaseRolesRetainValidationFeedback() {
+        var role = new CaseRoleEntity();
+        role.setReference("[KnownRole]");
+        parseContext.registerCaseRoleForCaseType("TestCase", role);
+        var failure = assertThrows(SpreadsheetParsingException.class,
+            () -> parseContext.getCaseRoleForCaseType("TestCase", "[MissingRole]"));
+        assertImportValidationResponse(failure, "No case role registered for case role ID: TestCase/[MissingRole]");
+    }
+
+    @Test
+    void duplicateEventsRetainValidationFeedback() {
+        var event = new EventEntity();
+        event.setReference("create");
+        parseContext.registerEvent("TestCase", event);
+        var failure = assertThrows(
+            ImportValidationException.class,
+            () -> parseContext.registerEvent("TestCase", event));
+        assertEquals("Event already registered for ID: create", failure.getMessage());
+        assertValidationResponse(failure);
+    }
+
+    @Test
     void shouldFail_whenRegisterCaseFieldTypeAgainForCaseType() {
 
         final CaseFieldEntity caseField = mock(CaseFieldEntity.class);
@@ -43,9 +77,10 @@ class ParseContextTest {
 
         parseContext.registerCaseFieldForCaseType("caseTypeId", caseField);
 
-        assertThrows(SpreadsheetParsingException.class, () -> {
+        var failure = assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.registerCaseFieldForCaseType("caseTypeId", caseField);
-        }, "Case field already registered for ID: case field id");
+        });
+        assertImportValidationResponse(failure, "Case field already registered for ID: case field id");
     }
 
     @Test
@@ -77,10 +112,10 @@ class ParseContextTest {
         final FieldTypeEntity fieldType = mock(FieldTypeEntity.class);
         parseContext.registerCaseFieldType("caseTypeId", "fieldId", fieldType);
 
-        assertThrows(SpreadsheetParsingException.class, () -> {
-                parseContext.registerCaseFieldType("caseTypeId", "fieldId", fieldType);
-            }, "Type already registered for field: fieldId"
-        );
+        var failure = assertThrows(SpreadsheetParsingException.class, () -> {
+            parseContext.registerCaseFieldType("caseTypeId", "fieldId", fieldType);
+        });
+        assertImportValidationResponse(failure, "Type already registered for field: fieldId");
     }
 
     @Test
@@ -103,9 +138,10 @@ class ParseContextTest {
         given(state.getReference()).willReturn("some state id");
         parseContext.registerStateForCaseType("case type id", state);
 
-        assertThrows(SpreadsheetParsingException.class, () -> {
+        var failure = assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.registerStateForCaseType("case type id", state);
-        }, "State already registered for ID: some state id");
+        });
+        assertImportValidationResponse(failure, "State already registered for ID: some state id");
     }
 
     @Test
@@ -133,9 +169,10 @@ class ParseContextTest {
 
     @Test
     void shouldFail_whenCaseTypeNotRegistered() {
-        assertThrows(SpreadsheetParsingException.class, () -> {
+        var failure = assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.getCaseFieldType("ngitb", "case field");
-        }, "No types registered for case type: ngitb");
+        });
+        assertImportValidationResponse(failure, "No types registered for case type: ngitb");
     }
 
     @Test
@@ -143,9 +180,9 @@ class ParseContextTest {
         final FieldTypeEntity f = mock(FieldTypeEntity.class);
         parseContext.registerCaseFieldType("ngitb", "case_field", f);
 
-        assertThrows(SpreadsheetParsingException.class,
-            () -> parseContext.getCaseFieldType("ngitb", "case field"),
-            "No types registered for case field ID: ngitb/case field");
+        var failure = assertThrows(SpreadsheetParsingException.class,
+            () -> parseContext.getCaseFieldType("ngitb", "case field"));
+        assertImportValidationResponse(failure, "No types registered for case field ID: ngitb/case field");
     }
 
     @Test
@@ -153,9 +190,9 @@ class ParseContextTest {
         final CaseFieldEntity o = mock(CaseFieldEntity.class);
         given(o.getReference()).willReturn("CF");
         parseContext.registerCaseFieldForCaseType("ngitb", o);
-        assertThrows(SpreadsheetParsingException.class,
-            () -> parseContext.getStateForCaseType("ngitb", "state"),
-            "No states registered for case type: ngitb");
+        var failure = assertThrows(SpreadsheetParsingException.class,
+            () -> parseContext.getStateForCaseType("ngitb", "state"));
+        assertImportValidationResponse(failure, "No states registered for case type: ngitb");
     }
 
     @Test
@@ -165,25 +202,28 @@ class ParseContextTest {
 
         parseContext.registerStateForCaseType("ngitb", s);
 
-        assertThrows(SpreadsheetParsingException.class,
-            () -> parseContext.getStateForCaseType("ngitb", "state"),
-            "No state registered for state ID: ngitb/state");
+        var failure = assertThrows(SpreadsheetParsingException.class,
+            () -> parseContext.getStateForCaseType("ngitb", "state"));
+        assertImportValidationResponse(failure, "No state registered for state ID: ngitb/state");
     }
 
     @Test
     void shouldFail_whenCaseTypeNotRegisteredFormCaseField() {
-        assertThrows(SpreadsheetParsingException.class, () -> {
+        var failure = assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.getCaseFieldForCaseType("ngitb", "state");
-        }, "No case fields registered for case type: ngitb");
+        });
+        assertImportValidationResponse(failure, "No case fields registered for case type: ngitb");
     }
 
     @Test
     void shouldFail_whenCaseFieldNotRegisteredForCaseType() {
-        assertThrows(SpreadsheetParsingException.class, () -> {
-
+        var existing = new CaseFieldEntity();
+        existing.setReference("knownField");
+        parseContext.registerCaseFieldForCaseType("ngitb", existing);
+        var failure = assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.getCaseFieldForCaseType("ngitb", "cf");
-
-        }, "Unknown field cf for case type ngitb");
+        });
+        assertImportValidationResponse(failure, "Unknown field cf for case type ngitb");
     }
 
     @Test
@@ -253,9 +293,10 @@ class ParseContextTest {
 
         parseContext.registerCaseTypeForCategory("caseTypeId", category);
 
-        assertThrows(SpreadsheetParsingException.class, () -> {
+        var failure = assertThrows(SpreadsheetParsingException.class, () -> {
             parseContext.registerCaseTypeForCategory("caseTypeId", category);
-        }, "Category already registered for ID: Category");
+        });
+        assertImportValidationResponse(failure, "Category already registered for ID: Category");
     }
 
     @Test

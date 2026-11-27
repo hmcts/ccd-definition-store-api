@@ -159,7 +159,7 @@ class ProcessUploadServiceTest {
 
         assertThat(exception.getCause().getMessage(), is("boo"));
         assertNotNull(exception.getJobId());
-        verify(importJobService).markFailed(any(UUID.class), eq("boo"));
+        verify(importJobService).markFailed(any(UUID.class), eq("Unable to complete the import."));
         verify(importJobService, never()).markCompleted(any(), any(), any());
     }
 

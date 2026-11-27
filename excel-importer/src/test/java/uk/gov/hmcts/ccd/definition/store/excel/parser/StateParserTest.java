@@ -19,6 +19,8 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ValidationResponseAssertions.assertImportValidationResponse;
 import static uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName.STATE;
 
 @DisplayName("State Parser Test")
@@ -62,6 +64,14 @@ class StateParserTest {
                 assertThat(s.getStateCategory(), is(SINGLE_STATE_CATEGORY));
                 assertThat(context.getStateForCaseType(CASE_TYPE_ID, STATE_ID), is(s));
             });
+    }
+
+    @Test
+    void missingStatesRetainValidationFeedback() {
+        definitionSheets.put(STATE.getName(), new DefinitionSheet());
+        var failure = assertThrows(SpreadsheetParsingException.class,
+            () -> underTest.parseAll(definitionSheets, caseTypeEntity));
+        assertImportValidationResponse(failure, "At least one state must be defined for case type: " + CASE_TYPE_ID);
     }
 
     @Test

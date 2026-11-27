@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -33,6 +34,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ValidationResponseAssertions.assertValidationResponse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
@@ -269,6 +271,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         MapperException result = assertThrows(MapperException.class, () -> wizardPageParser.parseAll(definitionSheets));
         assertThat(result.getMessage(), equalTo("Please provide single condition in PageShowCondition column "
             + "in CaseEventToFields for the tab SomeEventName"));
+        assertValidationResponse(result);
     }
 
     @Test
@@ -305,6 +308,7 @@ class DisplayGroupParserTest extends ParserTestBase {
             () -> caseTypeTabParser.parseAll(definitionSheets));
         assertThat(result.getMessage(), equalTo("Please provide single condition in TabShowCondition column "
             + "in CaseTypeTab for the tab Name"));
+        assertValidationResponse(result);
     }
 
 
@@ -347,7 +351,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         definitionSheet.addDataItem(item2);
         definitionSheet.addDataItem(item3);
 
-        MapperException result = assertThrows(MapperException.class,
+        ImportValidationException result = assertThrows(ImportValidationException.class,
             () -> caseTypeTabParser.parseAll(definitionSheets));
         assertThat(result.getMessage(),
             equalTo("Only one row per case type can have DefaultFocus set to true in worksheet CaseTypeTab; "
@@ -580,6 +584,7 @@ class DisplayGroupParserTest extends ParserTestBase {
             () -> caseTypeTabParser.parseAll(definitionSheets));
         assertThat(thrown.getMessage(), is("Please provide one access profile row per tab in worksheet "
             + "CaseTypeTab on column ACCESS_PROFILE for the tab NameTab"));
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -607,6 +612,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         assertThat(thrown.getMessage(),
             is("- Invalid access profile or case role 'AccessProfile1' in 'CaseTypeTab' tab "
                 + "for TabId 'NameTab'"));
+        assertValidationResponse(thrown);
     }
 
     @Test
@@ -632,6 +638,7 @@ class DisplayGroupParserTest extends ParserTestBase {
         assertThat(thrown.getMessage(),
             is("- Invalid access profile or case role '[CLAIMANT]' in 'CaseTypeTab' tab "
                 + "for TabId 'Name Tab'"));
+        assertValidationResponse(thrown);
     }
 
     @Test

@@ -23,8 +23,8 @@
       "timestamp": "[[ANYTHING_PRESENT]]",
       "status": 400,
       "error": "Bad Request",
-      "message": "User role already exists",
-      "path": "/api/user-role"
+      "message": "Bad Request",
+      "path": "/"
     }
   }
 }

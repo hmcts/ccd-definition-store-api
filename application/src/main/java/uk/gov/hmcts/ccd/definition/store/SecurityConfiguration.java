@@ -23,6 +23,7 @@ import uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ElasticsearchIndexCont
 import uk.gov.hmcts.ccd.definition.store.elastic.endpoint.ReindexTaskController;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.ImportController;
 import uk.gov.hmcts.ccd.definition.store.security.JwtGrantedAuthoritiesConverter;
+import uk.gov.hmcts.ccd.definition.store.security.SafeAuthenticationErrors;
 import uk.gov.hmcts.ccd.definition.store.security.filters.ExceptionHandlingFilter;
 import uk.gov.hmcts.reform.authorisation.filters.ServiceAuthFilter;
 
@@ -70,6 +71,7 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        SafeAuthenticationErrors safeErrors = new SafeAuthenticationErrors();
         http
             .addFilterBefore(exceptionHandlingFilter, BearerTokenAuthenticationFilter.class)
             .addFilterBefore(serviceAuthFilter, BearerTokenAuthenticationFilter.class)
@@ -86,8 +88,9 @@ public class SecurityConfiguration {
                 .anyRequest()
                 .authenticated()
             )
-            .oauth2ResourceServer(oauth2 -> oauth2.jwt(
-                jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)
+            .oauth2ResourceServer(oauth2 -> oauth2.authenticationEntryPoint(safeErrors)
+                .accessDeniedHandler(safeErrors).jwt(
+                    jwt -> jwt.jwtAuthenticationConverter(jwtAuthenticationConverter)
             ))
             .oauth2Client(Customizer.withDefaults());
         return http.build();

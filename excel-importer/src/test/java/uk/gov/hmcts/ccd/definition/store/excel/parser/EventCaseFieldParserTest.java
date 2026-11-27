@@ -4,7 +4,7 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.InvalidShowConditionException;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowCondition;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DisplayContextColumn;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.ColumnName;
@@ -147,7 +147,7 @@ class EventCaseFieldParserTest {
         DefinitionDataItem definitionDataItem = definitionDataItem(caseFieldId, displayContext, null,
             null, null, true, true, null, caseEventId, "", false);
 
-        MapperException exception = assertThrows(MapperException.class,
+        ImportValidationException exception = assertThrows(ImportValidationException.class,
             () -> classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem));
 
         assertEquals(expectedError, exception.getMessage());
@@ -172,7 +172,7 @@ class EventCaseFieldParserTest {
         String expectedError = "NullifyByDefault cannot be set to Yes if DefaultValue "
             + "has a value in CaseEventToFields";
 
-        MapperException exception = assertThrows(MapperException.class,
+        ImportValidationException exception = assertThrows(ImportValidationException.class,
             () -> classUnderTest.parseEventCaseField(caseTypeId, definitionDataItem));
         assertEquals(expectedError, exception.getMessage());
     }

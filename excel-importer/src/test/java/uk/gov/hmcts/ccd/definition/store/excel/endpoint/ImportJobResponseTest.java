@@ -81,6 +81,14 @@ class ImportJobResponseTest {
         assertEquals("task-xyz", response.reindexTaskId());
     }
 
+    @Test
+    void fromEntityRedactsLegacyDiagnosticSummary() {
+        ImportJobEntity entity = buildEntity();
+        entity.setStatus(ImportJobStatus.FAILED);
+        entity.setErrorSummary("SECRET jdbc://internal-host SQL exception");
+        assertEquals("Unable to complete the import.", ImportJobResponse.from(entity).errorSummary());
+    }
+
     private ImportJobEntity buildEntity() {
         ImportJobEntity entity = new ImportJobEntity();
         entity.setId(UUID.randomUUID());

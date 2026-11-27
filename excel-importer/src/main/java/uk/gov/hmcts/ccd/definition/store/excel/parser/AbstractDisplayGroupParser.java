@@ -1,7 +1,7 @@
 package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
@@ -66,9 +66,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
         DefinitionSheet definitionSheet = definitionSheets.get(this.sheetName.getName());
 
         if (definitionSheet == null) {
-            throw new MapperException(
-                String.format("A definition must contain a %s sheet with at least one entry", this.sheetName.getName())
-            );
+            throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_DISPLAY_GROUP_SHEET,
+                this.sheetName.getName());
         }
 
         final Map<String, List<DefinitionDataItem>> displayGroupsByCaseTypes = definitionSheets.get(
@@ -83,10 +82,7 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
 
             // For a TAB at least one DG Item is required, for WIZARD, DG Item is not mandatory
             if (CollectionUtils.isEmpty(displayGroupItems) && this.displayGroupItemMandatory) {
-                throw new MapperException(
-                    String.format(
-                        "At least one CaseField must be defined in the CaseTypeTab for case type %s",
-                        caseTypeId));
+                throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_TAB_FIELDS, caseTypeId);
             } else if (CollectionUtils.isEmpty(displayGroupItems)) {
                 continue;
             }
@@ -133,10 +129,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
             .count();
 
         if (defaultFocusCount > 1) {
-            throw new MapperException(String.format(
-                "Only one row per case type can have DefaultFocus set to true in worksheet %s; "
-                    + "found %d for case type %s",
-                displayGroupItems.get(0).getSheetName(), defaultFocusCount, caseTypeId));
+            throw ImportValidationException.multipleDefaultFocus(
+                displayGroupItems.get(0).getSheetName(), defaultFocusCount, caseTypeId);
         }
     }
 
@@ -186,9 +180,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
                                final DisplayGroupEntity group,
                                final List<DefinitionDataItem> groupDefinition) {
         if (hasMultipleAccessProfileRowsPerTab(groupDefinition)) {
-            throw new MapperException(
-                String.format("Please provide one access profile row per tab in worksheet %s on column ACCESS_PROFILE "
-                    + "for the tab %s", groupDefinition.get(0).getSheetName(), group.getReference()));
+            throw ImportValidationException.rule(ImportValidationException.Rule.MULTIPLE_TAB_ACCESS_PROFILES,
+                groupDefinition.get(0).getSheetName(), group.getReference());
         }
         Optional<DefinitionDataItem> optionalDDI = groupDefinition.stream()
             .filter(ddi -> StringUtils.isNotEmpty(ddi.getString(ACCESS_PROFILE))).findFirst();
@@ -203,9 +196,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
                                                  List<DefinitionDataItem> groupDefinition,
                                                  String accessProfile) {
         return parseContext.getAccessProfile(caseType.getReference(), accessProfile)
-            .orElseThrow(() -> new MapperException(
-                String.format("- Invalid access profile or case role '%s' in '%s' tab for TabId '%s'",
-                    accessProfile, groupDefinition.get(0).getSheetName(), group.getReference())));
+            .orElseThrow(() -> ImportValidationException.rule(ImportValidationException.Rule.INVALID_TAB_ACCESS_PROFILE,
+                accessProfile, groupDefinition.get(0).getSheetName(), group.getReference()));
     }
 
     private boolean hasMultipleAccessProfileRowsPerTab(List<DefinitionDataItem> groupDefinition) {
@@ -217,9 +209,8 @@ public abstract class AbstractDisplayGroupParser implements FieldShowConditionPa
                                          DisplayGroupEntity group,
                                          List<DefinitionDataItem> groupDefinition) {
         if (groupDefinition.stream().filter(ddi -> ddi.getString(column) != null).count() > 1) {
-            throw new MapperException(
-                String.format("Please provide single condition in %s column in %s for the tab %s",
-                    column, groupDefinition.get(0).getSheetName(), group.getReference()));
+            throw ImportValidationException.rule(ImportValidationException.Rule.MULTIPLE_TAB_CONDITIONS,
+                column.toString(), groupDefinition.get(0).getSheetName(), group.getReference());
         }
         Optional<DefinitionDataItem> definitionDataItemOpt = groupDefinition.stream()
             .filter(ddi -> ddi.getString(column) != null).findFirst();

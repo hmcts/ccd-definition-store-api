@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionSheet;
 import uk.gov.hmcts.ccd.definition.store.excel.util.mapper.SheetName;
 import uk.gov.hmcts.ccd.definition.store.repository.entity.GenericLayoutEntity;
@@ -29,9 +30,8 @@ public class SearchInputLayoutParser extends GenericLayoutParser {
     protected DefinitionSheet getDefinitionSheet(Map<String, DefinitionSheet> definitionSheets) {
         DefinitionSheet definitionSheet = definitionSheets.get(SheetName.SEARCH_INPUT_FIELD.getName());
         if (definitionSheet == null) {
-            throw new MapperException(
-                String.format("A definition must contain a %s sheet", SheetName.SEARCH_INPUT_FIELD.getName())
-            );
+            throw ImportValidationException.rule(ImportValidationException.Rule.MISSING_LAYOUT_SHEET,
+                SheetName.SEARCH_INPUT_FIELD.getName());
         }
         return definitionSheet;
     }

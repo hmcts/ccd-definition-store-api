@@ -2,7 +2,8 @@ package uk.gov.hmcts.ccd.definition.store.excel.parser;
 
 import org.apache.commons.lang3.StringUtils;
 import uk.gov.hmcts.ccd.definition.store.domain.showcondition.ShowConditionParser;
-import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.MapperException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException;
+import uk.gov.hmcts.ccd.definition.store.excel.endpoint.exception.ImportValidationException.Rule;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.field.FieldShowConditionParser;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DefinitionDataItem;
 import uk.gov.hmcts.ccd.definition.store.excel.parser.model.DisplayContextColumn;
@@ -76,11 +77,9 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
                                                   EventCaseFieldEntity eventCaseFieldEntity) {
         if (eventCaseFieldEntity.getDisplayContext() == DisplayContext.COMPLEX
             && eventCaseFieldDefinition.getBoolean(ColumnName.PUBLISH) != null) {
-            throw new MapperException(String.format("Publish column must not be set for case "
-                    + "field '%s', event '%s' in CaseEventToFields when DisplayContext is COMPLEX. "
-                    + "Please only use the Publish overrides in EventToComplexTypes.",
+            throw ImportValidationException.rule(Rule.PUBLISH_ON_COMPLEX,
                 eventCaseFieldDefinition.getString(ColumnName.CASE_FIELD_ID),
-                eventCaseFieldDefinition.getString(ColumnName.CASE_EVENT_ID)));
+                eventCaseFieldDefinition.getString(ColumnName.CASE_EVENT_ID));
         }
     }
 
@@ -88,8 +87,7 @@ public class EventCaseFieldParser implements FieldShowConditionParser {
                                                          boolean  nullifyByDefault,
                                                          DefinitionDataItem eventCaseFieldDefinition) {
         if (nullifyByDefault && StringUtils.isNotEmpty(defaultValue)) {
-            throw new MapperException("NullifyByDefault cannot be set to Yes if DefaultValue "
-                + "has a value in CaseEventToFields");
+            throw ImportValidationException.rule(Rule.NULLIFY_WITH_DEFAULT);
         }
     }
 }
