@@ -8,6 +8,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -76,6 +77,7 @@ import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -86,11 +88,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -368,7 +373,7 @@ public class ImportServiceImplTest {
             .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
         final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
 
-        assertThrows(MissingAccessProfilesException.class, 
+        assertThrows(MissingAccessProfilesException.class,
             () -> service.importFormDefinitions(inputStream, false, false)
         );
     }
@@ -413,6 +418,54 @@ public class ImportServiceImplTest {
         assertEquals("user@hmcts.net", eventCaptor.getValue().getUserEmailId());
         assertEquals(false, eventCaptor.getValue().isReindex());
         assertEquals(false, eventCaptor.getValue().isDeleteOldIndex());
+    }
+
+    private void stubHappyPathDependencies() {
+        given(jurisdictionService.get(JURISDICTION_NAME)).willReturn(Optional.of(jurisdiction));
+        given(fieldTypeService.getBaseTypes()).willReturn(getBaseTypesList());
+        given(fieldTypeService.getPredefinedComplexTypes()).willReturn(getPredefinedComplexBaseTypesList());
+        given(fieldTypeService.getTypesByJurisdiction(JURISDICTION_NAME)).willReturn(Lists.newArrayList());
+        CaseFieldEntity caseRef = new CaseFieldEntity();
+        caseRef.setReference("[CASE_REFERENCE]");
+        given(caseFieldRepository.findByDataFieldTypeAndCaseTypeNull(DataFieldType.METADATA))
+            .willReturn(Collections.singletonList(caseRef));
+        CaseFieldEntity state = new CaseFieldEntity();
+        state.setReference("[STATE]");
+        state.setDataFieldType(DataFieldType.METADATA);
+        given(metadataCaseFieldEntityFactory.createCaseFieldEntity(any(ParseContext.class), any(CaseTypeEntity.class)))
+            .willReturn(state);
+    }
+
+    @Test
+    void shouldFlushAfterCaseTypesAndAfterDisplayGroupsInOrder() throws Exception {
+        stubHappyPathDependencies();
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
+
+        service.importFormDefinitions(inputStream, false, false);
+
+        InOrder order = inOrder(fieldTypeService, caseTypeService, caseFieldRepository, layoutService,
+            workBasketUserDefaultService);
+        order.verify(fieldTypeService).saveTypes(any(), any());
+        order.verify(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
+        order.verify(caseFieldRepository).flush();
+        order.verify(layoutService, atLeastOnce()).createGenerics(any());
+        order.verify(layoutService).createDisplayGroups(any());
+        order.verify(caseFieldRepository).flush();
+        order.verify(workBasketUserDefaultService).saveWorkBasketUserDefaults(any(), any(), any(), any());
+        verify(caseFieldRepository, times(2)).flush();
+    }
+
+    @Test
+    void shouldNotFlushWhenCaseTypeCreateAllThrows() {
+        stubHappyPathDependencies();
+        doThrow(MissingAccessProfilesException.class)
+            .when(caseTypeService).createAll(any(JurisdictionEntity.class), any(Collection.class), any(Set.class));
+        final InputStream inputStream = getClass().getClassLoader().getResourceAsStream(GOOD_FILE);
+
+        assertThatThrownBy(() -> service.importFormDefinitions(inputStream, false, false))
+            .isInstanceOf(MissingAccessProfilesException.class);
+
+        verify(caseFieldRepository, never()).flush();
     }
 
     @Test
