@@ -46,7 +46,7 @@ ext {
     junit = '5.14.4'
     junitPlatform = '1.14.4'
     junitJupiterVersion = '5.12.2'
-    springDocVersion = '2.9.1'
+    springDocVersion = '2.10.1'
     hamcrestVersion = '3.0'
     flywayVersion = '12.11.0'
     reformLogging = '6.1.9'
@@ -89,7 +89,7 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
     dependencies {
-        dependency 'org.apache.commons:commons-lang3:3.21.0'
+        dependency 'org.apache.commons:commons-lang3:3.22.0'
         dependency "tools.jackson.core:jackson-core:${jackson3Version}"
         dependency "tools.jackson.core:jackson-databind:${jackson3Version}"
     }
@@ -127,7 +127,7 @@ allprojects {
     configurations.all {
         resolutionStrategy {
             force 'commons-fileupload:commons-fileupload:1.6.0',
-                'org.apache.commons:commons-lang3:3.21.0',
+                'org.apache.commons:commons-lang3:3.22.0',
                 'com.google.guava:guava:33.7.2-jre'
 
             eachDependency { DependencyResolveDetails details ->
@@ -249,7 +249,7 @@ subprojects { subproject ->
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         }
         dependencies {
-            dependency 'org.apache.commons:commons-lang3:3.21.0'
+            dependency 'org.apache.commons:commons-lang3:3.22.0'
             dependency "tools.jackson.core:jackson-core:${jackson3Version}"
             dependency "tools.jackson.core:jackson-databind:${jackson3Version}"
         }
@@ -304,7 +304,7 @@ subprojects { subproject ->
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '8.0.0'
 
         implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.3.1'
-        implementation group: 'com.google.code.gson', name: 'gson', version: '2.14.0'
+        implementation group: 'com.google.code.gson', name: 'gson', version: '2.15.0'
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'azure-storage', version: '8.6.6'

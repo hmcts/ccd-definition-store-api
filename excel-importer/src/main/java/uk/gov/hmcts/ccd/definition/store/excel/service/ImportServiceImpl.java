@@ -242,6 +242,7 @@ public class ImportServiceImpl implements ImportService {
         final ParseResult<CaseTypeEntity> parsedCaseTypes = caseTypeParser.parseAll(definitionSheets);
         List<CaseTypeEntity> caseTypes = parsedCaseTypes.getNewResults();
         caseTypeService.createAll(jurisdiction, caseTypes, parseContext.getMissingAccessProfiles()); // runs validation
+        flushPendingInserts();
 
         logger.info("Case types parsing: OK: {} case types parsed", parsedCaseTypes.getAllResults().size());
 
@@ -277,6 +278,7 @@ public class ImportServiceImpl implements ImportService {
         final ParseResult<DisplayGroupEntity> displayGroupsResult
             = layoutParser.parseAllDisplayGroups(definitionSheets);
         layoutService.createDisplayGroups(displayGroupsResult.getNewResults());
+        flushPendingInserts();
 
         logger.info("Importing spreadsheet: UI definition: OK");
 
@@ -494,4 +496,7 @@ public class ImportServiceImpl implements ImportService {
         }
     }
 
+    private void flushPendingInserts() {
+        caseFieldRepository.flush();
+    }
 }
