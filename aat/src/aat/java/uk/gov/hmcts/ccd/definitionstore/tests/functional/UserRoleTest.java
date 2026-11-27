@@ -14,6 +14,9 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 
 class UserRoleTest extends BaseTest {
 
@@ -306,6 +309,58 @@ class UserRoleTest extends BaseTest {
             .get("/api/user-role")
             .then()
             .statusCode(400);
+    }
+
+    @Test
+    @DisplayName("Should retrieve user roles for the requested roles")
+    void shouldRetrieveUserRolesForRequestedRoles() {
+        asUser.get()
+            .given()
+            .pathParam("roles", EXISTING_ROLE + ",functional-role-does-not-exist")
+            .when()
+            .get("/api/user-roles/{roles}")
+            .then()
+            .statusCode(200)
+            .body("", hasSize(1))
+            .body("role", hasItem(EXISTING_ROLE));
+    }
+
+    @Test
+    @DisplayName("Should return no user roles when none of the requested roles exist")
+    void shouldReturnNoUserRolesWhenNoneOfTheRequestedRolesExist() {
+        asUser.get()
+            .given()
+            .pathParam("roles", "functional-role-does-not-exist")
+            .when()
+            .get("/api/user-roles/{roles}")
+            .then()
+            .statusCode(200)
+            .body("", hasSize(0));
+    }
+
+    @Test
+    @DisplayName("Should retrieve all user roles")
+    void shouldRetrieveAllUserRoles() {
+        String additionalRole = "functional-list-role-" + UUID.randomUUID();
+        asUser.get()
+            .given()
+            .contentType(ContentType.JSON)
+            .body(userRoleBody(additionalRole))
+            .when()
+            .post("/api/user-role")
+            .then()
+            .statusCode(201);
+
+        try {
+            asUser.get()
+                .when()
+                .get("/api/user-roles")
+                .then()
+                .statusCode(200)
+                .body("role", hasItems(EXISTING_ROLE, additionalRole));
+        } finally {
+            cleanupUserRole(additionalRole);
+        }
     }
 
     @Test
