@@ -36,35 +36,36 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @RestControllerAdvice
 class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
-    private static final Integer MAX_DEPTH = 5;
     private static final String EXCEPTION_THROWN = "Exception thrown ";
+    private static final String INTERNAL_SERVER_ERROR_MSG = "An internal server error occurred";
+    private static final String CONFLICT_ERROR_MSG = "A conflict error occurred";
     private static final Logger LOG = LoggerFactory.getLogger(ControllerExceptionHandler.class);
 
     @ExceptionHandler(value = {PersistenceException.class})
     public ResponseEntity<Object> handleException(RuntimeException ex, WebRequest request) {
         log(ex);
-        return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(),
+        return handleExceptionInternal(ex, INTERNAL_SERVER_ERROR_MSG, new HttpHeaders(),
             INTERNAL_SERVER_ERROR, request);
     }
 
     @ExceptionHandler(value = {OptimisticLockException.class})
     public ResponseEntity<Object> handleConflict(PersistenceException ex, WebRequest request) {
         log(ex);
-        return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(),
+        return handleExceptionInternal(ex, CONFLICT_ERROR_MSG, new HttpHeaders(),
             HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(value = {ConcurrencyFailureException.class})
     public ResponseEntity<Object> handleConcurrencyFailure(ConcurrencyFailureException ex, WebRequest request) {
         log(ex);
-        return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(),
+        return handleExceptionInternal(ex, CONFLICT_ERROR_MSG, new HttpHeaders(),
             HttpStatus.CONFLICT, request);
     }
 
     @ExceptionHandler(value = {ConstraintViolationException.class})
     public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex, WebRequest request) {
         log(ex);
-        return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(),
+        return handleExceptionInternal(ex, CONFLICT_ERROR_MSG, new HttpHeaders(),
             HttpStatus.CONFLICT, request);
     }
 
@@ -82,7 +83,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {BadRequestException.class})
     public ResponseEntity<Object> handleBadRequest(BadRequestException ex, WebRequest request) {
         log(ex);
-        return handleExceptionInternal(ex, flattenExceptionMessages(ex), new HttpHeaders(),
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(),
             HttpStatus.BAD_REQUEST, request);
     }
 
@@ -107,7 +108,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseBody
     Map<String, String> generalIllegal(IllegalArgumentException e) {
         log(e);
-        return getMessage(e, "Illegal Input:%s");
+        return ImmutableMap.of("message", "Illegal input");
     }
 
     @ExceptionHandler(IOException.class)
@@ -115,7 +116,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseBody
     Map<String, String> handleIOException(IOException e) {
         log(e);
-        return getMessage(e, "Unexpected Error: " + e.getMessage());
+        return ImmutableMap.of("message", "An unexpected error occurred");
     }
 
     @ExceptionHandler(CaseTypeValidationException.class)
@@ -131,20 +132,7 @@ class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseBody
     Map<String, String> elasticSearchInitialisationException(ElasticSearchInitialisationException e) {
         LOG.error("ElasticSearch initialisation exception", e);
-        return getMessage(e, "ElasticSearch initialisation exception: %s");
-    }
-
-    private String flattenExceptionMessages(Throwable ex) {
-        final StringBuilder sb = new StringBuilder(ex.getMessage());
-
-        Integer remaining = MAX_DEPTH;
-        Throwable inner = ex;
-        while ((inner = inner.getCause()) != null && 0 < --remaining) {
-            LOG.debug("Remaining '{}' out of '{}'", remaining, MAX_DEPTH);
-            sb.append("\n").append(inner.getMessage());
-        }
-
-        return sb.toString();
+        return ImmutableMap.of("message", "ElasticSearch initialisation exception");
     }
 
     private Map<String, String> getMessage(Throwable e, String message) {
