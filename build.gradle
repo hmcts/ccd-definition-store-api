@@ -42,11 +42,11 @@ ext {
     set('snakeyaml.version', '2.3')
     set('log4j2.version', '2.26.1')
 
-    elasticsearchVersion = '9.5.6'
+    elasticsearchVersion = '9.5.7'
     junit = '5.14.4'
     junitPlatform = '1.14.4'
     junitJupiterVersion = '5.12.2'
-    springDocVersion = '2.9.1'
+    springDocVersion = '2.10.1'
     hamcrestVersion = '3.0'
     flywayVersion = '12.11.0'
     reformLogging = '6.1.9'
@@ -89,7 +89,7 @@ dependencyManagement {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
     }
     dependencies {
-        dependency 'org.apache.commons:commons-lang3:3.21.0'
+        dependency 'org.apache.commons:commons-lang3:3.22.0'
         dependency "tools.jackson.core:jackson-core:${jackson3Version}"
         dependency "tools.jackson.core:jackson-databind:${jackson3Version}"
     }
@@ -127,7 +127,7 @@ allprojects {
     configurations.all {
         resolutionStrategy {
             force 'commons-fileupload:commons-fileupload:1.6.0',
-                'org.apache.commons:commons-lang3:3.21.0',
+                'org.apache.commons:commons-lang3:3.22.0',
                 'com.google.guava:guava:33.7.2-jre'
 
             eachDependency { DependencyResolveDetails details ->
@@ -177,7 +177,7 @@ allprojects {
         implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
         implementation 'org.springframework.cloud:spring-cloud-starter'
 
-        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.14'
+        implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.15'
         implementation group: 'org.hibernate.orm', name: 'hibernate-core', version: '6.6.59.Final'
         implementation group: 'org.apache.httpcomponents.client5', name: 'httpclient5', version: '5.6.5'
         implementation group: 'org.apache.httpcomponents.core5', name: 'httpcore5', version: '5.4.4'
@@ -249,7 +249,7 @@ subprojects { subproject ->
             mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
         }
         dependencies {
-            dependency 'org.apache.commons:commons-lang3:3.21.0'
+            dependency 'org.apache.commons:commons-lang3:3.22.0'
             dependency "tools.jackson.core:jackson-core:${jackson3Version}"
             dependency "tools.jackson.core:jackson-databind:${jackson3Version}"
         }
@@ -304,7 +304,7 @@ subprojects { subproject ->
         implementation group: 'com.github.hmcts.java-logging', name: 'logging', version: '8.0.0'
 
         implementation group: 'com.github.ben-manes.caffeine', name: 'caffeine', version: '3.3.1'
-        implementation group: 'com.google.code.gson', name: 'gson', version: '2.14.0'
+        implementation group: 'com.google.code.gson', name: 'gson', version: '2.15.0'
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-logging-logback', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'applicationinsights-spring-boot-starter', version: appInsightsVersion
         implementation group: 'com.microsoft.azure', name: 'azure-storage', version: '8.6.6'
@@ -314,7 +314,7 @@ subprojects { subproject ->
         implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: jjwtVersion
         implementation group: 'io.jsonwebtoken', name: 'jjwt-impl', version: jjwtVersion
         implementation group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: jjwtVersion
-        implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.6.16'
+        implementation group: 'io.swagger', name: 'swagger-annotations', version: '1.6.17'
         implementation group: 'jakarta.inject', name: 'jakarta.inject-api', version: '2.0.1'
         implementation group: 'jakarta.validation', name: 'jakarta.validation-api', version: '3.1.1'
         implementation group: 'org.apache.poi', name: 'poi', version: apachePoiVersion
